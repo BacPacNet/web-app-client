@@ -1,6 +1,6 @@
 import { Header } from './Header';
 
-export default {
+const headerStory = {
   title: 'Example/Header',
   component: Header,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
@@ -10,6 +10,8 @@ export default {
     layout: 'fullscreen',
   },
 };
+
+export default headerStory;
 export const LoggedIn = {
   args: {
     user: {
