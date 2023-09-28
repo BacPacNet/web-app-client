@@ -10,7 +10,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic --project-token=chpt_1a0522d85a68f99",
-    "prettier" : "npx prettier . --check"
+    "prettier": "npx prettier . --check"
   },
   "dependencies": {
     "autoprefixer": "10.4.16",

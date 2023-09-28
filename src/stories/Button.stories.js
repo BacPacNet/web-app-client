@@ -1,4 +1,4 @@
-import { Button } from './Button';
+import { Button } from './Button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const ButtonStories = {
@@ -14,9 +14,9 @@ const ButtonStories = {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-};
+}
 
-export default ButtonStories;
+export default ButtonStories
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
 export const Primary = {
@@ -24,33 +24,32 @@ export const Primary = {
     primary: true,
     label: 'Button',
   },
-};
+}
 
 export const Secondary = {
   args: {
     label: 'Button',
   },
-};
+}
 
 export const Large = {
   args: {
     size: 'large',
     label: 'Button',
   },
-};
+}
 
 export const Small = {
   args: {
     size: 'small',
     label: 'Button',
   },
-};
-
+}
 
 export const Warning = {
   args: {
     primary: true,
     label: 'Delete now',
     backgroundColor: 'red',
-  }
-};
+  },
+}
