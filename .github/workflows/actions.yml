@@ -1,4 +1,3 @@
-name: Actions Workflow
 on:
   pull_request:
     types: [opened, reopened, synchronize]
@@ -39,8 +38,8 @@ jobs:
           fi
 
   chromatic-deployment: #Second Job is to deploy the project to Chromatic
-    # Operating System
-    runs-on: ubuntu-latest
+    name: Deploy Storybook to Chromatic
+    runs-on: ubuntu-latest # Operating System
     # Job steps
     steps:
       - name: Checkout Repository
