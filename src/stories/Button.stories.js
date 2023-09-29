@@ -1,7 +1,7 @@
 import { Button } from './Button'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
-export default {
+const btnStory = {
   title: 'Example/Button',
   component: Button,
   parameters: {
@@ -17,37 +17,45 @@ export default {
 }
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Primary = {
+const Primary = {
   args: {
     primary: true,
     label: 'Button',
   },
 }
 
-export const Secondary = {
+const Secondary = {
   args: {
     label: 'Button',
   },
 }
 
-export const Large = {
+const Large = {
   args: {
     size: 'large',
     label: 'Button',
   },
 }
 
-export const Small = {
+const Small = {
   args: {
     size: 'small',
     label: 'Button',
   },
 }
 
-export const Warning = {
+const Warning = {
   args: {
     primary: true,
     label: 'Delete now',
     backgroundColor: 'red',
   },
+}
+module.exports = {
+  btnStory,
+  Primary,
+  Secondary,
+  Warning,
+  Small,
+  Large,
 }

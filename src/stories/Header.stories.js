@@ -1,6 +1,6 @@
-import { Header } from './Header';
+import { Header } from './Header'
 
-export default {
+const headerStory = {
   title: 'Example/Header',
   component: Header,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
@@ -9,15 +9,20 @@ export default {
     // More on how to position stories at: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen',
   },
-};
-export const LoggedIn = {
+}
+const LoggedIn = {
   args: {
     user: {
       name: 'Jane Doe',
     },
   },
-};
+}
 
-export const LoggedOut = {
+const LoggedOut = {
   args: {},
-};
+}
+module.exports = {
+  headerStory,
+  LoggedIn,
+  LoggedOut,
+}
