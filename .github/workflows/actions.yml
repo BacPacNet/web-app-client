@@ -37,7 +37,7 @@ jobs:
             echo "Build failed!"
             exit 1
           fi
-  
+
   chromatic-deployment: #Second Job is to deploy the project to Chromatic
     # Operating System
     runs-on: ubuntu-latest
@@ -60,4 +60,3 @@ jobs:
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
