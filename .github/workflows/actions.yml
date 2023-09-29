@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-project: #First Job is to check the code formatting, linting and build the project.
+    if: github.event.pull_request.draft == false
     name: Run Prettier, Lint and Build Checks
     runs-on: ubuntu-latest
 
@@ -39,6 +40,7 @@ jobs:
           fi
 
   chromatic-deployment: #Second Job is to deploy the project to Chromatic
+    if: github.event.pull_request.draft == false
     name: Deploy Storybook to Chromatic
     runs-on: ubuntu-latest # Operating System
     # Job steps
