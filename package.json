@@ -9,7 +9,8 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prettier": "npx prettier . --check"
+    "prettier": "npx prettier . --check",
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
     "autoprefixer": "10.4.16",
