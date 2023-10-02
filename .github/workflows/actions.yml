@@ -1,0 +1,60 @@
+name: Workflow
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build-project: #First Job is to check the code formatting, linting and build the project.
+    if: github.event.pull_request.draft == false
+    name: Run Prettier, Lint and Build Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Code Formatting Check #Runs Prettier Script
+        run: npm run prettier
+
+      - name: Linting Check #Runs ESLint Script
+        run: npm run lint
+
+      - name: Build #Build the project
+        run: npm run build
+
+      - name: Check Build Status
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "Build successful!🎉"
+          else
+            echo "Build failed!"
+            exit 1
+          fi
+
+  chromatic-deployment: #Second Job is to deploy the project to Chromatic
+    if: github.event.pull_request.draft == false
+    name: Deploy Storybook to Chromatic
+    runs-on: ubuntu-latest # Operating System
+    # Job steps
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # 👈 Required to retrieve git history
+      - name: Install dependencies
+        run: npm install
+        # 👇 Adds Chromatic as a step in the workflow
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        # Chromatic GitHub Action options
+        with:
+          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
