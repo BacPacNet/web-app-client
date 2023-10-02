@@ -8,12 +8,6 @@ import jsonData from '../../data/university_data'
 export default function Home() {
   const [open, setOpen] = useState(false)
   const [searchData, setSearchData] = useState([])
-  // async function handler() {
-  //   setCollegesData(jsonData)
-  // }
-  // useEffect(() => {
-  //   handler()
-  // }, [])
   function handleSearch(e) {
     let input = e.target.value.toLowerCase()
     const filterData = jsonData
