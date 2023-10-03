@@ -1,5 +1,5 @@
-// The "use client" is used to declare a boundary between a Server and Client Component modules. 
-// This means that by defining a "use client" in a file, all other modules imported into it, including child components, are considered part of the client bundle - and will be rendered by React on the client. 
+// The "use client" is used to declare a boundary between a Server and Client Component modules.
+// This means that by defining a "use client" in a file, all other modules imported into it, including child components, are considered part of the client bundle - and will be rendered by React on the client.
 // In this file useSearchParams is a client component.
 'use client'
 
