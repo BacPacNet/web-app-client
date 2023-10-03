@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 import './page.css'
 
 import { Header } from './Header'
 import React from 'react'
-=======
-import React from 'react'
-
-import { Header } from './Header'
-import './page.css'
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
 
 export const Page = () => {
   const [user, setUser] = React.useState()
@@ -42,11 +35,7 @@ export const Page = () => {
         <ul>
           <li>
             Use a higher-level connected component. Storybook helps you compose
-<<<<<<< HEAD
             such data from the of child component stories
-=======
-            such data from the &quot;args&quot; of child component stories
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
           </li>
           <li>
             Assemble data in the page component from your services. You can mock
@@ -54,11 +43,7 @@ export const Page = () => {
           </li>
         </ul>
         <p>
-<<<<<<< HEAD
           Get a guided tutorial on component-driven development at
-=======
-          Get a guided tutorial on component-driven development at{' '}
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
           <a
             href="https://storybook.js.org/tutorials/"
             target="_blank"
@@ -78,11 +63,7 @@ export const Page = () => {
         </p>
         <div className="tip-wrapper">
           <span className="tip">Tip</span> Adjust the width of the canvas with
-<<<<<<< HEAD
           the
-=======
-          the{' '}
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
           <svg
             width="10"
             height="10"

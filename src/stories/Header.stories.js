@@ -10,13 +10,7 @@ const headerStory = {
     layout: 'fullscreen',
   },
 }
-<<<<<<< HEAD
 const LoggedIn = {
-=======
-
-export default headerStory
-export const LoggedIn = {
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
   args: {
     user: {
       name: 'Jane Doe',
@@ -27,11 +21,8 @@ export const LoggedIn = {
 const LoggedOut = {
   args: {},
 }
-<<<<<<< HEAD
 module.exports = {
   headerStory,
   LoggedIn,
   LoggedOut,
 }
-=======
->>>>>>> d2fbd219736b40e9ebe46e3fc3bb010704ec69ce
