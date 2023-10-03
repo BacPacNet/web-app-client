@@ -2,7 +2,7 @@ import { userEvent, within } from '@storybook/testing-library'
 
 import { Page } from './Page'
 
-const pageStory = {
+const pageStories = {
   title: 'Example/Page',
   component: Page,
   parameters: {
@@ -11,10 +11,12 @@ const pageStory = {
   },
 }
 
-const LoggedOut = {}
+export default pageStories
+
+export const LoggedOut = {}
 
 // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
-const LoggedIn = {
+export const LoggedIn = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const loginButton = await canvas.getByRole('button', {
@@ -23,4 +25,3 @@ const LoggedIn = {
     await userEvent.click(loginButton)
   },
 }
-module.exports = { pageStory, LoggedIn, LoggedOut }
