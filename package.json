@@ -13,7 +13,10 @@
     "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
+    "@as-integrations/next": "^2.0.2",
     "autoprefixer": "10.4.16",
+    "graphql-tag": "^2.12.6",
+    "mongodb": "^6.1.0",
     "next": "13.5.2",
     "postcss": "8.4.30",
     "react": "18.2.0",
