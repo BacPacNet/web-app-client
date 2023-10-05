@@ -18,9 +18,8 @@ async function getUniversityName(id) {
     const universities = database.collection('universities')
     const university = await universities.findOne({ id })
     return university.name
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close()
+  } catch (error) {
+    console.log(error)
   }
 }
 
