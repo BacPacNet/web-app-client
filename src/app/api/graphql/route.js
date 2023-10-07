@@ -2,8 +2,8 @@ import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { ApolloServer } from '@apollo/server'
 import {
   ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault 
-} from '@apollo/server/plugin/landingPage/default';
+  ApolloServerPluginLandingPageProductionDefault,
+} from '@apollo/server/plugin/landingPage/default'
 import { gql } from 'graphql-tag'
 import { MongoClient } from 'mongodb'
 
@@ -41,10 +41,15 @@ const typeDefs = gql`
   }
 `
 
-let plugins = [];
+let plugins = []
 //Next.js auto assigns NODE_ENV value as development for 'next dev' command, and production for other commands
 if (process.env.NODE_ENV === 'production') {
-  plugins = [ApolloServerPluginLandingPageProductionDefault({ embed: true, graphRef: 'bacpac-gql@current' })]
+  plugins = [
+    ApolloServerPluginLandingPageProductionDefault({
+      embed: true,
+      graphRef: 'bacpac-gql@current',
+    }),
+  ]
 } else {
   plugins = [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
 }
