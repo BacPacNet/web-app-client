@@ -58,3 +58,32 @@ jobs:
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+  check-up-to-date:
+    name: Check if PR is up to date with the main branch
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Code
+      uses: actions/checkout@v2
+
+    - name: Fetch Main Branch
+      run: git fetch origin main
+
+    - name: Check for Divergence
+      run: |
+        BASE=$(git rev-parse main)
+        HEAD=$(git rev-parse HEAD)
+        if [ $BASE != $HEAD ]; then
+          echo "PR is not up to date with the main branch."
+          exit 1
+        fi
+      continue-on-error: true
+
+    - name: Status Check
+      if: failure()
+      run: echo "Please make sure your PR is up to date with the main branch."
+
+    - name: Complete
+      if: always()
+      run: echo "PR is up to date with the main branch."
