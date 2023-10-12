@@ -72,7 +72,7 @@ jobs:
 
     - name: Check for Divergence
       run: |
-        BASE=$(git rev-parse main)
+        BASE=$(git rev-parse origin/main)
         HEAD=$(git rev-parse HEAD)
         if [ $BASE != $HEAD ]; then
           echo "PR is not up to date with the main branch."
