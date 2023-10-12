@@ -70,15 +70,20 @@ jobs:
     - name: Fetch Main Branch
       run: git fetch origin main
 
+    - name: Find Common Ancestor
+      run: |
+        COMMON=$(git merge-base origin/main HEAD)
+        echo "::set-output name=common::$COMMON"
+
     - name: Check for Divergence
       run: |
-        BASE=$(git rev-parse origin/main)
+        COMMON=${{ steps.find-common.outputs.common }}
+        BASE=$(git rev-parse $COMMON)
         HEAD=$(git rev-parse HEAD)
         if [ $BASE != $HEAD ]; then
           echo "PR is not up to date with the main branch."
           exit 1
         fi
-      continue-on-error: true
 
     - name: Status Check
       if: failure()
