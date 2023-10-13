@@ -72,18 +72,11 @@ jobs:
 
     - name: Check for Divergence
       run: |
-        BASE=$(git rev-parse refs/remotes/origin/main)
-        HEAD=$(git rev-parse HEAD)
-        if [ $BASE != $HEAD ]; then
-          echo "PR is not up to date with the main branch."
+        if git merge-base --is-ancestor master @
+        then
+          echo "Your branch is up to date."
+          exit 0
+        else
+          echo "You need to merge / rebase."
           exit 1
         fi
-      continue-on-error: true
-
-    - name: Status Check
-      if: failure()
-      run: echo "Please make sure your PR is up to date with the main branch."
-
-    - name: Complete
-      if: always()
-      run: echo "PR is up to date with the main branch."
