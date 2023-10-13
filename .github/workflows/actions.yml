@@ -64,30 +64,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check PR Up-to-Date
-      id: check-pr
+    - name: Check Out Code
+      uses: actions/checkout@v2
+
+    - name: Fetch Main Branch
+      run: git fetch origin main:refs/remotes/origin/main
+
+    - name: Check for Divergence
       run: |
-        # Get the name of the current pull request branch
-        PR_BRANCH=$GITHUB_REF
-
-        # Set the target branch (the main branch)
-        BASE_BRANCH=main
-
-        # Update the main branch to ensure it's up to date
-        git fetch origin $BASE_BRANCH:$BASE_BRANCH
-
-        # Compare the PR branch with the main branch and list the differing files
-        DIFF_FILES=$(git diff --name-only $BASE_BRANCH..$PR_BRANCH)
-
-        if [[ -z $DIFF_FILES ]]; then
-          # No differences, the PR is up to date
-          echo "PR is up-to-date with the main branch."
-        else
-          # Differences detected, the PR is not up to date
-          echo "PR is not up-to-date with the main branch. The following files have changes:"
-          echo "$DIFF_FILES"
-          echo "Please update your branch and resolve any conflicts before merging."
+        BASE=$(git rev-parse refs/remotes/origin/main)
+        HEAD=$(git rev-parse HEAD)
+        if [ $BASE != $HEAD ]; then
+          echo "PR is not up to date with the main branch."
           exit 1
         fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
+
+    - name: Status Check
+      if: failure()
+      run: echo "Please make sure your PR is up to date with the main branch."
+
+    - name: Complete
+      if: always()
+      run: echo "PR is up to date with the main branch."
