@@ -64,19 +64,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check Out Code
-      uses: actions/checkout@v2
-
-    - name: Fetch Main Branch
-      run: git fetch origin main:refs/remotes/origin/main
-
-    - name: Check for Divergence
-      run: |
-        if git merge-base --is-ancestor origin/main HEAD
-        then
-          echo "Your branch is up to date with the main branch."
-          exit 0
-        else
-          echo "Your branch is not up to date. You need to merge or rebase."
-          exit 1
-        fi
+      - name: Git checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        #Check if the PR is up to date with the main branch
+      - name: Check if branch is ahead of main
+        run: |
+            if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
+            then echo "This branch is not up to date. Please rebase or merge with main.";
+            exit 1;
+            else echo "This branch is up to date with main!🎉";
+            fi
