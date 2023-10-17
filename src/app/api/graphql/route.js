@@ -33,11 +33,7 @@ const resolvers = {
 
 const typeDefs = gql`
   type Query {
-    hello: String
     university_name(id: ID!): String
-  }
-  type Name {
-    name: String
   }
 `
 
@@ -62,4 +58,5 @@ const server = new ApolloServer({
 
 const handler = startServerAndCreateNextHandler(server)
 
+//Exports the handler function to be used as a Next.js API route handler.
 export { handler as GET, handler as POST }
