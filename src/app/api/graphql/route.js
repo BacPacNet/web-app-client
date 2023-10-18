@@ -8,7 +8,7 @@ import { gql } from 'graphql-tag'
 import { MongoClient } from 'mongodb'
 
 // The connection string for mongodb connection.
-const uri = process.env.MONGODB_URI? process.env.MONGODB_URI : ''
+const uri = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
 const client = new MongoClient(uri)
 
 async function getUniversityName(id) {
@@ -37,7 +37,7 @@ const typeDefs = gql`
 `
 
 let plugins = []
-const graphQLref = process.env.GRAPHQL_REF? process.env.GRAPHQL_REF : ''
+const graphQLref = process.env.GRAPHQL_REF ? process.env.GRAPHQL_REF : ''
 //Next.js auto assigns NODE_ENV value as development for 'next dev' command, and production for other commands
 if (process.env.NODE_ENV === 'production') {
   plugins = [
