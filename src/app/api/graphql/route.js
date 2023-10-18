@@ -8,8 +8,7 @@ import { gql } from 'graphql-tag'
 import { MongoClient } from 'mongodb'
 
 // The connection string for mongodb connection.
-const uri =
-  'mongodb+srv://ayushtiwari110:Ud7JOzOQRw6J93W2@bacpac.i8d4g8c.mongodb.net/'
+const uri = process.env.MONGODB_URI
 const client = new MongoClient(uri)
 
 async function getUniversityName(id) {
@@ -38,12 +37,13 @@ const typeDefs = gql`
 `
 
 let plugins = []
+const graphQLref = process.env.GRAPHQL_REF
 //Next.js auto assigns NODE_ENV value as development for 'next dev' command, and production for other commands
 if (process.env.NODE_ENV === 'production') {
   plugins = [
     ApolloServerPluginLandingPageProductionDefault({
       embed: true,
-      graphRef: 'bacpac-gql@current',
+      graphRef: graphQLref,
     }),
   ]
 } else {
