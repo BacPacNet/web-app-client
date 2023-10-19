@@ -27,14 +27,10 @@ jobs:
       - name: Linting Check #Runs ESLint Script
         run: npm run lint
 
-      - name: Create env file #Creates a .env file with empty values inorder to run the build script
-        run: |
-          touch .env
-          echo MONGODB_URI="" >> .env
-          echo API_KEY="" >> .env
-          cat .env
-
       - name: Build #Build the project
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          GRAPHQL_REF: ${{ secrets.GRAPHQL_REF }}
         run: npm run build
 
       - name: Check Build Status
