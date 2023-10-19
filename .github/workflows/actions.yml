@@ -28,6 +28,9 @@ jobs:
         run: npm run lint
 
       - name: Build #Build the project
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          GRAPHQL_REF: ${{ secrets.GRAPHQL_REF }}
         run: npm run build
 
       - name: Check Build Status
