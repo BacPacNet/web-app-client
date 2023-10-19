@@ -1,0 +1,36 @@
+.nav-link {
+  font-weight: bold;
+  font-size: 14px;
+  /* text-transform: uppercase; */
+  transform: scale(1.2);
+  text-decoration: none;
+  color: #222222;
+  padding: 20px 0px;
+  margin: 0px 20px;
+  display: inline-block;
+  position: relative;
+  opacity: 0.75;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+.nav-link::before {
+  transition: 300ms;
+  height: 3px;
+  content: '';
+  position: absolute;
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  width: 50%;
+}
+
+.nav-link-ltr::before {
+  width: 50%;
+  bottom: 15px;
+}
+
+.nav-link-ltr:hover::before {
+  width: 100%;
+}

@@ -1,10 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
+import { AiOutlineSearch } from 'react-icons/ai'
+import { BsStars } from 'react-icons/bs'
 import CollegeResult from './components/CollegeResult'
+import Footer from './components/Footer/Footer'
+import Image from 'next/image'
+import Navbar from './components/Navbar/Navbar'
+import bacpacTitle from '../assets/bacpacTitle.png'
 import jsonData from '../../data/university_data'
-
+import { useState } from 'react'
 export default function Home() {
   const [open, setOpen] = useState(false)
   const [searchData, setSearchData] = useState([])
@@ -21,23 +25,59 @@ export default function Home() {
     setSearchData(filterData)
   }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start">
-      <h1 className="text-9xl font-bold z-20 mt-60">BacPac</h1>
-      <div className="search-box mt-4 border-1 border-black w-4/12 h-12 rounded-2xl">
-        <input
-          type="text"
-          onChange={handleSearch}
-          placeholder="Search Colleges..."
-          className="w-full h-full indent-2.5 rounded-2xl"
-        />
-        {open && (
-          <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white">
-            {searchData.map((item, index) => (
-              <CollegeResult info={item} serialNo={index} key={index} />
-            ))}
+    <div className="home">
+      <Navbar />
+      <main className="flex min-h-screen flex-col items-center justify-start max-h-full bg-[#ffffff]">
+        <div className="text-9xl font-bold z-20 mt-28">
+          <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
+        </div>
+        <div className="search-box mt-4 border-1 border-black w-4/12 h-12 rounded-2xl">
+          <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
+            <AiOutlineSearch className="text-xl" />
           </div>
-        )}
-      </div>
-    </main>
+          <input
+            type="text"
+            onChange={handleSearch}
+            placeholder="Search"
+            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14"
+          />
+          {open && (
+            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white relative">
+              {searchData.map((item, index) => (
+                <CollegeResult info={item} serialNo={index} key={index} />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="login-part w-1/2 mt-24">
+          <div className="text flex justify-center items-center mb-5">
+            <BsStars className="text-[#6744FF] text-4xl mr-3 " />
+            <h2 className="heading text-xl font-medium">
+              Already part of your university community?
+            </h2>
+          </div>
+          <div className="btn flex justify-center items-start mb-3">
+            <button className="btn-secondary p-3 bg-[#6744FF] w-1/5 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-12 text-xl">
+              Login
+            </button>
+          </div>
+          <div className="checkbox flex justify-center items-center mt-3 ">
+            <input
+              type="checkbox"
+              name="login"
+              id="login"
+              className="mr-4 w-6 h-6 ml-11 cursor-pointer"
+            />
+            <label
+              htmlFor="login"
+              className=" font-medium text-lg cursor-pointer"
+            >
+              Keep me logged in
+            </label>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </div>
   )
 }
