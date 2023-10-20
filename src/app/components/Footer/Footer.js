@@ -40,7 +40,7 @@ function Footer() {
     window.open(url, '_blank') // Open the URL in a new tab
   }
   return (
-    <div className="footer flex w-full h-20 items-center bg-[#ECECEC] sticky bottom-0 left-0">
+    <div className="footer flex w-full h-20 items-center bg-[#ECECEC] relative bottom-0 left-0">
       <div className="images flex ml-24 items-center w-1/4 h-full cursor-pointer">
         <div className="logo">
           <Image src={bacpacLogo} alt="" className="w-16 h-full" />
