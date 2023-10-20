@@ -7,19 +7,15 @@ import Footer from './components/Footer/Footer'
 import Image from 'next/image'
 import Navbar from './components/Navbar/Navbar'
 import bacpacTitle from '../assets/bacpacTitle.png'
-import jsonData from '../../data/university_data'
+import universityData from '../../data/university_data'
 import { useState } from 'react'
-import { useEffect, useState } from 'react'
-
-import CollegeResult from './components/CollegeResult'
-import jsonData from '../../data/university_data'
 
 export default function Home() {
   const [open, setOpen] = useState(false)
   const [searchData, setSearchData] = useState([])
   function handleSearch(e) {
     let input = e.target.value.toLowerCase()
-    const filterData = jsonData
+    const filterData = universityData
       .filter((item) => {
         let collegeName = item.name.toLowerCase()
         let collegeAddress = item.address.toLowerCase()
