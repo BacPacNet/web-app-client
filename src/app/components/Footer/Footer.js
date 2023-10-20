@@ -41,12 +41,12 @@ function Footer() {
   }
   return (
     <div className="footer flex w-full h-20 items-center bg-[#ECECEC] relative bottom-0 left-0">
-      <div className="images flex ml-24 items-center w-1/4 h-full cursor-pointer">
-        <div className="logo">
-          <Image src={bacpacLogo} alt="" className="w-16 h-full" />
+      <div className="images flex ml-24 items-center w-1/4 h-full cursor-pointer ">
+        <div className="logo w-1/4 mr-4 h-full">
+          <Image src={bacpacLogo} alt="" className="w-full h-full" />
         </div>
-        <div className="title">
-          <Image src={bacpacTitle} alt="" className="w-16 h-6 ml-4" />
+        <div className="title w-1/2">
+          <Image src={bacpacTitle} alt="" className=" w-4/6" />
         </div>
       </div>
       <div className="text w-3/4  h-full flex items-center justify-center text-large">

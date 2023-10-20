@@ -16,16 +16,16 @@ function Navbar() {
       path: '/aboutus',
     },
     {
-      name: 'Site manual',
-      path: '/sitemanual',
+      name: 'Community',
+      path: '/community',
     },
     {
       name: 'Discover',
       path: '/discover',
     },
     {
-      name: 'Community',
-      path: '/community',
+      name: 'Site manual',
+      path: '/sitemanual',
     },
   ]
   //   border-2 border-gray-800
@@ -33,12 +33,12 @@ function Navbar() {
   return (
     <div className="navbar flex justify-around w-full h-20 items-center bg-[#ECECEC] sticky top-0 left-0 z-50">
       <div className="left h-full flex  w-3/4 items-center">
-        <div className="logo ml-24 h-full">
+        <div className="logo ml-24 mr-7 h-full mt-1/2">
           <Link href="/">
             <Image
               src={bacpacLogo}
               alt="BACPAC LOGO"
-              className="h-full w-full cursor-pointer"
+              className="h-full w-full cursor-pointer mb-4"
             />
           </Link>
         </div>
@@ -63,7 +63,7 @@ function Navbar() {
         <button className="btn-primary p-3 bg-[#BC9CFF] btn w-1/3 h-10 flex items-center justify-center rounded-lg text-[#ffffff]">
           Sign Up
         </button>
-        <button className="btn-secondary p-3 bg-[#6744FF] w-1/3 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-12">
+        <button className="btn-secondary p-3 bg-[#6744FF] w-1/3 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-6">
           Login
         </button>
       </div>

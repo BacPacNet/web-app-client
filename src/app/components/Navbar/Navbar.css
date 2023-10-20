@@ -1,3 +1,8 @@
+.nav li:hover {
+  font-size: 17px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+}
 .nav-link {
   font-weight: bold;
   font-size: 14px;
@@ -11,7 +16,6 @@
   position: relative;
   opacity: 0.75;
 }
-
 .nav-link:hover {
   opacity: 1;
 }
@@ -21,13 +25,13 @@
   height: 3px;
   content: '';
   position: absolute;
-  background-color: #1c1c1c;
+  background-color: #000000;
   border-radius: 5px;
   width: 50%;
 }
 
 .nav-link-ltr::before {
-  width: 50%;
+  width: 60%;
   bottom: 15px;
 }
 
