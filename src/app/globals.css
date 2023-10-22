@@ -29,3 +29,27 @@ body {
 .searchBox::-webkit-scrollbar {
   display: none;
 }
+@layer components {
+  .btn {
+    @apply p-3 rounded-lg flex text-[#ffffff] items-center justify-center;
+  }
+  .btn-primary {
+    @apply bg-[#BC9CFF];
+  }
+  .btn-secondary {
+    @apply bg-[#6744FF];
+  }
+  .center {
+    @apply flex items-center justify-center;
+  }
+  /* .center-v center's the element in vertical direction */
+  .center-v {
+    @apply flex items-center;
+  }
+  .icons {
+    @apply w-8 h-10 cursor-pointer;
+  }
+  .icon {
+    @apply w-8 h-6;
+  }
+}

@@ -40,8 +40,8 @@ function Footer() {
     window.open(url, '_blank') // Open the URL in a new tab
   }
   return (
-    <div className="footer flex w-full h-20 items-center bg-[#ECECEC] relative bottom-0 left-0">
-      <div className="images flex ml-24 items-center w-1/4 h-full cursor-pointer ">
+    <div className="footer center-v w-full h-20  bg-[#ECECEC] relative bottom-0 left-0">
+      <div className="images center-v ml-24  w-1/4 h-full cursor-pointer ">
         <div className="logo w-1/4 mr-4 h-full">
           <Image src={bacpacLogo} alt="" className="w-full h-full" />
         </div>
@@ -49,34 +49,28 @@ function Footer() {
           <Image src={bacpacTitle} alt="" className=" w-4/6" />
         </div>
       </div>
-      <div className="text w-3/4  h-full flex items-center justify-center text-large">
+      <div className="text w-3/4  h-full center text-large">
         Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Bacpac
         Networks
       </div>
-      <div className="social-media flex items-center justify-center h-full w-2/6 cursor-pointer">
+      <div className="center h-full w-2/6">
         <div
-          className="icons instagram w-8 h-10 flex items-center justify-center"
+          className="icons instagram center"
           onClick={() => handleRedirect(4)}
         >
-          <AiFillInstagram className="icon w-8 h-6" />
+          <AiFillInstagram className="icon" />
         </div>
         <div
-          className="icons facebook w-8 h-10 flex items-center justify-center"
+          className="icons facebook center"
           onClick={() => handleRedirect(2)}
         >
-          <AiFillFacebook className="icon  w-8 h-6" />
+          <AiFillFacebook className="icon" />
         </div>
-        <div
-          className="icons twitter w-8 h-10 flex items-center justify-center"
-          onClick={() => handleRedirect(3)}
-        >
-          <AiOutlineTwitter className="icon  w-8 h-6" />
+        <div className="icons twitter center" onClick={() => handleRedirect(3)}>
+          <AiOutlineTwitter className="icon" />
         </div>
-        <div
-          className="icons discord w-8 h-10 flex items-center justify-center"
-          onClick={() => handleRedirect(1)}
-        >
-          <BsDiscord className="icon  w-8 h-6" />
+        <div className="icons discord center" onClick={() => handleRedirect(1)}>
+          <BsDiscord className="icon" />
         </div>
       </div>
     </div>
