@@ -31,7 +31,7 @@ body {
 }
 @layer components {
   .btn {
-    @apply p-3 rounded-lg flex text-[#ffffff] items-center justify-center;
+    @apply p-3 rounded-lg flex text-[#ffffff] items-center justify-center text-lg;
   }
   .btn-primary {
     @apply bg-[#BC9CFF];
