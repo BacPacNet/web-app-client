@@ -1,14 +1,15 @@
 .navbar {
-  box-shadow: 0 5px 7px 5px #ececec;
+  box-shadow: 0 5px 15px 5px #ececec;
+  height: 70px;
 }
 .nav li:hover {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   transition: all 0.3s ease-in;
 }
 .nav-link {
   font-weight: bold;
-  font-size: 17px;
+  font-size: 16px;
   /* text-transform: uppercase; */
   transform: scale(1.2);
   text-decoration: none;
@@ -20,7 +21,7 @@
   opacity: 1;
 }
 .link {
-  font-size: 17px;
+  font-size: 16px;
   color: #000;
   font-weight: 500;
 }

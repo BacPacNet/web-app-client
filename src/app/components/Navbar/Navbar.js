@@ -31,14 +31,14 @@ function Navbar() {
   //   border-2 border-gray-800
   // console.log('url', window.location)
   return (
-    <div className="navbar justify-around w-full h-20 center-v bg-white sticky top-0 left-0 z-50">
+    <div className="navbar justify-around w-full center-v bg-white sticky top-0 left-0 z-50">
       <div className="left h-full center-v w-3/4 ">
-        <div className="logo ml-24 mr-7 h-full mt-1/2">
+        <div className="logo ml-24 mr-6 h-full  mt-1/2">
           <Link href="/">
             <Image
               src={bacpacLogo}
               alt="BACPAC LOGO"
-              className="h-full w-full cursor-pointer mb-4"
+              className="h-full w-full cursor-pointer pb-2"
             />
           </Link>
         </div>

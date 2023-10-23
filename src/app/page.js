@@ -51,15 +51,15 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="login-part w-1/2 mt-24">
+        <div className="login-part w-4/12 mt-24">
           <div className="text flex justify-center items-center mb-5">
-            <BsStars className="text-[#6744FF] text-4xl mr-3 " />
+            <BsStars className="text-[#6744FF] text-4xl " />
             <h2 className="heading text-xl font-medium">
               Already part of your university community?
             </h2>
           </div>
           <div className="btn flex justify-center items-start mb-3">
-            <button className="p-3 bg-[#6744FF] w-1/5 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-12 text-xl">
+            <button className="p-3 bg-[#6744FF] w-1/3 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-12 text-xl">
               Login
             </button>
           </div>

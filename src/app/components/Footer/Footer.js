@@ -1,3 +1,5 @@
+import './Footer.css'
+
 import {
   AiFillFacebook,
   AiFillInstagram,
@@ -40,9 +42,9 @@ function Footer() {
     window.open(url, '_blank') // Open the URL in a new tab
   }
   return (
-    <div className="footer center-v w-full h-20  bg-[#ECECEC] relative bottom-0 left-0">
+    <div className="footer center-v w-full  bg-[#ECECEC] relative bottom-0 left-0">
       <div className="images center-v ml-24  w-1/4 h-full cursor-pointer ">
-        <div className="logo w-1/4 mr-4 h-full">
+        <div className="logo w-12 mr-4 h-12">
           <Image src={bacpacLogo} alt="" className="w-full h-full" />
         </div>
         <div className="title w-1/2">
