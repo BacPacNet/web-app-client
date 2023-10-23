@@ -79,38 +79,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <div className="part-2 flex -mt-20 border-2 border-gray-800 justify-evenly h-96 items-center w-full bg-white">
-        <div className="text h-96 border-2 border-gray-800 flex flex-col justify-center">
-          <h1 className="heading">
-            First time user?
-            <br />
-            Get familiar with the <br />
-            site first!
-          </h1>
-          <div className="links">
-            <a href="#">Click here to learn about BACPAC</a>
-            <a href="#">Click here to learn how to use BACPAC</a>
-          </div>
-        </div>
-        <div className="book-img">
-          <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
-        </div>
-      </div>
-      <div className="part-3 flex flex-col justify-center border-2 border-gray-800 h-96 items-center w-full">
-        <div className="text">
-          <h1 className="heading text-center">Still have a questions?</h1>
-          <div className="text">
-            Our dicord community is ready and egar to help you with <br />
-            anything BACPAC realted. Make friends along the way!
-          </div>
-        </div>
-        <div className="discord">
-          <button className="btn-secondary btn">join server</button>
-        </div>
-        <div className="text">
-          Intrested in managing our server? Leave a message!
-        </div>
-      </div>
       <Footer />
     </div>
   )

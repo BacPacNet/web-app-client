@@ -12,7 +12,7 @@
   /* text-transform: uppercase; */
   transform: scale(1.2);
   text-decoration: none;
-  color: #6744ff;
+  color: #000;
   padding: 20px 0px;
   margin: 0px 20px;
   display: inline-block;
@@ -21,7 +21,8 @@
 }
 .link {
   font-size: 17px;
-  color: #6744ff;
+  color: #000;
+  font-weight: 500;
 }
 .nav-link:hover {
   opacity: 1;
@@ -32,7 +33,7 @@
   height: 2px;
   content: '';
   position: absolute;
-  background-color: #6744ff;
+  background-color: #000;
   border-radius: 5px;
   width: 50%;
   /* opacity: 1; */
