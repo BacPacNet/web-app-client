@@ -51,17 +51,17 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="login-part w-4/12 mt-24 ">
-          <div className="text flex items-center mb-5  w-full">
+        <div className="login-part w-full mt-24 flex flex-col items-center">
+          <div className="flex items-center mb-5 w-full ">
             <h2 className="heading text-xl font-medium  w-full center">
               <BsStars className="text-[#6744FF] text-4xl -ml-3 " />
               Already part of your university community?
             </h2>
           </div>
-          <div className="btn flex justify-center items-start mb-3">
-            <button className=" btn-secondary btn w-1/3 h-10 ">Login</button>
+          <div className="btn flex justify-center items-start w-full mb-3 ">
+            <button className=" btn-secondary btn w-40 h-10 ">Login</button>
           </div>
-          <div className="checkbox flex justify-center items-center mt-3 w-full ">
+          <div className="checkbox flex justify-center items-center mt-3 w-1/2">
             <input
               type="checkbox"
               name="login"
@@ -70,7 +70,7 @@ export default function Home() {
             />
             <label
               htmlFor="login"
-              className=" font-medium text-lg cursor-pointer center  w-1/3  "
+              className=" font-medium text-lg cursor-pointer center w-1/4"
             >
               Keep me logged in
             </label>
