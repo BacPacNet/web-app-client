@@ -51,28 +51,26 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="login-part w-4/12 mt-24">
-          <div className="text flex justify-center items-center mb-5">
-            <BsStars className="text-[#6744FF] text-4xl " />
-            <h2 className="heading text-xl font-medium">
+        <div className="login-part w-4/12 mt-24 ">
+          <div className="text flex items-center mb-5  w-full">
+            <h2 className="heading text-xl font-medium  w-full center">
+              <BsStars className="text-[#6744FF] text-4xl -ml-3 " />
               Already part of your university community?
             </h2>
           </div>
           <div className="btn flex justify-center items-start mb-3">
-            <button className="p-3 bg-[#6744FF] w-1/3 h-10 rounded-lg btn flex text-[#ffffff] items-center justify-center ml-12 text-xl">
-              Login
-            </button>
+            <button className=" btn-secondary btn w-1/3 h-10 ">Login</button>
           </div>
-          <div className="checkbox flex justify-center items-center mt-3 ">
+          <div className="checkbox flex justify-center items-center mt-3 w-full ">
             <input
               type="checkbox"
               name="login"
               id="login"
-              className="mr-4 w-6 h-6 ml-11 cursor-pointer"
+              className="w-6 h-6 cursor-pointer -ml-5"
             />
             <label
               htmlFor="login"
-              className=" font-medium text-lg cursor-pointer"
+              className=" font-medium text-lg cursor-pointer center  w-1/3  "
             >
               Keep me logged in
             </label>
