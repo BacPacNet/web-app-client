@@ -66,11 +66,11 @@ export default function Home() {
               type="checkbox"
               name="login"
               id="login"
-              className="w-6 h-6 cursor-pointer -ml-5"
+              className="w-6 h-6 cursor-pointer"
             />
             <label
               htmlFor="login"
-              className=" font-medium text-lg cursor-pointer center w-1/4"
+              className=" font-medium text-lg cursor-pointer pl-3 w-52"
             >
               Keep me logged in
             </label>
