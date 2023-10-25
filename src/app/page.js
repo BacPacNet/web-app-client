@@ -30,10 +30,10 @@ export default function Home() {
     <div className="home">
       <Navbar />
       <main className="flex min-h-screen flex-col items-center justify-start max-h-full bg-[#ffffff]">
-        <div className="text-9xl font-bold z-20 mt-28">
+        <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
-        <div className="search-box mt-4 border-1 border-black w-4/12 h-12 rounded-2xl">
+        <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
           <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
             <AiOutlineSearch className="text-xl" />
           </div>
@@ -51,15 +51,17 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className="login-part w-full mt-24 flex flex-col items-center">
-          <div className="flex items-center mb-5 w-full ">
-            <h2 className="heading text-xl font-medium  w-full center">
-              <BsStars className="text-[#6744FF] text-4xl -ml-3 " />
+        <div className="login-part w-5/12 mt-24 flex flex-col items-center">
+          <div className="flex items-center mb-5 w-full justify-center">
+            <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />
+            <h2 className="heading text-lg font-medium center">
               Already part of your university community?
             </h2>
           </div>
-          <div className="btn flex justify-center items-start w-full mb-3 ">
-            <button className=" btn-secondary btn w-40 h-10 ">Login</button>
+          <div className="flex justify-center items-center w-full mb-3">
+            <button className=" btn-secondary btn w-40 h-10 center mr-1">
+              Login
+            </button>
           </div>
           <div className="checkbox flex justify-center items-center mt-3 w-1/2">
             <input
