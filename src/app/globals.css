@@ -50,6 +50,6 @@ body {
     @apply w-8 h-10 cursor-pointer;
   }
   .icon {
-    @apply w-8 h-6;
+    @apply w-8 h-6 text-black;
   }
 }

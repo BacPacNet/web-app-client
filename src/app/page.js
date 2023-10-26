@@ -5,8 +5,10 @@ import { BsStars } from 'react-icons/bs'
 import CollegeResult from './components/CollegeResult'
 import Footer from './components/Footer/Footer'
 import Image from 'next/image'
+import Link from 'next/link'
 import Navbar from './components/Navbar/Navbar'
 import bacpacTitle from '../assets/bacpacTitle.png'
+import bookImg from '../assets/bookimg.png'
 import universityData from '../../data/university_data'
 import { useState } from 'react'
 
@@ -29,22 +31,22 @@ export default function Home() {
   return (
     <div className="home">
       <Navbar />
-      <main className="flex min-h-screen flex-col items-center justify-start max-h-full bg-[#ffffff]">
+      <main className="flex h-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
         <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
           <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
-            <AiOutlineSearch className="text-xl" />
+            <AiOutlineSearch className="text-xl text-black" />
           </div>
           <input
             type="text"
             onChange={handleSearch}
             placeholder="Search"
-            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14"
+            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14 text-black"
           />
           {open && (
-            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white relative">
+            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
               {searchData.map((item, index) => (
                 <CollegeResult info={item} serialNo={index} key={index} />
               ))}
@@ -76,6 +78,60 @@ export default function Home() {
             >
               Keep me logged in
             </label>
+          </div>
+        </div>
+        <div className="details bg-white w-full mt-40">
+          <div className="part-1 flex items-center justify-evenly h-96">
+            <div className="text w-1/3 h-full">
+              <div className="heading h-3/4 flex justify-center flex-col">
+                <h1 className="text-4xl font-bold ">
+                  <p className="leading-8">First time user? </p>
+                  <br />
+                  <p> Get familiar with the </p> <br /> <p>site first!</p>
+                </h1>
+              </div>
+              <div className="links flex flex-col justify-center">
+                <ul className="list-none">
+                  <li className="mb-2">
+                    <Link href="#" className="text-[#6744FF]">
+                      Click here to learn about BACPAC
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" className="text-[#6744FF]">
+                      Click here to learn how to use BACPAC
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="bookImg h-full w-1/4 ">
+              <Image
+                src={bookImg}
+                alt="BACPAC"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div className="part-2  h-96 center flex-col mt-20 mb-20 w-full">
+            <div className="text text-center center flex-col w-2/4">
+              <div className="heading text-4xl font-bold mb-7">
+                <h1>Still have questions?</h1>
+              </div>
+              <div className="para  w-full text-xl">
+                Our discord community is ready and eager to help you with <br />
+                anything BACPAC related. Make friends along the way!
+              </div>
+            </div>
+            <div className="discord-link flex  justify-center items-center mt-10">
+              <Image src={bacpacTitle} alt="BACPAC" className="w-1/4" />
+              <button className="btn btn-secondary w-40 h-10">
+                join server
+              </button>
+            </div>
+            <div className="para mt-11 text-lg">
+              Interested in managing our server? Leave a message!
+            </div>
           </div>
         </div>
       </main>
