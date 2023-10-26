@@ -33,7 +33,7 @@ function Navbar() {
   return (
     <div className="navbar justify-around w-full center-v bg-white sticky top-0 left-0 z-50">
       <div className="left h-full center-v w-3/4 ">
-        <div className="logo ml-24 mr-6 h-full  mt-1/2">
+        <div className="logo ml-24 mr-6 h-full w-12 mt-1/2">
           <Link href="/">
             <Image
               src={bacpacLogo}

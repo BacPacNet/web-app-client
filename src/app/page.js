@@ -72,7 +72,7 @@ export default function Home() {
             />
             <label
               htmlFor="login"
-              className=" font-medium text-lg cursor-pointer pl-3 w-52"
+              className=" font-medium text-lg cursor-pointer pl-3 w-52 "
             >
               Keep me logged in
             </label>
