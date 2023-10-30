@@ -8,7 +8,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from './components/Navbar/Navbar'
 import bacpacTitle from '../assets/bacpacTitle.png'
-import bookImg from '../assets/bookimg.png'
+import bookImgLogo from '../assets/bookimg.png'
+import discord from '../assets/discordLog.png'
 import universityData from '../../data/university_data'
 import { useState } from 'react'
 
@@ -31,7 +32,7 @@ export default function Home() {
   return (
     <div className="home">
       <Navbar />
-      <main className="flex h-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
+      <main className="flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
@@ -84,7 +85,7 @@ export default function Home() {
           <div className="part-1 flex items-center justify-evenly h-96">
             <div className="text w-1/3 h-full">
               <div className="heading h-3/4 flex justify-center flex-col">
-                <h1 className="text-4xl font-bold ">
+                <h1 className="text-4xl font-bold text-black">
                   <p className="leading-8">First time user? </p>
                   <br />
                   <p> Get familiar with the </p> <br /> <p>site first!</p>
@@ -107,13 +108,13 @@ export default function Home() {
             </div>
             <div className="bookImg h-full w-1/4 ">
               <Image
-                src={bookImg}
+                src={bookImgLogo}
                 alt="BACPAC"
                 className="w-full h-full object-cover"
               />
             </div>
           </div>
-          <div className="part-2  h-96 center flex-col mt-20 mb-20 w-full">
+          <div className="part-2  h-96 center flex-col mt-20 mb-20 w-full text-black">
             <div className="text text-center center flex-col w-2/4">
               <div className="heading text-4xl font-bold mb-7">
                 <h1>Still have questions?</h1>
@@ -123,8 +124,8 @@ export default function Home() {
                 anything BACPAC related. Make friends along the way!
               </div>
             </div>
-            <div className="discord-link flex  justify-center items-center mt-10">
-              <Image src={bacpacTitle} alt="BACPAC" className="w-1/4" />
+            <div className="discord-link flex justify-evenly  items-center mt-10">
+              <Image src={discord} alt="BACPAC" className="w-1/6" />
               <button className="btn btn-secondary w-40 h-10">
                 join server
               </button>
