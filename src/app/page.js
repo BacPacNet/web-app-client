@@ -57,7 +57,7 @@ export default function Home() {
         <div className="login-part w-5/12 mt-24 flex flex-col items-center">
           <div className="flex items-center mb-5 w-full justify-center">
             <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />
-            <h2 className="heading text-lg font-medium center">
+            <h2 className="heading text-lg font-medium center text-black">
               Already part of your university community?
             </h2>
           </div>
@@ -75,7 +75,7 @@ export default function Home() {
             />
             <label
               htmlFor="login"
-              className=" font-medium text-lg cursor-pointer pl-3 w-52 "
+              className=" font-medium text-lg cursor-pointer pl-3 w-52 text-black"
             >
               Keep me logged in
             </label>
