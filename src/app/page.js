@@ -31,7 +31,9 @@ export default function Home() {
           className="w-full h-full indent-2.5 rounded-2xl"
         />
         {open && (
-          <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white">
+          <div
+            className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white"
+          >
             {searchData.map((item, index) => (
               <CollegeResult info={item} serialNo={index} key={index} />
             ))}

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, getByTestId, waitFor } from '@testing-library/react'
 import SearchBar from '@/components/SearchBar.js'
 import data from '../../data/university_data'
 import '@testing-library/jest-dom'

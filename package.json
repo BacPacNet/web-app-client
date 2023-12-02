@@ -11,7 +11,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prettier": "npx prettier . --check",
-    "chromatic": "chromatic --exit-zero-on-changes"
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "coverage": "jest --coverage"
   },
   "dependencies": {
     "@as-integrations/next": "^2.0.2",
