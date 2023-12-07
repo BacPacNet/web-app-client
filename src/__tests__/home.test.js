@@ -8,7 +8,7 @@ describe('Home', () => {
     render(<Home />)
  
     const heading = screen.getByRole('heading', {
-      name: /BacPac/i,
+      name: /BacPac/i, //Regex expression for case insensitive
     })
  
     expect(heading).toBeInTheDocument()
