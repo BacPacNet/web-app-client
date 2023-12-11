@@ -28,8 +28,6 @@ function Navbar() {
       path: '/community',
     },
   ]
-  //   border-2 border-gray-800
-  // console.log('url', window.location)
   return (
     <div className="navbar justify-around w-full center-v bg-white sticky top-0 left-0 z-50">
       <div className="left h-full center-v w-3/4 ">

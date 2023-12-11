@@ -27,7 +27,6 @@ export default function Home() {
       .sort((a, b) => b.score - a.score)
     setOpen(input.length !== 0)
     setSearchData(filterData)
-    console.log('search', searchData)
   }
   return (
     <div className="home">

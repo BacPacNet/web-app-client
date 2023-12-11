@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-//ONavbar.js == original navbar component
 function Navbar() {
   return (
     <div className="navbar justify-around w-full h-20 center-v bg-white sticky top-0 left-0 z-50">

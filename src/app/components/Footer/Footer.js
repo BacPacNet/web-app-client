@@ -16,30 +16,29 @@ import bacpacTitle from '../../../assets/bacpacTitle.png'
 function Footer() {
   const handleRedirect = (platform) => {
     let url
-
+    const SocialNetwork = {
+      DISCORD: 1,
+      FACEBOOK: 2,
+      TWITTER: 3,
+      INSTAGRAM: 4,
+    }
     switch (platform) {
-      case 1:
-        // Discord
+      case SocialNetwork.DISCORD:
         url = '#'
         break
-      case 2:
-        // Facebook
+      case SocialNetwork.FACEBOOK:
         url = '#'
         break
-      case 3:
-        // Twitter
+      case SocialNetwork.TWITTER:
         url = '#'
         break
-      case 4:
-        // Instagram
+      case SocialNetwork.INSTAGRAM:
         url = '#'
         break
       default:
-        // Default action if platform parameter is not recognized
         return
     }
-
-    window.open(url, '_blank') // Open the URL in a new tab
+    window.open(url, '_blank')
   }
   return (
     <div className="footer center-v bg-[#ECECEC] realtive bottom-0 left-0 ">
