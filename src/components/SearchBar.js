@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { AiOutlineSearch } from 'react-icons/ai'
-import CollegeResult from "@/app/components/CollegeResult"
+import CollegeResult from "../app/components/CollegeResult"
 
 const SearchBar = ({ data }) => {
   const [open,setOpen] = useState(false)
