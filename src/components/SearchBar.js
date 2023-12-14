@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from "@/app/components/CollegeResult"
 
 const SearchBar = ({ data }) => {
@@ -26,13 +27,22 @@ const SearchBar = ({ data }) => {
   if(searchResults.length === 0) searchResults = <div>No results found</div>
 
   return (
-    <div className="search-box mt-4 border-1 border-black w-4/12 h-12 rounded-2xl">
-      <input placeholder="Search Colleges..." onChange = {handleSearch}/>
-
-      {open && <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white">
-        {searchResults}
-      </div>}
-    </div>
+    <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
+          <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
+            <AiOutlineSearch className="text-xl text-black" />
+          </div>
+          <input
+            type="text"
+            onChange={handleSearch}
+            placeholder="Search"
+            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14 text-black"
+          />
+          {open && (
+            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-auto max-h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
+              {searchResults}
+            </div>
+          )}
+        </div>
   )
 }
 

@@ -1,0 +1,50 @@
+.navbar {
+  box-shadow: 0 5px 15px 5px #ececec;
+  height: 60px;
+}
+.nav li:hover {
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease-in;
+}
+.nav-link {
+  font-weight: bold;
+  font-size: 16px;
+  /* text-transform: uppercase; */
+  transform: scale(1.2);
+  text-decoration: none;
+  color: #000;
+  padding: 20px 0px;
+  margin: 0px 20px;
+  display: inline-block;
+  position: relative;
+  opacity: 1;
+}
+.link {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+}
+.nav-link:hover {
+  opacity: 1;
+}
+
+.nav-link::before {
+  transition: 300ms;
+  height: 2px;
+  content: '';
+  position: absolute;
+  background-color: #000;
+  border-radius: 5px;
+  width: 50%;
+  /* opacity: 1; */
+}
+
+.nav-link-ltr::before {
+  width: 80%;
+  bottom: 20px;
+}
+
+.nav-link-ltr:hover::before {
+  width: 100%;
+}

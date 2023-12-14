@@ -5,7 +5,7 @@ import '@testing-library/jest-dom'
 
 it('display filtered data based on input', () => {
   const {getByPlaceholderText, queryByText} = render(<SearchBar data={data}/>)
-  const input = getByPlaceholderText('Search Colleges...')
+  const input = getByPlaceholderText('Search')
   
   fireEvent.change(input, { target: { value: 'Bhubaneswar' } })
 
@@ -15,7 +15,7 @@ it('display filtered data based on input', () => {
 
 it('handles case-insensitive filtering', () => {
   const { getByPlaceholderText, queryByText } = render(<SearchBar data={data} />);
-  const input = getByPlaceholderText('Search Colleges...');
+  const input = getByPlaceholderText('Search');
 
   fireEvent.change(input, { target: { value: 'bhub' } });
 
@@ -25,7 +25,7 @@ it('handles case-insensitive filtering', () => {
 
 it('should display "No results found" if no matching results are found', () => {
   const { getByPlaceholderText, queryByText } = render(<SearchBar data={data} />);
-  const input = getByPlaceholderText('Search Colleges...');
+  const input = getByPlaceholderText('Search');
 
   fireEvent.change(input, { target: { value: 'qwertyuiop' } });
   
