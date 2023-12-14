@@ -2,8 +2,6 @@
 .eslintrc.json
 .prettierrc.json
 .storybook/
-/src
-/data
 .vscode/settings.json
 package.json
 package-lock.json

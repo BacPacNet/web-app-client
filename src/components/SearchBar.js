@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
-import CollegeResult from "../app/components/CollegeResult"
+import CollegeResult from '../app/components/CollegeResult'
 
 const SearchBar = ({ data }) => {
-  const [open,setOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState([])
 
   const handleSearch = (e) => {
@@ -15,34 +15,31 @@ const SearchBar = ({ data }) => {
         return collegeName.includes(input) || collegeAddress.includes(input)
       })
       .sort((a, b) => b.score - a.score)
-      setOpen(input.length !== 0)
-      setFilterData(filterData)
-    
+    setOpen(input.length !== 0)
+    setFilterData(filterData)
   }
 
-  let searchResults = filterData?.map((item, index) => (
-    <CollegeResult info={item} serialNo={index} key={index} />
-  ))
+  let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
 
-  if(searchResults.length === 0) searchResults = <div>No results found</div>
+  if (searchResults.length === 0) searchResults = <div>No results found</div>
 
   return (
     <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
-          <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
-            <AiOutlineSearch className="text-xl text-black" />
-          </div>
-          <input
-            type="text"
-            onChange={handleSearch}
-            placeholder="Search"
-            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14 text-black"
-          />
-          {open && (
-            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-auto max-h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
-              {searchResults}
-            </div>
-          )}
+      <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
+        <AiOutlineSearch className="text-xl text-black" />
+      </div>
+      <input
+        type="text"
+        onChange={handleSearch}
+        placeholder="Search"
+        className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14 text-black"
+      />
+      {open && (
+        <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-auto max-h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
+          {searchResults}
         </div>
+      )}
+    </div>
   )
 }
 

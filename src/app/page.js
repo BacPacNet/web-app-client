@@ -40,26 +40,14 @@ export default function Home() {
         <div className="login-part w-5/12 mt-24 flex flex-col items-center">
           <div className="flex items-center mb-5 w-full justify-center">
             <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />
-            <h2 className="heading text-lg font-medium center text-black">
-              Already part of your university community?
-            </h2>
+            <h2 className="heading text-lg font-medium center text-black">Already part of your university community?</h2>
           </div>
           <div className="flex justify-center items-center w-full mb-3">
-            <button className=" btn-secondary btn w-40 h-10 center mr-1">
-              Login
-            </button>
+            <button className=" btn-secondary btn w-40 h-10 center mr-1">Login</button>
           </div>
           <div className="checkbox flex justify-center items-center mt-3 w-1/2">
-            <input
-              type="checkbox"
-              name="login"
-              id="login"
-              className="w-6 h-6 cursor-pointer"
-            />
-            <label
-              htmlFor="login"
-              className=" font-medium text-lg cursor-pointer pl-3 w-52 text-black"
-            >
+            <input type="checkbox" name="login" id="login" className="w-6 h-6 cursor-pointer" />
+            <label htmlFor="login" className=" font-medium text-lg cursor-pointer pl-3 w-52 text-black">
               Keep me logged in
             </label>
           </div>
@@ -90,11 +78,7 @@ export default function Home() {
               </div>
             </div>
             <div className="bookImg h-full w-1/4 ">
-              <Image
-                src={bookImgLogo}
-                alt="BACPAC"
-                className="w-full h-full object-cover"
-              />
+              <Image src={bookImgLogo} alt="BACPAC" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="part-2  h-96 center flex-col mt-20 mb-20 w-full text-black">
@@ -109,13 +93,9 @@ export default function Home() {
             </div>
             <div className="discord-link flex justify-evenly  items-center mt-10">
               <Image src={discord} alt="BACPAC" className="w-1/6" />
-              <button className="btn btn-secondary w-40 h-10">
-                join server
-              </button>
+              <button className="btn btn-secondary w-40 h-10">join server</button>
             </div>
-            <div className="para mt-11 text-lg">
-              Interested in managing our server? Leave a message!
-            </div>
+            <div className="para mt-11 text-lg">Interested in managing our server? Leave a message!</div>
           </div>
         </div>
       </main>
