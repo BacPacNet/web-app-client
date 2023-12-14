@@ -12,7 +12,7 @@ import bookImgLogo from '../assets/bookimg.png'
 import discord from '../assets/discordLog.png'
 import universityData from '../../data/university_data'
 import { useState } from 'react'
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '../components/SearchBar'
 
 export default function Home() {
   const [open, setOpen] = useState(false)
