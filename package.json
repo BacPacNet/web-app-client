@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch",
+    "test": "jest --maxWorkers=2",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prettier": "npx prettier . --check",
