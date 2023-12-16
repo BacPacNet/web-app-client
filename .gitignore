@@ -37,3 +37,5 @@ next-env.d.ts
 # storybook deployment
 /storybook-static
 build-storybook.log
+
+/coverage

@@ -1,11 +1,6 @@
 import './Footer.css'
 
-import {
-  AiFillFacebook,
-  AiFillInstagram,
-  AiOutlineCopyrightCircle,
-  AiOutlineTwitter,
-} from 'react-icons/ai'
+import { AiFillFacebook, AiFillInstagram, AiOutlineCopyrightCircle, AiOutlineTwitter } from 'react-icons/ai'
 
 import { BsDiscord } from 'react-icons/bs'
 import Image from 'next/image'
@@ -51,20 +46,13 @@ function Footer() {
         </div>
       </div>
       <div className="text w-3/4  h-full center text-large text-black">
-        Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Bacpac
-        Networks
+        Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Bacpac Networks
       </div>
       <div className="center h-full w-2/6">
-        <div
-          className="icons instagram center"
-          onClick={() => handleRedirect(4)}
-        >
+        <div className="icons instagram center" onClick={() => handleRedirect(4)}>
           <AiFillInstagram className="icon" />
         </div>
-        <div
-          className="icons facebook center"
-          onClick={() => handleRedirect(2)}
-        >
+        <div className="icons facebook center" onClick={() => handleRedirect(2)}>
           <AiFillFacebook className="icon" />
         </div>
         <div className="icons twitter center" onClick={() => handleRedirect(3)}>

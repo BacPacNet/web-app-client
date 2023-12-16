@@ -12,6 +12,7 @@ import bookImgLogo from '../assets/bookimg.png'
 import discord from '../assets/discordLog.png'
 import universityData from '../../data/university_data'
 import { useState } from 'react'
+import SearchBar from '../components/SearchBar'
 
 export default function Home() {
   const [open, setOpen] = useState(false)
@@ -35,47 +36,18 @@ export default function Home() {
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
-        <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
-          <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
-            <AiOutlineSearch className="text-xl text-black" />
-          </div>
-          <input
-            type="text"
-            onChange={handleSearch}
-            placeholder="Search"
-            className="w-full h-full rounded-2xl border-2 border-gray-800 indent-14 text-black"
-          />
-          {open && (
-            <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
-              {searchData.map((item, index) => (
-                <CollegeResult info={item} serialNo={index} key={index} />
-              ))}
-            </div>
-          )}
-        </div>
+        <SearchBar data={universityData} />
         <div className="login-part w-5/12 mt-24 flex flex-col items-center">
           <div className="flex items-center mb-5 w-full justify-center">
             <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />
-            <h2 className="heading text-lg font-medium center text-black">
-              Already part of your university community?
-            </h2>
+            <h2 className="heading text-lg font-medium center text-black">Already part of your university community?</h2>
           </div>
           <div className="flex justify-center items-center w-full mb-3">
-            <button className=" btn-secondary btn w-40 h-10 center mr-1">
-              Login
-            </button>
+            <button className=" btn-secondary btn w-40 h-10 center mr-1">Login</button>
           </div>
           <div className="checkbox flex justify-center items-center mt-3 w-1/2">
-            <input
-              type="checkbox"
-              name="login"
-              id="login"
-              className="w-6 h-6 cursor-pointer"
-            />
-            <label
-              htmlFor="login"
-              className=" font-medium text-lg cursor-pointer pl-3 w-52 text-black"
-            >
+            <input type="checkbox" name="login" id="login" className="w-6 h-6 cursor-pointer" />
+            <label htmlFor="login" className=" font-medium text-lg cursor-pointer pl-3 w-52 text-black">
               Keep me logged in
             </label>
           </div>
@@ -106,11 +78,7 @@ export default function Home() {
               </div>
             </div>
             <div className="bookImg h-full w-1/4 ">
-              <Image
-                src={bookImgLogo}
-                alt="BACPAC"
-                className="w-full h-full object-cover"
-              />
+              <Image src={bookImgLogo} alt="BACPAC" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="part-2  h-96 center flex-col mt-20 mb-20 w-full text-black">
@@ -125,13 +93,9 @@ export default function Home() {
             </div>
             <div className="discord-link flex justify-evenly  items-center mt-10">
               <Image src={discord} alt="BACPAC" className="w-1/6" />
-              <button className="btn btn-secondary w-40 h-10">
-                join server
-              </button>
+              <button className="btn btn-secondary w-40 h-10">join server</button>
             </div>
-            <div className="para mt-11 text-lg">
-              Interested in managing our server? Leave a message!
-            </div>
+            <div className="para mt-11 text-lg">Interested in managing our server? Leave a message!</div>
           </div>
         </div>
       </main>

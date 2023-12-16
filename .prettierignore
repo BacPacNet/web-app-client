@@ -7,3 +7,8 @@ package.json
 package-lock.json
 README.md
 tailwind.config.js
+jest.config.mjs
+jest.setup.js
+jsconfig.json
+next.config.js
+postcss.config.js

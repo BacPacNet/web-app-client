@@ -33,23 +33,14 @@ function Navbar() {
       <div className="left h-full center-v w-3/4 ">
         <div className="logo ml-24 mr-6 h-full w-12 mt-1/2">
           <Link href="/">
-            <Image
-              src={bacpacLogo}
-              alt="BACPAC LOGO"
-              className="h-full w-full cursor-pointer pb-2"
-            />
+            <Image src={bacpacLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer pb-2" />
           </Link>
         </div>
         <div className="nav center-v h-full w-3/6 justify-around relative">
           {menuContent.map((item, index) => {
             return (
               <li key={index} className="list-none">
-                <Link
-                  href={item.path}
-                  className={
-                    pathname === item.path ? 'nav-link nav-link-ltr' : 'link'
-                  }
-                >
+                <Link href={item.path} className={pathname === item.path ? 'nav-link nav-link-ltr' : 'link'}>
                   {item.name}
                 </Link>
               </li>
