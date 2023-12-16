@@ -1,4 +1,5 @@
 /** @type { import('@storybook/nextjs').StorybookConfig } */
+const path = require('path');
 module.exports = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   staticDirs: ['../public'],
@@ -18,7 +19,7 @@ module.exports = {
   webpackFinal: async (config, { configType }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/src': path.resolve(__dirname, "../interfaces"),
+      '@': path.resolve(__dirname, "../src/"),
     };
 
     return config;
