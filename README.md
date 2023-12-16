@@ -1,3 +1,6 @@
+![Github Actions](https://github.com/BacPacNet/web-app-client/actions/workflows/actions.yml/badge.svg)
+[![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=default&logo=vercel&logoColor=white)](https://web-app-client-flame.vercel.app/)
+[![Chromatic](https://img.shields.io/badge/-Storybook-FF4785?style=default&logo=storybook&logoColor=white)](https://www.chromatic.com/library?appId=6512e855c100db6ff5b55a3d&branch=main)
 # Bacpac Frontend
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
