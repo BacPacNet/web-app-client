@@ -30,6 +30,9 @@ jobs:
       - name: Test #Runs Jest Script
         run: npm run test
 
+      - name: Upload coverage to Codecov #Uploads the coverage report to Codecov
+        uses: codecov/codecov-action@v4-beta
+
       - name: Build #Build the project
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
