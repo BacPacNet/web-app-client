@@ -28,7 +28,7 @@ jobs:
         run: npm run lint
 
       - name: Test #Runs Jest Script
-        run: npm run test
+        run: npm run coverage
 
       - name: Upload coverage to Codecov #Uploads the coverage report to Codecov
         uses: codecov/codecov-action@v4-beta
