@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --maxWorkers=2",
+    "coverage": "jest --maxWorkers=2 --coverage",
+    "test": "jest --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prettier": "npx prettier . --check",
-    "chromatic": "chromatic --exit-zero-on-changes",
-    "coverage": "jest --coverage"
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
     "@as-integrations/next": "^2.0.2",
