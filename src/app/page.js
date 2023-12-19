@@ -10,6 +10,7 @@ import Footer from './components/Footer/Footer'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from './components/Navbar/Navbar'
+import SearchBar from '@/components/SearchBar'
 import bacpacTitle from '../assets/bacpacTitle.png'
 import bookImgLogo from '../assets/bookimg.png'
 import discord from '../assets/discordLog.png'
@@ -30,20 +31,20 @@ const query = gql`
 `
 export default function Home() {
   const [universityData, setUniversityData] = useState()
-  const [open, setOpen] = useState(false)
-  const [searchData, setSearchData] = useState([])
-  function handleSearch(e) {
-    let input = e.target.value.toLowerCase()
-    const filterData = universityData
-      ?.filter((item) => {
-        let collegeName = item?.name?.toLowerCase()
-        let collegeAddress = item?.address?.toLowerCase()
-        return collegeName?.includes(input) || collegeAddress?.includes(input)
-      })
-      .sort((a, b) => b.score - a.score)
-    setOpen(input.length !== 0)
-    setSearchData(filterData)
-  }
+  // const [open, setOpen] = useState(false)
+  // const [searchData, setSearchData] = useState([])
+  // function handleSearch(e) {
+  //   let input = e.target.value.toLowerCase()
+  //   const filterData = universityData
+  //     ?.filter((item) => {
+  //       let collegeName = item?.name?.toLowerCase()
+  //       let collegeAddress = item?.address?.toLowerCase()
+  //       return collegeName?.includes(input) || collegeAddress?.includes(input)
+  //     })
+  //     .sort((a, b) => b.score - a.score)
+  //   setOpen(input.length !== 0)
+  //   setSearchData(filterData)
+  // }
   function fetchData() {
     client.query({ query }).then((result) => setUniversityData(result.data.universityList))
   }
@@ -57,7 +58,7 @@ export default function Home() {
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
-        <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
+        {/* <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
           <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
             <AiOutlineSearch className="text-xl text-black" />
           </div>
@@ -74,7 +75,8 @@ export default function Home() {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
+        <SearchBar data={universityData} />
         <div className="login-part w-5/12 mt-24 flex flex-col items-center">
           <div className="flex items-center mb-5 w-full justify-center">
             <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />

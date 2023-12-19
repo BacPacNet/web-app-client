@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react'
-import Home from '../app/page.js'
-import SearchBar from '@/components/SearchBar.js'
 import '@testing-library/jest-dom'
+
+import { render, screen } from '@testing-library/react'
+
+import SearchBar from '@/components/SearchBar.js'
 
 it('renders a search box', () => {
   const { getByPlaceholderText } = render(<SearchBar />)

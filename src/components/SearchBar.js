@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
+import { useState } from 'react'
 
 const SearchBar = ({ data }) => {
   const [open, setOpen] = useState(false)
@@ -10,9 +10,9 @@ const SearchBar = ({ data }) => {
     let input = e.target.value.trim().toLowerCase()
     const filterData = data
       .filter((item) => {
-        let collegeName = item.name.toLowerCase()
-        let collegeAddress = item.address.toLowerCase()
-        return collegeName.includes(input) || collegeAddress.includes(input)
+        let collegeName = item?.name?.toLowerCase()
+        let collegeAddress = item?.address?.toLowerCase()
+        return collegeName?.includes(input) || collegeAddress?.includes(input)
       })
       .sort((a, b) => b.score - a.score)
     setOpen(input.length !== 0)
