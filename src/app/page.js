@@ -16,7 +16,7 @@ import discord from '../assets/discordLog.png'
 import { gql } from '@apollo/client'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/api/graphql', // Replace with your GraphQL API endpoint
+  uri: 'http://localhost:3000/api/graphql',
   cache: new InMemoryCache(),
 })
 const query = gql`

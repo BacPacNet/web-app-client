@@ -6,7 +6,7 @@ on:
 jobs:
   build-project: #First Job is to check the code formatting, linting and build the project.
     if: github.event.pull_request.draft == false
-    name: Run Prettier, Lint and Build Checks
+    name: Run Formatting Checks and Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,14 @@ jobs:
 
       - name: Linting Check #Runs ESLint Script
         run: npm run lint
+
+      - name: Test #Runs Jest Script
+        run: npm run coverage
+
+      - name: Upload coverage to Codecov #Uploads the coverage report to Codecov
+        uses: codecov/codecov-action@v4-beta
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
 
       - name: Build #Build the project
         env:

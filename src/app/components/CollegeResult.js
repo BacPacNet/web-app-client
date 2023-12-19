@@ -1,4 +1,5 @@
 import Link from 'next/link'
+
 function CollegeResult(props) {
   return (
     <div className="mb-3.5">
