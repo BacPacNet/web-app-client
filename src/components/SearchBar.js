@@ -9,7 +9,7 @@ const SearchBar = ({ data }) => {
   const handleSearch = (e) => {
     let input = e.target.value.trim().toLowerCase()
     const filterData = data
-      .filter((item) => {
+      ?.filter((item) => {
         let collegeName = item?.name?.toLowerCase()
         let collegeAddress = item?.address?.toLowerCase()
         return collegeName?.includes(input) || collegeAddress?.includes(input)
