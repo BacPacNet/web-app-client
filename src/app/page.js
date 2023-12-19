@@ -1,5 +1,8 @@
 'use client'
 
+import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { useEffect, useState } from 'react'
+
 import { AiOutlineSearch } from 'react-icons/ai'
 import { BsStars } from 'react-icons/bs'
 import CollegeResult from './components/CollegeResult'
@@ -10,24 +13,47 @@ import Navbar from './components/Navbar/Navbar'
 import bacpacTitle from '../assets/bacpacTitle.png'
 import bookImgLogo from '../assets/bookimg.png'
 import discord from '../assets/discordLog.png'
-import universityData from '../../data/university_data'
-import { useState } from 'react'
+import { gql } from '@apollo/client'
 
+// import universityData from '../../data/university_data'
+
+const client = new ApolloClient({
+  uri: 'http://localhost:3000/api/graphql', // Replace with your GraphQL API endpoint
+  cache: new InMemoryCache(),
+})
+const query = gql`
+  query getUniversityList {
+    universityList {
+      name
+      score
+      country
+    }
+  }
+`
 export default function Home() {
+  const [universityData, setUniversityData] = useState()
   const [open, setOpen] = useState(false)
   const [searchData, setSearchData] = useState([])
   function handleSearch(e) {
     let input = e.target.value.toLowerCase()
     const filterData = universityData
-      .filter((item) => {
-        let collegeName = item.name.toLowerCase()
-        let collegeAddress = item.address.toLowerCase()
-        return collegeName.includes(input) || collegeAddress.includes(input)
+      ?.filter((item) => {
+        let collegeName = item?.name?.toLowerCase()
+        let collegeAddress = item?.address?.toLowerCase()
+        return collegeName?.includes(input) || collegeAddress?.includes(input)
       })
       .sort((a, b) => b.score - a.score)
     setOpen(input.length !== 0)
     setSearchData(filterData)
   }
+  function fetchData() {
+    client
+      .query({ query })
+      .then((result) => setUniversityData(result.data.universityList))
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
   return (
     <div className="home">
       <Navbar />
@@ -47,7 +73,7 @@ export default function Home() {
           />
           {open && (
             <div className="searchBox border-2 overflow-auto border-gray-300 w-full h-80 mt-4 rounded-lg p-3 bg-white text-black relative">
-              {searchData.map((item, index) => (
+              {searchData?.map((item, index) => (
                 <CollegeResult info={item} serialNo={index} key={index} />
               ))}
             </div>
