@@ -1,7 +1,4 @@
-import {
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault,
-} from '@apollo/server/plugin/landingPage/default'
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default'
 
 import { ApolloServer } from '@apollo/server'
 import { MongoClient } from 'mongodb'
@@ -9,9 +6,7 @@ import { gql } from 'graphql-tag'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
 // The connection string for mongodb connection.
-const uri =
-  process.env.MONGODB_URI ||
-  'mongodb+srv://bacpactech:BACPAC2023@bacpac.e1tsleh.mongodb.net'
+const uri = process.env.MONGODB_URI || 'mongodb+srv://bacpactech:BACPAC2023@bacpac.e1tsleh.mongodb.net'
 const client = new MongoClient(uri)
 
 async function getUniversityName(id) {
