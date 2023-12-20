@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
-const SearchBar = ({ data }) => {
+const SearchBar: React.FC = () => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState([])
 
   const handleSearch = (e) => {
-    let input = e.target.value.trim().toLowerCase()
+    const input = e.target.value.trim().toLowerCase()
     const filterData = searchAlgorithm(input)
     setOpen(input.length !== 0)
     setFilterData(filterData)
@@ -15,7 +15,7 @@ const SearchBar = ({ data }) => {
 
   let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
 
-  if (searchResults.length === 0) searchResults = <div>No results found</div>
+  if (searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
 
   return (
     <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">

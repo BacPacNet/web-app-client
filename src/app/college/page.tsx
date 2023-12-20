@@ -3,7 +3,7 @@
 // In this file useSearchParams is a client component.
 'use client'
 
-import jsonData from '../../../data/university_data'
+import jsonData from '../../../data/university_data.json'
 import { useSearchParams } from 'next/navigation'
 
 export default function Home() {

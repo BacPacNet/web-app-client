@@ -1,6 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import Home from '../app/page.js'
-import SearchBar from '@/components/SearchBar.js'
+import { render } from '@testing-library/react'
+import SearchBar from '@/components/SearchBar'
 import '@testing-library/jest-dom'
 
 it('renders a search box', () => {
