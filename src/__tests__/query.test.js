@@ -8,6 +8,7 @@ const query = gql`
       name
       score
       country
+      city
     }
   }
 `

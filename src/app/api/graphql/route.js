@@ -52,6 +52,7 @@ const typeDefs = gql`
     name: String
     score: String
     country: String
+    city: String
   }
 `
 
