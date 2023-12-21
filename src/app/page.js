@@ -1,6 +1,5 @@
 'use client'
 
-import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { useEffect, useState } from 'react'
 
 import { BsStars } from 'react-icons/bs'
@@ -11,16 +10,14 @@ import Navbar from './components/Navbar/Navbar'
 import SearchBar from '../components/SearchBar'
 import bacpacTitle from '../assets/bacpacTitle.png'
 import bookImgLogo from '../assets/bookimg.png'
+import client from '../client'
 import discord from '../assets/discordLog.png'
 import { gql } from '@apollo/client'
 
-const client = new ApolloClient({
-  uri: 'http://localhost:3000/api/graphql',
-  cache: new InMemoryCache(),
-})
 const query = gql`
   query getUniversityList {
     universityList {
+      id
       name
       score
       country
@@ -29,8 +26,13 @@ const query = gql`
 `
 export default function Home() {
   const [universityData, setUniversityData] = useState(null)
-  function fetchData() {
-    client.query({ query }).then((result) => setUniversityData(result?.data?.universityList))
+  async function fetchData() {
+    try {
+      const result = await client.query({ query })
+      setUniversityData(result?.data?.universityList)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
   useEffect(() => {
     fetchData()

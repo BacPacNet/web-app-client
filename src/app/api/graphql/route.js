@@ -48,6 +48,7 @@ const typeDefs = gql`
     universityList: [universityInfo]
   }
   type universityInfo {
+    id: String
     name: String
     score: String
     country: String

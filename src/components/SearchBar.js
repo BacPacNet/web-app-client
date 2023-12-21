@@ -11,7 +11,7 @@ const SearchBar = ({ data }) => {
     const filterData = data
       ?.filter((item) => {
         let collegeName = item?.name?.toLowerCase()
-        let collegeAddress = item?.address?.toLowerCase()
+        let collegeAddress = item?.country?.toLowerCase()
         return collegeName?.includes(input) || collegeAddress?.includes(input)
       })
       .sort((a, b) => b.score - a.score)
