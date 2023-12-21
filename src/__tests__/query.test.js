@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom'
+
 import client from '../client'
 import { gql } from '@apollo/client'
 
@@ -25,9 +27,9 @@ test('the data is of college', async () => {
   try {
     const result = await fetchData()
     expect(result).toBeDefined()
-    expect(result.data).toHaveProperty('universityList')
-    expect(result.data.universityList).toBeInstanceOf(Array)
-    expect(result.data.universityList.length).toBeGreaterThan(0)
+    expect(result?.data).toHaveProperty('universityList')
+    expect(result?.data?.universityList).toBeInstanceOf(Array)
+    expect(result?.data?.universityList?.length).toBeGreaterThan(0)
   } catch (e) {
     expect(e.message).toMatch('error')
   }
