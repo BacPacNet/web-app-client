@@ -14,7 +14,7 @@ async function getUniversityName(id) {
     const database = client.db('bacpac')
     const universities = database.collection('universities')
     const university = await universities.findOne({ id })
-    console.log('name of university', university.name)
+    console.log('url', uri)
     return university.name
   } catch (error) {
     console.log(error)

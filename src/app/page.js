@@ -14,7 +14,6 @@ import client from '../client'
 import discord from '../assets/discordLog.png'
 import { gql } from '@apollo/client'
 
-// In database we have to diffrent properties city and country
 const query = gql`
   query getUniversityList {
     universityList {

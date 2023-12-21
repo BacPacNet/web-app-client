@@ -6,18 +6,14 @@ import { useState } from 'react'
 const SearchBar = ({ data }) => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState([])
-
   const handleSearch = (e) => {
     let input = e.target.value.trim().toLowerCase()
     const filterData = searchAlgorithm(input, data).sort((a, b) => b.score - a.score)
     setOpen(input.length !== 0)
     setFilterData(filterData)
   }
-
   let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
-
   if (searchResults.length === 0) searchResults = <div>No results found</div>
-
   return (
     <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
       <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
