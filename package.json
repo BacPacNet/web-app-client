@@ -15,8 +15,12 @@
     "chromatic": "chromatic --exit-zero-on-changes"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
+    "@apollo/server": "^4.9.5",
     "@as-integrations/next": "^2.0.2",
     "autoprefixer": "10.4.16",
+    "cross-fetch": "^4.0.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "match-sorter": "^6.3.1",
     "mongodb": "^6.1.0",
