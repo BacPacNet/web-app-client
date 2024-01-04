@@ -13,7 +13,7 @@ export const Page = () => {
   return (
     <article>
       <Header
-        user={user}
+        user={user || null}
         onLogin={() => setUser({ name: 'Jane Doe' })}
         onLogout={() => setUser(undefined)}
         onCreateAccount={() => setUser({ name: 'Jane Doe' })}
