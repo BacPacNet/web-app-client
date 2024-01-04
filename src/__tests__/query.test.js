@@ -23,13 +23,13 @@ describe('test to check the data of collegeList', () => {
   beforeAll(async () => {
     fetchedData = await fetchData()
   })
-  test('the data is of college', () => {
+  it('the data is of college', () => {
     expect(fetchedData?.data).toHaveProperty('universityList')
     expect(fetchedData?.data?.universityList).toBeInstanceOf(Array)
     expect(fetchedData?.data?.universityList?.length).toBeGreaterThan(0)
   })
 
-  test('the data has specific properties', () => {
+  it('the data has specific properties', () => {
     // Reuse fetchedData in the second test
     fetchedData?.data?.universityList?.forEach((college) => {
       // check for id property
