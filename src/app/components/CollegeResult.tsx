@@ -1,11 +1,11 @@
 import Link from 'next/link'
 
 interface CollegeProps {
-  serialNo: number,
+  serialNo: number
   info: {
-    id: string,
-    name: string,
-    score: string,
+    id: string
+    name: string
+    score: string
   }
 }
 
