@@ -8,12 +8,12 @@ import { MongoClient } from 'mongodb'
 const uri = process.env.MONGODB_URI || ''
 const client = new MongoClient(uri)
 
-async function getUniversityName(id) {
+async function getUniversityName(id: string) {
   try {
     const database = client.db('bacpac')
     const universities = database.collection('universities')
     const university = await universities.findOne({ id })
-    return university.name
+    return university!.name
   } catch (error) {
     console.log(error)
   }
@@ -21,7 +21,7 @@ async function getUniversityName(id) {
 
 const resolvers = {
   Query: {
-    university_name: async (_, args) => {
+    university_name: async (_: unknown, args: { id: string }) => {
       return await getUniversityName(args.id)
     },
   },

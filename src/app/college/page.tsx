@@ -3,14 +3,19 @@
 // In this file useSearchParams is a client component.
 'use client'
 
-import jsonData from '../../../data/university_data'
+import jsonData from '../../../data/university_data.json'
 import { useSearchParams } from 'next/navigation'
+
+interface University {
+  name: string
+  id: string
+}
 
 export default function Home() {
   const router = useSearchParams()
-  const collegeList = jsonData
-  const id = router.get('id')
-  const selectedCollege = collegeList.find((item) => item.id === id)
+  const collegeList: University[] = jsonData as University[]
+  const id = router.get('id') as string
+  const selectedCollege: University | undefined = collegeList.find((item) => item.id === id)
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-5xl font-bold z-10">{selectedCollege?.name}</h1>

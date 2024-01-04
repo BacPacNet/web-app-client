@@ -8,7 +8,7 @@ import React from 'react'
 import bacpacLogo from '../../../assets/bacpacLogo.png'
 import { usePathname } from 'next/navigation'
 
-function Navbar() {
+const Navbar: React.FC = () => {
   const pathname = usePathname()
   const menuContent = [
     {

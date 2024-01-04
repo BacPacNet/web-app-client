@@ -8,8 +8,8 @@ import React from 'react'
 import bacpacLogo from '../../../assets/bacpacLogo.png'
 import bacpacTitle from '../../../assets/bacpacTitle.png'
 
-function Footer() {
-  const handleRedirect = (platform) => {
+const Footer: React.FC = () => {
+  const handleRedirect = (platform: number) => {
     let url
     const SocialNetwork = {
       DISCORD: 1,

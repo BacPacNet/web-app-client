@@ -1,8 +1,28 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-
+import bacpacLogo from '../../../assets/bacpacLogo.png'
+import { usePathname } from 'next/navigation'
 function Navbar() {
+  const pathname = usePathname()
+  const menuContent = [
+    {
+      name: 'Discover',
+      path: '/discover',
+    },
+    {
+      name: 'About us',
+      path: '/aboutus',
+    },
+    {
+      name: 'Site manual',
+      path: '/sitemanual',
+    },
+    {
+      name: 'Community',
+      path: '/community',
+    },
+  ]
   return (
     <div className="navbar justify-around w-full h-20 center-v bg-white sticky top-0 left-0 z-50">
       <div className="left h-full center-v w-3/4 ">
