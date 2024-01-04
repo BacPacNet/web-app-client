@@ -12,19 +12,8 @@ import bacpacTitle from '../assets/bacpacTitle.png'
 import bookImgLogo from '../assets/bookimg.png'
 import client from '../client'
 import discord from '../assets/discordLog.png'
-import { gql } from '@apollo/client'
+import { query } from '../queries/queries'
 
-const query = gql`
-  query getUniversityList {
-    universityList {
-      id
-      name
-      score
-      country
-      city
-    }
-  }
-`
 export default function Home() {
   const [universityData, setUniversityData] = useState(null)
   async function fetchData() {

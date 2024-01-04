@@ -15,29 +15,23 @@ const query = gql`
   }
 `
 async function fetchData() {
-  try {
-    const result = await client.query({ query })
-    return result
-  } catch (error) {
-    console.error('Error in fetching college data form mongodb:', error)
-  }
+  const result = await client.query({ query })
+  return result
 }
-// test to check the data is not empty
-test('the data is of college', async () => {
-  try {
-    const result = await fetchData()
-    expect(result?.data).toHaveProperty('universityList')
-    expect(result?.data?.universityList).toBeInstanceOf(Array)
-    expect(result?.data?.universityList?.length).toBeGreaterThan(0)
-  } catch (e) {
-    expect(e.message).toMatch('error')
-  }
-})
-// test to check the format of data recived by the query
-test('the data has specific properties', async () => {
-  try {
-    const result = await fetchData()
-    result?.data?.universityList?.forEach((college) => {
+describe('test to check the data of collegeList', () => {
+  let fetchedData
+  beforeAll(async () => {
+    fetchedData = await fetchData()
+  })
+  test('the data is of college', () => {
+    expect(fetchedData?.data).toHaveProperty('universityList')
+    expect(fetchedData?.data?.universityList).toBeInstanceOf(Array)
+    expect(fetchedData?.data?.universityList?.length).toBeGreaterThan(0)
+  })
+
+  test('the data has specific properties', () => {
+    // Reuse fetchedData in the second test
+    fetchedData?.data?.universityList?.forEach((college) => {
       // check for id property
       expect(college).toHaveProperty('id')
       expect(college?.id).not.toBeNull()
@@ -55,7 +49,5 @@ test('the data has specific properties', async () => {
       expect(college?.country).not.toBeNull()
       expect(typeof college?.country).toBe('string')
     })
-  } catch (e) {
-    expect(e.message).toMatch('error')
-  }
+  })
 })
