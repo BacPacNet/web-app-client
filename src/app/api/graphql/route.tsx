@@ -8,7 +8,7 @@ import { MongoClient } from 'mongodb'
 const uri = process.env.MONGODB_URI || ''
 const client = new MongoClient(uri)
 
-async function getUniversityName(id) {
+async function getUniversityName(id: string) {
   try {
     const database = client.db('bacpac')
     const universities = database.collection('universities')
