@@ -21,7 +21,7 @@ async function getUniversityName(id: string) {
 
 const resolvers = {
   Query: {
-    university_name: async (_: unknown, args : { id: string}) => {
+    university_name: async (_: unknown, args: { id: string }) => {
       return await getUniversityName(args.id)
     },
   },

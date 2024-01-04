@@ -3,11 +3,11 @@ import { Inter } from 'next/font/google'
 
 type FontClassName = string
 
-const inter = Inter({ subsets: ['latin'] }) as { className: FontClassName}
+const inter = Inter({ subsets: ['latin'] }) as { className: FontClassName }
 
 interface Metadata {
-  title: string,
-  description: string,
+  title: string
+  description: string
 }
 
 export const metadata: Metadata = {

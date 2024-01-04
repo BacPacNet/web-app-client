@@ -7,8 +7,8 @@ import jsonData from '../../../data/university_data.json'
 import { useSearchParams } from 'next/navigation'
 
 interface University {
-  name: string,
-  id: string,
+  name: string
+  id: string
 }
 
 export default function Home() {
