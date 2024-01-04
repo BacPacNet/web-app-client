@@ -4,16 +4,24 @@ import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 const SearchBar: React.FC = () => {
   const [open, setOpen] = useState(false)
-  const [filterData, setFilterData] = useState([])
+  const [filterData, setFilterData] = useState<FilteredCollege[]>([])
 
-  const handleSearch = (e) => {
+  interface FilteredCollege {
+    id: string
+    name: string
+    score: string
+    address: string
+    collegePage: string
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.trim().toLowerCase()
-    const filterData = searchAlgorithm(input)
+    const filterData = searchAlgorithm(input) as FilteredCollege[]
     setOpen(input.length !== 0)
     setFilterData(filterData)
   }
 
-  let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
+  let searchResults: JSX.Element[] = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
 
   if (searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
 
