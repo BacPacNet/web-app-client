@@ -1,5 +1,9 @@
-/** @type {import('next').NextConfig} */
-require('dotenv').config();
+const result = require('dotenv').config();
+
+if (result.error) {
+    console.log("error form env",result.error);
+  console.error(result.error);
+}
 
 const nextConfig = {}
 
