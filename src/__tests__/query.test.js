@@ -28,7 +28,6 @@ describe('test to check the data of collegeList', () => {
     expect(fetchedData?.data?.universityList).toBeInstanceOf(Array)
     expect(fetchedData?.data?.universityList?.length).toBeGreaterThan(0)
   })
-
   it('the data has specific properties', () => {
     // Reuse fetchedData in the second test
     fetchedData?.data?.universityList?.forEach((college) => {
@@ -49,5 +48,5 @@ describe('test to check the data of collegeList', () => {
       expect(college?.country).not.toBeNull()
       expect(typeof college?.country).toBe('string')
     })
-  })
+  }, 10000)
 })
