@@ -1,10 +1,5 @@
-const result = require('dotenv').config();
-
-if (result.error) {
-    console.log("error form env",result.error);
-  console.error(result.error);
+require('dotenv').config();
+const nextConfig = {
 }
-
-const nextConfig = {}
 
 module.exports = nextConfig

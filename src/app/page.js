@@ -21,7 +21,7 @@ export default function Home() {
       const result = await client.query({ query })
       setUniversityData(result?.data?.universityList)
     } catch (error) {
-      console.error('Error fetching data:', error)
+      console.log('Error fetching data:', error)
     }
   }
   useEffect(() => {

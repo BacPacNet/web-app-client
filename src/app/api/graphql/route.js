@@ -2,6 +2,7 @@ import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPag
 
 import { ApolloServer } from '@apollo/server'
 import { MongoClient } from 'mongodb'
+import cors from 'cors'
 import { gql } from 'graphql-tag'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
@@ -73,6 +74,10 @@ const server = new ApolloServer({
   resolvers,
   typeDefs,
   plugins,
+  cors: {
+    origin: '*', // Specify the allowed origin(s) or use '*' to allow any
+    credentials: true, // Allow credentials such as cookies
+  },
 })
 
 const handler = startServerAndCreateNextHandler(server)
