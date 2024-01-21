@@ -19,7 +19,7 @@ async function fetchData() {
     const result = await client.query({ query })
     return result
   } catch (error) {
-    console.error('Error in fetching college data form mongodb:', error)
+    console.log('Error in fetching college data form mongodb:', error)
   }
 }
 // test to check the data is not empty
