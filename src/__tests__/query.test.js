@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom'
 
-import client from '../client'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+
+import fetch from 'cross-fetch'
 import { gql } from '@apollo/client'
 
 const query = gql`
@@ -14,6 +16,13 @@ const query = gql`
     }
   }
 `
+
+let uri = 'http://localhost:3000/api/graphql'
+console.log('graphql_uri', uri)
+const client = new ApolloClient({
+  link: new HttpLink({ uri, fetch }),
+  cache: new InMemoryCache(),
+})
 async function fetchData() {
   try {
     const result = await client.query({ query })
