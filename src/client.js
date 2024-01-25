@@ -2,7 +2,20 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 
 import fetch from 'cross-fetch'
 
-const uri = process.env.LOCAL_STATE === 'development' ? 'http://localhost:3000/api/graphql' : 'https://web-app-client-flame.vercel.app/api/graphql'
+let uri
+switch (process.env.NEXT_PUBLIC_LOCAL_STATE) {
+  case 'development':
+    uri = 'http://localhost:3000/api/graphql'
+    break
+  case 'test':
+    uri = 'http://localhost:3000/api/graphql'
+    break
+  case 'production':
+    uri = 'https://web-app-client-flame.vercel.app/api/graphql'
+    break
+  default:
+    break
+}
 console.log('graphql_uri', uri)
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),
