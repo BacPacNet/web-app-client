@@ -1,3 +1,5 @@
+import Image from 'next/image'
+import bacpacTitle from '../../../assets/bacpacTitle.png'
 import './style.css'
 
 function UnderConstructionPage() {
@@ -12,16 +14,11 @@ function UnderConstructionPage() {
                     <p class="uc__description">
                         We are working hard on it & the site may go live very soon. We promise, it will be worth the wait!
                     </p>
-                    <div class="uc__subscribe">
-                        <h3>Get Notified When We Go Live</h3>
-
-                        <div class="uc__form">
-
-                        </div>
-                    </div>
                 </div>
                 <div class="uc__art">
-
+                    <div className='art_img' >
+                        <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
+                    </div>
                 </div>
             </div>
         </div>

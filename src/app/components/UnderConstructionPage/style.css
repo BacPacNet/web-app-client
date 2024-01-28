@@ -45,6 +45,13 @@ body {
   width: 70%;
 }
 
+.art_img {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .title {
   display: inline-block;
   font-size: 40px;
