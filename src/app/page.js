@@ -13,6 +13,7 @@ import discord from '../assets/discordLog.png'
 import universityData from '../../data/university_data'
 import { useState } from 'react'
 import SearchBar from '../components/SearchBar'
+import UnderConstructionPage from './components/UnderConstructionPage/UnderConstructionPage'
 
 export default function Home() {
   const [open, setOpen] = useState(false)
@@ -31,7 +32,7 @@ export default function Home() {
   }
   return (
     <div className="home">
-      <Navbar />
+      {/* <Navbar />
       <main className="flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
@@ -98,7 +99,8 @@ export default function Home() {
             <div className="para mt-11 text-lg">Interested in managing our server? Leave a message!</div>
           </div>
         </div>
-      </main>
+      </main> */}
+      <UnderConstructionPage />
       <Footer />
     </div>
   )
