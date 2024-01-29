@@ -74,7 +74,6 @@ const server = new ApolloServer({
   typeDefs,
   plugins,
 })
-
 const handler = startServerAndCreateNextHandler(server)
 
 //Exports the handler function to be used as a Next.js API route handler.
