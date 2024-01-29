@@ -2,6 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 
 import fetch from 'cross-fetch'
 
+// uri = 'https://web-app-client-flame.vercel.app/api/graphql'
 let uri
 switch (process.env.NEXT_PUBLIC_LOCAL_STATE) {
   case 'development':
@@ -11,7 +12,7 @@ switch (process.env.NEXT_PUBLIC_LOCAL_STATE) {
     uri = 'http://localhost:3000/api/graphql'
     break
   case 'production':
-    uri = 'https://web-app-client-flame.vercel.app/api/graphql'
+    uri: 'https://web-app-client-lraro1uh2-bacpacs-projects.vercel.app'
     break
   default:
     break
