@@ -12,7 +12,7 @@ switch (process.env.NEXT_PUBLIC_LOCAL_STATE) {
     uri = 'http://localhost:3000/api/graphql'
     break
   case 'production':
-    uri: 'https://web-app-client-lraro1uh2-bacpacs-projects.vercel.app'
+    uri = 'https://web-app-client-lraro1uh2-bacpacs-projects.vercel.app'
     break
   default:
     break
