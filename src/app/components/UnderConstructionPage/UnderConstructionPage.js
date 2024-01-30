@@ -1,31 +1,63 @@
-import './style.css'
+import './css/main.css';
+import './css/util.css';
+import './css/bootstrap.css'
+
+import React, { useEffect, useState, useMemo } from 'react';
+import { calculateTimeRemaining, startCountdown } from './js/script';
+
 
 function UnderConstructionPage() {
+    const eventDate = useMemo(() => new Date("2024-06-01T00:00:00"), []);
+
+    const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining(eventDate));
+
+    useEffect(() => {
+        // Start the countdown when the component mounts
+        const intervalId = startCountdown(eventDate, setTimeRemaining);
+
+        // Clean up the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [eventDate]);
     return (
-        <div className="under-construction-page">
-            <div class="uc__wrapper">
-                <div class="uc__details">
-                    <h1 class="title">Coming Soon!</h1>
-                    <h3 class="intro">
-                        We are working hard to give you a better experience.
+        <div className="UnderConstructionPage">
+            <div className="bg-g1 size1 flex-w flex-col-c-sb p-l-15 p-r-15 p-t-55 p-b-35 respon1">
+
+                <div className="flex-col-c p-t-50 p-b-50">
+                    <h3 className="l1-txt1 txt-center p-b-10">
+                        Coming Soon
                     </h3>
-                    <p class="uc__description">
-                        We are working hard on it & the site may go live very soon. We promise, it will be worth the wait!
+
+                    <p className="txt-center l1-txt2 p-b-60">
+                        Our website is under construction
                     </p>
-                    <div class="uc__subscribe">
-                        <h3>Get Notified When We Go Live</h3>
 
-                        <div class="uc__form">
+                    <div className="flex-w flex-c cd100 p-b-82">
+                        <div className="flex-col-c-m size2 how-countdown">
+                            <div className="l1-txt3 p-b-9 days">{timeRemaining.days}</div>
+                            <div className="s1-txt1">Days</div>
+                        </div>
 
+                        <div className="flex-col-c-m size2 how-countdown">
+                            <div className="l1-txt3 p-b-9 hours">{timeRemaining.hours}</div>
+                            <div className="s1-txt1">Hours</div>
+                        </div>
+
+                        <div className="flex-col-c-m size2 how-countdown">
+                            <div className="l1-txt3 p-b-9 minutes">{timeRemaining.minutes}</div>
+                            <div className="s1-txt1">Minutes</div>
+                        </div>
+
+                        <div className="flex-col-c-m size2 how-countdown">
+                            <div className="l1-txt3 p-b-9 minutes">{timeRemaining.seconds}</div>
+                            <div className="s1-txt1">Seconds</div>
                         </div>
                     </div>
                 </div>
-                <div class="uc__art">
 
-                </div>
+
             </div>
         </div>
-    )
+    );
 }
 
-export default UnderConstructionPage
+export default UnderConstructionPage;
