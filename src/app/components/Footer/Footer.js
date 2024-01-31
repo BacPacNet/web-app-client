@@ -43,8 +43,9 @@ function Footer() {
         </div>
         <div className="title w-1/2">
           {/* <Image src={bacpacTitle} alt="" className=" w-4/6" /> */}
-          <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: '#4754FF', margin: 'auto' }} className="text-xl font-bold">UniBuzz</h1>
-
+          <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: '#4754FF', margin: 'auto' }} className="text-xl font-bold">
+            UniBuzz
+          </h1>
         </div>
       </div>
       <div className="text w-3/4  h-full center text-large text-black">
