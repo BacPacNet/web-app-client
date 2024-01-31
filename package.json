@@ -30,6 +30,7 @@
     "tailwindcss": "3.3.3"
   },
   "devDependencies": {
+    "@apollo/rover": "^0.22.0",
     "@storybook/addon-essentials": "^7.4.4",
     "@storybook/addon-interactions": "^7.4.4",
     "@storybook/addon-links": "^7.4.4",
