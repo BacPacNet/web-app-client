@@ -17,13 +17,11 @@ function UnderConstructionPage() {
   }, [eventDate])
   return (
     <div className="UnderConstructionPage">
-
       <h3 className="headline">Coming Soon</h3>
 
       <p className="info">Our website is under construction</p>
 
       <div className="countdown">
-
         <div className="countdown-numbers">
           <div className="time">{timeRemaining.days}</div>
           <div className="time-unit">Days</div>
@@ -45,7 +43,6 @@ function UnderConstructionPage() {
         </div>
       </div>
     </div>
-
   )
 }
 
