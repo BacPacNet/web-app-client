@@ -13,6 +13,8 @@
   flex-wrap: wrap;
   justify-content: centre;
   margin: 0px 5px;
+  align-items: center;
+  text-align: center;
 }
 .right {
   display: flex;
