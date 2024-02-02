@@ -3,13 +3,17 @@ import './page.css'
 import { Header } from './Header'
 import React from 'react'
 
+type User = {
+  name: string
+}
+
 export const Page = () => {
-  const [user, setUser] = React.useState()
+  const [user, setUser] = React.useState<User>()
 
   return (
     <article>
       <Header
-        user={user}
+        user={user || null}
         onLogin={() => setUser({ name: 'Jane Doe' })}
         onLogout={() => setUser(undefined)}
         onCreateAccount={() => setUser({ name: 'Jane Doe' })}
