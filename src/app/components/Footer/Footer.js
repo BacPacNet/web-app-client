@@ -37,7 +37,7 @@ function Footer() {
   }
   return (
     <div className="footer center-v bg-[#ECECEC] realtive bottom-0 left-0 ">
-      <div className="images center-v ml-24 w-1/4 h-full cursor-pointer ">
+      <div className="images center-v ml-24 h-full cursor-pointer left ">
         <div className="logo w-12 pb-1 mr-4 h-13">
           <Image src={bacpacLogo} alt="" className="w-full h-full" />
         </div>
@@ -48,10 +48,10 @@ function Footer() {
           </h1>
         </div>
       </div>
-      <div className="text w-3/4  h-full center text-large text-black">
+      <div className="text  h-full center text-large text-black mid">
         Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Unibuzz Networks
       </div>
-      <div className="center h-full w-2/6">
+      <div className="center h-full  right">
         <div className="icons instagram center" onClick={() => handleRedirect(4)}>
           <AiFillInstagram className="icon" />
         </div>
