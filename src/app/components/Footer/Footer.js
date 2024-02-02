@@ -19,16 +19,16 @@ function Footer() {
     }
     switch (platform) {
       case SocialNetwork.DISCORD:
-        url = '#'
+        url = 'https://discord.gg/FRbdHraQj3'
         break
       case SocialNetwork.FACEBOOK:
-        url = '#'
+        url = 'https://www.facebook.com/profile.php?id=61555598325563'
         break
       case SocialNetwork.TWITTER:
         url = '#'
         break
       case SocialNetwork.INSTAGRAM:
-        url = '#'
+        url = 'https://www.instagram.com/uni.buzz/'
         break
       default:
         return
@@ -37,18 +37,21 @@ function Footer() {
   }
   return (
     <div className="footer center-v bg-[#ECECEC] realtive bottom-0 left-0 ">
-      <div className="images center-v ml-24 w-1/4 h-full cursor-pointer ">
+      <div className="images center-v ml-24 h-full cursor-pointer left ">
         <div className="logo w-12 pb-1 mr-4 h-13">
           <Image src={bacpacLogo} alt="" className="w-full h-full" />
         </div>
         <div className="title w-1/2">
-          <Image src={bacpacTitle} alt="" className=" w-4/6" />
+          {/* <Image src={bacpacTitle} alt="" className=" w-4/6" /> */}
+          <h1 style={{ fontFamily: 'Inter, sans-serif', fontWeight: 'bold', color: '#4754FF', margin: 'auto' }} className="text-xl font-bold">
+            UniBuzz
+          </h1>
         </div>
       </div>
-      <div className="text w-3/4  h-full center text-large text-black">
-        Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Bacpac Networks
+      <div className="text  h-full center text-large text-black mid">
+        Copyright <AiOutlineCopyrightCircle className="ml-1 mr-1" /> 2023 Unibuzz Networks
       </div>
-      <div className="center h-full w-2/6">
+      <div className="center h-full  right">
         <div className="icons instagram center" onClick={() => handleRedirect(4)}>
           <AiFillInstagram className="icon" />
         </div>
