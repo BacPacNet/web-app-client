@@ -39,3 +39,4 @@ const GET_COLLEGE = gql`
     }
   }
 `
+export { GET_COLLEGES, GET_COLLEGE }

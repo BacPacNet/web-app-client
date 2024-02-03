@@ -23,6 +23,6 @@ const typeDefs = `#graphql
         name: String!
         degrees: [String!]
     }
-`;
+`
 
-export default typeDefs;
+export default typeDefs

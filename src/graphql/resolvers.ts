@@ -1,28 +1,30 @@
 const resolvers = {
-    Query: {
-        colleges: async (
-          _: any,
-          __: any,
-          context: any
-        ) => {
-          try {
-            return await context.dataSources.colleges.getAllColleges();
-          } catch (error) {
-            throw new Error("Failed to fetch colleges");
-          }
-        },
-        college: async (
-          _: any,
-          args: { id: string },
-          context: any
-        ) => {
-          try {
-            return await context.dataSources.colleges.getCollegeById(args.id);
-          } catch (error) {
-            throw new Error(`Failed to fetch college with id: ${args.id} `);
-          }
-        },
+  Query: {
+    colleges: async (
+      _: unknown,
+      __: unknown,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context: any
+    ) => {
+      try {
+        return await context.dataSources.colleges.getAllColleges()
+      } catch (error) {
+        throw new Error('Failed to fetch colleges')
+      }
     },
-  };
-  
-  export default resolvers;
+    college: async (
+      _: unknown,
+      args: { id: string },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context: any
+    ) => {
+      try {
+        return await context.dataSources.colleges.getCollegeById(args.id)
+      } catch (error) {
+        throw new Error(`Failed to fetch college with id: ${args.id} `)
+      }
+    },
+  },
+}
+
+export default resolvers
