@@ -17,7 +17,7 @@ const query = gql`
   }
 `
 
-let uri = 'http://localhost:3000/api/graphql'
+let uri = '/api/graphql'
 console.log('graphql_uri', uri)
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),

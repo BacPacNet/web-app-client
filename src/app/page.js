@@ -16,12 +16,16 @@ import { query } from '../queries/queries'
 
 export default function Home() {
   const [universityData, setUniversityData] = useState(null)
+  const [loading, setLoading] = useState(false)
   async function fetchData() {
     try {
+      setLoading(true)
       const result = await client.query({ query })
       setUniversityData(result?.data?.universityList)
     } catch (error) {
       console.log('Error fetching data:', error)
+    } finally {
+      setLoading(false)
     }
   }
   useEffect(() => {
@@ -34,7 +38,7 @@ export default function Home() {
         <div className="text-9xl font-bold  mt-28">
           <Image src={bacpacTitle} alt="BACPAC" className="w-full h-full" />
         </div>
-        <SearchBar data={universityData} />
+        <SearchBar data={universityData} loading={loading} />
         <div className="login-part w-5/12 mt-24 flex flex-col items-center">
           <div className="flex items-center mb-5 w-full justify-center">
             <BsStars className="text-[#6744FF] text-4xl -ml-3 center" />
