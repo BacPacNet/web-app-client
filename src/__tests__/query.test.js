@@ -17,7 +17,7 @@ const query = gql`
   }
 `
 
-let uri = '/api/graphql'
+let uri = "https://web-app-client-b69l4yjrq-bacpacs-projects.vercel.app/api/graphql"
 console.log('graphql_uri', uri)
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),
