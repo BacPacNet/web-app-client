@@ -18,22 +18,15 @@ const query = gql`
 `
 
 let uri = 'https://web-app-client-b69l4yjrq-bacpacs-projects.vercel.app/api/graphql'
-console.log('graphql_uri', uri)
+console.log('GraphQL URI in tests:', uri)
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),
   cache: new InMemoryCache(),
 })
-async function fetchData() {
-  try {
-    const result = await client.query({ query })
-    return result
-  } catch (error) {
-    console.log('Error in fetching college data form mongodb:', error)
-  }
-}
 // test to check the data is not empty
 test('the data is of college', async () => {
-  const result = await fetchData()
+  const result = await client.query({ query })
+
   expect(result?.data).not.toBeNull()
   expect(result?.data).toHaveProperty('universityList')
   expect(result?.data?.universityList).toBeInstanceOf(Array)
@@ -41,7 +34,8 @@ test('the data is of college', async () => {
 })
 // test to check the format of data recived by the query
 test('the data has specific properties', async () => {
-  const result = await fetchData()
+  const result = await client.query({ query })
+
   result?.data?.universityList?.forEach((college) => {
     // check for id property
     expect(college).toHaveProperty('id')

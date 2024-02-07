@@ -1,19 +1,25 @@
 import searchAlgorithm from '../utils/searchAlgorithm'
 describe('searchAlgorithm', () => {
+  const colleges = [{ name: 'Massachusetts Institute of Technology (MIT)', country: 'United States', city: 'Cambridge' }]
   it('returns filtered results when input and data are provided', () => {
     const input = 'mass'
-    const colleges = [{ name: 'Massachusetts Institute of Technology (MIT)', country: 'United States', city: 'Cambridge' }]
+
     const result = searchAlgorithm(input, colleges)
+
     expect(result).toEqual([{ name: 'Massachusetts Institute of Technology (MIT)', country: 'United States', city: 'Cambridge' }])
   })
   it('returns an empty array when either input is not provided', () => {
     const input = ''
-    const resultWithoutData = searchAlgorithm(input, null)
-    expect(resultWithoutData).toEqual([])
+
+    const result = searchAlgorithm(input, colleges)
+
+    expect(result).toEqual([])
   })
   it('returns an empty array when either input doesnot match with the college name,city or country', () => {
     const input = 'xyw'
-    const resultWithoutData = searchAlgorithm(input, null)
-    expect(resultWithoutData).toEqual([])
+
+    const result = searchAlgorithm(input, colleges)
+
+    expect(result).toEqual([])
   })
 })
