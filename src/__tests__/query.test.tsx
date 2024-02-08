@@ -5,9 +5,9 @@ import fetch from 'cross-fetch'
 import { gql } from '@apollo/client'
 
 interface College {
-  id: string,
-  name: string,
-  score: string,
+  id: string
+  name: string
+  score: string
   country: string
 }
 

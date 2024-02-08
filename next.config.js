@@ -1,5 +1,5 @@
-import { config } from 'dotenv';
-config();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 
 const nextConfig = {
     async headers() {

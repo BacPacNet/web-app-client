@@ -15,7 +15,7 @@ import client from '../client'
 import { query } from '../queries/queries'
 
 export default function Home() {
-  const [universityData, setUniversityData] = useState(null)
+  const [universityData, setUniversityData] = useState([])
   const [loading, setLoading] = useState(false)
   async function fetchData() {
     try {

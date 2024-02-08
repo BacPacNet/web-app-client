@@ -13,7 +13,7 @@ interface SearchBarProps {
   loading: boolean
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({data, loading}) => {
+const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
 
@@ -27,7 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = ({data, loading}) => {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.trim().toLowerCase()
-    const filterData = searchAlgorithm(input,data).sort((a, b) => +b.score - +a.score)
+    const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
     setOpen(input.length !== 0)
     setFilterData(filterData)
   }
