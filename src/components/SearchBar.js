@@ -3,7 +3,7 @@ import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '../utils/searchAlgorithm'
 import { useState } from 'react'
 
-const SearchBar = ({ data }) => {
+const SearchBar = ({ data, loading }) => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState([])
   const handleSearch = (e) => {
@@ -13,7 +13,8 @@ const SearchBar = ({ data }) => {
     setFilterData(filterData)
   }
   let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
-  if (searchResults.length === 0) searchResults = <div>No results found</div>
+  if (!loading && searchResults.length === 0) searchResults = <div>No results found</div>
+  if (loading) searchResults = <div>Loading....</div>
   return (
     <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
       <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
