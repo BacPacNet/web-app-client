@@ -13,6 +13,7 @@ interface University {
 
 export default function Home() {
   const router = useSearchParams()
+  // TODO: Fetch Data from GraphQL instead of JSON
   const collegeList: University[] = jsonData as University[]
   const id = router.get('id') as string
   const selectedCollege: University | undefined = collegeList.find((item) => item.id === id)
