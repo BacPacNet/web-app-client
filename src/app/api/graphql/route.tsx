@@ -1,8 +1,9 @@
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
-import { ApolloServer } from '@apollo/server'
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default'
-import { gql } from 'graphql-tag'
+
+import { ApolloServer } from '@apollo/server'
 import { MongoClient } from 'mongodb'
+import { gql } from 'graphql-tag'
+import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
 // The connection string for mongodb connection.
 const uri = process.env.MONGODB_URI!
@@ -32,7 +33,7 @@ async function getUniversityList() {
 
 const resolvers = {
   Query: {
-    university_name: async (_: unknown, args: { id: string }) => {
+    university_name: async (_: void, args: { id: string }) => {
       return await getUniversityName(args.id)
     },
     universityList: () => {

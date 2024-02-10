@@ -1,29 +1,24 @@
-import { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
+import { useState } from 'react'
+
+interface FilteredCollege {
+  id: string
+  name: string
+  score: string
+  city?: string
+  country?: string
+  collegePage?: string
+}
 interface SearchBarProps {
-  data: {
-    id: string
-    name: string
-    score: string
-    address: string
-    collegePage: string
-  }[]
+  data: FilteredCollege[]
   loading: boolean
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
-
-  interface FilteredCollege {
-    id: string
-    name: string
-    score: string
-    address?: string
-    collegePage?: string
-  }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.trim().toLowerCase()

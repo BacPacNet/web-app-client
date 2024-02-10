@@ -7,11 +7,11 @@ import Footer from './components/Footer/Footer'
 import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from './components/Navbar/Navbar'
+import SearchBar from '../components/SearchBar'
 import bacpacTitle from '../assets/bacpacTitle.png'
 import bookImgLogo from '../assets/bookimg.png'
-import discord from '../assets/discordLog.png'
-import SearchBar from '../components/SearchBar'
 import client from '../client'
+import discord from '../assets/discordLog.png'
 import { query } from '../queries/queries'
 
 export default function Home() {

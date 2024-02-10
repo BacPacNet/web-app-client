@@ -1,7 +1,9 @@
-import { render, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
+
+import { fireEvent, render } from '@testing-library/react'
+
 import SearchBar from '@/components/SearchBar'
 import data from '../../data/university_data.json'
-import '@testing-library/jest-dom'
 
 it('display filtered data based on input', () => {
   const { getByPlaceholderText, queryByText } = render(<SearchBar data={data} loading={false} />)

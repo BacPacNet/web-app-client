@@ -4,10 +4,9 @@ interface College {
   id: string
   name: string
   score: string
-  address?: string
-  collegePage?: string
   city?: string
   country?: string
+  collegePage?: string
 }
 
 const searchAlgorithm = (input: string, data: College[]): College[] => {
