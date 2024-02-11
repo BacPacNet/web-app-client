@@ -1,4 +1,5 @@
 /** @type { import('@storybook/nextjs').StorybookConfig } */
+import type { StorybookConfig } from '@storybook/nextjs';
 const path = require('path');
 module.exports = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],

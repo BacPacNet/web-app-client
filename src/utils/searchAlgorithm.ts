@@ -1,6 +1,15 @@
 import { matchSorter } from 'match-sorter'
 
-const searchAlgorithm = (input, data) => {
+interface College {
+  id: string
+  name: string
+  score: string
+  city?: string
+  country?: string
+  collegePage?: string
+}
+
+const searchAlgorithm = (input: string, data: College[]): College[] => {
   if (input && data) {
     return matchSorter(data, input, { keys: ['name', 'country', 'city'] })
   } else {

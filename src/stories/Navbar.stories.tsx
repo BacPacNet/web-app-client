@@ -1,11 +1,15 @@
+import type { Meta } from '@storybook/react'
 import Navbar from '../app/components/Navbar/Navbar'
-
-export default {
+const navbarStory: Meta = {
   title: 'Navbar',
   component: Navbar,
   parameters: {
     componentSubtitle: 'Navbar with animations',
   },
 }
-const Template = (args) => <Navbar withAnimation />
+
+export default navbarStory
+
+const Template = () => <Navbar />
+// const Template = () => <Navbar withAnimation />
 export const simpleNavbar = Template.bind({})

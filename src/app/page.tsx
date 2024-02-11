@@ -15,7 +15,7 @@ import discord from '../assets/discordLog.png'
 import { query } from '../queries/queries'
 
 export default function Home() {
-  const [universityData, setUniversityData] = useState(null)
+  const [universityData, setUniversityData] = useState([])
   const [loading, setLoading] = useState(false)
   async function fetchData() {
     try {
@@ -31,6 +31,7 @@ export default function Home() {
   useEffect(() => {
     fetchData()
   }, [])
+
   return (
     <div className="home">
       <Navbar />

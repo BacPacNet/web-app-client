@@ -1,6 +1,15 @@
 import Link from 'next/link'
 
-function CollegeResult(props) {
+interface CollegeProps {
+  serialNo: number
+  info: {
+    id: string
+    name: string
+    score: string
+  }
+}
+
+const CollegeResult: React.FC<CollegeProps> = (props) => {
   return (
     <div className="mb-3.5">
       <Link href={{ pathname: '/college', query: { id: props.info.id } }} className="border-3 border-black flex justify-center align-middle">

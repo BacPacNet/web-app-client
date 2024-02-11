@@ -1,20 +1,37 @@
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
-import searchAlgorithm from '../utils/searchAlgorithm'
+import searchAlgorithm from '@/utils/searchAlgorithm'
 import { useState } from 'react'
 
-const SearchBar = ({ data, loading }) => {
+interface FilteredCollege {
+  id: string
+  name: string
+  score: string
+  city?: string
+  country?: string
+  collegePage?: string
+}
+interface SearchBarProps {
+  data: FilteredCollege[]
+  loading: boolean
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   const [open, setOpen] = useState(false)
-  const [filterData, setFilterData] = useState([])
-  const handleSearch = (e) => {
-    let input = e.target.value.trim().toLowerCase()
-    const filterData = searchAlgorithm(input, data).sort((a, b) => b.score - a.score)
+  const [filterData, setFilterData] = useState<FilteredCollege[]>([])
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.trim().toLowerCase()
+    const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
     setOpen(input.length !== 0)
     setFilterData(filterData)
   }
-  let searchResults = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
-  if (!loading && searchResults.length === 0) searchResults = <div>No results found</div>
-  if (loading) searchResults = <div>Loading....</div>
+
+  let searchResults: JSX.Element[] = filterData?.map((item, index) => <CollegeResult info={item} serialNo={index} key={index} />)
+
+  if (!loading && searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
+  if (loading) searchResults = [<div key="loading">Loading....</div>]
+
   return (
     <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
       <div className="search-icon w-12 absolute h-12 flex justify-center items-center">

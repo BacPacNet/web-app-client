@@ -5,6 +5,14 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import fetch from 'cross-fetch'
 import { gql } from '@apollo/client'
 
+interface College {
+  id: string
+  name: string
+  score: string
+  city: string
+  country: string
+}
+
 const query = gql`
   query getUniversityList {
     universityList {
@@ -17,7 +25,7 @@ const query = gql`
   }
 `
 
-let uri = 'https://web-app-client-b69l4yjrq-bacpacs-projects.vercel.app/api/graphql'
+const uri = 'https://web-app-client-b69l4yjrq-bacpacs-projects.vercel.app/api/graphql'
 console.log('GraphQL URI in tests:', uri)
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),
@@ -36,7 +44,7 @@ test('the data is of college', async () => {
 test('the data has specific properties', async () => {
   const result = await client.query({ query })
 
-  result?.data?.universityList?.forEach((college) => {
+  result?.data?.universityList?.forEach((college: College) => {
     // check for id property
     expect(college).toHaveProperty('id')
     expect(college?.id).not.toBeNull()

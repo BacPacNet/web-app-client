@@ -1,11 +1,13 @@
 import Home from '../app/page'
 
-export default {
+const story = {
   title: 'HomePage',
   component: Home,
   parameters: {
     layout: 'fullscreen',
   },
 }
-const Template = (args) => <Home />
+
+export default story
+const Template = () => <Home />
 export const homePage = Template.bind({})

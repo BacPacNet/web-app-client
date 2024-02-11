@@ -1,10 +1,19 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-
-import { Button } from './Button'
 import './header.css'
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }) => (
+import { Button } from './Button'
+import PropTypes from 'prop-types'
+import React from 'react'
+
+interface HeaderProps {
+  user: {
+    name: string
+  } | null
+  onLogin: () => void
+  onLogout: () => void
+  onCreateAccount: () => void
+}
+
+export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, onCreateAccount }) => (
   <header>
     <div className="storybook-header">
       <div>

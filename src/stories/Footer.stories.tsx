@@ -1,8 +1,10 @@
 import Footer from '../app/components/Footer/Footer'
 
-export default {
+const story = {
   title: 'Footer',
   component: Footer,
 }
-const Template = (args) => <Footer />
+
+export default story
+const Template = () => <Footer />
 export const simpleFooter = Template.bind({})

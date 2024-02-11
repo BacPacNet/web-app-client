@@ -6,19 +6,20 @@ import { gql } from 'graphql-tag'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
 // The connection string for mongodb connection.
-const uri = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URI!
 const client = new MongoClient(uri)
 
-async function getUniversityName(id) {
+async function getUniversityName(id: string) {
   try {
     const database = client.db('bacpac')
     const universities = database.collection('universities')
-    const universityList = await universities.findOne({ id })
-    return universityList.name
+    const university = await universities.findOne({ id })
+    return university!.name
   } catch (error) {
     console.log(error)
   }
 }
+
 async function getUniversityList() {
   try {
     const database = client.db('bacpac')
@@ -32,7 +33,7 @@ async function getUniversityList() {
 
 const resolvers = {
   Query: {
-    university_name: async (_, args) => {
+    university_name: async (_: void, args: { id: string }) => {
       return await getUniversityName(args.id)
     },
     universityList: () => {
@@ -56,7 +57,7 @@ const typeDefs = gql`
 `
 
 let plugins = []
-const graphQLref = process.env.GRAPHQL_REF
+const graphQLref = process.env.GRAPHQL_REF!
 //Next.js auto assigns NODE_ENV value as development for 'next dev' command, and production for other commands
 if (process.env.NODE_ENV === 'production') {
   plugins = [
@@ -74,6 +75,7 @@ const server = new ApolloServer({
   typeDefs,
   plugins,
 })
+
 const handler = startServerAndCreateNextHandler(server)
 
 //Exports the handler function to be used as a Next.js API route handler.
