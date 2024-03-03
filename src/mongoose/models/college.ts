@@ -3,9 +3,12 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+import { ObjectId } from 'mongodb'
+
 const collegeSchema = new Schema({
   // Define college fields here matching the GraphQL schema
-  collegeId: String, //collegeId is mapped to id in graphql schema and differs from default _id field of mongodb
+  _id: ObjectId,
+  id: String, //mapped to id in graphql schema and differs from default _id field of mongodb
   name: { type: String, required: [true, 'A College must have a name'] },
   score: {
     type: Number,

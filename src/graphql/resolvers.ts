@@ -21,6 +21,8 @@ const resolvers = {
       try {
         return await context.dataSources.colleges.getCollegeById(args.id)
       } catch (error) {
+        console.log(error);
+        
         throw new Error(`Failed to fetch college with id: ${args.id} `)
       }
     },
