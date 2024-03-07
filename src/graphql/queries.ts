@@ -15,7 +15,7 @@ const GET_COLLEGES = gql`
           degrees
         }
       }
-      tutionFee
+      tuitionFee
     }
   }
 `
@@ -35,7 +35,7 @@ const GET_COLLEGE = gql`
           degrees
         }
       }
-      tutionFee
+      tuitionFee
     }
   }
 `

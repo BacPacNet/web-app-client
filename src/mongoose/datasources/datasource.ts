@@ -12,7 +12,7 @@ interface CollegeDocument {
   city: string
   country: string
   programs: [Program]
-  tutionFee: string
+  tuitionFee: string
 }
 interface Program {
   name: string
@@ -35,7 +35,7 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
   // Function to fetch a single college by id
   async getCollegeById(id: string) {
     try {
-      return await CollegeModel.findOne({ id: id })
+      return await CollegeModel.findOne({ id })
     } catch (error) {
       throw new Error('Failed to fetch college')
     }

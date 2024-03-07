@@ -33,9 +33,9 @@ const collegeSchema = new Schema({
       ],
     },
   ],
-  tutionFee: {
+  tuitionFee: {
     type: String,
-    required: [true, 'A College must have a tution fee'],
+    required: [true, 'A College must have a tuition fee'],
   },
 })
 

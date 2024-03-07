@@ -1,17 +1,17 @@
 const typeDefs = `#graphql
     type Query {
-        college(id: ID!): [College]
+        college(id: String!): [College]
         colleges: [College]
     }
 
     type College {
-        id: ID!
+        id: String!
         name: String!
         score: String!
         city: String!
         country: String!
         programs: [Program]
-        tutionFee: String
+        tuitionFee: String
     }
 
     type Program {
