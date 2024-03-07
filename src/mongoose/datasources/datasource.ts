@@ -27,7 +27,8 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
   // Function to fetch all users
   async getAllColleges() {
     try {
-      return await CollegeModel.find()
+      const colleges = await CollegeModel.find()
+      return colleges
     } catch (error) {
       throw new Error('Failed to fetch colleges')
     }
@@ -35,7 +36,8 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
   // Function to fetch a single college by id
   async getCollegeById(id: string) {
     try {
-      return await CollegeModel.findOne({ id })
+      const college = await CollegeModel.findOne({ id })
+      return college
     } catch (error) {
       throw new Error('Failed to fetch college')
     }
