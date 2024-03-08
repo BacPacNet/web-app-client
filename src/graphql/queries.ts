@@ -41,9 +41,9 @@ const GET_COLLEGE = gql`
 `
 
 const GET_TEST_COLLEGES = gql`
-query testColleges($limit: Int = 20) {
-  testColleges(limit: $limit) {
-    collegeId
+  query testColleges($limit: Int = 20) {
+    testColleges(limit: $limit) {
+      collegeId
       name
       score
       city
@@ -56,7 +56,7 @@ query testColleges($limit: Int = 20) {
         }
       }
       tuitionFee
+    }
   }
-}
 `
 export { GET_COLLEGES, GET_COLLEGE, GET_TEST_COLLEGES }
