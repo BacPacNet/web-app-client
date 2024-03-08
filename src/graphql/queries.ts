@@ -39,4 +39,24 @@ const GET_COLLEGE = gql`
     }
   }
 `
-export { GET_COLLEGES, GET_COLLEGE }
+
+const GET_TEST_COLLEGES = gql`
+query testColleges($limit: Int = 20) {
+  testColleges(limit: $limit) {
+    collegeId
+      name
+      score
+      city
+      country
+      programs {
+        name
+        courses {
+          name
+          degrees
+        }
+      }
+      tuitionFee
+  }
+}
+`
+export { GET_COLLEGES, GET_COLLEGE, GET_TEST_COLLEGES }

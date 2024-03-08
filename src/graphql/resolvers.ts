@@ -26,6 +26,18 @@ const resolvers = {
         throw new Error(`Failed to fetch college with id: ${args.collegeId} `)
       }
     },
+    testColleges: async (
+      _: unknown,
+      args: { limit: number },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      context: any
+    ) => {
+      try {
+        return await context.dataSources.colleges.getTestColleges(args.limit)
+      } catch (error) {
+        throw new Error('Failed to fetch test colleges')
+      }
+    },
   },
 }
 

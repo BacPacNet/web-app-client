@@ -42,4 +42,17 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
       throw new Error('Failed to fetch college')
     }
   }
+  // Function to fetch a limited number of colleges
+  async getTestColleges(limit: number) {
+    try {
+      //Get a random set of colleges (default = 20), by skipping a random number of colleges
+      const totalColleges = await CollegeModel.countDocuments()
+      const skip = Math.floor(Math.random() * (totalColleges - limit))
+
+      const colleges = await CollegeModel.find().skip(skip).limit(limit)
+      return colleges
+    } catch (error) {
+      throw new Error('Failed to fetch test colleges')
+    }
+  }
 }

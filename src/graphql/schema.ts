@@ -2,6 +2,7 @@ const typeDefs = `#graphql
     type Query {
         college(collegeId: String!): College
         colleges: [College]
+        testColleges(limit: Int = 20): [College]
     }
 
     type College {
