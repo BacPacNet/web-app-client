@@ -14,16 +14,16 @@ const resolvers = {
     },
     college: async (
       _: unknown,
-      args: { id: string },
+      args: { collegeId: string },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       context: any
     ) => {
       try {
-        return await context.dataSources.colleges.getCollegeById(args.id)
+        return await context.dataSources.colleges.getCollegeById(args.collegeId)
       } catch (error) {
         console.log(error)
 
-        throw new Error(`Failed to fetch college with id: ${args.id} `)
+        throw new Error(`Failed to fetch college with id: ${args.collegeId} `)
       }
     },
   },

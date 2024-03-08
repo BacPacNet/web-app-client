@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb'
 
 interface CollegeDocument {
   _id: ObjectId
-  id: string
+  collegeId: string
   name: string
   score: string
   city: string
@@ -34,9 +34,9 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
     }
   }
   // Function to fetch a single college by id
-  async getCollegeById(id: string) {
+  async getCollegeById(collegeId: string) {
     try {
-      const college = await CollegeModel.findOne({ id })
+      const college = await CollegeModel.findOne({ collegeId })
       return college
     } catch (error) {
       throw new Error('Failed to fetch college')

@@ -8,7 +8,7 @@ import { ObjectId } from 'mongodb'
 const collegeSchema = new Schema({
   // Define college fields here matching the GraphQL schema
   _id: ObjectId,
-  id: String, //mapped to id in graphql schema and differs from default _id field of mongodb
+  collegeId: String,
   name: { type: String, required: [true, 'A College must have a name'] },
   score: {
     type: Number,

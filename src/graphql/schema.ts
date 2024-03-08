@@ -1,11 +1,11 @@
 const typeDefs = `#graphql
     type Query {
-        college(id: String!): College
+        college(collegeId: String!): College
         colleges: [College]
     }
 
     type College {
-        id: String!
+        collegeId: String!
         name: String!
         score: String!
         city: String!

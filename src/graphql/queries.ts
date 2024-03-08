@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 const GET_COLLEGES = gql`
   query Colleges {
     colleges {
-      id
+      collegeId
       name
       score
       city
@@ -23,7 +23,7 @@ const GET_COLLEGES = gql`
 const GET_COLLEGE = gql`
   query College($id: ID!) {
     college(id: $id) {
-      id
+      collegeId
       name
       score
       city
