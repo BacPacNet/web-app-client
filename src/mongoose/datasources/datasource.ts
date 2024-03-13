@@ -49,9 +49,9 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
       const totalColleges = await CollegeModel.countDocuments()
       //add seed to random function
       // const skip = Math.floor(Math.random() * (totalColleges - limit)*seed)
-      let skip = 0;
-      if(seed >= 0 && seed <=1) {
-        skip = Math.floor(seed * (totalColleges - limit)); 
+      let skip = 0
+      if (seed >= 0 && seed <= 1) {
+        skip = Math.floor(seed * (totalColleges - limit))
       }
       console.log(skip)
       const colleges = await CollegeModel.find().skip(skip).limit(limit)

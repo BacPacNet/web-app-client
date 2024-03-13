@@ -28,7 +28,7 @@ const resolvers = {
     },
     testColleges: async (
       _: unknown,
-      args: { limit: number, seed: number},
+      args: { limit: number; seed: number },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       context: any
     ) => {
