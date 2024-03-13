@@ -43,12 +43,17 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
     }
   }
   // Function to fetch a limited number of colleges
-  async getTestColleges(limit: number) {
+  async getTestColleges(limit: number, seed: number) {
     try {
       //Get a random set of colleges (default = 20), by skipping a random number of colleges
       const totalColleges = await CollegeModel.countDocuments()
-      const skip = Math.floor(Math.random() * (totalColleges - limit))
-
+      //add seed to random function
+      // const skip = Math.floor(Math.random() * (totalColleges - limit)*seed)
+      let skip = 0;
+      if(seed >= 0 && seed <=1) {
+        skip = Math.floor(seed * (totalColleges - limit)); 
+      }
+      console.log(skip)
       const colleges = await CollegeModel.find().skip(skip).limit(limit)
       return colleges
     } catch (error) {

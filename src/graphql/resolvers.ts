@@ -28,12 +28,12 @@ const resolvers = {
     },
     testColleges: async (
       _: unknown,
-      args: { limit: number },
+      args: { limit: number, seed: number},
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       context: any
     ) => {
       try {
-        return await context.dataSources.colleges.getTestColleges(args.limit)
+        return await context.dataSources.colleges.getTestColleges(args.limit, args.seed)
       } catch (error) {
         throw new Error('Failed to fetch test colleges')
       }

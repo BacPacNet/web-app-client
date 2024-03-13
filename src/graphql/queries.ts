@@ -41,7 +41,7 @@ const GET_COLLEGE = gql`
 `
 
 const GET_TEST_COLLEGES = gql`
-  query testColleges($limit: Int = 20) {
+  query testColleges($limit: Int = 20, $seed: Float = 0) {
     testColleges(limit: $limit) {
       collegeId
       name
