@@ -52,7 +52,7 @@ export default class Colleges extends MongoDataSource<CollegeDocument> {
       if (seed >= 0 && seed <= 1) {
         skip = Math.floor(seed * (totalColleges - limit))
       }
-      console.log("No. of colleges skipped = ",skip)
+      console.log('No. of colleges skipped = ', skip)
       const colleges = await CollegeModel.find().skip(skip).limit(limit)
       return colleges
     } catch (error) {
