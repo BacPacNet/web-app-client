@@ -6,9 +6,9 @@ import resolvers from '@/graphql/resolvers'
 import mongoose from 'mongoose'
 import Colleges from '@/mongoose/datasources/datasource'
 import CollegeModel from '@/mongoose/models/college'
+
 const uri = process.env.MONGODB_URI
-//TODO: MAKE getCollegeFromId work
-//TODO: tuitionFee spelling wrong in db
+
 const connectDB = async () => {
   try {
     if (uri) {
