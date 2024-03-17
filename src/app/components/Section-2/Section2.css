@@ -1,0 +1,234 @@
+.section-2 {
+  width: 100%;
+  height: 1808px;
+}
+.part-1 {
+  width: 992px;
+  height: 377px;
+  /* border: 2px solid red; */
+  justify-content: space-between;
+}
+.picture {
+  width: 472px;
+  height: 284.2px;
+  border-radius: 8px;
+}
+.magnifier {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  top: 150px;
+  left: 300px;
+  border-radius: 9999px;
+}
+.right-sec2 {
+  width: 452px;
+  height: 228px;
+  /* border: 2px solid red; */
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.college-info {
+  margin-top: 403px;
+  /* border: 2px solid red; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* border: 2px solid red; */
+  background-image: url('../../../assets/test.png');
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+}
+.typing-effect {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 48px;
+  /* text-align: center; */
+  margin-bottom: 26px;
+}
+.hp2 {
+  font-family: Inter;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+.pic-1 {
+  width: 368.35px;
+  /* border: 2px solid red; */
+  height: 90.73px;
+}
+.pic-2 {
+  position: relative;
+  top: -40px;
+  /* border: 2px solid red; */
+  width: 600px;
+  height: 264.22px;
+  border-radius: 300px;
+}
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .section-2 {
+    width: 100%;
+  }
+  .heading {
+    width: 382px;
+    height: 104px;
+  }
+  .part-1 {
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid red; */
+    align-items: center;
+    width: 100%;
+  }
+  .typing-effect {
+    width: 583.83px;
+    height: 96px;
+    text-align: center;
+  }
+  .absolute {
+    position: absolute;
+    left: 128px;
+    top: auto;
+  }
+  .right-sec2 {
+    position: relative;
+    top: 220px;
+    width: 718.45px;
+    height: 196px;
+    padding: 24px;
+    justify-content: center;
+  }
+  .h1 {
+    text-align: center;
+  }
+  .magnifier {
+    top: 160px;
+    left: 180px;
+  }
+  .college-info {
+    display: flex;
+    flex-direction: column-reverse;
+    /* border: 2px solid red; */
+    width: 100%;
+    height: fit-content;
+    background-size: contain;
+  }
+  .pic-2 {
+    width: 603px;
+    height: 264.23px;
+    border-radius: 300px;
+  }
+  .pic-1 {
+    width: 530px;
+    height: 118px;
+  }
+  .h2,
+  .hp2 {
+    width: 583.83px;
+    height: 216px;
+    /* padding: 24px; */
+  }
+  .h2 {
+    font-family: Inter;
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 48px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #171717;
+  }
+  .hp2 {
+    margin-top: 24px;
+    font-family: Inter;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 48px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #525252;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .section-2 {
+    width: 100%;
+    margin-top: -150px;
+    height: 1192px;
+  }
+  .heading {
+    width: 301px;
+    height: 96px;
+  }
+  .part-1 {
+    display: flex;
+    width: 336px;
+    flex-direction: column;
+  }
+  .left {
+    width: 336px;
+    height: 248px;
+  }
+  .absolute {
+    position: absolute;
+    left: 8px;
+  }
+  .magnifier {
+    position: relative;
+    width: 120px;
+    height: 117px;
+    top: 186px;
+    left: 227px;
+    border-radius: 9999px;
+  }
+  .h1 {
+    text-align: center;
+  }
+  .right-sec2 {
+    position: relative;
+    top: 220px;
+    margin-left: 0px;
+    padding: -0px;
+    left: -10px;
+    justify-content: center;
+    width: 350.81px;
+    height: 249px;
+  }
+  .college-info {
+    margin-top: 250px;
+    background-size: contain;
+  }
+  .h2 {
+    width: 337px;
+    height: 168px;
+  }
+  .hp1 {
+    width: 337px;
+    height: 80px;
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #171717;
+    margin-top: -30px;
+  }
+  .hp2 {
+    width: 337px;
+    height: 64px;
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #525252;
+    margin-top: 50px;
+  }
+}

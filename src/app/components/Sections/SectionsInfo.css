@@ -1,0 +1,256 @@
+.part {
+  width: 968px;
+  height: 412px;
+  margin-top: 83px;
+  border-radius: 300px;
+  /* border: 2px solid red; */
+}
+.applicantModel {
+  width: 445.74px;
+  height: 412px;
+}
+.studentModel {
+  width: 479.88px;
+  height: 332px;
+}
+.facultyModel {
+  width: 464px;
+  height: 336.45px;
+}
+.info {
+  width: 446px;
+  height: 296px;
+}
+.appSubClass {
+  width: 446px;
+  height: 328px;
+  margin-left: 32px;
+}
+.studntSubClass,
+.factSubClass {
+  width: 446px;
+  /* border: 2px solid red; */
+  height: 296px;
+  margin-right: 32px;
+}
+.factSubClass {
+  margin-left: 32px;
+}
+.title {
+  width: 147px;
+  height: 36px;
+  font-family: Inter;
+  font-size: 28px;
+  font-weight: 800;
+  display: flex;
+  justify-content: flex-start;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #171717;
+}
+.info {
+  width: 446px;
+  height: 260px;
+  margin-top: 12px;
+}
+.subtitle {
+  width: 446px;
+  height: 56px;
+  font-family: Inter;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  color: #404040;
+  text-align: justify;
+}
+.appSubtitle {
+  width: 446px;
+  height: 36px;
+  font-family: Inter;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  color: #404040;
+  text-align: justify;
+}
+.desc {
+  margin-top: 5px;
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: justify;
+  color: #404040;
+  width: 446px;
+  height: 192px;
+}
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .part {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    height: 680px;
+    width: 768px;
+    /* border: 2px solid red; */
+  }
+  .applicantModel {
+    width: 442.62px;
+    height: 412px;
+    border-radius: 300px;
+  }
+  .studentModel {
+    width: 476.51px;
+    height: 330.6px;
+  }
+  .appSubClass {
+    width: 768px;
+    /* border: 2px solid red; */
+    height: 204px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0px;
+    padding: 32px;
+  }
+  .info {
+    width: 768px;
+    height: 136px;
+    margin-top: 12px;
+    text-align: center;
+  }
+  .subtitle,
+  .appSubtitle {
+    width: 100%;
+    text-align: center;
+  }
+  .title {
+    text-align: center;
+  }
+  .desc {
+    width: 100%;
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
+  .studntSubClass {
+    width: 721.32px;
+    height: 204px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0px;
+  }
+  .factSubClass {
+    width: 721.32px;
+    height: 236px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0px;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .part {
+    /* margin-top: 36px; */
+    display: flex;
+    flex-direction: column;
+  }
+  .applicantModel {
+    width: 370px;
+    height: 310px;
+    /* padding: 15.4px; */
+  }
+  .appSubClass {
+    width: 343.56px;
+    height: 316px;
+    margin-left: 0px;
+    margin-top: 36px;
+  }
+  .title {
+    width: 343.56px;
+    margin-bottom: 32px;
+    font-family: Inter;
+    /* border: 2px solid red; */
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+  .info {
+    width: 100%;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+  }
+  .appSubtitle {
+    font-family: Inter;
+    font-size: 18px;
+    height: 48px;
+    width: 100%;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    /* color: #404040; */
+  }
+  .desc {
+    width: 343.56px;
+    height: 252px;
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #404040;
+    margin: 0;
+  }
+  .studentModel {
+    width: 336.46px;
+    margin-top: 230px;
+    height: 233.43px;
+    padding-left: 23.03px;
+    padding-right: 17.51px;
+  }
+  .subtitle {
+    width: 342.56px;
+    height: 48px;
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
+  .studntSubClass {
+    /* border: 2px solid red; */
+    width: 342.56px;
+    height: 316px;
+    margin-right: 0px;
+    margin-top: 47.57px;
+  }
+  .facultyModel {
+    width: 340.72px;
+    height: 248.18px;
+    margin-top: 350px;
+    padding-left: 24.51px;
+    padding-right: 11.56px;
+  }
+  .factSubClass {
+    width: 342.56px;
+    height: 348px;
+    margin-top: 64.82px;
+  }
+}

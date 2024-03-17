@@ -1,0 +1,31 @@
+.search-box {
+  width: 688px;
+}
+
+.search-input::placeholder {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+.search-input {
+  border: 1px solid #d4d4d4;
+  cursor: pointer;
+}
+@media only screen and (max-width: 375px) {
+  .search-box {
+    width: 342px;
+  }
+  .search-input {
+    width: 342px;
+    height: 48px;
+    cursor: pointer;
+    padding: 9px 23px 9px 23px;
+    border-radius: 20px;
+    border: 1px solid #d4d4d4;
+  }
+  .search-input::placeholder {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}

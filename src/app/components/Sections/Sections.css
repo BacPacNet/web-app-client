@@ -1,0 +1,51 @@
+.section-1 {
+  min-height: 1620px;
+  height: max-content;
+  margin-bottom: 200px;
+}
+.heading {
+  width: 435px;
+  height: 104px;
+  gap: 16px;
+  /* border: 2px solid red; */
+  margin-top: 84px;
+}
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .section-1 {
+    width: 100%;
+    height: 2490px;
+  }
+  .heading {
+    margin-top: 86px;
+  }
+  .part-info {
+    width: 768px;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .section-1 {
+    width: 100%;
+    height: 2200px;
+  }
+  .sec-1 {
+    width: 60px;
+    height: 40px;
+  }
+  .heading {
+    width: 343px;
+    height: 40px;
+  }
+  .part {
+    width: 100%;
+  }
+  .h-section-1 {
+    width: 343px;
+    height: 40px;
+    font-family: Inter;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+}
