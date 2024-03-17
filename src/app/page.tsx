@@ -1,6 +1,6 @@
 'use client'
 
-import "./page.css"
+import './page.css'
 
 import { useEffect, useState } from 'react'
 
@@ -8,10 +8,10 @@ import { BsStars } from 'react-icons/bs'
 import Footer from './components/Footer/Footer'
 import Navbar from './components/Navbar/Navbar'
 import SearchBar from '../components/SearchBar'
-import Section2 from "./components/Section-2/Section2"
-import Section3 from "./components/Section-3/Section3"
-import Sections from "./components/Sections/Sections"
-import { TypeAnimation } from 'react-type-animation';
+import Section2 from './components/Section-2/Section2'
+import Section3 from './components/Section-3/Section3'
+import Sections from './components/Sections/Sections'
+import { TypeAnimation } from 'react-type-animation'
 import client from '../client'
 import { query } from '../queries/queries'
 
@@ -22,7 +22,7 @@ export default function Home() {
     try {
       setLoading(true)
       const result = await client.query({ query })
-      console.log("universityList", result)
+      console.log('universityList', result)
       setUniversityData(result?.data?.universityList)
     } catch (error) {
       console.log('Error fetching data:', error)
@@ -41,10 +41,7 @@ export default function Home() {
           <TypeAnimation
             className="typing-effect"
             cursor={false}
-            sequence={[
-              100,
-              'Search universities worldwide and become part of their online communities',
-            ]}
+            sequence={[100, 'Search universities worldwide and become part of their online communities']}
             speed={65}
             repeat={0}
           />

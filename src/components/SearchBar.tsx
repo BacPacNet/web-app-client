@@ -1,4 +1,4 @@
-import "./SearchBar.css"
+import './SearchBar.css'
 
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
