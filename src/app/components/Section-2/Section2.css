@@ -8,8 +8,12 @@
   /* border: 2px solid red; */
   justify-content: space-between;
 }
+.left {
+  width: 472px;
+}
 .picture {
   width: 472px;
+  /* border: 2px solid red; */
   height: 284.2px;
   border-radius: 8px;
 }
@@ -177,6 +181,7 @@
   .absolute {
     position: absolute;
     left: 8px;
+    top: 0px;
   }
   .magnifier {
     position: relative;

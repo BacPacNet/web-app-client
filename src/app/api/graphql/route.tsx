@@ -30,6 +30,8 @@ async function getUniversityList() {
   }
 }
 
+
+
 const resolvers = {
   Query: {
     university_name: async (_: void, args: { id: string }) => {

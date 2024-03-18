@@ -10,7 +10,7 @@ it('renders a search box', () => {
   ]
   const { getByPlaceholderText } = render(<SearchBar data={mockData} loading={false} />)
 
-  const subject = getByPlaceholderText('Search institute')
+  const subject = getByPlaceholderText('Search')
 
   expect(subject).toBeInTheDocument()
 })

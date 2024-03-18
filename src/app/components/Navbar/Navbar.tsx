@@ -1,7 +1,6 @@
 'use client'
 
 import './Navbar.css'
-import 'aos/dist/aos.css'
 
 import React, { useEffect, useState } from 'react'
 

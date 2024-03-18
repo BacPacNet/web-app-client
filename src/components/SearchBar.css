@@ -11,6 +11,11 @@
   border: 1px solid #d4d4d4;
   cursor: pointer;
 }
+@media only screen and (max-width: 765px) and (min-width: 375px) {
+  .search-box {
+    width: 90%;
+  }
+}
 @media only screen and (max-width: 375px) {
   .search-box {
     width: 342px;

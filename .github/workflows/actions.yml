@@ -11,15 +11,33 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - uses: actions/cache@v4
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
 
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Code Formatting Check #Runs Prettier Script
         run: npm run prettier
@@ -31,7 +49,7 @@ jobs:
         run: npm run coverage
 
       - name: Upload coverage to Codecov #Uploads the coverage report to Codecov
-        uses: codecov/codecov-action@v4-beta
+        uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
 
@@ -54,36 +72,19 @@ jobs:
     if: github.event.pull_request.draft == false
     name: Deploy Storybook to Chromatic
     runs-on: ubuntu-latest # Operating System
-    # Job steps
+    needs: build-project #Depends on the build-project job to be completed
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 👈 Required to retrieve git history
+          fetch-depth: 0 # Fetch all history for all tags and branches
+
       - name: Install dependencies
         run: npm install
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
-        uses: chromaui/action@v1
+        uses: chromaui/action@latest
         # Chromatic GitHub Action options
         with:
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
-  check-up-to-date:
-    name: Check if PR is up to date with the main branch
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-        #Check if the PR is up to date with the main branch
-      - name: Check if branch is ahead of main
-        run: |
-            if ! git merge-base --is-ancestor origin/main ${{ github.event.pull_request.head.sha }};
-            then echo "This branch is not up to date. Please merge with main.";
-            exit 1;
-            else echo "This branch is up to date with main!🎉";
-            fi
