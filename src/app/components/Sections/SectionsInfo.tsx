@@ -5,9 +5,23 @@ import 'aos/dist/aos.css'
 
 import AOS from 'aos'
 import Image from 'next/image'
+import { StaticImageData } from 'next/image'
 import { useEffect } from 'react'
 
-function SectionsInfo({ item }) {
+interface SectionItem {
+  title: string
+  subTitle: string
+  desc: string
+  image: StaticImageData
+  className: string
+  subClass: string
+  animation: string[]
+  reverse: boolean
+}
+interface SectionsInfoProps {
+  item: SectionItem
+}
+function SectionsInfo({ item }: SectionsInfoProps) {
   useEffect(() => {
     AOS.init({ duration: 300 })
   }, [])
