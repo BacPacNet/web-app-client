@@ -53,8 +53,8 @@ function Sections() {
           </h3>
         </div>
         <div className="part-info">
-          {sectionContent.map((item) => (
-            <SectionsInfo item={item} />
+          {sectionContent.map((item, index) => (
+            <SectionsInfo item={item} key={index} />
           ))}
         </div>
       </div>

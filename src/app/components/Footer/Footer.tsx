@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
         <div className="left-part">
           <p className="p1 text-[#6647FF] font-semibold text-xs h-5">STILL HAVE QUESTIONS?</p>
           <h1 className="h1 text-[#171717] font-extrabold text-4xl h-11">Get to know us better</h1>
-          <p className="p2 text-lg font-normal h-7 text-[#525252]">Familiarize yourself with Unibuzz's mission and purpose</p>
+          <p className="p2 text-lg font-normal h-7 text-[#525252]">Familiarize yourself with Unibuzz&apos;s mission and purpose</p>
         </div>
         <div className="right-part">
           <div className="discord mr-6">

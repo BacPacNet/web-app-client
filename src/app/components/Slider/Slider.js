@@ -4,7 +4,7 @@ import 'swiper/css/pagination'
 import './Slider.css'
 
 import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Image from 'next/image'
@@ -79,10 +79,10 @@ export default function Slider() {
       <div className="slider-controler">
         <div className="slider-btn">
           <div className="swiper-button-prev slider-arrow">
-            <Image src={arrow} name="arrow-back-outline" className="ion-icon swiper-button-prev" />
+            <Image src={arrow} name="arrow-back-outline" className="ion-icon swiper-button-prev" alt="prev" />
           </div>
           <div className="swiper-button-next slider-arrow">
-            <Image src={nextarrow} name="arrow-forward-outline" className="ion-icon swiper-button-next" />
+            <Image src={nextarrow} name="arrow-forward-outline" className="ion-icon swiper-button-next" alt="next" />
           </div>
         </div>
         <div className="swiper-pagination"></div>

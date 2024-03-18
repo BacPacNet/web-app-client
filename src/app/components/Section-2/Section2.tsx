@@ -3,7 +3,7 @@
 import './Section2.css'
 import 'aos/dist/aos.css'
 
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import AOS from 'aos'
 import Image from 'next/image'
@@ -39,8 +39,9 @@ function Section2() {
         <div className="right-sec2">
           <div className="h1 text-4xl font-extrabold">One click to join</div>
           <div className="desc" data-aos="fade-right">
-            After searching for the institution you're interested in, click 'Join' to become part of the university's group. This grants you access to
-            the university page and its full range of features. Join now to seamlessly explore and engage with the university community.
+            After searching for the institution you&apos;re interested in, click &apos;Join&apos; to become part of the university&apos;s group. This
+            grants you access to the university page and its full range of features. Join now to seamlessly explore and engage with the university
+            community.
           </div>
         </div>
       </div>

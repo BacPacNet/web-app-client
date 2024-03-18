@@ -8,7 +8,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import buttonIcon from '../../../assets/buttonIcon.png'
 import close from '../../../assets/close.png'
-import star from '../../../assets/star.png'
 import unibuzzLogo from '../../../assets/unibuzzLogo.png'
 import { usePathname } from 'next/navigation'
 
@@ -126,7 +125,6 @@ const Navbar: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false)
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const [hover, setHover] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
