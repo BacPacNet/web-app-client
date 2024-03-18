@@ -2,7 +2,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 import { useState } from 'react'
-
+// search bar
 interface FilteredCollege {
   id: string
   name: string
