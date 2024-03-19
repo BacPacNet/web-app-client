@@ -98,7 +98,7 @@
   }
   .absolute {
     position: absolute;
-    left: 128px;
+    left: 0px;
     top: auto;
   }
   .right-sec2 {
@@ -114,7 +114,7 @@
   }
   .magnifier {
     top: 160px;
-    left: 180px;
+    left: 331px;
   }
   .college-info {
     display: flex;

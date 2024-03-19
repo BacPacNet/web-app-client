@@ -146,11 +146,12 @@
   .policy {
     width: 392px;
     height: 20px;
+    margin-left: 18px;
   }
   .copyright {
     position: relative;
     top: 34px;
-    left: 251px;
+    left: 264px;
   }
 }
 @media only screen and (max-width: 375px) {

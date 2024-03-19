@@ -9,16 +9,18 @@
 }
 .search-input {
   border: 1px solid #d4d4d4;
+  width: 688px;
   cursor: pointer;
 }
-@media only screen and (max-width: 765px) and (min-width: 375px) {
-  .search-box {
-    width: 90%;
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .search-input {
+    width: 688px;
   }
 }
 @media only screen and (max-width: 375px) {
   .search-box {
     width: 342px;
+    margin-top: -32px;
   }
   .search-input {
     width: 342px;

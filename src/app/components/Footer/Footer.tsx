@@ -51,7 +51,9 @@ const Footer: React.FC = () => {
             </button>
           </div>
           <div className="aboutus">
-            <button className="btn-sec border border-[#E5E5E5] bg-transparent text-[#404040] w-40 h-12 text-base font-medium">About us</button>
+            <button className="btn-sec border border-[#E5E5E5] rounded-md bg-transparent text-[#404040] w-40 h-12 text-base font-medium">
+              About us
+            </button>
           </div>
         </div>
       </div>

@@ -1,7 +1,10 @@
+import './SearchBar.css'
+
 import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 import { useState } from 'react'
+
 // search bar
 interface FilteredCollege {
   id: string
@@ -44,7 +47,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
         className="search-input w-full h-full rounded-2xl border border-solid border-gray-300 indent-14 text-black"
       />
       {open && (
-        <div className="searchBox overflow-auto  w-full h-auto max-h-80 mt-4 rounded-2xl border border-solid border-gray-300 p-3 bg-white text-black relative">
+        <div className="searchBox overflow-auto w-full h-auto max-h-80 mt-4 rounded-2xl border border-solid border-gray-300 p-3 bg-white text-black relative">
           {searchResults}
         </div>
       )}
