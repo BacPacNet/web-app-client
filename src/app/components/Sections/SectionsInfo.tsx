@@ -28,16 +28,14 @@ function SectionsInfo({ item }: SectionsInfoProps) {
 
   return (
     <div className={item.reverse === true ? 'part flex flex-row-reverse items-center' : 'part flex items-center'}>
-      <div className={item.className} data-aos={item.animation[0]}>
+      <div className={item.className} data-aos={item.animation[0]} data-aos-duration="500" data-aos-easing="ease-in">
         <Image src={item.image} alt={item.title} className="w-full h-full" />
       </div>
       <div className={item.subClass}>
         <div className="title">{item.title}</div>
-        <div className="info">
+        <div className="info" data-aos={item.animation[1]}>
           <div className={item.subClass == 'appSubClass' ? 'appSubtitle' : 'subtitle'}>{item.subTitle}</div>
-          <div className="desc" data-aos={item.animation[1]}>
-            {item.desc}
-          </div>
+          <div className="desc">{item.desc}</div>
         </div>
       </div>
     </div>

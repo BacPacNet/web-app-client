@@ -58,6 +58,9 @@
   /* border: 2px solid red; */
   margin-right: -100px;
 }
+.btn-disc {
+  background-color: #f3f2ff;
+}
 .icon {
   width: 16px;
   height: 16px;

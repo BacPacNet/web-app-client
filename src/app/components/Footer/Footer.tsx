@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
         </div>
         <div className="right-part">
           <div className="discord mr-6">
-            <button className="btn btn-primary text-[#6647FF] text-base text-center w-40 h-12 font-medium p-2">
+            <button className="btn btn-disc text-[#6647FF] text-base text-center w-40 h-12 font-medium p-2">
               <Image src={discordLogo} alt="discord" className="discordImage" />
               Our Discord
             </button>

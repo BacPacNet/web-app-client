@@ -1,7 +1,10 @@
+'use client'
+
 import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/pagination'
 import './Slider.css'
+import 'aos/dist/aos.css'
 
 import { EffectCoverflow, Navigation, Pagination } from 'swiper/modules'
 import React, { useState } from 'react'
@@ -16,6 +19,7 @@ import nextarrow from '../../../assets/right.png'
 
 export default function Slider() {
   const [description, setDescription] = useState('')
+
   const featureInfo = [
     {
       id: 0,
@@ -46,7 +50,6 @@ export default function Slider() {
     const imgIndex = item.realIndex
     setDescription(featureInfo[imgIndex].desc)
   }
-
   return (
     <Swiper
       effect={'coverflow'}
@@ -87,7 +90,7 @@ export default function Slider() {
         </div>
         <div className="swiper-pagination"></div>
       </div>
-      <div className="description">
+      <div className="description" data-aos="fade-left">
         <p className="animated-description">{description}</p>
       </div>
     </Swiper>

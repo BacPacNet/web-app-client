@@ -1,5 +1,6 @@
 .search-box {
   width: 688px;
+  /* border: 2px solid red; */
 }
 
 .search-input::placeholder {

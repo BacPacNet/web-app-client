@@ -1,6 +1,7 @@
 .navbar {
   box-shadow: 0 5px 15px 5px #ececec;
   height: 64px;
+  width: 100%;
 }
 .nav li:hover {
   font-size: 14px;
@@ -32,7 +33,9 @@
 .link {
   font-size: 14px;
   color: #404040;
-  width: 81px;
+  /* border: 2px solid red; */
+  display: block;
+  width: max-content;
   text-align: center;
   /* border: 2px solid red; */
   font-weight: 500;
@@ -91,6 +94,14 @@
   border-radius: 5px;
   width: 100%;
   /* opacity: 1; */
+}
+.btn-primary,
+.btn-secondary {
+  width: 85px;
+  height: 36px;
+  gap: 12px;
+  border-radius: 4px;
+  opacity: 0px;
 }
 .nav-link-ltr::before {
   content: ''; /* Ensure content is empty for pseudo-element */

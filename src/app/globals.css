@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,7 +20,8 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: white;
-  font-style: 'Montserrat', sans-serif;
+  /* font-style: 'Montserrat', sans-serif; */
+  font-family: 'Inter', sans-serif;
 }
 .searchBox::-webkit-scrollbar {
   display: none;

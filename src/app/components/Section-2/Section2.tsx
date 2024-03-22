@@ -20,7 +20,6 @@ function Section2() {
     try {
       AOS.init({ duration: 300 })
       setTypingStart(true)
-      console.log('typing', typingStart)
     } catch (e) {
       console.log('error')
     }
@@ -36,9 +35,9 @@ function Section2() {
           <Image src={picture} alt="l" className="picture absolute" />
           <Image src={magnifier} alt="l" className="magnifier relative" />
         </div>
-        <div className="right-sec2">
+        <div className="right-sec2" data-aos="fade-right">
           <div className="h1 text-4xl font-extrabold">One click to join</div>
-          <div className="desc" data-aos="fade-right">
+          <div className="desc">
             After searching for the institution you&apos;re interested in, click &apos;Join&apos; to become part of the university&apos;s group. This
             grants you access to the university page and its full range of features. Join now to seamlessly explore and engage with the university
             community.
