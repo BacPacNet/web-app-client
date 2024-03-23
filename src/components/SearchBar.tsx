@@ -2,6 +2,7 @@ import { AiOutlineSearch } from 'react-icons/ai'
 import CollegeResult from '../app/components/CollegeResult'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 import { useState } from 'react'
+import { cn } from "@/lib/utils"
 
 interface FilteredCollege {
   id: string
@@ -13,10 +14,11 @@ interface FilteredCollege {
 }
 interface SearchBarProps {
   data: FilteredCollege[]
-  loading: boolean
+  loading: boolean,
+  className?: string
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ data, loading, className }) => {
   const [open, setOpen] = useState(false)
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
 
@@ -33,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   if (loading) searchResults = [<div key="loading">Loading....</div>]
 
   return (
-    <div className="search-box mt-4 w-5/12 h-12 rounded-2xl">
+    <div className={cn("search-box mt-4 w-5/12 h-12 rounded-2xl", className)}>
       <div className="search-icon w-12 absolute h-12 flex justify-center items-center">
         <AiOutlineSearch className="text-xl text-black" />
       </div>
