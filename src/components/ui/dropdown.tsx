@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 
 export interface DropdownOption {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface DropdownProps {
-  label: string;
-  options: DropdownOption[];
-  value: string;
-  onChange: (value: string) => void;
+  label: string
+  options: DropdownOption[]
+  value: string
+  onChange: (value: string) => void
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange }) => {
@@ -27,14 +27,14 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange }) 
         >
           <option value="">{label}</option>
           {options.map(({ value, label }) => (
-            <option key={value} value={value} className=''>
+            <option key={value} value={value} className="">
               {label}
             </option>
           ))}
         </select>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dropdown;
+export default Dropdown
