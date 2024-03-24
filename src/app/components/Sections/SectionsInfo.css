@@ -64,6 +64,7 @@
   letter-spacing: -0.02em;
   color: #404040;
   text-align: justify;
+  /* border: 2px solid red; */
 }
 .appSubtitle {
   width: 446px;
