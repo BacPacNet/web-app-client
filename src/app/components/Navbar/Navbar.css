@@ -116,6 +116,14 @@
 .nav-link-ltr.active::before {
   width: 100%;
 }
+@media (max-width: 1240px) and (min-width: 768px) {
+  .right-nav {
+    margin-left: -10px;
+  }
+  .left-nav {
+    justify-content: space-evenly;
+  }
+}
 @media (max-width: 768px) {
   .navbar {
     height: 82px;
