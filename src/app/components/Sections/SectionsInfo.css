@@ -64,14 +64,15 @@
   letter-spacing: -0.02em;
   color: #404040;
   text-align: justify;
-  /* border: 2px solid red; */
 }
 .appSubtitle {
   width: 446px;
   height: 36px;
+  /* border: 2px solid red; */
   font-family: Inter;
   font-size: 20px;
   font-weight: 700;
+  margin-bottom: 5px;
   line-height: 28px;
   letter-spacing: -0.02em;
   color: #404040;
