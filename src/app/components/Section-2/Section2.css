@@ -56,7 +56,6 @@
   margin-bottom: 26px;
 }
 .hp2 {
-  font-family: Inter;
   font-size: 40px;
   font-weight: 500;
   line-height: 48px;
@@ -76,9 +75,19 @@
   height: 264.22px;
   border-radius: 300px;
 }
+.desc {
+  width: 452px;
+  height: 160px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 32px;
+  text-align: justify;
+  color: #525252;
+}
 @media only screen and (max-width: 768px) and (min-width: 375px) {
   .section-2 {
     width: 100%;
+    height: 1921px;
   }
   .heading {
     width: 382px;
@@ -92,7 +101,6 @@
     width: 100%;
   }
   .typing-effect {
-    width: 583.83px;
     height: 96px;
     text-align: center;
   }
@@ -104,13 +112,14 @@
   .right-sec2 {
     position: relative;
     top: 220px;
-    width: 718.45px;
+    width: 100%;
     height: 196px;
     padding: 24px;
     justify-content: center;
   }
   .h1 {
     text-align: center;
+    margin-bottom: 24px;
   }
   .magnifier {
     top: 160px;
@@ -133,14 +142,12 @@
     width: 530px;
     height: 118px;
   }
-  .h2,
-  .hp2 {
-    width: 583.83px;
+  .h2 {
+    width: 100%;
     height: 216px;
     /* padding: 24px; */
   }
   .h2 {
-    font-family: Inter;
     font-size: 44px;
     font-weight: 700;
     line-height: 48px;
@@ -150,7 +157,6 @@
   }
   .hp2 {
     margin-top: 24px;
-    font-family: Inter;
     font-size: 40px;
     font-weight: 500;
     line-height: 48px;
@@ -158,12 +164,28 @@
     text-align: center;
     color: #525252;
   }
+  .desc {
+    width: 100%;
+    height: 128px;
+  }
+  .left {
+    width: 336px;
+  }
+  .magnifier {
+    top: 160px;
+    left: 175px;
+  }
+  .hp2 {
+    width: 100%;
+    height: 216px;
+    /* padding: 24px; */
+  }
 }
 @media only screen and (max-width: 375px) {
   .section-2 {
     width: 100%;
     margin-top: -150px;
-    height: 1192px;
+    height: 1300px;
   }
   .heading {
     width: 301px;
@@ -173,6 +195,7 @@
     display: flex;
     width: 336px;
     flex-direction: column;
+    height: 248px;
   }
   .left {
     width: 336px;
@@ -180,7 +203,7 @@
   }
   .absolute {
     position: absolute;
-    left: 8px;
+    left: 0px;
     top: 0px;
   }
   .magnifier {
@@ -193,20 +216,23 @@
   }
   .h1 {
     text-align: center;
+    margin-bottom: 24px;
   }
   .right-sec2 {
     position: relative;
     top: 220px;
     margin-left: 0px;
     padding: -0px;
-    left: -10px;
+    left: 0px;
     justify-content: center;
-    width: 350.81px;
+    width: 100%;
     height: 249px;
   }
   .college-info {
-    margin-top: 250px;
+    margin-top: 550px;
     background-size: contain;
+    height: 390px;
+    /* border: 2px solid red; */
   }
   .h2 {
     width: 337px;
@@ -215,7 +241,6 @@
   .hp1 {
     width: 337px;
     height: 80px;
-    font-family: Inter;
     font-size: 32px;
     font-weight: 700;
     line-height: 40px;
@@ -227,7 +252,6 @@
   .hp2 {
     width: 337px;
     height: 64px;
-    font-family: Inter;
     font-size: 24px;
     font-weight: 500;
     line-height: 32px;
@@ -235,5 +259,12 @@
     text-align: center;
     color: #525252;
     margin-top: 50px;
+  }
+  .desc {
+    width: 100%;
+    height: 192px;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
   }
 }

@@ -35,7 +35,7 @@ function SectionsInfo({ item }: SectionsInfoProps) {
         <div className="title">{item.title}</div>
         <div className="info" data-aos={item.animation[1]}>
           <div className={item.subClass == 'appSubClass' ? 'appSubtitle' : 'subtitle'}>{item.subTitle}</div>
-          <div className="desc">{item.desc}</div>
+          <div className="desc-sec">{item.desc}</div>
         </div>
       </div>
     </div>

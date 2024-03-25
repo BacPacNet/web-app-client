@@ -89,9 +89,9 @@ export default function Slider() {
           </div>
         </div>
         <div className="swiper-pagination"></div>
-      </div>
-      <div className="description" data-aos="fade-left">
-        <p className="animated-description">{description}</p>
+        <div className="description" data-aos="fade-left">
+          <p className="animated-description">{description}</p>
+        </div>
       </div>
     </Swiper>
   )

@@ -56,7 +56,7 @@
   width: 114px;
   height: 20px;
   /* border: 2px solid red; */
-  margin-right: -100px;
+  margin-right: -125px;
 }
 .btn-disc {
   background-color: #f3f2ff;
@@ -88,7 +88,6 @@
     margin-top: 64px;
   }
   .p1 {
-    font-family: Inter;
     font-size: 12px;
     font-weight: 600;
     line-height: 20px;
@@ -96,8 +95,10 @@
     text-align: center;
     width: 373.85px;
   }
+  .left-part {
+    width: 100%;
+  }
   .left-part h1 {
-    font-family: Inter;
     font-size: 36px;
     font-weight: 800;
     line-height: 44px;
@@ -106,7 +107,6 @@
     width: 373.85px;
   }
   .p2 {
-    font-family: Inter;
     font-size: 18px;
     font-weight: 400;
     line-height: 28px;
@@ -127,21 +127,22 @@
   .horizontal-line {
     /* display: flex; */
     position: absolute;
-    left: 27px;
     top: 360px;
-    width: 690px;
+    width: 90%;
   }
   .bottom {
     display: flex;
     flex-direction: column-reverse;
     top: 382px;
     margin-top: 32px;
+    width: 100%;
   }
   .bottom-part-2 {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     width: 100%;
-    margin-left: -30px;
+    margin-left: 0px;
+    /* justify-content: start; */
   }
   .w-64 {
     position: relative;
@@ -149,18 +150,30 @@
   }
   .logos {
     position: relative;
-    top: 50px;
-    left: -60px;
+    top: 54px;
+    left: -146px;
+    justify-content: space-between;
   }
   .policy {
     width: 392px;
     height: 20px;
-    margin-left: 18px;
+    margin-left: 0px;
+    justify-content: space-between;
+    position: relative;
+    top: 7px;
+    left: 31px;
+    /* width: 294px; */
   }
   .copyright {
     position: relative;
     top: 34px;
-    left: 264px;
+    left: 31px;
+    width: 294px;
+  }
+  .icons {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
   }
 }
 @media only screen and (max-width: 375px) {
@@ -188,9 +201,9 @@
     width: 336px;
     height: 36px;
     justify-content: center;
+    margin-top: 31px;
   }
   .p1 {
-    font-family: Inter;
     font-size: 12px;
     font-weight: 600;
     line-height: 20px;
@@ -198,15 +211,14 @@
     text-align: left;
   }
   .h1 {
-    font-family: Inter;
     font-size: 32px;
     font-weight: 700;
     line-height: 40px;
     letter-spacing: -0.02em;
     text-align: center;
+    margin-bottom: 10px;
   }
   .p2 {
-    font-family: Inter;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
@@ -224,7 +236,6 @@
   }
   .btn-sec {
     width: 140px;
-    height: 36px;
     padding: 10px 16px 10px 16px;
     border-radius: 8px;
     border: 1px solid #e5e5e5;
@@ -236,8 +247,9 @@
     justify-content: center;
   }
   .horizontal-line {
-    width: 344px;
+    width: 90%;
     top: 16rem;
+    margin-top: 30px;
   }
   .absolute {
     position: absolute;
@@ -252,12 +264,11 @@
   }
   .policy {
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 344px;
     height: 20px;
   }
   .policy > p {
-    font-family: Inter;
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -266,22 +277,21 @@
   }
   .bottom-part-2 {
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 0px;
   }
   .logos {
     width: 100px;
     height: 16px;
     position: absolute;
     bottom: -16px;
-    margin-right: -256px;
+    margin-right: -232px;
   }
   .copyright {
     width: 214px;
     height: 20px;
     position: relative;
-    left: 434px;
+    left: 447px;
     top: 18.5px;
-    font-family: Inter;
     font-size: 12px;
     font-weight: 400;
     line-height: 20px;

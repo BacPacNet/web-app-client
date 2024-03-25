@@ -14,14 +14,23 @@
   cursor: pointer;
 }
 @media only screen and (max-width: 768px) and (min-width: 375px) {
+  .search-box {
+    width: 90%;
+  }
   .search-input {
-    width: 688px;
+    width: 100%;
+  }
+  .searchBox {
+    z-index: 10;
   }
 }
 @media only screen and (max-width: 375px) {
   .search-box {
     width: 342px;
     margin-top: -32px;
+  }
+  .searchBox {
+    z-index: 10;
   }
   .search-input {
     width: 342px;

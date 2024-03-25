@@ -73,6 +73,7 @@
 .nav {
   /* border: 2px solid red; */
   display: flex;
+  justify-content: space-around;
   justify-content: start;
   width: 70%;
   transition: all 2s ease;
@@ -116,12 +117,20 @@
 .nav-link-ltr.active::before {
   width: 100%;
 }
-@media (max-width: 1240px) and (min-width: 768px) {
+@media (max-width: 1140px) and (min-width: 768px) {
   .right-nav {
     margin-left: -10px;
   }
   .left-nav {
     justify-content: space-evenly;
+  }
+  .logo {
+    margin-right: 0rem;
+    width: 10%;
+  }
+  .nav {
+    justify-content: space-around;
+    gap: 2rem;
   }
 }
 @media (max-width: 768px) {

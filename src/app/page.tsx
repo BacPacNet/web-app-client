@@ -39,7 +39,7 @@ export default function Home() {
       <main className="main flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
         <div className="typing-box text-9xl font-bold mt-48 flex flex-col items-center">
           <TypeAnimation
-            className="typing-effect"
+            className="typing-animation"
             cursor={false}
             sequence={[100, 'Search universities worldwide and become part of their online communities']}
             speed={65}

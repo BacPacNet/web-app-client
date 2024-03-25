@@ -33,6 +33,8 @@
 .swiper-slide.swiper-slide-visible.swiper-slide-next {
   display: flex;
   align-items: center;
+  /* object-fit: cover; */
+  /* border: 2px solid red; */
 }
 .swiper-slide-shadow-left,
 .swiper-slide-shadow-right {
@@ -102,6 +104,7 @@
 .description {
   display: flex;
   justify-content: center;
+  margin-top: 30px;
 }
 .animated-description {
   animation: slideIn 300ms ease-in;
@@ -109,7 +112,6 @@
   text-align: center;
   width: 860px;
   height: 72px;
-  font-family: Inter;
   font-size: 28px;
   font-weight: 800;
   line-height: 36px;
@@ -129,7 +131,7 @@
   }
 }
 
-@media only screen and (max-width: 768px) and (min-width: 380px) {
+@media only screen and (max-width: 768px) and (min-width: 350px) {
   .swiper_container {
     height: 30rem;
     width: 100%;
@@ -152,25 +154,33 @@
   }
   .slider-controler {
     bottom: 5rem;
+    width: 100%;
   }
   .slider-btn {
     top: 15.46px;
+    width: 90%;
   }
   .active-img {
-    width: 533px;
+    width: 100%;
     height: 376.71px;
-    transform: translateX(50px);
+    /* transform: translateX(50px); */
+    object-fit: contain;
+    transform: translate(0%, 0px);
   }
   .not-active-img {
     display: none;
+    /* border: 2px solid red; */
+  }
+  .description {
+    width: 90%;
+    border: 2px solid red;
   }
   .animated-description {
-    width: 627.28px;
-    height: 108px;
-    font-family: Inter;
-    font-size: 28px;
+    width: 90%;
+    height: 112px;
+    font-size: 20px;
     font-weight: 800;
-    line-height: 36px;
+    line-height: 28px;
     letter-spacing: -0.02em;
     text-align: center;
   }
@@ -187,7 +197,7 @@
     margin: 0 0;
   }
   .swiper-slide {
-    width: 346.29px;
+    width: 100%;
     height: 244.75px;
     border-radius: 10px;
     /* transform: translateX(35%); */
@@ -198,7 +208,7 @@
   }
 
   .active-img {
-    width: 346.29px;
+    width: 95%;
     border-radius: 5px;
     box-shadow: 0px 8px 24px -3px rgba(0, 0, 0, 0.1);
     /* border: 2px solid #d4d4d4; */
@@ -236,10 +246,12 @@
     justify-content: center;
     align-items: center;
   }
+  .description {
+    width: 90%;
+  }
   .animated-description {
-    width: 347.33px;
+    width: 90%;
     height: 112px;
-    font-family: Inter;
     font-size: 20px;
     font-weight: 700;
     line-height: 28px;
