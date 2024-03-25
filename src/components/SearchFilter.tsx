@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import Dropdown, { DropdownOption } from '@/components/ui/dropdown'
-
+import Modal from '@/components/Modal'
 interface SearchFilterProps {
   filters: {
     label: string
@@ -11,7 +11,9 @@ interface SearchFilterProps {
 
 const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
   const [selectedValues, setSelectedValues] = useState<{ [key: string]: string }>({})
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [activeFilter, setActiveFilter] = useState<{ label: string; options: DropdownOption[] } | null>(null);
+  console.log(selectedValues)
   const handleSelectChange = (filterLabel: string, value: string) => {
     setSelectedValues((prevValues) => ({
       ...prevValues,
@@ -23,24 +25,90 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
     setSelectedValues({})
   }
 
+  const handleFilterClick = (filterLabel: string) => {
+    const filter = filters.find(f => f.label === filterLabel);
+    if (filter) {
+      setActiveFilter(filter);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleOptionSelect = (value: string) => {
+    if (activeFilter) {
+      handleSelectChange(activeFilter.label, value);
+    }
+  };
+
   return (
-    <div className=" p-4 rounded-md h-auto">
-      {filters.map(({ label, options }) => (
-        <Dropdown
-          key={label}
-          label={label}
-          options={options}
-          value={selectedValues[label] || ''}
-          onChange={(value) => handleSelectChange(label, value)}
-        />
-      ))}
-      <button
-        className="px-3 py-2 rounded-md hover:bg-indigo-500 transition-colors duration-300 border-indigo-500 border-2 mt-4 text-indigo-500 font-medium text-xs float-right"
-        onClick={handleReset}
-      >
-        Reset
-      </button>
-    </div>
+    <>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {activeFilter && (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <h1 className="text-xl font-bold text-center mb-4">{activeFilter.label}</h1>
+              <ul className="divide-y divide-gray-200">
+                {activeFilter.options.map(option => (
+                  <li
+                    key={option.value}
+                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleOptionSelect(option.value)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button
+              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Apply
+            </button>
+          </div>
+        )}
+      </Modal>
+      {/* For Screen sizes equivalent to large or more */}
+      <div className="border-2 border-gray-300 rounded-lg pb-4 max-h-[380px] hidden lg:block">
+        <p className="p-[18px] pr-[61px] mb-4 border-b-2 bg-gray-100 font-medium text-[16px] whitespace-nowrap">Search Filter</p>
+        <div className=" p-4 rounded-md h-auto">
+          {filters.map(({ label, options }) => (
+            <Dropdown
+              key={label}
+              label={label}
+              options={options}
+              value={selectedValues[label] || ''}
+              onChange={(value) => handleSelectChange(label, value)}
+            />
+          ))}
+          <button
+            className="px-3 py-2 rounded-md hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 mt-4 text-indigo-500 font-medium text-xs float-right"
+            onClick={handleReset}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+      {/* For screen sizes below large */}
+      <div className="pb-4 block lg:hidden justify-center">
+        <p className="font-medium text-2xl pb-3">Search Filters</p>
+        <div className="flex flex-row items-center justify-between flex-wrap">
+          <div className="flex flex-row gap-3 flex-wrap py-2">
+            {filters.map(({ label }) => (
+              <p
+                key={label}
+                className="border-2 border-gray-300 rounded-3xl py-2 px-4 font-medium cursor-pointer"
+                onClick={() => handleFilterClick(label)}
+              >
+                {selectedValues[label] ?? label}
+              </p>
+            ))}
+          </div>
+          <button className="px-4 py-2 rounded-3xl hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 text-indigo-500 font-medium" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
+      </div>
+    </>
   )
 }
 
