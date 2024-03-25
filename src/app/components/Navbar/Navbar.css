@@ -117,7 +117,7 @@
 .nav-link-ltr.active::before {
   width: 100%;
 }
-@media (max-width: 1140px) and (min-width: 768px) {
+@media (max-width: 1200px) and (min-width: 768px) {
   .right-nav {
     margin-left: -10px;
   }

@@ -55,6 +55,9 @@
   /* text-align: center; */
   margin-bottom: 26px;
 }
+.h2 {
+  text-align: center;
+}
 .hp2 {
   font-size: 40px;
   font-weight: 500;
