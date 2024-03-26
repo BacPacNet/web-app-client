@@ -12,7 +12,7 @@ interface SearchFilterProps {
 const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
   const [selectedValues, setSelectedValues] = useState<{ [key: string]: string }>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [activeFilter, setActiveFilter] = useState<{ label: string; options: DropdownOption[] } | null>(null);
+  const [activeFilter, setActiveFilter] = useState<{ label: string; options: DropdownOption[] } | null>(null)
   console.log(selectedValues)
   const handleSelectChange = (filterLabel: string, value: string) => {
     setSelectedValues((prevValues) => ({
@@ -26,18 +26,18 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
   }
 
   const handleFilterClick = (filterLabel: string) => {
-    const filter = filters.find(f => f.label === filterLabel);
+    const filter = filters.find((f) => f.label === filterLabel)
     if (filter) {
-      setActiveFilter(filter);
-      setIsModalOpen(true);
+      setActiveFilter(filter)
+      setIsModalOpen(true)
     }
-  };
+  }
 
   const handleOptionSelect = (value: string) => {
     if (activeFilter) {
-      handleSelectChange(activeFilter.label, value);
+      handleSelectChange(activeFilter.label, value)
     }
-  };
+  }
 
   return (
     <>
@@ -47,21 +47,14 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
             <div>
               <h1 className="text-xl font-bold text-center mb-4">{activeFilter.label}</h1>
               <ul className="divide-y divide-gray-200">
-                {activeFilter.options.map(option => (
-                  <li
-                    key={option.value}
-                    className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleOptionSelect(option.value)}
-                  >
+                {activeFilter.options.map((option) => (
+                  <li key={option.value} className="py-2 px-4 hover:bg-gray-100 cursor-pointer" onClick={() => handleOptionSelect(option.value)}>
                     {option.label}
                   </li>
                 ))}
               </ul>
             </div>
-            <button
-              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" onClick={() => setIsModalOpen(false)}>
               Apply
             </button>
           </div>
@@ -103,7 +96,10 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
               </p>
             ))}
           </div>
-          <button className="px-4 py-2 rounded-3xl hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 text-indigo-500 font-medium" onClick={handleReset}>
+          <button
+            className="px-4 py-2 rounded-3xl hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 text-indigo-500 font-medium"
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>

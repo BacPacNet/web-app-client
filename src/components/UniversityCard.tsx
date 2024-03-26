@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 const UniversityCard = ({ name, image, logo }: { name: string; image: string; logo: string }) => {
-
   return (
     <div className="rounded-lg shadow-md overflow-hidden relative">
       <img src={image} alt={name} className="w-full h-52 object-cover transition-all duration-500" style={{ opacity: 0.7 }} />
@@ -15,4 +14,4 @@ const UniversityCard = ({ name, image, logo }: { name: string; image: string; lo
   )
 }
 
-export default UniversityCard;
+export default UniversityCard

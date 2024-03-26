@@ -38,7 +38,6 @@ const filterOptions = [
   },
 ]
 
-
 function Discover() {
   //TODO: Add backend logic to make the UI work as expected.
 
