@@ -2,7 +2,8 @@
 
 import './Sections.css'
 
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
+
 import { Parallax } from 'react-parallax'
 import SectionsInfo from './SectionsInfo'
 import applicantModel from '../../../assets/applicantModel.png'
@@ -10,8 +11,19 @@ import facultyModel from '../../../assets/facultyModel.png'
 import sectionNumber from '../../../assets/Number Label.png'
 import studentModel from '../../../assets/studentModel.png'
 
-function Sections() {
-  const sectionContent = [
+interface SectionContentItem {
+  title: string
+  subTitle: string
+  desc: string
+  image: StaticImageData
+  className: string
+  subClass: string
+  animation: string[]
+  reverse: boolean
+}
+
+const Sections: React.FC = () => {
+  const sectionContent: SectionContentItem[] = [
     {
       title: 'Applicants',
       subTitle: 'Embark on your university journey with confidence',

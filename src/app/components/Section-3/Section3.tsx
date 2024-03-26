@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Slider from '../Slider/Slider'
 import number3 from '../../../assets/number3.png'
 
-function Section3() {
+const Section3: React.FC = () => {
   return (
     <div className="section3 bg-[#F3F2FF]">
       <div className="heading-3">

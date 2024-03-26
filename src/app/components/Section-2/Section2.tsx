@@ -14,15 +14,11 @@ import picture from '../../../assets/Section Image.png'
 import sectionNumber from '../../../assets/Number2.png'
 import users from '../../../assets/users.png'
 
-function Section2() {
-  const [typingStart, setTypingStart] = useState(false)
+const Section2: React.FC = () => {
+  const [typingStart, setTypingStart] = useState<boolean>(false)
   useEffect(() => {
-    try {
-      AOS.init({ duration: 300 })
-      setTypingStart(true)
-    } catch (e) {
-      console.log('error')
-    }
+    AOS.init({ duration: 300 })
+    setTypingStart(true)
   }, [])
   return (
     <div className="section-2 bg-white flex flex-col items-center">

@@ -35,7 +35,7 @@
     "**/*.tsx",
     "jest.config.ts",
     "jest.setup.js"
-  ],
+, "src/app/components/Slider/Slider.js"  ],
   "exclude": [
     "node_modules"
   ]
