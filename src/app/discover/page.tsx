@@ -38,9 +38,8 @@ const filterOptions = [
   },
 ]
 
-function Discover() {
-  //TODO: Add backend logic to make the UI work as expected.
-
+const Discover = () => {
+  //TODO: Solve hydration error
   return (
     <div>
       <Navbar />
@@ -51,10 +50,10 @@ function Discover() {
           <SearchBar
             data={[]}
             loading={false}
-            className="w-full lg:max-w-none mt-0"
+            className="w-full lg:max-w-none mt-0 rounded-3xl hover:shadow-lg"
             inputStyle="border-gray-300 rounded-3xl text-[14px]"
-            iconDivStyle="pl-4"
-            iconStyle="text-gray-500"
+            iconDivStyle="pl-6"
+            iconStyle="text-gray-600"
             iconSize="1.5rem"
             placeholderText="Search institution"
           />

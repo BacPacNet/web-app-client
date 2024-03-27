@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import Dropdown, { DropdownOption } from '@/components/ui/dropdown'
 import Modal from '@/components/Modal'
+import { cn } from '@/lib/utils'
 interface SearchFilterProps {
   filters: {
     label: string
@@ -43,27 +44,36 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {activeFilter && (
-          <div className="flex flex-col justify-between h-full">
+          <div className="flex flex-col justify-between pt-6">
             <div>
-              <h1 className="text-xl font-bold text-center mb-4">{activeFilter.label}</h1>
-              <ul className="divide-y divide-gray-200">
-                {activeFilter.options.map((option) => (
-                  <li key={option.value} className="py-2 px-4 hover:bg-gray-100 cursor-pointer" onClick={() => handleOptionSelect(option.value)}>
-                    {option.label}
-                  </li>
-                ))}
+              <h1 className="text-xl font-medium text-center mb-4">{activeFilter.label}</h1>
+              <ul className="">
+                {activeFilter.options.map((option) => {
+                  const activeClass = selectedValues[activeFilter.label] === option.value ? 'bg-gray-100 border-l-2 border-black' : ''
+                  return (
+                    <li
+                      key={option.value}
+                      className={cn('py-1 px-4 mx-6 my-2 hover:bg-gray-50 hover:border-l-2 hover:border-black cursor-pointer', activeClass)}
+                      onClick={() => handleOptionSelect(option.value)}
+                    >
+                      {option.label}
+                    </li>
+                  )
+                })}
               </ul>
             </div>
-            <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" onClick={() => setIsModalOpen(false)}>
-              Apply
-            </button>
+            <div className="flex justify-end">
+              <button className="my-4 bg-[#6647FF] text-white py-2 px-6 rounded-lg hover:bg-blue-700" onClick={() => setIsModalOpen(false)}>
+                Apply
+              </button>
+            </div>
           </div>
         )}
       </Modal>
       {/* For Screen sizes equivalent to large or more */}
-      <div className="border-2 border-gray-300 rounded-lg pb-4 max-h-[380px] hidden lg:block">
-        <p className="p-[18px] pr-[61px] mb-4 border-b-2 bg-gray-100 font-medium text-[16px] whitespace-nowrap">Search Filter</p>
-        <div className=" p-4 rounded-md h-auto">
+      <div className="border-2 border-gray-300 rounded-lg pb-4 max-h-[400px] hidden lg:block">
+        <p className="p-[18px] pr-[61px] mb-4 border-b-2 bg-gray-50 font-medium text-[16px] whitespace-nowrap">Search Filter</p>
+        <div className=" p-4 rounded-md">
           {filters.map(({ label, options }) => (
             <Dropdown
               key={label}
@@ -74,7 +84,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
             />
           ))}
           <button
-            className="px-3 py-2 rounded-md hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 mt-4 text-indigo-500 font-medium text-xs float-right"
+            className="px-3 py-2 rounded-md hover:border-indigo-400 transition-colors duration-300 border-indigo-500 border-2 mt-4 text-indigo-500 font-medium text-xs float-right mb-4"
             onClick={handleReset}
           >
             Reset

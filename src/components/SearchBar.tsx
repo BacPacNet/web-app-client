@@ -64,7 +64,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       {open && (
         <div
           className={cn(
-            'searchBox border-2 overflow-auto border-gray-300 w-full h-auto max-h-80 mt-4 rounded-lg p-3 bg-white text-black relative',
+            'searchBox border-2 overflow-auto border-gray-300 w-full h-auto max-h-80 mt-4 rounded-lg p-3 bg-white text-black relative z-50',
             resultStyle
           )}
         >
