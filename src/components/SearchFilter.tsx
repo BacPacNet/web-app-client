@@ -14,7 +14,8 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
   const [selectedValues, setSelectedValues] = useState<{ [key: string]: string }>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeFilter, setActiveFilter] = useState<{ label: string; options: DropdownOption[] } | null>(null)
-  console.log(selectedValues)
+  console.log("Selected Filters: ",selectedValues)
+
   const handleSelectChange = (filterLabel: string, value: string) => {
     setSelectedValues((prevValues) => ({
       ...prevValues,
@@ -71,7 +72,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
         )}
       </Modal>
       {/* For Screen sizes equivalent to large or more */}
-      <div className="border-2 border-gray-300 rounded-lg pb-4 max-h-[400px] hidden lg:block">
+      <div className="border-2 border-gray-300 rounded-lg pb-4 max-h-[400px] hidden lg:block pt-1">
         <p className="p-[18px] pr-[61px] mb-4 border-b-2 bg-gray-50 font-medium text-[16px] whitespace-nowrap">Search Filter</p>
         <div className=" p-4 rounded-md">
           {filters.map(({ label, options }) => (
