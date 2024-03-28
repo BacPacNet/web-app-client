@@ -1,0 +1,118 @@
+.main {
+  height: 820px;
+}
+.left-part {
+  width: 440px;
+}
+.typing-box {
+  margin-bottom: 36px;
+}
+.typing-animation {
+  text-align: center;
+  display: block;
+  height: 46px;
+  width: 955px;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: #171717;
+}
+
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .typing-box {
+    width: 100%;
+    height: 180px;
+    gap: 36px;
+    /* border: 2px solid red; */
+  }
+  .typing-animation {
+    width: 100%;
+    height: 144px;
+    /* border: 2px solid red; */
+    font-family: Inter;
+    font-size: 44px;
+    line-height: 48px;
+    color: #171717;
+    font-weight: 700;
+    text-align: center;
+  }
+  .typing-animation {
+    width: 100%;
+    height: 96px;
+    text-align: center;
+  }
+  .login-part {
+    width: 400px;
+    margin-top: 64px;
+    height: 116px;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .main {
+    height: 550px;
+  }
+  .typing-box {
+    /* border: 2px solid rgb(78, 6, 6); */
+    width: 100%;
+    height: 160px;
+    margin-top: 76px;
+  }
+  .typing-animation {
+    width: 100%;
+    /* border: 2px solid red; */
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  .login-part {
+    /* border: 2px solid red; */
+    width: 342.62px;
+    height: 106px;
+    margin-top: 50px;
+  }
+  .login-text {
+    margin-bottom: 8px;
+  }
+  .login-text h2 {
+    /* border: 2px solid red; */
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+  .star {
+    width: 28px;
+    height: 24px;
+  }
+  .checkbox {
+    width: 159px;
+    height: 20px;
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0em;
+    margin-top: 8px;
+    text-align: left;
+  }
+  .box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    color: #d4d4d4;
+  }
+  .box-text {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+}
