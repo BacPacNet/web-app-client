@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState } from 'react'
+import { cn } from '@/lib/utils'
 export interface DropdownOption {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface DropdownProps {
-  label: string;
-  options: DropdownOption[];
-  value: string;
-  onChange: (value: string) => void;
+  label: string
+  options: DropdownOption[]
+  value: string
+  onChange: (value: string) => void
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange, }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange }) => {
+  const [isOpen, setIsOpen] = useState(false)
   const handleOptionClick = (optionValue: string) => {
-    onChange(optionValue);
-    setIsOpen(false);
-  };
+    onChange(optionValue)
+    setIsOpen(false)
+  }
 
-  const activeStyle = isOpen ? 'bg-gray-50 border-2 rounded-b-none' : '';
-  const activeDropdownStyle = isOpen ? 'border-2 border-gray-300 rounded-t-none border-t-0' : 'rounded-md';
+  const activeStyle = isOpen ? 'bg-gray-50 border-2 rounded-b-none' : ''
+  const activeDropdownStyle = isOpen ? 'border-2 border-gray-300 rounded-t-none border-t-0' : 'rounded-md'
   return (
-    <div className="mb-4 relative" >
+    <div className="mb-4 relative">
       <button
-        className={cn("block w-full py-2 px-3 border border-gray-300 bg-white rounded-md appearance-none text-left", activeStyle)}
+        className={cn('block w-full py-2 px-3 border border-gray-300 bg-white rounded-md appearance-none text-left', activeStyle)}
         onClick={() => setIsOpen(!isOpen)}
       >
         {value || label}
@@ -37,20 +37,16 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, value, onChange, })
         </svg>
       </button>
       {isOpen && (
-        <ul className={cn("absolute z-10 w-full bg-white rounded-md shadow-md", activeDropdownStyle)}>
+        <ul className={cn('absolute z-10 w-full bg-white rounded-md shadow-md', activeDropdownStyle)}>
           {options.map(({ value, label }) => (
-            <li
-              key={value}
-              className="px-3 py-2 hover:bg-gray-50 hover:font-medium cursor-pointer"
-              onClick={() => handleOptionClick(value)}
-            >
+            <li key={value} className="px-3 py-2 hover:bg-gray-50 hover:font-medium cursor-pointer" onClick={() => handleOptionClick(value)}>
               {label}
             </li>
           ))}
         </ul>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Dropdown;
+export default Dropdown

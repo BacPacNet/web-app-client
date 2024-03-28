@@ -14,7 +14,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ filters }) => {
   const [selectedValues, setSelectedValues] = useState<{ [key: string]: string }>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeFilter, setActiveFilter] = useState<{ label: string; options: DropdownOption[] } | null>(null)
-  console.log("Selected Filters: ",selectedValues)
+  console.log('Selected Filters: ', selectedValues)
 
   const handleSelectChange = (filterLabel: string, value: string) => {
     setSelectedValues((prevValues) => ({
