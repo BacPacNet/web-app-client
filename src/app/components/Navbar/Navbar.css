@@ -2,6 +2,7 @@
   box-shadow: 0 5px 15px 5px #ececec;
   height: 64px;
   width: 100%;
+  z-index: 105;
 }
 .nav li:hover {
   font-size: 14px;
@@ -35,7 +36,7 @@
   color: #404040;
   /* border: 2px solid red; */
   display: block;
-  width: max-content;
+  width: 78px;
   text-align: center;
   /* border: 2px solid red; */
   font-weight: 500;
@@ -76,7 +77,6 @@
   justify-content: space-around;
   justify-content: start;
   width: 70%;
-  transition: all 2s ease;
 }
 .right-nav {
   width: 190px;

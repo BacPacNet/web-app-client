@@ -94,7 +94,7 @@ const Navbar: React.FC = () => {
   ]
   const filteredMenuContent: MenuItem[] = isMobile ? menuContent : menuContent.filter((item) => item.display !== 'mobile')
   return (
-    <div className="navbar justify-around w-full center-v h-16 bg-white sticky top-0 left-0 z-50">
+    <div className="navbar justify-around w-full center-v h-16 bg-white sticky top-0 left-0">
       <div className="left-nav h-8 center-v">
         <div className="logo center-v mr-16 h-full">
           <Link href="/">

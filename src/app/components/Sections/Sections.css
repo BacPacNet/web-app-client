@@ -19,16 +19,18 @@
     height: 2490px;
   }
   .heading {
-    margin-top: 86px;
+    margin-top: 84px;
+    width: 100%;
   }
   .part-info {
     width: 100%;
+    height: 2040px;
   }
 }
 @media only screen and (max-width: 375px) {
   .section-1 {
     width: 100%;
-    height: 2200px;
+    height: 2262px;
   }
   .sec-1 {
     width: 60px;

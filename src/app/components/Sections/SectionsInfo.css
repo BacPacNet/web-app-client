@@ -2,11 +2,12 @@
   width: 968px;
   height: 412px;
   margin-top: 83px;
-  border-radius: 300px;
   /* border: 2px solid red; */
+  align-items: normal;
 }
 .applicantModel {
   width: 445.74px;
+  /* border: 2px solid rebeccapurple; */
   height: 412px;
 }
 .studentModel {
@@ -24,12 +25,16 @@
 .appSubClass {
   width: 446px;
   height: 328px;
+  /* border: 2px solid red; */
   margin-left: 32px;
+}
+.studntSubClass {
+  /* border: 2px solid red; */
+  margin-top: 20px;
 }
 .studntSubClass,
 .factSubClass {
   width: 446px;
-  /* border: 2px solid red; */
   height: 296px;
   margin-right: 32px;
 }
@@ -43,6 +48,8 @@
   font-weight: 800;
   display: flex;
   justify-content: flex-start;
+  /* border: 2px solid red; */
+  margin-bottom: 32px;
   line-height: 36px;
   letter-spacing: -0.02em;
   text-align: left;
@@ -51,9 +58,11 @@
 .info {
   width: 446px;
   height: 260px;
-  margin-top: 12px;
+  /* border: 2px solid red; */
+  /* margin-top: 12px; */
 }
 .subtitle {
+  /* border: 2px solid red; */
   width: 446px;
   height: 56px;
   font-size: 20px;
@@ -61,6 +70,7 @@
   line-height: 28px;
   letter-spacing: -0.02em;
   color: #404040;
+  margin-bottom: 12px;
   text-align: justify;
 }
 .appSubtitle {
@@ -92,10 +102,19 @@
   .part {
     display: flex;
     flex-direction: column;
-    margin-top: 100px;
-    height: 680px;
+    height: 650px;
     width: 100%;
+    margin-top: -0px;
+    align-items: center;
+    justify-content: flex-end;
     /* border: 2px solid red; */
+  }
+  .part:nth-child(2) {
+    margin-top: 100px;
+  }
+  .part:nth-child(3) {
+    margin-top: 140px;
+    height: 598.6px;
   }
   .applicantModel {
     width: 442.62px;
@@ -105,6 +124,11 @@
   .studentModel {
     width: 476.51px;
     height: 330.6px;
+    margin-top: 100px;
+  }
+  .facultyModel {
+    width: 461.91px;
+    height: 336.45px;
   }
   .appSubClass {
     width: 100%;
@@ -112,6 +136,7 @@
     height: 204px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
     margin-left: 0px;
     margin-right: 0;
@@ -120,7 +145,7 @@
   .info {
     width: 100%;
     height: 136px;
-    margin-top: 12px;
+    /* margin-top: 12px; */
     text-align: center;
   }
   .subtitle,
@@ -131,12 +156,15 @@
   }
   .title {
     text-align: center;
+    margin-bottom: 32px;
+    margin-top: 64px;
+    justify-content: center;
   }
   .desc-sec {
     display: flex;
     width: 100%;
     font-size: 18px;
-    padding: 24px;
+    padding: 0 24px;
     font-weight: 400;
     line-height: 32px;
     letter-spacing: 0em;
@@ -150,6 +178,8 @@
     /* padding: 32px; */
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+
     align-items: center;
     margin-left: 0px;
     margin-right: 0;
@@ -160,16 +190,34 @@
     /* padding: 32px; */
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+
     align-items: center;
     margin-left: 0px;
     margin-right: 0;
   }
 }
+@media only screen and (max-width: 480px) and (min-width: 375px) {
+  .applicantModel {
+    width: 100%;
+    height: 412px;
+    border-radius: 300px;
+  }
+  .studentModel {
+    width: 100%;
+    height: 330.6px;
+    margin-top: 100px;
+  }
+  .facultyModel {
+    width: 100%;
+    height: 336.45px;
+  }
+}
 @media only screen and (max-width: 375px) {
   .part {
-    /* margin-top: 36px; */
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
   .applicantModel {
     width: 370px;
@@ -180,12 +228,11 @@
     width: 343.56px;
     height: 316px;
     margin-left: 0px;
-    margin-top: 36px;
+    margin-top: 56px;
   }
   .title {
     width: 343.56px;
     margin-bottom: 32px;
-    font-family: Inter;
     /* border: 2px solid red; */
     font-size: 24px;
     font-weight: 800;
@@ -201,8 +248,12 @@
     flex-direction: column;
     align-items: center; */
   }
+  .subtitle {
+    margin-bottom: 12px;
+  }
   .appSubtitle {
     font-size: 18px;
+    margin-bottom: 12px;
     height: 48px;
     width: 100%;
     font-weight: 700;
@@ -224,8 +275,8 @@
   }
   .studentModel {
     width: 336.46px;
-    margin-top: 230px;
     height: 233.43px;
+    margin-top: 230px;
     padding-left: 23.03px;
     padding-right: 17.51px;
   }
@@ -243,7 +294,7 @@
     width: 342.56px;
     height: 316px;
     margin-right: 0px;
-    margin-top: 47.57px;
+    margin-top: 56px;
   }
   .facultyModel {
     width: 340.72px;
@@ -255,6 +306,6 @@
   .factSubClass {
     width: 342.56px;
     height: 348px;
-    margin-top: 64.82px;
+    margin-top: 56px;
   }
 }

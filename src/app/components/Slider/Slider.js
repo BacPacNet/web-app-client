@@ -52,6 +52,8 @@ export default function Slider() {
   }
   return (
     <Swiper
+      data-aos="fade-up"
+      data-aos-duration="500"
       effect={'coverflow'}
       // grabCursor={true}
       // onSlideChange={handleSlideChange}
@@ -76,7 +78,11 @@ export default function Slider() {
     >
       {featureInfo.map((feature, index) => (
         <SwiperSlide key={index}>
-          {({ isActive }) => <Image src={feature.imgUrl} alt={`slide_image_${index}`} className={isActive ? 'active-img' : 'not-active-img'} />}
+          {({ isActive }) => (
+            <div className={isActive ? 'active-img' : 'not-active-img'}>
+              <Image src={feature.imgUrl} alt={`slide_image_${index}`} className="img" />
+            </div>
+          )}
         </SwiperSlide>
       ))}
       <div className="slider-controler">

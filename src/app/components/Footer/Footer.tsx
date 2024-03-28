@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
   }
   return (
     <div className="footer center-v bg-[#ffffff] relative bottom-0 left-0 right-0 flex flex-col">
-      <div className="top w-full flex relative top-11 h-full justify-around">
+      <div className="top w-full flex relative top-11 h-full justify-between">
         <div className="left-part">
           <p className="p1 text-[#6647FF] font-semibold text-xs h-5">STILL HAVE QUESTIONS?</p>
           <h1 className="h1 text-[#171717] font-extrabold text-4xl h-11">Get to know us better</h1>
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
       <div className="bottom w-full ">
         <div className="copyright">Copyright © 2024, Unibuzz Networks</div>
         <div className="flex bottom-part-2">
-          <div className="policy flex w-80">
+          <div className="policy flex">
             <p>Privacy Policy</p>
             <p>Terms and Conditions</p>
             <p>Contact Us</p>

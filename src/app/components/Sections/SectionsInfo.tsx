@@ -27,7 +27,7 @@ function SectionsInfo({ item }: SectionsInfoProps) {
   }, [])
 
   return (
-    <div className={item.reverse === true ? 'part flex flex-row-reverse items-center' : 'part flex items-center'}>
+    <div className={item.reverse === true ? 'part flex flex-row-reverse' : 'part flex'}>
       <div className={item.className} data-aos={item.animation[0]} data-aos-duration="500" data-aos-easing="ease-in">
         <Image src={item.image} alt={item.title} className="w-full h-full" />
       </div>

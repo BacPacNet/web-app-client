@@ -11,12 +11,12 @@ import SearchBar from '../components/SearchBar'
 import Section2 from './components/Section-2/Section2'
 import Section3 from './components/Section-3/Section3'
 import Sections from './components/Sections/Sections'
-import { TypeAnimation } from 'react-type-animation'
 import client from '../client'
 import { query } from '../queries/queries'
 
 export default function Home() {
   const [universityData, setUniversityData] = useState([])
+  const [searchOpen, setSearchOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   async function fetchData() {
     try {
@@ -36,15 +36,12 @@ export default function Home() {
   return (
     <div className="home">
       <Navbar />
-      <main className="main flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]">
+      <main
+        className="main flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]"
+        onClick={() => setSearchOpen(!searchOpen)}
+      >
         <div className="typing-box text-9xl font-bold mt-48 flex flex-col items-center">
-          <TypeAnimation
-            className="typing-animation"
-            cursor={false}
-            sequence={[100, 'Search universities worldwide and become part of their online communities']}
-            speed={65}
-            repeat={0}
-          />
+          <div className="typing-animation">Search universities worldwide and become part of their online communities</div>
         </div>
         <SearchBar data={universityData} loading={loading} />
         <div className="login-part mt-14 flex flex-col items-center">
