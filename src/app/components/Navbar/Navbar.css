@@ -125,7 +125,7 @@
 .nav-link-ltr.active::before {
   width: 100%;
 }
-@media only screen and (max-width: 1200px) and (min-width: 768px) {
+@media only screen and (max-width: 1290px) and (min-width: 850px) {
   .right-nav {
     margin-left: -10px;
   }
@@ -139,6 +139,24 @@
   .nav {
     justify-content: space-around;
     gap: 2rem;
+  }
+}
+@media only screen and (max-width: 850px) and (min-width: 760px) {
+  .right-nav {
+    margin-left: -10px;
+  }
+  .left-nav {
+    justify-content: space-evenly;
+  }
+  .logo {
+    margin-right: 0rem;
+    width: 103px;
+    height: 32px;
+  }
+  .nav {
+    justify-content: space-around;
+    gap: 1em;
+    width: 74%;
   }
 }
 @media only screen and (max-width: 768px) {

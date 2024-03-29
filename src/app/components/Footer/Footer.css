@@ -87,6 +87,28 @@
   border-radius: 8px;
   border: 1px solid #e5e5e5;
 }
+@media only screen and (max-width: 1100px) and (min-width: 768px) {
+  .top {
+    width: 90%;
+  }
+  .bottom {
+    width: 90%;
+    justify-content: space-between;
+  }
+  .copyright {
+    width: 40%;
+  }
+  .bottom-part-2 {
+    justify-content: center;
+  }
+  .policy {
+    width: 392px;
+    margin-left: -118px;
+    height: 10px;
+    display: flex;
+    justify-content: space-around;
+  }
+}
 @media only screen and (max-width: 768px) and (min-width: 375px) {
   .footer {
     width: 100%;
@@ -203,6 +225,7 @@
     align-items: center;
     display: flex;
     justify-content: start;
+    width: 100%;
   }
   .left-part {
     width: 344px;
@@ -279,7 +302,6 @@
     justify-content: space-between;
   }
   .policy {
-    width: 100%;
     justify-content: space-around;
     width: 344px;
     height: 20px;
