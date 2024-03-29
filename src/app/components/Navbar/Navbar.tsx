@@ -116,39 +116,41 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           )}
-          {filteredMenuContent.map((item, index) => {
-            return (
-              <div className="nav-item" key={index}>
-                <li key={index} className="list-none">
-                  {item.path === '/upgrade' ? (
-                    <div className="flex" onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                      {item.display === 'mobile' ? (
-                        <Link
-                          href={item.path}
-                          className={pathname === item.path ? 'mobile nav-link active nav-link-ltr' : 'mobile link special w-16'}
-                        >
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <Link href={item.path} className={pathname === item.path ? 'nav-link active nav-link-ltr' : 'link special w-16'}>
-                          {item.name}
-                        </Link>
-                      )}
-                      <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
-                    </div>
-                  ) : item.display === 'mobile' ? (
-                    <Link href={item.path} className={pathname === item.path ? 'mobile nav-link nav-link-ltr' : 'mobile link'}>
-                      {item.name}
-                    </Link>
-                  ) : (
-                    <Link href={item.path} className={pathname === item.path ? ' nav-link active nav-link-ltr' : ' link'}>
-                      {item.name}
-                    </Link>
-                  )}
-                </li>
-              </div>
-            )
-          })}
+          <div className="nav-details flex">
+            {filteredMenuContent.map((item, index) => {
+              return (
+                <div className="nav-item" key={index}>
+                  <li key={index} className="list-none">
+                    {item.path === '/upgrade' ? (
+                      <div className="flex" onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                        {item.display === 'mobile' ? (
+                          <Link
+                            href={item.path}
+                            className={pathname === item.path ? 'mobile nav-link active nav-link-ltr' : 'mobile link special w-16'}
+                          >
+                            {item.name}
+                          </Link>
+                        ) : (
+                          <Link href={item.path} className={pathname === item.path ? 'nav-link active nav-link-ltr' : 'link special w-16'}>
+                            {item.name}
+                          </Link>
+                        )}
+                        <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
+                      </div>
+                    ) : item.display === 'mobile' ? (
+                      <Link href={item.path} className={pathname === item.path ? 'mobile nav-link nav-link-ltr' : 'mobile link'}>
+                        {item.name}
+                      </Link>
+                    ) : (
+                      <Link href={item.path} className={pathname === item.path ? ' nav-link active nav-link-ltr' : ' link'}>
+                        {item.name}
+                      </Link>
+                    )}
+                  </li>
+                </div>
+              )
+            })}
+          </div>
           {!isMobile && (
             <div className={open ? 'btn-res' : 'right-nav w-48 center-v justify-start h-9 '}>
               <div>
