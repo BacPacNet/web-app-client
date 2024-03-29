@@ -30,12 +30,6 @@ body {
   .btn {
     @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
   }
-  .btn-primary {
-    @apply bg-[#F3F2FF];
-  }
-  .btn-secondary {
-    @apply bg-[#6647FF];
-  }
   .center {
     @apply flex items-center justify-center;
   }

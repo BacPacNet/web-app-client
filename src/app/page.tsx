@@ -50,7 +50,7 @@ export default function Home() {
             <h2 className="text-lg font-medium center text-black">Already part of your university community?</h2>
           </div>
           <div className="flex justify-center items-center w-28">
-            <button className=" btn-secondary btn w-28 h-10 center mr-1 px-4 py-2.5">Login</button>
+            <button className="btn-secondary btn w-28 h-10 center mr-1 px-4 py-2.5">Login</button>
           </div>
           <div className="checkbox flex justify-center items-center mt-4 w-1/2">
             <input type="checkbox" name="login" id="login" className="box w-6 h-6 cursor-pointer" />

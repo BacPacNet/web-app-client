@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
           <p className="p2 text-lg font-normal h-7 text-[#525252]">Familiarize yourself with Unibuzz&apos;s mission and purpose</p>
         </div>
         <div className="right-part">
-          <div className="discord mr-6">
+          <div className="discord mr-4">
             <button className="btn btn-disc text-[#6647FF] text-base text-center w-40 h-12 font-medium p-2 flex justify-evenly items-center">
               <FaDiscord className="discord-icon" />
               Our Discord
