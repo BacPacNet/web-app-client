@@ -3,7 +3,7 @@
 import './Section2.css'
 import 'aos/dist/aos.css'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import AOS from 'aos'
 import Image from 'next/image'
@@ -16,12 +16,36 @@ import users from '../../../assets/users.png'
 
 const Section2: React.FC = () => {
   const [typingStart, setTypingStart] = useState<boolean>(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    AOS.init({ duration: 300 })
-    setTypingStart(true)
+    AOS.init({ duration: 500 })
+    // Set up IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Start typing animation when section comes into view
+          setTimeout(() => {
+            setTypingStart(true)
+          }, 300)
+        }
+      })
+    })
+
+    // Observe the section
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    // Clean up the observer
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
   }, [])
+
   return (
-    <div className="section-2 bg-white flex flex-col items-center">
+    <div ref={sectionRef} className="section-2 bg-white flex flex-col items-center">
       <div className="heading flex justify-center flex-col items-center mt-4">
         <Image src={sectionNumber} alt="1" className=" w-14 h-10" />
         <h3 className="font-inter font-extrabold text-4xl leading-12 tracking-tight text-center text-[#171717]">Join your institute</h3>
@@ -40,7 +64,7 @@ const Section2: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="college-info flex flex-col items-center">
+      <div className="college-info flex flex-col items-center relative">
         <div className="h2">
           {typingStart && (
             <TypeAnimation

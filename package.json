@@ -18,6 +18,8 @@
     "@apollo/client": "^3.8.8",
     "@apollo/server": "^4.9.5",
     "@as-integrations/next": "^2.0.2",
+    "@tsparticles/engine": "^3.3.0",
+    "@tsparticles/react": "^3.0.0",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",

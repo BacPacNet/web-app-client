@@ -151,8 +151,12 @@ const Navbar: React.FC = () => {
           })}
           {!isMobile && (
             <div className={open ? 'btn-res' : 'right-nav w-48 center-v justify-start h-9 '}>
-              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right h-full">Sign Up</button>
-              <button className="btn btn-secondary ml-6 text-right text-sm font-medium h-full">Login</button>
+              <div>
+                <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right h-full">Sign Up</button>
+              </div>
+              <div>
+                <button className="btn btn-secondary ml-6 text-right text-sm font-medium h-full">Login</button>
+              </div>
             </div>
           )}
         </div>
