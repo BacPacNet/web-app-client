@@ -18,11 +18,13 @@ const Section2: React.FC = () => {
   const [typingStart, setTypingStart] = useState<boolean>(false)
   const sectionRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    AOS.init({ duration: 500 })
+    AOS.init({ duration: 300 })
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setTypingStart(true)
+        } else {
+          setTypingStart(false)
         }
       })
     })
@@ -41,7 +43,7 @@ const Section2: React.FC = () => {
   }, [])
 
   return (
-    <div className="section-2 bg-white flex flex-col items-center">
+    <div className="section-2 bg-white flex flex-col items-center" ref={sectionRef}>
       <div className="heading flex justify-center flex-col items-center mt-4">
         <Image src={sectionNumber} alt="1" className=" w-14 h-10" />
         <h3 className="font-inter font-extrabold text-4xl leading-12 tracking-tight text-center text-[#171717]">Join your institute</h3>
@@ -60,7 +62,7 @@ const Section2: React.FC = () => {
           </div>
         </div>
       </div>
-      <div ref={sectionRef} className="college-info flex flex-col items-center relative">
+      <div className="college-info flex flex-col items-center relative">
         <div className="h2">
           {typingStart && (
             <TypeAnimation
