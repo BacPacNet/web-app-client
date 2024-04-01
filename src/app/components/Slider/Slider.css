@@ -247,8 +247,8 @@
     width: 100%;
   }
   .img {
-    width: 533px;
-    height: 376.71px;
+    width: 386px;
+    height: 344.71px;
   }
   .slider-btn {
     top: -99.54px;
@@ -258,10 +258,8 @@
   .active-img {
     width: 85%;
     height: 377px;
-    transform: translateX(50px);
-    -o-object-fit: contain;
+    transform: translateX(74px);
     object-fit: contain;
-    transform: translate(10%, 0px);
   }
   .not-active-img {
     display: none;

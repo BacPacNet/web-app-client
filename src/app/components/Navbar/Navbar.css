@@ -132,6 +132,9 @@
 .nav-link-ltr.active::before {
   width: 100%;
 }
+.nav-res {
+  height: 0;
+}
 @media only screen and (max-width: 1290px) and (min-width: 760px) {
   .right-nav {
     margin-left: -10px;
@@ -155,28 +158,11 @@
     justify-content: space-between;
     align-items: center;
   }
+  .nav-res {
+    height: 0;
+    transition: height 300ms ease-in;
+  }
 }
-/* @media only screen and (max-width: 850px) and (min-width: 760px) {
-  .right-nav {
-    margin-left: -10px;
-  }
-  .nav-details {
-    width: 530px;
-  }
-  .left-nav {
-    justify-content: space-evenly;
-  }
-  .logo {
-    margin-right: 0rem;
-    width: 103px;
-    height: 32px;
-  }
-  .nav {
-    justify-content: space-around;
-    gap: 1em;
-    width: 74%;
-  }
-} */
 @media only screen and (max-width: 768px) {
   .navbar {
     height: 82px;
@@ -190,33 +176,37 @@
     justify-content: normal;
     padding-left: 32px;
   }
-  /* .right-nav {
-    display: none;
-  } */
   .nav-res {
     position: absolute;
-    transition: all 0.3s ease-in;
     top: 100%;
     left: 0;
     width: 100%;
     background-color: white;
-    box-shadow: 0 5px 15px 5px #ececec;
+    box-shadow: 0px 15px 9px -4px #ececec;
     /* border: 2px solid red; */
-    height: 429px;
     display: flex;
     flex-direction: column;
     z-index: 999;
     justify-content: flex-start;
-    padding-left: 32px;
+    padding-left: 27px;
+    padding-right: 25px;
     align-items: normal;
   }
+  .open {
+    height: 429px;
+  }
   .nav-item {
-    margin-top: 33px;
+    /* border: 2px solid red; */
+    margin-top: 10px;
+    height: 40px;
+    display: flex;
+    width: 100%;
+    align-items: center;
   }
   .nav-details {
     width: 100%;
-    /* border: 2px solid red; */
-    height: 100%;
+    border-bottom: 2px solid #ececec;
+    height: 78%;
     justify-content: flex-start;
     flex-direction: column;
     align-items: baseline;
@@ -227,11 +217,10 @@
     width: 190px;
     height: 36px;
     position: absolute;
-    right: 40px;
+    right: 30px;
     bottom: 40px;
   }
   .navbar .nav {
-    border: 2px solid rgb(187, 255, 0);
     display: none;
     flex-direction: column;
     align-items: center;
@@ -265,23 +254,39 @@
     justify-content: space-between;
   }
   .left-nav {
-    width: 103px;
-    margin-left: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: normal;
+    padding-left: 12px;
   }
   .mobile {
     display: block;
     font-size: 12px;
-    margin-left: 20px;
+    margin-left: 0;
     text-align: left;
     font-weight: 500;
-    width: 210px;
+    width: 87%;
     height: 35px;
+    margin-left: 20px;
     color: #6647ff;
+    /* border: 2px solid red; */
+  }
+  .nav-item:nth-child(1):hover,
+  .nav-item:nth-child(2):hover,
+  .nav-item:nth-child(10):hover {
+    background-color: #ececec;
+    color: #404040;
+  }
+  li {
+    width: 100%;
+    height: 35px;
+    /* border: 2px solid red; */
   }
   .nav-details {
-    width: 90%;
-    /* border: 2px solid red; */
-    height: 81%;
+    width: 100%;
+    border-bottom: none;
+    height: 71%;
+    padding-inline: 9px;
     justify-content: space-between;
     flex-direction: column;
     align-items: baseline;
@@ -292,7 +297,8 @@
     height: 40px;
     /* border: 2px solid red; */
     justify-content: space-between;
-    width: 95%;
+    width: 100%;
+    padding-inline: 6px;
     align-items: center;
     margin-bottom: -13px;
   }
@@ -327,28 +333,25 @@
   .nav-item {
     margin-top: 6px;
     height: 50px;
-    width: 235px;
+    width: 100%;
     font-size: 12px;
   }
 
-  .nav-item:first-child:hover,
-  .nav-item:nth-child(n + 6):nth-child(-n + 9):hover {
-    background-color: #ececec;
-    color: #404040;
-  }
-  .nav-item:nth-child(1) {
-    /* margin-top: 20px; */
-  }
-  .nav-item:nth-child(11) {
-    margin-bottom: 20px;
-  }
   .nav-res {
-    height: 600px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .open {
+    height: 625px;
   }
   .logo {
+    width: 73px;
+    height: 31px;
+    margin-right: 0;
+  }
+  .logo a .img {
     width: 100%;
     height: 100%;
-    margin-right: 0;
   }
   .btn-res {
     bottom: 30px;

@@ -102,7 +102,7 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
         <div
-          className={open ? 'nav-res gap-7 h-full flex items-center justify-around w-full relative' : 'nav center-v gap-16 h-full w-full relative'}
+          className={open ? 'nav-res open gap-7 h-full flex items-center justify-around w-full relative' : 'nav center-v gap-16 h-full w-full relative'}
         >
           {isLogin && isMobile && (
             <div className="profile">
@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
                         {item.name}
                       </Link>
                     ) : (
-                      <Link href={item.path} className={pathname === item.path ? ' nav-link active nav-link-ltr' : ' link'}>
+                      <Link href={item.path} className={pathname === item.path ? ' nav-link active nav-link-ltr' : 'link'}>
                         {item.name}
                       </Link>
                     )}

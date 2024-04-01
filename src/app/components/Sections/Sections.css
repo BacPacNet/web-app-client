@@ -43,8 +43,12 @@
   .part {
     width: 100%;
   }
+  .part-info {
+    width: 100%;
+    height: 2040px;
+  }
   .h-section-1 {
-    width: 343px;
+    width: 100%;
     height: 40px;
     font-size: 32px;
     font-weight: 700;

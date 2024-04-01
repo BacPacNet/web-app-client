@@ -44,7 +44,7 @@ const Section2: React.FC = () => {
 
   return (
     <div className="section-2 bg-white flex flex-col items-center" ref={sectionRef}>
-      <div className="heading flex justify-center flex-col items-center mt-4">
+      <div className="heading-sec2 flex justify-center flex-col items-center mt-4">
         <Image src={sectionNumber} alt="1" className=" w-14 h-10" />
         <h3 className="font-inter font-extrabold text-4xl leading-12 tracking-tight text-center text-[#171717]">Join your institute</h3>
       </div>
@@ -66,7 +66,7 @@ const Section2: React.FC = () => {
         <div className="h2">
           {typingStart && (
             <TypeAnimation
-              style={{ whiteSpace: 'pre-line', display: 'block', fontSize: '44px' }}
+              style={{ whiteSpace: 'pre-line', display: 'block' }}
               className="typing-effect hp1"
               cursor={false}
               sequence={[1000, 'Connect, Collaborate, and Elevate']}

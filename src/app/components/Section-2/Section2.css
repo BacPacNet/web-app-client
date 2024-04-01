@@ -80,6 +80,9 @@
   height: 264.22px;
   border-radius: 300px;
 }
+.hp1 {
+  font-size: 44px;
+}
 .desc {
   width: 452px;
   height: 160px;
@@ -99,8 +102,8 @@
     width: 100%;
     height: 1921px;
   }
-  .heading {
-    width: 382px;
+  .heading-sec2 {
+    width: 370px;
     height: 104px;
   }
   .part-1 {
@@ -132,6 +135,7 @@
     margin-bottom: 24px;
   }
   .magnifier {
+    width: 178px;
     top: 160px;
     left: 331px;
   }
@@ -195,8 +199,8 @@
     margin-top: -150px;
     height: 1300px;
   }
-  .heading {
-    width: 301px;
+  .heading-sec2 {
+    width: 100%;
     height: 96px;
   }
   .part-1 {
@@ -274,5 +278,50 @@
     font-size: 16px;
     font-weight: 400;
     text-align: center;
+  }
+}
+@media only screen and (max-width: 359px) {
+  .part-1 {
+    width: 100%;
+  }
+  .left {
+    width: 100%;
+    height: 248px;
+  }
+  .picture {
+    width: 87%;
+    height: 183px;
+    /* border: 2px solid red; */
+    color: transparent;
+  }
+  .absolute {
+    left: 18px;
+  }
+  .hp1 {
+    font-size: 32px;
+    width: 100%;
+  }
+  .h2 {
+    width: 100%;
+  }
+  .hp2 {
+    width: 100%;
+    margin-top: 15px;
+  }
+  .right-sec2 {
+    padding-inline: 5px;
+  }
+  .magnifier {
+    position: relative;
+    width: 139px;
+    height: 134px;
+    top: 102px;
+    left: 191px;
+    border-radius: 9999px;
+  }
+}
+@media only screen and (max-width: 330px) {
+  .magnifier {
+    width: 120px;
   }
 }
