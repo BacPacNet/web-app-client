@@ -35,7 +35,16 @@
   padding: 4rem 1rem;
   margin: 0 auto;
 }
-
+@media only screen and (max-width: 765px) and (min-width: 500px) {
+  .section3 {
+    height: 860px;
+  }
+}
+@media only screen and (max-width: 500px) and (min-width: 375px) {
+  .section3 {
+    height: 810px;
+  }
+}
 @media only screen and (max-width: 375px) {
   .section3 {
     width: 100%;
