@@ -184,10 +184,10 @@
     flex-direction: column;
     z-index: 999;
     justify-content: flex-start;
-    padding-left: 27px;
-    height: 429px;
-    padding-right: 25px;
-    align-items: normal;
+    padding-left: 16px;
+    height: 314px;
+    padding-right: 28px;
+    align-items: flex-end;
   }
   .nav-item {
     /* border: 2px solid red; */
@@ -211,8 +211,8 @@
     width: 190px;
     height: 36px;
     position: absolute;
-    right: 30px;
-    bottom: 40px;
+    right: 33px;
+    bottom: 18px;
   }
   .navbar .nav {
     display: none;
