@@ -1,9 +1,11 @@
 'use client'
 
 import './Navbar.css'
+import 'aos/dist/aos.css'
 
 import React, { useEffect, useState } from 'react'
 
+import AOS from 'aos'
 import { FaRegBell } from 'react-icons/fa'
 import Image from 'next/image'
 import { IoMdMail } from 'react-icons/io'
@@ -35,6 +37,10 @@ const Navbar: React.FC = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+  useEffect(() => {
+    AOS.init({ duration: 300 })
+  }, [open])
+
   const menuContent: MenuItem[] = [
     {
       name: 'Discover',
@@ -103,6 +109,9 @@ const Navbar: React.FC = () => {
         </div>
         <div
           className={open ? 'nav-res gap-7 h-full flex items-center justify-around w-full relative' : 'nav center-v gap-16 h-full w-full relative'}
+          data-aos={open ? 'fade-down' : ''}
+          data-aos-duration="300"
+          data-aos-easing="ease-in"
         >
           {isLogin && isMobile && (
             <div className="profile">
@@ -135,7 +144,11 @@ const Navbar: React.FC = () => {
                             {item.name}
                           </Link>
                         )}
-                        <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
+                        {open ? (
+                          <Image src={star} alt="" className="active-upgrade" />
+                        ) : (
+                          <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
+                        )}
                       </div>
                     ) : item.display === 'mobile' ? (
                       <Link href={item.path} className={pathname === item.path ? 'mobile nav-link nav-link-ltr' : 'mobile link'}>
