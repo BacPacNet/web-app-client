@@ -2,11 +2,23 @@
   "name": "web-app-client",
   "version": "0.1.0",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "npm lint",
+      "git add"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint './**/*.{ts,tsx}' --max-warnings 0",
     "coverage": "jest --maxWorkers=2 --coverage",
     "test": "jest --watch",
     "storybook": "storybook dev -p 6006",
@@ -62,8 +74,10 @@
     "eslint": "^8.50.0",
     "eslint-config-next": "13.5.2",
     "eslint-config-prettier": "^9.0.0",
+    "husky": "^9.0.11",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.2.2",
     "prettier": "3.0.3",
     "react-test-renderer": "^18.2.0",
     "storybook": "^7.4.4",
