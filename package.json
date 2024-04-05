@@ -2,17 +2,14 @@
   "name": "web-app-client",
   "version": "0.1.0",
   "private": true,
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "./**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
       "prettier --write",
-      "npm lint",
+      "npm run lint",
       "git add"
-    ]
+    ],
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   },
   "scripts": {
     "dev": "next dev",
@@ -24,7 +21,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prettier": "npx prettier . --check",
-    "chromatic": "chromatic --exit-zero-on-changes"
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@apollo/client": "^3.10.0-rc.0",
