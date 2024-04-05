@@ -13,6 +13,7 @@ import bookImgLogo from '../assets/bookimg.png'
 import client from '../client'
 import discord from '../assets/discordLog.png'
 import { query } from '../queries/queries'
+import { useQuery, useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr'
 
 export default function Home() {
   const [universityData, setUniversityData] = useState([])
