@@ -31,6 +31,7 @@ export default function Home() {
   }
   useEffect(() => {
     // fetchData
+    console.log(loading)
     fetchData()
   }, [])
 
