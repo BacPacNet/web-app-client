@@ -133,14 +133,11 @@ const Navbar: React.FC = () => {
                     {item.path === '/upgrade' ? (
                       <div className="flex" onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                         {item.display === 'mobile' ? (
-                          <Link
-                            href={item.path}
-                            className={pathname === item.path ? 'mobile nav-link active nav-link-ltr' : 'mobile link special w-16'}
-                          >
+                          <Link href={item.path} className={pathname === item.path ? 'mobile nav-link active' : 'mobile nav-link special w-16'}>
                             {item.name}
                           </Link>
                         ) : (
-                          <Link href={item.path} className={pathname === item.path ? 'nav-link active nav-link-ltr' : 'link special w-16'}>
+                          <Link href={item.path} className={pathname === item.path ? 'nav-link active' : 'nav-link special w-16'}>
                             {item.name}
                           </Link>
                         )}
@@ -151,11 +148,11 @@ const Navbar: React.FC = () => {
                         )}
                       </div>
                     ) : item.display === 'mobile' ? (
-                      <Link href={item.path} className={pathname === item.path ? 'mobile nav-link nav-link-ltr' : 'mobile link'}>
+                      <Link href={item.path} className={pathname === item.path ? 'mobile nav-link' : 'mobile nav-link'}>
                         {item.name}
                       </Link>
                     ) : (
-                      <Link href={item.path} className={pathname === item.path ? ' nav-link active nav-link-ltr' : 'link'}>
+                      <Link href={item.path} className={pathname === item.path ? ' nav-link active' : 'nav-link'}>
                         {item.name}
                       </Link>
                     )}

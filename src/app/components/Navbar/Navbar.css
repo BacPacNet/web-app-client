@@ -27,27 +27,16 @@
 .nav-link {
   font-weight: 500;
   font-size: 14px;
-  /* text-transform: uppercase; */
   text-align: center;
   text-decoration: none;
-  width: 81px;
+  width: fit-content;
   color: #404040;
-  padding: 8px 2px 8px 2px;
-  /* margin: 0px 20px; */
+  padding: 0 2px;
   display: inline-block;
   position: relative;
   opacity: 1;
 }
-.link {
-  font-size: 14px;
-  color: #404040;
-  /* border: 2px solid red; */
-  display: block;
-  width: 78px;
-  text-align: center;
-  /* border: 2px solid red; */
-  font-weight: 500;
-}
+
 .special {
   background-image: linear-gradient(to right, rgba(189, 0, 255, 1), rgba(0, 182, 222, 1));
   -webkit-background-clip: text; /* For webkit-based browsers */
@@ -68,7 +57,7 @@
   width: 9px;
   height: 8px;
 }
-.link:hover {
+.nav-link:hover {
   transition: all 100ms ease-in;
   font-weight: bolder;
 }
@@ -91,15 +80,6 @@
   /* border: 2px solid red; */
   margin-left: 240px;
 }
-.nav-link::before {
-  height: 3px;
-  content: '';
-  position: absolute;
-  background-color: #6647ff;
-  border-radius: 5px;
-  width: 100%;
-  /* opacity: 1; */
-}
 .btn-primary {
   background-color: #f3f2ff;
   width: 85px;
@@ -116,18 +96,40 @@
   border-radius: 4px;
   opacity: 1;
 }
-.nav-link-ltr::before {
+.nav-link::after {
   content: ''; /* Ensure content is empty for pseudo-element */
-  width: 0; /* Set initial width to 0 */
+  width: 0%; /* Set initial width to 0 */
   height: 2px; /* Set the height of the underline */
   background-color: #6647ff; /* Set the color of the underline */
   position: absolute; /* Position the underline absolutely */
-  bottom: 5px; /* Align the underline to the bottom of the link */
+  bottom: 0px; /* Align the underline to the bottom of the link */
   left: 0;
-  transition: width 0.3s ease-in-out;
+  transform: scale(0, 1);
+  transform-origin: 0% 100%;
+  transition: transform 300ms ease-in;
 }
-.nav-link-ltr.active::before {
+.active::after {
+  content: '';
   width: 100%;
+  height: 2px;
+  background-color: #6647ff;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  transform: scale(0, 1);
+  transform-origin: 0% 100%;
+  transition: transform 300ms ease-in;
+}
+@keyframes SlideIn {
+  0% {
+    transform: scale(0, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+.active::after {
+  animation: SlideIn 300ms ease-in forwards;
 }
 
 @media only screen and (min-width: 760px) {
@@ -171,7 +173,7 @@
     left: 0;
     width: 100%;
     background-color: white;
-    box-shadow: 0px 15px 9px -4px #ececec;
+    box-shadow: 0 1px 15px #f2f2f2;
     /* border: 2px solid red; */
     display: flex;
     flex-direction: column;
