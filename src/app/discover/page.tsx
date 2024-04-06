@@ -1,8 +1,7 @@
-import Navbar from '../components/Navbar/Navbar'
 import React from 'react'
 
 function Discover() {
-  return <div></div>
+  return <div>Discover</div>
 }
 
 export default Discover

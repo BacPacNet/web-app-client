@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 
 import { BsStars } from 'react-icons/bs'
 import Footer from './components/Footer/Footer'
-import Navbar from './components/Navbar/Navbar'
 import SearchBar from '../components/SearchBar'
 import Section2 from './components/Section-2/Section2'
 import Section3 from './components/Section-3/Section3'
