@@ -6,10 +6,10 @@ import Image, { StaticImageData } from 'next/image'
 
 import { Parallax } from 'react-parallax'
 import SectionsInfo from './SectionsInfo'
-import applicantModel from '../../../assets/applicantModel.png'
-import facultyModel from '../../../assets/facultyModel.png'
-import sectionNumber from '../../../assets/Number Label.png'
-import studentModel from '../../../assets/studentModel.png'
+import applicantModel from '../../assets/applicantModel.png'
+import facultyModel from '../../assets/facultyModel.png'
+import sectionNumber from '../../assets/Number Label.png'
+import studentModel from '../../assets/studentModel.png'
 
 interface SectionContentItem {
   title: string

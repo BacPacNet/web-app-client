@@ -2,7 +2,7 @@ import './Section3.css'
 
 import Image from 'next/image'
 import Slider from '../Slider/Slider'
-import number3 from '../../../assets/number3.png'
+import number3 from '../../assets/number3.png'
 
 const Section3: React.FC = () => {
   return (

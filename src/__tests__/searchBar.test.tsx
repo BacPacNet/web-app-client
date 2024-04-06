@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 
 import { fireEvent, render } from '@testing-library/react'
 
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/SearchBox/SearchBar'
 import data from '../../data/university_data.json'
 
 it('display filtered data based on input', () => {

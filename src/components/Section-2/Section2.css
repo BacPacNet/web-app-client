@@ -43,7 +43,7 @@
   flex-direction: column;
   justify-content: center;
   /* border: 2px solid red; */
-  background-image: url('../../../assets/test.png');
+  background-image: url('../../assets/test.png');
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover;

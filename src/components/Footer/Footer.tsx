@@ -3,10 +3,10 @@ import './Footer.css'
 import { FaDiscord } from 'react-icons/fa'
 import Image from 'next/image'
 import React from 'react'
-import facebook from '../../../assets/Facebook.png'
-import insta from '../../../assets/instagram.png'
-import linkedin from '../../../assets/linkedin.png'
-import x from '../../../assets/X.png'
+import facebook from '../../assets/Facebook.png'
+import insta from '../../assets/instagram.png'
+import linkedin from '../../assets/linkedin.png'
+import x from '../../assets/X.png'
 
 const Footer: React.FC = () => {
   const handleRedirect = (platform: number) => {

@@ -101,6 +101,9 @@
   .bottom-part-2 {
     justify-content: center;
   }
+  .horizontal-line {
+    width: 90%;
+  }
   .policy {
     width: 392px;
     margin-left: -118px;

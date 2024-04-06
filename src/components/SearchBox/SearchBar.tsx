@@ -1,8 +1,8 @@
 import './SearchBar.css'
 
 import { AiOutlineSearch } from 'react-icons/ai'
-import CollegeResult from '../app/components/CollegeResult'
-import SearchHistoryBox from '@/app/components/SearchHistoryBox/SearchHistoryBox'
+import CollegeResult from '../CollegeResult'
+import SearchHistoryBox from '@/components/SearchHistoryBox/SearchHistoryBox'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 import { useState } from 'react'
 

@@ -8,11 +8,11 @@ import { useEffect, useRef, useState } from 'react'
 import AOS from 'aos'
 import Image from 'next/image'
 import { TypeAnimation } from 'react-type-animation'
-import banner from '../../../assets/instituteBanner.png'
-import magnifier from '../../../assets/magnifier.png'
-import picture from '../../../assets/Section Image.png'
-import sectionNumber from '../../../assets/Number2.png'
-import users from '../../../assets/users.png'
+import banner from '../../assets/instituteBanner.png'
+import magnifier from '../../assets/magnifier.png'
+import picture from '../../assets/Section Image.png'
+import sectionNumber from '../../assets/Number2.png'
+import users from '../../assets/users.png'
 
 const Section2: React.FC = () => {
   const [typingStart, setTypingStart] = useState<boolean>(false)

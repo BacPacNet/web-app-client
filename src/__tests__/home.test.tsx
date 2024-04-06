@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 
-import SearchBar from '@/components/SearchBar'
+import SearchBar from '@/components/SearchBox/SearchBar'
 import { render } from '@testing-library/react'
 
 it('renders a search box', () => {
