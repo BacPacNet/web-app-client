@@ -269,7 +269,7 @@
     text-align: center;
   }
   .btn-primary {
-    width: 140px;
+    /*width: 140px;*/
     height: 36px;
     padding: 10px;
     border-radius: 8px;

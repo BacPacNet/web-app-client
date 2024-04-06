@@ -35,7 +35,6 @@ export default function Home() {
   }, [])
   return (
     <div className="home">
-      <Navbar />
       <main
         className="main flex h-full w-full flex-col items-center justify-start max-h-full bg-[#ffffff]"
         onClick={() => setSearchOpen(!searchOpen)}

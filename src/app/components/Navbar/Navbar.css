@@ -1,7 +1,5 @@
 .navbar {
   box-shadow: 0 1px 15px #f2f2f2;
-  height: 64px;
-  width: 100%;
   z-index: 105;
 }
 .nav li:hover {
@@ -24,16 +22,17 @@
   justify-content: space-between;
   align-items: center;
 }
+.nav-link.active {
+  transition: all 200ms ease-in;
+  border-bottom: 2px solid #6647ff;
+}
 .nav-link {
   font-weight: 500;
   font-size: 14px;
-  /* text-transform: uppercase; */
   text-align: center;
   text-decoration: none;
-  width: 81px;
+  width: fit-content;
   color: #404040;
-  padding: 8px 2px 8px 2px;
-  /* margin: 0px 20px; */
   display: inline-block;
   position: relative;
   opacity: 1;
@@ -41,11 +40,9 @@
 .link {
   font-size: 14px;
   color: #404040;
-  /* border: 2px solid red; */
   display: block;
   width: 78px;
   text-align: center;
-  /* border: 2px solid red; */
   font-weight: 500;
 }
 .special {
@@ -91,15 +88,7 @@
   /* border: 2px solid red; */
   margin-left: 240px;
 }
-.nav-link::before {
-  height: 3px;
-  content: '';
-  position: absolute;
-  background-color: #6647ff;
-  border-radius: 5px;
-  width: 100%;
-  /* opacity: 1; */
-}
+
 .btn-primary {
   background-color: #f3f2ff;
   width: 85px;
@@ -116,16 +105,11 @@
   border-radius: 4px;
   opacity: 1;
 }
-.nav-link-ltr::before {
-  content: ''; /* Ensure content is empty for pseudo-element */
-  width: 0; /* Set initial width to 0 */
-  height: 2px; /* Set the height of the underline */
-  background-color: #6647ff; /* Set the color of the underline */
-  position: absolute; /* Position the underline absolutely */
-  bottom: 5px; /* Align the underline to the bottom of the link */
-  left: 0;
-  transition: width 0.3s ease-in-out;
-}
+
+/*.nav-link-ltr {
+  border-bottom: 2px solid #6647ff;
+}*/
+
 .nav-link-ltr.active::before {
   width: 100%;
 }
@@ -172,24 +156,19 @@
     width: 100%;
     background-color: white;
     box-shadow: 0px 15px 9px -4px #ececec;
-    /* border: 2px solid red; */
-    display: flex;
     flex-direction: column;
-    z-index: 999;
+    z-index: 104;
     justify-content: flex-start;
-    padding-left: 16px;
-    height: 314px;
+    height: auto;
     padding-right: 28px;
-    align-items: flex-end;
   }
-  .nav-item {
-    /* border: 2px solid red; */
+  /*.nav-item {
     margin-top: 10px;
     height: 40px;
     display: flex;
     width: 100%;
     align-items: center;
-  }
+  }*/
   .nav-details {
     width: 98%;
     border-bottom: 2px solid #ececec;
@@ -198,15 +177,7 @@
     flex-direction: column;
     align-items: baseline;
   }
-  .btn-res {
-    /* border: 2px solid red; */
-    display: flex;
-    width: 190px;
-    height: 36px;
-    position: absolute;
-    right: 33px;
-    bottom: 22px;
-  }
+
   .navbar .nav {
     display: none;
     flex-direction: column;
@@ -326,11 +297,6 @@
     height: 46px;
   }
 
-  .nav-res {
-    padding-left: 0;
-    padding-right: 0;
-    height: 400px;
-  }
   .logo {
     width: 73px;
     height: 31px;
