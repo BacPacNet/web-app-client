@@ -81,7 +81,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
           onChange={handleSearch}
           onClick={handleSearchHistory}
           placeholder="Search institute"
-          className={`block w-full h-12 rounded-xl border-0 py-1.5 pl-12 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  text-sm lg:text-lg sm:leading-6 ${
+          className={`block w-full h-12 rounded-xl border-0 py-1.5 pl-12 pr-20 text-gray-900 ring-1 ring-gray-light ring-inset ring-gray-300 placeholder:text-gray-400  text-sm lg:text-lg sm:leading-6 ${
             open ? 'search-input-open' : ''
           }`}
         />
