@@ -60,9 +60,6 @@
     margin-top: 10rem;
   }
 
-  .login-text h2 {
-    font-size: 16px;
-  }
   .box-text {
     font-size: 16px;
   }
@@ -82,15 +79,6 @@
     text-align: center;
   }
 
-  .login-text h2 {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 24px;
-  }
-  .star {
-    width: 28px;
-    height: 24px;
-  }
   .checkbox {
     width: 159px;
     height: 20px;

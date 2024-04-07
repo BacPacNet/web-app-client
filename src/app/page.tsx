@@ -4,7 +4,6 @@ import './page.css'
 
 import { useEffect, useState } from 'react'
 
-import { BsStars } from 'react-icons/bs'
 import Footer from './components/Footer/Footer'
 import SearchBar from '../components/SearchBar'
 import Section2 from './components/Section-2/Section2'
@@ -13,6 +12,8 @@ import Sections from './components/Sections/Sections'
 import client from '../client'
 import { query } from '../queries/queries'
 import { motion } from 'framer-motion'
+import StarIcon from '../assets/stars.svg'
+import Image from 'next/image'
 
 export default function Home() {
   const [universityData, setUniversityData] = useState([])
@@ -61,16 +62,20 @@ export default function Home() {
           </div>
           <SearchBar data={universityData} loading={loading} />
           <div className="flex flex-col items-center my-4">
-            <div className="login-text flex items-center mt-8 md:mt-16">
-              <BsStars className="star text-[#6744FF] text-4xl -ml-3 center" />
-              <h2 className="text-lg font-medium text-center">Already part of your university community?</h2>
+            <div className="flex items-center mt-4  md:mt-16 gap-2">
+              <div>
+                <Image src={StarIcon} alt="start icon" className="text-xl" />
+              </div>
+              <div>
+                <h2 className="text-sm sm:text-lg md:text-xl font-medium text-left">Already part of your university community?</h2>
+              </div>
             </div>
             <div className="flex justify-center items-center w-28 my-3">
               <button className="btn-secondary btn w-28 h-10 center px-4 py-2.5">Login</button>
             </div>
-            <div className="checkbox flex justify-center items-center w-1/2">
+            <div className="checkbox flex justify-center items-center">
               <input type="checkbox" name="login" id="login" className="box w-6 h-6 cursor-pointer" />
-              <label htmlFor="login" className="box-text font-medium text-lg cursor-pointer pl-3 w-52 text-black">
+              <label htmlFor="login" className="box-text font-medium text-lg cursor-pointer pl-3  text-black">
                 Keep me logged in
               </label>
             </div>
