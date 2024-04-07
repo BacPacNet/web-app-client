@@ -10,8 +10,6 @@ import AOS from 'aos'
 import Image from 'next/image'
 //import { IoMdMail } from 'react-icons/io'
 import Link from 'next/link'
-import buttonIcon from '../../../assets/buttonIcon.png'
-import close from '../../../assets/close.png'
 //import demopic from '../../../assets/demopic.jpg'
 import star from '../../../assets/star.png'
 import unibuzzLogo from '../../../assets/logo.svg'
@@ -109,12 +107,17 @@ const Navbar: React.FC = () => {
           <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">Login</button>
         </div>
 
-        <div className="h-8 w-8 flex md:hidden" onClick={() => setIsLogin(!isLogin)}>
-          {open ? (
-            <Image src={close} alt="close" className="w-full h-full" onClick={() => setOpen(false)} />
-          ) : (
-            <Image src={buttonIcon} alt="hamburger-menu" className="w-full h-full" onClick={() => setOpen(true)} />
-          )}
+        <div
+          className={`hamburger ${open ? 'is-active' : ''} h-8  md:hidden`}
+          id="hamburger"
+          onClick={() => {
+            setIsLogin(!isLogin)
+            setOpen(!open)
+          }}
+        >
+          <span className="line"></span>
+          <span className="line"></span>
+          <span className="line"></span>
         </div>
       </div>
     </div>

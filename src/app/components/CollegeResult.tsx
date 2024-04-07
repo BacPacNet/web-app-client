@@ -12,7 +12,7 @@ interface CollegeProps {
 }
 const CollegeResult: React.FC<CollegeProps> = (props) => {
   return (
-    <div className="mb-3.5 college-result">
+    <div className="college-result">
       <Link href={{ pathname: '/college', query: { id: props.info.id } }} className="h-10 flex justify-center align-middle">
         <div className="no w-1/6 flex justify-center align-middle text-black">{props.serialNo + 1}</div>
         <div className="name w-4/5 flex justify-center align-middle text-black">{props.info.name}</div>

@@ -20,7 +20,19 @@ module.exports = {
                 'lg': '1024px',  // Custom large screen
                 'xl': '1280px',  // Custom extra large screen
                 '2xl': '1536px', // Custom double extra large screen
-            }
+            },
+            colors: {
+                'primary': '#6647FF',
+                'purple': '#7e5bef',
+                'pink': '#ff49db',
+                'orange': '#ff7849',
+                'green': '#13ce66',
+                'yellow': '#ffc82c',
+                'gray-dark': '#273444',
+                'gray': '#8492a6',
+                'gray-light': '#d3dce6',
+            },
+
         },
     },
     plugins: [],

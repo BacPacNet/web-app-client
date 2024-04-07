@@ -294,11 +294,6 @@
     top: 16rem;
     margin-top: 30px;
   }
-  .absolute {
-    position: absolute;
-    left: 13px;
-    top: 256px;
-  }
   .bottom {
     margin-top: 70px;
     display: flex;

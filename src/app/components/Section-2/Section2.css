@@ -118,11 +118,6 @@
     height: 96px;
     text-align: center;
   }
-  .absolute {
-    position: absolute;
-    left: 0px;
-    top: auto;
-  }
   .right-sec2 {
     position: relative;
     top: 220px;
@@ -214,11 +209,6 @@
     width: 336px;
     height: 248px;
   }
-  .absolute {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-  }
   .magnifier {
     position: relative;
     width: 120px;
@@ -294,9 +284,6 @@
     height: 183px;
     /* border: 2px solid red; */
     color: transparent;
-  }
-  .absolute {
-    left: 18px;
   }
   .hp1 {
     font-size: 32px;

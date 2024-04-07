@@ -1,9 +1,10 @@
 import './SearchBar.css'
 
-import { AiOutlineSearch } from 'react-icons/ai'
+import Image from 'next/image'
 import CollegeResult from '../app/components/CollegeResult'
 import SearchHistoryBox from '@/app/components/SearchHistoryBox/SearchHistoryBox'
 import searchAlgorithm from '@/utils/searchAlgorithm'
+import searchIcon from '../assets/search-icon.svg'
 import { useState } from 'react'
 
 // search bar
@@ -66,23 +67,28 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   if (!loading && searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
   if (loading) searchResults = [<div key="loading">Loading....</div>]
   return (
-    <div className="search-box mt-2 h-12 rounded-3xl">
-      <div className="search-icon w-6 top-9 left-4 relative h-6 flex justify-center items-center z-auto">
-        <AiOutlineSearch className="search-icon text-lg h-full w-full text-[#D4D4D4]" />
+    <div className="w-full text-center relative mt-2 h-12 rounded-3xl">
+      <div className="relative mt-2 rounded-md shadow-sm">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="text-gray-500 sm:text-sm">
+            <Image src={searchIcon} alt="BACPAC LOGO" />
+          </span>
+        </div>
+        <input
+          type="text"
+          name="price"
+          id="price"
+          onChange={handleSearch}
+          onClick={handleSearchHistory}
+          placeholder="Search institute"
+          className={`block w-full h-12 rounded-xl border-0 py-1.5 pl-12 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  text-sm lg:text-lg sm:leading-6 ${
+            open ? 'search-input-open' : ''
+          }`}
+        />
       </div>
-      <input
-        type="text"
-        onChange={handleSearch}
-        onClick={handleSearchHistory}
-        placeholder="Search institute"
-        className={
-          open
-            ? 'search-input2 w-full h-full border border-solid border-gray-300 indent-14 text-black'
-            : 'search-input w-full h-full border border-solid border-gray-300 indent-14 text-black'
-        }
-      />
+
       {open && (
-        <div className="searchBox overflow-auto w-full h-auto max-h-80 border border-solid border-gray-300 pt-4 bg-white text-black relative">
+        <div className="searchBox overflow-auto h-auto max-h-80 border border-solid border-gray-light py-2  bg-white text-black relative">
           {searchResults}
         </div>
       )}
