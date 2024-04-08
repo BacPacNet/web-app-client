@@ -6,7 +6,7 @@ import number3 from '../../../assets/number3.png'
 
 const Section3: React.FC = () => {
   return (
-    <div className="w-full flex flex-col items-center bg-secondary pt-10 lg:my-6">
+    <div className="w-full flex flex-col items-center bg-secondary py-10 lg:my-6">
       <div className="heading-3 flex flex-col center-v gap-6 my-6 lg:my-12">
         <Image src={number3} alt="3" />
         <h3>Enjoy the features</h3>
