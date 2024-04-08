@@ -255,14 +255,22 @@
   .mobile {
     display: block;
     font-size: 12px;
-    margin-left: 0;
     text-align: left;
     font-weight: 500;
-    width: 87%;
+    width: 100%;
+    padding-left: 20px;
     height: 35px;
-    margin-left: 20px;
+    margin-left: 0px;
     color: #6647ff;
+    display: flex;
+    align-items: center;
     /* border: 2px solid red; */
+  }
+  .nav-item:nth-child(1) li,
+  .nav-item:nth-child(2) li,
+  .nav-item:nth-child(10) li {
+    display: flex;
+    align-items: center;
   }
   .nav-item:nth-child(1):hover,
   .nav-item:nth-child(2):hover,
@@ -279,7 +287,7 @@
     width: 100%;
     border-bottom: none;
     height: 80%;
-    padding-inline: 9px;
+    padding-inline: 6px;
     justify-content: space-between;
     flex-direction: column;
     align-items: baseline;
