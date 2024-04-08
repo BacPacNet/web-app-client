@@ -1,12 +1,12 @@
 import './Footer.css'
 
-import { FaDiscord } from 'react-icons/fa'
 import Image from 'next/image'
 import React from 'react'
 import facebook from '../../../assets/Facebook.png'
 import insta from '../../../assets/instagram.png'
 import linkedin from '../../../assets/linkedin.png'
 import x from '../../../assets/X.png'
+import DiscordIcon from '../../../assets/discord.svg'
 
 const Footer: React.FC = () => {
   const handleRedirect = (platform: number) => {
@@ -36,29 +36,27 @@ const Footer: React.FC = () => {
     window.open(url, '_blank')
   }
   return (
-    <div className="footer center-v bg-[#ffffff] relative bottom-0 left-0 right-0 flex flex-col">
-      <div className="top w-full flex relative top-11 h-full justify-between">
-        <div className="left-part">
-          <p className="p1 text-[#6647FF] font-semibold text-xs h-5">STILL HAVE QUESTIONS?</p>
-          <h1 className="h1 text-[#171717] font-extrabold text-4xl h-11">Get to know us better</h1>
-          <p className="p2 text-lg font-normal h-7 text-[#525252]">Familiarize yourself with Unibuzz&apos;s mission and purpose</p>
+    <div className=" w-[90%] mx-auto relative flex flex-col center-v py-8 lg:py-16">
+      <div className="w-full flex flex-col lg:flex-row relative items-center justify-between border-b-2 border-b-gray-light pb-8">
+        <div className="w-full lg:w-1/2 text-center lg:text-left">
+          <p className=" text-[#6647FF] font-semibold text-xs lg:text-sm my-4">STILL HAVE QUESTIONS?</p>
+          <h1 className="text-[#171717] font-extrabold text-3xl lg:text-4xl w-full">Get to know us better</h1>
+          <p className="text-sm lg:text-md my-4 text-[#525252]">Familiarize yourself with Unibuzz&apos;s mission and purpose</p>
         </div>
-        <div className="right-part">
-          <div className="discord mr-4">
-            <button className="btn btn-disc text-[#6647FF] text-base text-center w-40 h-12 font-medium p-2 flex justify-evenly items-center">
-              <FaDiscord className="discord-icon" />
+        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end gap-8 my-8">
+          <div className="discord">
+            <button className="btn btn-disc text-[#6647FF] text-base text-center font-medium py-3 px-4 flex justify-evenly items-center">
+              <Image src={DiscordIcon} className="icon mr-2" alt="DiscordIcon" />
               Our Discord
             </button>
           </div>
           <div className="aboutus">
-            <button className="btn-sec border border-[#E5E5E5] rounded-md bg-transparent text-[#404040] w-40 h-12 text-base font-medium">
-              About us
-            </button>
+            <button className="btn-sec border border-[#E5E5E5] rounded-md bg-transparent text-[#404040] text-base font-medium">About us</button>
           </div>
         </div>
       </div>
-      <hr className="horizontal-line top-56 " />
-      <div className="bottom w-full ">
+
+      <div className="bottom w-full my-4">
         <div className="copyright">Copyright © 2024, Unibuzz Networks</div>
         <div className="flex bottom-part-2">
           <div className="policy flex">
