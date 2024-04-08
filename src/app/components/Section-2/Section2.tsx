@@ -42,7 +42,7 @@ const Section2: React.FC = () => {
   //  }, [])
 
   return (
-    <div className="bg-white flex flex-col items-center px-4 md:px-6 lg:px-12 my-4 md:my-32 lg:my-50" ref={sectionRef}>
+    <div className="bg-white flex flex-col items-center px-4 md:px-6 lg:px-12 my-4 md:my-32 lg:my-8" ref={sectionRef}>
       <div className="flex justify-center flex-col items-center my-12">
         <Image src={sectionNumber} alt="1" className=" w-14 h-10" />
         <h3 className="font-inter font-extrabold text-4xl leading-12 tracking-tight text-center text-[#171717] py-4">Join your institute</h3>
