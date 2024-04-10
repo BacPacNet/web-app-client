@@ -22,7 +22,7 @@ export const metadata: Metadata = {
       url: '',
     },
   ],
-  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  viewport: 'maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
   icons: [
     { rel: 'apple-touch-icon', url: 'icons/icon-192x192.png' },
     { rel: 'icon', url: 'icons/icon-192x192.png' },
@@ -32,7 +32,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       <body className={inter.className}>
         <Navbar />
         {children}
