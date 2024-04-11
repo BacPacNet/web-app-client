@@ -2,7 +2,7 @@ import './globals.css'
 
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import Navbar from './components/Navbar/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import { ApolloWrapper } from '@/lib/apollo-provider'
 
 type FontClassName = string
@@ -35,7 +35,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        {children}
         <ApolloWrapper>{children}</ApolloWrapper>
       </body>
     </html>

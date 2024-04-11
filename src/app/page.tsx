@@ -1,41 +1,25 @@
 'use client'
 
 import './page.css'
+import { useState } from 'react'
 
-import { useEffect, useState } from 'react'
-
-import Footer from './components/Footer/Footer'
+import Footer from '../components/Footer/Footer'
 import SearchBar from '../components/SearchBar'
-import Section2 from './components/Section-2/Section2'
-import Section3 from './components/Section-3/Section3'
-import Sections from './components/Sections/Sections'
-import client from '../client'
+import Section2 from '../components/Section-2/Section2'
+import Section3 from '../components/Section-3/Section3'
+import Sections from '../components/Sections/Sections'
 import { query } from '../queries/queries'
 import { motion } from 'framer-motion'
 import StarIcon from '../assets/stars.svg'
 import Image from 'next/image'
+import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr'
 
 export default function Home() {
-  const [universityData, setUniversityData] = useState([])
+  const { data, loading } = useQuery(query)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+
   const LANDING_PAGE_TEXT = ' Search universities worldwide and become part of their online communities'.split(' ')
-  async function fetchData() {
-    try {
-      setLoading(true)
-      const result = await client.query({ query })
-      console.log('universityList', result)
-      setUniversityData(result?.data?.universityList)
-    } catch (error) {
-      console.log('Error fetching data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-  useEffect(() => {
-    // fetchData
-    fetchData()
-  }, [])
+
   return (
     <div className="home">
       <main
@@ -44,9 +28,6 @@ export default function Home() {
       >
         <div className="m-auto center-v flex-col w-[90%] lg:w-[70%]">
           <div className="typing-animation py-5 w-full text-3xl md:text-4xl lg:text-5xl font-bold items-center">
-            {/*Search <span className="text-primary">universities</span> worldwide and become part of their{' '}
-            <span className="text-primary">online communities</span>*/}
-
             {LANDING_PAGE_TEXT.map((el, i) => (
               <motion.span
                 initial={{ opacity: 0 }}
@@ -61,7 +42,7 @@ export default function Home() {
               </motion.span>
             ))}
           </div>
-          <SearchBar data={universityData} loading={loading} />
+          <SearchBar data={(data as any)?.universityList} loading={loading} />
           <div className="flex flex-col items-center my-4">
             <div className="flex items-center mt-4  md:mt-16 gap-2">
               <div>

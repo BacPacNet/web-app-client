@@ -4,10 +4,10 @@ import './Sections.css'
 
 import Image from 'next/image'
 
-import applicantModel from '../../../assets/applicantModel.png'
-import facultyModel from '../../../assets/facultyModel.png'
-import sectionNumber from '../../../assets/Number Label.png'
-import studentModel from '../../../assets/studentModel.png'
+import applicantModel from '@assets/applicantModel.png'
+import facultyModel from '@assets/facultyModel.png'
+import sectionNumber from '@assets/Number Label.png'
+import studentModel from '@assets/studentModel.png'
 
 //interface SectionContentItem {
 //  title: string

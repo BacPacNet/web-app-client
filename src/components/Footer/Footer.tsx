@@ -2,11 +2,11 @@ import './Footer.css'
 
 import Image from 'next/image'
 import React from 'react'
-import facebook from '../../../assets/Facebook.png'
-import insta from '../../../assets/instagram.png'
-import linkedin from '../../../assets/linkedin.png'
-import x from '../../../assets/X.png'
-import DiscordIcon from '../../../assets/discord.svg'
+import facebook from '@assets/facebook.png'
+import insta from '@assets/instagram.png'
+import linkedin from '@assets/linkedin.png'
+import x from '@assets/X.png'
+import DiscordIcon from '@assets/discord.svg'
 
 const Footer: React.FC = () => {
   const handleRedirect = (platform: number) => {
