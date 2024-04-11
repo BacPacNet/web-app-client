@@ -1,0 +1,317 @@
+.part {
+  width: 968px;
+  height: 412px;
+  margin-top: 83px;
+  /* border: 2px solid red; */
+  align-items: normal;
+}
+.applicantModel {
+  width: 445.74px;
+  /* border: 2px solid rebeccapurple; */
+  height: 412px;
+}
+.studentModel {
+  width: 479.88px;
+  height: 332px;
+}
+.facultyModel {
+  width: 464px;
+  height: 336.45px;
+}
+.info {
+  width: 446px;
+  height: 296px;
+}
+.appSubClass {
+  width: 446px;
+  height: 328px;
+  /* border: 2px solid red; */
+  margin-left: 32px;
+}
+.studntSubClass {
+  /* border: 2px solid red; */
+  margin-top: 20px;
+}
+.studntSubClass,
+.factSubClass {
+  width: 446px;
+  height: 296px;
+  margin-right: 32px;
+}
+.factSubClass {
+  margin-left: 32px;
+}
+.title {
+  width: 147px;
+  height: 36px;
+  font-size: 28px;
+  font-weight: 800;
+  display: flex;
+  justify-content: flex-start;
+  /* border: 2px solid red; */
+  margin-bottom: 32px;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #171717;
+}
+.info {
+  width: 446px;
+  height: 260px;
+  /* border: 2px solid red; */
+  /* margin-top: 12px; */
+}
+.subtitle {
+  /* border: 2px solid red; */
+  width: 446px;
+  height: 56px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  color: #404040;
+  margin-bottom: 12px;
+  text-align: justify;
+}
+.appSubtitle {
+  width: 446px;
+  height: 56px;
+  /* border: 2px solid red; */
+
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  color: #404040;
+  text-align: justify;
+}
+.desc-sec {
+  margin-top: 5px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0em;
+  text-align: justify;
+  margin-top: 12px;
+  color: #404040;
+  width: 446px;
+  height: 192px;
+}
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .part {
+    display: flex;
+    flex-direction: column;
+    height: 650px;
+    width: 100%;
+    margin-top: 50px;
+    align-items: center;
+    justify-content: flex-end;
+    /* border: 2px solid red; */
+  }
+  .part:nth-child(2) {
+    margin-top: 65px;
+  }
+  .part:nth-child(3) {
+    margin-top: 140px;
+    height: 598.6px;
+  }
+  .applicantModel {
+    width: 442.62px;
+    height: 412px;
+    border-radius: 300px;
+  }
+  .studentModel {
+    width: 476.51px;
+    height: 330.6px;
+    margin-top: 100px;
+  }
+  .facultyModel {
+    width: 461.91px;
+    height: 336.45px;
+  }
+  .appSubClass {
+    width: 100%;
+    /* border: 2px solid red; */
+    height: 204px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: 0px;
+    margin-right: 0;
+    /* padding: 32px; */
+  }
+  .info {
+    width: 100%;
+    height: 136px;
+    /* margin-top: 12px; */
+    text-align: center;
+  }
+  .subtitle,
+  .appSubtitle {
+    width: 100%;
+    height: fit-content;
+    text-align: center;
+  }
+  .title {
+    text-align: center;
+    margin-bottom: 32px;
+    margin-top: 64px;
+    justify-content: center;
+  }
+  .desc-sec {
+    display: flex;
+    width: 100%;
+    font-size: 18px;
+    padding: 0 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+    justify-content: center;
+    /* padding: 0px 8px 24px 24px; */
+  }
+  .studntSubClass {
+    width: 100%;
+    height: 204px;
+    /* padding: 32px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    align-items: center;
+    margin-left: 0px;
+    margin-right: 0;
+  }
+  .factSubClass {
+    width: 100%;
+    height: 236px;
+    /* padding: 32px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    align-items: center;
+    margin-left: 0px;
+    margin-right: 0;
+  }
+}
+@media only screen and (max-width: 480px) and (min-width: 375px) {
+  .part {
+    margin-top: 0px;
+  }
+  .applicantModel {
+    width: 100%;
+    height: 412px;
+    border-radius: 300px;
+  }
+  .studentModel {
+    width: 100%;
+    height: 330.6px;
+    margin-top: 100px;
+  }
+  .facultyModel {
+    width: 100%;
+    height: 336.45px;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .part {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .applicantModel {
+    width: 100%;
+    height: 310px;
+    /* padding: 15.4px; */
+  }
+  .appSubClass {
+    width: 100%;
+    height: 316px;
+    margin-left: 0px;
+    margin-top: 56px;
+  }
+  .title {
+    width: 100%;
+    margin-bottom: 32px;
+    /* border: 2px solid red; */
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+  .info {
+    width: 100%;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+  }
+  .subtitle {
+    margin-bottom: 12px;
+  }
+  .appSubtitle {
+    font-size: 18px;
+    margin-bottom: 12px;
+    height: 48px;
+    width: 100%;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+    /* color: #404040; */
+  }
+  .desc-sec {
+    width: 100%;
+    height: 252px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #404040;
+    margin: 0;
+  }
+  .studentModel {
+    width: 100%;
+    height: 233.43px;
+    margin-top: 230px;
+    padding-left: 23.03px;
+    padding-right: 17.51px;
+  }
+  .subtitle {
+    width: 100%;
+    height: 48px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
+  .studntSubClass {
+    /* border: 2px solid red; */
+    width: 100%;
+    height: 316px;
+    margin-right: 0px;
+    margin-top: 56px;
+  }
+  .facultyModel {
+    width: 100%;
+    height: 248.18px;
+    margin-top: 350px;
+    padding-left: 24.51px;
+    padding-right: 11.56px;
+  }
+  .factSubClass {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    height: 348px;
+    margin-top: 56px;
+  }
+}
