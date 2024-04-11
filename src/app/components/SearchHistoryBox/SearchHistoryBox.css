@@ -1,0 +1,35 @@
+.history-link {
+  height: 40px;
+  /* padding: 24px; */
+  /* border: 2px solid red; */
+  justify-content: flex-start;
+}
+.history-link:nth-child(1) {
+  margin-top: 10px;
+}
+.history-link:hover {
+  background: #f3f2ff;
+  /* border: 2px solid red; */
+}
+.history-icon {
+  width: 50px;
+  height: 30px;
+  color: #d4d4d4;
+  /* border: 2px solid red; */
+}
+.name {
+  color: #5e45da;
+  font-weight: 500;
+}
+@media only screen and (max-width: 768px) {
+  .history-link {
+    justify-content: space-evenly;
+  }
+}
+@media only screen and (max-width: 375px) {
+  .history-icon {
+    width: 63px;
+    height: 30px;
+    color: #d4d4d4;
+  }
+}

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +11,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
@@ -18,21 +19,16 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-  font-style: 'Montserrat', sans-serif;
+  background: white;
+  /* font-style: 'Montserrat', sans-serif; */
+  font-family: 'Inter', sans-serif;
 }
 .searchBox::-webkit-scrollbar {
   display: none;
 }
 @layer components {
   .btn {
-    @apply p-3 rounded-lg flex text-[#ffffff] items-center justify-center text-base;
-  }
-  .btn-primary {
-    @apply bg-[#BC9CFF];
-  }
-  .btn-secondary {
-    @apply bg-[#6744FF];
+    @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
   }
   .center {
     @apply flex items-center justify-center;

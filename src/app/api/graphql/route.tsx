@@ -19,7 +19,6 @@ async function getUniversityName(id: string) {
     console.log(error)
   }
 }
-
 async function getUniversityList() {
   try {
     const database = client.db('bacpac')
@@ -75,7 +74,6 @@ const server = new ApolloServer({
   typeDefs,
   plugins,
 })
-
 const handler = startServerAndCreateNextHandler(server)
 
 //Exports the handler function to be used as a Next.js API route handler.
