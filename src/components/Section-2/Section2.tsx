@@ -8,10 +8,10 @@ import { useRef } from 'react'
 //import AOS from 'aos'
 import Image from 'next/image'
 //import { TypeAnimation } from 'react-type-animation'
-import Institution from '../../../assets/institution.png'
-import sectionNumber from '../../../assets/Number2.png'
-import UnibuzzStudent from '../../../assets/unibuzz-student.png'
-import BackgroundImg from '../../../assets/section2bg.png'
+import Institution from '@assets/institution.png'
+import sectionNumber from '@assets/Number2.png'
+import UnibuzzStudent from '@assets/unibuzz-student.png'
+import BackgroundImg from '@assets/section2bg.png'
 
 const Section2: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null)

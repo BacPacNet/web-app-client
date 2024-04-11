@@ -1,8 +1,8 @@
 import './SearchBar.css'
 
 import Image from 'next/image'
-import CollegeResult from '../app/components/CollegeResult'
-import SearchHistoryBox from '@/app/components/SearchHistoryBox/SearchHistoryBox'
+import CollegeResult from '@components/CollegeResult'
+import SearchHistoryBox from '@components/SearchHistoryBox/SearchHistoryBox'
 import searchAlgorithm from '@/utils/searchAlgorithm'
 import searchIcon from '../assets/search-icon.svg'
 import { useState } from 'react'
