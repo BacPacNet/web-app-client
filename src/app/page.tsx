@@ -1,7 +1,7 @@
 'use client'
 
 import './page.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import Footer from '../components/Footer/Footer'
 import SearchBar from '../components/SearchBar'
