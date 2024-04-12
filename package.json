@@ -15,7 +15,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint './**/*.{ts,tsx}' --max-warnings 100",
+    "lint": "eslint './**/*.{ts,tsx}' --max-warnings=50",
     "coverage": "jest --maxWorkers=2 --coverage",
     "test": "jest --watch",
     "storybook": "storybook dev -p 6006",
