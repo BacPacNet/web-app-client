@@ -223,27 +223,31 @@ const Login = () => {
               <label htmlFor="tnc" className="my-5 font-normal">
                 Terms & Conditions
               </label>
-              <div className="lg:max-w-lg md:max-w-md sm:max-w-sm h-40 overflow-auto p-4 border border-primary">
+              <div className="lg:max-w-lg md:max-w-md sm:max-w-sm h-40 overflow-auto p-2 font-normal text-sm border border-primary">
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero odio necessitatibus corporis amet consequatur ad ex nam. Facere autem
-                  laborum repellendus atque temporibus porro, itaque quidem harum! Doloremque nesciunt culpa cum, assumenda, exercitationem iure ad
-                  recusandae eveniet totam quidem illo hic fuga nostrum, veniam eum animi. Eum, perferendis fugiat? Sunt veniam repellat, obcaecati
-                  totam eligendi aperiam nam at eius? Blanditiis, illo minus neque enim impedit necessitatibus, earum unde nulla reiciendis magnam
-                  dolore. Facere ducimus error magnam dolorem, illo eveniet doloremque consequatur sequi ab ipsum labore nihil nulla dolor expedita
-                  odio modi accusantium amet? Consectetur ipsam quis aliquam, pariatur veritatis sapiente.
+                  Welcome to UniBuzz, a [brief description of your product/service]. These Terms and Conditions (&quot;Terms&quot;) govern your access
+                  to and use of UniBuzz Network Pvt Ltd (hereon referred to as UniBuzz Networks) website, mobile application, and related services
+                  (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these Terms, our Privacy
+                  Policy, and any additional terms applicable to certain features of the Service, which are incorporated herein by reference. By
+                  creating an account, accessing, or Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel modi et porro quo aut fugiat
+                  reprehenderit quod, voluptate consequatur, voluptatum repellat quidem. Voluptatem, corporis mollitia laborum ab cumque quaerat
+                  soluta! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, maxime sint inventore laudantium quos non libero unde.
+                  Modi, necessitatibus. Debitis quisquam reprehenderit velit necessitatibus, maxime doloremque molestiae numquam accusamus ducimus.
                 </p>
               </div>
               <label htmlFor="privacy policy" className="my-5 font-normal">
                 Privacy Policy
               </label>
-              <div className="lg:max-w-lg md:max-w-md sm:max-w-sm h-40 overflow-auto p-4 border border-primary mb-5">
+              <div className="lg:max-w-lg md:max-w-md sm:max-w-sm h-40 overflow-auto p-2 font-normal text-sm border border-primary mb-5">
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero odio necessitatibus corporis amet consequatur ad ex nam. Facere autem
-                  laborum repellendus atque temporibus porro, itaque quidem harum! Doloremque nesciunt culpa cum, assumenda, exercitationem iure ad
-                  recusandae eveniet totam quidem illo hic fuga nostrum, veniam eum animi. Eum, perferendis fugiat? Sunt veniam repellat, obcaecati
-                  totam eligendi aperiam nam at eius? Blanditiis, illo minus neque enim impedit necessitatibus, earum unde nulla reiciendis magnam
-                  dolore. Facere ducimus error magnam dolorem, illo eveniet doloremque consequatur sequi ab ipsum labore nihil nulla dolor expedita
-                  odio modi accusantium amet? Consectetur ipsam quis aliquam, pariatur veritatis sapiente.
+                  Welcome to UniBuzz, a [brief description of your product/service]. These Terms and Conditions (&quot;Terms&quot;) govern your access
+                  to and use of UniBuzz Network Pvt Ltd (hereon referred to as UniBuzz Networks) website, mobile application, and related services
+                  (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these Terms, our Privacy
+                  Policy, and any additional terms applicable to certain features of the Service, which are incorporated herein by reference. By
+                  creating an account, accessing, or Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, et, dolorem eaque, id enim
+                  laboriosam architecto accusamus odit velit dolorum aut? Adipisci vel nisi libero! Beatae earum a illum modi?Lorem ipsum dolor sit
+                  amet consectetur, adipisicing elit. Ea incidunt distinctio officia architecto. Officiis iure quia repudiandae culpa veniam non nemo
+                  consequatur ut? Obcaecati, nisi. Soluta, maxime eligendi! Soluta, enim.
                 </p>
               </div>
               {/* checkbox for remember me */}
@@ -255,7 +259,7 @@ const Login = () => {
                   I have read and agree with the terms of service and privacy policy.
                 </label>
               </div>
-              <input type="submit" value="Sign Up" className="bg-primary py-2 rounded-xl text-white text-lg font-normal mb-5" />
+              <input type="submit" value="Sign Up" className="bg-primary py-2 rounded-lg text-white text-lg font-normal mb-5" />
               <p className="text-md text-center text-gray font-medium px-2">
                 Already a member?{' '}
                 <span
