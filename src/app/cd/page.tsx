@@ -1,8 +1,11 @@
 import React from 'react'
 import Navbar from '../components/Navbar/Navbar'
 import { MdOutlineHome, MdNavigateNext, MdEmail } from 'react-icons/md'
-import { FaCircleInfo, FaStar } from "react-icons/fa6";
+import { FaCircleInfo, FaStar, FaLink, FaClock } from "react-icons/fa6";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { FaPhoneAlt } from "react-icons/fa";
+import { TiHome } from "react-icons/ti";
+import { HiMiniPrinter } from "react-icons/hi2";
 
 export default function CollegeDiscovery() {
 
@@ -19,7 +22,7 @@ export default function CollegeDiscovery() {
                 </div>
 
                 <div style={{ height: '500px', overflow: 'hidden' }}>
-                    <img src="./img.png" alt="img" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src="./img.png" alt="img" style={{ width: '100%', height: '500px', objectFit: 'cover' }} />
                 </div>
                 <div className='px-8 lg:px-28 grid grid-cols-1 md:grid-cols-2 justify-center md:justify-between py-10'>
                     <div className='flex flex-row items-center'>
@@ -42,28 +45,28 @@ export default function CollegeDiscovery() {
                         <span className="px-10 lg:px-44 gap-4">
                             <ul className='grid grid-cols-2 md:grid-cols-4  gap-4 align-center justify-center '>
                                 <li className="flex flex-col items-center justify-center">
-                                    <span><img src="./group 36.png" alt="1" /></span>
+                                    <span><img src="./1.png" alt="logo" srcSet="" /></span>
                                     <span className="flex flex-row items-center gap-2.5">
                                         <div className="font-bold text-3xl">30k</div>
                                         <div className="text-center text-gray w-10">Total Students</div>
                                     </span>
                                 </li>
                                 <li className="flex flex-col items-center justify-center">
-                                    <span><img src="./group 36(1).png" alt="1" /></span>
+                                    <span><img src="./2.png" alt="logo" srcSet="" /></span>
                                     <span className="flex flex-row items-center gap-2.5 text-primary">
                                         <div className="font-bold text-3xl">320</div>
                                         <div className="text-center text-gray w-15">Students on Unibuzz</div>
                                     </span>
                                 </li>
                                 <li className="flex flex-col items-center justify-center">
-                                    <span><img src="./group.png" alt="1" /></span>
+                                    <span><img src="./4.png" alt="logo" srcSet="" /></span>
                                     <span className="flex flex-row items-center gap-2.5">
                                         <div className="font-bold text-3xl">5k</div>
                                         <div className="text-center text-gray w-15">Total Faculty</div>
                                     </span>
                                 </li>
                                 <li className="flex flex-col items-center justify-center">
-                                    <span><img src="./group.png" alt="1" /></span>
+                                    <span><img src="./3.png" alt="logo" srcSet="" /></span>
                                     <span className="flex flex-row items-center gap-2.5 text-primary">
                                         <div className="font-bold text-3xl">50</div>
                                         <div className="text-center text-gray w-15">Faculty on UniBuzz</div>
@@ -89,16 +92,16 @@ export default function CollegeDiscovery() {
                         <span className='grid grid-cols-1 md:grid-cols-2 gap-8 justify-between'>
                             <div className='border-2 border-gray rounded-lg p-2'>
                                 <ul className='flex flex-col gap-8'>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
+                                    <li><span className='flex felx-row items-center font-bold'><MdEmail className='mx-1' size={20} /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
+                                    <li><span className='flex felx-row items-center font-bold'>< FaPhoneAlt className='mx-1' size={20} /> Phone</span><span className='text-gray'>TEL:+81-52-747-6556 </span></li>
+                                    <li><span className='flex felx-row items-center font-bold'><HiMiniPrinter className='mx-1' size={20} /> Fax</span><span className='text-gray'>TEL:+81-52-747-6556 </span></li>
                                 </ul>
                             </div>
                             <div className='border-2 border-gray rounded-lg p-2'>
                                 <ul className='flex flex-col gap-8'>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
-                                    <li><span className='flex felx-row items-center font-bold'><MdEmail /> Email</span><span className='text-gray'>apply@g30.nagoya-u.ac.jp</span></li>
+                                    <li><span className='flex felx-row items-center font-bold'><FaLink className='mx-1' size={20} /> Link</span><span className='text-gray'>https://en.nagoya-u.ac.jp/index.html</span></li>
+                                    <li><span className='flex felx-row items-center font-bold'><TiHome className='mx-1' size={20} /> Address</span><span className='text-gray'>Furo-cho, Chikusa-ku, Nagoya, 464-8601, Japan</span></li>
+                                    <li><span className='flex felx-row items-center font-bold'><FaClock className='mx-1' size={20} /> Office Hours</span><span className='text-gray'>Monday to Friday 9:00 am - 12:00 p.m. and 1:00 p.m - 5:00 p.m</span></li>
 
                                 </ul>
                             </div>
@@ -135,11 +138,11 @@ export default function CollegeDiscovery() {
 
                     </div>
                     <div className='flex flex-col gap-4 md:gap-1'>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 text-gray-dark'>
                             <span className='flex flex-row gap-2'>
-                                <div><img src="./avatars.png" alt="avatar" /></div>
+                                <div><img src="./Avatars.png" alt="logo" srcSet="" /></div>
                                 <div className='flex flex-col'>
-                                    <span>Kathryn Murphy  </span>
+                                    <span className='font-bold'>Kathryn Murphy  </span>
                                     <span>Nagoya University</span>
                                     <span>3rd Yr. Undergraduate</span>
                                 </div>
@@ -148,11 +151,11 @@ export default function CollegeDiscovery() {
                             <span>Studying in Nagoya is one of the best hcances I have ever had. I got the chance to live in a new environment with people from different countries. The biggest challege for me when I came to NU was learning a Japanese language... To compete with international minds in a foreign language was and still is pretty tough...</span>
                             <span className=' flex flex-row gap-1 justify-end items-center text-right text-primary'><span>Read More</span> <RiArrowDropDownLine color='black' size={20} /> </span>
                         </div>
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 text-gray-dark'>
                             <span className='flex flex-row gap-2'>
-                                <div><img src="./avatars.png" alt="avatar" /></div>
+                                <div><img src="./Avatars.png" alt="logo" srcSet="" /></div>
                                 <div className='flex flex-col'>
-                                    <span>Kathryn Murphy  </span>
+                                    <span className='font-bold'>Kathryn Murphy  </span>
                                     <span>Nagoya University</span>
                                     <span>3rd Yr. Undergraduate</span>
                                 </div>
