@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "lint-staged": {
-    "*.{ts, tsx}": [
+    "*.{ts,tsx}": [
+      "eslint",
       "prettier --write",
-      "next lint",
       "git add"
     ],
     "*.js": "eslint --cache --fix",
@@ -15,7 +15,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint './**/*.{ts,tsx}' --max-warnings=50",
+    "lint": "next lint",
     "lint:fix": "npm run lint --fix",
     "coverage": "jest --maxWorkers=2 --coverage",
     "test": "jest --watch",
