@@ -2,14 +2,16 @@
   "name": "web-app-client",
   "version": "0.1.0",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint",
-      "prettier --write",
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
       "git add"
-    ],
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    ]
   },
   "scripts": {
     "dev": "next dev",
