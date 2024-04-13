@@ -9,6 +9,7 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-onboarding',
     '@storybook/addon-interactions',
+    "storybook-addon-apollo-client",
   ],
   framework: {
     name: '@storybook/nextjs',
