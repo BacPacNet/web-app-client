@@ -1,6 +1,6 @@
 /** @type { import('@storybook/react').Preview } */
 import '../src/app/globals.css'
-import { MockedProvider } from '@apollo/client/testing';
+// import { MockedProvider } from '@apollo/client/testing';
 const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
@@ -11,7 +11,7 @@ const preview = {
       },
     },
     apolloClient: {
-      MockedProvider,
+      // MockedProvider,
       globalMocks: [
         // whatever mocks you want here
       ],

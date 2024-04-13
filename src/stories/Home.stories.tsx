@@ -1,5 +1,6 @@
 import Home from '../app/page'
 import { GET_COLLEGES } from '@/graphql/queries'
+import { ApolloWrapper } from '@/lib/apollo-provider'
 const story = {
   title: 'HomePage',
   component: Home,
@@ -24,5 +25,9 @@ const story = {
 }
 
 export default story
-const Template = () => <Home />
+const Template = () => (
+  <ApolloWrapper>
+    <Home />
+  </ApolloWrapper>
+)
 export const homePage = Template.bind({})
