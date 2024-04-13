@@ -13,7 +13,7 @@ import { motion } from 'framer-motion'
 import StarIcon from '../assets/stars.svg'
 import Image from 'next/image'
 import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr'
-
+import DiscordIcon from '@assets/discord.svg'
 export default function Home() {
   const { data, loading } = useQuery(query)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -67,6 +67,26 @@ export default function Home() {
       <Sections />
       <Section2 />
       <Section3 />
+      <div className=" w-[90%] mx-auto relative flex flex-col center-v pt-8 lg:pt-16">
+        <div className="w-full flex flex-col lg:flex-row relative items-center justify-between border-b-2 border-b-gray-light pb-4">
+          <div className="w-full lg:w-1/2 text-center lg:text-left">
+            <p className=" text-[#6647FF] font-semibold text-xs lg:text-sm my-4">STILL HAVE QUESTIONS?</p>
+            <h1 className="text-[#171717] font-extrabold text-3xl lg:text-4xl w-full">Get to know us better</h1>
+            <p className="text-sm lg:text-md my-4 text-[#525252]">Familiarize yourself with Unibuzz&apos;s mission and purpose</p>
+          </div>
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end gap-8 my-8">
+            <div className="discord">
+              <button className="btn btn-disc text-[#6647FF] text-base text-center font-medium py-3 px-4 flex justify-evenly items-center">
+                <Image src={DiscordIcon} className="icon mr-2" alt="DiscordIcon" />
+                Our Discord
+              </button>
+            </div>
+            <div className="aboutus">
+              <button className="btn-sec border border-[#E5E5E5] rounded-md bg-transparent text-[#404040] text-base font-medium">About us</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   )
