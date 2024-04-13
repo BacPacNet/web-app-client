@@ -47,11 +47,11 @@ const Login = () => {
   }
 
   return (
-    <div>
+    <main>
       <div className="flex flex-col justify-center items-center bg-violet-100">
         {/* LOGIN COMPONENT */}
         {display === 'login' && (
-          <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl lg:min-w-[500px]">
+          <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl lg:min-w-[500px] mx-4">
             <div className="self-center">
               <img src="/unibuzzLogo.png" alt="uniBuzz Logo" />
             </div>
@@ -87,13 +87,13 @@ const Login = () => {
               </div>
               {/* errors will return when field validation fails  */}
               {loginErrors.password && <span className="text-red-500 font-normal">Please enter your password!</span>}
-              <p className="text-md text-slate-600 font-normal px-2 my-4">Forgot Password?</p>
+              <p className="text-sm text-slate-600 font-normal px-2 my-4 cursor-pointer">Forgot Password?</p>
               {/* checkbox for remember me */}
-              <div className="flex items-center mb-4 pl-2">
+              <div className="flex flex-row items-center mb-4 pl-2">
                 <div>
                   <input type="checkbox" {...registerLogin('rememberMe')} id="rememberMe" name="rememberMe" value="rememberMe" className="mr-2" />
                 </div>
-                <label htmlFor="rememberMe" className="text-md font-normal">
+                <label htmlFor="rememberMe" className="text-sm font-normal">
                   Remember Me
                 </label>
               </div>
@@ -276,7 +276,7 @@ const Login = () => {
         )}
       </div>
       <Footer />
-    </div>
+    </main>
   )
 }
 
