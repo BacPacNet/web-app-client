@@ -1,11 +1,11 @@
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
 import { ApolloServer } from '@apollo/server'
-import { NextRequest } from 'next/server'
-import typeDefs from '@/graphql/schema'
-import resolvers from '@/graphql/resolvers'
-import mongoose from 'mongoose'
-import Colleges from '@/mongoose/datasources/datasource'
 import CollegeModel from '@/mongoose/models/college'
+import Colleges from '@/mongoose/datasources/datasource'
+import { NextRequest } from 'next/server'
+import mongoose from 'mongoose'
+import resolvers from '@/graphql/resolvers'
+import { startServerAndCreateNextHandler } from '@as-integrations/next'
+import typeDefs from '@/graphql/schema'
 
 const uri = process.env.MONGODB_URI
 

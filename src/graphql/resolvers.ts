@@ -1,3 +1,4 @@
+import { register } from '../mongoose/auth/auth'
 const resolvers = {
   Query: {
     colleges: async (
@@ -22,7 +23,6 @@ const resolvers = {
         return await context.dataSources.colleges.getCollegeById(args.collegeId)
       } catch (error) {
         console.log(error)
-
         throw new Error(`Failed to fetch college with id: ${args.collegeId} `)
       }
     },
@@ -37,6 +37,15 @@ const resolvers = {
       } catch (error) {
         throw new Error('Failed to fetch test colleges')
       }
+    },
+  },
+  Mutation: {
+    async registerUser(
+      _: unknown,
+      { registerInput }: { registerInput: { email: string; password: string; firstName: string; lastName: string; gender: string; dob: string } }
+    ) {
+      const result = await register(registerInput, _)
+      return result
     },
   },
 }

@@ -29,7 +29,6 @@ async function getUniversityList() {
     console.log('this is error from get all unversity list side', error)
   }
 }
-
 const resolvers = {
   Query: {
     university_name: async (_: void, args: { id: string }) => {
@@ -40,6 +39,7 @@ const resolvers = {
     },
   },
 }
+// need to pass the parameter
 
 const typeDefs = gql`
   type Query {
