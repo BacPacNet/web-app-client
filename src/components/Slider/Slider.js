@@ -11,11 +11,11 @@ import React, { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Image from 'next/image'
-import arrow from '../../assets/arrow.png'
-import f1 from '../../assets/Organized Group Feature.png'
-import f2 from '../../assets/chatBot.png'
-import f3 from '../../assets/connectionFeature.png'
-import nextarrow from '../../assets/right.png'
+import arrow from '@assets/arrow.png'
+import f1 from '@assets/Organized Group Feature.png'
+import f2 from '@assets/chatBot.png'
+import f3 from '@assets/connectionFeature.png'
+import nextarrow from '@assets/right.png'
 
 export default function Slider() {
   const [description, setDescription] = useState('')
@@ -52,8 +52,6 @@ export default function Slider() {
   }
   return (
     <Swiper
-      data-aos="fade-up"
-      data-aos-duration="500"
       effect={'coverflow'}
       // grabCursor={true}
       // onSlideChange={handleSlideChange}

@@ -1,48 +1,9 @@
-.section-2 {
-  width: 100%;
-  height: 1808px;
-}
-.part-1 {
-  width: 992px;
-  height: 377px;
-  /* border: 2px solid red; */
-  justify-content: space-between;
-}
-.left {
-  width: 472px;
-}
-.picture {
-  width: 472px;
-  /* border: 2px solid red; */
-  height: 284.2px;
-  border-radius: 8px;
-}
-.magnifier {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  top: 150px;
-  left: 300px;
-  border-radius: 9999px;
-}
-.right-sec2 {
-  width: 452px;
-  height: 228px;
-  /* border: 2px solid red; */
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 .college-info {
-  margin-top: 403px;
-  /* border: 2px solid red; */
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* border: 2px solid red; */
   background-image: url('../../assets/test.png');
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
@@ -59,23 +20,14 @@
 .h2 {
   text-align: center;
 }
-.hp2 {
-  font-size: 40px;
-  font-weight: 500;
-  color: #171717;
-  line-height: 48px;
-  letter-spacing: -0.02em;
-  text-align: center;
-}
+
 .pic-1 {
   width: 368.35px;
-  /* border: 2px solid red; */
   height: 90.73px;
 }
 .pic-2 {
   position: relative;
   top: -40px;
-  /* border: 2px solid red; */
   width: 600px;
   height: 264.22px;
   border-radius: 300px;
@@ -84,44 +36,13 @@
   font-size: 44px;
 }
 .desc {
-  width: 452px;
-  height: 160px;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 32px;
-  text-align: justify;
   color: #525252;
 }
-@media only screen and (max-width: 1100px) and (min-width: 768px) {
-  .part-1 {
-    width: 100%;
-  }
-}
+
 @media only screen and (max-width: 768px) and (min-width: 375px) {
-  .section-2 {
-    width: 100%;
-    height: 1921px;
-  }
-  .heading-sec2 {
-    width: 370px;
-    height: 104px;
-    margin-top: 84px;
-  }
-  .part-1 {
-    display: flex;
-    flex-direction: column;
-    /* border: 2px solid red; */
-    align-items: center;
-    width: 100%;
-  }
   .typing-effect {
     height: 96px;
     text-align: center;
-  }
-  .absolute {
-    position: absolute;
-    left: 0px;
-    top: auto;
   }
   .right-sec2 {
     position: relative;
@@ -130,15 +51,6 @@
     height: 196px;
     padding: 24px;
     justify-content: center;
-  }
-  .h1 {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .magnifier {
-    width: 178px;
-    top: 160px;
-    left: 331px;
   }
   .college-info {
     display: flex;
@@ -167,70 +79,12 @@
     text-align: center;
     color: #171717;
   }
-  .hp2 {
-    margin-top: 24px;
-    font-size: 40px;
-    font-weight: 500;
-    line-height: 48px;
-    letter-spacing: -0.02em;
-    text-align: center;
-    color: #525252;
-  }
-  .desc {
-    width: 100%;
-    height: 128px;
-  }
-  .left {
-    width: 336px;
-  }
-  .magnifier {
-    top: 160px;
-    left: 175px;
-  }
-  .hp2 {
-    width: 100%;
-    height: 216px;
-    margin-top: 50px;
-    /* padding: 24px; */
-  }
 }
 @media only screen and (max-width: 375px) {
-  .section-2 {
-    width: 100%;
-    margin-top: -150px;
-    height: 1300px;
-  }
-  .heading-sec2 {
-    width: 100%;
-    height: 96px;
-  }
-  .part-1 {
-    display: flex;
-    width: 336px;
-    flex-direction: column;
-    height: 248px;
-  }
-  .left {
-    width: 336px;
-    height: 248px;
-  }
-  .absolute {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-  }
-  .magnifier {
-    position: relative;
-    width: 120px;
-    height: 117px;
-    top: 186px;
-    left: 227px;
-    border-radius: 9999px;
-  }
-  .h1 {
+  /*.h1 {
     text-align: center;
     margin-bottom: 24px;
-  }
+  }*/
   .right-sec2 {
     position: relative;
     top: 220px;
@@ -262,42 +116,13 @@
     color: #171717;
     margin-top: -30px;
   }
-  .hp2 {
-    width: 337px;
-    height: 64px;
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 32px;
-    letter-spacing: -0.02em;
-    text-align: center;
-    color: #525252;
-    margin-top: 50px;
-  }
+
   .desc {
-    width: 100%;
-    height: 192px;
     font-size: 16px;
     font-weight: 400;
-    text-align: center;
   }
 }
 @media only screen and (max-width: 359px) {
-  .part-1 {
-    width: 100%;
-  }
-  .left {
-    width: 100%;
-    height: 248px;
-  }
-  .picture {
-    width: 87%;
-    height: 183px;
-    /* border: 2px solid red; */
-    color: transparent;
-  }
-  .absolute {
-    left: 18px;
-  }
   .hp1 {
     font-size: 32px;
     width: 100%;
@@ -305,24 +130,8 @@
   .h2 {
     width: 100%;
   }
-  .hp2 {
-    width: 100%;
-    margin-top: 15px;
-  }
+
   .right-sec2 {
     padding-inline: 5px;
-  }
-  .magnifier {
-    position: relative;
-    width: 139px;
-    height: 134px;
-    top: 102px;
-    left: 191px;
-    border-radius: 9999px;
-  }
-}
-@media only screen and (max-width: 330px) {
-  .magnifier {
-    width: 120px;
   }
 }

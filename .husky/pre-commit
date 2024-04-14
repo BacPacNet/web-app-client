@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo 'checking code styling before committing'
+
+# Check ESLint Standards
+npm run lint ||
+(
+        echo 'ESLint Check Failed. Run yarn run lint:fix, Review the listed issues, make the required adjustments, add the changes, and attempt to commit again.'
+        false; 
+)
+
+# Check Code Formatting
+npm run prettier ||
+(
+        echo 'ESLint Check Failed. Run yarn run lint:fix, Review the listed issues, make the required adjustments, add the changes, and attempt to commit again.'
+        false; 
+)
+
+# If everything passes... Now we can commit
+echo 'The code has been successfully validated. Proceeding with the commit process...'

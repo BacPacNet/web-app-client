@@ -1,12 +1,11 @@
-const bcrypt = require('bcrypt')
+import jwt, { Secret } from 'jsonwebtoken'
 
-const jwt = require('jsonwebtoken')
-
+import bcrypt from 'bcrypt'
 import userModel from '../models/user'
 
 const generateAccessToken = (data: any) => {
   try {
-    const token = jwt.sign(data, process.env.ACCESS_KEY, {
+    const token = jwt.sign(data, process.env.ACCESS_KEY as Secret, {
       expiresIn: '1d',
     })
     return token
@@ -17,7 +16,7 @@ const generateAccessToken = (data: any) => {
 
 const generateRefreshToken = (data: any) => {
   try {
-    const token = jwt.sign(data, process.env.REFRESH_KEY, {
+    const token = jwt.sign(data, process.env.REFRESH_KEY as Secret, {
       expiresIn: '1y',
     })
     return token

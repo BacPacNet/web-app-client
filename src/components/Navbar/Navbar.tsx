@@ -5,17 +5,20 @@ import 'aos/dist/aos.css'
 
 import React, { useEffect, useState } from 'react'
 
-import AOS from 'aos'
-import { FaRegBell } from 'react-icons/fa'
 import Image from 'next/image'
-import { IoMdMail } from 'react-icons/io'
 import Link from 'next/link'
-import buttonIcon from '../../assets/buttonIcon.png'
-import close from '../../assets/close.png'
-import demopic from '../../assets/demopic.jpg'
-import star from '../../assets/star.png'
-import unibuzzLogo from '../../assets/unibuzzLogo.png'
+import { menuContent } from './constant'
+import { motion } from 'framer-motion'
+import star from '@assets/star.png'
+import unibuzzLogo from '@assets/logo.svg'
 import { usePathname } from 'next/navigation'
+import useWindowSize from '@/hooks/useWindowSize'
+
+//import { FaRegBell } from 'react-icons/fa'
+
+//import { IoMdMail } from 'react-icons/io'
+
+//import demopic from '@assets/demopic.jpg'
 
 interface MenuItem {
   name: string
@@ -23,164 +26,120 @@ interface MenuItem {
   display: string
 }
 const Navbar: React.FC = () => {
-  const [isMobile, setIsMobile] = useState<boolean>(false)
+  const [isMobile] = useState<boolean>(false)
+  const [width] = useWindowSize()
   const pathname = usePathname()
   const [open, setOpen] = useState<boolean>(false)
   // isLogin is just for demo purpose.
   const [isLogin, setIsLogin] = useState<boolean>(false)
   const [hover, setHover] = useState<boolean>(false)
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 375)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-  useEffect(() => {
-    AOS.init({ duration: 300 })
-  }, [open])
+  const [activeItem, setActiveItem] = useState('')
 
-  const menuContent: MenuItem[] = [
-    {
-      name: 'Discover',
-      path: '/discover',
-      display: 'lap',
-    },
-    {
-      name: 'Community',
-      path: '/community',
-      display: 'lap',
-    },
-    {
-      name: 'Timeline',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'Profile',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'Notifications',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'Messages',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'Connections',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'University Community',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'Chatbot',
-      path: '/',
-      display: 'mobile',
-    },
-    {
-      name: 'About us',
-      path: '/aboutus',
-      display: 'lap',
-    },
-    {
-      name: 'UPGRADE',
-      path: '/upgrade',
-      display: 'lap',
-    },
-  ]
+  const handleClick = (item: string) => {
+    setActiveItem(item)
+  }
+
+  useEffect(() => {
+    if (width.toString() > '769') {
+      console.log('object')
+      setOpen(false)
+    }
+  }, [width])
+
+  const FilteredMenuComponent = () => {
+    return (
+      <>
+        {filteredMenuContent.map((item, index) => {
+          return (
+            <div className="" key={index}>
+              <li key={index} className="list-none">
+                {item.path === '/upgrade' ? (
+                  <div className="flex" onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                    <Link href={item.path} className={pathname === item.path ? 'nav-link  nav-link-ltr' : 'link special '}>
+                      {item.name}
+                    </Link>
+                    <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
+                  </div>
+                ) : item.display === 'mobile' ? (
+                  <Link href={item.path} className={pathname === item.path ? 'mobile nav-link nav-link-ltr' : 'mobile link'}>
+                    {item.name}
+                  </Link>
+                ) : (
+                  <Link href={item.path} onClick={() => handleClick(item.name)} className={activeItem === item.name ? 'active nav-link' : 'nav-link'}>
+                    {item.name}
+                  </Link>
+                )}
+              </li>
+            </div>
+          )
+        })}
+      </>
+    )
+  }
+
   const filteredMenuContent: MenuItem[] = isMobile ? menuContent : menuContent.filter((item) => item.display !== 'mobile')
   return (
-    <div className="navbar justify-around w-full center-v h-16 bg-white sticky top-0 left-0">
-      <div className="left-nav h-8 center-v">
-        <div className="logo center-v mr-16 h-full">
-          <Link href="/">
-            <Image src={unibuzzLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer" />
-          </Link>
-        </div>
-        <div
-          className={open ? 'nav-res gap-7 h-full flex items-center justify-around w-full relative' : 'nav center-v gap-16 h-full w-full relative'}
-          data-aos={open ? 'fade-down' : ''}
-          data-aos-duration="300"
-          data-aos-easing="ease-in"
-        >
-          {isLogin && isMobile && (
-            <div className="profile">
-              <div className="profile-info">
-                <Image src={demopic} alt="demo" height={40} width={40} className="mr-2" />
-                <div className="name">Kate perry</div>
-              </div>
-              <div className="notifications">
-                <IoMdMail className="notifi-icons" />
-                <FaRegBell className="notifi-icons" />
-              </div>
+    <>
+      <div className="navbar justify-around w-full center-v h-16 sticky top-0 px-6 xl:px-28 bg-white">
+        <div className="flex w-full center-v justify-between">
+          <div className="w-1/6">
+            <div className="flex">
+              <Link className="flex gap-4 center-v" href="/">
+                <Image src={unibuzzLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer" />
+                <span>Unibuzz</span>
+              </Link>
             </div>
-          )}
-          <div className="nav-details flex">
-            {filteredMenuContent.map((item, index) => {
-              return (
-                <div className="nav-item" key={index}>
-                  <li key={index} className="list-none">
-                    {item.path === '/upgrade' ? (
-                      <div className="flex" onMouseOver={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                        {item.display === 'mobile' ? (
-                          <Link href={item.path} className={pathname === item.path ? 'mobile nav-link active' : 'mobile nav-link special w-16'}>
-                            {item.name}
-                          </Link>
-                        ) : (
-                          <Link href={item.path} className={pathname === item.path ? 'nav-link active' : 'nav-link special w-16'}>
-                            {item.name}
-                          </Link>
-                        )}
-                        {open ? (
-                          <Image src={star} alt="" className="active-upgrade" />
-                        ) : (
-                          <Image src={star} alt="" className={hover ? 'active-upgrade' : 'upgrade'} />
-                        )}
-                      </div>
-                    ) : item.display === 'mobile' ? (
-                      <Link href={item.path} className={pathname === item.path ? 'mobile nav-link' : 'mobile nav-link'}>
-                        {item.name}
-                      </Link>
-                    ) : (
-                      <Link href={item.path} className={pathname === item.path ? ' nav-link active' : 'nav-link'}>
-                        {item.name}
-                      </Link>
-                    )}
-                  </li>
-                </div>
-              )
-            })}
           </div>
-          {!isMobile && (
-            <div className={open ? 'btn-res' : 'right-nav w-48 center-v justify-start h-9 '}>
-              <div>
-                <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right h-full">Sign Up</button>
-              </div>
-              <div>
-                <button className="btn btn-secondary ml-6 text-right text-sm font-medium h-full">Login</button>
-              </div>
-            </div>
-          )}
+          <div className="relative w-1/2 hidden md:flex gap-6 lg:gap-16 center-v">
+            <>
+              <FilteredMenuComponent />
+              {open ? (
+                <>
+                  <hr className="my-3" />
+                  <div className="flex justify-end">
+                    <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
+                    <button className="btn btn-secondary ml-6 text-right text-sm font-medium">Login</button>
+                  </div>
+                </>
+              ) : null}
+            </>
+          </div>
+          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
+            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
+            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">Login</button>
+          </div>
+
+          <div
+            className={`hamburger ${open ? 'is-active' : ''} h-8  md:hidden`}
+            id="hamburger"
+            onClick={() => {
+              setIsLogin(!isLogin)
+              setOpen(!open)
+            }}
+          >
+            <span className="line"></span>
+            <span className="line"></span>
+            <span className="line"></span>
+          </div>
         </div>
       </div>
-      <div className="hamberger-menu" onClick={() => setIsLogin(!isLogin)}>
-        {open ? (
-          <Image src={close} alt="close" className="w-full h-full" onClick={() => setOpen(false)} />
-        ) : (
-          <Image src={buttonIcon} alt="hamburger-menu" className="w-full h-full" onClick={() => setOpen(true)} />
-        )}
-      </div>
-    </div>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: '-100%' }}
+          animate={{ opacity: 1, y: 0, transition: { ease: 'easeIn' } }}
+          className="nav-res gap-4 flex justify-around w-full p-6 md:p-0 md:center-v md:hidden"
+        >
+          <FilteredMenuComponent />
+          <>
+            <hr className="my-3" />
+            <div className="flex justify-end">
+              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
+              <button className="btn btn-secondary ml-6 text-right text-sm font-medium">Login</button>
+            </div>
+          </>
+        </motion.div>
+      )}
+    </>
   )
 }
 
