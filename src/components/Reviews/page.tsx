@@ -28,7 +28,12 @@ const Reviews = () => {
       <div className="flex flex-col gap-4 text-gray-dark">
         <span className="flex flex-row gap-2">
           <div>
-            <Image src="/demo_cd/Avatars.png" alt="avatar" width={50} height={50} />
+            <Image
+              src="https://github.com/BacPacNet/web-app-client/blob/BI-64_college_discovery_page/public/demo_cd/Avatars.png?raw=true'"
+              alt="avatar"
+              width={50}
+              height={50}
+            />
           </div>
           <div className="flex flex-col">
             <span className="font-bold">Kathryn Murphy </span>
