@@ -64,7 +64,7 @@ const Login = () => {
             {/* checkbox for remember me */}
             <div className="flex flex-row items-center mb-4 pl-2">
               <div>
-                <input type="checkbox" {...registerLogin('rememberMe')} id="rememberMe" name="rememberMe" value="rememberMe" className="mr-2" />
+                <input type="checkbox" {...registerLogin('rememberMe')} id="rememberMe" name="rememberMe" value="true" className="mr-2" />
               </div>
               <label htmlFor="rememberMe" className="text-sm font-normal">
                 Remember Me

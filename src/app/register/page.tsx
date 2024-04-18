@@ -27,7 +27,12 @@ const SignUp = () => {
     register: registerSignup,
     handleSubmit: handleSubmitSignup,
     formState: { errors: signupErrors },
+    watch,
   } = useForm<signupInputs>()
+
+  // Get the current values of password and confirmPassword
+  const password = watch('password')
+
   const onSignupSubmit: SubmitHandler<signupInputs> = (data) => {
     console.log(data)
     console.log('signup errors', signupErrors)
@@ -56,57 +61,84 @@ const SignUp = () => {
               Last Name
             </label>
             <input
-              {...registerSignup('lastname')}
+              {...registerSignup('lastname', { required: true })}
               placeholder="Last Name"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-
+            {signupErrors.lastname && <span className="text-red-500 font-normal">Please enter your last name!</span>}
             <label htmlFor="email" className="py-1 mt-5">
               Email Address
             </label>
             <input
-              {...registerSignup('email', { required: true })}
+              {...registerSignup('email', {
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'Please enter a valid email address',
+                },
+              })}
               placeholder="Email Address"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-            {signupErrors.email && <span className="text-red-500 font-normal">Please enter your email!</span>}
+            {signupErrors.email && (
+              <span className="text-red-500 font-normal">{signupErrors.email.message ? signupErrors.email.message : 'Please enter your email!'}</span>
+            )}
             <label htmlFor="gender" className="py-1 mt-5">
               Gender
             </label>
             {/* TODO: make it a dropdown */}
             <input
-              {...registerSignup('gender')}
+              {...registerSignup('gender', {
+                required: true,
+              })}
               placeholder="Gender"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
+            {signupErrors.gender && <span className="text-red-500 font-normal">Please enter your Gender!</span>}
             <label htmlFor="birthday" className="py-1 mt-5">
               Birthday
             </label>
             <input
               type="date"
-              {...registerSignup('birthday')}
+              {...registerSignup('birthday', { required: true })}
               placeholder="Email Address"
               className=" border px-3 py-2 text-md rounded-lg border-gray-light font-normal text-gray"
             />
+            {signupErrors.birthday && <span className="text-red-500 font-normal">Please enter your birth date!</span>}
             <label htmlFor="country" className="py-1 mt-5">
               Country
             </label>
             <input
-              {...registerSignup('country')}
+              {...registerSignup('country', { required: true })}
               placeholder="Country"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
+            {signupErrors.country && <span className="text-red-500 font-normal">Please enter your Country!</span>}
             <label htmlFor="city" className="py-1 mt-5">
               City
             </label>
-            <input {...registerSignup('city')} placeholder="City" className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal" />
+            <input
+              {...registerSignup('city', { required: true })}
+              placeholder="City"
+              className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
+            />
+            {signupErrors.firstname && <span className="text-red-500 font-normal">Please enter your City!</span>}
             <label htmlFor="password" className="py-1 mt-5">
               Password
             </label>
-            {/* include validation with required or other standard HTML validation rules */}
             <div className="relative">
               <input
-                {...registerSignup('password', { required: true })}
+                {...registerSignup('password', {
+                  required: true,
+                  minLength: {
+                    value: 8,
+                    message: 'Password must have at least 8 characters',
+                  },
+                  pattern: {
+                    value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+                    message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+                  },
+                })}
                 placeholder="Password"
                 className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal w-full"
                 type={showPassword ? 'text' : 'password'}
@@ -119,12 +151,23 @@ const SignUp = () => {
                 )}
               </div>
             </div>
+            {signupErrors.password && (
+              <div className=" max-w-md">
+                <span className="text-red-500 font-normal break-words">
+                  {signupErrors.password.message ? signupErrors.password.message : 'Please enter your password!'}
+                </span>
+              </div>
+            )}
             <label htmlFor="confirm password" className="py-1 mt-5">
               Confirm Password
             </label>
             <div className="relative">
               <input
-                {...registerSignup('confirmPassword', { required: true })}
+                {...registerSignup('confirmPassword', {
+                  required: true,
+                  // Add validation to match password
+                  validate: (value) => value === password || 'Passwords do not match',
+                })}
                 placeholder="Password"
                 className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal w-full"
                 type={showConfirmPassword ? 'text' : 'password'}
@@ -140,8 +183,8 @@ const SignUp = () => {
                 )}
               </div>
             </div>
-            {/* errors will return when field validation fails  */}
-            {signupErrors.password && <span className="text-red-500 font-normal">Please enter your password!</span>}
+            {signupErrors.confirmPassword && <span className="text-red-500 font-normal">{signupErrors.confirmPassword.message}</span>}
+
             <label htmlFor="tnc" className="my-5 font-normal">
               Terms & Conditions
             </label>
@@ -173,15 +216,16 @@ const SignUp = () => {
               </p>
             </div>
             {/* checkbox for remember me */}
-            <div className="flex items-center mb-4 pl-2">
+            <div className="flex items-center pl-2">
               <div>
-                <input {...registerSignup('tnc')} type="checkbox" id="rememberMe" name="rememberMe" value="tnc" className="mr-2" />
+                <input {...registerSignup('tnc', { required: true })} type="checkbox" id="tnc" name="tnc" value="true" className="mr-2" />
               </div>
               <label htmlFor="tnc agree" className="text-md font-normal">
                 I have read and agree with the terms of service and privacy policy.
               </label>
             </div>
-            <input type="submit" value="Sign Up" className="bg-primary py-2 rounded-lg text-white text-lg font-normal mb-5" />
+            {signupErrors.tnc && <span className="text-red-500 font-normal">Required!</span>}
+            <input type="submit" value="Sign Up" className="bg-primary py-2 rounded-lg text-white text-lg font-normal mb-5 mt-4" />
             <p className="text-md text-center text-gray font-medium px-2">
               Already a member?{' '}
               <span className="text-primary cursor-pointer">
