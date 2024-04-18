@@ -34,11 +34,19 @@ const Login = () => {
               Email Address
             </label>
             <input
-              {...registerLogin('email', { required: true })}
+              {...registerLogin('email', {
+                required: true,
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'Please enter a valid email address',
+                },
+              })}
               placeholder="Email Address"
               className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-            {loginErrors.email && <span className="text-red-500 font-normal">Please enter your email!</span>}
+            {loginErrors.email && (
+              <span className="text-red-500 font-normal">{loginErrors.email.message ? loginErrors.email.message : 'Please enter your email!'}</span>
+            )}
             <label htmlFor="password" className="py-1 mt-5">
               Password
             </label>
