@@ -3,9 +3,11 @@ import './SearchBar.css'
 import Image from 'next/image'
 import CollegeResult from '@components/CollegeResult'
 import SearchHistoryBox from '@components/SearchHistoryBox/SearchHistoryBox'
-import searchAlgorithm from '@/utils/searchAlgorithm'
+// import searchAlgorithm from '@/utils/searchAlgorithm'
 import searchIcon from '../assets/search-icon.svg'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { searchUniversity } from '@/utils/UniversityApiFunctions'
 
 // search bar
 interface FilteredCollege {
@@ -25,18 +27,36 @@ interface College {
   name: string
   score: string
 }
-const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
+const SearchBar: React.FC<SearchBarProps> = () => {
   const [open, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
   const [searchHistoryShown, setSearchHistoryShown] = useState(true)
+  const { refetch, isLoading } = useQuery({
+    enabled: false,
+    queryKey: ['searchTerm', { searchTerm }],
+    queryFn: () => searchUniversity(searchTerm).then((res) => setFilterData(res.result)),
+  })
+  // console.log('uni', universityData?.result)
+  // console.log('fil', filterData)
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.trim().toLowerCase()
-    const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
+    // const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
+    setSearchTerm(input)
     setIsOpen(input.length !== 0)
-    setFilterData(filterData)
     setSearchHistoryShown(false)
   }
+
+  useEffect(() => {
+    if (searchTerm) {
+      const temp = setTimeout(() => {
+        refetch()
+      }, 1000)
+      return () => clearTimeout(temp)
+    }
+  }, [searchTerm, refetch])
+
   function handleSearchHistory() {
     if (!open) {
       // Only update history if the input is not already open
@@ -64,8 +84,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
   let searchResults: JSX.Element[] = filterData?.map((item, index) =>
     searchHistoryShown ? <SearchHistoryBox info={item} serialNo={index} key={index} /> : <CollegeResult info={item} serialNo={index} key={index} />
   )
-  if (!loading && searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
-  if (loading) searchResults = [<div key="loading">Loading....</div>]
+  if (!isLoading && searchResults?.length === 0) searchResults = [<div key="no-results">No results found</div>]
+  if (isLoading) searchResults = [<div key="loading">Loading....</div>]
   return (
     <div className="w-full text-center relative mt-2 h-12 rounded-3xl">
       <div className="relative mt-2 rounded-md shadow-sm">
