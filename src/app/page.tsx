@@ -8,14 +8,11 @@ import SearchBar from '../components/SearchBar'
 import Section2 from '../components/Section-2/Section2'
 import Section3 from '../components/Section-3/Section3'
 import Sections from '../components/Sections/Sections'
-import { query } from '../queries/queries'
 import { motion } from 'framer-motion'
 import StarIcon from '../assets/stars.svg'
 import Image from 'next/image'
-import { useQuery } from '@apollo/experimental-nextjs-app-support/ssr'
 import DiscordIcon from '@assets/discord.svg'
 export default function Home() {
-  const { data, loading } = useQuery(query)
   const [searchOpen, setSearchOpen] = useState(false)
 
   const LANDING_PAGE_TEXT = ' Search universities worldwide and become part of their online communities'.split(' ')
@@ -42,7 +39,7 @@ export default function Home() {
               </motion.span>
             ))}
           </div>
-          <SearchBar data={(data as any)?.universityList} loading={loading} />
+          <SearchBar />
           <div className="flex flex-col items-center my-4">
             <div className="flex items-center mt-4  md:mt-16 gap-2">
               <div>
