@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import Navbar from '../components/Navbar/Navbar'
 import { ApolloWrapper } from '@/lib/apollo-provider'
+import { ChakraProvider } from '@chakra-ui/react'
 
 type FontClassName = string
 
@@ -34,8 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ChakraProvider>
+          <Navbar />
+          <ApolloWrapper>{children}</ApolloWrapper>
+        </ChakraProvider>
       </body>
     </html>
   )
