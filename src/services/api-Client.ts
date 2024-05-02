@@ -31,7 +31,7 @@ const client = async <T, U>(
   }: RequestData<U> = {}
 ): Promise<ServerResponse<T>> => {
   const config: AxiosRequestConfig = {
-    url: customBaseUrl ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/${endpoint}` : `/api/${endpoint}`,
+    url: customBaseUrl ? `${process.env.NEXT_PUBLIC_CUSTOM_BASE_URL}/${endpoint}` : `${process.env.NEXT_PUBLIC_API_BASE_URL}/${endpoint}`,
     method: method || (data ? 'POST' : 'GET'),
     data: data ? JSON.stringify(data) : undefined,
     headers: { ...headers, 'Content-Type': 'application/json' },
