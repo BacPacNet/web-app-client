@@ -94,16 +94,24 @@ const Navbar: React.FC = () => {
                 <>
                   <hr className="my-3" />
                   <div className="flex justify-end">
-                    <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
-                    <button className="btn btn-secondary ml-6 text-right text-sm font-medium">Login</button>
+                    <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+                      <Link href={'/register'}>Sign Up</Link>
+                    </button>
+                    <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
+                      <Link href={'/login'}>Login</Link>
+                    </button>
                   </div>
                 </>
               ) : null}
             </>
           </div>
           <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
-            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
-            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">Login</button>
+            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+              <Link href={'/register'}>Sign Up</Link>
+            </button>
+            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
+              <Link href={'/login'}>Login</Link>
+            </button>
           </div>
 
           <div
@@ -130,8 +138,12 @@ const Navbar: React.FC = () => {
           <>
             <hr className="my-3" />
             <div className="flex justify-end">
-              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up</button>
-              <button className="btn btn-secondary ml-6 text-right text-sm font-medium">Login</button>
+              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+                <Link href={'/register'}>Sign Up</Link>
+              </button>
+              <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
+                <Link href={'/login'}>Login</Link>
+              </button>
             </div>
           </>
         </motion.div>
