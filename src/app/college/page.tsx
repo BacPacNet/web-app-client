@@ -3,20 +3,46 @@
 // In this file useSearchParams is a client component.
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import jsonData from '../../../data/university_data.json'
+// import { useSearchHistory } from './searchHistoryContext'
 import { useSearchParams } from 'next/navigation'
 
 interface University {
   name: string
   id: string
 }
-
+interface SelectedCollege {
+  id: string
+  name: string
+}
 export default function Home() {
   const router = useSearchParams()
+  const [selectedCollegeNames, setSelectedCollegeNames] = useState<SelectedCollege[]>([])
   // TODO: Fetch Data from GraphQL instead of JSON
   const collegeList: University[] = jsonData as University[]
   const id = router.get('id') as string
   const selectedCollege: University | undefined = collegeList.find((item) => item.id === id)
+  useEffect(() => {
+    if (selectedCollege) {
+      // Retrieve existing selected college names array from localStorage
+      const storedSelectedCollegeNames = localStorage.getItem('selectedCollegeNames')
+      let updatedSelectedCollegeNames: SelectedCollege[] = []
+      if (storedSelectedCollegeNames) {
+        updatedSelectedCollegeNames = JSON.parse(storedSelectedCollegeNames)
+      }
+      // Update the array with the new selected college name
+      if (!updatedSelectedCollegeNames.find((college: SelectedCollege) => college.id === selectedCollege.id)) {
+        updatedSelectedCollegeNames.push(selectedCollege)
+        localStorage.setItem('selectedCollegeNames', JSON.stringify(updatedSelectedCollegeNames))
+        // Update the state with the updated array
+        setSelectedCollegeNames(updatedSelectedCollegeNames)
+      }
+      // Set the updated array in localStorage
+    }
+    console.log('selectedcollege', selectedCollegeNames)
+  }, [id, selectedCollege, selectedCollegeNames])
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-5xl font-bold z-10">{selectedCollege?.name}</h1>

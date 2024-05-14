@@ -1,4 +1,4 @@
-import Footer from '../app/components/Footer/Footer'
+import Footer from '../components/Footer/Footer'
 
 const story = {
   title: 'Footer',
