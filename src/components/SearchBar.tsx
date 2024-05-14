@@ -6,8 +6,7 @@ import SearchHistoryBox from '@components/SearchHistoryBox/SearchHistoryBox'
 import searchIcon from '../assets/search-icon.svg'
 import { useEffect, useState } from 'react'
 import { useUniversitySearch } from '@/services/universitySearch'
-import { cn } from '@/lib/utils'
-// search barimport { cn } from '@/lib/utils'
+// import { cn } from '@/lib/utils'
 
 interface FilteredCollege {
   id: string
@@ -41,14 +40,14 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   data,
-  loading,
-  className,
-  iconDivStyle,
-  iconStyle,
-  iconSize,
-  inputStyle,
-  resultStyle,
-  placeholderText,
+  // loading,
+  // className,
+  // iconDivStyle,
+  // iconStyle,
+  // iconSize,
+  // inputStyle,
+  // resultStyle,
+  // placeholderText,
 }) => {
   const [open, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
