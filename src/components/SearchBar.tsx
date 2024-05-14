@@ -27,7 +27,6 @@ interface College {
 }
 
 interface SearchBarProps {
-  data: FilteredCollege[]
   loading: boolean
   className?: string
   iconDivStyle?: string
@@ -38,17 +37,7 @@ interface SearchBarProps {
   placeholderText?: string
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  data,
-  // loading,
-  // className,
-  // iconDivStyle,
-  // iconStyle,
-  // iconSize,
-  // inputStyle,
-  // resultStyle,
-  // placeholderText,
-}) => {
+const SearchBar: React.FC<SearchBarProps> = () => {
   const [open, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
