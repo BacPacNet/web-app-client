@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-
-import Navbar from '../components/Navbar/Navbar'
 import React from 'react'
 import SearchBar from '@/components/SearchBar'
 import SearchFilter from '@/components/SearchFilter'
@@ -42,7 +40,6 @@ const Discover = () => {
   //TODO: Solve hydration error
   return (
     <div>
-      <Navbar />
       <div className="w-screen min-h-screen bg-white text-black p-4 sm:pt-16 sm:pb-24 sm:pr-36 sm:pl-36 lg:flex lg:flex-row gap-8 justify-center">
         <SearchFilter filters={filterOptions} />
         <div className="flex flex-col items-center">

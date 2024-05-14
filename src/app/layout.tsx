@@ -2,6 +2,8 @@ import './globals.css'
 
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
+import Navbar from '../components/Navbar/Navbar'
+import { ReactQueryClientProvider } from '@/utils/Provider'
 
 type FontClassName = string
 
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
       url: '',
     },
   ],
-  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  viewport: 'maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
   icons: [
     { rel: 'apple-touch-icon', url: 'icons/icon-192x192.png' },
     { rel: 'icon', url: 'icons/icon-192x192.png' },
@@ -32,7 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <div id="modal-root"></div>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Navbar />
+        <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+      </body>
     </html>
   )
 }

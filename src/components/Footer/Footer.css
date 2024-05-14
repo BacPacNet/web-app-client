@@ -1,0 +1,14 @@
+.btn-disc {
+  background-color: #f3f2ff;
+}
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.btn-sec {
+  width: 160px;
+  height: 46px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
