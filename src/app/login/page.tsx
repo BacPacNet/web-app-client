@@ -6,25 +6,24 @@ import { useState } from 'react'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Link from 'next/link'
-interface loginInputs {
-  email: string
-  password: string
-  rememberMe: boolean | string
-}
+import { useHandleLogin } from '@/services/auth'
+import { LoginForm } from '@/models/auth'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const { mutate: mutateLogin } = useHandleLogin()
   const {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
     formState: { errors: loginErrors },
-  } = useForm<loginInputs>()
-  const onLoginSubmit: SubmitHandler<loginInputs> = (data) => console.log(data)
+  } = useForm<LoginForm>()
+
+  const onLoginSubmit: SubmitHandler<LoginForm> = (data) => mutateLogin(data)
 
   return (
     <main>
       <div className="flex flex-col justify-center items-center bg-violet-100">
-        <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl lg:min-w-[500px] mx-4">
+        <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl w-[85%] lg:w-[500px] mx-4">
           <div className="self-center">
             <img src="/unibuzzLogo.png" alt="uniBuzz Logo" />
           </div>
@@ -70,14 +69,14 @@ const Login = () => {
             {loginErrors.password && <span className="text-red-500 font-normal">Please enter your password!</span>}
             <p className="text-sm text-slate-600 font-normal px-2 my-4 cursor-pointer">Forgot Password?</p>
             {/* checkbox for remember me */}
-            <div className="flex flex-row items-center mb-4 pl-2">
+            {/*<div className="flex flex-row items-center mb-4 pl-2">
               <div>
                 <input type="checkbox" {...registerLogin('rememberMe')} id="rememberMe" name="rememberMe" value="true" className="mr-2" />
               </div>
               <label htmlFor="rememberMe" className="text-sm font-normal">
                 Remember Me
               </label>
-            </div>
+            </div>*/}
             <input type="submit" value="Login" className="bg-primary py-2 rounded-xl text-white text-lg font-normal mb-5" />
             <p className="text-md text-center text-gray font-medium px-2">
               Don&apos;t have an account?{' '}

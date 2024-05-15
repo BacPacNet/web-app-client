@@ -41,7 +41,7 @@ const SignUp = () => {
   return (
     <main>
       <div className="flex flex-col justify-center items-center bg-violet-100">
-        <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl lg:min-w-[500px] mx-4 sm:mx-32">
+        <div className="my-16 bg-white flex flex-col justify-center px-6 py-8 rounded-xl w-[85%] lg:w-[500px] mx-4">
           <div className="mb-8">
             <img src="/unibuzzLogo.png" alt="uniBuzz Logo" />
           </div>
