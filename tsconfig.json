@@ -38,7 +38,7 @@
     "jest.config.ts",
     "jest.setup.js",
     "src/app/components/Slider/Slider.js"
-    ],
+, "src/store/userSlice"    ],
   "exclude": [
     "node_modules"
   ]
