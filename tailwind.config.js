@@ -23,6 +23,7 @@ module.exports = {
             },
             colors: {
                 'primary': '#6647FF',
+                'primary-50': '#F3F2FF',
                 'secondary': '#F3F2FF',
                 'pink': '#ff49db',
                 'orange': '#ff7849',
@@ -31,6 +32,8 @@ module.exports = {
                 'gray-dark': '#525252',
                 'gray': '#8492a6',
                 'gray-light': '#d3dce6',
+                'gray-1': '#737373',
+                'border': '#D4D4D4',
             },
 
         },

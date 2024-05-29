@@ -8,3 +8,5 @@ declare global {
     collegePage: string
   }
 }
+
+export type ModalContentType = 'ConnectionsModal' | 'PollModal' | 'EditProfileModal' | 'ReplyModal' | undefined
