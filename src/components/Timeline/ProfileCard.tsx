@@ -23,7 +23,7 @@ interface ProfileProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ProfileItem = ({ iconName, text }: { iconName: React.ComponentType; text: string }) => {
+const ProfileItem = ({ iconName, text }: { iconName: React.ComponentType<{ size: number; color: string }>; text: string }) => {
   return (
     <div className="flex flex-row gap-3 items-center">
       {React.createElement(iconName, { size: 22, color: '#404040' })}
