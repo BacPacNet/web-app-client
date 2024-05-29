@@ -98,7 +98,7 @@ const PollModal = () => {
           />
         </div>
       </div>
-      <button className="py-2 px-4 font-medium text-[#EF4444] border border-[#EF4444] text-white rounded-md self-center" onClick={removeChoice}>
+      <button className="py-2 px-4 font-medium text-[#EF4444] border border-[#EF4444] rounded-md self-center" onClick={removeChoice}>
         Remove Poll
       </button>
       <button className="text-white self-end bg-primary px-4 py-2 rounded-xl text-sm" onClick={handlePost}>
