@@ -1,13 +1,3 @@
-export interface LoginForm {
-  email: string
-  password: string
-}
-
-export interface UserResponseType {
-  user: User
-  tokens: Tokens
-}
-
 interface verifiedInterface {
   communityId: string
   communityName: string
@@ -17,30 +7,16 @@ interface unverifiedInterface {
   communityName: string
 }
 
-export interface User {
+export interface userType {
   firstName: string
   lastName: string
   email: string
+  // password: string
   gender: string
   dob: string
   role: string
   isEmailVerified: boolean
-  id: string
+  // createdAt: Date | string
   userVerifiedCommunities: verifiedInterface[]
   userUnVerifiedCommunities: unverifiedInterface[]
-}
-
-export interface Tokens {
-  access: Access
-  refresh: Refresh
-}
-
-export interface Access {
-  token: string
-  expires: string
-}
-
-export interface Refresh {
-  token: string
-  expires: string
 }
