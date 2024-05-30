@@ -1,3 +1,4 @@
+import Footer from '@/components/Footer/Footer'
 import CommunityProfilePost from '@/components/communityProfile/CommunityProfilePost'
 import GroupInfo from '@/components/communityUniversity/GroupInfo'
 import GroupSideBsr from '@/components/communityUniversity/GroupSideBsr'
@@ -29,6 +30,7 @@ const page = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

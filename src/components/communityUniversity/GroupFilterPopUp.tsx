@@ -8,7 +8,7 @@ type Props = {
 const GroupFilterPopUp = ({ setShowPopUp }: Props) => {
   return (
     <>
-      <div className="fixed   w-full h-[100%] top-0 left-0 backdrop-blur-sm z-10"></div>
+      <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-10"></div>
       <div className={`fixed w-96 max-sm:w-11/12 z-50   top-1/3 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg`}>
         <div className="flex justify-end w-full">
           {' '}
