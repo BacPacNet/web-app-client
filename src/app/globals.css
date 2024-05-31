@@ -26,6 +26,11 @@ body {
 .searchBox::-webkit-scrollbar {
   display: none;
 }
+
+.noscroll {
+  overflow-y: hidden;
+}
+
 @layer components {
   .btn {
     @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
