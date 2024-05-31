@@ -34,7 +34,7 @@ const dummySavedData = [
 const CommunityProfileContainer = () => {
   const [selectedOption, setSelectedOption] = useState('Posts')
   return (
-    <div className="w-1/2 max-md:w-9/12 max-sm:w-11/12 border-2 rounded-lg border-[#737373] max-h-max">
+    <div className="w-1/2 max-md:w-9/12 max-sm:w-11/12 border-2 rounded-lg border-[#737373] max-h-max ">
       <CommunityProfileOption selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
       {selectedOption == valueType.Posts ? (
         <CommunityProfilePost data={dummyData} />

@@ -1,23 +1,47 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import CommunityProfileDeactivatePopUp from './CommunityProfileDeactivatePopUp'
+import accountveriImg from "@/assets/Account_Verified.png"
 
 const CommunityProfileAccount = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showEmail, setShowEmail] = useState(false)
-
+const [accountVerified,setAccountVerified] = useState(false)
   const [showPopUp, setShowPopUp] = useState(false)
+
+  useEffect(() => {
+    if (showPopUp) {
+      document.body.classList.add('noscroll');
+    } else {
+      document.body.classList.remove('noscroll');
+    }
+
+    return () => {
+      document.body.classList.remove('noscroll');
+    };
+  }, [showPopUp]);
   return (
     <>
-      <div className="py-10 px-12 flex flex-col gap-16">
+      <div className={`py-10 px-12 flex flex-col gap-16 `}>
         <div className="flex flex-col gap-10">
-          <h6 className="font-bold text-lg">Account Verification</h6>
-          <div className="flex flex-col gap-2">
+          <h6 onClick={()=>setAccountVerified(!accountVerified)} className="font-bold text-lg">Account Verification</h6>
+          {
+            !accountVerified ?
+            <div className="flex flex-col gap-2">
             <label className="font-medium mb-4">Verify your account with Sheer ID. </label>
             <input className="border-2 border-[#E5E5E5] w-80 h-10 max-lg:w-10/12 rounded-lg px-3" type="text" placeholder="University Email" />
             <label className="text-neutral-500 text-sm">Enter your university email. </label>
           </div>
+          :
+          <div className='flex flex-col gap-6 justify-center items-center'>
+            <img className='w-40' src={accountveriImg.src} alt="acc" />
+            <label className="font-medium mb-4">Your account is verified.</label>
+            <input className="border-2 border-[#E5E5E5] w-80 h-10 max-lg:w-10/12 rounded-lg px-3" type="text" disabled placeholder="unibuzz.college@gmail.com" />
+            
+          </div>
+          }
+         
         </div>
         {/* change email  */}
         <div className="flex flex-col gap-10">

@@ -2,11 +2,12 @@ import React from 'react'
 import { SettingOptionType } from './optionEnum'
 
 const option = [
+  SettingOptionType.Account,
   SettingOptionType.Accesibility,
-  SettingOptionType.Billings,
+  
   SettingOptionType.Notifications,
   SettingOptionType.Security,
-  SettingOptionType.Account,
+  SettingOptionType.Billings,
 ]
 
 type optionType = {

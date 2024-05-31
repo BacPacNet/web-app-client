@@ -45,7 +45,7 @@ const CommunityProfileAccesibility = () => {
         </div>
       </div>
       {/* //size  */}
-      <div className="flex flex-col gap-2 max-w-md">
+      <div className="flex flex-col gap-2 ">
         <h6 className="font-bold text-lg">Font Size</h6>
         <div className="">
           <ol className="flex justify-center items-center">
