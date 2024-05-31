@@ -4,7 +4,7 @@ import { SettingOptionType } from './optionEnum'
 const option = [
   SettingOptionType.Account,
   SettingOptionType.Accesibility,
-  
+
   SettingOptionType.Notifications,
   SettingOptionType.Security,
   SettingOptionType.Billings,

@@ -21,6 +21,7 @@ interface ProfileProps {
   followers: number
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isUserProfile?: boolean
 }
 
 const ProfileItem = ({ iconName, text }: { iconName: React.ComponentType<{ size: number; color: string }>; text: string }) => {
@@ -45,6 +46,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
   followers,
   setIsModalOpen,
   setModalContentType,
+  isUserProfile,
 }) => {
   return (
     <div className="max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark">
@@ -71,7 +73,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
       <div className="px-8 mt-8 py-5">
         <h2 className="text-lg font-semibold">{name}</h2>
         <p className="text-gray-dark text-xs py-1">{bio}</p>
-        <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>
+        {!isUserProfile && <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>}
         <div className="mt-5 flex flex-col gap-4">
           <ProfileItem iconName={RiGraduationCapFill} text={university} />
           <ProfileItem iconName={HiLibrary} text={department} />

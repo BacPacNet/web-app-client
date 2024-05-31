@@ -27,11 +27,8 @@ body {
   display: none;
 }
 
-.noscroll{
-
-    overflow-y: hidden
-  
-  
+.noscroll {
+  overflow-y: hidden;
 }
 
 @layer components {

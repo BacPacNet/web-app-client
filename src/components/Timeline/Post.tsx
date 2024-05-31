@@ -5,7 +5,7 @@ import { FaComment } from 'react-icons/fa'
 import { IoPaperPlaneSharp } from 'react-icons/io5'
 // import Image from 'next/image'
 import { SlOptions } from 'react-icons/sl'
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa6'
+import { FaArrowUp, FaArrowDown, FaBookmark } from 'react-icons/fa6'
 import { MdOutlineImage } from 'react-icons/md'
 import { MdGifBox, MdOutlineBookmarkBorder } from 'react-icons/md'
 import { HiReply, HiOutlineBell, HiOutlineFlag } from 'react-icons/hi'
@@ -37,7 +37,7 @@ interface PostProps {
   university: string
   year: string
   text: string
-  link: string
+  link?: string
   date: string
   avatar: string
   likes: number
@@ -47,6 +47,9 @@ interface PostProps {
   userComments: Comment[]
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isUserProfile?: boolean
+  media?: string
+  saved?: boolean
 }
 
 const PostOptions = () => {
@@ -134,9 +137,12 @@ const Post: React.FC<PostProps> = ({
   userComments,
   setIsModalOpen,
   setModalContentType,
+  isUserProfile,
+  media,
+  saved,
 }) => {
   return (
-    <div className="border-2 border-gray-dark rounded-lg mb-4 shadow-sm max-w-[696px]">
+    <div className={`${isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'} mb-4 shadow-sm max-w-[696px]`}>
       <div className="flex items-start">
         {/* User Post */}
         <div className="pt-10">
@@ -151,8 +157,18 @@ const Post: React.FC<PostProps> = ({
               </div>
             </div>
             {/* POST OPTIONS */}
-            <PostOptions />
+            <div className="flex items-center gap-2">
+              {saved && <FaBookmark />}
+
+              <PostOptions />
+            </div>
           </div>
+          {/* media div  */}
+          {media && (
+            <div className="flex justify-center w-full px-10 mt-2">
+              <img className="rounded-lg h-96 object-fill max-sm:object-cover w-full " src={media} alt="media" />
+            </div>
+          )}
           {/* Post Content */}
           <div className="mt-6 px-10 ">
             {/* TODO: A MARKDOWN PARSER MAY BE NEEDED FOR POST CONTENT */}

@@ -95,7 +95,7 @@ const CommunityProfileAccesibility = () => {
              after:rounded-full after:z-50
                 `}
             ></li>
-            <p className="font-medium pt-4 text-2xl"> Aa</p>
+            <p className="font-medium pt-4 text-2xl ps-4"> Aa</p>
           </ol>
         </div>
       </div>
