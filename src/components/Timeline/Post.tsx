@@ -142,12 +142,16 @@ const Post: React.FC<PostProps> = ({
   saved,
 }) => {
   return (
-    <div className={`${isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'} mb-4 shadow-sm lg:max-w-[696px] sm:max-w-md xs:max-w-sm`}>
+    <div
+      className={`${
+        isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'
+      } mb-4 shadow-sm lg:max-w-[696px] sm:max-w-md xs:max-w-[340px] xs:mx-4 sm:mx-0`}
+    >
       <div className="flex items-start">
         {/* User Post */}
         <div className="pt-10">
           {/* User Info */}
-          <div className="flex justify-between px-10 sm:max-w-md lg:max-w-full">
+          <div className="flex justify-between px-5 sm:px-10 xs:max-w-xs sm:max-w-md lg:max-w-full">
             <div className="flex gap-4 items-center">
               <img src={avatar} alt={`${user}'s avatar`} width={14} height={14} className="rounded-full w-14 h-14" />
               <div>
@@ -170,7 +174,7 @@ const Post: React.FC<PostProps> = ({
             </div>
           )}
           {/* Post Content */}
-          <div className="mt-6 px-10 sm:max-w-md lg:max-w-full">
+          <div className="mt-6 px-5 sm:px-10 sm:max-w-md lg:max-w-full">
             {/* TODO: A MARKDOWN PARSER MAY BE NEEDED FOR POST CONTENT */}
             <p className="text-sm font-medium break-words whitespace-pre-wrap ">
               {text}{' '}
@@ -183,7 +187,7 @@ const Post: React.FC<PostProps> = ({
             </p>
           </div>
           {/* Post Actions */}
-          <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-sm sm:max-w-md lg:max-w-full">
+          <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
             <div className="flex items-center">
               <FaArrowUp className="text-gray-dark" />
               <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes}</span>
@@ -210,7 +214,7 @@ const Post: React.FC<PostProps> = ({
             </Popover>
           </div>
           {/* Comments Box */}
-          <div className="py-2 px-10">
+          <div className="py-2 px-5 sm:px-10">
             {/* Comments Input Box */}
             <div className="flex items-center gap-4">
               <img src="/timeline/avatar.png" alt="User Avatar" width={14} height={14} className="rounded-full w-12 h-12 sm:w-14 sm:h-14" />
@@ -218,7 +222,7 @@ const Post: React.FC<PostProps> = ({
                 <input
                   type="text"
                   placeholder="Add a comment..."
-                  className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none lg:min-w-[450px] text-sm"
+                  className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none lg:min-w-[450px] xs:text-xs sm:text-sm"
                 />
                 <MdGifBox size={24} color="#737373" />
                 <MdOutlineImage size={24} color="#737373" />
@@ -226,12 +230,18 @@ const Post: React.FC<PostProps> = ({
             </div>
             <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div>
             {/* Comments Section */}
-            <div>
+            <div className="xs:max-w-xs sm:max-w-max">
               {userComments.map((comment) => (
-                <div key={comment.id} className="my-4">
+                <div key={comment.id} className="my-4 xs:mr-4 sm:mr-0">
                   {/* Comment Info */}
                   <div className="flex gap-4">
-                    <img src={comment.avatar} alt={`${comment.user}'s avatar`} width={14} height={14} className="rounded-full w-14 h-14" />
+                    <img
+                      src={comment.avatar}
+                      alt={`${comment.user}'s avatar`}
+                      width={14}
+                      height={14}
+                      className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
+                    />
                     <div className="px-4 py-2 border border-gray">
                       <div className="flex justify-between">
                         <div>
@@ -240,7 +250,7 @@ const Post: React.FC<PostProps> = ({
                         </div>
                         <SlOptions color="gray" />
                       </div>
-                      <p className="text-sm pt-1">{comment.text}</p>
+                      <p className="text-xs sm:text-sm pt-1 break-words">{comment.text}</p>
                     </div>
                   </div>
                   {/* Comment Actions */}
@@ -264,7 +274,7 @@ const Post: React.FC<PostProps> = ({
                 </div>
               ))}
             </div>
-            <div className="flex justify-end mt-5 mb-10">
+            <div className="flex justify-end mt-5 mb-10 xs:mr-8 sm:mr-0">
               <button className="text-gray text-sm underline">View More Comments</button>
             </div>
           </div>

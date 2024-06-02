@@ -156,7 +156,7 @@ const Timeline = () => {
           <ProfileCard {...sampleUser} setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
           <Recommendations people={recommendations} />
         </div>
-        <div className="flex flex-col justify-center items-stretch gap-5">
+        <div className="flex flex-col justify-center items-stretch gap-5 max-w-[696px]">
           <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
           <Dropdown options={options} defaultOption="Recent" />
           <Post
