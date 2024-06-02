@@ -142,12 +142,12 @@ const Post: React.FC<PostProps> = ({
   saved,
 }) => {
   return (
-    <div className={`${isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'} mb-4 shadow-sm max-w-[696px]`}>
+    <div className={`${isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'} mb-4 shadow-sm lg:max-w-[696px] sm:max-w-md xs:max-w-sm`}>
       <div className="flex items-start">
         {/* User Post */}
         <div className="pt-10">
           {/* User Info */}
-          <div className="flex justify-between px-10 ">
+          <div className="flex justify-between px-10 sm:max-w-md lg:max-w-full">
             <div className="flex gap-4 items-center">
               <img src={avatar} alt={`${user}'s avatar`} width={14} height={14} className="rounded-full w-14 h-14" />
               <div>
@@ -170,38 +170,38 @@ const Post: React.FC<PostProps> = ({
             </div>
           )}
           {/* Post Content */}
-          <div className="mt-6 px-10 ">
+          <div className="mt-6 px-10 sm:max-w-md lg:max-w-full">
             {/* TODO: A MARKDOWN PARSER MAY BE NEEDED FOR POST CONTENT */}
-            <p className="text-sm font-medium break-words whitespace-pre-wrap">
+            <p className="text-sm font-medium break-words whitespace-pre-wrap ">
               {text}{' '}
               <a href={link} className="text-blue-500">
                 {link}
               </a>
             </p>
             <p className="text-xs text-gray mt-4">
-              <span className="text-gray-dark">{date}</span> · Post from {user} at {university}
+              <span className="text-gray-dark break-words">{date}</span> · Post from {user} at {university}
             </p>
           </div>
           {/* Post Actions */}
-          <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-10 py-2 border-border text-gray-1">
+          <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-sm sm:max-w-md lg:max-w-full">
             <div className="flex items-center">
               <FaArrowUp className="text-gray-dark" />
-              <span className="mx-1 text-sm">{likes}</span>
+              <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes}</span>
               <FaArrowDown className="text-gray-500" />
             </div>
             <div className="flex items-center">
-              <FaComment className="text-gray-500 ml-6 mr-2" />
-              <span className="text-sm">{comments} Comments</span>
+              <FaComment className="text-gray-500 sm:ml-6 mr-2" />
+              <span className="text-sm xs:text-xs sm:text-sm">{comments} Comments</span>
             </div>
             <div className="flex items-center">
-              <BiRepost className="text-gray-500 ml-6 mr-2 h-6 w-6" />
-              <span className="text-sm">{reposts} Reposts</span>
+              <BiRepost className="text-gray-500 sm:ml-6 mr-2 h-6 w-6" />
+              <span className="text-sm xs:text-xs sm:text-sm">{reposts} Reposts</span>
             </div>
             <Popover>
               <PopoverTrigger>
                 <div className="flex items-center">
-                  <IoPaperPlaneSharp className="text-gray-500 ml-6 mr-2" />
-                  <span className="text-sm">Share</span>
+                  <IoPaperPlaneSharp className="text-gray-500 sm:ml-6 mr-2" />
+                  <span className="text-sm xs:text-xs sm:text-sm">Share</span>
                 </div>
               </PopoverTrigger>
               <PopoverContent className="relative right-40 top-8 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
@@ -213,12 +213,12 @@ const Post: React.FC<PostProps> = ({
           <div className="py-2 px-10">
             {/* Comments Input Box */}
             <div className="flex items-center gap-4">
-              <img src="/timeline/avatar.png" alt="User Avatar" width={14} height={14} className="rounded-full w-14 h-14" />
+              <img src="/timeline/avatar.png" alt="User Avatar" width={14} height={14} className="rounded-full w-12 h-12 sm:w-14 sm:h-14" />
               <div className="w-auto border border-gray-light rounded-full py-2 pr-3 flex items-center">
                 <input
                   type="text"
                   placeholder="Add a comment..."
-                  className="flex-grow mx-4 p-1 border-none focus:outline-none min-w-[450px] text-sm"
+                  className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none lg:min-w-[450px] text-sm"
                 />
                 <MdGifBox size={24} color="#737373" />
                 <MdOutlineImage size={24} color="#737373" />

@@ -8,6 +8,7 @@ import { FaBirthdayCake } from 'react-icons/fa'
 import { HiPencilAlt } from 'react-icons/hi'
 import coverImage from '../../../public/timeline/cover.png'
 import { ModalContentType } from '@/types/global'
+import { cn } from '@/lib/utils'
 interface ProfileProps {
   name: string
   bio: string
@@ -24,11 +25,22 @@ interface ProfileProps {
   isUserProfile?: boolean
 }
 
-const ProfileItem = ({ iconName, text }: { iconName: React.ComponentType<{ size: number; color: string }>; text: string }) => {
+const ProfileItem = ({
+  iconName,
+  text,
+  size,
+  textClassName,
+}: {
+  iconName: React.ComponentType<{ size: number; color: string }>
+  text: string
+  size?: number
+  textClassName?: string
+}) => {
+  const iconSize = size ? size : 22
   return (
     <div className="flex flex-row gap-3 items-center">
-      {React.createElement(iconName, { size: 22, color: '#404040' })}
-      <p className="text-gray-600 text-xs font-medium">{text}</p>
+      {React.createElement(iconName, { size: iconSize, color: '#404040' })}
+      <p className={cn('text-gray-600 text-xs font-medium break-words', textClassName)}>{text}</p>
     </div>
   )
 }
@@ -49,10 +61,10 @@ const ProfileCard: React.FC<ProfileProps> = ({
   isUserProfile,
 }) => {
   return (
-    <div className="max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark">
-      <div className="relative max-w-xs w-full">
+    <div className="sm:max-w-md lg:max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark">
+      <div className="relative lg:max-w-xs w-full">
         {/* Cover Image */}
-        <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${coverImage.src})` }} />
+        <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${coverImage.src})`, objectFit: 'cover' }} />
         {/* Profile Picture and Edit Profile Button */}
         <div className="absolute top-14 flex items-end pb-4 pl-4 w-full">
           <div className="flex">
@@ -74,11 +86,11 @@ const ProfileCard: React.FC<ProfileProps> = ({
         <h2 className="text-lg font-semibold">{name}</h2>
         <p className="text-gray-dark text-xs py-1">{bio}</p>
         {!isUserProfile && <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>}
-        <div className="mt-5 flex flex-col gap-4">
+        <div className="mt-5 flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-x-6 lg:flex">
           <ProfileItem iconName={RiGraduationCapFill} text={university} />
           <ProfileItem iconName={HiLibrary} text={department} />
           <ProfileItem iconName={FaLocationDot} text={location} />
-          <ProfileItem iconName={MdEmail} text={email} />
+          <ProfileItem iconName={MdEmail} text={email} textClassName="break-all" />
           <ProfileItem iconName={MdPhone} text={phone} />
           <ProfileItem iconName={FaBirthdayCake} text={dateOfBirth} />
         </div>
