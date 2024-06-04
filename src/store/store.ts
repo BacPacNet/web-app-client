@@ -10,7 +10,7 @@ export const useUniStore = create<storeType>()(
         ...createUserSlice(...a),
       }),
       {
-        name: 'UniStore',
+        name: 'store',
         // partialize: (state) => ({ products: state.products,userName:state.userName }),
         // skipHydration: true
       }

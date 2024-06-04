@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 
 const CommunityProfileAccesibility = () => {
-  const [currFontSize, setCurrFontSize] = useState(1)
+  // const [currFontSize, setCurrFontSize] = useState(1)
   return (
     <div className="py-10 px-12 flex flex-col gap-16">
       {/* Language  */}
@@ -45,7 +45,7 @@ const CommunityProfileAccesibility = () => {
         </div>
       </div>
       {/* //size  */}
-      <div className="flex flex-col gap-2 ">
+      {/* <div className="flex flex-col gap-2 ">
         <h6 className="font-bold text-lg">Font Size</h6>
         <div className="">
           <ol className="flex justify-center items-center">
@@ -98,7 +98,7 @@ const CommunityProfileAccesibility = () => {
             <p className="font-medium pt-4 text-2xl ps-4"> Aa</p>
           </ol>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

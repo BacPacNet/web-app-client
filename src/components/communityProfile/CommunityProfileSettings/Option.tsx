@@ -7,7 +7,7 @@ const option = [
 
   SettingOptionType.Notifications,
   SettingOptionType.Security,
-  SettingOptionType.Billings,
+  // SettingOptionType.Billings,
 ]
 
 type optionType = {
