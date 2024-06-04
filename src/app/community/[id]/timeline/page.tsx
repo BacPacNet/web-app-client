@@ -79,7 +79,7 @@ const sampleUser = {
   name: 'Kathryn Murphy',
   bio: 'Junior student major at Law, Nagoya University',
   university: '3rd Year, Undergraduate, Law',
-  department: 'Junior student major at Law',
+  department: 'Department of Liberal Arts',
   location: 'London, United Kingdom',
   email: 'kathrynmurphy@gmail.com',
   phone: '+44-3028-3239',
@@ -151,12 +151,12 @@ const Timeline = () => {
         {modalContentType && modalContent(modalContentType)}
       </Modal>
       <Navbar activeTab={activeTab} onTabClick={handleTabClick} />
-      <div className="flex justify-center items-start gap-7 mt-16">
+      <div className="flex justify-center items-center lg:items-start gap-7 mt-16 flex-col lg:flex-row xs:px-4 sm:px-0">
         <div className="flex flex-col gap-6">
           <ProfileCard {...sampleUser} setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
           <Recommendations people={recommendations} />
         </div>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col justify-center items-stretch gap-5 max-w-[696px]">
           <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
           <Dropdown options={options} defaultOption="Recent" />
           <Post

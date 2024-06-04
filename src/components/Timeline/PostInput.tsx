@@ -22,19 +22,19 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
   }
 
   return (
-    <div className="flex flex-col gap-3 border-2 border-gray-dark rounded-lg justify-center items-center py-6 max-w-[696px]">
-      <div className=" flex gap-4">
-        <img src="/timeline/avatar.png" alt="User" className=" w-14 h-14 rounded-full" />
+    <div className="flex flex-col gap-3 border-2 border-gray-dark rounded-lg justify-center items-center py-6 lg:max-w-[696px] sm:max-w-md xs:max-w-sm xs:mx-4 sm:mx-0">
+      <div className="flex gap-4">
+        <img src="/timeline/avatar.png" alt="User" className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" />
         <div className="flex flex-col gap-3">
-          <div className="w-auto border border-gray-light rounded-full py-2 pr-5 flex">
+          <div className="w-auto border border-gray-light rounded-full py-1 sm:py-2 pr-5 flex">
             <input
               type="text"
               placeholder="Post on your timeline..."
-              className="flex-grow mx-4 p-2 border-none focus:outline-none min-w-[450px] text-sm"
+              className="flex-grow mx-1 sm:mx-4 p-2 border-none focus:outline-none lg:min-w-[450px] text-xs sm:text-sm"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <button className="text-white bg-primary px-3 py-2 rounded-full text-sm">Post</button>
+            <button className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">Post</button>
           </div>
           <div className="flex items-center gap-2">
             <MdOutlineImage size={24} color="#737373" />

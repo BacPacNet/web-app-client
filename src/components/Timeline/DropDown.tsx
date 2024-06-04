@@ -19,7 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, defaultOption }) => {
   }
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left xs:pl-5 sm:pl-0">
       <div>
         <button
           type="button"

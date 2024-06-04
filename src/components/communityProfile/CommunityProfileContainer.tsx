@@ -53,7 +53,7 @@ const CommunityProfileContainer = () => {
         {modalContentType && modalContent(modalContentType)}
       </Modal>
 
-      <div className="w-1/2 max-md:w-9/12 max-sm:w-11/12 border-2 rounded-lg border-[#737373] max-h-max ">
+      <div className="w-1/2 max-md:w-9/12 max-sm:w-11/12 border-2 rounded-lg border-[#737373] max-h-max lg:max-w-[696px]">
         <CommunityProfileOption selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
         {selectedOption == valueType.Posts ? (
           <Post
