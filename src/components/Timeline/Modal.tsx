@@ -34,8 +34,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <>
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-[black] bg-opacity-10">
-          <div className="relative w-auto mx-auto rounded-xl shadow-lg bg-white p-6 my-5">
+        <div className="fixed w-screen inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto bg-[black] bg-opacity-10">
+          <div className="relative xs:max-w-sm sm:max-w-max w-auto mx-auto rounded-xl shadow-lg bg-white p-6 my-5">
             <button
               className="absolute top-2 right-2 p-1 bg-transparent border-0 text-gray-600 text-lg font-bold leading-none outline-none focus:outline-none"
               onClick={handleClose}
