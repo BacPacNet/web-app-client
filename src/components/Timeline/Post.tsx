@@ -50,6 +50,7 @@ interface PostProps {
   isUserProfile?: boolean
   media?: string
   saved?: boolean
+  isUniversity?: boolean
 }
 
 const PostOptions = () => {
@@ -140,12 +141,17 @@ const Post: React.FC<PostProps> = ({
   isUserProfile,
   media,
   saved,
+  isUniversity,
 }) => {
   return (
-    <div className={`${isUserProfile ? '' : 'border-2 border-gray-dark rounded-lg'} mb-4 shadow-sm max-w-[696px]`}>
+    <div
+      className={`${
+        isUserProfile ? 'max-w-[696px]' : isUniversity ? 'w-full pt-5' : 'border-2 border-gray-dark rounded-lg max-w-[696px]'
+      }  mb-4 shadow-sm `}
+    >
       <div className="flex items-start">
         {/* User Post */}
-        <div className="pt-10">
+        <div className={`${isUniversity ? 'w-full' : 'pt-10 '} `}>
           {/* User Info */}
           <div className="flex justify-between px-10 ">
             <div className="flex gap-4 items-center">
