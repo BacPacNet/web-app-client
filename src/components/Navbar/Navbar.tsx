@@ -35,7 +35,6 @@ const Navbar: React.FC = () => {
   const handleClick = (item: string) => {
     setActiveItem(item)
   }
-  console.log('first')
 
   useEffect(() => {
     if (width.toString() > '769') {
@@ -82,7 +81,7 @@ const Navbar: React.FC = () => {
         <div className="flex w-full center-v justify-between">
           <div className="w-1/6">
             <div className="flex">
-              <Link onClick={() => setActiveItem('')} className="flex gap-4 center-v" href="/">
+              <Link className="flex gap-4 center-v" href="/">
                 <Image src={unibuzzLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer" />
                 <span>Unibuzz</span>
               </Link>
