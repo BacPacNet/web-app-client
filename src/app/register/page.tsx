@@ -6,36 +6,27 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { useState } from 'react'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
-
-interface signupInputs {
-  firstname: string
-  lastname: string
-  email: string
-  gender: string
-  birthday: any
-  country: string
-  city: string
-  password: string
-  confirmPassword: string
-  tnc: boolean | string
-}
+import { RegisterForm } from '@/models/auth'
+import { useHandleRegister } from '@/services/auth'
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const { mutate: mutateRegister } = useHandleRegister()
   const {
     register: registerSignup,
     handleSubmit: handleSubmitSignup,
     formState: { errors: signupErrors },
     watch,
-  } = useForm<signupInputs>()
+  } = useForm<RegisterForm>()
 
   // Get the current values of password and confirmPassword
   const password = watch('password')
 
-  const onSignupSubmit: SubmitHandler<signupInputs> = (data) => {
+  const onSignupSubmit: SubmitHandler<RegisterForm> = (data) => {
     console.log(data)
     console.log('signup errors', signupErrors)
+    mutateRegister(data)
   }
 
   return (
@@ -101,7 +92,7 @@ const SignUp = () => {
             <input
               type="date"
               {...registerSignup('birthday', { required: true })}
-              placeholder="Email Address"
+              placeholder="Birthday"
               className=" border px-3 py-2 text-md rounded-lg border-gray-light font-normal text-gray"
             />
             {signupErrors.birthday && <span className="text-red-500 font-normal">Please enter your birth date!</span>}
@@ -122,7 +113,7 @@ const SignUp = () => {
               placeholder="City"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-            {signupErrors.firstname && <span className="text-red-500 font-normal">Please enter your City!</span>}
+            {signupErrors.city && <span className="text-red-500 font-normal">Please enter your City!</span>}
             <label htmlFor="password" className="py-1 mt-5">
               Password
             </label>
@@ -218,7 +209,7 @@ const SignUp = () => {
             {/* checkbox for remember me */}
             <div className="flex items-center pl-2">
               <div>
-                <input {...registerSignup('tnc', { required: true })} type="checkbox" id="tnc" name="tnc" value="true" className="mr-2" />
+                <input {...registerSignup('tnc', { required: true })} type="checkbox" id="tnc" name="tnc" value={'true'} className="mr-2" />
               </div>
               <label htmlFor="tnc agree" className="text-md font-normal">
                 I have read and agree with the terms of service and privacy policy.
