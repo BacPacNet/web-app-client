@@ -11,17 +11,21 @@ const login = async (data: LoginForm): Promise<UserResponseType> => {
 
 export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
-  // const setToken = useUniStore((state) => state.setToken)
+  const setUserProfileData = useUniStore((state) => state.setUserProfileData)
+  const setUserFollowingData = useUniStore((state) => state.setUserFollowingData)
+
   const [_, setCookieValue] = useCookie('uni_user_token')
   const [__, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
-    onSuccess: (response) => {
-      console.log(response, 'response')
+    onSuccess: (response: any) => {
+      // console.log(response, 'response')
       console.log(_, __)
 
       setUserData(response.user)
+      setUserProfileData(response.userProfile)
+      setUserFollowingData(response.Following)
       // setToken(response.tokens)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
