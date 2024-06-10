@@ -2,6 +2,18 @@ export interface LoginForm {
   email: string
   password: string
 }
+export interface RegisterForm {
+  firstname: string
+  lastname: string
+  email: string
+  gender: string
+  birthday: any
+  country: string
+  city: string
+  password: string
+  confirmPassword: string
+  tnc: boolean | string
+}
 
 export interface UserResponseType {
   user: User
