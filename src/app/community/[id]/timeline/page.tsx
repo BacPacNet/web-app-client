@@ -13,6 +13,7 @@ import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ReplyModal from '@/components/Timeline/Modals/ReplyModal'
 import { ModalContentType } from '@/types/global'
 import Recommendations from '@/components/Timeline/Recommendations'
+import { useUniStore } from '@/store/store'
 interface User {
   name: string
   bio: string
@@ -75,18 +76,18 @@ interface Comment {
 //   ],
 //   reposts: 2,
 // };
-const sampleUser = {
-  name: 'Kathryn Murphy',
-  bio: 'Junior student major at Law, Nagoya University',
-  university: '3rd Year, Undergraduate, Law',
-  department: 'Department of Liberal Arts',
-  location: 'London, United Kingdom',
-  email: 'kathrynmurphy@gmail.com',
-  phone: '+44-3028-3239',
-  dateOfBirth: 'April 3rd, 2002',
-  followers: 21,
-  following: 63,
-}
+// const sampleUser = {
+//   name: 'Kathryn Murphy',
+//   bio: 'Junior student major at Law, Nagoya University',
+//   university: '3rd Year, Undergraduate, Law',
+//   department: 'Department of Liberal Arts',
+//   location: 'London, United Kingdom',
+//   email: 'kathrynmurphy@gmail.com',
+//   phone: '+44-3028-3239',
+//   dateOfBirth: 'April 3rd, 2002',
+//   followers: 21,
+//   following: 63,
+// }
 const options = ['Recent', 'Popular', 'Most Liked']
 const comments = [
   {
@@ -123,6 +124,7 @@ const recommendations = [
 const Timeline = () => {
   const [activeTab, setActiveTab] = useState<string>('Timeline')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { userData, userProfileData, userFollowingData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
   const handleTabClick = (tab: string) => {
     setActiveTab(tab)
@@ -153,7 +155,15 @@ const Timeline = () => {
       <Navbar activeTab={activeTab} onTabClick={handleTabClick} />
       <div className="flex justify-center items-center lg:items-start gap-7 mt-16 flex-col lg:flex-row xs:px-4 sm:px-0">
         <div className="flex flex-col gap-6">
-          <ProfileCard {...sampleUser} setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
+          <ProfileCard
+            userProfileData={userProfileData}
+            userData={userData}
+            setModalContentType={setModalContentType}
+            setIsModalOpen={setIsModalOpen}
+            isUserProfile={true}
+            following={userFollowingData?.followingCount}
+            followers={userFollowingData?.followerCount}
+          />
           <Recommendations people={recommendations} />
         </div>
         <div className="flex flex-col justify-center items-stretch gap-5 max-w-[696px]">
