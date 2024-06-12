@@ -18,6 +18,7 @@ export interface RegisterForm {
 export interface UserResponseType {
   user: User
   tokens: Tokens
+  userProfile: UserProfile
 }
 
 interface verifiedInterface {
@@ -40,6 +41,26 @@ export interface User {
   id: string
   userVerifiedCommunities: verifiedInterface[]
   userUnVerifiedCommunities: unverifiedInterface[]
+}
+
+export interface UserProfile {
+  users_id: string
+  profile_dp?: string
+  email: string[]
+  cover_dp?: string
+  bio?: string
+  phone_number?: string
+  dob?: string
+  country?: string
+  city?: string
+  university_name?: string
+  study_year?: string
+  degree?: string
+  major?: string
+  affiliation?: string
+  occupation?: string
+  totalFilled: number
+  _id: string
 }
 
 export interface Tokens {

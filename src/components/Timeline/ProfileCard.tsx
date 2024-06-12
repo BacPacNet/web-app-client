@@ -8,21 +8,17 @@ import { FaBirthdayCake } from 'react-icons/fa'
 import { HiPencilAlt } from 'react-icons/hi'
 import coverImage from '../../../public/timeline/cover.png'
 import { ModalContentType } from '@/types/global'
+import { userType } from '@/store/userSlice/userType'
 import { cn } from '@/lib/utils'
+import { userProfileType } from '@/store/userProfileSlice/userProfileType'
 interface ProfileProps {
-  name: string
-  bio: string
-  university: string
-  department: string
-  location: string
-  email: string
-  phone: string
-  dateOfBirth: string
   following: number
   followers: number
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   isUserProfile?: boolean
+  userData: userType
+  userProfileData: userProfileType
 }
 
 const ProfileItem = ({
@@ -32,7 +28,7 @@ const ProfileItem = ({
   textClassName,
 }: {
   iconName: React.ComponentType<{ size: number; color: string }>
-  text: string
+  text: string | any
   size?: number
   textClassName?: string
 }) => {
@@ -46,22 +42,34 @@ const ProfileItem = ({
 }
 
 const ProfileCard: React.FC<ProfileProps> = ({
-  name,
-  bio,
-  university,
-  department,
-  location,
-  email,
-  phone,
-  dateOfBirth,
   following,
   followers,
   setIsModalOpen,
   setModalContentType,
+  userData,
+  userProfileData,
   isUserProfile,
 }) => {
+  // console.log(userProfileData)
+
   return (
-    <div className="sm:max-w-md lg:max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark">
+    <div className="relative sm:max-w-md lg:max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark min-w-[300px]">
+      {/* if no data then show  */}
+      {!userData?.email?.length && (
+        <>
+          <div className="absolute z-20 -top-72 left-0 w-full h-[150%] backdrop-blur-lg "></div>
+          <button
+            onClick={() => {
+              setModalContentType('EditProfileModal')
+              setIsModalOpen(true)
+            }}
+            className="absolute bg-primary py-2 px-3 rounded-xl text-white text-sm  font-normal mt-10 mx-[25%] z-40 "
+          >
+            Complete Your Profile
+          </button>
+        </>
+      )}
+
       <div className="relative lg:max-w-xs w-full">
         {/* Cover Image */}
         <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${coverImage.src})`, objectFit: 'cover' }} />
@@ -83,16 +91,19 @@ const ProfileCard: React.FC<ProfileProps> = ({
         </div>
       </div>
       <div className="px-8 mt-8 py-5">
-        <h2 className="text-lg font-semibold">{name}</h2>
-        <p className="text-gray-dark text-xs py-1">{bio}</p>
+        <h2 className="text-lg font-semibold">{userData.firstName}</h2>
+        <p className="text-gray-dark text-xs py-1">{userProfileData.bio}</p>
         {!isUserProfile && <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>}
         <div className="mt-5 flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-x-6 lg:flex">
-          <ProfileItem iconName={RiGraduationCapFill} text={university} />
-          <ProfileItem iconName={HiLibrary} text={department} />
-          <ProfileItem iconName={FaLocationDot} text={location} />
-          <ProfileItem iconName={MdEmail} text={email} textClassName="break-all" />
-          <ProfileItem iconName={MdPhone} text={phone} />
-          <ProfileItem iconName={FaBirthdayCake} text={dateOfBirth} />
+          <ProfileItem
+            iconName={RiGraduationCapFill}
+            text={userProfileData.study_year + ' Year' + ', ' + userProfileData.degree + ', ' + userProfileData.major}
+          />
+          <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData.major} />
+          <ProfileItem iconName={FaLocationDot} text={userProfileData.city + ' ' + userProfileData.country} />
+          <ProfileItem iconName={MdEmail} text={userData.email} textClassName="break-all" />
+          <ProfileItem iconName={MdPhone} text={userProfileData.phone_number} />
+          <ProfileItem iconName={FaBirthdayCake} text={userProfileData.dob ? new Date(userProfileData.dob).toISOString().split('T')[0] : ''} />
         </div>
         <p className="mt-6 text-lg font-medium">Connections</p>
         <div
