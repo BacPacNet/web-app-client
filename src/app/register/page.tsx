@@ -12,6 +12,7 @@ import { useHandleRegister } from '@/services/auth'
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [acceptTnC, setAcceptTnC] = useState(false)
   const { mutate: mutateRegister } = useHandleRegister()
   const {
     register: registerSignup,
@@ -24,9 +25,11 @@ const SignUp = () => {
   const password = watch('password')
 
   const onSignupSubmit: SubmitHandler<RegisterForm> = (data) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, tnc, ...signupData } = data
     console.log(data)
     console.log('signup errors', signupErrors)
-    mutateRegister(data)
+    mutateRegister(signupData)
   }
 
   return (
@@ -43,20 +46,20 @@ const SignUp = () => {
               First Name
             </label>
             <input
-              {...registerSignup('firstname', { required: true })}
+              {...registerSignup('firstName', { required: true })}
               placeholder="First Name"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-            {signupErrors.firstname && <span className="text-red-500 font-normal">Please enter your first name!</span>}
+            {signupErrors.firstName && <span className="text-red-500 font-normal">Please enter your first name!</span>}
             <label htmlFor="lastname" className="py-1 mt-5">
               Last Name
             </label>
             <input
-              {...registerSignup('lastname', { required: true })}
+              {...registerSignup('lastName', { required: true })}
               placeholder="Last Name"
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
-            {signupErrors.lastname && <span className="text-red-500 font-normal">Please enter your last name!</span>}
+            {signupErrors.lastName && <span className="text-red-500 font-normal">Please enter your last name!</span>}
             <label htmlFor="email" className="py-1 mt-5">
               Email Address
             </label>
@@ -86,16 +89,16 @@ const SignUp = () => {
               className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
             />
             {signupErrors.gender && <span className="text-red-500 font-normal">Please enter your Gender!</span>}
-            <label htmlFor="birthday" className="py-1 mt-5">
+            <label htmlFor="dob" className="py-1 mt-5">
               Birthday
             </label>
             <input
               type="date"
-              {...registerSignup('birthday', { required: true })}
+              {...registerSignup('dob', { required: true })}
               placeholder="Birthday"
               className=" border px-3 py-2 text-md rounded-lg border-gray-light font-normal text-gray"
             />
-            {signupErrors.birthday && <span className="text-red-500 font-normal">Please enter your birth date!</span>}
+            {signupErrors.dob && <span className="text-red-500 font-normal">Please enter your birth date!</span>}
             <label htmlFor="country" className="py-1 mt-5">
               Country
             </label>
@@ -156,7 +159,6 @@ const SignUp = () => {
               <input
                 {...registerSignup('confirmPassword', {
                   required: true,
-                  // Add validation to match password
                   validate: (value) => value === password || 'Passwords do not match',
                 })}
                 placeholder="Password"
@@ -209,7 +211,15 @@ const SignUp = () => {
             {/* checkbox for remember me */}
             <div className="flex items-center pl-2">
               <div>
-                <input {...registerSignup('tnc', { required: true })} type="checkbox" id="tnc" name="tnc" value={'true'} className="mr-2" />
+                <input
+                  {...registerSignup('tnc', { required: true })}
+                  type="checkbox"
+                  id="tnc"
+                  name="tnc"
+                  value={acceptTnC ? 'true' : 'false'}
+                  onClick={() => setAcceptTnC(!acceptTnC)}
+                  className="mr-2"
+                />
               </div>
               <label htmlFor="tnc agree" className="text-md font-normal">
                 I have read and agree with the terms of service and privacy policy.
