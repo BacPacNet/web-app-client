@@ -12,11 +12,17 @@ import Link from 'next/link'
 //import demopic from '@assets/demopic.jpg'
 import star from '@assets/star.png'
 import unibuzzLogo from '@assets/logo.svg'
+import { TbMailFilled } from 'react-icons/tb'
+import { FaBell } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
 import { menuContent } from './constant'
 import { motion } from 'framer-motion'
 import useWindowSize from '@/hooks/useWindowSize'
-
+import useCookie from '@/hooks/useCookie'
+import { useUniStore } from '@/store/store'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
+import { MdLogout } from 'react-icons/md'
+import { useRouter } from 'next/navigation'
 interface MenuItem {
   name: string
   path: string
@@ -31,9 +37,28 @@ const Navbar: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false)
   const [hover, setHover] = useState<boolean>(false)
   const [activeItem, setActiveItem] = useState('')
+  const [cookieValue, _, deleteCookie] = useCookie('uni_user_token')
+  const { userProfileData, userData, resetUserData, resetUserProfileData, resetUserFollowingData } = useUniStore()
+  const router = useRouter()
+  console.log(_)
+
+  useEffect(() => {
+    // console.log('cookieValue', cookieValue);
+
+    if (cookieValue) setIsLogin(true)
+  }, [cookieValue])
 
   const handleClick = (item: string) => {
     setActiveItem(item)
+  }
+
+  const handleLogout = () => {
+    deleteCookie()
+    resetUserData()
+    resetUserProfileData()
+    resetUserFollowingData()
+    setIsLogin(false)
+    router.push('/login')
   }
 
   useEffect(() => {
@@ -42,6 +67,33 @@ const Navbar: React.FC = () => {
       setOpen(false)
     }
   }, [width])
+
+  const LoggedInMenu = () => {
+    return (
+      <div className="flex gap-[18px] items-center ">
+        <TbMailFilled className="text-primary" size={32} />
+        <FaBell className="text-primary" size={26} />
+        <Popover>
+          <PopoverTrigger>
+            <div className="flex items-center gap-3">
+              <p className="font-medium text-sm">
+                {userData?.firstName} {userData?.lastName}
+              </p>
+              <img src={userProfileData ? userProfileData.profile_dp : '/timeline/avatar.png'} className="w-10 h-10" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="relative right-8 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
+            <div className="flex flex-col gap-5">
+              <div className="flex gap-1 items-center" onClick={handleLogout}>
+                <MdLogout className="text-primary" size={20} />
+                <p className="font-medium text-sm">Logout</p>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+    )
+  }
 
   const FilteredMenuComponent = () => {
     return (
@@ -94,25 +146,37 @@ const Navbar: React.FC = () => {
                 <>
                   <hr className="my-3" />
                   <div className="flex justify-end">
-                    <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-                      <Link href={'/register'}>Sign Up</Link>
-                    </button>
-                    <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
-                      <Link href={'/login'}>Login</Link>
-                    </button>
+                    {!isLogin ? (
+                      <>
+                        <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+                          <Link href={'/register'}>Sign Up</Link>
+                        </button>
+                        <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
+                          <Link href={'/login'}>Login</Link>
+                        </button>
+                      </>
+                    ) : (
+                      <LoggedInMenu />
+                    )}
                   </div>
                 </>
               ) : null}
             </>
           </div>
-          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
-            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-              <Link href={'/register'}>Sign Up</Link>
-            </button>
-            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-              <Link href={'/login'}>Login</Link>
-            </button>
-          </div>
+          {!isLogin ? (
+            <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
+              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+                <Link href={'/register'}>Sign Up</Link>
+              </button>
+              <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
+                <Link href={'/login'}>Login</Link>
+              </button>
+            </div>
+          ) : (
+            <div className="md:flex hidden">
+              <LoggedInMenu />
+            </div>
+          )}
 
           <div
             className={`hamburger ${open ? 'is-active' : ''} h-8  md:hidden`}
@@ -138,12 +202,18 @@ const Navbar: React.FC = () => {
           <>
             <hr className="my-3" />
             <div className="flex justify-end">
-              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-                <Link href={'/register'}>Sign Up</Link>
-              </button>
-              <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
-                <Link href={'/login'}>Login</Link>
-              </button>
+              {!isLogin ? (
+                <>
+                  <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+                    <Link href={'/register'}>Sign Up</Link>
+                  </button>
+                  <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
+                    <Link href={'/login'}>Login</Link>
+                  </button>
+                </>
+              ) : (
+                <LoggedInMenu />
+              )}
             </div>
           </>
         </motion.div>

@@ -33,7 +33,7 @@ const Recommendations: React.FC<Props> = ({ people }) => {
   return (
     <div className="bg-white border-2 border-gray-dark rounded-lg py-5 pl-7 shadow-md">
       <h1 className="text-sm font-semibold mb-4">Recommendations</h1>
-      <div className="flex flex-col gap-6">{people.map((user) => userCard(user, user?.name))}</div>
+      <div className="flex flex-col gap-6">{people.map((user) => userCard(user, `${user?.avatar}${user?.name}`))}</div>
     </div>
   )
 }

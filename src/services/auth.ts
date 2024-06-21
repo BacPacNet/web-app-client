@@ -25,7 +25,7 @@ export const useHandleLogin = () => {
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
     onSuccess: (response: any) => {
-      // console.log(response, 'response')
+      console.log(response, 'response')
       console.log(_, __)
 
       setUserData(response.user)
