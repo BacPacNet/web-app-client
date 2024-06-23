@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticated } from './utils/isAuthenticated'
+import { isAuthenticated } from './utils/Authentication'
 
 const protectedRoutes = ['/community', '/communityuniversity']
 export default function middleware(req: NextRequest) {
