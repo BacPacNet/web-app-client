@@ -32,15 +32,15 @@ import { replaceImage } from '@/services/uploadImage'
 
 dayjs.extend(relativeTime)
 
-interface Comment {
-  _id: number
-  user: string
-  content: string
-  createdAt: string
+// interface Comment {
+//   _id: number
+//   user: string
+//   content: string
+//   createdAt: string
 
-  likes: number
-  commenterId: { firstName: string; lastName: string; id: string; profile_dp: { imageUrl: string } }
-}
+//   likes: number
+//   commenterId: { firstName: string; lastName: string; id: string; profile_dp: { imageUrl: string } }
+// }
 
 interface Like {
   userId: string
@@ -58,14 +58,14 @@ interface PostProps {
   comments: number
   reposts: number
   shares: number
-  userComments: Comment[]
+  userComments: any
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   isUserProfile?: boolean
   media?: string
   saved?: boolean
   isUniversity?: boolean
-  postID: string
+  postID?: string
   profileDp?: string
 }
 
@@ -306,7 +306,7 @@ const Post: React.FC<PostProps> = ({
             {userComments.length && showCommentSec ? <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div> : ''}
             {/* Comments Section */}
             <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''} xs:max-w-xs sm:max-w-max flex flex-col gap-2 `}>
-              {userComments.map((comment) => (
+              {userComments.map((comment: any) => (
                 <div key={comment._id} className="my-4 xs:mr-4 sm:mr-0">
                   {/* Comment Info */}
                   <div className="flex gap-4">

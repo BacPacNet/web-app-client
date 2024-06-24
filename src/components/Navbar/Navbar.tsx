@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
               <p className="font-medium text-sm">
                 {userData?.firstName} {userData?.lastName}
               </p>
-              <img src={userProfileData ? userProfileData.profile_dp : '/timeline/avatar.png'} className="w-10 h-10" />
+              <img src={userProfileData ? userProfileData?.cover_dp?.imageUrl : '/timeline/avatar.png'} className="w-10 h-10" />
             </div>
           </PopoverTrigger>
           <PopoverContent className="relative right-8 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
