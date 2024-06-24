@@ -50,7 +50,7 @@ const Page = () => {
   const { data: communityGroupPost } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
   // console.log('gg', currSelectedGroup)
   // console.log('jj', isJoinedInGroup)
-  console.log('g2', communityGroupPost)
+  // console.log('g2', communityGroupPost)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
