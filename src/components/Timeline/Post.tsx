@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 // components/Post.tsx
-import React from 'react'
+import React, { useState } from 'react'
 import { FaComment } from 'react-icons/fa'
 import { IoPaperPlaneSharp } from 'react-icons/io5'
 // import Image from 'next/image'
@@ -23,13 +23,27 @@ import {
   TwitterShareButton,
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
+import { AiOutlineLike } from 'react-icons/ai'
+import { useCreateGroupPostComment, useLikeUnilikeGroupPost } from '@/services/community-university'
+import { useUniStore } from '@/store/store'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import { replaceImage } from '@/services/uploadImage'
+
+dayjs.extend(relativeTime)
+
 interface Comment {
-  id: number
+  _id: number
   user: string
-  text: string
-  date: string
-  avatar: string
+  content: string
+  createdAt: string
+
   likes: number
+  commenterId: { firstName: string; lastName: string; id: string; profile_dp: { imageUrl: string } }
+}
+
+interface Like {
+  userId: string
 }
 
 interface PostProps {
@@ -40,7 +54,7 @@ interface PostProps {
   link?: string
   date: string
   avatar: string
-  likes: number
+  likes: Like[]
   comments: number
   reposts: number
   shares: number
@@ -51,6 +65,8 @@ interface PostProps {
   media?: string
   saved?: boolean
   isUniversity?: boolean
+  postID: string
+  profileDp?: string
 }
 
 const PostOptions = () => {
@@ -142,7 +158,41 @@ const Post: React.FC<PostProps> = ({
   media,
   saved,
   isUniversity,
+  postID,
+  profileDp,
 }) => {
+  const { mutate: LikeUnlikePost } = useLikeUnilikeGroupPost()
+  const { mutate: CreateComment } = useCreateGroupPostComment()
+  const [comment, setComment] = useState('')
+  const [ImageValue, setImageValue] = useState('')
+  // console.log(postID)
+  const [showCommentSec, setShowCommentsec] = useState(false)
+  const { userData } = useUniStore()
+
+  const LikesUserId: string[] = Array.isArray(likes) ? likes.map((item) => item.userId) : []
+
+  const handlePostComment = async () => {
+    if (comment.length <= 1) {
+      return console.log('Please type something to comment!')
+    }
+    if (ImageValue) {
+      // setProfileImage(files[0]);
+      const imagedata: any = await replaceImage(ImageValue, '')
+
+      const data = {
+        postID: postID,
+        content: comment,
+        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+      }
+      CreateComment(data)
+    } else {
+      const data = {
+        postID: postID,
+        content: comment,
+      }
+      CreateComment(data)
+    }
+  }
   return (
     <div
       className={`${
@@ -163,7 +213,7 @@ const Post: React.FC<PostProps> = ({
               <div>
                 <p className="font-medium text-base text-gray-dark">{user}</p>
                 <p className="text-xs text-gray-1 pb-1">{university}</p>
-                <p className="text-xs text-gray-1">{year}</p>
+                <p className="text-xs text-gray-1">{!year.includes('undefined') ? year : ''}</p>
               </div>
             </div>
             {/* POST OPTIONS */}
@@ -176,7 +226,7 @@ const Post: React.FC<PostProps> = ({
           {/* media div  */}
           {media && (
             <div className="flex justify-center w-full px-10 mt-2">
-              <img className="rounded-lg h-96 object-fill max-sm:object-cover w-full " src={media} alt="media" />
+              <img className="rounded-lg h-96  object-cover w-full " src={media} alt="media" />
             </div>
           )}
           {/* Post Content */}
@@ -189,17 +239,19 @@ const Post: React.FC<PostProps> = ({
               </a>
             </p>
             <p className="text-xs text-gray mt-4">
-              <span className="text-gray-dark break-words">{date}</span> · Post from {user} at {university}
+              <span className="text-gray-dark break-words">{dayjs(new Date(date).toString()).format('h:m a · MMM DD, YYYY')}</span> · Post from {user}{' '}
+              at {university}
             </p>
           </div>
           {/* Post Actions */}
           <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
-            <div className="flex items-center">
-              <FaArrowUp className="text-gray-dark" />
-              <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes}</span>
-              <FaArrowDown className="text-gray-500" />
+            <div onClick={() => LikeUnlikePost(postID)} className="flex items-center cursor-pointer">
+              {/* <FaArrowUp color={LikesUserId.includes(userData?.id) ? 'green' : ''} className="text-gray-dark " /> */}
+              <AiOutlineLike color={LikesUserId.includes(userData?.id) ? 'green' : ''} />
+              <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes?.length ? likes?.length : 0}</span>
+              {/* <FaArrowDown className="text-gray-500" /> */}
             </div>
-            <div className="flex items-center">
+            <div onClick={() => setShowCommentsec(!showCommentSec)} className="flex items-center">
               <FaComment className="text-gray-500 sm:ml-6 mr-2" />
               <span className="text-sm xs:text-xs sm:text-sm">{comments} Comments</span>
             </div>
@@ -223,47 +275,69 @@ const Post: React.FC<PostProps> = ({
           <div className="py-2 px-5 sm:px-10">
             {/* Comments Input Box */}
             <div className="flex items-center gap-4">
-              <img src="/timeline/avatar.png" alt="User Avatar" width={14} height={14} className="rounded-full w-12 h-12 sm:w-14 sm:h-14" />
-              <div className="w-auto border border-gray-light rounded-full py-2 pr-3 flex items-center">
+              {profileDp ? (
+                <img src={profileDp} alt="User Avatar" width={14} height={14} className="rounded-full w-12 h-12 sm:w-14 sm:h-14" />
+              ) : (
+                <div className="rounded-full w-12 h-12 sm:w-14 sm:h-14 bg-gray"></div>
+              )}
+              <div className="w-11/12 border border-gray-light rounded-full py-2 pr-3 flex items-center">
                 <input
+                  onChange={(e) => setComment(e.target.value)}
+                  value={comment}
                   type="text"
                   placeholder="Add a comment..."
-                  className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none lg:min-w-[450px] xs:text-xs sm:text-sm"
+                  className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none w-full lg:min-w-[370px] xs:text-xs sm:text-sm"
                 />
                 <MdGifBox size={24} color="#737373" />
-                <MdOutlineImage size={24} color="#737373" />
+                <div>
+                  <input style={{ display: 'none' }} type="file" id="CommentsImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
+                  <label htmlFor="CommentsImage">
+                    <MdOutlineImage size={24} color="#737373" />
+                  </label>
+                </div>
+
+                {comment.length > 1 && (
+                  <button onClick={() => handlePostComment()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">
+                    Post
+                  </button>
+                )}
               </div>
             </div>
-            <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div>
+            {userComments.length && showCommentSec ? <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div> : ''}
             {/* Comments Section */}
-            <div className="xs:max-w-xs sm:max-w-max">
+            <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''} xs:max-w-xs sm:max-w-max flex flex-col gap-2 `}>
               {userComments.map((comment) => (
-                <div key={comment.id} className="my-4 xs:mr-4 sm:mr-0">
+                <div key={comment._id} className="my-4 xs:mr-4 sm:mr-0">
                   {/* Comment Info */}
                   <div className="flex gap-4">
-                    <img
-                      src={comment.avatar}
-                      alt={`${comment.user}'s avatar`}
-                      width={14}
-                      height={14}
-                      className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
-                    />
-                    <div className="px-4 py-2 border border-gray">
+                    {comment?.commenterId?.profile_dp?.imageUrl ? (
+                      <img
+                        src={comment?.commenterId?.profile_dp?.imageUrl}
+                        alt={`${comment?.user}'s avatar`}
+                        width={14}
+                        height={14}
+                        className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
+                      />
+                    ) : (
+                      <div className="rounded-full w-12 h-12 sm:w-14 sm:h-14 bg-gray" />
+                    )}
+
+                    <div className="px-4 py-2 border border-gray rounded-lg">
                       <div className="flex justify-between">
                         <div>
-                          <p className="font-medium text-base text-gray-dark">{comment.user}</p>
-                          <p className="text-xs text-gray">{comment.date}</p>
+                          <p className="font-medium text-base text-gray-dark">{comment?.commenterId?.firstName}</p>
+                          <p className="text-xs text-gray">{comment.createdAt && dayjs(new Date(comment?.createdAt).toString()).fromNow()}</p>
                         </div>
                         <SlOptions color="gray" />
                       </div>
-                      <p className="text-xs sm:text-sm pt-1 break-words">{comment.text}</p>
+                      <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
                     </div>
                   </div>
                   {/* Comment Actions */}
                   <div className="flex justify-end mt-3 gap-10">
                     <div className="flex items-center">
                       <FaArrowUp className="text-gray-dark" />
-                      <span className="mx-1 text-sm">{comment.likes}</span>
+                      <span className="mx-1 text-sm">{comment?.likes}</span>
                       <FaArrowDown className="text-gray-500" />
                     </div>
                     <div
@@ -281,7 +355,7 @@ const Post: React.FC<PostProps> = ({
               ))}
             </div>
             <div className="flex justify-end mt-5 mb-10 xs:mr-8 sm:mr-0">
-              <button className="text-gray text-sm underline">View More Comments</button>
+              {userComments.length > 5 && showCommentSec ? <button className="text-gray text-sm underline">View More Comments</button> : ''}
             </div>
           </div>
         </div>

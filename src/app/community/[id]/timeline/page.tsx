@@ -177,7 +177,7 @@ const Timeline = () => {
             link="https://www.butkochem.com/homework/A1-35"
             date="9:31 PM · Feb 11, 2024"
             avatar="/timeline/avatar.png"
-            likes={50}
+            likes={[{ userId: '663a034cb65c15b36f959894' }, { userId: '663a034cb65c15b36f959894' }]}
             comments={3}
             reposts={2}
             shares={1}

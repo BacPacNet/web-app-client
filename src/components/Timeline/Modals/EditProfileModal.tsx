@@ -52,8 +52,8 @@ const EditProfileModal = () => {
     defaultValues: {
       fullname: userData.firstName,
       email: userProfileData?.email[0]?.UniversityEmail || '',
-      profile_dp: userProfileData.profile_dp,
-      cover_dp: userProfileData.cover_dp,
+      // profile_dp: userProfileData.profile_dp,
+      // cover_dp: userProfileData.cover_dp,
       bio: userProfileData.bio,
       phone_number: userProfileData.phone_number,
       dob: userProfileData.dob ? new Date(userProfileData.dob).toISOString().split('T')[0] : '',

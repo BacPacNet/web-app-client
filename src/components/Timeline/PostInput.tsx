@@ -9,22 +9,72 @@ import { LuList } from 'react-icons/lu'
 import { ModalContentType } from '@/types/global'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker from 'emoji-picker-react'
+import { useCreateGroupPost } from '@/services/community-university'
+import { replaceImage } from '@/services/uploadImage'
 interface PostInputProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  idToPost?: string
+  profileDp?: string
 }
 
-const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType }) => {
+const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
   const [inputValue, setInputValue] = useState('')
+  const [ImageValue, setImageValue] = useState('')
+  const { mutate: CreateGroupPost } = useCreateGroupPost()
 
   const handleEmojiClick = (emojiData: any) => {
     setInputValue((prevValue) => prevValue + emojiData.emoji)
   }
 
+  const handleGroupPost = async () => {
+    if (inputValue.length <= 1) {
+      return console.log('Please type something to post!')
+    }
+
+    if (ImageValue) {
+      // setProfileImage(files[0]);
+      const imagedata: any = await replaceImage(ImageValue, '')
+
+      const data = {
+        communityId: idToPost,
+        content: inputValue,
+        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+      }
+      CreateGroupPost(data)
+    } else {
+      const data = {
+        communityId: idToPost,
+        content: inputValue,
+      }
+      CreateGroupPost(data)
+    }
+  }
+
+  // const handleGroupImagePost = async (e: any) => {
+  //   // const files = e.target.files
+  //   // console.log('aaa')
+
+  //   if (ImageValue) {
+  //     // setProfileImage(files[0]);
+  //     const imagedata: any = await replaceImage(ImageValue,"")
+
+  //     const data = {
+  //       communityId: idToPost,
+  //       content: inputValue,
+  //       imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId }
+  //     }
+  //     CreateGroupPost(data)
+
+  //   } else {
+  //     console.error('No file selected.')
+  //   }
+  // }
+
   return (
     <div className="flex flex-col gap-3 border-2 border-gray-dark rounded-lg justify-center items-center py-6 lg:max-w-[696px] sm:max-w-md xs:max-w-sm xs:mx-4 sm:mx-0">
       <div className="flex gap-4">
-        <img src="/timeline/avatar.png" alt="User" className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" />
+        <img src={profileDp} alt="User" className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" />
         <div className="flex flex-col gap-3">
           <div className="w-auto border border-gray-light rounded-full py-1 sm:py-2 pr-5 flex">
             <input
@@ -34,10 +84,17 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <button className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">Post</button>
+            <button onClick={() => handleGroupPost()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">
+              Post
+            </button>
           </div>
           <div className="flex items-center gap-2">
-            <MdOutlineImage size={24} color="#737373" />
+            <div>
+              <input style={{ display: 'none' }} type="file" id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
+              <label htmlFor="postImage">
+                <MdOutlineImage size={24} color="#737373" />
+              </label>
+            </div>
             <MdGifBox size={24} color="#737373" />
             {/* EMOJI Icon */}
             <Popover>

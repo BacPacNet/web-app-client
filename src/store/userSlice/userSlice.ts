@@ -12,6 +12,7 @@ type userAction = {
 
 const initialState: userState = {
   userData: {
+    id: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -21,8 +22,8 @@ const initialState: userState = {
     role: '',
     isEmailVerified: false,
     // createdAt: '',
-    userVerifiedCommunities: [],
-    userUnVerifiedCommunities: [],
+    userVerifiedCommunities: [{ communityId: '', communityName: '', communityGroups: [{ communityGroupName: '', communityGroupId: '' }] }],
+    userUnVerifiedCommunities: [{ communityId: '', communityName: '', communityGroups: [{ communityGroupName: '', communityGroupId: '' }] }],
   },
 }
 

@@ -3,17 +3,18 @@ import { client } from './api-Client'
 // import { editProfileInputs } from '@/components/Timeline/Modals/EditProfileModal'
 import { useUniStore } from '@/store/store'
 
-const editProfile = async (data: any) => {
-  const res = await client('userprofile/663a034cb65c15b36f959896', { method: 'PUT', data })
+const editProfile = async (data: any, id: string) => {
+  const res = await client(`userprofile/${id}`, { method: 'PUT', data })
   return res
 }
 
 export const useEditProfile = () => {
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
+  const { userProfileData } = useUniStore()
   return useMutation({
-    mutationFn: (data: any) => editProfile(data),
+    mutationFn: (data: any) => editProfile(data, userProfileData._id),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
+      // console.log(response, 'response')
 
       setUserProfileData(response.updatedUserProfile)
     },
