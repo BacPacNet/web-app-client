@@ -3,16 +3,16 @@ export interface LoginForm {
   password: string
 }
 export interface RegisterForm {
-  firstname: string
-  lastname: string
+  firstName: string
+  lastName: string
   email: string
   gender: string
-  birthday: any
+  dob: any
   country: string
   city: string
   password: string
-  confirmPassword: string
-  tnc: boolean | string
+  confirmPassword: string // only for client side validation
+  tnc: boolean // only for client side validation
 }
 
 export interface UserResponseType {

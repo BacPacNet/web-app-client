@@ -8,6 +8,8 @@ import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Link from 'next/link'
 import { useHandleLogin } from '@/services/auth'
 import { LoginForm } from '@/models/auth'
+import { useUniStore } from '@/store/store'
+import { useRouter } from 'next/navigation'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -17,8 +19,15 @@ const Login = () => {
     handleSubmit: handleSubmitLogin,
     formState: { errors: loginErrors },
   } = useForm<LoginForm>()
+  const { userProfileData } = useUniStore()
+  const router = useRouter()
 
-  const onLoginSubmit: SubmitHandler<LoginForm> = (data) => mutateLogin(data)
+  const onLoginSubmit: SubmitHandler<LoginForm> = (data) => {
+    mutateLogin(data)
+    console.log(userProfileData)
+
+    router.push(`/community/${userProfileData?._id}/timeline`)
+  }
 
   return (
     <main>

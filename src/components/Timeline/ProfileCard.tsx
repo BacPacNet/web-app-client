@@ -158,18 +158,18 @@ const ProfileCard: React.FC<ProfileProps> = ({
       </div>
       <div className="px-8 mt-8 py-5">
         <h2 className="text-lg font-semibold">{userData.firstName}</h2>
-        <p className="text-gray-dark text-xs py-1">{userProfileData.bio}</p>
+        <p className="text-gray-dark text-xs py-1">{userProfileData?.bio}</p>
         {!isUserProfile && <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>}
         <div className="mt-5 flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-x-6 lg:flex">
           <ProfileItem
             iconName={RiGraduationCapFill}
-            text={userProfileData.study_year + ' Year' + ', ' + userProfileData.degree + ', ' + userProfileData.major}
+            text={userProfileData?.study_year + ' Year' + ', ' + userProfileData?.degree + ', ' + userProfileData?.major}
           />
-          <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData.major} />
-          <ProfileItem iconName={FaLocationDot} text={userProfileData.city + ' ' + userProfileData.country} />
+          <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData?.major} />
+          <ProfileItem iconName={FaLocationDot} text={userProfileData?.city + ' ' + userProfileData?.country} />
           <ProfileItem iconName={MdEmail} text={userData.email} textClassName="break-all" />
-          <ProfileItem iconName={MdPhone} text={userProfileData.phone_number} />
-          <ProfileItem iconName={FaBirthdayCake} text={userProfileData.dob ? new Date(userProfileData.dob).toISOString().split('T')[0] : ''} />
+          <ProfileItem iconName={MdPhone} text={userProfileData?.phone_number} />
+          <ProfileItem iconName={FaBirthdayCake} text={userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : ''} />
         </div>
         <p className="mt-6 text-lg font-medium">Connections</p>
         <div

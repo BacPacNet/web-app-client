@@ -9,8 +9,8 @@ const login = async (data: LoginForm): Promise<UserResponseType> => {
   return result
 }
 
-const register = async (data: RegisterForm): Promise<UserResponseType> => {
-  const result = await client<UserResponseType, RegisterForm>('auth/register', { data })
+const register = async (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>): Promise<UserResponseType> => {
+  const result = await client<UserResponseType, Omit<RegisterForm, 'confirmPassword' | 'tnc'>>('auth/register', { data })
   return result
 }
 
@@ -25,7 +25,7 @@ export const useHandleLogin = () => {
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
     onSuccess: (response: any) => {
-      // console.log(response, 'response')
+      console.log(response, 'response')
       console.log(_, __)
 
       setUserData(response.user)
@@ -45,7 +45,7 @@ export const useHandleRegister = () => {
   const [__, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 
   return useMutation({
-    mutationFn: (data: RegisterForm) => register(data),
+    mutationFn: (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>) => register(data),
     onSuccess: (response) => {
       console.log(response, 'response')
       console.log(_, __)
