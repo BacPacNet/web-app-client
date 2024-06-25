@@ -122,13 +122,9 @@ const recommendations = [
 ]
 
 const Timeline = () => {
-  const [activeTab, setActiveTab] = useState<string>('Timeline')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { userData, userProfileData, userFollowingData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab)
-  }
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
@@ -152,7 +148,7 @@ const Timeline = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar activeTab={activeTab} onTabClick={handleTabClick} />
+      <Navbar />
       <div className="flex justify-center items-center lg:items-start gap-7 mt-16 flex-col lg:flex-row xs:px-4 sm:px-0">
         <div className="flex flex-col gap-6">
           <ProfileCard
