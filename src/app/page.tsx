@@ -12,13 +12,11 @@ import { motion } from 'framer-motion'
 import StarIcon from '../assets/stars.svg'
 import Image from 'next/image'
 import DiscordIcon from '@assets/discord.svg'
-import useCookie from '@/hooks/useCookie'
+
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false)
 
   const LANDING_PAGE_TEXT = ' Search universities worldwide and become part of their online communities'.split(' ')
-  const [cookieValue] = useCookie('uni_user_token')
-  console.log(cookieValue)
 
   return (
     <div className="home">

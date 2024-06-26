@@ -63,7 +63,7 @@ const CommunityProfileContainer = () => {
             text="Law Debate Club will have its first debate starting next week Feb 19, 2024! Any participants interested send me a DM."
             date="9:31 PM · Feb 11, 2024"
             avatar="/timeline/avatar.png"
-            likes={50}
+            likes={[]}
             comments={3}
             reposts={2}
             shares={1}
@@ -80,7 +80,7 @@ const CommunityProfileContainer = () => {
             text="Beautiful building landscapes in the japanese skyline."
             date="9:31 PM · Feb 11, 2024"
             avatar="/timeline/avatar.png"
-            likes={50}
+            likes={[]}
             comments={3}
             reposts={2}
             shares={1}
@@ -98,7 +98,7 @@ const CommunityProfileContainer = () => {
             text="Law Debate Club will have its first debate starting next week Feb 19, 2024! Any participants interested send me a DM."
             date="9:31 PM · Feb 11, 2024"
             avatar="/timeline/avatar.png"
-            likes={50}
+            likes={[]}
             comments={3}
             reposts={2}
             shares={1}
@@ -118,7 +118,7 @@ const CommunityProfileContainer = () => {
             text="Beautiful building landscapes in the japanese skyline."
             date="9:31 PM · Feb 11, 2024"
             avatar="/timeline/avatar.png"
-            likes={50}
+            likes={[]}
             comments={3}
             reposts={2}
             shares={1}

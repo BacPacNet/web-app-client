@@ -5,9 +5,9 @@ interface emailType {
 
 export interface userProfileType {
   users_id: string
-  profile_dp?: string
+  profile_dp?: { imageUrl: string; publicId: string }
   email: emailType[]
-  cover_dp?: string
+  cover_dp?: { imageUrl: string; publicId: string }
   bio?: string
   phone_number?: string
   dob?: string

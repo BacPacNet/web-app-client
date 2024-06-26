@@ -14,9 +14,9 @@ const initialState: userProfileState = {
   userProfileData: {
     _id: '',
     users_id: '',
-    profile_dp: '',
+    profile_dp: { imageUrl: '', publicId: '' },
     email: [{ UniversityName: '', UniversityEmail: '' }],
-    cover_dp: '',
+    cover_dp: { imageUrl: '', publicId: '' },
     bio: '',
     phone_number: '',
     dob: '',

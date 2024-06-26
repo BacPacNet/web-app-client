@@ -46,7 +46,7 @@ export const useHandleRegister = () => {
 
   return useMutation({
     mutationFn: (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>) => register(data),
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       console.log(response, 'response')
       console.log(_, __)
 
