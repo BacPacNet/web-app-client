@@ -3,39 +3,12 @@ import React, { useState } from 'react'
 import { TiFilter } from 'react-icons/ti'
 import GroupSelectors from './GroupSelectors'
 import GroupFilterPopUp from './GroupFilterPopUp'
-
-// const dummyGroupData = [
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.HREQ3eXR4Po8ltsOK7uWlQHaHa%26pid%3DApi&f=1&ipt=2099cb40b09bffceb2fe2a7921a325b8b9e2ba3ec3220c8d5f70d217c5c3bd22&ipo=images',
-//     name: 'Butko’s Chemistry Lab Yr. 2023',
-//   },
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.MHbtkPYAjIvaPFebO9RT3QHaHa%26pid%3DApi&f=1&ipt=ac9b625aabe3e6abdf7d0976bf73a4a8ed50aa16379b8b7f07067174cff42683&ipo=images',
-//     name: 'Nagoya Boxing',
-//   },
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.MSzw4vGxfwsk0OMbG02EtgHaHZ%26pid%3DApi&f=1&ipt=dc8b8604e3b30af217a284569c0d64589dc3d53f52494010953323afc0fb8017&ipo=images',
-//     name: 'Chess Kings 2 ',
-//   },
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.HREQ3eXR4Po8ltsOK7uWlQHaHa%26pid%3DApi&f=1&ipt=2099cb40b09bffceb2fe2a7921a325b8b9e2ba3ec3220c8d5f70d217c5c3bd22&ipo=images',
-//     name: 'Butko’s Chemistry Lab Yr. 2023 2',
-//   },
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.MHbtkPYAjIvaPFebO9RT3QHaHa%26pid%3DApi&f=1&ipt=ac9b625aabe3e6abdf7d0976bf73a4a8ed50aa16379b8b7f07067174cff42683&ipo=images',
-//     name: 'Nagoya Boxing 2',
-//   },
-//   {
-//     icon: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.MSzw4vGxfwsk0OMbG02EtgHaHZ%26pid%3DApi&f=1&ipt=dc8b8604e3b30af217a284569c0d64589dc3d53f52494010953323afc0fb8017&ipo=images',
-//     name: 'Chess Kings ',
-//   },
-// ]
+import CreateNewGroup from './CreateNewGroup'
 
 const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined }: any) => {
   const [currGroup, setCurrGroup] = useState('All')
-  // const [currSelectedGroup, setCurrSelectedGroup] = useState(data?.groups[0].name)
   const [showPopUp, setShowPopUp] = useState(false)
-  // console.log(data)
+  const [showNewGroup, setShowNewGroup] = useState(false)
 
   return (
     <>
@@ -120,13 +93,16 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
           </div>
         ) : currGroup == 'Your Groups' ? (
           <div className="min-h-[412.8px] max-md:min-h-[100px] w-full flex flex-col items-center relative after:content-[''] after:absolute after:right-0 after:z-50 after:top-[calc(20%+10px)] max-md:after:top-[calc(75%+10px)] after:w-[calc(100%)] after:h-[2px] after:bg-neutral-300">
-            <button className="bg-[#6647FF]   py-3 px-5 my-4 text-white rounded-md">Create your Group</button>
+            <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF]   py-3 px-5 my-4 text-white rounded-md">
+              Create your Group
+            </button>
           </div>
         ) : (
           <div className=" min-h-[412.8px] max-md:min-h-[100px]"></div>
         )}
       </div>
       {showPopUp && <GroupFilterPopUp setShowPopUp={setShowPopUp} />}
+      {showNewGroup && <CreateNewGroup setNewGroup={setShowNewGroup} />}
     </>
   )
 }

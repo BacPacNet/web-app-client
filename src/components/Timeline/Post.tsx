@@ -32,16 +32,6 @@ import { replaceImage } from '@/services/uploadImage'
 
 dayjs.extend(relativeTime)
 
-// interface Comment {
-//   _id: number
-//   user: string
-//   content: string
-//   createdAt: string
-
-//   likes: number
-//   commenterId: { firstName: string; lastName: string; id: string; profile_dp: { imageUrl: string } }
-// }
-
 interface Like {
   userId: string
 }
@@ -165,7 +155,7 @@ const Post: React.FC<PostProps> = ({
   const { mutate: CreateComment } = useCreateGroupPostComment()
   const [comment, setComment] = useState('')
   const [ImageValue, setImageValue] = useState('')
-  // console.log(postID)
+
   const [showCommentSec, setShowCommentsec] = useState(false)
   const { userData } = useUniStore()
 
@@ -176,7 +166,6 @@ const Post: React.FC<PostProps> = ({
       return console.log('Please type something to comment!')
     }
     if (ImageValue) {
-      // setProfileImage(files[0]);
       const imagedata: any = await replaceImage(ImageValue, '')
 
       const data = {
@@ -246,10 +235,8 @@ const Post: React.FC<PostProps> = ({
           {/* Post Actions */}
           <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
             <div onClick={() => LikeUnlikePost(postID)} className="flex items-center cursor-pointer">
-              {/* <FaArrowUp color={LikesUserId.includes(userData?.id) ? 'green' : ''} className="text-gray-dark " /> */}
               <AiOutlineLike color={LikesUserId.includes(userData?.id) ? 'green' : ''} />
               <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes?.length ? likes?.length : 0}</span>
-              {/* <FaArrowDown className="text-gray-500" /> */}
             </div>
             <div onClick={() => setShowCommentsec(!showCommentSec)} className="flex items-center">
               <FaComment className="text-gray-500 sm:ml-6 mr-2" />

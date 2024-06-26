@@ -40,54 +40,6 @@ interface Comment {
   likes: number
 }
 
-// SAMPLE DATA FOR TESTING
-
-// const samplePost = {
-//   user: {
-//     name: 'Joshua Welman',
-//     university: 'Nagoya University',
-//     department: '2nd Yr. Graduate',
-//     location: '',
-//     email: '',
-//     phone: '',
-//     dateOfBirth: '',
-//     followers: 0,
-//     following: 0,
-//   },
-//   content: 'Can someone help me with this chemistry equation? Here\'s the link to the google drive: //https:www.bukochem.com/homework/A1-35',
-//   dateTime: 'Feb 11, 2024 - Post from Bukio\'s Chemistry Lab at Nagoya University',
-//   likes: 50,
-//   comments: [
-//     {
-//       user: {
-//         name: 'Johnny Nitro',
-//         university: '',
-//         department: '',
-//         location: '',
-//         email: '',
-//         phone: '',
-//         dateOfBirth: '',
-//         followers: 0,
-//         following: 0,
-//       },
-//       content: 'Yeah give me a second I\'ll try to solve it and send the solution over your DMs.',
-//       likes: 4,
-//     },
-//   ],
-//   reposts: 2,
-// };
-// const sampleUser = {
-//   name: 'Kathryn Murphy',
-//   bio: 'Junior student major at Law, Nagoya University',
-//   university: '3rd Year, Undergraduate, Law',
-//   department: 'Department of Liberal Arts',
-//   location: 'London, United Kingdom',
-//   email: 'kathrynmurphy@gmail.com',
-//   phone: '+44-3028-3239',
-//   dateOfBirth: 'April 3rd, 2002',
-//   followers: 21,
-//   following: 63,
-// }
 const options = ['Recent', 'Popular', 'Most Liked']
 const comments = [
   {
@@ -144,8 +96,6 @@ const Timeline = () => {
         return null
     }
   }
-  // useEffect(() => {
-  // }, [modalContentType])
 
   return (
     <main>

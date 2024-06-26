@@ -20,7 +20,7 @@ interface PostInputProps {
 
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
   const [inputValue, setInputValue] = useState('')
-  const [ImageValue, setImageValue] = useState('')
+  const [ImageValue, setImageValue] = useState()
   const { mutate: CreateGroupPost } = useCreateGroupPost()
 
   const handleEmojiClick = (emojiData: any) => {
@@ -51,26 +51,6 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
     }
   }
 
-  // const handleGroupImagePost = async (e: any) => {
-  //   // const files = e.target.files
-  //   // console.log('aaa')
-
-  //   if (ImageValue) {
-  //     // setProfileImage(files[0]);
-  //     const imagedata: any = await replaceImage(ImageValue,"")
-
-  //     const data = {
-  //       communityId: idToPost,
-  //       content: inputValue,
-  //       imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId }
-  //     }
-  //     CreateGroupPost(data)
-
-  //   } else {
-  //     console.error('No file selected.')
-  //   }
-  // }
-
   return (
     <div className="flex flex-col gap-3 border-2 border-gray-dark rounded-lg justify-center items-center py-6 lg:max-w-[696px] sm:max-w-md xs:max-w-sm xs:mx-4 sm:mx-0">
       <div className="flex gap-4">
@@ -88,6 +68,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
               Post
             </button>
           </div>
+          {ImageValue && <img className="w-11/12" src={URL.createObjectURL(ImageValue)} alt="" />}
           <div className="flex items-center gap-2">
             <div>
               <input style={{ display: 'none' }} type="file" id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />

@@ -9,19 +9,6 @@ import { ModalContentType } from '@/types/global'
 import React, { useState } from 'react'
 import { useUniStore } from '@/store/store'
 
-// const sampleUser = {
-//   name: 'Kathryn Murphy',
-//   bio: 'Junior student major at Law, Nagoya University',
-//   university: '3rd Year, Undergraduate, Law',
-//   department: 'Junior student major at Law',
-//   location: 'London, United Kingdom',
-//   email: 'kathrynmurphy@gmail.com',
-//   phone: '+44-3028-3239',
-//   dateOfBirth: 'April 3rd, 2002',
-//   followers: 21,
-//   following: 63,
-// }
-
 const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()

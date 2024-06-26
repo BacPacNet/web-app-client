@@ -9,8 +9,6 @@ export async function getCommunity(communityId: string) {
   return response
 }
 export async function UpdateCommunity(communityId: string, data: any) {
-  // return console.log(communityId)
-
   const response = await client(`/community/${communityId}`, { method: 'PUT', data })
   return response
 }
@@ -89,10 +87,8 @@ export const useUpdateCommunity = () => {
 }
 
 export const useJoinCommunity = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  //   console.log(cookieValue)
 
   return useMutation({
     mutationFn: (communityId: any) => JoinCommunity(communityId, cookieValue),
@@ -108,10 +104,8 @@ export const useJoinCommunity = () => {
 }
 
 export const useLeaveCommunity = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const [cookieValue] = useCookie('uni_user_token')
   const { setUserData } = useUniStore()
-  //   console.log(cookieValue)
 
   return useMutation({
     mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
@@ -144,16 +138,13 @@ export function useGetCommunityGroups(communityId: string, isJoined: boolean) {
 }
 
 export const useJoinCommunityGroup = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('aasd')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (communityGroupId: any) => JoinCommunityGroup(communityGroupId, cookieValue),
 
     onSuccess: (response: any) => {
-      // console.log(response, 'response')
       setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
@@ -165,10 +156,7 @@ export const useJoinCommunityGroup = () => {
 }
 
 export const useUpdateCommunityGroup = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  // const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('aasd')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ dataToPush, id }: { dataToPush: any; id: any }) => UpdateCommunityGroup(dataToPush, id, cookieValue),
@@ -177,12 +165,6 @@ export const useUpdateCommunityGroup = () => {
       console.log(response, 'response')
 
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
-      // queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      // setTimeout(() => {
-      //   // queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
-      //   queryClient.clear()
-      //   queryClient.refetchQueries({ queryKey: ['communityGroups'] })
-      // }, 2000)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -192,7 +174,6 @@ export const useUpdateCommunityGroup = () => {
 
 export function useGetCommunityGroupPost(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('query', isJoined)
 
   const { isLoading, data, error } = useQuery({
     queryKey: ['communityGroupsPost', communityId],
@@ -209,17 +190,12 @@ export function useGetCommunityGroupPost(communityId: string, isJoined: boolean)
 }
 
 export const useLikeUnilikeGroupPost = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  // const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('aasd')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
     onSuccess: () => {
-      // console.log(response, 'response')
-      // setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
     onError: (res: any) => {
@@ -231,17 +207,12 @@ export const useLikeUnilikeGroupPost = () => {
 //post
 
 export const useCreateGroupPost = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  // const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('aasd')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPost(data, cookieValue),
 
     onSuccess: () => {
-      // console.log(response, 'response')
-      // setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
     onError: (res: any) => {
@@ -251,17 +222,12 @@ export const useCreateGroupPost = () => {
 }
 
 export const useCreateGroupPostComment = () => {
-  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  // const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-  // console.log('aasd')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
 
     onSuccess: () => {
-      // console.log(response, 'response')
-      // setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
     onError: (res: any) => {

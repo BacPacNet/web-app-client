@@ -2,8 +2,6 @@ import React from 'react'
 import { FaStar } from 'react-icons/fa'
 
 const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data }: any) => {
-  // console.log(data)
-
   return (
     <div
       onClick={() => setCurrSelectedGroup(data)}

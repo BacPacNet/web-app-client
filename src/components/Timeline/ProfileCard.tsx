@@ -59,11 +59,10 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      // setProfileImage(files[0]);
       const data: any = await replaceImage(files[0], userProfileData.profile_dp?.publicId)
-      // console.log(data)
+
       const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
-      // console.log(dataToPush)
+
       mutateEditProfile(dataToPush)
     } else {
       console.error('No file selected.')
@@ -73,11 +72,10 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      // setProfileImage(files[0]);
       const data: any = await replaceImage(files[0], userProfileData.cover_dp?.publicId)
-      // console.log(data)
+
       const dataToPush = { cover_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
-      // console.log(dataToPush)
+
       mutateEditProfile(dataToPush)
     } else {
       console.error('No file selected.')

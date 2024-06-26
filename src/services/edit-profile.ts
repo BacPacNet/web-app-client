@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
 import { client } from './api-Client'
-// import { editProfileInputs } from '@/components/Timeline/Modals/EditProfileModal'
 import { useUniStore } from '@/store/store'
 
 const editProfile = async (data: any, id: string) => {
@@ -14,8 +13,6 @@ export const useEditProfile = () => {
   return useMutation({
     mutationFn: (data: any) => editProfile(data, userProfileData._id),
     onSuccess: (response: any) => {
-      // console.log(response, 'response')
-
       setUserProfileData(response.updatedUserProfile)
     },
     onError: (res: any) => {

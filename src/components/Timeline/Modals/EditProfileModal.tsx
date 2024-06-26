@@ -4,21 +4,6 @@ import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 export interface editProfileInputs {
-  // users_id: string
-  // _id: string
-  // fullname: string
-  // bio: string
-  // year: number
-  // degree: string
-  // fieldOfStudy: string
-  // occupationForFaculty: string
-  // affilation: string
-  // country: string
-  // city: string
-  // email: string[]
-  // phoneNumber: string
-  // dob: string
-  // totalFilled: number
   fullname: string
   users_id: string
   profile_dp?: string
@@ -52,8 +37,6 @@ const EditProfileModal = () => {
     defaultValues: {
       fullname: userData.firstName,
       email: userProfileData?.email[0]?.UniversityEmail || '',
-      // profile_dp: userProfileData.profile_dp,
-      // cover_dp: userProfileData.cover_dp,
       bio: userProfileData.bio,
       phone_number: userProfileData.phone_number,
       dob: userProfileData.dob ? new Date(userProfileData.dob).toISOString().split('T')[0] : '',
@@ -72,7 +55,6 @@ const EditProfileModal = () => {
   const onSubmit: SubmitHandler<editProfileInputs> = (data) => {
     const emailToInsert = [{ UniversityName: data.affiliation, UniversityEmail: data.email }]
     const dataToPush = { ...data, email: emailToInsert }
-    // return console.log(dataToPush)
     mutateEditProfile(dataToPush)
   }
   return (

@@ -13,9 +13,6 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
   const [logoImage, setLogoImage] = useState('')
   const [tempImg, setTempImg] = useState('')
   const [uploadFunc, setUploadFunc] = useState('')
-  // const [isJoined, setIsJoined] = useState(false)
-  // console.log(data)
-  // console.log('aaa', updateData)
   const userVerifiedCommunityGroupIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
   }, [userData])
@@ -54,18 +51,15 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
 
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
-    // console.log('aaa')
 
     if (files && files[0]) {
-      // setProfileImage(files[0]);
       const imagedata: any = await replaceImage(files[0], data?.communityGroupLogoCoverUrl?.publicId)
-      // console.log(data)
+
       setTempImg(imagedata?.imageUrl)
       setUploadFunc('cover')
       const dataToPush = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-      // console.log(dataToPush)
+
       UpdateCommunityGroup({ dataToPush, id: data._id })
-      // console.log('aasdas', updatedat)
     } else {
       console.error('No file selected.')
     }
@@ -73,18 +67,13 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
 
   const handleLogoImageUpload = async (e: any) => {
     const files = e.target.files
-    // console.log('aaa')
 
     if (files && files[0]) {
-      // setProfileImage(files[0]);
       const imagedata: any = await replaceImage(files[0], data?.communityGroupLogoUrl?.publicId)
-      // console.log(data)
       setTempImg(imagedata?.imageUrl)
       setUploadFunc('logo')
       const dataToPush = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-      // console.log(dataToPush)
       UpdateCommunityGroup({ dataToPush, id: data._id })
-      // console.log('aasdas', updatedat)
     } else {
       console.error('No file selected.')
     }

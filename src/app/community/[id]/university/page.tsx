@@ -16,17 +16,6 @@ import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 
-// const comments = [
-//   {
-//     id: 1,
-//     user: 'Johnny Nitro',
-//     text: "Yeah give me a second I'll try to solve it and send the solution over your DMs.",
-//     date: '5d',
-//     avatar: '/timeline/avatar.png',
-//     likes: 4,
-//   },
-// ]
-
 const roberta = {
   avatarUrl: '/timeline/avatar2.png',
   userAvatarUrl: '/timeline/avatar.png',
@@ -44,13 +33,8 @@ const Page = () => {
   const [isJoined, setIsJoined] = useState(false)
   const { data: communityGroups } = useGetCommunityGroups(id, isJoined)
   const [currSelectedGroup, setCurrSelectedGroup] = useState(communityGroups?.groups[0])
-  // console.log(userData.userVerifiedCommunities.);
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
-
   const { data: communityGroupPost } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
-  // console.log('gg', currSelectedGroup)
-  // console.log('jj', isJoinedInGroup)
-  // console.log('g2', communityGroupPost)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {

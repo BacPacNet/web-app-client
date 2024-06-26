@@ -20,8 +20,6 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
     return userData?.userUnVerifiedCommunities?.map((c) => c.communityId.toString()) || []
   }, [userData])
 
-  // console.log(userUnverifiedVerifiedCommunityIds, userVerifiedCommunityIds)
-
   useEffect(() => {
     if (data) {
       const communityId = data?.community?._id
@@ -33,15 +31,8 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
     }
   }, [data, userVerifiedCommunityIds, userUnverifiedVerifiedCommunityIds])
 
-  // console.log(userVerifiedCommunityIds)
-  // console.log(userUnverifiedVerifiedCommunityIds)
-  // console.log(isJoined)
-  // console.log(data)
-  // console.log(data?.community?._id)
-
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
-    // console.log('aaa')
 
     if (files && files[0]) {
       const imagedata: any = await replaceImage(files[0], data?.community?.communityCoverUrl?.publicId)
@@ -56,7 +47,6 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
 
   const handleLogoImageUpload = async (e: any) => {
     const files = e.target.files
-    // console.log('aaa')
 
     if (files && files[0]) {
       const imagedata: any = await replaceImage(files[0], data?.community?.communityLogoUrl?.publicId)
