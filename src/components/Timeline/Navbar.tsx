@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   const activeTab = path.split('/').pop()
 
   return (
-    <nav className="bg-primary text-white flex items-center justify-between px-4 py-2">
+    <nav className="bg-primary text-white items-center justify-between px-4 py-2 hidden lg:flex">
       <div className="flex items-center">
         {CommunityNavbarLinks.map((tab) => (
           <button

@@ -11,7 +11,7 @@ interface FollowingItemProps {
 
 const UserListItem: React.FC<FollowingItemProps> = ({ name, university, role, tags }) => {
   return (
-    <div className="flex items-center p-4 border-b border-border min-w-[536px]">
+    <div className="flex items-center p-2 md:p-4 border-b border-border ">
       <img src={`/timeline/avatar.png`} alt={name} className="w-14 h-14 rounded-full mr-4" />
       <div className="flex-1">
         <h3 className="font-medium text-base text-gray-dark">{name}</h3>

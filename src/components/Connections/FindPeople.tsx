@@ -109,7 +109,7 @@ const filters: Filter[] = [
 ]
 
 const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
-  <button className={`px-4 py-[10px] hover:text-gray-dark text-sm font-medium ${isActive ? 'text-primary' : 'text-gray-1'}`} onClick={onClick}>
+  <button className={`px-4 py-[10px] hover:text-primary text-sm font-medium ${isActive ? 'text-primary' : 'text-gray-1'}`} onClick={onClick}>
     {label}
   </button>
 )
@@ -118,7 +118,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
   const [content, setContent] = useState<ContentType>('Following')
 
   return (
-    <div className="border border-border rounded-lg py-4 px-6">
+    <div className="border border-border rounded-lg py-4 px-0 md:px-6">
       {/* Controls */}
       <div>
         <div className="flex items-center justify-start cursor-pointer">
@@ -126,7 +126,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
             <TabButton key={tab.value} label={tab.label} isActive={content === tab.value} onClick={() => setContent(tab.value)} />
           ))}
         </div>
-        <div className="flex gap-3 my-3 px-3">
+        <div className="flex gap-3 my-3 px-3 flex-wrap">
           {filters.map((filter) => (
             <div key={filter.value} className="flex items-center px-3 py-2 border border-primary rounded-full">
               <span className="text-xs text-primary font-medium">{filter.label}</span>
