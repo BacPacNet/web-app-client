@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (width.toString() > '769') {
-      console.log('object')
+      // console.log('object')
       setOpen(false)
     }
   }, [width])
