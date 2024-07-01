@@ -72,7 +72,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData.cover_dp?.publicId)
+      const data: any = await replaceImage(files[0], userProfileData?.cover_dp?.publicId)
 
       const dataToPush = { cover_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
 
@@ -101,7 +101,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
 
       <div className="relative lg:max-w-xs w-full">
         {/* Cover Image */}
-        {userProfileData.cover_dp?.imageUrl ? (
+        {userProfileData?.cover_dp?.imageUrl ? (
           <div
             className="relative h-28 bg-cover bg-center group"
             style={{ backgroundImage: `url(${userProfileData?.cover_dp?.imageUrl})`, objectFit: 'cover' }}
@@ -128,7 +128,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
           <div className="flex">
             <div className="group relative">
               <img
-                src={`${userProfileData.profile_dp?.imageUrl ? userProfileData.profile_dp.imageUrl : '/timeline/avatar.png'} `}
+                src={`${userProfileData?.profile_dp?.imageUrl ? userProfileData.profile_dp.imageUrl : '/timeline/avatar.png'} `}
                 alt="Profile"
                 className="h-24 w-24 rounded-full border-4 border-white"
                 width={24}
