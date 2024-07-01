@@ -12,12 +12,7 @@ import { useUniStore } from '@/store/store'
 const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const [activeTab, setActiveTab] = useState<string>('Profile')
   const { userData, userProfileData, userFollowingData } = useUniStore()
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab)
-  }
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
@@ -32,7 +27,7 @@ const Profile = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar activeTab={activeTab} onTabClick={handleTabClick} />
+      <Navbar />
       <div className="flex justify-center w-full gap-6 mt-20 max-md:flex-col max-md:items-center pb-10  ">
         <ProfileCard
           userProfileData={userProfileData}

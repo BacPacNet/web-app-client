@@ -10,3 +10,8 @@ declare global {
 }
 
 export type ModalContentType = 'ConnectionsModal' | 'PollModal' | 'EditProfileModal' | 'ReplyModal' | undefined
+
+interface NavLink {
+  label: string
+  href: string
+}
