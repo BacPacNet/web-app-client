@@ -2,7 +2,7 @@
 'use client'
 import Footer from '@components/Footer/Footer'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Link from 'next/link'
@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
-  const { mutate: mutateLogin } = useHandleLogin()
+  const { mutate: mutateLogin, isSuccess } = useHandleLogin()
   const {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
@@ -22,12 +22,21 @@ const Login = () => {
   const { userProfileData } = useUniStore()
   const router = useRouter()
 
-  const onLoginSubmit: SubmitHandler<LoginForm> = (data) => {
-    mutateLogin(data)
-    console.log(userProfileData)
+  const onLoginSubmit: SubmitHandler<LoginForm> = async (data) => {
+    await mutateLogin(data)
 
-    router.push(`/community/${userProfileData?._id}/timeline`)
+    // if (userProfileData?._id) {
+    //   router.push(`/community/${userProfileData._id}/timeline`)
+    // } else {
+    //   console.error('User profile data is missing or invalid.')
+    // }
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(`/community/${userProfileData._id}/timeline`)
+    }
+  }, [isSuccess])
 
   return (
     <main>

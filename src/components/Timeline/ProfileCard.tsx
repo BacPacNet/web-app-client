@@ -135,8 +135,8 @@ const ProfileCard: React.FC<ProfileProps> = ({
                 height={24}
               />
               <div className="group-hover:block hidden absolute top-1/2 left-1/4">
-                <input style={{ display: 'none' }} type="file" id="file" onChange={(e) => handleImageUpload(e)} />
-                <label htmlFor="file">
+                <input style={{ display: 'none' }} type="file" id="file2" onChange={(e) => handleImageUpload(e)} />
+                <label htmlFor="file2">
                   <p className="">Upload</p>
                 </label>
               </div>

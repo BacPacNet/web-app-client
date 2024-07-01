@@ -23,6 +23,7 @@ import { useUniStore } from '@/store/store'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
+import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
 interface MenuItem {
   name: string
   path: string
@@ -37,13 +38,18 @@ const Navbar: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false)
   const [hover, setHover] = useState<boolean>(false)
   const [activeItem, setActiveItem] = useState('')
-  const [cookieValue, _, deleteCookie] = useCookie('uni_user_token')
+  // eslint-disable-next-line no-unused-vars
+  const [cookieValue, , deleteCookie] = useCookie('uni_user_token')
   const { userProfileData, userData, resetUserData, resetUserProfileData, resetUserFollowingData } = useUniStore()
   const router = useRouter()
-  console.log(_)
+  // console.log(cookieValue)
+  const { data: notificationData } = useGetNotification()
+  const { mutate: joinGroup } = useJoinCommunityGroup()
+  const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
+  // console.log('noti', notificationData)
 
   useEffect(() => {
-    // console.log('cookieValue', cookieValue);
+    // console.log('cookieValue', cookieValue)
 
     if (cookieValue) setIsLogin(true)
   }, [cookieValue])
@@ -68,11 +74,51 @@ const Navbar: React.FC = () => {
     }
   }, [width])
 
+  const handleJoinGroup = (data: any) => {
+    const dataToPush = {
+      groupId: data.communityGroupId._id,
+      id: data._id,
+    }
+    // console.log('nData', dataToPush)
+    joinGroup(dataToPush)
+  }
+
+  const handleIsSeenGroup = (data: any) => {
+    const dataToPush = {
+      // groupId: data.communityGroupId._id,
+      id: data._id,
+    }
+    // console.log('nData', dataToPush)
+    updateIsSeen(dataToPush)
+  }
+
   const LoggedInMenu = () => {
     return (
       <div className="flex gap-[18px] items-center ">
         <TbMailFilled className="text-primary" size={32} />
-        <FaBell className="text-primary" size={26} />
+        <Popover>
+          <PopoverTrigger>
+            <FaBell className="text-primary" size={26} />
+          </PopoverTrigger>
+          <PopoverContent className="relative right-8 w-72 p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
+            {notificationData?.map((item: any) => (
+              <div key={item._id} className="bg-slate-50 p-2 border-b border-slate-300">
+                <p className="text-xs">
+                  You Received an invite from <span className="text-sm font-bold">{item?.adminId?.firstName}</span> to Join Group
+                </p>
+                <div className="flex gap-2 justify-end">
+                  <button onClick={() => handleIsSeenGroup(item)} className="bg-slate-200 py-2 px-3 font-bold">
+                    Deny
+                  </button>
+                  <button onClick={() => handleJoinGroup(item)} className="bg-blue-400 py-2 px-4 font-bold">
+                    Join
+                  </button>
+                </div>
+              </div>
+            ))}
+          </PopoverContent>
+        </Popover>
+        {/* notificaton End  */}
         <Popover>
           <PopoverTrigger>
             <div className="flex items-center gap-3">

@@ -26,6 +26,7 @@ const roberta = {
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
+
   const { id } = useParams<{ id: string }>()
   const { data } = useGetCommunity(id)
   const { userData, userProfileData } = useUniStore()
