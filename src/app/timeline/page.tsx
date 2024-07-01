@@ -14,6 +14,7 @@ import ReplyModal from '@/components/Timeline/Modals/ReplyModal'
 import { ModalContentType } from '@/types/global'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
+import { useParams } from 'next/navigation'
 interface User {
   name: string
   bio: string
@@ -75,8 +76,11 @@ const recommendations = [
 
 const Timeline = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const params = useParams()
   const { userData, userProfileData, userFollowingData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
+
+  console.log(params)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {

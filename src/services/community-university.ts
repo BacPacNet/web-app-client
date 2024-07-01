@@ -8,6 +8,7 @@ export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
   return response
 }
+
 export async function UpdateCommunity(communityId: string, data: any) {
   const response = await client(`/community/${communityId}`, { method: 'PUT', data })
   return response
@@ -15,6 +16,12 @@ export async function UpdateCommunity(communityId: string, data: any) {
 
 export async function JoinCommunity(communityId: string, token: any) {
   const response = await client(`/users/${communityId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+export async function getCommunityUsers(communityId: string, privacy: string, name: string, token: any) {
+  const response: any = await client(`/users/communityUsers/${communityId}?privacy=${privacy}&&name=${name}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -30,6 +37,13 @@ export async function getAllCommunityGroups(communityId: string, token: any) {
 
 export async function JoinCommunityGroup(communityGroupId: string, token: any) {
   const response = await client(`/communitygroup/togglegroup/${communityGroupId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export async function CreateCommunityGroup(communityId: string, token: any, data: any) {
+  console.log('data', data)
+
+  const response = await client(`/communitygroup/${communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
 
@@ -155,6 +169,24 @@ export const useJoinCommunityGroup = () => {
   })
 }
 
+//create community
+export const useCreateCommunityGroup = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
+
+    onSuccess: (response: any) => {
+      console.log(response)
+
+      queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
 export const useUpdateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
@@ -234,4 +266,20 @@ export const useCreateGroupPostComment = () => {
       console.log(res.response.data.message, 'res')
     },
   })
+}
+
+export function useGetCommunityUsers(communityId: string, isopen: boolean, privacy: string, name: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const { isLoading, data, error } = useQuery({
+    enabled: isopen,
+    queryKey: ['communityUsers', communityId, privacy, name],
+    queryFn: () => getCommunityUsers(communityId, privacy, name, cookieValue),
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(error) && error.response) {
+    errorMessage = error.response.data
+  }
+
+  return { isLoading, data, error: errorMessage }
 }

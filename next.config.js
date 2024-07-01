@@ -16,6 +16,8 @@ const nextConfig = {
           }
         ]
     }
+   
+   
 }
 // Configuration object tells the next-pwa plugin 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

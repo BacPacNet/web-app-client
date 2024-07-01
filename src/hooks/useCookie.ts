@@ -11,10 +11,13 @@ const useCookie = (cookieName: string): [string, (value: string, expirationDate:
 
   const setCookie = (value: string, expirationDate: string): void => {
     document.cookie = `${cookieName}=${value}; expires=${new Date(expirationDate).toUTCString()}; path=/`
+    // console.log('set cookie', value, cookieName, expirationDate)
+    setCookieValue(value)
   }
 
   const deleteCookie = (): void => {
     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
+    setCookieValue('')
   }
 
   return [cookieValue, setCookie, deleteCookie]

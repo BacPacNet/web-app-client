@@ -50,7 +50,7 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
               onClick={() => setCurrGroup('All')}
               className={`${
                 currGroup == 'All'
-                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-50 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
+                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-30 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
                   : 'text-neutral-500'
               } `}
             >
@@ -60,7 +60,7 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
               onClick={() => setCurrGroup('Starred')}
               className={`${
                 currGroup == 'Starred'
-                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-50 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
+                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-30 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
                   : 'text-neutral-500'
               } `}
             >
@@ -70,7 +70,7 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
               onClick={() => setCurrGroup('Your Groups')}
               className={`${
                 currGroup == 'Your Groups'
-                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-50 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
+                  ? "relative after:content-[''] after:absolute after:-right-1 after:z-30 after:top-[calc(100%+3px)] after:w-[calc(100%+10px)] after:h-[2px] after:bg-[#6647FF]"
                   : 'text-neutral-500'
               } `}
             >
@@ -92,7 +92,7 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
             </div>
           </div>
         ) : currGroup == 'Your Groups' ? (
-          <div className="min-h-[412.8px] max-md:min-h-[100px] w-full flex flex-col items-center relative after:content-[''] after:absolute after:right-0 after:z-50 after:top-[calc(20%+10px)] max-md:after:top-[calc(75%+10px)] after:w-[calc(100%)] after:h-[2px] after:bg-neutral-300">
+          <div className="min-h-[412.8px] max-md:min-h-[100px] w-full flex flex-col items-center relative after:content-[''] after:absolute after:right-0 after:z-10 after:top-[calc(20%+10px)] max-md:after:top-[calc(75%+10px)] after:w-[calc(100%)] after:h-[2px] after:bg-neutral-300">
             <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF]   py-3 px-5 my-4 text-white rounded-md">
               Create your Group
             </button>

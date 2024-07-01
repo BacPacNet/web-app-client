@@ -9,7 +9,7 @@ const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data }: any) 
         currSelectedGroup?.title == data?.title
           ? 'bg-[#F3F2FF] max-md:bg-white max-md:after:h-[4px] after:rounded-full'
           : 'border-t-2 max-md:border-0 border-neutral-300'
-      } flex w-full  justify-between items-center gap-1 py-2 px-3 first-of-type:border-0  relative after:content-[''] after:absolute after:left-3 after:z-50 after:top-[calc(90%+10px)]  after:w-[calc(60%)]  after:bg-[#6647FF] `}
+      } flex w-full  justify-between items-center gap-1 py-2 px-3 first-of-type:border-0  relative after:content-[''] after:absolute after:left-3 after:z-30 after:top-[calc(90%+10px)]  after:w-[calc(60%)]  after:bg-[#6647FF] `}
     >
       {data.communityGroupLogoUrl ? (
         <img className="w-10 h-10 object-cover rounded-full" src={data?.communityGroupLogoUrl.imageUrl} alt="dp" />
