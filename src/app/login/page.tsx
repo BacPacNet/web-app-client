@@ -8,7 +8,7 @@ import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Link from 'next/link'
 import { useHandleLogin } from '@/services/auth'
 import { LoginForm } from '@/models/auth'
-import { useUniStore } from '@/store/store'
+// import { useUniStore } from '@/store/store'
 import { useRouter } from 'next/navigation'
 
 const Login = () => {
@@ -19,7 +19,7 @@ const Login = () => {
     handleSubmit: handleSubmitLogin,
     formState: { errors: loginErrors },
   } = useForm<LoginForm>()
-  const { userProfileData } = useUniStore()
+  // const { userProfileData } = useUniStore()
   const router = useRouter()
 
   const onLoginSubmit: SubmitHandler<LoginForm> = async (data) => {
@@ -34,7 +34,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      router.push(`/community/${userProfileData._id}/timeline`)
+      router.push(`/timeline`)
     }
   }, [isSuccess])
 
