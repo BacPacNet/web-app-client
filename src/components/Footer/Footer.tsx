@@ -1,3 +1,4 @@
+'use client'
 import './Footer.css'
 
 import Image from 'next/image'
@@ -37,7 +38,7 @@ const Footer: React.FC = () => {
   return (
     <div className=" w-[90%] mx-auto relative flex flex-col center-v py-8 lg:pt-8">
       <div className="w-full text-gray-dark text-sm lg:text-lg">
-        <div className="flex justify-between md:justify-start gap-2 md:gap-16 ">
+        <div className="flex justify-between md:justify-start gap-2 md:gap-16">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms and Conditions</a>
           <a href="#">Contact Us</a>

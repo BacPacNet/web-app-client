@@ -3,40 +3,50 @@ import './SearchBar.css'
 import Image from 'next/image'
 import CollegeResult from '@components/CollegeResult'
 import SearchHistoryBox from '@components/SearchHistoryBox/SearchHistoryBox'
-import searchAlgorithm from '@/utils/searchAlgorithm'
 import searchIcon from '../assets/search-icon.svg'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useUniversitySearch } from '@/services/universitySearch'
 
 // search bar
 interface FilteredCollege {
   id: string
   name: string
-  score: string
-  city?: string
-  country?: string
-  collegePage?: string
+  pathUrl: string
+  country: string
 }
-interface SearchBarProps {
-  data: FilteredCollege[]
-  loading: boolean
-}
+// interface SearchBarProps {
+//   data: FilteredCollege[]
+//   loading: boolean
+// }
 interface College {
   id: string
   name: string
-  score: string
+  pathUrl: string
+  country: string
 }
-const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
+const SearchBar = () => {
   const [open, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const [filterData, setFilterData] = useState<FilteredCollege[]>([])
   const [searchHistoryShown, setSearchHistoryShown] = useState(true)
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { isLoading, data } = useUniversitySearch(searchTerm)
+  // console.log(data)
+
+  useEffect(() => {
+    if (data) {
+      setFilterData(data?.result)
+    }
+  }, [data])
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.trim().toLowerCase()
-    const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
+    // const filterData = searchAlgorithm(input, data).sort((a, b) => +b.score - +a.score)
+    setSearchTerm(input)
     setIsOpen(input.length !== 0)
-    setFilterData(filterData)
     setSearchHistoryShown(false)
   }
+
   function handleSearchHistory() {
     if (!open) {
       // Only update history if the input is not already open
@@ -48,8 +58,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
         // Extract name and score from each object and create a new array
         const selectedCollegeInfoArray = selectedCollegeNamesArray.map((college: College) => ({
           name: college.name,
-          score: college.score,
           id: college.id, // You may need to set the ID here if it's available
+          pathUrl: college.pathUrl,
+          country: college.country,
         }))
         setFilterData(selectedCollegeInfoArray)
         setIsOpen(true) // Open the input to show history
@@ -61,11 +72,17 @@ const SearchBar: React.FC<SearchBarProps> = ({ data, loading }) => {
       setSearchHistoryShown(false)
     }
   }
-  let searchResults: JSX.Element[] = filterData?.map((item, index) =>
-    searchHistoryShown ? <SearchHistoryBox info={item} serialNo={index} key={index} /> : <CollegeResult info={item} serialNo={index} key={index} />
-  )
-  if (!loading && searchResults.length === 0) searchResults = [<div key="no-results">No results found</div>]
-  if (loading) searchResults = [<div key="loading">Loading....</div>]
+  let searchResults: JSX.Element[] = Array.isArray(filterData)
+    ? filterData?.map((item, index) =>
+        searchHistoryShown ? (
+          <SearchHistoryBox info={item} serialNo={index} key={index} />
+        ) : (
+          <CollegeResult info={item} serialNo={index} key={index} />
+        )
+      )
+    : []
+  if (!isLoading && searchResults?.length === 0) searchResults = [<div key="no-results">No results found</div>]
+  if (isLoading) searchResults = [<div key="loading">Loading....</div>]
   return (
     <div className="w-full text-center relative mt-2 h-12 rounded-3xl">
       <div className="relative mt-2 rounded-md shadow-sm">

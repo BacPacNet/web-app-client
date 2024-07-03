@@ -26,6 +26,11 @@ body {
 .searchBox::-webkit-scrollbar {
   display: none;
 }
+
+.noscroll {
+  overflow-y: hidden;
+}
+
 @layer components {
   .btn {
     @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
@@ -42,5 +47,26 @@ body {
   }
   .icon {
     @apply w-8 h-6 text-black;
+  }
+}
+
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
   }
 }

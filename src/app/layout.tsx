@@ -3,7 +3,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import Navbar from '../components/Navbar/Navbar'
-import { ApolloWrapper } from '@/lib/apollo-provider'
+import { ReactQueryClientProvider } from '@/utils/Provider'
 
 type FontClassName = string
 
@@ -34,8 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        <ApolloWrapper>{children}</ApolloWrapper>
+        <ReactQueryClientProvider>
+          <Navbar />
+          {children}
+        </ReactQueryClientProvider>
       </body>
     </html>
   )

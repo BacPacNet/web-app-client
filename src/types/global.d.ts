@@ -8,3 +8,10 @@ declare global {
     collegePage: string
   }
 }
+
+export type ModalContentType = 'ConnectionsModal' | 'PollModal' | 'EditProfileModal' | 'ReplyModal' | undefined
+
+interface NavLink {
+  label: string
+  href: string
+}
