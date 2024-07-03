@@ -15,9 +15,9 @@ const nextConfig = {
         ]
       }
     ]
-  }, images: {
-    domains: ['github.com'],
-  },
+  }
+
+
 }
 // Configuration object tells the next-pwa plugin 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
