@@ -8,7 +8,8 @@ interface SearchHistoryProps {
   info: {
     id: string
     name: string
-    score: string
+    pathUrl: string
+    country: string
   }
 }
 const SearchHistoryBox: React.FC<SearchHistoryProps> = (props) => {
