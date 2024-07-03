@@ -24,6 +24,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
+import { Skeleton } from '@/components/ui/skeleton'
+
 interface MenuItem {
   name: string
   path: string
@@ -34,12 +36,11 @@ const Navbar: React.FC = () => {
   const [width] = useWindowSize()
   const pathname = usePathname()
   const [open, setOpen] = useState<boolean>(false)
-  // isLogin is just for demo purpose.
-  const [isLogin, setIsLogin] = useState<boolean>(false)
+  const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const [hover, setHover] = useState<boolean>(false)
   const [activeItem, setActiveItem] = useState('')
   // eslint-disable-next-line no-unused-vars
-  const [cookieValue, , deleteCookie] = useCookie('uni_user_token')
+  const [, , deleteCookie] = useCookie('uni_user_token')
   const { userProfileData, userData, resetUserData, resetUserProfileData, resetUserFollowingData } = useUniStore()
   const router = useRouter()
   // console.log(cookieValue)
@@ -50,9 +51,8 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     // console.log('cookieValue', cookieValue)
-
-    if (cookieValue) setIsLogin(true)
-  }, [cookieValue])
+    setIsLogin(!!userData?.id)
+  }, [userData, userData?.id])
 
   const handleClick = (item: string) => {
     setActiveItem(item)
@@ -122,14 +122,14 @@ const Navbar: React.FC = () => {
         <Popover>
           <PopoverTrigger>
             <div className="flex items-center gap-3">
-              <p className="font-medium text-sm">
-                {userData?.firstName} {userData?.lastName}
-              </p>
-              <img src={userProfileData ? userProfileData?.cover_dp?.imageUrl : '/timeline/avatar.png'} className="w-10 h-10" />
+              <img src={userProfileData ? userProfileData?.cover_dp?.imageUrl : '/timeline/avatar.png'} className="w-10 h-10 rounded-full" />
             </div>
           </PopoverTrigger>
           <PopoverContent className="relative right-8 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
             <div className="flex flex-col gap-5">
+              <p className="font-medium text-sm">
+                {userData?.firstName} {userData?.lastName}
+              </p>
               <div className="flex gap-1 items-center" onClick={handleLogout}>
                 <MdLogout className="text-primary" size={20} />
                 <p className="font-medium text-sm">Logout</p>
@@ -138,6 +138,41 @@ const Navbar: React.FC = () => {
           </PopoverContent>
         </Popover>
       </div>
+    )
+  }
+
+  const AuthButtons: React.FC = () => {
+    switch (isLogin) {
+      case true:
+        return <LoggedInMenu />
+
+      case false:
+        return (
+          <>
+            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+              <Link href={'/register'}>Sign Up</Link>
+            </button>
+            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
+              <Link href={'/login'}>Login</Link>
+            </button>
+          </>
+        )
+      default:
+        return <Skeleton className=" w-[40%] h-10 rounded-2xl bg-primary-50" />
+    }
+
+    if (isLogin) {
+      return <LoggedInMenu />
+    }
+    return (
+      <>
+        <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
+          <Link href={'/register'}>Sign Up</Link>
+        </button>
+        <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
+          <Link href={'/login'}>Login</Link>
+        </button>
+      </>
     )
   }
 
@@ -173,6 +208,7 @@ const Navbar: React.FC = () => {
   }
 
   const filteredMenuContent: MenuItem[] = isMobile ? menuContent : menuContent.filter((item) => item.display !== 'mobile')
+
   return (
     <>
       <div className="navbar justify-around w-full center-v h-16 sticky top-0 px-6 xl:px-28 bg-white">
@@ -188,42 +224,20 @@ const Navbar: React.FC = () => {
           <div className="relative w-1/2 hidden md:flex gap-6 lg:gap-16 center-v">
             <>
               <FilteredMenuComponent />
+              {/* Open modal on md,sm devices */}
               {open ? (
                 <>
                   <hr className="my-3" />
                   <div className="flex justify-end">
-                    {!isLogin ? (
-                      <>
-                        <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-                          <Link href={'/register'}>Sign Up</Link>
-                        </button>
-                        <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
-                          <Link href={'/login'}>Login</Link>
-                        </button>
-                      </>
-                    ) : (
-                      <LoggedInMenu />
-                    )}
+                    <AuthButtons />
                   </div>
                 </>
               ) : null}
             </>
           </div>
-          {!isLogin ? (
-            <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
-              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-                <Link href={'/register'}>Sign Up</Link>
-              </button>
-              <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-                <Link href={'/login'}>Login</Link>
-              </button>
-            </div>
-          ) : (
-            <div className="md:flex hidden">
-              <LoggedInMenu />
-            </div>
-          )}
-
+          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
+            <AuthButtons />
+          </div>
           <div
             className={`hamburger ${open ? 'is-active' : ''} h-8  md:hidden`}
             id="hamburger"
@@ -248,18 +262,7 @@ const Navbar: React.FC = () => {
           <>
             <hr className="my-3" />
             <div className="flex justify-end">
-              {!isLogin ? (
-                <>
-                  <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-                    <Link href={'/register'}>Sign Up</Link>
-                  </button>
-                  <button className="btn btn-secondary ml-6 text-right text-sm font-medium">
-                    <Link href={'/login'}>Login</Link>
-                  </button>
-                </>
-              ) : (
-                <LoggedInMenu />
-              )}
+              <AuthButtons />
             </div>
           </>
         </motion.div>

@@ -2,10 +2,10 @@ import { NavLink } from './global'
 
 export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Timeline', href: '/timeline' },
-  { label: 'Profile', href: '/profile' },
+  { label: 'Profile', href: '/:id' },
   { label: 'Notifications', href: '/notifications' },
   { label: 'Messages', href: '/messages' },
-  { label: 'Connections', href: '/connections' },
-  { label: 'University Community', href: '/university-community' },
+  { label: 'Connections', href: '/community/:id/connections' },
+  { label: 'University Community', href: '/community/:id' },
   { label: 'Chatbot', href: '/chatbot' },
 ]
