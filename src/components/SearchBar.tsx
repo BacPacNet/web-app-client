@@ -74,12 +74,12 @@ const SearchBar = () => {
   }
   let searchResults: JSX.Element[] = Array.isArray(filterData)
     ? filterData?.map((item, index) =>
-      searchHistoryShown ? (
-        <SearchHistoryBox info={item} serialNo={index} key={index} />
-      ) : (
-        <CollegeResult info={item} serialNo={index} key={index} />
+        searchHistoryShown ? (
+          <SearchHistoryBox info={item} serialNo={index} key={index} />
+        ) : (
+          <CollegeResult info={item} serialNo={index} key={index} />
+        )
       )
-    )
     : []
   if (!isLoading && searchResults?.length === 0) searchResults = [<div key="no-results">No results found</div>]
   if (isLoading) searchResults = [<div key="loading">Loading....</div>]
@@ -98,8 +98,9 @@ const SearchBar = () => {
           onChange={handleSearch}
           onClick={handleSearchHistory}
           placeholder="Search institute"
-          className={`block w-full h-12 rounded-xl border-0 py-1.5 pl-12 pr-20 text-gray-900 ring-1 ring-gray-light ring-inset ring-gray-300 placeholder:text-gray-400  text-sm lg:text-lg sm:leading-6 ${open ? 'search-input-open' : ''
-            }`}
+          className={`block w-full h-12 rounded-xl border-0 py-1.5 pl-12 pr-20 text-gray-900 ring-1 ring-gray-light ring-inset ring-gray-300 placeholder:text-gray-400  text-sm lg:text-lg sm:leading-6 ${
+            open ? 'search-input-open' : ''
+          }`}
         />
       </div>
 

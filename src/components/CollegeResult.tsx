@@ -19,7 +19,6 @@ const CollegeResult: React.FC<CollegeProps> = (props) => {
         <div className="name w-4/5 flex justify-center align-middle text-black">{props?.info?.name}</div>
         {/* <div className="score w-1/6 flex justify-center align-middle text-black">{props?.info?.score}</div> */}
         <div className="score w-1/6 flex justify-center align-middle text-black">{props?.info?.country}</div>
-
       </Link>
     </div>
   )
