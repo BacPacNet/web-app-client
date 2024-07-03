@@ -24,7 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 interface MenuItem {
   name: string
