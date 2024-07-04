@@ -54,7 +54,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
   return (
     <div className="flex flex-col gap-3 border-2 border-gray-dark rounded-lg justify-center items-center py-6 lg:max-w-[696px] sm:max-w-md xs:max-w-sm xs:mx-4 sm:mx-0">
       <div className="flex gap-4">
-        <img src={profileDp} alt="User" className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" />
+        <img src={profileDp ?? '/icons/avatar.svg'} alt="User" className="w-10 h-10 sm:w-14 sm:h-14 rounded-full" />
         <div className="flex flex-col gap-3">
           <div className="w-auto border border-gray-light rounded-full py-1 sm:py-2 pr-5 flex">
             <input
