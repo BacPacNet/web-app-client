@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
         <Popover>
           <PopoverTrigger>
             <div className="flex items-center gap-3">
-              <img src={userProfileData ? userProfileData?.cover_dp?.imageUrl : '/timeline/avatar.png'} className="w-10 h-10 rounded-full" />
+              <img src={userProfileData ? userProfileData?.cover_dp?.imageUrl : '/icons/avatar.svg'} className="w-10 h-10 rounded-full bg-border" />
             </div>
           </PopoverTrigger>
           <PopoverContent className="relative right-8 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
               <p className="font-medium text-sm">
                 {userData?.firstName} {userData?.lastName}
               </p>
-              <div className="flex gap-1 items-center" onClick={handleLogout}>
+              <div className="flex gap-1 items-center cursor-pointer" onClick={handleLogout}>
                 <MdLogout className="text-primary" size={20} />
                 <p className="font-medium text-sm">Logout</p>
               </div>
