@@ -87,7 +87,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
       <div className="h-52 relative flex justify-start items-end   ">
         {coverImage ? (
           <>
-            <img className="absolute bottom-8 -z-10" src={coverImage} alt="bg" />
+            <img className="absolute bottom-8 -z-10 object-cover w-full" src={coverImage} alt="bg" />
             <div className="absolute bottom-8 z-0 w-full h-full  group">
               <div className={`${data?.adminUserId._id == userData.id ? 'block ' : 'hidden'} w-full  text-end  mt-10 pr-4 `}>
                 <input style={{ display: 'none' }} type="file" id="file" onChange={(e) => handleCoverImageUpload(e)} />

@@ -182,7 +182,7 @@ const Post: React.FC<PostProps> = ({
       CreateComment(data)
     }
   }
-  console.log('cc', userComments, ImageValue)
+  // console.log('cc', userComments, ImageValue)
 
   return (
     <div

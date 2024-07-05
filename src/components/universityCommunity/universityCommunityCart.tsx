@@ -10,12 +10,12 @@ type Props = {
 
 const UniversityCommunityCart = ({ UniversityName, UniversityAddress, UniversityLink, universityLogo }: Props) => {
   const router = useRouter()
-  const address = UniversityAddress.wikiInfoBox.Address
-    ? UniversityAddress.wikiInfoBox.Address
-    : UniversityAddress.wikiInfoBox.Location
-    ? UniversityAddress.wikiInfoBox.Location
-    : UniversityAddress.collegeBoardInfo.Location
-    ? UniversityAddress.collegeBoardInfo.Location
+  const address = UniversityAddress?.wikiInfoBox?.Address
+    ? UniversityAddress?.wikiInfoBox?.Address
+    : UniversityAddress?.wikiInfoBox?.Location
+    ? UniversityAddress?.wikiInfoBox?.Location
+    : UniversityAddress?.collegeBoardInfo?.Location
+    ? UniversityAddress?.collegeBoardInfo?.Location
     : 'Not Available'
 
   const handleClick = () => {
