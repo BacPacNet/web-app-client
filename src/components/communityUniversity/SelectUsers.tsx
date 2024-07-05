@@ -1,8 +1,6 @@
 import React from 'react'
 
 const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: any) => {
-  //   console.log('dd', data)
-
   const handleClick = () => {
     if (selectedUsers?.some((item: any) => item._id == data._id)) {
       const filterd = selectedUsers.filter((item: any) => item._id !== data._id)
@@ -12,7 +10,6 @@ const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: any) => {
     }
   }
 
-  //   console.log(selectedUsers?.some((item) => item.id == data.id))
   const isSelected = selectedUsers.some((item: any) => item._id === data._id)
   return (
     <div className="flex justify-between w-full">

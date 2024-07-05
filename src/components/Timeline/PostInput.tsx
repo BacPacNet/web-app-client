@@ -20,7 +20,7 @@ interface PostInputProps {
 
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
   const [inputValue, setInputValue] = useState('')
-  const [ImageValue, setImageValue] = useState()
+  const [ImageValue, setImageValue] = useState<File | null>(null)
   const { mutate: CreateGroupPost } = useCreateGroupPost()
 
   const handleEmojiClick = (emojiData: any) => {
@@ -68,7 +68,14 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
               Post
             </button>
           </div>
-          {ImageValue && <img className="w-11/12" src={URL.createObjectURL(ImageValue)} alt="" />}
+          {ImageValue && (
+            <div className="relative w-11/12">
+              <img className="" src={URL.createObjectURL(ImageValue)} alt="" />
+              <p onClick={() => setImageValue(null)} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
+                X
+              </p>
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <div>
               <input style={{ display: 'none' }} type="file" id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />

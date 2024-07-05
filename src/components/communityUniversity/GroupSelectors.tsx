@@ -11,7 +11,7 @@ const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data }: any) 
           : 'border-t-2 max-md:border-0 border-neutral-300'
       } flex w-full  justify-between items-center gap-1 py-2 px-3 first-of-type:border-0  relative after:content-[''] after:absolute after:left-3 after:z-30 after:top-[calc(90%+10px)]  after:w-[calc(60%)]  after:bg-[#6647FF] `}
     >
-      {data.communityGroupLogoUrl ? (
+      {data?.communityGroupLogoUrl?.imageUrl ? (
         <img className="w-10 h-10 object-cover rounded-full" src={data?.communityGroupLogoUrl.imageUrl} alt="dp" />
       ) : (
         <div className="w-10 h-10 object-cover rounded-full bg-orange"></div>

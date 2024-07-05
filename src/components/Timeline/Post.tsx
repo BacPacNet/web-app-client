@@ -5,7 +5,7 @@ import { FaComment } from 'react-icons/fa'
 import { IoPaperPlaneSharp } from 'react-icons/io5'
 // import Image from 'next/image'
 import { SlOptions } from 'react-icons/sl'
-import { FaArrowUp, FaArrowDown, FaBookmark } from 'react-icons/fa6'
+import { FaBookmark } from 'react-icons/fa6'
 import { MdOutlineImage } from 'react-icons/md'
 import { MdGifBox, MdOutlineBookmarkBorder } from 'react-icons/md'
 import { HiReply, HiOutlineBell, HiOutlineFlag } from 'react-icons/hi'
@@ -24,7 +24,7 @@ import {
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
 import { AiOutlineLike } from 'react-icons/ai'
-import { useCreateGroupPostComment, useLikeUnilikeGroupPost } from '@/services/community-university'
+import { useCreateGroupPostComment, useLikeUnilikeGroupPost, useLikeUnlikeGroupPostComment } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -153,14 +153,14 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const { mutate: LikeUnlikePost } = useLikeUnilikeGroupPost()
   const { mutate: CreateComment } = useCreateGroupPostComment()
+  const { mutate: likePostComment } = useLikeUnlikeGroupPostComment()
   const [comment, setComment] = useState('')
-  const [ImageValue, setImageValue] = useState('')
+  const [ImageValue, setImageValue] = useState<File | null>(null)
 
   const [showCommentSec, setShowCommentsec] = useState(false)
   const { userData } = useUniStore()
 
   const LikesUserId: string[] = Array.isArray(likes) ? likes.map((item) => item.userId) : []
-
   const handlePostComment = async () => {
     if (comment.length <= 1) {
       return console.log('Please type something to comment!')
@@ -182,6 +182,7 @@ const Post: React.FC<PostProps> = ({
       CreateComment(data)
     }
   }
+
   return (
     <div
       className={`${
@@ -235,7 +236,7 @@ const Post: React.FC<PostProps> = ({
           {/* Post Actions */}
           <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
             <div onClick={() => LikeUnlikePost(postID)} className="flex items-center cursor-pointer">
-              <AiOutlineLike color={LikesUserId.includes(userData?.id) ? 'green' : ''} />
+              <AiOutlineLike color={LikesUserId.includes(userData?.id) ? '#6647FF' : ''} />
               <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes?.length ? likes?.length : 0}</span>
             </div>
             <div onClick={() => setShowCommentsec(!showCommentSec)} className="flex items-center">
@@ -277,8 +278,13 @@ const Post: React.FC<PostProps> = ({
                 />
                 <MdGifBox size={24} color="#737373" />
                 <div>
-                  <input style={{ display: 'none' }} type="file" id="CommentsImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
-                  <label htmlFor="CommentsImage">
+                  <input
+                    style={{ display: 'none' }}
+                    type="file"
+                    id={`CommentsImage${postID}`}
+                    onChange={(e: any) => setImageValue(e.target.files[0])}
+                  />
+                  <label htmlFor={`CommentsImage${postID}`}>
                     <MdOutlineImage size={24} color="#737373" />
                   </label>
                 </div>
@@ -290,6 +296,14 @@ const Post: React.FC<PostProps> = ({
                 )}
               </div>
             </div>
+            {ImageValue && (
+              <div className="relative w-11/12">
+                <img className="" src={URL.createObjectURL(ImageValue)} alt="" />
+                <p onClick={() => setImageValue(null)} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
+                  X
+                </p>
+              </div>
+            )}
             {userComments.length && showCommentSec ? <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div> : ''}
             {/* Comments Section */}
             <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''} xs:max-w-xs sm:max-w-max flex flex-col gap-2 `}>
@@ -322,10 +336,9 @@ const Post: React.FC<PostProps> = ({
                   </div>
                   {/* Comment Actions */}
                   <div className="flex justify-end mt-3 gap-10">
-                    <div className="flex items-center">
-                      <FaArrowUp className="text-gray-dark" />
-                      <span className="mx-1 text-sm">{comment?.likes}</span>
-                      <FaArrowDown className="text-gray-500" />
+                    <div onClick={() => likePostComment(comment?._id)} className="flex items-center cursor-pointer">
+                      <AiOutlineLike color={comment?.likeCount?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
+                      <span className="mx-1 text-sm">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
                     </div>
                     <div
                       className="flex items-center cursor-pointer"

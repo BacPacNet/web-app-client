@@ -19,15 +19,12 @@ export const useHandleLogin = () => {
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const setUserFollowingData = useUniStore((state) => state.setUserFollowingData)
 
-  const [_, setCookieValue] = useCookie('uni_user_token')
-  const [__, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
+  const [, setCookieValue] = useCookie('uni_user_token')
+  const [, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
-      console.log(_, __)
-
       setUserData(response.user)
       setUserProfileData(response.userProfile)
       setUserFollowingData(response.Following)

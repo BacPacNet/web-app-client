@@ -15,6 +15,7 @@ import { ModalContentType } from '@/types/global'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
+import Navbar from '@/components/Timeline/Navbar'
 
 const roberta = {
   avatarUrl: '/timeline/avatar2.png',
@@ -55,7 +56,7 @@ const Page = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-
+      <Navbar />
       <div className="flex flex-col items-center w-full gap-6 mt-10  pb-10">
         <HeroSec data={data} isJoined={isJoined} setIsJoined={setIsJoined} />
         <div className="flex justify-center w-11/12 max-sm:w-full max-md:w-11/12  max-xl:w-full max-md:flex-col px-16 max-sm:px-4">

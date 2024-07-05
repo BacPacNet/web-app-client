@@ -41,8 +41,6 @@ export async function JoinCommunityGroup(communityGroupId: string, token: any) {
 }
 
 export async function CreateCommunityGroup(communityId: string, token: any, data: any) {
-  console.log('data', data)
-
   const response = await client(`/communitygroup/${communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
@@ -69,6 +67,14 @@ export async function CreateGroupPost(data: any, token: any) {
 }
 export async function CreateGroupPostComment(data: any, token: any) {
   const response = await client(`/communitypostcomment/${data.postID}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
+  return response
+}
+
+export async function LikeUnilikeGroupPostCommnet(communityGroupPostCommentId: string, token: any) {
+  const response = await client(`/communitypostcomment/likeUnlike/${communityGroupPostCommentId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -107,8 +113,6 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: (communityId: any) => JoinCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
-
       setUserData(response.user)
     },
     onError: (res: any) => {
@@ -124,7 +128,6 @@ export const useLeaveCommunity = () => {
   return useMutation({
     mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
       setUserData(response.user)
     },
     onError: (res: any) => {
@@ -258,6 +261,21 @@ export const useCreateGroupPostComment = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
+export const useLikeUnlikeGroupPostComment = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (communityGroupPostCommentId: any) => LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })

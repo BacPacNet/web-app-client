@@ -20,7 +20,6 @@ export async function UpdateCommunityGroup(data: any, token: any) {
 
 export function useGetNotification() {
   const [cookieValue] = useCookie('uni_user_token')
-  //   console.log('tt', !!cookieValue)
 
   const { isLoading, data, error } = useQuery({
     queryKey: ['notification'],

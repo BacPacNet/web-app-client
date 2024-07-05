@@ -8,8 +8,8 @@ export interface RegisterForm {
   email: string
   gender: string
   dob: any
-  country: string
-  city: string
+  country?: string
+  city?: string
   password: string
   confirmPassword: string // only for client side validation
   tnc: boolean // only for client side validation
