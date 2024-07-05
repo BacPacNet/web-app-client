@@ -4,6 +4,7 @@ import { useUniStore } from '@/store/store'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaLock } from 'react-icons/fa'
 import { CiImageOn } from 'react-icons/ci'
+import { IoMdSettings } from 'react-icons/io'
 
 const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGroup }: any) => {
   const { mutate: JoinCommunityGroup } = useJoinCommunityGroup()
@@ -13,6 +14,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
   const [logoImage, setLogoImage] = useState('')
   const [tempImg, setTempImg] = useState('')
   const [uploadFunc, setUploadFunc] = useState('')
+
   const userVerifiedCommunityGroupIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
   }, [userData])
@@ -140,19 +142,30 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
           <p className="text-sm font-semibold text-neutral-500 mt-2 max-lg:hidden">{data?.memberCount} Members </p>
           <div className="lg:hidden flex justify-between items-center">
             <p className="text-sm font-semibold text-neutral-500 mt-4">{data?.memberCount} Members </p>
-            <button onClick={() => JoinCommunityGroup(data?._id)} className=" bg-[#6647FF] py-2 px-3 text-white rounded-md">
-              {isJoinedInGroup ? 'Leave Group' : 'Join Group'}
-            </button>
+            {data?.adminUserId?._id == userData.id ? (
+              <button className=" bg-[#6647FF] py-3 px-3 text-white rounded-full min-w-fit">
+                <IoMdSettings />
+              </button>
+            ) : (
+              <button onClick={() => JoinCommunityGroup(data?._id)} className=" bg-[#6647FF] py-2 px-3 text-white rounded-md">
+                {isJoinedInGroup ? 'Leave Group' : 'Join Group'}
+              </button>
+            )}
           </div>
         </div>
-
-        <button
-          onClick={() => JoinCommunityGroup(data?._id)}
-          disabled={!isJoinedinCommunity}
-          className="max-lg:hidden bg-[#6647FF] py-2 px-3 text-white rounded-md min-w-fit"
-        >
-          {isJoinedInGroup ? 'Leave Group' : 'Join Group'}
-        </button>
+        {data?.adminUserId?._id == userData.id ? (
+          <button className="max-lg:hidden bg-[#6647FF] py-3 px-3 text-white rounded-full min-w-fit">
+            <IoMdSettings />
+          </button>
+        ) : (
+          <button
+            onClick={() => JoinCommunityGroup(data?._id)}
+            disabled={!isJoinedinCommunity}
+            className="max-lg:hidden bg-[#6647FF] py-2 px-3 text-white rounded-md min-w-fit"
+          >
+            {isJoinedInGroup ? 'Leave Group' : 'Join Group'}
+          </button>
+        )}
       </div>
     </div>
   )

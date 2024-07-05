@@ -72,6 +72,14 @@ export async function CreateGroupPostComment(data: any, token: any) {
   return response
 }
 
+export async function LikeUnilikeGroupPostCommnet(communityGroupPostCommentId: string, token: any) {
+  const response = await client(`/communitypostcomment/likeUnlike/${communityGroupPostCommentId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
 export function useGetCommunity(communityId: string) {
   const { isLoading, data, error } = useQuery({
     queryKey: ['community', communityId],
@@ -258,6 +266,21 @@ export const useCreateGroupPostComment = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
+export const useLikeUnlikeGroupPostComment = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (communityGroupPostCommentId: any) => LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })

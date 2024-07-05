@@ -5,12 +5,14 @@ import { useJoinCommunity, useLeaveCommunity, useUpdateCommunity } from '@/servi
 import { useUniStore } from '@/store/store'
 import { CiImageOn } from 'react-icons/ci'
 import { replaceImage } from '@/services/uploadImage'
+import { IoMdSettings } from 'react-icons/io'
 
 const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
   const { mutate: JoinCommunity } = useJoinCommunity()
   const { mutate: LeaveCommunity } = useLeaveCommunity()
   const { mutate: updateCommunity } = useUpdateCommunity()
   const { userData } = useUniStore()
+  // console.log('data', data)
 
   const userVerifiedCommunityIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []
@@ -63,7 +65,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
     <div className=" w-10/12 max-xl:w-11/12 max-md:w-9/12 max-sm:w-11/12 overflow-hidden border-2 border-neutral-300 rounded-lg pb-10">
       {/* top section  */}
       <div className="h-96 max-md:h-[28rem] relative flex max-md:flex-col justify-between max-md:justify-end items-end max-md:items-center ">
-        {data?.community?.communityCoverUrl ? (
+        {data?.community?.communityCoverUrl?.imageUrl ? (
           <>
             <img
               className="absolute bottom-20 -z-10 object-cover w-full h-full max-md:bottom-52"
@@ -103,10 +105,10 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
           </div>
         </div>
         <div className="flex flex-col items-center max-md:gap-2 relative">
-          {data?.community?.communityLogoUrl ? (
+          {data?.community?.communityLogoUrl?.imageUrl ? (
             <>
               <img
-                className="w-28 h-28 object-contain border-4 border-neutral-300 rounded-full bg-white"
+                className="w-28 h-28 object-cover border-4 border-neutral-300 rounded-full bg-white"
                 src={data?.community?.communityLogoUrl.imageUrl}
                 alt="dp"
               />
@@ -139,12 +141,16 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
             <img className="object-contain" src={chatboticon.src} alt="chatboticon" />
             <label className="text-neutral-500 font-medium max-lg:text-sm">Chatbot Support</label>
           </div>
-          {!isJoined ? (
+          {!isJoined && data?.community?.adminId != userData.id ? (
             <button
               onClick={() => JoinCommunity(data?.community?._id)}
               className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0"
             >
               Join Community
+            </button>
+          ) : data?.community?.adminId == userData.id ? (
+            <button className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0">
+              <IoMdSettings />
             </button>
           ) : (
             <button
