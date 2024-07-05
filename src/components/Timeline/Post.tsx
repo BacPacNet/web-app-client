@@ -155,7 +155,7 @@ const Post: React.FC<PostProps> = ({
   const { mutate: CreateComment } = useCreateGroupPostComment()
   const { mutate: likePostComment } = useLikeUnlikeGroupPostComment()
   const [comment, setComment] = useState('')
-  const [ImageValue, setImageValue] = useState<any>()
+  const [ImageValue, setImageValue] = useState<File | null>(null)
 
   const [showCommentSec, setShowCommentsec] = useState(false)
   const { userData } = useUniStore()
@@ -182,7 +182,6 @@ const Post: React.FC<PostProps> = ({
       CreateComment(data)
     }
   }
-  // console.log('cc', userComments, ImageValue)
 
   return (
     <div
@@ -300,7 +299,7 @@ const Post: React.FC<PostProps> = ({
             {ImageValue && (
               <div className="relative w-11/12">
                 <img className="" src={URL.createObjectURL(ImageValue)} alt="" />
-                <p onClick={() => setImageValue('')} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
+                <p onClick={() => setImageValue(null)} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
                   X
                 </p>
               </div>

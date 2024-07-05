@@ -20,7 +20,7 @@ interface PostInputProps {
 
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
   const [inputValue, setInputValue] = useState('')
-  const [ImageValue, setImageValue] = useState<any>()
+  const [ImageValue, setImageValue] = useState<File | null>(null)
   const { mutate: CreateGroupPost } = useCreateGroupPost()
 
   const handleEmojiClick = (emojiData: any) => {
@@ -71,7 +71,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
           {ImageValue && (
             <div className="relative w-11/12">
               <img className="" src={URL.createObjectURL(ImageValue)} alt="" />
-              <p onClick={() => setImageValue('')} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
+              <p onClick={() => setImageValue(null)} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
                 X
               </p>
             </div>

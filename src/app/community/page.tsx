@@ -28,8 +28,6 @@ import { useGetUserSubscribedCommunityGroups } from '@/services/university-commu
 
 const Page = () => {
   const { data: SubscribedData, isLoading } = useGetUserSubscribedCommunityGroups()
-  console.log(SubscribedData)
-  //   const bool = false
   return (
     <>
       <Navbar />

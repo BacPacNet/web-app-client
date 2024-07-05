@@ -28,8 +28,6 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   } = useForm()
   const values = getValues()
   const onGroupSubmit = async (data: any) => {
-    // return console.log(data)
-
     let CoverImageData
     let logoImageData
 
@@ -51,14 +49,9 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
     // return console.log(id)
 
     createGroup({ communityId: id, data: dataToPush })
-    // return console.log(dataToPush)
   }
 
   const { data } = useGetCommunityUsers(id, userPopUp, values.communityGroupType, searchInput)
-  console.log('selec', selectedUsersId)
-  // console.log('getValu', values)
-
-  console.log('sad', data?.user)
 
   return (
     <>

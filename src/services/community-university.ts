@@ -41,8 +41,6 @@ export async function JoinCommunityGroup(communityGroupId: string, token: any) {
 }
 
 export async function CreateCommunityGroup(communityId: string, token: any, data: any) {
-  console.log('data', data)
-
   const response = await client(`/communitygroup/${communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
@@ -115,8 +113,6 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: (communityId: any) => JoinCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
-
       setUserData(response.user)
     },
     onError: (res: any) => {
@@ -132,7 +128,6 @@ export const useLeaveCommunity = () => {
   return useMutation({
     mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
       setUserData(response.user)
     },
     onError: (res: any) => {

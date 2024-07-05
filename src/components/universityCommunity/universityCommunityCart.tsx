@@ -19,7 +19,6 @@ const UniversityCommunityCart = ({ UniversityName, UniversityAddress, University
     : 'Not Available'
 
   const handleClick = () => {
-    // console.log(UniversityLink)
     if (UniversityLink) {
       router.push(`/community/${UniversityLink}`)
     }

@@ -27,8 +27,6 @@ const SignUp = () => {
   const onSignupSubmit: SubmitHandler<RegisterForm> = (data) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, tnc, country, city, ...signupData } = data
-    console.log(data)
-    console.log('signup errors', signupErrors)
     mutateRegister(signupData)
   }
 
