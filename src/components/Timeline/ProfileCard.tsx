@@ -23,26 +23,6 @@ interface ProfileProps {
   userProfileData: userProfileType
 }
 
-const ProfileItem = ({
-  iconName,
-  text,
-  size,
-  textClassName,
-}: {
-  iconName: React.ComponentType<{ size: number; color: string }>
-  text: string | any
-  size?: number
-  textClassName?: string
-}) => {
-  const iconSize = size ? size : 22
-  return (
-    <div className="flex flex-row gap-3 items-center">
-      {React.createElement(iconName, { size: iconSize, color: '#404040' })}
-      <p className={cn('text-gray-600 text-xs font-medium break-words', textClassName)}>{text}</p>
-    </div>
-  )
-}
-
 const ProfileCard: React.FC<ProfileProps> = ({
   following,
   followers,
@@ -59,7 +39,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData.profile_dp?.publicId)
+      const data: any = await replaceImage(files[0], userProfileData?.profile_dp?.publicId)
 
       const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
 
@@ -72,7 +52,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData.cover_dp?.publicId)
+      const data: any = await replaceImage(files[0], userProfileData?.cover_dp?.publicId)
 
       const dataToPush = { cover_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
 
@@ -81,6 +61,42 @@ const ProfileCard: React.FC<ProfileProps> = ({
       console.error('No file selected.')
     }
   }
+
+  const ProfileItem = ({
+    iconName,
+    text,
+    size,
+    textClassName,
+    field,
+  }: {
+    iconName: React.ComponentType<{ size: number; color: string }>
+    text: string | undefined
+    size?: number
+    textClassName?: string
+    field?: string
+  }) => {
+    const iconSize = size ? size : 22
+    const error = text === undefined || text.includes('undefined') || text.includes('null') || text.includes('NaN')
+    return (
+      <div className="flex flex-row gap-3 items-center">
+        {React.createElement(iconName, { size: iconSize, color: '#404040' })}
+        {!error ? (
+          <p className={cn('text-gray-600 text-xs font-medium break-words', textClassName)}>{text}</p>
+        ) : (
+          <p
+            className={cn('text-slate-400 text-xs font-medium break-words cursor-pointer', textClassName)}
+            onClick={() => {
+              setModalContentType('EditProfileModal')
+              setIsModalOpen(true)
+            }}
+          >
+            {field ? `Add your ${field}` : 'Add to Profile'}
+          </p>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="relative sm:max-w-md lg:max-w-[280px] bg-white rounded-lg shadow-md overflow-hidden border-2 border-gray-dark min-w-[300px]">
       {/* if no data then show  */}
@@ -101,7 +117,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
 
       <div className="relative lg:max-w-xs w-full">
         {/* Cover Image */}
-        {userProfileData.cover_dp?.imageUrl ? (
+        {userProfileData?.cover_dp?.imageUrl ? (
           <div
             className="relative h-28 bg-cover bg-center group"
             style={{ backgroundImage: `url(${userProfileData?.cover_dp?.imageUrl})`, objectFit: 'cover' }}
@@ -114,11 +130,11 @@ const ProfileCard: React.FC<ProfileProps> = ({
             </div>
           </div>
         ) : (
-          <div className="relative h-28 bg-cover bg-center bg-orange group">
-            <div className="group-hover:block hover:block hidden absolute top-1/4 left-1/2">
+          <div className="relative h-28 bg-cover bg-center bg-primary-50 group">
+            <div className="group-hover:block hover:block hidden absolute top-1/4 left-[40%] border border-primary py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
               <input style={{ display: 'none' }} type="file" id="file" onChange={(e) => handleCoverImageUpload(e)} />
               <label htmlFor="file">
-                <p className="">Upload</p>
+                <p className="cursor-pointer">Upload</p>
               </label>
             </div>
           </div>
@@ -128,16 +144,16 @@ const ProfileCard: React.FC<ProfileProps> = ({
           <div className="flex">
             <div className="group relative">
               <img
-                src={`${userProfileData.profile_dp?.imageUrl ? userProfileData.profile_dp.imageUrl : '/timeline/avatar.png'} `}
+                src={`${userProfileData?.profile_dp?.imageUrl ? userProfileData.profile_dp.imageUrl : '/icons/avatar.svg'} `}
                 alt="Profile"
                 className="h-24 w-24 rounded-full border-4 border-white"
                 width={24}
                 height={24}
               />
-              <div className="group-hover:block hidden absolute top-1/2 left-1/4">
+              <div className="group-hover:block hidden absolute top-1/3 left-[15%] bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
                 <input style={{ display: 'none' }} type="file" id="file2" onChange={(e) => handleImageUpload(e)} />
                 <label htmlFor="file2">
-                  <p className="">Upload</p>
+                  <p className="cursor-pointer">Upload</p>
                 </label>
               </div>
             </div>
@@ -162,12 +178,17 @@ const ProfileCard: React.FC<ProfileProps> = ({
           <ProfileItem
             iconName={RiGraduationCapFill}
             text={userProfileData?.study_year + ' Year' + ', ' + userProfileData?.degree + ', ' + userProfileData?.major}
+            field="Education"
           />
-          <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData?.major} />
-          <ProfileItem iconName={FaLocationDot} text={userProfileData?.city + ' ' + userProfileData?.country} />
-          <ProfileItem iconName={MdEmail} text={userData.email} textClassName="break-all" />
-          <ProfileItem iconName={MdPhone} text={userProfileData?.phone_number} />
-          <ProfileItem iconName={FaBirthdayCake} text={userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : ''} />
+          <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData?.major} field="Department" />
+          <ProfileItem iconName={FaLocationDot} text={userProfileData?.city + ' ' + userProfileData?.country} field="Location" />
+          <ProfileItem iconName={MdEmail} text={userData.email} textClassName="break-all" field="Email" />
+          <ProfileItem iconName={MdPhone} text={userProfileData?.phone_number} field="Contact" />
+          <ProfileItem
+            iconName={FaBirthdayCake}
+            text={userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : undefined}
+            field="Birthday"
+          />
         </div>
         <p className="mt-6 text-lg font-medium">Connections</p>
         <div

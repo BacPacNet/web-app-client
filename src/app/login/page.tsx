@@ -24,7 +24,6 @@ const Login = () => {
 
   const onLoginSubmit: SubmitHandler<LoginForm> = async (data) => {
     await mutateLogin(data)
-
     // if (userProfileData?._id) {
     //   router.push(`/community/${userProfileData._id}/timeline`)
     // } else {
