@@ -1,4 +1,5 @@
 'use client'
+import { ButtonPrimary } from '@/components/Buttons/PrimaryButton'
 import { useEditProfile } from '@/services/edit-profile'
 import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -61,7 +62,7 @@ const EditProfileModal = () => {
     <div className=" flex flex-col justify-center px-6 py-8 rounded-xl w-[85%] lg:w-[500px] mx-4">
       <h1 className="text-xl font-bold mb-1 text-[#404040]">Edit Profile</h1>
       <p>This will show up on your profile for others to see</p>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col font-medium text-sm">
+      <form className="flex flex-col font-medium text-sm">
         <label htmlFor="fullname" className="py-1 mt-5">
           Full Name
         </label>
@@ -171,7 +172,9 @@ const EditProfileModal = () => {
           className=" border px-3 py-2 text-md rounded-lg border-gray-light font-normal text-gray"
         />
         {errors.dob && <span className="text-red-500 font-normal">Please enter your birth date!</span>}
-        <input disabled={isPending} type="submit" value="Update Profile" className="bg-primary py-3 mt-16 rounded-lg text-white font-medium mb-5" />
+        <ButtonPrimary onClick={handleSubmit(onSubmit)} disabled={isPending} className="mt-16 font-medium mb-5">
+          Update Profile
+        </ButtonPrimary>
         <button className="bg-primary-50 py-3 rounded-lg text-primary font-medium mb-5" onClick={() => reset()}>
           Redo Changes
         </button>

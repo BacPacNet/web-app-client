@@ -4,6 +4,7 @@ import Navbar from '@/components/Timeline/Navbar'
 import Footer from '@/components/Footer/Footer'
 import UniversityCard from '@/components/universityCommunity/universityCommunityCart'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
+import Loading from '../loading'
 
 // const data = [
 //   {
@@ -28,14 +29,15 @@ import { useGetUserSubscribedCommunityGroups } from '@/services/university-commu
 
 const Page = () => {
   const { data: SubscribedData, isLoading } = useGetUserSubscribedCommunityGroups()
+
+  if (isLoading) return <Loading />
+
   return (
     <>
       <Navbar />
       <div className="flex flex-col min-h-[62vh] items-center ">
         <h3 className="py-10 text-xl font-bold text-neutral-700">Joined Communities</h3>
-        {isLoading ? (
-          <div>Loading</div>
-        ) : SubscribedData?.community?.length ? (
+        {SubscribedData?.community?.length ? (
           <div className="flex gap-10 flex-wrap justify-center">
             {SubscribedData?.community?.map((item: any) => (
               <UniversityCard

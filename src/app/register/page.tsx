@@ -8,6 +8,7 @@ import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import { RegisterForm } from '@/models/auth'
 import { useHandleRegister } from '@/services/auth'
+import { ButtonPrimary } from '@/components/Buttons/PrimaryButton'
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -39,7 +40,7 @@ const SignUp = () => {
           </div>
           <h1 className="text-2xl font-extrabold mb-1">Sign Up</h1>
           <p>Start your journey with us by creating an account!</p>
-          <form onSubmit={handleSubmitSignup(onSignupSubmit)} className="flex flex-col font-medium">
+          <form className="flex flex-col font-medium">
             <label htmlFor="firstname" className="py-1 mt-5">
               First Name
             </label>
@@ -224,7 +225,8 @@ const SignUp = () => {
               </label>
             </div>
             {signupErrors.tnc && <span className="text-red-500 font-normal">Required!</span>}
-            <input type="submit" value="Sign Up" className="bg-primary py-2 rounded-lg text-white text-lg font-normal mb-5 mt-4" />
+            {/*<input type="submit" value="Sign Up" className="bg-primary py-2 rounded-lg text-white text-lg font-normal mb-5 mt-4" />*/}
+            <ButtonPrimary onClick={handleSubmitSignup(onSignupSubmit)}>Signd Up</ButtonPrimary>
             <p className="text-md text-center text-gray font-medium px-2">
               Already a member?{' '}
               <span className="text-primary cursor-pointer">

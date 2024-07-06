@@ -6,6 +6,6 @@ export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Notifications', href: '/notifications' },
   { label: 'Messages', href: '/messages' },
   { label: 'Connections', href: '/community/:id/connections' },
-  { label: 'University Community', href: '/community/:id' },
+  { label: 'University Community', href: '/community' },
   { label: 'Chatbot', href: '/chatbot' },
 ]
