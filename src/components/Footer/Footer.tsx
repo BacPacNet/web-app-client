@@ -3,7 +3,7 @@ import './Footer.css'
 
 import Image from 'next/image'
 import React from 'react'
-import facebook from '@assets/Facebook.svg'
+import facebook from '@assets/facebook.svg'
 import insta from '@assets/instagram.svg'
 import linkedin from '@assets/linkedin.svg'
 import x from '@assets/X.svg'
