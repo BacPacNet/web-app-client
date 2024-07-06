@@ -70,3 +70,17 @@ body {
     border: transparent;
   }
 }
+
+.primary-btn {
+  background-color: #6647ff;
+  border-radius: 4px;
+  color: white;
+  padding: 8px 24px;
+  width: 100%;
+}
+.primary-btn:hover {
+  background-color: #5d40ee;
+}
+.primary-btn:active {
+  background-color: #553adc;
+}

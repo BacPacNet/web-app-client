@@ -25,6 +25,7 @@ import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { ButtonPrimary } from '../Buttons/PrimaryButton'
 
 interface MenuItem {
   name: string
@@ -149,31 +150,19 @@ const Navbar: React.FC = () => {
       case false:
         return (
           <>
-            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-              <Link href={'/register'}>Sign Up</Link>
-            </button>
-            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-              <Link href={'/login'}>Login</Link>
-            </button>
+            <Link href={'/register'}>
+              {' '}
+              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up </button>
+            </Link>
+
+            <Link href={'/login'}>
+              <ButtonPrimary className="text-sm font-medium">Login</ButtonPrimary>
+            </Link>
           </>
         )
       default:
         return <Skeleton className=" w-[40%] h-10 rounded-2xl bg-primary-50" />
     }
-
-    if (isLogin) {
-      return <LoggedInMenu />
-    }
-    return (
-      <>
-        <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-          <Link href={'/register'}>Sign Up</Link>
-        </button>
-        <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-          <Link href={'/login'}>Login</Link>
-        </button>
-      </>
-    )
   }
 
   const FilteredMenuComponent = () => {
@@ -235,7 +224,7 @@ const Navbar: React.FC = () => {
               ) : null}
             </>
           </div>
-          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
+          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex gap-6 justify-end center-v'}>
             <AuthButtons />
           </div>
           <div
