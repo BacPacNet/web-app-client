@@ -46,7 +46,7 @@ const Login = () => {
             <img src="/unibuzzLogo.png" alt="uniBuzz Logo" />
           </div>
           <h1 className="text-2xl font-extrabold py-6 text-center">Login to your account</h1>
-          <form onSubmit={handleSubmitLogin(onLoginSubmit)} className="flex flex-col font-medium">
+          <form className="flex flex-col font-medium">
             <label htmlFor="email" className="py-1">
               Email Address
             </label>
@@ -95,8 +95,9 @@ const Login = () => {
                 Remember Me
               </label>
             </div>*/}
-            {/*<input type="submit" value="Login" className="py-2 rounded-xl text-white text-lg font-normal mb-5" />*/}
-            <ButtonPrimary className="py-2 rounded-xl text-white text-lg font-normal mb-5">Login</ButtonPrimary>
+            <ButtonPrimary onClick={handleSubmitLogin(onLoginSubmit)} className="py-2 rounded-xl text-white text-lg font-normal mb-5">
+              Login
+            </ButtonPrimary>
             <p className="text-md text-center text-gray font-medium px-2">
               Don&apos;t have an account?{' '}
               <span className="text-primary cursor-pointer">
