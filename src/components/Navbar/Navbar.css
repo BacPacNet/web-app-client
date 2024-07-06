@@ -93,14 +93,6 @@
   border-radius: 4px;
   opacity: 1;
 }
-.btn-secondary {
-  background-color: #6647ff;
-  width: 85px;
-  height: 36px;
-  gap: 12px;
-  border-radius: 4px;
-  opacity: 1;
-}
 
 .nav-link-ltr.active::before {
   width: 100%;
