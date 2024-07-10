@@ -36,7 +36,6 @@ const EditProfileModal = () => {
   } = useForm<editProfileInputs>({
     defaultValues: {
       fullname: userData.firstName,
-      email: userProfileData?.email[0]?.UniversityEmail || '',
       bio: userProfileData?.bio,
       phone_number: userProfileData?.phone_number,
       dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
@@ -132,26 +131,6 @@ const EditProfileModal = () => {
         </label>
         <input {...register('city')} placeholder="City" className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal" />
         {errors.city && <span className="text-red-500 font-normal">Please enter your City!</span>}
-        <label htmlFor="email" className="py-1 mt-5">
-          Email
-        </label>
-        <input
-          {...register('email', {
-            required: true,
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-              message: 'Please enter a valid email address',
-            },
-          })}
-          placeholder="Email Address"
-          className=" border pl-3 py-2 text-md rounded-lg border-gray-light font-normal"
-        />
-        {errors.email && (
-          <span className="text-red-500 font-normal">
-            {' '}
-            {typeof errors.email.message === 'string' ? errors.email.message : 'Please enter your email!'}
-          </span>
-        )}
         <label htmlFor="phone_number" className="py-1 mt-5">
           Phone Number
         </label>
