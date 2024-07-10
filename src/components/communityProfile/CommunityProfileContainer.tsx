@@ -88,7 +88,7 @@ const CommunityProfileContainer = () => {
             setModalContentType={setModalContentType}
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
-            media="https://cdn.pixabay.com/photo/2016/04/07/18/36/architecture-1314416_1280.jpg"
+            media={[]}
           />
         ) : selectedOption == valueType.Saved ? (
           <Post
