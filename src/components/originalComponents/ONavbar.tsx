@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import bacpacLogo from '../../../assets/bacpacLogo.png'
 import { usePathname } from 'next/navigation'
+import { ButtonPrimary } from '../Buttons/PrimaryButton'
 
 const Navbar: React.FC = () => {
   const pathname = usePathname()
@@ -46,7 +47,7 @@ const Navbar: React.FC = () => {
       </div>
       <div className=" w-1/4 center-v justify-start h-full">
         <button className="btn btn-primary w-1/3 h-10">Sign Up</button>
-        <button className="btn btn-secondary ml-6 w-1/3 h-10">Login</button>
+        <ButtonPrimary className="ml-6 w-1/3 h-10">Login</ButtonPrimary>
       </div>
     </div>
   )

@@ -13,7 +13,7 @@ export function useGetUserSubscribedCommunityGroups() {
   const { isLoading, data, error } = useQuery({
     queryKey: ['UserSubscribedCommunityGroups'],
     queryFn: () => getUserSubscribedCommunityGroups(cookieValue),
-    enabled: !!cookieValue,
+    enabled: true,
   })
 
   let errorMessage = null

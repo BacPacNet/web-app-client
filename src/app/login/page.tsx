@@ -10,6 +10,7 @@ import { useHandleLogin } from '@/services/auth'
 import { LoginForm } from '@/models/auth'
 // import { useUniStore } from '@/store/store'
 import { useRouter } from 'next/navigation'
+import { ButtonPrimary } from '@/components/Buttons/PrimaryButton'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -45,7 +46,7 @@ const Login = () => {
             <img src="/unibuzzLogo.png" alt="uniBuzz Logo" />
           </div>
           <h1 className="text-2xl font-extrabold py-6 text-center">Login to your account</h1>
-          <form onSubmit={handleSubmitLogin(onLoginSubmit)} className="flex flex-col font-medium">
+          <form className="flex flex-col font-medium">
             <label htmlFor="email" className="py-1">
               Email Address
             </label>
@@ -94,7 +95,9 @@ const Login = () => {
                 Remember Me
               </label>
             </div>*/}
-            <input type="submit" value="Login" className="bg-primary py-2 rounded-xl text-white text-lg font-normal mb-5" />
+            <ButtonPrimary onClick={handleSubmitLogin(onLoginSubmit)} className="py-2 rounded-xl text-white text-lg font-normal mb-5">
+              Login
+            </ButtonPrimary>
             <p className="text-md text-center text-gray font-medium px-2">
               Don&apos;t have an account?{' '}
               <span className="text-primary cursor-pointer">

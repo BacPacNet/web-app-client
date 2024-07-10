@@ -12,6 +12,7 @@ import { motion } from 'framer-motion'
 import StarIcon from '../assets/stars.svg'
 import Image from 'next/image'
 import DiscordIcon from '@assets/discord.svg'
+import { ButtonPrimary } from '@/components/Buttons/PrimaryButton'
 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -51,7 +52,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex justify-center items-center w-28 my-3">
-              <button className="btn-secondary btn w-28 h-10 center px-4 py-2.5">Login</button>
+              <ButtonPrimary className="btn w-28 h-10 center px-4 py-2.5">Login</ButtonPrimary>
             </div>
             <div className="checkbox flex justify-center items-center">
               <input type="checkbox" name="login" id="login" className="box w-6 h-6 cursor-pointer" />

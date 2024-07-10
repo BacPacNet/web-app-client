@@ -11,7 +11,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 //import demopic from '@assets/demopic.jpg'
 import star from '@assets/star.png'
-import unibuzzLogo from '@assets/logo.svg'
+import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import { TbMailFilled } from 'react-icons/tb'
 import { FaBell } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
@@ -25,6 +25,7 @@ import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
 import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { ButtonPrimary } from '../Buttons/PrimaryButton'
 
 interface MenuItem {
   name: string
@@ -149,31 +150,19 @@ const Navbar: React.FC = () => {
       case false:
         return (
           <>
-            <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-              <Link href={'/register'}>Sign Up</Link>
-            </button>
-            <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-              <Link href={'/login'}>Login</Link>
-            </button>
+            <Link href={'/register'}>
+              {' '}
+              <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">Sign Up </button>
+            </Link>
+
+            <Link href={'/login'}>
+              <ButtonPrimary className="text-sm font-medium">Login</ButtonPrimary>
+            </Link>
           </>
         )
       default:
         return <Skeleton className=" w-[40%] h-10 rounded-2xl bg-primary-50" />
     }
-
-    if (isLogin) {
-      return <LoggedInMenu />
-    }
-    return (
-      <>
-        <button className="btn btn-primary text-sm font-medium text-[#6647FF] text-right ">
-          <Link href={'/register'}>Sign Up</Link>
-        </button>
-        <button className="btn btn-secondary ml-6 text-right text-sm font-medium ">
-          <Link href={'/login'}>Login</Link>
-        </button>
-      </>
-    )
   }
 
   const FilteredMenuComponent = () => {
@@ -214,10 +203,9 @@ const Navbar: React.FC = () => {
       <div className="navbar justify-around w-full center-v h-16 sticky top-0 px-6 xl:px-28 bg-white">
         <div className="flex w-full center-v justify-between">
           <div className="w-1/6">
-            <div className="flex">
+            <div className="flex max-w-[150px] min-w-[100px]">
               <Link className="flex gap-4 center-v" href="/">
                 <Image src={unibuzzLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer" />
-                <span>Unibuzz</span>
               </Link>
             </div>
           </div>
@@ -235,7 +223,7 @@ const Navbar: React.FC = () => {
               ) : null}
             </>
           </div>
-          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex justify-end center-v'}>
+          <div className={open ? 'hidden' : 'w-1/4 hidden md:flex gap-6 justify-end center-v'}>
             <AuthButtons />
           </div>
           <div
