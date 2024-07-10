@@ -24,9 +24,9 @@ const UniversityCommunityCart = ({ UniversityName, UniversityAddress, University
     }
   }
   return (
-    <div className="flex flex-col gap-4 items-center ">
+    <div className="flex flex-col gap-4 items-center w-1/4 max-sm:w-80 h-80 justify-between">
       <img className="w-40 h-40 bg-white shadow-lg rounded-full p-4" src={universityLogo} alt="" />
-      <h3 className="text-sm font-semibold">{UniversityName}</h3>
+      <h3 className="text-sm font-semibold text-center">{UniversityName}</h3>
       <p className="text-xs text-neutral-500 max-w-[90%] text-center">{address}</p>
       <button onClick={() => handleClick()} className="text-primary bg-primary-50 px-4 py-2 rounded-lg">
         University Page
