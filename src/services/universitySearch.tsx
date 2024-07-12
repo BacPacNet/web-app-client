@@ -31,3 +31,8 @@ export async function getUniversitySearch(searchTerm: string) {
   const response = await client(`university/searched?searchTerm=${searchTerm}`)
   return response
 }
+
+export async function getUniversity(pathUrl: string) {
+  const response = await client(`university/university?pathUrl=${pathUrl}`)
+  return response
+}
