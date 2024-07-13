@@ -11,7 +11,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 //import demopic from '@assets/demopic.jpg'
 import star from '@assets/star.png'
-import unibuzzLogo from '@assets/logo.svg'
+import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import { TbMailFilled } from 'react-icons/tb'
 import { FaBell } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
@@ -276,10 +276,9 @@ const Navbar: React.FC = () => {
       <div className="navbar justify-around w-full center-v h-16 sticky top-0 px-6 xl:px-28 bg-white">
         <div className="flex w-full center-v justify-between">
           <div className="w-1/6">
-            <div className="flex">
+            <div className="flex max-w-[150px] min-w-[100px]">
               <Link className="flex gap-4 center-v" href="/">
                 <Image src={unibuzzLogo} alt="BACPAC LOGO" className="h-full w-full cursor-pointer" />
-                <span>Unibuzz</span>
               </Link>
             </div>
           </div>

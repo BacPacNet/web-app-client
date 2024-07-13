@@ -14,7 +14,6 @@ type Props = {
 
 const AssignNotification = ({ id, senderName, communityGroupId, message, createdAt }: Props) => {
   const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
-  console.log('postId', communityGroupId)
 
   const handleIsSeenGroup = (id: string) => {
     const dataToPush = {
@@ -23,6 +22,7 @@ const AssignNotification = ({ id, senderName, communityGroupId, message, created
     }
     // console.log('nData', dataToPush)
     updateIsSeen(dataToPush)
+    console.log('postId', communityGroupId)
   }
 
   return (

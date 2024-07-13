@@ -6,7 +6,7 @@ import { IoPaperPlaneSharp } from 'react-icons/io5'
 // import Image from 'next/image'
 import { SlOptions } from 'react-icons/sl'
 import { FaBookmark } from 'react-icons/fa6'
-import { MdOutlineImage } from 'react-icons/md'
+// import { MdOutlineImage } from 'react-icons/md'
 import { MdGifBox, MdOutlineBookmarkBorder } from 'react-icons/md'
 import { HiReply, HiOutlineBell, HiOutlineFlag } from 'react-icons/hi'
 import { BiRepost } from 'react-icons/bi'
@@ -52,7 +52,7 @@ interface PostProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   isUserProfile?: boolean
-  media?: string
+  media?: []
   saved?: boolean
   isUniversity?: boolean
   postID?: string
@@ -224,8 +224,10 @@ const Post: React.FC<PostProps> = ({
           </div>
           {/* media div  */}
           {media && (
-            <div className="flex justify-center w-full px-10 mt-2">
-              <img className="rounded-lg h-96  object-cover w-full " src={media} alt="media" />
+            <div className="flex justify-center flex-wrap w-full px-10 mt-2">
+              {media?.map((item: { imageUrl: string }) => (
+                <img key={item.imageUrl} className="rounded-lg h-96  object-cover w-full " src={item.imageUrl} alt="media" />
+              ))}
             </div>
           )}
           {/* Post Content */}
@@ -285,16 +287,17 @@ const Post: React.FC<PostProps> = ({
                   placeholder="Add a comment..."
                   className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none w-full lg:min-w-[370px] xs:text-xs sm:text-sm"
                 />
-                <MdGifBox size={24} color="#737373" />
+                {/* <MdGifBox size={24} color="#737373" /> */}
                 <div>
                   <input
                     style={{ display: 'none' }}
                     type="file"
                     id={`CommentsImage${postID}`}
                     onChange={(e: any) => setImageValue(e.target.files[0])}
+                    accept="image/gif,image/webp"
                   />
                   <label htmlFor={`CommentsImage${postID}`}>
-                    <MdOutlineImage size={24} color="#737373" />
+                    <MdGifBox size={24} color="#737373" />
                   </label>
                 </div>
 
@@ -340,6 +343,7 @@ const Post: React.FC<PostProps> = ({
                         </div>
                         <SlOptions color="gray" />
                       </div>
+                      {comment?.imageUrl?.imageUrl && <img className="w-full h-80 object-contain" src={comment?.imageUrl?.imageUrl} alt="" />}
                       <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
                     </div>
                   </div>

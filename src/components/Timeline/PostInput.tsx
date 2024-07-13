@@ -20,11 +20,20 @@ interface PostInputProps {
 
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
   const [inputValue, setInputValue] = useState('')
-  const [ImageValue, setImageValue] = useState<File | null>(null)
+  const [ImageValue, setImageValue] = useState<File[] | []>([])
   const { mutate: CreateGroupPost } = useCreateGroupPost()
 
   const handleEmojiClick = (emojiData: any) => {
     setInputValue((prevValue) => prevValue + emojiData.emoji)
+  }
+
+  const processImages = async (images: File[]) => {
+    const promises = images.map((image) => replaceImage(image, ''))
+    const results = await Promise.all(promises)
+    return results.map((result) => ({
+      imageUrl: result?.imageUrl,
+      publicId: result?.publicId,
+    }))
   }
 
   const handleGroupPost = async () => {
@@ -33,14 +42,13 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
     }
 
     if (ImageValue) {
-      // setProfileImage(files[0]);
-      const imagedata: any = await replaceImage(ImageValue, '')
-
+      const imagedata = await processImages(ImageValue)
       const data = {
         communityId: idToPost,
         content: inputValue,
-        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        imageUrl: imagedata,
       }
+
       CreateGroupPost(data)
     } else {
       const data = {
@@ -69,21 +77,45 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
             </button>
           </div>
           {ImageValue && (
-            <div className="relative w-11/12">
-              <img className="" src={URL.createObjectURL(ImageValue)} alt="" />
-              <p onClick={() => setImageValue(null)} className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center">
-                X
-              </p>
+            <div className=" w-11/12">
+              {ImageValue?.map((item, idx) => (
+                <div key={idx} className="relative w-11/12">
+                  <img className="" src={URL.createObjectURL(item)} alt="" />
+                  <p
+                    onClick={() => setImageValue(ImageValue.filter((img) => img != item))}
+                    className="absolute right-0 top-0 w-5 h-5 bg-white rounded-full text-center"
+                  >
+                    X
+                  </p>
+                </div>
+              ))}
             </div>
           )}
           <div className="flex items-center gap-2">
             <div>
-              <input style={{ display: 'none' }} type="file" multiple id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
+              <input
+                style={{ display: 'none' }}
+                type="file"
+                accept="image/png, image/jpeg"
+                id="postImage"
+                onChange={(e: any) => setImageValue([...ImageValue, e.target.files[0]])}
+              />
               <label htmlFor="postImage">
                 <MdOutlineImage size={24} color="#737373" />
               </label>
             </div>
-            <MdGifBox size={24} color="#737373" />
+            <div>
+              <input
+                style={{ display: 'none' }}
+                type="file"
+                accept="image/gif,image/webp"
+                id="postGif"
+                onChange={(e: any) => setImageValue([...ImageValue, e.target.files[0]])}
+              />
+              <label htmlFor="postGif">
+                <MdGifBox size={24} color="#737373" />
+              </label>
+            </div>
             {/* EMOJI Icon */}
             <Popover>
               <PopoverTrigger>

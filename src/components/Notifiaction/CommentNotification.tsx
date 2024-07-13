@@ -15,7 +15,6 @@ type Props = {
 
 const CommentNotification = ({ id, senderName, communityPostId, message, createdAt }: Props) => {
   const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
-  console.log('postId', communityPostId)
 
   const handleIsSeenGroup = (id: string) => {
     const dataToPush = {
@@ -24,6 +23,7 @@ const CommentNotification = ({ id, senderName, communityPostId, message, created
     }
     // console.log('nData', dataToPush)
     updateIsSeen(dataToPush)
+    console.log('postId', communityPostId)
   }
   return (
     <div key={id} className="bg-slate-50 p-2 border-b border-slate-300">

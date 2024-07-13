@@ -133,7 +133,7 @@ const Page = () => {
                         setIsModalOpen={setIsModalOpen}
                         isUniversity={true}
                         profileDp={userProfileData?.profile_dp?.imageUrl}
-                        media={item?.imageUrl?.imageUrl}
+                        media={item?.imageUrl}
                       />
                     </div>
                   ))}

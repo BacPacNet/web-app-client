@@ -6,27 +6,6 @@ import UniversityCard from '@/components/universityCommunity/universityCommunity
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
 import Loading from '../loading'
 
-// const data = [
-//   {
-//     UniversityName: 'University of Seoul',
-//     UniversityAddress: '163 Seoulsiripdae-ro, Dongdaemun-gu, Seoul',
-//     UniversityLink: 'asd',
-//     universityLogo: 'https://www.stonybrook.edu/commcms/studyabroad/_images/university-logos/UOS_emblem.png',
-//   },
-//   {
-//     UniversityName: 'University of Seoul',
-//     UniversityAddress: '163 Seoulsiripdae-ro, Dongdaemun-gu, Seoul',
-//     UniversityLink: 'asd',
-//     universityLogo: 'https://www.stonybrook.edu/commcms/studyabroad/_images/university-logos/UOS_emblem.png',
-//   },
-//   {
-//     UniversityName: 'University of Seoul',
-//     UniversityAddress: '163 Seoulsiripdae-ro, Dongdaemun-gu, Seoul',
-//     UniversityLink: 'asd',
-//     universityLogo: 'https://www.stonybrook.edu/commcms/studyabroad/_images/university-logos/UOS_emblem.png',
-//   },
-// ]
-
 const Page = () => {
   const { data: SubscribedData, isLoading } = useGetUserSubscribedCommunityGroups()
 
