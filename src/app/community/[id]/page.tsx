@@ -50,7 +50,6 @@ const Page = () => {
         return null
     }
   }
-  // console.log('curr', communityGroupPost)
 
   useEffect(() => {
     const findGroupRole = (communities: any) => {
@@ -69,7 +68,7 @@ const Page = () => {
       findGroupRole(userData.userUnVerifiedCommunities)
     }
   }, [currSelectedGroup, userData])
-  // console.log('role', currUserGroupRole, currSelectedGroup?.adminUserId?._id, userData?.id)
+  // console.log('role', currUserGroupRole, userData)
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

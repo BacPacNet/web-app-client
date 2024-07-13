@@ -23,16 +23,13 @@ const InviteNotification = ({ id, groupId, senderName, groupName, message, creat
       groupId: groupId,
       id: id,
     }
-    // console.log('nData', dataToPush)
     joinGroup(dataToPush)
   }
 
   const handleIsSeenGroup = (id: string) => {
     const dataToPush = {
-      // groupId: data.communityGroupId._id,
       id: id,
     }
-    // console.log('nData', dataToPush)
     updateIsSeen(dataToPush)
   }
 

@@ -32,8 +32,6 @@ const ProfileCard: React.FC<ProfileProps> = ({
   userProfileData,
   isUserProfile,
 }) => {
-  // console.log(userProfileData)
-
   const { mutate: mutateEditProfile } = useEditProfile()
 
   const handleImageUpload = async (e: any) => {

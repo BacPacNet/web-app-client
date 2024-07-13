@@ -25,8 +25,8 @@ export async function getCommunityUsers(communityId: string, privacy: string, na
   return response
 }
 
-export async function getCommunityGroupUsers(communityGroupId: string, privacy: string, name: string, token: any) {
-  const response: any = await client(`/users/communityGroupUsers/${communityGroupId}?privacy=${privacy}&&name=${name}`, {
+export async function getCommunityGroupUsers(communityGroupId: string, name: string, token: any) {
+  const response: any = await client(`/users/communityGroupUsers/${communityGroupId}?name=${name}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
@@ -315,12 +315,12 @@ export function useGetCommunityUsers(communityId: string, isopen: boolean, priva
   return { isLoading, data, error: errorMessage }
 }
 
-export function useGetCommunityGroupUsers(communityGroupId: string, isopen: boolean, privacy: string, name: string) {
+export function useGetCommunityGroupUsers(communityGroupId: string, isopen: boolean, name: string) {
   const [cookieValue] = useCookie('uni_user_token')
   const { isLoading, data, error } = useQuery({
     enabled: isopen,
-    queryKey: ['communityGroupUsers', communityGroupId, privacy, name],
-    queryFn: () => getCommunityGroupUsers(communityGroupId, privacy, name, cookieValue),
+    queryKey: ['communityGroupUsers', communityGroupId, name],
+    queryFn: () => getCommunityGroupUsers(communityGroupId, name, cookieValue),
   })
 
   let errorMessage = null

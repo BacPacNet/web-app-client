@@ -161,7 +161,6 @@ const Post: React.FC<PostProps> = ({
 
   const [showCommentSec, setShowCommentsec] = useState(false)
   const { userData } = useUniStore()
-  // console.log('add', adminId)
 
   const LikesUserId: string[] = Array.isArray(likes) ? likes.map((item) => item.userId) : []
   const handlePostComment = async () => {

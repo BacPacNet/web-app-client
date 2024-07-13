@@ -9,12 +9,10 @@ type Props = {
 
 const AssignGroupModerators = ({ setAssignUsers, assignUsers, id }: Props) => {
   const [searchInput, setSearchInput] = useState('')
-  const { data } = useGetCommunityGroupUsers(id, assignUsers, 'Public', searchInput)
+  const { data } = useGetCommunityGroupUsers(id, assignUsers, searchInput)
   const { mutate: userGroupRole } = useUserGroupRole()
-  console.log('groupUsers', data)
 
   const handleChange = (e: any, communityGroupId: string, id: string) => {
-    console.log(e.target.value, communityGroupId)
     const data = {
       role: e.target.value,
       communityGroupId: communityGroupId,
@@ -31,7 +29,7 @@ const AssignGroupModerators = ({ setAssignUsers, assignUsers, id }: Props) => {
           <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
           <div className="fixed w-2/4 max-sm:w-11/12 z-50 h-3/4   top-[10%] bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
             <div className="flex justify-between w-full">
-              <h3>Add Community members</h3>
+              <h3>Change User Role</h3>
               <RxCross2 onClick={() => setAssignUsers(false)} size={24} color="#737373" />
             </div>
             {/* search  */}

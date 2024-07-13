@@ -17,10 +17,9 @@ const AssignNotification = ({ id, senderName, communityGroupId, message, created
 
   const handleIsSeenGroup = (id: string) => {
     const dataToPush = {
-      // groupId: data.communityGroupId._id,
       id: id,
     }
-    // console.log('nData', dataToPush)
+
     updateIsSeen(dataToPush)
     console.log('postId', communityGroupId)
   }

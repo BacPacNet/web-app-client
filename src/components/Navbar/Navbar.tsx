@@ -4,12 +4,8 @@ import './Navbar.css'
 import 'aos/dist/aos.css'
 
 import React, { useEffect, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
-//import { FaRegBell } from 'react-icons/fa'
 import Image from 'next/image'
-//import { IoMdMail } from 'react-icons/io'
 import Link from 'next/link'
-//import demopic from '@assets/demopic.jpg'
 import star from '@assets/star.png'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import { TbMailFilled } from 'react-icons/tb'
@@ -28,7 +24,6 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { ButtonPrimary } from '../Buttons/PrimaryButton'
 import InviteNotification from '../Notifiaction/InviteNotification'
 import CommentNotification from '../Notifiaction/CommentNotification'
-import { useGetUserData } from '@/services/user'
 import AssignNotification from '../Notifiaction/AssignNotification'
 
 interface MenuItem {
@@ -37,9 +32,6 @@ interface MenuItem {
   display: string
 }
 
-interface notification {
-  message: string
-}
 const Navbar: React.FC = () => {
   const [isMobile] = useState<boolean>(false)
   const [width] = useWindowSize()
@@ -48,36 +40,15 @@ const Navbar: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const [hover, setHover] = useState<boolean>(false)
   const [activeItem, setActiveItem] = useState('')
-  // eslint-disable-next-line no-unused-vars
   const [, , deleteCookie] = useCookie('uni_user_token')
-  const {
-    userProfileData,
-    userData,
-    resetUserData,
-    resetUserProfileData,
-    resetUserFollowingData,
-    setUserUnVerifiedCommunities,
-    setUserVerifiedCommunities,
-  } = useUniStore()
+  const { userProfileData, userData, resetUserData, resetUserProfileData, resetUserFollowingData } = useUniStore()
   const router = useRouter()
-  // console.log(cookieValue)
-  const { data: notificationData, refetch: refetchNotification } = useGetNotification()
-  const { refetch: refetchUserData, data: RefetcheduserData } = useGetUserData()
-  const [isRefetched, setIsRefetched] = useState(false)
+
+  const { data: notificationData } = useGetNotification()
+
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  // console.log('noti', notificationData)
-  // console.log('RefetcheduserData', RefetcheduserData)
 
   useEffect(() => {
-    if (isRefetched) {
-      setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
-      setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
-      setIsRefetched(false)
-    }
-  }, [RefetcheduserData])
-
-  useEffect(() => {
-    // console.log('cookieValue', cookieValue)
     setIsLogin(!!userData?.id)
   }, [userData, userData?.id])
 
@@ -96,44 +67,9 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (width.toString() > '769') {
-      // console.log('object')
       setOpen(false)
     }
   }, [width])
-
-  //socket.io
-
-  let socket: Socket
-
-  useEffect(() => {
-    socket = io('http://localhost:9000')
-
-    // console.log(socket)
-
-    socket.on('connect', () => {
-      console.log('Connected to the server')
-    })
-
-    socket.on('disconnect', () => {
-      console.log('Disconnected from the server')
-    })
-
-    socket.on(`notification_${userData.id}`, (notification: notification) => {
-      // console.log(notification)
-      // console.log('sss', notification.message)
-
-      if (notification.message == 'You have a been assigned') {
-        refetchUserData()
-        // console.log();
-        setIsRefetched(true)
-      }
-      refetchNotification()
-    })
-
-    return () => {
-      socket.disconnect()
-    }
-  }, [userData.id])
 
   const LoggedInMenu = () => {
     return (
