@@ -13,7 +13,7 @@ import { useGetCommunity, useGetCommunityGroupPost, useGetCommunityGroups } from
 import { useUniStore } from '@/store/store'
 import { ModalContentType } from '@/types/global'
 import { useParams } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 import Navbar from '@/components/Timeline/Navbar'
 
@@ -27,7 +27,7 @@ const roberta = {
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-
+  const [currUserGroupRole, setCurrUserGroupRole] = useState('')
   const { id } = useParams<{ id: string }>()
   const { data } = useGetCommunity(id)
   const { userData, userProfileData } = useUniStore()
@@ -50,7 +50,26 @@ const Page = () => {
         return null
     }
   }
+  // console.log('curr', communityGroupPost)
 
+  useEffect(() => {
+    const findGroupRole = (communities: any) => {
+      return communities?.some((community: any) => {
+        return community.communityGroups.some((group: any) => {
+          if (group.communityGroupId === currSelectedGroup?._id) {
+            setCurrUserGroupRole(group.role)
+            return true
+          }
+          return false
+        })
+      })
+    }
+
+    if (!findGroupRole(userData.userVerifiedCommunities)) {
+      findGroupRole(userData.userUnVerifiedCommunities)
+    }
+  }, [currSelectedGroup, userData])
+  // console.log('role', currUserGroupRole, currSelectedGroup?.adminUserId?._id, userData?.id)
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -83,24 +102,27 @@ const Page = () => {
               ) : (
                 <div>
                   <div>
-                    {currSelectedGroup?.adminUserId?._id == userData?.id && (
+                    {currUserGroupRole === 'Admin' || currUserGroupRole === 'Moderator' ? (
                       <PostInput
                         profileDp={userProfileData?.profile_dp?.imageUrl}
                         idToPost={currSelectedGroup._id}
                         setModalContentType={setModalContentType}
                         setIsModalOpen={setIsModalOpen}
                       />
+                    ) : (
+                      ''
                     )}
                   </div>
                   {communityGroupPost?.communityPosts.map((item: any) => (
                     <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
                       <Post
-                        user={currSelectedGroup?.adminUserId?.firstName + ' ' + currSelectedGroup?.adminUserId?.lastName}
-                        university={currSelectedGroup?.adminUserProfile?.university_name}
-                        year={currSelectedGroup?.adminUserProfile?.study_year + ' Yr. ' + ' ' + currSelectedGroup?.adminUserProfile?.degree}
+                        user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
+                        adminId={item.user_id._id}
+                        university={item?.user_id?.university_name}
+                        year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
                         text={item.content}
                         date={item?.createdAt}
-                        avatar={currSelectedGroup?.adminUserProfile?.profile_dp?.imageUrl}
+                        avatar={item?.user_id?.profile_dp?.imageUrl}
                         likes={item.likeCount}
                         comments={item.comments.length}
                         postID={item._id}

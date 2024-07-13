@@ -4,7 +4,7 @@ import './Navbar.css'
 import 'aos/dist/aos.css'
 
 import React, { useEffect, useState } from 'react'
-
+import { io, Socket } from 'socket.io-client'
 //import { FaRegBell } from 'react-icons/fa'
 import Image from 'next/image'
 //import { IoMdMail } from 'react-icons/io'
@@ -15,7 +15,7 @@ import unibuzzLogo from '@assets/logo.svg'
 import { TbMailFilled } from 'react-icons/tb'
 import { FaBell } from 'react-icons/fa'
 import { usePathname } from 'next/navigation'
-import { menuContent } from './constant'
+import { menuContent, notificationRoleAccess } from './constant'
 import { motion } from 'framer-motion'
 import useWindowSize from '@/hooks/useWindowSize'
 import useCookie from '@/hooks/useCookie'
@@ -23,14 +23,22 @@ import { useUniStore } from '@/store/store'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { MdLogout } from 'react-icons/md'
 import { useRouter } from 'next/navigation'
-import { useGetNotification, useJoinCommunityGroup, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
+import { useGetNotification } from '@/services/notification'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { ButtonPrimary } from '../Buttons/PrimaryButton'
+import InviteNotification from '../Notifiaction/InviteNotification'
+import CommentNotification from '../Notifiaction/CommentNotification'
+import { useGetUserData } from '@/services/user'
+import AssignNotification from '../Notifiaction/AssignNotification'
 
 interface MenuItem {
   name: string
   path: string
   display: string
+}
+
+interface notification {
+  message: string
 }
 const Navbar: React.FC = () => {
   const [isMobile] = useState<boolean>(false)
@@ -42,13 +50,31 @@ const Navbar: React.FC = () => {
   const [activeItem, setActiveItem] = useState('')
   // eslint-disable-next-line no-unused-vars
   const [, , deleteCookie] = useCookie('uni_user_token')
-  const { userProfileData, userData, resetUserData, resetUserProfileData, resetUserFollowingData } = useUniStore()
+  const {
+    userProfileData,
+    userData,
+    resetUserData,
+    resetUserProfileData,
+    resetUserFollowingData,
+    setUserUnVerifiedCommunities,
+    setUserVerifiedCommunities,
+  } = useUniStore()
   const router = useRouter()
   // console.log(cookieValue)
-  const { data: notificationData } = useGetNotification()
-  const { mutate: joinGroup } = useJoinCommunityGroup()
-  const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
+  const { data: notificationData, refetch: refetchNotification } = useGetNotification()
+  const { refetch: refetchUserData, data: RefetcheduserData } = useGetUserData()
+  const [isRefetched, setIsRefetched] = useState(false)
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
   // console.log('noti', notificationData)
+  // console.log('RefetcheduserData', RefetcheduserData)
+
+  useEffect(() => {
+    if (isRefetched) {
+      setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
+      setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
+      setIsRefetched(false)
+    }
+  }, [RefetcheduserData])
 
   useEffect(() => {
     // console.log('cookieValue', cookieValue)
@@ -75,48 +101,95 @@ const Navbar: React.FC = () => {
     }
   }, [width])
 
-  const handleJoinGroup = (data: any) => {
-    const dataToPush = {
-      groupId: data.communityGroupId._id,
-      id: data._id,
-    }
-    // console.log('nData', dataToPush)
-    joinGroup(dataToPush)
-  }
+  //socket.io
 
-  const handleIsSeenGroup = (data: any) => {
-    const dataToPush = {
-      // groupId: data.communityGroupId._id,
-      id: data._id,
+  let socket: Socket
+
+  useEffect(() => {
+    socket = io('http://localhost:9000')
+
+    // console.log(socket)
+
+    socket.on('connect', () => {
+      console.log('Connected to the server')
+    })
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from the server')
+    })
+
+    socket.on(`notification_${userData.id}`, (notification: notification) => {
+      // console.log(notification)
+      // console.log('sss', notification.message)
+
+      if (notification.message == 'You have a been assigned') {
+        refetchUserData()
+        // console.log();
+        setIsRefetched(true)
+      }
+      refetchNotification()
+    })
+
+    return () => {
+      socket.disconnect()
     }
-    // console.log('nData', dataToPush)
-    updateIsSeen(dataToPush)
-  }
+  }, [userData.id])
 
   const LoggedInMenu = () => {
     return (
       <div className="flex gap-[18px] items-center ">
         <TbMailFilled className="text-primary" size={32} />
-        <Popover>
+        <Popover open={isNotificationOpen} onOpenChange={() => setIsNotificationOpen(!isNotificationOpen)}>
           <PopoverTrigger>
-            <FaBell className="text-primary" size={26} />
-          </PopoverTrigger>
-          <PopoverContent className="relative right-8 w-72 p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
-            {notificationData?.map((item: any) => (
-              <div key={item._id} className="bg-slate-50 p-2 border-b border-slate-300">
-                <p className="text-xs">
-                  You Received an invite from <span className="text-sm font-bold">{item?.adminId?.firstName}</span> to Join Group
+            <div className="relative">
+              <FaBell className="text-primary" size={26} />
+              {notificationData?.length ? (
+                <p className="absolute bg-red-500 rounded-full w-4 h-4 top-0 right-0 text-center text-white text-xs">
+                  {notificationData?.length > 9 ? '9+' : notificationData?.length}
                 </p>
-                <div className="flex gap-2 justify-end">
-                  <button onClick={() => handleIsSeenGroup(item)} className="bg-slate-200 py-2 px-3 font-bold">
-                    Deny
-                  </button>
-                  <button onClick={() => handleJoinGroup(item)} className="bg-blue-400 py-2 px-4 font-bold">
-                    Join
-                  </button>
-                </div>
-              </div>
-            ))}
+              ) : (
+                ''
+              )}
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="relative right-8 w-72 p-5 border-none shadow-lg bg-white shadow-gray-light z-20 h-96 overflow-y-scroll">
+            {notificationData?.length ? (
+              notificationData?.map((item: any) =>
+                item.type == notificationRoleAccess.GROUP_INVITE ? (
+                  <InviteNotification
+                    key={item?._id}
+                    id={item?._id}
+                    groupId={item?.communityGroupId?._id}
+                    groupName={item?.communityGroupId?.title}
+                    senderName={item?.sender_id?.firstName}
+                    message={item?.message}
+                    createdAt={item?.createdAt}
+                  />
+                ) : item.type == notificationRoleAccess.COMMENT ? (
+                  <CommentNotification
+                    key={item?._id}
+                    id={item?._id}
+                    communityPostId={item?.communityPostId?._id}
+                    senderName={item?.sender_id?.firstName}
+                    message={item?.message}
+                    createdAt={item?.createdAt}
+                  />
+                ) : item.type == notificationRoleAccess.ASSIGN ? (
+                  <AssignNotification
+                    key={item?._id}
+                    id={item?._id}
+                    communityGroupId={item?.communityPostId?._id}
+                    senderName={item?.sender_id?.firstName}
+                    message={item?.message}
+                    createdAt={item?.createdAt}
+                  />
+                ) : (
+                  ''
+                )
+              )
+            ) : (
+              <p className="text-black text-center">No Notification</p>
+            )}
           </PopoverContent>
         </Popover>
         {/* notificaton End  */}

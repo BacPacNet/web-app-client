@@ -78,7 +78,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
           )}
           <div className="flex items-center gap-2">
             <div>
-              <input style={{ display: 'none' }} type="file" id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
+              <input style={{ display: 'none' }} type="file" multiple id="postImage" onChange={(e: any) => setImageValue(e.target.files[0])} />
               <label htmlFor="postImage">
                 <MdOutlineImage size={24} color="#737373" />
               </label>
