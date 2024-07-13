@@ -89,6 +89,7 @@ const Page = () => {
                         idToPost={currSelectedGroup._id}
                         setModalContentType={setModalContentType}
                         setIsModalOpen={setIsModalOpen}
+                        type="Community"
                       />
                     )}
                   </div>

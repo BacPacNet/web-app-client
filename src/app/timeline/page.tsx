@@ -15,6 +15,8 @@ import { ModalContentType } from '@/types/global'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
 import { useParams } from 'next/navigation'
+import { useGetUserPosts } from '@/services/community-timeline'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 interface User {
   name: string
   bio: string
@@ -79,7 +81,11 @@ const Timeline = () => {
   const params = useParams()
   const { userData, userProfileData, userFollowingData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
+  const { isLoading, data: TimelinePosts, error } = useGetUserPosts()
+  const timelinePosts = TimelinePosts?.timelinePosts
+  console.log(timelinePosts)
 
+  console.log(isLoading, TimelinePosts, error)
   console.log(params)
 
   const modalContent = (modalContentType: string) => {
@@ -117,24 +123,30 @@ const Timeline = () => {
           <Recommendations people={recommendations} />
         </div>
         <div className="flex flex-col justify-center items-stretch gap-5 max-w-[696px]">
-          <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
+          <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} type="Timeline" />
           <Dropdown options={options} defaultOption="Recent" />
-          <Post
-            user="Joshua Welman"
-            university="Nagoya University"
-            year="2nd Yr. Graduate"
-            text="Can someone help me with this chemistry equation? Here’s the link to the google drive:"
-            link="https://www.butkochem.com/homework/A1-35"
-            date="9:31 PM · Feb 11, 2024"
-            avatar="/timeline/avatar.png"
-            likes={[{ userId: '663a034cb65c15b36f959894' }, { userId: '663a034cb65c15b36f959894' }]}
-            comments={3}
-            reposts={2}
-            shares={1}
-            userComments={comments}
-            setModalContentType={setModalContentType}
-            setIsModalOpen={setIsModalOpen}
-          />
+          {isLoading && Array.from({ length: 2 }).map((_, index) => <PostSkeleton key={index} />)}
+          {!isLoading &&
+            timelinePosts?.map((post: any) => {
+              return (
+                <Post
+                  key={post._id}
+                  user="Joshua Welman"
+                  university={post.userId}
+                  year="2nd Yr. Graduate"
+                  text={post.content}
+                  date={post.createdAt}
+                  avatar="/timeline/avatar.png"
+                  likes={post.likeCount}
+                  comments={0}
+                  reposts={2}
+                  shares={1}
+                  userComments={comments}
+                  setModalContentType={setModalContentType}
+                  setIsModalOpen={setIsModalOpen}
+                />
+              )
+            })}
         </div>
       </div>
       <Footer />

@@ -11,18 +11,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import EmojiPicker from 'emoji-picker-react'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
+import { useCreateUserPost } from '@/services/community-timeline'
 interface PostInputProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   idToPost?: string
   profileDp?: string
+  type: string
 }
 
-const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp }) => {
+const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp, type }) => {
   const [inputValue, setInputValue] = useState('')
   const [ImageValue, setImageValue] = useState<File[] | []>([])
   const { mutate: CreateGroupPost } = useCreateGroupPost()
-
+  const { mutate: CreateTimelinePost } = useCreateUserPost()
   const handleEmojiClick = (emojiData: any) => {
     setInputValue((prevValue) => prevValue + emojiData.emoji)
   }
@@ -43,19 +45,31 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
 
     if (ImageValue) {
       const imagedata = await processImages(ImageValue)
-      const data = {
-        communityId: idToPost,
+      const data: any = {
+        // communityId: idToPost,
         content: inputValue,
         imageUrl: imagedata,
       }
-
-      CreateGroupPost(data)
+      //if type is community , add communityId field to data
+      if (type === 'Community') {
+        data.communityId = idToPost
+        CreateGroupPost(data)
+      } else if (type === 'Timeline') {
+        CreateTimelinePost(data)
+      }
+      // CreateGroupPost(data)
     } else {
-      const data = {
-        communityId: idToPost,
+      const data: any = {
+        // communityId: idToPost,
         content: inputValue,
       }
-      CreateGroupPost(data)
+      if (type === 'Community') {
+        data.communityId = idToPost
+        CreateGroupPost(data)
+      } else if (type === 'Timeline') {
+        CreateTimelinePost(data)
+      }
+      // CreateGroupPost(data)
     }
   }
 
