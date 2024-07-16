@@ -9,3 +9,8 @@ export const CommunityNavbarLinks: NavLink[] = [
   { label: 'University Community', href: '/community' },
   { label: 'Chatbot', href: '/chatbot' },
 ]
+
+export enum PostInputType {
+  Community = 'Community',
+  Timeline = 'Timeline',
+}

@@ -12,6 +12,7 @@ import HeroSec from '@/components/communityUniversity/HeroSec'
 import { useGetCommunity, useGetCommunityGroupPost, useGetCommunityGroups } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { ModalContentType } from '@/types/global'
+import { PostInputType } from '@/types/constants'
 import { useParams } from 'next/navigation'
 import React, { useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -89,7 +90,7 @@ const Page = () => {
                         idToPost={currSelectedGroup._id}
                         setModalContentType={setModalContentType}
                         setIsModalOpen={setIsModalOpen}
-                        type="Community"
+                        type={PostInputType.Community}
                       />
                     )}
                   </div>
