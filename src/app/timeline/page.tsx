@@ -121,6 +121,7 @@ const Timeline = () => {
           <Dropdown options={options} defaultOption="Recent" />
           <Post
             user="Joshua Welman"
+            adminId="123"
             university="Nagoya University"
             year="2nd Yr. Graduate"
             text="Can someone help me with this chemistry equation? Here’s the link to the google drive:"

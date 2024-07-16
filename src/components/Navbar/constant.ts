@@ -55,3 +55,11 @@ export const menuContent = [
     display: 'lap',
   },
 ]
+
+export const notificationRoleAccess = {
+  GROUP_INVITE: 'GROUP_INVITE',
+  REPLY: 'REPLY',
+  FOLLOW: 'FOLLOW',
+  ASSIGN: 'ASSIGN',
+  COMMENT: 'COMMENT',
+}

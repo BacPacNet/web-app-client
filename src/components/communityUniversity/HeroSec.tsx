@@ -12,7 +12,6 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
   const { mutate: LeaveCommunity } = useLeaveCommunity()
   const { mutate: updateCommunity } = useUpdateCommunity()
   const { userData } = useUniStore()
-  // console.log('data', data)
 
   const userVerifiedCommunityIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []

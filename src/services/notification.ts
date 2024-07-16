@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
+import { useUniStore } from '@/store/store'
 
 export async function getUserNotification(token: any) {
   const response = await client(`/notification/`, { headers: { Authorization: `Bearer ${token}` } })
@@ -21,7 +22,7 @@ export async function UpdateCommunityGroup(data: any, token: any) {
 export function useGetNotification() {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error } = useQuery({
+  const { isLoading, data, error, refetch } = useQuery({
     queryKey: ['notification'],
     queryFn: () => getUserNotification(cookieValue),
     enabled: !!cookieValue,
@@ -32,17 +33,18 @@ export function useGetNotification() {
     errorMessage = error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { isLoading, data, error: errorMessage, refetch }
 }
 
 export const useJoinCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
+  const { setUserData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => JoinCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
-      console.log(response)
+      setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (res: any) => {

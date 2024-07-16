@@ -57,6 +57,7 @@ interface PostProps {
   isUniversity?: boolean
   postID?: string
   profileDp?: string
+  adminId: string
 }
 
 const PostOptions = () => {
@@ -150,6 +151,7 @@ const Post: React.FC<PostProps> = ({
   isUniversity,
   postID,
   profileDp,
+  adminId,
 }) => {
   const { mutate: LikeUnlikePost } = useLikeUnilikeGroupPost()
   const { mutate: CreateComment } = useCreateGroupPostComment()
@@ -172,12 +174,14 @@ const Post: React.FC<PostProps> = ({
         postID: postID,
         content: comment,
         imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        adminId,
       }
       CreateComment(data)
     } else {
       const data = {
         postID: postID,
         content: comment,
+        adminId,
       }
       CreateComment(data)
     }
@@ -199,10 +203,14 @@ const Post: React.FC<PostProps> = ({
           {/* User Info */}
           <div className="flex justify-between px-5 sm:px-10 xs:max-w-xs sm:max-w-md lg:max-w-full">
             <div className="flex gap-4 items-center">
-              <img src={avatar} alt={`${user}'s avatar`} width={14} height={14} className="rounded-full w-14 h-14" />
+              {avatar ? (
+                <img src={avatar} alt={`${user}'s avatar`} width={14} height={14} className="rounded-full w-14 h-14" />
+              ) : (
+                <div className="rounded-full w-14 h-14 bg-gray"></div>
+              )}
               <div>
                 <p className="font-medium text-base text-gray-dark">{user}</p>
-                <p className="text-xs text-gray-1 pb-1">{university}</p>
+                <p className="text-xs text-gray-1 pb-1">{university ? university : 'not available'}</p>
                 <p className="text-xs text-gray-1">{!year.includes('undefined') ? year : ''}</p>
               </div>
             </div>
