@@ -3,7 +3,7 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 
 const editProfile = async (data: any, id: string) => {
-  const res = await client(`userprofile/${id}`, { method: 'PUT', data })
+  const res = await client(`/userprofile/${id}`, { method: 'PUT', data })
   return res
 }
 

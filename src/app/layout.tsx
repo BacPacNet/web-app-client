@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import Navbar from '../components/Navbar/Navbar'
 import { ReactQueryClientProvider } from '@/utils/Provider'
+import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 
 type FontClassName = string
 
@@ -35,8 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <ReactQueryClientProvider>
-          <Navbar />
-          {children}
+          <ZustandSocketProvider>
+            <Navbar />
+            {children}
+          </ZustandSocketProvider>
         </ReactQueryClientProvider>
       </body>
     </html>

@@ -111,6 +111,7 @@ const Timeline = () => {
         <Post
           key={post._id}
           user="Joshua Welman"
+          adminId="123"
           university={post.userId}
           year="2nd Yr. Graduate"
           text={post.content}

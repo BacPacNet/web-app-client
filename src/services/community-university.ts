@@ -25,8 +25,20 @@ export async function getCommunityUsers(communityId: string, privacy: string, na
   return response
 }
 
+export async function getCommunityGroupUsers(communityGroupId: string, name: string, token: any) {
+  const response: any = await client(`/users/communityGroupUsers/${communityGroupId}?name=${name}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
 export async function LeaveCommunity(communityId: string, token: any) {
   const response = await client(`/users/leave/${communityId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export async function changeUserGroupRole(data: any, token: any) {
+  const response = await client(`/users/user/GroupRole`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
 
@@ -176,12 +188,13 @@ export const useJoinCommunityGroup = () => {
 export const useCreateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const { setUserData } = useUniStore()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
 
     onSuccess: (response: any) => {
       console.log(response)
-
+      setUserData(response.userData)
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
     },
     onError: (res: any) => {
@@ -300,4 +313,37 @@ export function useGetCommunityUsers(communityId: string, isopen: boolean, priva
   }
 
   return { isLoading, data, error: errorMessage }
+}
+
+export function useGetCommunityGroupUsers(communityGroupId: string, isopen: boolean, name: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const { isLoading, data, error } = useQuery({
+    enabled: isopen,
+    queryKey: ['communityGroupUsers', communityGroupId, name],
+    queryFn: () => getCommunityGroupUsers(communityGroupId, name, cookieValue),
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(error) && error.response) {
+    errorMessage = error.response.data
+  }
+
+  return { isLoading, data, error: errorMessage }
+}
+
+export const useUserGroupRole = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => changeUserGroupRole(data, cookieValue),
+
+    onSuccess: (response: any) => {
+      console.log(response)
+
+      queryClient.invalidateQueries({ queryKey: ['communityGroupUsers'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
 }
