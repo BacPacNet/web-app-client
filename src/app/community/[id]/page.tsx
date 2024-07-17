@@ -12,7 +12,7 @@ import HeroSec from '@/components/communityUniversity/HeroSec'
 import { useGetCommunity, useGetCommunityGroupPost, useGetCommunityGroups } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { ModalContentType } from '@/types/global'
-import { PostInputType } from '@/types/constants'
+import { PostInputType, PostType } from '@/types/constants'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -118,7 +118,7 @@ const Page = () => {
                     <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
                       <Post
                         user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
-                        adminId={item.user_id._id}
+                        adminId={item.user_id?._id}
                         university={item?.user_id?.university_name}
                         year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
                         text={item.content}
@@ -135,6 +135,7 @@ const Page = () => {
                         isUniversity={true}
                         profileDp={userProfileData?.profile_dp?.imageUrl}
                         media={item?.imageUrl}
+                        type={PostType.Community}
                       />
                     </div>
                   ))}

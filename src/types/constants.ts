@@ -14,3 +14,8 @@ export enum PostInputType {
   Community = 'Community',
   Timeline = 'Timeline',
 }
+
+export enum PostType {
+  Community = 'Community',
+  Timeline = 'Timeline',
+}

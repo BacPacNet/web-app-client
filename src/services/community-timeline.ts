@@ -28,9 +28,52 @@ export async function CreateUserPost(data: any, token: any) {
   return response
 }
 
-//Query Functions
+export async function CreateUserPostComment(data: any, token: any) {
+  const response = await client(`/userpostcomment/${data.postID}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
+  return response
+}
 
-export const useDeletePost = () => {
+export async function LikeUnlikeUserPostComment(UserPostCommentId: string, token: any) {
+  const response = await client(`/userpostcomment/likeUnlike/${UserPostCommentId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
+//Query Functions for UserPost, UserPostComment
+
+export const useCreateUserPostComment = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => CreateUserPostComment(data, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
+export const useLikeUnlikeUserPostComment = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (userPostCommentId: any) => LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
+export const useDeleteUserPost = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
@@ -94,11 +137,11 @@ export const useCreateUserPost = () => {
   })
 }
 
-export const useLikeUnilikeGroupPost = () => {
+export const useLikeUnlikeTimelinePost = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (postId: any) => LikeUnilikeUserPost(postId, cookieValue),
+    mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })

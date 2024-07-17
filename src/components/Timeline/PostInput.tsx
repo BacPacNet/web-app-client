@@ -57,7 +57,6 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
       } else if (type === PostInputType.Timeline) {
         CreateTimelinePost(data)
       }
-      // CreateGroupPost(data)
     } else {
       const data: any = {
         content: inputValue,
