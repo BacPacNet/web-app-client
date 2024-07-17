@@ -1,6 +1,7 @@
 interface communityGroupsInterface {
   communityGroupName: string
   communityGroupId: string
+  role: string
 }
 
 interface verifiedInterface {

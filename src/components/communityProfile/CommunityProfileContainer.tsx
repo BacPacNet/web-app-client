@@ -58,6 +58,7 @@ const CommunityProfileContainer = () => {
         {selectedOption == valueType.Posts ? (
           <Post
             user="Kathryn Murphy"
+            adminId="123"
             university="Nagoya University"
             year="2nd Yr. Graduate"
             text="Law Debate Club will have its first debate starting next week Feb 19, 2024! Any participants interested send me a DM."
@@ -75,6 +76,7 @@ const CommunityProfileContainer = () => {
         ) : selectedOption == valueType.Media ? (
           <Post
             user="Kathryn Murphy"
+            adminId="123"
             university="Nagoya University"
             year="2nd Yr. Graduate"
             text="Beautiful building landscapes in the japanese skyline."
@@ -93,6 +95,7 @@ const CommunityProfileContainer = () => {
         ) : selectedOption == valueType.Saved ? (
           <Post
             user="Kathryn Murphy"
+            adminId="123"
             university="Nagoya University"
             year="2nd Yr. Graduate"
             text="Law Debate Club will have its first debate starting next week Feb 19, 2024! Any participants interested send me a DM."
@@ -113,6 +116,7 @@ const CommunityProfileContainer = () => {
         ) : (
           <Post
             user="Kathryn Murphy"
+            adminId="123"
             university="Nagoya University"
             year="2nd Yr. Graduate"
             text="Beautiful building landscapes in the japanese skyline."
