@@ -12,9 +12,11 @@ import PollModal from '@/components/Timeline/Modals/PollModal'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ReplyModal from '@/components/Timeline/Modals/ReplyModal'
 import { ModalContentType } from '@/types/global'
+import { PostInputType } from '@/types/constants'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
-import { useParams } from 'next/navigation'
+import { useGetUserPosts } from '@/services/community-timeline'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 interface User {
   name: string
   bio: string
@@ -76,11 +78,10 @@ const recommendations = [
 
 const Timeline = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const params = useParams()
   const { userData, userProfileData, userFollowingData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-
-  console.log(params)
+  const { isLoading, data: TimelinePosts, error } = useGetUserPosts()
+  const timelinePosts = TimelinePosts?.timelinePosts
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
@@ -95,6 +96,37 @@ const Timeline = () => {
       default:
         return null
     }
+  }
+
+  const PostsContainer = () => {
+    if (isLoading) {
+      return Array.from({ length: 2 }).map((_, index) => <PostSkeleton key={index} />)
+    }
+    if (error) {
+      console.log(error)
+      return <div>Something Went Wrong!</div>
+    }
+    return timelinePosts?.map((post: any) => {
+      return (
+        <Post
+          key={post._id}
+          user="Joshua Welman"
+          adminId="123"
+          university={post.userId}
+          year="2nd Yr. Graduate"
+          text={post.content}
+          date={post.createdAt}
+          avatar="/timeline/avatar.png"
+          likes={post.likeCount}
+          comments={0}
+          reposts={2}
+          shares={1}
+          userComments={comments}
+          setModalContentType={setModalContentType}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )
+    })
   }
 
   return (
@@ -117,25 +149,9 @@ const Timeline = () => {
           <Recommendations people={recommendations} />
         </div>
         <div className="flex flex-col justify-center items-stretch gap-5 max-w-[696px]">
-          <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} />
+          <PostInput setModalContentType={setModalContentType} setIsModalOpen={setIsModalOpen} type={PostInputType.Timeline} />
           <Dropdown options={options} defaultOption="Recent" />
-          <Post
-            user="Joshua Welman"
-            adminId="123"
-            university="Nagoya University"
-            year="2nd Yr. Graduate"
-            text="Can someone help me with this chemistry equation? Here’s the link to the google drive:"
-            link="https://www.butkochem.com/homework/A1-35"
-            date="9:31 PM · Feb 11, 2024"
-            avatar="/timeline/avatar.png"
-            likes={[{ userId: '663a034cb65c15b36f959894' }, { userId: '663a034cb65c15b36f959894' }]}
-            comments={3}
-            reposts={2}
-            shares={1}
-            userComments={comments}
-            setModalContentType={setModalContentType}
-            setIsModalOpen={setIsModalOpen}
-          />
+          <PostsContainer />
         </div>
       </div>
       <Footer />
