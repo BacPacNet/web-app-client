@@ -3,57 +3,58 @@ import React, { useState } from 'react'
 import UserListItem from '../Timeline/UserListItem'
 import { GoSearch } from 'react-icons/go'
 import { cn } from '@/lib/utils'
+import { useGetAllUserWithProfileData, useGetUserFollow } from '@/services/connection'
 // Sample data
-const followingData = [
-  {
-    name: 'Roberta Green',
-    university: 'Nagoya University',
-    role: '2nd Yr. Undergraduate, Psychology',
-    tags: [
-      { label: '2nd Yr', color: 'bg-purple-500' },
-      { label: 'Undergraduate', color: 'bg-green' },
-      { label: 'Law', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Jonathan Park',
-    university: 'Nagoya University',
-    role: '2nd Yr. Undergraduate, Law',
-    tags: [
-      { label: '2nd Yr', color: 'bg-purple-500' },
-      { label: 'Undergraduate', color: 'bg-green' },
-      { label: 'Law', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Pathova Siena',
-    university: 'Nagoya University',
-    role: '4th Year PhD Lab of Semiconductors',
-    tags: [
-      { label: '4th Yr', color: 'bg-purple-500' },
-      { label: 'PhD', color: 'bg-green' },
-      { label: 'Physics', color: 'bg-cyan-500' },
-    ],
-  },
-  {
-    name: 'Danny Tela',
-    university: 'Nagoya University',
-    role: 'Assistant Professor of Molecular Neuroscience',
-    tags: [
-      { label: 'Assistant Professor', color: 'bg-purple-700' },
-      { label: 'Molecular Neuroscience', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Gretha Bassuk',
-    university: 'Nagoya University',
-    role: 'Professor',
-    tags: [
-      { label: 'Professor', color: 'bg-blue-500' },
-      { label: 'Philosopy', color: 'bg-red-500' },
-    ],
-  },
-]
+// const followingData = [
+//   {
+//     name: 'Roberta Green',
+//     university: 'Nagoya University',
+//     role: '2nd Yr. Undergraduate, Psychology',
+//     tags: [
+//       { label: '2nd Yr', color: 'bg-purple-500' },
+//       { label: 'Undergraduate', color: 'bg-green' },
+//       { label: 'Law', color: 'bg-red-500' },
+//     ],
+//   },
+//   {
+//     name: 'Jonathan Park',
+//     university: 'Nagoya University',
+//     role: '2nd Yr. Undergraduate, Law',
+//     tags: [
+//       { label: '2nd Yr', color: 'bg-purple-500' },
+//       { label: 'Undergraduate', color: 'bg-green' },
+//       { label: 'Law', color: 'bg-red-500' },
+//     ],
+//   },
+//   {
+//     name: 'Pathova Siena',
+//     university: 'Nagoya University',
+//     role: '4th Year PhD Lab of Semiconductors',
+//     tags: [
+//       { label: '4th Yr', color: 'bg-purple-500' },
+//       { label: 'PhD', color: 'bg-green' },
+//       { label: 'Physics', color: 'bg-cyan-500' },
+//     ],
+//   },
+//   {
+//     name: 'Danny Tela',
+//     university: 'Nagoya University',
+//     role: 'Assistant Professor of Molecular Neuroscience',
+//     tags: [
+//       { label: 'Assistant Professor', color: 'bg-purple-700' },
+//       { label: 'Molecular Neuroscience', color: 'bg-red-500' },
+//     ],
+//   },
+//   {
+//     name: 'Gretha Bassuk',
+//     university: 'Nagoya University',
+//     role: 'Professor',
+//     tags: [
+//       { label: 'Professor', color: 'bg-blue-500' },
+//       { label: 'Philosopy', color: 'bg-red-500' },
+//     ],
+//   },
+// ]
 
 type ContentType = 'Find People' | 'Following' | 'Followers'
 
@@ -115,7 +116,17 @@ const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
 )
 
 const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
-  const [content, setContent] = useState<ContentType>('Following')
+  const [content, setContent] = useState<ContentType>('Find People')
+  const [name, setName] = useState('')
+
+  const { data: allUserData } = useGetAllUserWithProfileData(name, content == 'Find People')
+  const { data: userFollow } = useGetUserFollow(name, content == 'Following')
+  // const { data: allUserFollowing } = useGetUserFollowing(name, content == 'Following')
+  // const { data: allUserFollowers } = useGetUserFollowers(name, content == 'Followers')
+
+  console.log('users', allUserData)
+  console.log('allUserFollowing', userFollow)
+  // console.log('allUserFollowers', allUserFollowers)
 
   return (
     <div className="border border-border rounded-lg py-4 px-0 md:px-6">
@@ -135,13 +146,47 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
         </div>
         <div className="mx-3 px-5 py-[10px] border border-border rounded-full flex items-center gap-4">
           <GoSearch size={24} />
-          <input type="text" className="text-sm" placeholder="Search People" />
+          <input onChange={(e) => setName(e.target.value)} type="text" value={name} className="text-sm" placeholder="Search People" />
         </div>
       </div>
       <div className={cn('mx-auto bg-white rounded-lg overflow-hidden overflow-y-auto custom-scrollbar', contentDivStyle)}>
-        {content === 'Following' && followingData.map((item, index) => <UserListItem key={index} {...item} />)}
+        {content === 'Following' &&
+          userFollow?.profile?.map((item: any, index: string) => (
+            <UserListItem
+              key={index}
+              id={item?.users_id?.id}
+              firstName={item?.users_id?.firstName}
+              lastName={item?.users_id?.lastName}
+              university={item?.university}
+              study_year={item?.study_year}
+              degree={item?.degree}
+              major={item?.major}
+              occupation={item?.occupation}
+              imageUrl={item?.profile_dp?.imageUrl}
+              type={content}
+            />
+          ))}
+        {/* {content === 'Followers' &&
+          allUserFollowers?.map((item:any, index:string) => (
+            <UserListItem key={index} firstName={item?.user_id?.firstName} lastName={item?.user_id?.lastName} profile={item?.profile} />
+          ))} */}
         {/* For testing Purposes */}
-        {content === 'Find People' && followingData.map((item, index) => <UserListItem key={index} {...item} />)}
+        {content === 'Find People' &&
+          allUserData?.user?.map((item: any, index: string) => (
+            <UserListItem
+              key={index}
+              id={item?._id}
+              firstName={item?.firstName}
+              lastName={item?.lastName}
+              university={item?.profile?.university}
+              study_year={item?.profile?.study_year}
+              degree={item?.profile?.degree}
+              major={item?.profile?.major}
+              occupation={item?.profile?.occupation}
+              imageUrl={item?.profile?.profile_dp?.imageUrl}
+              type={content}
+            />
+          ))}
       </div>
     </div>
   )

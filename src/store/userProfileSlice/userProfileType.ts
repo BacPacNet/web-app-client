@@ -3,6 +3,10 @@ interface emailType {
   UniversityEmail: string
 }
 
+interface following {
+  userId: string
+}
+
 export interface userProfileType {
   users_id: string
   profile_dp?: { imageUrl: string; publicId: string }
@@ -19,6 +23,8 @@ export interface userProfileType {
   major?: string
   affiliation?: string
   occupation?: string
+  following: following[]
+  followers: following[]
   totalFilled: number
   _id: string
 }
