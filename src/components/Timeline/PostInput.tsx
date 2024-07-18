@@ -21,6 +21,15 @@ interface PostInputProps {
   type: string
 }
 
+interface PostInputData {
+  content: string
+  imageUrl?: Array<{
+    imageUrl: string
+    publicId: string
+  }>
+  communityId?: string | number
+}
+
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp, type }) => {
   const [inputValue, setInputValue] = useState('')
   const [ImageValue, setImageValue] = useState<File[] | []>([])
@@ -46,7 +55,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
 
     if (ImageValue) {
       const imagedata = await processImages(ImageValue)
-      const data: any = {
+      const data: PostInputData = {
         content: inputValue,
         imageUrl: imagedata,
       }
@@ -58,7 +67,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
         CreateTimelinePost(data)
       }
     } else {
-      const data: any = {
+      const data: PostInputData = {
         content: inputValue,
       }
       if (type === PostInputType.Community) {

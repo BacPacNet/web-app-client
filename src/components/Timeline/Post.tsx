@@ -63,6 +63,16 @@ interface PostProps {
   type: PostType
 }
 
+interface PostCommentData {
+  postID: string | undefined
+  content: string
+  imageUrl?: {
+    imageUrl: string
+    publicId: string
+  }
+  adminId?: string | number
+}
+
 const PostOptions = () => {
   return (
     <Popover>
@@ -177,7 +187,7 @@ const Post: React.FC<PostProps> = ({
     if (ImageValue) {
       const imagedata: any = await replaceImage(ImageValue, '')
 
-      const data: any = {
+      const data: PostCommentData = {
         postID: postID,
         content: comment,
         imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
@@ -190,7 +200,7 @@ const Post: React.FC<PostProps> = ({
         CreateGroupPostComment(data)
       }
     } else {
-      const data: any = {
+      const data: PostCommentData = {
         postID: postID,
         content: comment,
       }
