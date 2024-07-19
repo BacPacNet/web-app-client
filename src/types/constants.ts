@@ -70,3 +70,8 @@ export interface notificationInterface {
   isRead: boolean
   createdAt: string
 }
+
+export enum PostInputType {
+  Community = 'Community',
+  Timeline = 'Timeline',
+}
