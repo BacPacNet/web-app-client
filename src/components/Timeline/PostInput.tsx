@@ -12,22 +12,13 @@ import EmojiPicker from 'emoji-picker-react'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { useCreateUserPost } from '@/services/community-timeline'
-import { PostInputType } from '@/types/constants'
+import { CommunityPostData, PostInputData, PostInputType } from '@/types/constants'
 interface PostInputProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   idToPost?: string
   profileDp?: string
   type: string
-}
-
-interface PostInputData {
-  content: string
-  imageUrl?: Array<{
-    imageUrl: string
-    publicId: string
-  }>
-  communityId?: string | number
 }
 
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp, type }) => {
@@ -61,8 +52,11 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
       }
       //if type is community , add communityId field to data
       if (type === PostInputType.Community) {
-        data.communityId = idToPost
-        CreateGroupPost(data)
+        const communityData: CommunityPostData = {
+          ...data,
+          communityId: idToPost,
+        }
+        CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
         CreateTimelinePost(data)
       }
@@ -71,8 +65,11 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
         content: inputValue,
       }
       if (type === PostInputType.Community) {
-        data.communityId = idToPost
-        CreateGroupPost(data)
+        const communityData: CommunityPostData = {
+          ...data,
+          communityId: idToPost,
+        }
+        CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
         CreateTimelinePost(data)
       }

@@ -30,7 +30,7 @@ import { useUniStore } from '@/store/store'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { replaceImage } from '@/services/uploadImage'
-import { PostType } from '@/types/constants'
+import { PostCommentData, PostType } from '@/types/constants'
 
 dayjs.extend(relativeTime)
 
@@ -61,16 +61,6 @@ interface PostProps {
   profileDp?: string
   adminId: string
   type: PostType
-}
-
-interface PostCommentData {
-  postID: string | undefined
-  content: string
-  imageUrl?: {
-    imageUrl: string
-    publicId: string
-  }
-  adminId?: string | number
 }
 
 const PostOptions = () => {
