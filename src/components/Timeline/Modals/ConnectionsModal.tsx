@@ -5,6 +5,7 @@ import UserListItem from '../UserListItem'
 import { useGetUserFollow, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { FollowingItemProps } from '@/types/constants'
 
 const ConnectionsModal = () => {
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
@@ -40,7 +41,7 @@ const ConnectionsModal = () => {
           <p className="text-center p-4">You are not Following anyone.</p>
         ) : (
           content === 'Following' &&
-          userFollow?.profile?.map((item: any, index: number) => (
+          userFollow?.profile?.map((item: FollowingItemProps, index: number) => (
             <UserListItem
               key={index}
               id={item?.users_id?.id}
@@ -67,7 +68,7 @@ const ConnectionsModal = () => {
           <p className="text-center p-4">You have 0 Followers</p>
         ) : (
           content === 'Followers' &&
-          userFollowers?.profile?.map((item: any, index: number) => (
+          userFollowers?.profile?.map((item: FollowingItemProps, index: number) => (
             <UserListItem
               key={index}
               id={item?.users_id?.id}
