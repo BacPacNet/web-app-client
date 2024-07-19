@@ -15,6 +15,7 @@ interface FollowingItemProps {
   occupation: string
   imageUrl: string
   type: string
+  userFollowingIDs: string[]
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -28,8 +29,10 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   major,
   occupation,
   imageUrl,
+  userFollowingIDs,
 }) => {
   const { mutate: toggleFollow } = useToggleFollow(type)
+
   return (
     <div className="flex items-center p-2 md:p-4 border-b border-border ">
       {imageUrl ? (
@@ -66,8 +69,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           <PopoverTrigger>
             <SlOptionsVertical className="text-primary" />
           </PopoverTrigger>
-          <PopoverContent className="relative right-24 bottom-10 w-36 p-5 border-none shadow-lg bg-white shadow-gray-light z-20">
-            <p onClick={() => toggleFollow(id)}>Follow</p>
+          <PopoverContent className="relative right-24 bottom-10 w-36 p-5 border-none shadow-lg bg-white shadow-gray-light z-50">
+            <p onClick={() => toggleFollow(id)}>{userFollowingIDs?.includes(id) ? 'Un-Follow' : 'Follow'}</p>
           </PopoverContent>
         </Popover>
       </div>

@@ -25,6 +25,8 @@ import { ButtonPrimary } from '../Buttons/PrimaryButton'
 import InviteNotification from '../Notifiaction/InviteNotification'
 import CommentNotification from '../Notifiaction/CommentNotification'
 import AssignNotification from '../Notifiaction/AssignNotification'
+import UserFollowNotification from '../Notifiaction/UserFollowNotification'
+import { notificationInterface } from '@/types/constants'
 
 interface MenuItem {
   name: string
@@ -90,7 +92,7 @@ const Navbar: React.FC = () => {
           </PopoverTrigger>
           <PopoverContent className="relative right-8 w-72 p-5 border-none shadow-lg bg-white shadow-gray-light z-20 h-96 overflow-y-scroll">
             {notificationData?.length ? (
-              notificationData?.map((item: any) =>
+              notificationData?.map((item: notificationInterface) =>
                 item.type == notificationRoleAccess.GROUP_INVITE ? (
                   <InviteNotification
                     key={item?._id}
@@ -115,6 +117,14 @@ const Navbar: React.FC = () => {
                     key={item?._id}
                     id={item?._id}
                     communityGroupId={item?.communityPostId?._id}
+                    senderName={item?.sender_id?.firstName}
+                    message={item?.message}
+                    createdAt={item?.createdAt}
+                  />
+                ) : item.type == notificationRoleAccess.FOLLOW ? (
+                  <UserFollowNotification
+                    key={item?._id}
+                    id={item?._id}
                     senderName={item?.sender_id?.firstName}
                     message={item?.message}
                     createdAt={item?.createdAt}

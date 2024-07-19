@@ -8,16 +8,19 @@ import CommunityProfileContainer from '@/components/communityProfile/CommunityPr
 import { ModalContentType } from '@/types/global'
 import React, { useState } from 'react'
 import { useUniStore } from '@/store/store'
+import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 
 const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { userData, userProfileData, userFollowingData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
       case 'EditProfileModal':
         return <EditProfileModal />
+      case 'ConnectionsModal':
+        return <ConnectionsModal />
       default:
         return null
     }
@@ -35,8 +38,8 @@ const Profile = () => {
           setModalContentType={setModalContentType}
           setIsModalOpen={setIsModalOpen}
           isUserProfile={true}
-          following={userFollowingData?.followingCount}
-          followers={userFollowingData?.followerCount}
+          following={userProfileData?.following?.length}
+          followers={userProfileData?.followers?.length}
         />
         <CommunityProfileContainer />
       </div>

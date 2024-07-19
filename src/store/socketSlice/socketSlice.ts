@@ -1,20 +1,22 @@
 import { StateCreator } from 'zustand'
 import { io, Socket } from 'socket.io-client'
+import { notificationRoleAccess } from '@/components/Navbar/constant'
 
 type Notification = {
-  message: string
+  type: string
 }
 
 type SocketState = {
   socket: Socket | null
   isConnected: boolean
-  isRefetched: boolean
+  type: string
 }
 
 type SocketActions = {
-  initializeSocket: (userId: string, refetchUserData: () => void, refetchNotification: () => void) => void
+  initializeSocket: (userId: string, refetchUserData: () => void, refetchNotification: () => void, refetchUserProfileData: () => void) => void
+
   disconnectSocket: () => void
-  setIsRefetched: (value: boolean) => void
+  setIsRefetched: (value: string) => void
 }
 
 export type SocketSlice = SocketState & SocketActions
@@ -22,13 +24,13 @@ export type SocketSlice = SocketState & SocketActions
 const initialState: SocketState = {
   socket: null,
   isConnected: false,
-  isRefetched: false,
+  type: '',
 }
 
 export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
   ...initialState,
 
-  initializeSocket: (userId, refetchUserData, refetchNotification) => {
+  initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData) => {
     const newSocket = io('http://localhost:9000')
 
     newSocket.on('connect', () => {
@@ -42,9 +44,13 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
     })
 
     newSocket.on(`notification_${userId}`, (notification: Notification) => {
-      if (notification.message === 'You have a been assigned') {
+      if (notification.type === notificationRoleAccess.ASSIGN) {
         refetchUserData()
-        set({ isRefetched: true })
+        set({ type: notificationRoleAccess.ASSIGN })
+      }
+      if (notification.type === notificationRoleAccess.FOLLOW) {
+        refetchUserProfileData()
+        set({ type: notificationRoleAccess.FOLLOW })
       }
 
       refetchNotification()
@@ -61,5 +67,5 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
     }
   },
 
-  setIsRefetched: (value: boolean) => set({ isRefetched: value }),
+  setIsRefetched: (value: string) => set({ type: value }),
 })
