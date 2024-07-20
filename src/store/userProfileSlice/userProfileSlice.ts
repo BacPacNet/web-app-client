@@ -7,6 +7,8 @@ type userProfileState = {
 
 type userProfileAction = {
   setUserProfileData: (userProfileData: userProfileType) => void
+  setUserFollowers: (communities: userProfileType['followers']) => void
+  setUserfollowing: (communities: userProfileType['following']) => void
   resetUserProfileData: () => void
 }
 
@@ -28,6 +30,8 @@ const initialState: userProfileState = {
     major: '',
     affiliation: '',
     occupation: '',
+    followers: [{ userId: '' }],
+    following: [{ userId: '' }],
     totalFilled: 0,
   },
 }
@@ -37,5 +41,19 @@ export type userProfileSlice = userProfileState & userProfileAction
 export const createUserProfileSlice: StateCreator<userProfileSlice> = (set) => ({
   userProfileData: initialState.userProfileData,
   setUserProfileData: (userProfileData: userProfileType) => set({ userProfileData }),
+  setUserFollowers: (followers: any) =>
+    set((state) => ({
+      userProfileData: {
+        ...state.userProfileData,
+        followers: followers,
+      },
+    })),
+  setUserfollowing: (followings: any) =>
+    set((state) => ({
+      userProfileData: {
+        ...state.userProfileData,
+        following: followings,
+      },
+    })),
   resetUserProfileData: () => set(initialState),
 })

@@ -2,60 +2,17 @@
 'use client'
 import React, { useState } from 'react'
 import UserListItem from '../UserListItem'
-
-const followingData = [
-  {
-    name: 'Roberta Green',
-    university: 'Nagoya University',
-    role: '2nd Yr. Undergraduate, Psychology',
-    tags: [
-      { label: '2nd Yr', color: 'bg-purple-500' },
-      { label: 'Undergraduate', color: 'bg-green' },
-      { label: 'Law', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Jonathan Park',
-    university: 'Nagoya University',
-    role: '2nd Yr. Undergraduate, Law',
-    tags: [
-      { label: '2nd Yr', color: 'bg-purple-500' },
-      { label: 'Undergraduate', color: 'bg-green' },
-      { label: 'Law', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Pathova Siena',
-    university: 'Nagoya University',
-    role: '4th Year PhD Lab of Semiconductors',
-    tags: [
-      { label: '4th Yr', color: 'bg-purple-500' },
-      { label: 'PhD', color: 'bg-green' },
-      { label: 'Physics', color: 'bg-cyan-500' },
-    ],
-  },
-  {
-    name: 'Danny Tela',
-    university: 'Nagoya University',
-    role: 'Assistant Professor of Molecular Neuroscience',
-    tags: [
-      { label: 'Assistant Professor', color: 'bg-purple-700' },
-      { label: 'Molecular Neuroscience', color: 'bg-red-500' },
-    ],
-  },
-  {
-    name: 'Gretha Bassuk',
-    university: 'Nagoya University',
-    role: 'Professor',
-    tags: [
-      { label: 'Professor', color: 'bg-blue-500' },
-      { label: 'Philosopy', color: 'bg-red-500' },
-    ],
-  },
-]
+import { useGetUserFollow, useGetUserFollowers } from '@/services/connection'
+import { useUniStore } from '@/store/store'
+import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { FollowingItemProps } from '@/types/constants'
 
 const ConnectionsModal = () => {
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
+  const { userProfileData } = useUniStore()
+  const userFollowingIDs = userProfileData.following.map((following) => following.userId)
+  const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow('', content == 'Following')
+  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers('', content == 'Followers')
 
   return (
     <div>
@@ -73,8 +30,61 @@ const ConnectionsModal = () => {
           Followers
         </p>
       </div>
-      <div className="mx-auto bg-white rounded-lg shadow-md overflow-hidden overflow-y-auto ">
-        {content === 'Following' && followingData.map((item, index) => <UserListItem key={index} {...item} />)}
+      <div className="mx-auto min-w-[300px] bg-white rounded-lg shadow-md overflow-hidden overflow-y-auto ">
+        {content === 'Following' && isFollowingLoading ? (
+          <>
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+          </>
+        ) : content === 'Following' && !userFollow?.profile?.length ? (
+          <p className="text-center p-4">You are not Following anyone.</p>
+        ) : (
+          content === 'Following' &&
+          userFollow?.profile?.map((item: FollowingItemProps, index: number) => (
+            <UserListItem
+              key={index}
+              id={item?.users_id?.id}
+              firstName={item?.users_id?.firstName}
+              lastName={item?.users_id?.lastName}
+              university={item?.university}
+              study_year={item?.study_year}
+              degree={item?.degree}
+              major={item?.major}
+              occupation={item?.occupation}
+              imageUrl={item?.profile_dp?.imageUrl}
+              type={content}
+              userFollowingIDs={userFollowingIDs}
+            />
+          ))
+        )}
+        {content === 'Followers' && isFollowersLoading ? (
+          <>
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+          </>
+        ) : content === 'Followers' && !userFollow?.profile?.length ? (
+          <p className="text-center p-4">You have 0 Followers</p>
+        ) : (
+          content === 'Followers' &&
+          userFollowers?.profile?.map((item: FollowingItemProps, index: number) => (
+            <UserListItem
+              key={index}
+              id={item?.users_id?.id}
+              firstName={item?.users_id?.firstName}
+              lastName={item?.users_id?.lastName}
+              university={item?.university}
+              study_year={item?.study_year}
+              degree={item?.degree}
+              major={item?.major}
+              occupation={item?.occupation}
+              imageUrl={item?.profile_dp?.imageUrl}
+              type={content}
+              userFollowingIDs={userFollowingIDs}
+            />
+          ))
+        )}
       </div>
     </div>
   )

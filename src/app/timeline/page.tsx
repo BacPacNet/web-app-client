@@ -69,7 +69,7 @@ const recommendations = [
 
 const Timeline = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { userData, userProfileData, userFollowingData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
   const { isLoading, data: TimelinePosts, error } = useGetUserPosts()
   const timelinePosts = TimelinePosts?.timelinePosts
@@ -136,8 +136,8 @@ const Timeline = () => {
             setModalContentType={setModalContentType}
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
-            following={userFollowingData?.followingCount}
-            followers={userFollowingData?.followerCount}
+            following={userProfileData?.following?.length}
+            followers={userProfileData?.followers?.length}
           />
           <Recommendations people={recommendations} />
         </div>

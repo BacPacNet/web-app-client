@@ -3,18 +3,19 @@ import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
+import { notificationInterface } from '@/types/constants'
 
-export async function getUserNotification(token: any) {
-  const response = await client(`/notification/`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getUserNotification(token: string) {
+  const response: notificationInterface[] = await client(`/notification/`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
-export async function JoinCommunityGroup(data: any, token: any) {
+export async function JoinCommunityGroup(data: { groupId: string; id: string }, token: string) {
   const response = await client(`/notification/join/`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
 
-export async function UpdateCommunityGroup(data: any, token: any) {
+export async function UpdateCommunityGroup(data: { id: string }, token: string) {
   const response = await client(`/notification`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
@@ -41,7 +42,7 @@ export const useJoinCommunityGroup = () => {
   const { setUserData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: any) => JoinCommunityGroup(data, cookieValue),
+    mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
       setUserData(response.user)
@@ -57,7 +58,7 @@ export const useUpdateIsSeenCommunityGroupNotification = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: any) => UpdateCommunityGroup(data, cookieValue),
+    mutationFn: (data: { id: string }) => UpdateCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
       console.log(response)

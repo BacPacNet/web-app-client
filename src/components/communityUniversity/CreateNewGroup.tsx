@@ -46,8 +46,6 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
       ...logoImageData,
       selectedUsersId,
     }
-    // return console.log(id)
-
     createGroup({ communityId: id, data: dataToPush })
   }
 

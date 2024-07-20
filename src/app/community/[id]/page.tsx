@@ -69,7 +69,6 @@ const Page = () => {
       findGroupRole(userData.userUnVerifiedCommunities)
     }
   }, [currSelectedGroup, userData])
-  // console.log('role', currUserGroupRole, userData)
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
