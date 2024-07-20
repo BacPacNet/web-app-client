@@ -9,6 +9,7 @@ import Modal from '../Timeline/Modal'
 import ConnectionsModal from '../Timeline/Modals/ConnectionsModal'
 import PollModal from '../Timeline/Modals/PollModal'
 import ReplyModal from '../Timeline/Modals/ReplyModal'
+import { PostType } from '@/types/constants'
 
 const comments = [
   {
@@ -72,6 +73,7 @@ const CommunityProfileContainer = () => {
             setModalContentType={setModalContentType}
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
+            type={PostType.Community}
           />
         ) : selectedOption == valueType.Media ? (
           <Post
@@ -91,6 +93,7 @@ const CommunityProfileContainer = () => {
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
             media={[]}
+            type={PostType.Community}
           />
         ) : selectedOption == valueType.Saved ? (
           <Post
@@ -110,6 +113,7 @@ const CommunityProfileContainer = () => {
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
             saved={true}
+            type={PostType.Community}
           />
         ) : selectedOption == valueType.Settings ? (
           <CommunityProfileSettings />
@@ -130,6 +134,7 @@ const CommunityProfileContainer = () => {
             setModalContentType={setModalContentType}
             setIsModalOpen={setIsModalOpen}
             isUserProfile={true}
+            type={PostType.Community}
           />
         )}
       </div>

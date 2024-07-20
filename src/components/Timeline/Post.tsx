@@ -25,10 +25,12 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import { AiOutlineLike } from 'react-icons/ai'
 import { useCreateGroupPostComment, useLikeUnilikeGroupPost, useLikeUnlikeGroupPostComment } from '@/services/community-university'
+import { useLikeUnlikeTimelinePost, useCreateUserPostComment, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useUniStore } from '@/store/store'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { replaceImage } from '@/services/uploadImage'
+import { PostCommentData, PostType } from '@/types/constants'
 
 dayjs.extend(relativeTime)
 
@@ -58,6 +60,7 @@ interface PostProps {
   postID?: string
   profileDp?: string
   adminId: string
+  type: PostType
 }
 
 const PostOptions = () => {
@@ -152,10 +155,14 @@ const Post: React.FC<PostProps> = ({
   postID,
   profileDp,
   adminId,
+  type,
 }) => {
-  const { mutate: LikeUnlikePost } = useLikeUnilikeGroupPost()
-  const { mutate: CreateComment } = useCreateGroupPostComment()
-  const { mutate: likePostComment } = useLikeUnlikeGroupPostComment()
+  const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
+  const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
+  const { mutate: CreateGroupPostComment } = useCreateGroupPostComment()
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment()
+  const { mutate: CreateUserPostComment } = useCreateUserPostComment()
+  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment()
   const [comment, setComment] = useState('')
   const [ImageValue, setImageValue] = useState<File | null>(null)
 
@@ -170,20 +177,46 @@ const Post: React.FC<PostProps> = ({
     if (ImageValue) {
       const imagedata: any = await replaceImage(ImageValue, '')
 
-      const data = {
+      const data: PostCommentData = {
         postID: postID,
         content: comment,
         imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
-        adminId,
       }
-      CreateComment(data)
+
+      if (type === PostType.Timeline) {
+        CreateUserPostComment(data)
+      } else if (type === PostType.Community) {
+        data.adminId = adminId
+        CreateGroupPostComment(data)
+      }
     } else {
-      const data = {
+      const data: PostCommentData = {
         postID: postID,
         content: comment,
-        adminId,
       }
-      CreateComment(data)
+
+      if (type === PostType.Timeline) {
+        CreateUserPostComment(data)
+      } else if (type === PostType.Community) {
+        data.adminId = adminId
+        CreateGroupPostComment(data)
+      }
+    }
+  }
+
+  const LikeUnlikeHandler = (postId: string) => {
+    if (type === PostType.Timeline) {
+      LikeUnlikeTimelinePost(postId)
+    } else if (type === PostType.Community) {
+      LikeUnlikeGroupPost({ postId })
+    }
+  }
+
+  const likePostCommentHandler = (commentId: string) => {
+    if (type === PostType.Timeline) {
+      likeUserPostComment(commentId)
+    } else if (type === PostType.Community) {
+      likeGroupPostComment(commentId)
     }
   }
 
@@ -245,7 +278,8 @@ const Post: React.FC<PostProps> = ({
           </div>
           {/* Post Actions */}
           <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
-            <div onClick={() => LikeUnlikePost(postID)} className="flex items-center cursor-pointer">
+            {/* Like Button */}
+            <div onClick={() => LikeUnlikeHandler(postID!)} className="flex items-center cursor-pointer">
               <AiOutlineLike color={LikesUserId.includes(userData?.id) ? '#6647FF' : ''} />
               <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes?.length ? likes?.length : 0}</span>
             </div>
@@ -348,7 +382,7 @@ const Post: React.FC<PostProps> = ({
                   </div>
                   {/* Comment Actions */}
                   <div className="flex justify-end mt-3 gap-10">
-                    <div onClick={() => likePostComment(comment?._id)} className="flex items-center cursor-pointer">
+                    <div onClick={() => likePostCommentHandler(comment._id)} className="flex items-center cursor-pointer">
                       <AiOutlineLike color={comment?.likeCount?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
                       <span className="mx-1 text-sm">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
                     </div>

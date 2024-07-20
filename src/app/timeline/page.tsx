@@ -12,7 +12,7 @@ import PollModal from '@/components/Timeline/Modals/PollModal'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ReplyModal from '@/components/Timeline/Modals/ReplyModal'
 import { ModalContentType } from '@/types/global'
-import { PostInputType } from '@/types/constants'
+import { PostInputType, PostType } from '@/types/constants'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
 import { useGetUserPosts } from '@/services/community-timeline'
@@ -44,16 +44,7 @@ interface Comment {
 }
 
 const options = ['Recent', 'Popular', 'Most Liked']
-const comments = [
-  {
-    id: 1,
-    user: 'Johnny Nitro',
-    text: "Yeah give me a second I'll try to solve it and send the solution over your DMs.",
-    date: '5d',
-    avatar: '/timeline/avatar.png',
-    likes: 4,
-  },
-]
+
 const roberta = {
   avatarUrl: '/timeline/avatar2.png',
   userAvatarUrl: '/timeline/avatar.png',
@@ -110,20 +101,22 @@ const Timeline = () => {
       return (
         <Post
           key={post._id}
-          user="Joshua Welman"
-          adminId="123"
-          university={post.userId}
-          year="2nd Yr. Graduate"
+          user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
+          adminId="null"
+          university={post.user_id?.university_name}
+          year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
           text={post.content}
           date={post.createdAt}
-          avatar="/timeline/avatar.png"
+          avatar={post?.user_id?.profile_dp?.imageUrl}
           likes={post.likeCount}
-          comments={0}
+          comments={post.comments.length}
           reposts={2}
           shares={1}
-          userComments={comments}
+          userComments={post.comments}
           setModalContentType={setModalContentType}
           setIsModalOpen={setIsModalOpen}
+          postID={post._id}
+          type={PostType.Timeline}
         />
       )
     })
