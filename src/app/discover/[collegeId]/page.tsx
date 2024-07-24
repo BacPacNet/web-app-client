@@ -13,9 +13,36 @@ import ft_grey from '../../../../public/stats/ft_grey.png'
 import ft_violet from '../../../../public/stats/ft_violet.png'
 import Link from 'next/link'
 
-export default function CollegeDiscovery({ params }) {
+interface College {
+  name?: string
+  images: string[]
+  logos?: string[]
+  wikiInfoBox?: {
+    Location?: string
+  }
+  topUniInfo?: {
+    about?: string
+    studentsAndFacultiesData?: {
+      Total_students: { Total_students: number }
+      Total_faculty_staff: { Total_faculty_staff: number }
+    }
+  }
+  collegeBoardInfo?: any // Define this based on the actual structure of collegeBoardInfo
+}
+
+interface ApiResponse {
+  result?: [College]
+}
+
+export default function CollegeDiscovery({
+  params,
+}: {
+  params: {
+    collegeId: string
+  }
+}) {
   const [loading, setLoading] = useState(true)
-  const [college, setCollege] = useState(null)
+  const [college, setCollege] = useState<College>()
   const collegeId = params.collegeId
 
   const [imageIndex, setImageIndex] = useState(0)
@@ -32,8 +59,9 @@ export default function CollegeDiscovery({ params }) {
     const fetchCollege = async () => {
       try {
         console.log('Fetching college data for ', collegeId)
-        const data = await getUniversity(collegeId)
-        setCollege(data?.result)
+        const data: ApiResponse = await getUniversity(collegeId)
+        console.log('fetched  college ', data)
+        setCollege(data.result?.[0])
       } catch (error) {
         console.error('Error fetching college data: ', error)
       } finally {
@@ -71,11 +99,13 @@ export default function CollegeDiscovery({ params }) {
         {/* Image with Sliding Animation */}
         <div className="relative h-96 overflow-hidden">
           {college.images.map((img, idx) => (
-            <img
+            <Image
               key={idx}
               src={img}
               alt={`College image ${idx}`}
-              className={`absolute w-full h-full object-cover transition-transform duration-1000 ${
+              layout="fill"
+              objectFit="cover"
+              className={`absolute transition-transform duration-1000 ${
                 idx === imageIndex ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
               }`}
               style={{
@@ -89,7 +119,7 @@ export default function CollegeDiscovery({ params }) {
         <div className="px-8 lg:px-28 grid grid-cols-1 md:grid-cols-2 justify-center md:justify-between pt-4 gap-8">
           <div className="flex flex-row items-center">
             <div className="mr-10">
-              <Image src={college?.logos[1]} alt="" width={100} height={30} />
+              <Image src={college?.logos?.[1] || ''} alt="" width={100} height={30} />
             </div>
             <div className="flex flex-col">
               <span className="font-bold">{college?.name}</span>
@@ -115,7 +145,9 @@ export default function CollegeDiscovery({ params }) {
                     <Image src={st_grey} alt="" width={100} height={100} />
                   </span>
                   <span className="flex flex-row items-center gap-2.5">
-                    <div className="font-bold text-3xl">{college?.topUniInfo?.studentsAndFacultiesData[0]?.['Total students'] || 'No data'}</div>
+                    <div className="font-bold text-3xl">
+                      {college?.topUniInfo?.studentsAndFacultiesData?.Total_students?.Total_students || 'No data'}
+                    </div>
                     <div className="text-center text-gray w-10">Total Students</div>
                   </span>
                 </li>
@@ -133,7 +165,9 @@ export default function CollegeDiscovery({ params }) {
                     <Image src={ft_grey} alt="" width={100} height={100} />
                   </span>
                   <span className="flex flex-row items-center gap-2.5">
-                    <div className="font-bold text-3xl">{college?.topUniInfo?.studentsAndFacultiesData[2]?.['Total faculty staff']}</div>
+                    <div className="font-bold text-3xl">
+                      {college?.topUniInfo?.studentsAndFacultiesData?.Total_faculty_staff?.Total_faculty_staff}
+                    </div>
                     <div className="text-center text-gray w-15">Total Faculty</div>
                   </span>
                 </li>
