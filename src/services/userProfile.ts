@@ -8,13 +8,13 @@ export async function getUserProfileData(token: any) {
   return response
 }
 
-export function useGetUserProfileData() {
+export function useGetUserProfileData(type: string) {
   const [cookieValue] = useCookie('uni_user_token')
 
   const { isLoading, data, error, refetch } = useQuery({
     queryKey: ['getRefetchUserProfileData'],
     queryFn: () => getUserProfileData(cookieValue),
-    enabled: !!cookieValue,
+    enabled: !!cookieValue && type !== '',
   })
 
   let errorMessage = null

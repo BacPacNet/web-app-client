@@ -6,10 +6,18 @@ import UniversityCard from '@/components/universityCommunity/universityCommunity
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
 import Loading from '../loading'
 
+interface CommunityType {
+  _id: string
+  communityLogoUrl: {
+    imageUrl: string
+  }
+  name: string
+  collegeID: string
+}
 const Page = () => {
-  const { data: SubscribedData, isLoading } = useGetUserSubscribedCommunityGroups()
+  const { data: SubscribedData, isFetching } = useGetUserSubscribedCommunityGroups()
 
-  if (isLoading) return <Loading />
+  if (isFetching) return <Loading />
 
   return (
     <>
@@ -18,7 +26,7 @@ const Page = () => {
         <h3 className="py-10 text-xl font-bold text-neutral-700">Joined Communities</h3>
         {SubscribedData?.community?.length ? (
           <div className="flex gap-10 flex-wrap justify-center">
-            {SubscribedData?.community?.map((item: any) => (
+            {SubscribedData?.community?.map((item: CommunityType) => (
               <UniversityCard
                 key={item?._id}
                 universityLogo={item?.communityLogoUrl?.imageUrl}

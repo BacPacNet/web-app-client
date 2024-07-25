@@ -74,7 +74,7 @@ export async function getAllCommunityGroupPost(communityId: string, token: any) 
 
 //posts
 export async function getPost(postID: string, isType: string | null, token: any) {
-  const response: any = await client(`/post/singlePost/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/communitypost/post/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -228,7 +228,7 @@ export const useUpdateCommunityGroup = () => {
 export function useGetCommunityGroupPost(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error, isError } = useQuery({
+  const { isFetching, data, error, isError } = useQuery({
     queryKey: ['communityGroupsPost', communityId],
     queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
     enabled: isJoined,
@@ -239,7 +239,7 @@ export function useGetCommunityGroupPost(communityId: string, isJoined: boolean)
     errorMessage = error.response.data
   }
 
-  return { isLoading, data, isError, error: errorMessage }
+  return { isFetching, data, isError, error: errorMessage }
 }
 
 export const useLikeUnilikeGroupPost = () => {
@@ -360,10 +360,10 @@ export const useUserGroupRole = () => {
 export function useGetPost(postId: string, isType: string | null) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error } = useQuery({
+  const { isFetching, data, error } = useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, cookieValue),
-    enabled: !!postId,
+    enabled: !!postId && !!cookieValue,
   })
 
   let errorMessage = null
@@ -371,5 +371,5 @@ export function useGetPost(postId: string, isType: string | null) {
     errorMessage = error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { isFetching, data, error: errorMessage }
 }

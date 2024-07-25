@@ -3,17 +3,29 @@ import { client } from './api-Client'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
+interface community {
+  _id: string
+  communityLogoUrl: {
+    imageUrl: string
+  }
+  name: string
+  collegeID: string
+}
+interface CommunityType {
+  community: community[]
+}
+
 export async function getUserSubscribedCommunityGroups(token: any) {
-  const response: any = await client(`/community`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: CommunityType = await client(`/community`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
 export function useGetUserSubscribedCommunityGroups() {
   const [cookieValue] = useCookie('uni_user_token')
-  const { isLoading, data, error } = useQuery({
+  const { isFetching, data, error } = useQuery({
     queryKey: ['UserSubscribedCommunityGroups'],
     queryFn: () => getUserSubscribedCommunityGroups(cookieValue),
-    enabled: true,
+    enabled: !!cookieValue,
   })
 
   let errorMessage = null
@@ -21,5 +33,5 @@ export function useGetUserSubscribedCommunityGroups() {
     errorMessage = error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { isFetching, data, error: errorMessage }
 }
