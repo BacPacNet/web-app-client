@@ -243,8 +243,8 @@ const Post: React.FC<PostProps> = ({
               )}
               <div>
                 <p className="font-medium text-base text-gray-dark">{user}</p>
-                <p className="text-xs text-gray-1 pb-1">{university ? university : 'not available'}</p>
-                <p className="text-xs text-gray-1">{!year.includes('undefined') ? year : ''}</p>
+                <p className="text-xs text-gray-1 pb-1">{university ? university : ''}</p>
+                <p className="text-xs text-gray-1">{!year.includes('undefined') && !year === null ? year : ''}</p>
               </div>
             </div>
             {/* POST OPTIONS */}
