@@ -17,6 +17,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
 import Navbar from '@/components/Timeline/Navbar'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 
 const roberta = {
   avatarUrl: '/timeline/avatar2.png',
@@ -37,7 +38,11 @@ const Page = () => {
   const { data: communityGroups } = useGetCommunityGroups(id, isJoined)
   const [currSelectedGroup, setCurrSelectedGroup] = useState(communityGroups?.groups[0])
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
-  const { data: communityGroupPost } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
+  const {
+    data: communityGroupPost,
+    isLoading: communityGroupPostLoading,
+    isError,
+  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
@@ -51,6 +56,10 @@ const Page = () => {
         return null
     }
   }
+
+  useEffect(() => {
+    setCurrSelectedGroup(communityGroups?.groups[0])
+  }, [communityGroups && !!currSelectedGroup])
 
   useEffect(() => {
     const findGroupRole = (communities: any) => {
@@ -69,6 +78,7 @@ const Page = () => {
       findGroupRole(userData.userUnVerifiedCommunities)
     }
   }, [currSelectedGroup, userData])
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -113,31 +123,40 @@ const Page = () => {
                       ''
                     )}
                   </div>
-                  {communityGroupPost?.communityPosts.map((item: any) => (
-                    <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
-                      <Post
-                        user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
-                        adminId={item.user_id?._id}
-                        university={item?.user_id?.university_name}
-                        year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
-                        text={item.content}
-                        date={item?.createdAt}
-                        avatar={item?.user_id?.profile_dp?.imageUrl}
-                        likes={item.likeCount}
-                        comments={item.comments.length}
-                        postID={item._id}
-                        reposts={2}
-                        shares={1}
-                        userComments={item.comments}
-                        setModalContentType={setModalContentType}
-                        setIsModalOpen={setIsModalOpen}
-                        isUniversity={true}
-                        profileDp={userProfileData?.profile_dp?.imageUrl}
-                        media={item?.imageUrl}
-                        type={PostType.Community}
-                      />
-                    </div>
-                  ))}
+                  {communityGroupPostLoading ? (
+                    <PostSkeleton />
+                  ) : isError ? (
+                    <div>Something went wrong!</div>
+                  ) : !communityGroupPost?.communityPosts.length ? (
+                    <div className="text-center font-bold mt-10">No post Yet!</div>
+                  ) : (
+                    communityGroupPost?.communityPosts.map((item: any) => (
+                      <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
+                        <Post
+                          isType={'communityId' in item ? 'CommunityPost' : 'userPost'}
+                          user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
+                          adminId={item.user_id?._id}
+                          university={item?.user_id?.university_name}
+                          year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
+                          text={item.content}
+                          date={item?.createdAt}
+                          avatar={item?.user_id?.profile_dp?.imageUrl}
+                          likes={item.likeCount}
+                          comments={item.comments.length}
+                          postID={item._id}
+                          reposts={2}
+                          shares={1}
+                          userComments={item.comments}
+                          setModalContentType={setModalContentType}
+                          setIsModalOpen={setIsModalOpen}
+                          isUniversity={true}
+                          profileDp={userProfileData?.profile_dp?.imageUrl}
+                          media={item?.imageUrl}
+                          type={PostType.Community}
+                        />
+                      </div>
+                    ))
+                  )}
                 </div>
               )}
             </div>

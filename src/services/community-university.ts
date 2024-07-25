@@ -73,6 +73,11 @@ export async function getAllCommunityGroupPost(communityId: string, token: any) 
 }
 
 //posts
+export async function getPost(postID: string, isType: string | null, token: any) {
+  const response: any = await client(`/communitypost/singlePost/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
 export async function CreateGroupPost(data: any, token: any) {
   const response = await client(`/communitypost`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
@@ -223,7 +228,7 @@ export const useUpdateCommunityGroup = () => {
 export function useGetCommunityGroupPost(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error } = useQuery({
+  const { isLoading, data, error, isError } = useQuery({
     queryKey: ['communityGroupsPost', communityId],
     queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
     enabled: isJoined,
@@ -234,7 +239,7 @@ export function useGetCommunityGroupPost(communityId: string, isJoined: boolean)
     errorMessage = error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { isLoading, data, isError, error: errorMessage }
 }
 
 export const useLikeUnilikeGroupPost = () => {
@@ -269,14 +274,18 @@ export const useCreateGroupPost = () => {
   })
 }
 
-export const useCreateGroupPostComment = () => {
+export const useCreateGroupPostComment = (isSinglePost: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      if (isSinglePost) {
+        queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -346,4 +355,21 @@ export const useUserGroupRole = () => {
       console.log(res.response.data.message, 'res')
     },
   })
+}
+
+export function useGetPost(postId: string, isType: string | null) {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['getPost', postId],
+    queryFn: () => getPost(postId, isType, cookieValue),
+    enabled: !!postId,
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(error) && error.response) {
+    errorMessage = error.response.data
+  }
+
+  return { isLoading, data, error: errorMessage }
 }

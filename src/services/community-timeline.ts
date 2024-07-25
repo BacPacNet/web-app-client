@@ -44,14 +44,18 @@ export async function LikeUnlikeUserPostComment(UserPostCommentId: string, token
 
 //Query Functions for UserPost, UserPostComment
 
-export const useCreateUserPostComment = () => {
+export const useCreateUserPostComment = (isSinglePost: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: PostCommentData) => CreateUserPostComment(data, cookieValue),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      if (isSinglePost) {
+        queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

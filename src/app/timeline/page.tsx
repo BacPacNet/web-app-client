@@ -117,6 +117,7 @@ const Timeline = () => {
           setIsModalOpen={setIsModalOpen}
           postID={post._id}
           type={PostType.Timeline}
+          isType={'communityId' in post ? 'CommunityPost' : 'userPost'}
         />
       )
     })
