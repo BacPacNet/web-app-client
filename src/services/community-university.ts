@@ -74,7 +74,7 @@ export async function getAllCommunityGroupPost(communityId: string, token: any) 
 
 //posts
 export async function getPost(postID: string, isType: string | null, token: any) {
-  const response: any = await client(`/communitypost/singlePost/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/post/singlePost/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
