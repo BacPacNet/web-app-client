@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import Navbar from '@/components/Timeline/Navbar'
 import Footer from '@/components/Footer/Footer'
 import UniversityCard from '@/components/universityCommunity/universityCommunityCart'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
@@ -21,7 +20,6 @@ const Page = () => {
 
   return (
     <>
-      <Navbar />
       <div className="flex flex-col min-h-[62vh] items-center ">
         <h3 className="py-10 text-xl font-bold text-neutral-700">Joined Communities</h3>
         {SubscribedData?.community?.length ? (

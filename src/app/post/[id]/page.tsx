@@ -8,7 +8,7 @@ import PollModal from '@/components/Timeline/Modals/PollModal'
 
 import React, { useState } from 'react'
 import { ModalContentType } from '@/types/global'
-import Navbar from '@/components/Timeline/Navbar'
+
 import { PostType } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
@@ -19,7 +19,7 @@ const UserPost = () => {
   const Type = searchParams.get('isType')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { data, isFetching } = useGetPost(id, Type)
+  const { data, isFetching, isPending } = useGetPost(id, Type)
   const item = data?.post
   const [cookieValue] = useCookie('uni_user_token')
   const { userProfileData } = useUniStore()
@@ -35,12 +35,13 @@ const UserPost = () => {
   }
 
   const PostHolder = () => {
-    if (!cookieValue) {
+    if (!cookieValue && !isPending) {
       return <div className="text-center">Login to view Post.</div>
     }
-    if (isFetching) {
+    if (isFetching || isPending) {
       return <PostSkeleton />
     }
+
     return (
       <Post
         isType={String(Type)}
@@ -73,7 +74,6 @@ const UserPost = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar />
 
       <div className="border-2 border-neutral-300 rounded-md w-3/4 mx-auto  mt-6">
         <PostHolder />

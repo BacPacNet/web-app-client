@@ -3,6 +3,7 @@ import React from 'react'
 import { CommunityNavbarLinks } from '@/types/constants'
 import { useRouter, usePathname } from 'next/navigation'
 import { useUniStore } from '@/store/store'
+import useCookie from '@/hooks/useCookie'
 
 const Navbar: React.FC = () => {
   // const tabs = ['Timeline', 'Profile', 'Notifications', 'Messages', 'Connections', 'University Community', 'Chatbot']
@@ -11,7 +12,11 @@ const Navbar: React.FC = () => {
   const id = userData?.id
   const path = usePathname()
   const activeTab = path.split('/').pop()
+  const [cookieValue] = useCookie('uni_user_token')
 
+  if (!cookieValue) {
+    return
+  }
   return (
     <nav className="bg-primary text-white items-center justify-between px-4 py-2 hidden lg:flex">
       <div className="flex items-center">

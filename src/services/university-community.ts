@@ -22,16 +22,16 @@ export async function getUserSubscribedCommunityGroups(token: any) {
 
 export function useGetUserSubscribedCommunityGroups() {
   const [cookieValue] = useCookie('uni_user_token')
-  const { isFetching, data, error } = useQuery({
+  const state = useQuery({
     queryKey: ['UserSubscribedCommunityGroups'],
     queryFn: () => getUserSubscribedCommunityGroups(cookieValue),
     enabled: !!cookieValue,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isFetching, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }

@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import Navbar from '@/components/Timeline/Navbar'
 import ProfileCard from '@/components/Timeline/ProfileCard'
 import PostInput from '@/components/Timeline/PostInput'
 import Dropdown from '@/components/Timeline/DropDown'
@@ -12,7 +11,7 @@ import PollModal from '@/components/Timeline/Modals/PollModal'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ReplyModal from '@/components/Timeline/Modals/ReplyModal'
 import { ModalContentType } from '@/types/global'
-import { PostInputType, PostType } from '@/types/constants'
+import { PostInputType, PostType, singlePostEnum } from '@/types/constants'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
 import { useGetUserPosts } from '@/services/community-timeline'
@@ -117,7 +116,7 @@ const Timeline = () => {
           setIsModalOpen={setIsModalOpen}
           postID={post._id}
           type={PostType.Timeline}
-          isType={'communityId' in post ? 'CommunityPost' : 'userPost'}
+          isType={'communityId' in post ? singlePostEnum.CommunityPost : singlePostEnum.userPost}
         />
       )
     })
@@ -128,7 +127,6 @@ const Timeline = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar />
       <div className="flex justify-center items-center lg:items-start gap-7 mt-16 flex-col lg:flex-row xs:px-4 sm:px-0">
         <div className="flex flex-col gap-6">
           <ProfileCard

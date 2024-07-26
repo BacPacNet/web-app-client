@@ -96,17 +96,17 @@ export async function LikeUnilikeGroupPostCommnet(communityGroupPostCommentId: s
 }
 
 export function useGetCommunity(communityId: string) {
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     queryKey: ['community', communityId],
     queryFn: () => getCommunity(communityId),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useUpdateCommunity = () => {
@@ -157,18 +157,18 @@ export const useLeaveCommunity = () => {
 
 export function useGetCommunityGroups(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     enabled: isJoined,
     queryKey: ['communityGroups', communityId],
     queryFn: () => getAllCommunityGroups(communityId, cookieValue),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useJoinCommunityGroup = () => {
@@ -228,18 +228,18 @@ export const useUpdateCommunityGroup = () => {
 export function useGetCommunityGroupPost(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isFetching, data, error, isError } = useQuery({
+  const state = useQuery({
     queryKey: ['communityGroupsPost', communityId],
     queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
     enabled: isJoined,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isFetching, data, isError, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useLikeUnilikeGroupPost = () => {
@@ -310,34 +310,34 @@ export const useLikeUnlikeGroupPostComment = () => {
 
 export function useGetCommunityUsers(communityId: string, isopen: boolean, privacy: string, name: string) {
   const [cookieValue] = useCookie('uni_user_token')
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     enabled: isopen,
     queryKey: ['communityUsers', communityId, privacy, name],
     queryFn: () => getCommunityUsers(communityId, privacy, name, cookieValue),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export function useGetCommunityGroupUsers(communityGroupId: string, isopen: boolean, name: string) {
   const [cookieValue] = useCookie('uni_user_token')
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     enabled: isopen,
     queryKey: ['communityGroupUsers', communityGroupId, name],
     queryFn: () => getCommunityGroupUsers(communityGroupId, name, cookieValue),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useUserGroupRole = () => {
@@ -360,16 +360,16 @@ export const useUserGroupRole = () => {
 export function useGetPost(postId: string, isType: string | null) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isFetching, data, error } = useQuery({
+  const state = useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, cookieValue),
-    enabled: !!postId && !!cookieValue,
+    enabled: !!postId,
+    retry: 1,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
-
-  return { isFetching, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }

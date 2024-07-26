@@ -17,7 +17,6 @@ const register = async (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>): Pr
 export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  const setUserFollowingData = useUniStore((state) => state.setUserFollowingData)
 
   const [, setCookieValue] = useCookie('uni_user_token')
   const [, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
@@ -27,7 +26,6 @@ export const useHandleLogin = () => {
     onSuccess: (response: any) => {
       setUserData(response.user)
       setUserProfileData(response.userProfile)
-      setUserFollowingData(response.Following)
       // setToken(response.tokens)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)

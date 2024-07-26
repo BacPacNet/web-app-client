@@ -1,6 +1,5 @@
 import FindPeople from '@/components/Connections/FindPeople'
 import Footer from '@/components/Footer/Footer'
-import Navbar from '@/components/Timeline/Navbar'
 import Recommendations from '@/components/Timeline/Recommendations'
 import React from 'react'
 
@@ -46,7 +45,6 @@ const recommendations = [
 const Connections = () => {
   return (
     <div>
-      <Navbar />
       <div className="flex flex-col lg:flex-row my-12 gap-8 justify-center mx-4 md:mx-20 lg:mx-0">
         <FindPeople contentDivStyle="max-h-[500px]" />
         <Recommendations

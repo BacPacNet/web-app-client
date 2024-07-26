@@ -12,11 +12,10 @@ import HeroSec from '@/components/communityUniversity/HeroSec'
 import { useGetCommunity, useGetCommunityGroupPost, useGetCommunityGroups } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { ModalContentType } from '@/types/global'
-import { PostInputType, PostType } from '@/types/constants'
+import { PostInputType, PostType, singlePostEnum } from '@/types/constants'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
-import Navbar from '@/components/Timeline/Navbar'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 
 const roberta = {
@@ -113,7 +112,7 @@ const Page = () => {
     return communityGroupPost?.communityPosts.map((item: communityPostType) => (
       <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
         <Post
-          isType={'communityId' in item ? 'CommunityPost' : 'userPost'}
+          isType={'communityId' in item ? singlePostEnum.CommunityPost : singlePostEnum.userPost}
           user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
           adminId={item.user_id?._id}
           university={item?.user_id?.university_name}
@@ -143,7 +142,6 @@ const Page = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar />
       <div className="flex flex-col items-center w-full gap-6 mt-10  pb-10">
         <HeroSec data={data} isJoined={isJoined} setIsJoined={setIsJoined} />
         <div className="flex justify-center w-11/12 max-sm:w-full max-md:w-11/12  max-xl:w-full max-md:flex-col px-16 max-sm:px-4">

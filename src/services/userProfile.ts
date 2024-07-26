@@ -11,16 +11,16 @@ export async function getUserProfileData(token: any) {
 export function useGetUserProfileData(type: string) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error, refetch } = useQuery({
+  const state = useQuery({
     queryKey: ['getRefetchUserProfileData'],
     queryFn: () => getUserProfileData(cookieValue),
     enabled: !!cookieValue && type !== '',
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage, refetch }
+  return { ...state, error: errorMessage }
 }
