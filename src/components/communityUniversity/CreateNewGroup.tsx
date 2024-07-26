@@ -7,6 +7,7 @@ import SelectUsers from './SelectUsers'
 import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/community-university'
 import { useParams } from 'next/navigation'
 import { replaceImage } from '@/services/uploadImage'
+import { Spinner } from '../spinner/Spinner'
 type Props = {
   setNewGroup: (value: boolean) => void
 }
@@ -16,10 +17,11 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [userPopUp, setUserPopUp] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState([])
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
-  const { mutate: createGroup } = useCreateCommunityGroup()
+  const { mutate: createGroup, isPending } = useCreateCommunityGroup()
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
@@ -30,7 +32,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const onGroupSubmit = async (data: any) => {
     let CoverImageData
     let logoImageData
-
+    setIsLoading(true)
     if (coverImage) {
       const imagedata: any = await replaceImage(coverImage, '')
       CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
@@ -47,6 +49,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
       selectedUsersId,
     }
     createGroup({ communityId: id, data: dataToPush })
+    setIsLoading(false)
   }
 
   const { data } = useGetCommunityUsers(id, userPopUp, values.communityGroupType, searchInput)
@@ -81,6 +84,9 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
                 className="w-full pl-12 pr-3 py-2 text-gray-500 bg-transparent outline-none border border-neutral-300  rounded-2xl"
               />
             </div>
+            <button onClick={() => setSelectedUsers(data?.user)} className="self-end bg-slate-200 p-2 text-xs rounded-xl shadow-sm">
+              Select All
+            </button>
             {data?.user?.map((item: any) => (
               <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
             ))}
@@ -166,9 +172,15 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
               </div>
             </div>
             <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white">
-              Create Group
+              {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
             </button>
-            <button className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]">Reset</button>
+            <button
+              type="reset"
+              onClick={() => (setLogoImage(undefined), setCoverImage(undefined), setSelectedUsers([]))}
+              className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]"
+            >
+              Reset
+            </button>
           </form>
         </div>
       </div>

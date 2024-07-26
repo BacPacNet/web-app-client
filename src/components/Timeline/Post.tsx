@@ -9,6 +9,7 @@ import { FaBookmark } from 'react-icons/fa6'
 // import { MdOutlineImage } from 'react-icons/md'
 import { MdGifBox, MdOutlineBookmarkBorder } from 'react-icons/md'
 import { HiReply, HiOutlineBell, HiOutlineFlag } from 'react-icons/hi'
+import { MdOutlineOpenInNew } from 'react-icons/md'
 import { BiRepost } from 'react-icons/bi'
 import { ModalContentType } from '@/types/global'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -31,6 +32,8 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { replaceImage } from '@/services/uploadImage'
 import { PostCommentData, PostType } from '@/types/constants'
+import Link from 'next/link'
+import { Spinner } from '../spinner/Spinner'
 
 dayjs.extend(relativeTime)
 
@@ -57,13 +60,20 @@ interface PostProps {
   media?: []
   saved?: boolean
   isUniversity?: boolean
-  postID?: string
+  postID: string
   profileDp?: string
   adminId: string
   type: PostType
+  isType: string
+  isSinglePost?: boolean
 }
 
-const PostOptions = () => {
+interface PostOptionType {
+  postID: string
+  isType: string
+}
+
+const PostOptions = ({ postID, isType }: PostOptionType) => {
   return (
     <Popover>
       <PopoverTrigger>
@@ -71,6 +81,12 @@ const PostOptions = () => {
       </PopoverTrigger>
       <PopoverContent className="relative right-16 bottom-16 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
         <div className="flex flex-col gap-5">
+          <div className="flex gap-1 items-center">
+            <Link className="flex gap-1 items-center" href={`/post/${postID}?isType=${isType}`}>
+              <MdOutlineOpenInNew className="text-primary" size={20} />
+              <p className="font-medium text-sm">Open Post</p>
+            </Link>
+          </div>
           <div className="flex gap-1 items-center">
             <MdOutlineBookmarkBorder className="text-primary" size={20} />
             <p className="font-medium text-sm">Save Post</p>
@@ -156,15 +172,18 @@ const Post: React.FC<PostProps> = ({
   profileDp,
   adminId,
   type,
+  isType,
+  isSinglePost,
 }) => {
   const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
   const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
-  const { mutate: CreateGroupPostComment } = useCreateGroupPostComment()
+  const { mutate: CreateGroupPostComment, isPending: CreateGroupPostCommentLoading } = useCreateGroupPostComment(isSinglePost ? isSinglePost : false)
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment()
-  const { mutate: CreateUserPostComment } = useCreateUserPostComment()
+  const { mutate: CreateUserPostComment, isPending: CreateUserPostCommentLoading } = useCreateUserPostComment(isSinglePost ? isSinglePost : false)
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment()
   const [comment, setComment] = useState('')
   const [ImageValue, setImageValue] = useState<File | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [showCommentSec, setShowCommentsec] = useState(false)
   const { userData } = useUniStore()
@@ -174,6 +193,7 @@ const Post: React.FC<PostProps> = ({
     if (comment.length <= 1) {
       return console.log('Please type something to comment!')
     }
+    setIsLoading(true)
     if (ImageValue) {
       const imagedata: any = await replaceImage(ImageValue, '')
 
@@ -202,6 +222,9 @@ const Post: React.FC<PostProps> = ({
         CreateGroupPostComment(data)
       }
     }
+    setIsLoading(false)
+    setImageValue(null)
+    setComment('')
   }
 
   const LikeUnlikeHandler = (postId: string) => {
@@ -251,7 +274,7 @@ const Post: React.FC<PostProps> = ({
             <div className="flex items-center gap-2">
               {saved && <FaBookmark />}
 
-              <PostOptions />
+              <PostOptions postID={postID} isType={isType} />
             </div>
           </div>
           {/* media div  */}
@@ -334,9 +357,9 @@ const Post: React.FC<PostProps> = ({
                   </label>
                 </div>
 
-                {comment.length > 1 && (
+                {comment?.length > 1 && (
                   <button onClick={() => handlePostComment()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">
-                    Post
+                    {CreateGroupPostCommentLoading || CreateUserPostCommentLoading || isLoading ? <Spinner /> : <p>Post</p>}
                   </button>
                 )}
               </div>
@@ -349,10 +372,10 @@ const Post: React.FC<PostProps> = ({
                 </p>
               </div>
             )}
-            {userComments.length && showCommentSec ? <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div> : ''}
+            {userComments?.length && showCommentSec ? <div className="my-6 text-sm text-gray-500">Most Relevant / Most Recent</div> : ''}
             {/* Comments Section */}
             <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''} xs:max-w-xs sm:max-w-max flex flex-col gap-2 `}>
-              {userComments.map((comment: any) => (
+              {userComments?.map((comment: any) => (
                 <div key={comment._id} className="my-4 xs:mr-4 sm:mr-0">
                   {/* Comment Info */}
                   <div className="flex gap-4">
@@ -401,7 +424,7 @@ const Post: React.FC<PostProps> = ({
               ))}
             </div>
             <div className="flex justify-end mt-5 mb-10 xs:mr-8 sm:mr-0">
-              {userComments.length > 5 && showCommentSec ? <button className="text-gray text-sm underline">View More Comments</button> : ''}
+              {userComments?.length > 5 && showCommentSec ? <button className="text-gray text-sm underline">View More Comments</button> : ''}
             </div>
           </div>
         </div>

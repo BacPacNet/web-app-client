@@ -9,19 +9,19 @@ export async function getUserData(token: any, id: string) {
   return response
 }
 
-export function useGetUserData() {
+export function useGetUserData(type: string) {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
-  const { isLoading, data, error, refetch } = useQuery({
+  const state = useQuery({
     queryKey: ['getRefetchUserData'],
     queryFn: () => getUserData(cookieValue, userData.id),
-    enabled: !!cookieValue,
+    enabled: !!cookieValue && type != '',
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage, refetch }
+  return { ...state, error: errorMessage }
 }

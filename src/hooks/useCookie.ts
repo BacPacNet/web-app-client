@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from 'react'
 
 const useCookie = (cookieName: string): [string, (value: string, expirationDate: string) => void, () => void] => {

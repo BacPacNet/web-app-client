@@ -35,18 +35,18 @@ export async function toggleFollow(id: string, token: any) {
 export function useGetAllUserWithProfileData(Name: string, content: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(Name, 1000)
-  const { isLoading, data, error, isFetching } = useQuery({
+  const state = useQuery({
     queryKey: ['getAllUsersWithProfile', debouncedSearchTerm],
     queryFn: () => getUsersWithProfile(cookieValue, debouncedSearchTerm),
     enabled: !!cookieValue && content,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, isFetching, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useToggleFollow = (type: string) => {
@@ -73,33 +73,33 @@ export const useToggleFollow = (type: string) => {
 export function useGetUserFollow(Name: string, content: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(Name, 1000)
-  const { isLoading, data, error, isFetching } = useQuery({
+  const state = useQuery({
     queryKey: ['getUserFollow', debouncedSearchTerm],
     queryFn: () => getUserFollow(cookieValue, debouncedSearchTerm),
     enabled: !!cookieValue && content,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, isFetching, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export function useGetUserFollowers(Name: string, content: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(Name, 1000)
-  const { isLoading, data, error, isFetching } = useQuery({
+  const state = useQuery({
     queryKey: ['getUserFollowers', debouncedSearchTerm],
     queryFn: () => getUserFollowers(cookieValue, debouncedSearchTerm),
     enabled: !!cookieValue && content,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, isFetching, error: errorMessage }
+  return { ...state, error: errorMessage }
 }

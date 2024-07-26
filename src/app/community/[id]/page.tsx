@@ -12,11 +12,11 @@ import HeroSec from '@/components/communityUniversity/HeroSec'
 import { useGetCommunity, useGetCommunityGroupPost, useGetCommunityGroups } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { ModalContentType } from '@/types/global'
-import { PostInputType, PostType } from '@/types/constants'
+import { PostInputType, PostType, singlePostEnum } from '@/types/constants'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowDown } from 'react-icons/io'
-import Navbar from '@/components/Timeline/Navbar'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 
 const roberta = {
   avatarUrl: '/timeline/avatar2.png',
@@ -25,6 +25,27 @@ const roberta = {
   comment: 'Sorry that was a strange thing to ask.',
   replyingTo: 'Johnny Nitro and Kathryn Murphy',
 }
+
+interface communityPostType {
+  _id: string
+  user_id: {
+    firstName: string
+    lastName: string
+    _id: string
+    university_name: string
+    study_year: string
+    degree: string
+    profile_dp: {
+      imageUrl: string
+    }
+  }
+  content: string
+  createdAt: string
+  likeCount: []
+  comments: []
+  imageUrl: []
+}
+
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
@@ -37,7 +58,11 @@ const Page = () => {
   const { data: communityGroups } = useGetCommunityGroups(id, isJoined)
   const [currSelectedGroup, setCurrSelectedGroup] = useState(communityGroups?.groups[0])
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
-  const { data: communityGroupPost } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
+  const {
+    data: communityGroupPost,
+    isFetching: communityGroupPostLoading,
+    isError,
+  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {
@@ -51,6 +76,10 @@ const Page = () => {
         return null
     }
   }
+
+  useEffect(() => {
+    setCurrSelectedGroup(communityGroups?.groups[0])
+  }, [communityGroups && !!currSelectedGroup])
 
   useEffect(() => {
     const findGroupRole = (communities: any) => {
@@ -69,12 +98,50 @@ const Page = () => {
       findGroupRole(userData.userUnVerifiedCommunities)
     }
   }, [currSelectedGroup, userData])
+
+  const PostContainer = () => {
+    if (communityGroupPostLoading) {
+      return <PostSkeleton />
+    }
+    if (isError) {
+      return <div>Something went wrong!</div>
+    }
+    if (!communityGroupPost?.communityPosts.length) {
+      return <div className="text-center font-bold mt-10">No post Yet!</div>
+    }
+    return communityGroupPost?.communityPosts.map((item: communityPostType) => (
+      <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
+        <Post
+          isType={'communityId' in item ? singlePostEnum.CommunityPost : singlePostEnum.userPost}
+          user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
+          adminId={item.user_id?._id}
+          university={item?.user_id?.university_name}
+          year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
+          text={item.content}
+          date={item?.createdAt}
+          avatar={item?.user_id?.profile_dp?.imageUrl}
+          likes={item.likeCount}
+          comments={item.comments.length}
+          postID={item._id}
+          reposts={2}
+          shares={1}
+          userComments={item.comments}
+          setModalContentType={setModalContentType}
+          setIsModalOpen={setIsModalOpen}
+          isUniversity={true}
+          profileDp={userProfileData?.profile_dp?.imageUrl}
+          media={item?.imageUrl}
+          type={PostType.Community}
+        />
+      </div>
+    ))
+  }
+
   return (
     <>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
-      <Navbar />
       <div className="flex flex-col items-center w-full gap-6 mt-10  pb-10">
         <HeroSec data={data} isJoined={isJoined} setIsJoined={setIsJoined} />
         <div className="flex justify-center w-11/12 max-sm:w-full max-md:w-11/12  max-xl:w-full max-md:flex-col px-16 max-sm:px-4">
@@ -113,31 +180,7 @@ const Page = () => {
                       ''
                     )}
                   </div>
-                  {communityGroupPost?.communityPosts.map((item: any) => (
-                    <div key={item._id} className="border-2 border-neutral-300 rounded-md w-[73%] max-xl:w-10/12 mt-6">
-                      <Post
-                        user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
-                        adminId={item.user_id?._id}
-                        university={item?.user_id?.university_name}
-                        year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
-                        text={item.content}
-                        date={item?.createdAt}
-                        avatar={item?.user_id?.profile_dp?.imageUrl}
-                        likes={item.likeCount}
-                        comments={item.comments.length}
-                        postID={item._id}
-                        reposts={2}
-                        shares={1}
-                        userComments={item.comments}
-                        setModalContentType={setModalContentType}
-                        setIsModalOpen={setIsModalOpen}
-                        isUniversity={true}
-                        profileDp={userProfileData?.profile_dp?.imageUrl}
-                        media={item?.imageUrl}
-                        type={PostType.Community}
-                      />
-                    </div>
-                  ))}
+                  <PostContainer />
                 </div>
               )}
             </div>

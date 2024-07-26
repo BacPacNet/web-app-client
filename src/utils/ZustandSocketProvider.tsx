@@ -12,12 +12,12 @@ type ZustandSocketProviderProps = {
 }
 
 const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children }) => {
-  const initializeSocket = useUniStore((state: any) => state.initializeSocket)
-  const disconnectSocket = useUniStore((state: any) => state.disconnectSocket)
+  const initializeSocket = useUniStore((state) => state.initializeSocket)
+  const disconnectSocket = useUniStore((state) => state.disconnectSocket)
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
   const { refetch: refetchNotification } = useGetNotification()
-  const { refetch: refetchUserData, data: RefetcheduserData } = useGetUserData()
-  const { refetch: refetchUserProfileData, data: RefetcheduserProfileData } = useGetUserProfileData()
+  const { refetch: refetchUserData, data: RefetcheduserData } = useGetUserData(type)
+  const { refetch: refetchUserProfileData, data: RefetcheduserProfileData } = useGetUserProfileData(type)
 
   useEffect(() => {
     if (userData.id) {

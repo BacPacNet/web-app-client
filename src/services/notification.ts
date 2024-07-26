@@ -23,18 +23,18 @@ export async function UpdateCommunityGroup(data: { id: string }, token: string) 
 export function useGetNotification() {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error, refetch } = useQuery({
+  const state = useQuery({
     queryKey: ['notification'],
     queryFn: () => getUserNotification(cookieValue),
     enabled: !!cookieValue,
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage, refetch }
+  return { ...state, error: errorMessage }
 }
 
 export const useJoinCommunityGroup = () => {

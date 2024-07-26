@@ -58,6 +58,8 @@ const CommunityProfileContainer = () => {
         <CommunityProfileOption selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
         {selectedOption == valueType.Posts ? (
           <Post
+            isType={'userPost'}
+            postID={'123'}
             user="Kathryn Murphy"
             adminId="123"
             university="Nagoya University"
@@ -77,6 +79,8 @@ const CommunityProfileContainer = () => {
           />
         ) : selectedOption == valueType.Media ? (
           <Post
+            isType={'userPost'}
+            postID={'123'}
             user="Kathryn Murphy"
             adminId="123"
             university="Nagoya University"
@@ -97,6 +101,8 @@ const CommunityProfileContainer = () => {
           />
         ) : selectedOption == valueType.Saved ? (
           <Post
+            isType={'userPost'}
+            postID={'123'}
             user="Kathryn Murphy"
             adminId="123"
             university="Nagoya University"
@@ -119,6 +125,8 @@ const CommunityProfileContainer = () => {
           <CommunityProfileSettings />
         ) : (
           <Post
+            isType={'userPost'}
+            postID={'123'}
             user="Kathryn Murphy"
             adminId="123"
             university="Nagoya University"

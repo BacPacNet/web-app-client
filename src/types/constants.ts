@@ -112,3 +112,8 @@ interface ErrorResponse {
 }
 
 export type AxiosErrorType = AxiosError<ErrorResponse>
+
+export enum singlePostEnum {
+  userPost = 'userPost',
+  CommunityPost = 'CommunityPost',
+}

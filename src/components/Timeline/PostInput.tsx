@@ -13,6 +13,7 @@ import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { CommunityPostData, PostInputData, PostInputType } from '@/types/constants'
+import { Spinner } from '../spinner/Spinner'
 interface PostInputProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -24,8 +25,10 @@ interface PostInputProps {
 const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentType, idToPost, profileDp, type }) => {
   const [inputValue, setInputValue] = useState('')
   const [ImageValue, setImageValue] = useState<File[] | []>([])
-  const { mutate: CreateGroupPost } = useCreateGroupPost()
+  const [isLoading, setIsLoading] = useState(false)
+  const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
+
   const handleEmojiClick = (emojiData: any) => {
     setInputValue((prevValue) => prevValue + emojiData.emoji)
   }
@@ -43,6 +46,8 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
     if (inputValue.length <= 1) {
       return console.log('Please type something to post!')
     }
+
+    setIsLoading(true)
 
     if (ImageValue) {
       const imagedata = await processImages(ImageValue)
@@ -74,6 +79,8 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
         CreateTimelinePost(data)
       }
     }
+
+    setIsLoading(false)
   }
 
   return (
@@ -89,8 +96,12 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <button onClick={() => handleGroupPost()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">
-              Post
+            <button
+              disabled={isLoading}
+              onClick={() => handleGroupPost()}
+              className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm"
+            >
+              {isLoading || isPending ? <Spinner /> : <p>Post</p>}
             </button>
           </div>
           {ImageValue && (
