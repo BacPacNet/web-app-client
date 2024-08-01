@@ -14,7 +14,7 @@ import { ModalContentType } from '@/types/global'
 import { PostInputType, PostType, singlePostEnum } from '@/types/constants'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { useUniStore } from '@/store/store'
-import { useGetUserPosts } from '@/services/community-timeline'
+import { useGetTimelinePosts } from '@/services/community-timeline'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 interface User {
   name: string
@@ -70,7 +70,7 @@ const Timeline = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { userData, userProfileData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { isLoading, data: TimelinePosts, error } = useGetUserPosts()
+  const { isLoading, data: TimelinePosts, error } = useGetTimelinePosts()
   const timelinePosts = TimelinePosts?.timelinePosts
 
   const modalContent = (modalContentType: string) => {
