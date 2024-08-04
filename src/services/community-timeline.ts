@@ -24,6 +24,11 @@ export async function getAllUserPosts(token: string) {
   return response
 }
 
+export async function getAllTimelinePosts(token: string) {
+  const response: any = await client('/userpost/timeline', { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
 export async function CreateUserPost(data: UserPostData, token: string) {
   const response = await client(`/userpost/`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
@@ -52,9 +57,11 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
 
     onSuccess: () => {
       if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['getPost'] })
+        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
       } else {
         queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
       }
     },
     onError: (res: any) => {
@@ -71,6 +78,7 @@ export const useLikeUnlikeUserPostComment = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -85,6 +93,7 @@ export const useDeleteUserPost = () => {
     mutationFn: (postId: string) => DeleteUserPost(postId, cookieValue),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: AxiosErrorType) => {
       console.log(res.response?.data.message, 'res')
@@ -100,6 +109,7 @@ export const useUpdateUserPost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: AxiosErrorType) => {
       console.log(res.response?.data.message, 'res')
@@ -131,11 +141,28 @@ export const useCreateUserPost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: AxiosErrorType) => {
       console.log(res.response?.data.message, 'res')
     },
   })
+}
+
+export function useGetTimelinePosts() {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['timelinePosts'],
+    queryFn: () => getAllTimelinePosts(cookieValue),
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(error) && error.response) {
+    errorMessage = error.response.data
+  }
+
+  return { isLoading, data, error: errorMessage }
 }
 
 export const useLikeUnlikeTimelinePost = () => {
@@ -146,6 +173,7 @@ export const useLikeUnlikeTimelinePost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: AxiosErrorType) => {
       console.log(res)
