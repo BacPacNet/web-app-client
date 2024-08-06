@@ -120,17 +120,17 @@ export const useUpdateUserPost = () => {
 export function useGetUserPosts() {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     queryKey: ['userPosts'],
     queryFn: () => getAllUserPosts(cookieValue),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useCreateUserPost = () => {
@@ -152,17 +152,17 @@ export const useCreateUserPost = () => {
 export function useGetTimelinePosts() {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const { isLoading, data, error } = useQuery({
+  const state = useQuery({
     queryKey: ['timelinePosts'],
     queryFn: () => getAllTimelinePosts(cookieValue),
   })
 
   let errorMessage = null
-  if (axios.isAxiosError(error) && error.response) {
-    errorMessage = error.response.data
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
   }
 
-  return { isLoading, data, error: errorMessage }
+  return { ...state, error: errorMessage }
 }
 
 export const useLikeUnlikeTimelinePost = () => {
