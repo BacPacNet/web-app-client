@@ -31,7 +31,7 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
   ...initialState,
 
   initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData) => {
-    const newSocket = io('http://localhost:9000')
+    const newSocket = io('http://localhost:8000')
 
     newSocket.on('connect', () => {
       console.log('Connected to the server')

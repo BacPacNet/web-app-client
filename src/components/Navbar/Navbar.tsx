@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
   const [, , deleteCookie] = useCookie('uni_user_token')
   const { userProfileData, userData, resetUserData, resetUserProfileData } = useUniStore()
   const router = useRouter()
-
+  const { refetch: refetchNotification } = useGetNotification()
   const { data: notificationData } = useGetNotification()
 
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -53,6 +53,12 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     setIsLogin(!!userData?.id)
   }, [userData, userData?.id])
+
+  useEffect(() => {
+    if (isLogin) {
+      refetchNotification()
+    }
+  }, [isLogin])
 
   const handleClick = (item: string) => {
     setActiveItem(item)

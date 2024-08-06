@@ -137,13 +137,13 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
             <UserListItemSkeleton />
             <UserListItemSkeleton />
           </>
-        ) : content === 'Followers' && !userFollow?.profile?.length ? (
+        ) : content === 'Followers' && !userFollowers?.profile?.length ? (
           <p className="text-center p-4">You have 0 Followers</p>
         ) : (
           content === 'Followers' &&
           userFollowers?.profile?.map((item: FollowingItemProps, index: number) => (
             <UserListItem
-              key={index}
+              key={'Followers' + index}
               id={item?.users_id?.id}
               firstName={item?.users_id?.firstName}
               lastName={item?.users_id?.lastName}

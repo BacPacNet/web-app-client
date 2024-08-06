@@ -21,12 +21,17 @@ export async function UpdateCommunityGroup(data: { id: string }, token: string) 
 }
 
 export function useGetNotification() {
-  const [cookieValue] = useCookie('uni_user_token')
+  let finalCookie: any = null
+
+  if (typeof document !== 'undefined') {
+    const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('uni_user_token='))
+    finalCookie = cookieValue ? cookieValue.split('=')[1] : null
+  }
 
   const state = useQuery({
     queryKey: ['notification'],
-    queryFn: () => getUserNotification(cookieValue),
-    enabled: !!cookieValue,
+    queryFn: () => getUserNotification(finalCookie),
+    enabled: !!finalCookie,
   })
 
   let errorMessage = null

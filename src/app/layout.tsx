@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar/Navbar'
 import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 
-import SecNavbar from '@/components/Timeline/Navbar'
+import SecondaryNavbar from '@/components/Timeline/Navbar'
 type FontClassName = string
 
 const inter = Inter({ subsets: ['latin'] }) as { className: FontClassName }
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
             <Navbar />
-            <SecNavbar />
+            <SecondaryNavbar />
             {children}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>
