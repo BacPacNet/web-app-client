@@ -19,7 +19,7 @@ export async function getUsersWithProfile(token: string, Name: string) {
   return response
 }
 export async function getUserFollow(token: string, Name: string) {
-  const response: FollowingItemPropss = await client(`/userprofile?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: FollowingItemPropss = await client(`/userprofile/following?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 export async function getUserFollowers(token: string, Name: string) {

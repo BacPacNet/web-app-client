@@ -16,9 +16,13 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const disconnectSocket = useUniStore((state) => state.disconnectSocket)
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
   const { refetch: refetchNotification } = useGetNotification()
-  const { refetch: refetchUserData, data: RefetcheduserData } = useGetUserData(type)
-  const { refetch: refetchUserProfileData, data: RefetcheduserProfileData } = useGetUserProfileData(type)
-
+  const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(type)
+  const {
+    refetch: refetchUserProfileData,
+    data: RefetcheduserProfileData,
+    isSuccess: refectUserProfileDataIsSuccess,
+    isFetching: userProfileRefething,
+  } = useGetUserProfileData(type)
   useEffect(() => {
     if (userData.id) {
       initializeSocket(userData.id, refetchUserData, refetchNotification, refetchUserProfileData)
@@ -30,18 +34,20 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   }, [userData.id, initializeSocket, disconnectSocket, refetchNotification])
 
   useEffect(() => {
-    switch (type) {
-      case notificationRoleAccess.ASSIGN:
-        setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
-        setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
-        setIsRefetched('')
-        break
-      case notificationRoleAccess.FOLLOW:
-        setUserFollowers(RefetcheduserProfileData?.profile?.followers)
-        setIsRefetched('')
-        break
-      default:
-        break
+    if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {
+      switch (type) {
+        case notificationRoleAccess.ASSIGN:
+          setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
+          setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
+          setIsRefetched('')
+          break
+        case notificationRoleAccess.FOLLOW:
+          setUserFollowers(RefetcheduserProfileData?.profile?.followers)
+          setIsRefetched('')
+          break
+        default:
+          break
+      }
     }
   }, [RefetcheduserData, RefetcheduserProfileData])
 

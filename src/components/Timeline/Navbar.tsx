@@ -1,20 +1,24 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CommunityNavbarLinks } from '@/types/constants'
 import { useRouter, usePathname } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import useCookie from '@/hooks/useCookie'
 
-const Navbar: React.FC = () => {
+const SecondaryNavbar: React.FC = () => {
   // const tabs = ['Timeline', 'Profile', 'Notifications', 'Messages', 'Connections', 'University Community', 'Chatbot']
   const router = useRouter()
   const { userData } = useUniStore()
   const id = userData?.id
   const path = usePathname()
   const activeTab = path.split('/').pop()
-  const [cookieValue] = useCookie('uni_user_token')
 
-  if (!cookieValue) {
+  const [isLogin, setIsLogin] = useState<boolean | undefined>(false)
+
+  useEffect(() => {
+    setIsLogin(!!userData?.id)
+  }, [userData, userData?.id])
+
+  if (!isLogin) {
     return
   }
   return (
@@ -40,4 +44,4 @@ const Navbar: React.FC = () => {
   )
 }
 
-export default Navbar
+export default SecondaryNavbar
