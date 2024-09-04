@@ -1,16 +1,39 @@
 import React from 'react'
 
-const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: any) => {
+type media = {
+  imageUrl: string
+  publicId: string
+}
+type User = {
+  _id: string
+  firstName: string
+  isOnline?: boolean
+  profile: {
+    profile_dp: media
+    _id: string
+    university_name?: string
+    study_year?: string
+    degree?: string
+  }
+}
+
+type props = {
+  setSelectedUsers: (value: User[]) => void
+  selectedUsers: User[]
+  data: User
+}
+
+const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: props) => {
   const handleClick = () => {
-    if (selectedUsers?.some((item: any) => item._id == data._id)) {
-      const filterd = selectedUsers.filter((item: any) => item._id !== data._id)
+    if (selectedUsers?.some((item) => item._id == data._id)) {
+      const filterd = selectedUsers.filter((item) => item._id !== data._id)
       setSelectedUsers(filterd)
     } else {
       setSelectedUsers([...selectedUsers, data])
     }
   }
 
-  const isSelected = selectedUsers.some((item: any) => item._id === data._id)
+  const isSelected = selectedUsers.some((item) => item._id === data._id)
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-2">

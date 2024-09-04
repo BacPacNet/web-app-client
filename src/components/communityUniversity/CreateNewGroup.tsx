@@ -12,13 +12,26 @@ type Props = {
   setNewGroup: (value: boolean) => void
 }
 
+type media = {
+  imageUrl: string
+  publicId: string
+}
+type User = {
+  _id: string
+  firstName: string
+  isOnline?: boolean
+  profile: {
+    profile_dp: media
+    _id: string
+  }
+}
 const CreateNewGroup = ({ setNewGroup }: Props) => {
   const { id } = useParams<{ id: string }>()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [userPopUp, setUserPopUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
@@ -53,6 +66,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   }
 
   const { data } = useGetCommunityUsers(id, userPopUp, values.communityGroupType, searchInput)
+  console.log('com', data)
 
   return (
     <>

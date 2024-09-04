@@ -23,6 +23,7 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
     isSuccess: refectUserProfileDataIsSuccess,
     isFetching: userProfileRefething,
   } = useGetUserProfileData(type)
+
   useEffect(() => {
     if (userData.id) {
       initializeSocket(userData.id, refetchUserData, refetchNotification, refetchUserProfileData)

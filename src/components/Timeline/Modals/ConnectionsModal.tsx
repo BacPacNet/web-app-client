@@ -7,7 +7,12 @@ import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { FollowingItemProps } from '@/types/constants'
 
-const ConnectionsModal = () => {
+type props = {
+  isChat?: boolean
+  setIsCreateGroupModalOpen?: (value: boolean) => void
+  setIsModalOpen?: (value: boolean) => void
+}
+const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }: props) => {
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
   const { userProfileData } = useUniStore()
   const userFollowingIDs = userProfileData.following.map((following) => following.userId)
@@ -23,12 +28,21 @@ const ConnectionsModal = () => {
         >
           Following
         </p>
+
         <p
           className={`px-4 py-2 hover:text-primary text-sm ${content === 'Followers' ? 'font-semibold' : 'font-medium'}`}
           onClickCapture={() => setContent('Followers')}
         >
           Followers
         </p>
+        {isChat && setIsCreateGroupModalOpen && setIsModalOpen && (
+          <p
+            className={`px-4 py-2 hover:text-primary text-sm ${content === 'Followers' ? 'font-semibold' : 'font-medium'}`}
+            onClick={() => (setIsCreateGroupModalOpen(true), setIsModalOpen(false))}
+          >
+            create group
+          </p>
+        )}
       </div>
       <div className="mx-auto min-w-[300px] bg-white rounded-lg shadow-md overflow-hidden overflow-y-auto ">
         {content === 'Following' && isFollowingLoading ? (
@@ -55,6 +69,7 @@ const ConnectionsModal = () => {
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
               userFollowingIDs={userFollowingIDs}
+              isChat={isChat}
             />
           ))
         )}
@@ -82,6 +97,7 @@ const ConnectionsModal = () => {
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
               userFollowingIDs={userFollowingIDs}
+              isChat={isChat}
             />
           ))
         )}
