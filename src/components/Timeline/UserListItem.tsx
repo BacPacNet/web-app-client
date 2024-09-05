@@ -3,6 +3,7 @@ import React from 'react'
 import { SlOptionsVertical } from 'react-icons/sl'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/Popover'
 import { useToggleFollow } from '@/services/connection'
+import { useCreateUserChat } from '@/services/Messages'
 
 interface FollowingItemProps {
   firstName: string
@@ -16,6 +17,7 @@ interface FollowingItemProps {
   imageUrl: string
   type: string
   userFollowingIDs: string[]
+  isChat?: boolean
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -30,8 +32,10 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   occupation,
   imageUrl,
   userFollowingIDs,
+  isChat,
 }) => {
   const { mutate: toggleFollow } = useToggleFollow(type)
+  const { mutate: createUserChat } = useCreateUserChat()
 
   return (
     <div className="flex items-center p-2 md:p-4 border-b border-border ">
@@ -70,7 +74,11 @@ const UserListItem: React.FC<FollowingItemProps> = ({
             <SlOptionsVertical className="text-primary" />
           </PopoverTrigger>
           <PopoverContent className="relative right-24 bottom-10 w-36 p-5 border-none shadow-lg bg-white shadow-gray-light z-50">
-            <p onClick={() => toggleFollow(id)}>{userFollowingIDs?.includes(id) ? 'Un-Follow' : 'Follow'}</p>
+            {isChat ? (
+              <p onClick={() => createUserChat({ userId: id })}>Start-chat</p>
+            ) : (
+              <p onClick={() => toggleFollow(id)}>{userFollowingIDs?.includes(id) ? 'Un-Follow' : 'Follow'}</p>
+            )}
           </PopoverContent>
         </Popover>
       </div>

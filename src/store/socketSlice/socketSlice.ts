@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { io, Socket } from 'socket.io-client'
 import { notificationRoleAccess } from '@/components/Navbar/constant'
+import { SocketConnectionEnums } from '@/types/constants'
 
 type Notification = {
   type: string
@@ -35,10 +36,11 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
 
     newSocket.on('connect', () => {
       console.log('Connected to the server')
+      newSocket.emit(SocketConnectionEnums.SETUP, userId)
       set({ socket: newSocket, isConnected: true })
     })
 
-    newSocket.on('disconnect', () => {
+    newSocket.on(SocketConnectionEnums.DISCONNECT, () => {
       console.log('Disconnected from the server')
       set({ socket: null, isConnected: false })
     })
