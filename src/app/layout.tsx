@@ -1,15 +1,28 @@
 import './globals.css'
 
 import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import type { Metadata } from 'next'
-import Navbar from '../components/Navbar/Navbar'
+
 import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 
 import SecondaryNavbar from '@/components/Timeline/Navbar'
 type FontClassName = string
 
-const inter = Inter({ subsets: ['latin'] }) as { className: FontClassName }
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+}) as { className: FontClassName }
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+})
 
 export const metadata: Metadata = {
   title: 'UniBuzz',
@@ -34,11 +47,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`${poppins.variable} ${inter.className}`}>
+      <head>
+        <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+      </head>
+
+      <body>
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
-            <Navbar />
+            {/*<Navbar />*/}
             <SecondaryNavbar />
             {children}
           </ZustandSocketProvider>
