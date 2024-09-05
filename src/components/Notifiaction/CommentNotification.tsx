@@ -21,7 +21,6 @@ const CommentNotification = ({ id, senderName, communityPostId, message, created
       id: id,
     }
     updateIsSeen(dataToPush)
-    console.log('postId', communityPostId)
   }
   return (
     <div key={id} className="bg-slate-50 p-2 border-b border-slate-300">

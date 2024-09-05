@@ -32,7 +32,6 @@ const SearchBar = () => {
   const [searchHistoryShown, setSearchHistoryShown] = useState(true)
 
   const { isLoading, data } = useUniversitySearch(searchTerm)
-  // console.log(data)
 
   useEffect(() => {
     if (data) {
@@ -55,7 +54,6 @@ const SearchBar = () => {
       if (storedSelectedCollegeNames) {
         // Parse the string back into an array
         const selectedCollegeNamesArray = JSON.parse(storedSelectedCollegeNames).reverse()
-        console.log('selected college history', selectedCollegeNamesArray)
         // Extract name and score from each object and create a new array
         const selectedCollegeInfoArray = selectedCollegeNamesArray.map((college: College) => ({
           name: college.name,

@@ -36,19 +36,14 @@ export const useHandleLogin = () => {
 export const useHandleRegister = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  // const setToken = useUniStore((state) => state.setToken)
   const [_, setCookieValue] = useCookie('uni_user_token')
   const [__, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 
   return useMutation({
     mutationFn: (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>) => register(data),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
-      console.log(_, __)
-
       setUserData(response.user)
       setUserProfileData(response.userProfile)
-      // setToken(response.tokens)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
     },

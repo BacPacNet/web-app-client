@@ -57,7 +57,6 @@ const CommunityProfileContainer = () => {
       return <PostSkeleton />
     }
     if (error) {
-      console.log(error)
       return <div>Something Went Wrong!</div>
     }
     return userPosts?.map((post: any) => {
