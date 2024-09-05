@@ -41,7 +41,6 @@ const PollModal = () => {
       choices,
       duration: pollLength,
     }
-    console.log(poll)
   }
 
   return (

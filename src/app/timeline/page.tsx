@@ -93,7 +93,6 @@ const Timeline = () => {
       return Array.from({ length: 2 }).map((_, index) => <PostSkeleton key={index} />)
     }
     if (error) {
-      console.log(error)
       return <div>Something Went Wrong!</div>
     }
     return timelinePosts?.map((post: any) => {

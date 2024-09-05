@@ -21,7 +21,6 @@ const AssignNotification = ({ id, senderName, communityGroupId, message, created
     }
 
     updateIsSeen(dataToPush)
-    console.log('postId', communityGroupId)
   }
 
   return (

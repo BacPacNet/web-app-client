@@ -20,14 +20,12 @@ async function deletePreviousImage(publicId: any) {
   try {
     const { signature, timestamp } = generateSignature(publicId)
 
-    const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
+    await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
       public_id: publicId,
       api_key: APIKEY,
       timestamp: timestamp,
       signature: signature,
     })
-
-    console.log('Previous image deleted', res.data)
   } catch (err) {
     console.log('Error deleting previous image', err)
   }

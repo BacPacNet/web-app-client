@@ -41,7 +41,6 @@ export default function Home() {
       }
       // Set the updated array in localStorage
     }
-    console.log('selectedcollege', selectedCollegeNames)
   }, [id, selectedCollege, selectedCollegeNames])
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
