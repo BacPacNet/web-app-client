@@ -44,6 +44,7 @@ module.exports = {
                 'gray-light': '#d3dce6',
                 'gray-1': '#737373',
                 'border': '#D4D4D4',
+                'shade-button-border': '#E9E8FF',
             },
 
         },
