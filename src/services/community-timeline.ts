@@ -155,6 +155,7 @@ export function useGetTimelinePosts() {
   const state = useQuery({
     queryKey: ['timelinePosts'],
     queryFn: () => getAllTimelinePosts(cookieValue),
+    enabled: !!cookieValue,
   })
 
   let errorMessage = null

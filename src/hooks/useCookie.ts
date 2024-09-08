@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const useCookie = (cookieName: string): [string, (value: string, expirationDate: string) => void, () => void] => {
   const [cookieValue, setCookieValue] = useState<string>('')
@@ -10,15 +10,18 @@ const useCookie = (cookieName: string): [string, (value: string, expirationDate:
     setCookieValue(cookie ? cookie.split('=')[1] : '')
   }, [cookieName])
 
-  const setCookie = (value: string, expirationDate: string): void => {
-    document.cookie = `${cookieName}=${value}; expires=${new Date(expirationDate).toUTCString()}; path=/`
-    setCookieValue(value)
-  }
+  const setCookie = useCallback(
+    (value: string, expirationDate: string): void => {
+      document.cookie = `${cookieName}=${value}; expires=${new Date(expirationDate).toUTCString()}; path=/`
+      setCookieValue(value)
+    },
+    [cookieName]
+  )
 
-  const deleteCookie = (): void => {
+  const deleteCookie = useCallback((): void => {
     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
     setCookieValue('')
-  }
+  }, [cookieName])
 
   return [cookieValue, setCookie, deleteCookie]
 }
