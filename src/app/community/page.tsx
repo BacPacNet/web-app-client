@@ -3,7 +3,7 @@ import React from 'react'
 import Footer from '@/components/Footer/Footer'
 import UniversityCard from '@/components/universityCommunity/universityCommunityCart'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
-import Loading from '../loading'
+import Loading from '@/components/atoms/Loading'
 
 interface CommunityType {
   _id: string
