@@ -11,10 +11,8 @@ import { useUniversitySearch } from '@/services/universitySearch'
 interface FilteredCollege {
   id: string
   name: string
-  score: string
-  city?: string
-  country?: string
-  collegePage?: string
+  pathUrl: string
+  country: string
 }
 // interface SearchBarProps {
 //   data: FilteredCollege[]
@@ -23,7 +21,8 @@ interface FilteredCollege {
 interface College {
   id: string
   name: string
-  score: string
+  pathUrl: string
+  country: string
 }
 const SearchBar = () => {
   const [open, setIsOpen] = useState(false)
@@ -57,8 +56,9 @@ const SearchBar = () => {
         // Extract name and score from each object and create a new array
         const selectedCollegeInfoArray = selectedCollegeNamesArray.map((college: College) => ({
           name: college.name,
-          score: college.score,
           id: college.id, // You may need to set the ID here if it's available
+          pathUrl: college.pathUrl,
+          country: college.country,
         }))
         setFilterData(selectedCollegeInfoArray)
         setIsOpen(true) // Open the input to show history
