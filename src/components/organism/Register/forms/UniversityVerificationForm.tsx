@@ -4,9 +4,10 @@ import LoginButtons from '@/components/atoms/LoginButtons'
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
-
+import blueTick from '@/assets/blueBGTick.svg'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import Image from 'next/image'
 
 interface props {
   setStep: (value: number) => void
@@ -44,36 +45,18 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
       </div>
       <div>
         <div className="flex gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M11.9996 20.4001C16.6388 20.4001 20.3996 16.6393 20.3996 12.0001C20.3996 7.36091 16.6388 3.6001 11.9996 3.6001C7.36042 3.6001 3.59961 7.36091 3.59961 12.0001C3.59961 16.6393 7.36042 20.4001 11.9996 20.4001ZM15.8921 10.6426C16.3021 10.2325 16.3021 9.56769 15.8921 9.15764C15.482 8.74758 14.8172 8.74758 14.4071 9.15764L10.9496 12.6152L9.59207 11.2576C9.18202 10.8476 8.5172 10.8476 8.10715 11.2576C7.6971 11.6677 7.6971 12.3325 8.10715 12.7426L10.2071 14.8426C10.6172 15.2526 11.282 15.2526 11.6921 14.8426L15.8921 10.6426Z"
-              fill="#6744FF"
-            />
-          </svg>
+          <Image src={blueTick} width={24} height={24} alt="tick" />
+
           <p className="text-sm text-neutral-600 text-center">Can join private groups in university community</p>
         </div>
         <div className="flex gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M11.9996 20.4001C16.6388 20.4001 20.3996 16.6393 20.3996 12.0001C20.3996 7.36091 16.6388 3.6001 11.9996 3.6001C7.36042 3.6001 3.59961 7.36091 3.59961 12.0001C3.59961 16.6393 7.36042 20.4001 11.9996 20.4001ZM15.8921 10.6426C16.3021 10.2325 16.3021 9.56769 15.8921 9.15764C15.482 8.74758 14.8172 8.74758 14.4071 9.15764L10.9496 12.6152L9.59207 11.2576C9.18202 10.8476 8.5172 10.8476 8.10715 11.2576C7.6971 11.6677 7.6971 12.3325 8.10715 12.7426L10.2071 14.8426C10.6172 15.2526 11.282 15.2526 11.6921 14.8426L15.8921 10.6426Z"
-              fill="#6744FF"
-            />
-          </svg>
+          <Image src={blueTick} width={24} height={24} alt="tick" />
+
           <p className="text-sm text-neutral-600 text-center">Can join more than 1 university community</p>
         </div>
         <div className="flex gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M11.9996 20.4001C16.6388 20.4001 20.3996 16.6393 20.3996 12.0001C20.3996 7.36091 16.6388 3.6001 11.9996 3.6001C7.36042 3.6001 3.59961 7.36091 3.59961 12.0001C3.59961 16.6393 7.36042 20.4001 11.9996 20.4001ZM15.8921 10.6426C16.3021 10.2325 16.3021 9.56769 15.8921 9.15764C15.482 8.74758 14.8172 8.74758 14.4071 9.15764L10.9496 12.6152L9.59207 11.2576C9.18202 10.8476 8.5172 10.8476 8.10715 11.2576C7.6971 11.6677 7.6971 12.3325 8.10715 12.7426L10.2071 14.8426C10.6172 15.2526 11.282 15.2526 11.6921 14.8426L15.8921 10.6426Z"
-              fill="#6744FF"
-            />
-          </svg>
+          <Image src={blueTick} width={24} height={24} alt="tick" />
+
           <p className="text-sm text-neutral-600 text-center">Can create groups in university community </p>
         </div>
       </div>

@@ -102,17 +102,6 @@ export const useHandleRegister_v2 = () => {
   })
 }
 
-// export const useHandleUserEmailAndUserNameAvailability = () => {
-//   return useMutation({
-//     mutationFn: (data: any) => userNameAndEmailAvailability(data),
-//     onSuccess: (res: any) => {
-//       console.log(res)
-//     },
-//     onError: (res: any) => {
-//       console.log(res.response.data, 'res')
-//     },
-//   })
-// }
 export const useHandleUserEmailAndUserNameAvailability = () => {
   return useMutation({
     mutationFn: (data: { email: string; userName: string }) => userNameAndEmailAvailability(data),
