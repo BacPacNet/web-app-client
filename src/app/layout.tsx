@@ -8,6 +8,7 @@ import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 
 import SecondaryNavbar from '@/components/Timeline/Navbar'
+import LogoNavbar from '@/components/atoms/LogoNavbar'
 type FontClassName = string
 
 const inter = Inter({
@@ -53,10 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
       </head>
 
-      <body>
+      <body className="bg-surface-primary-50">
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
             {/*<Navbar />*/}
+            <LogoNavbar />
             <SecondaryNavbar />
             {children}
           </ZustandSocketProvider>

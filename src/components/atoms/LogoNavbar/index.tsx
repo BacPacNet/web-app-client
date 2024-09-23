@@ -11,7 +11,7 @@ interface Props {
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   return (
-    <div className="w-full h-[68px] px-28 mx-auto py-3 flex items-center justify-between">
+    <div className="w-full h-[68px] px-28 mx-auto py-3 flex items-center justify-between bg-white">
       <div>
         <Link className="flex gap-4 center-v" href="/">
           <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
