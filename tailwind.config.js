@@ -13,6 +13,7 @@ module.exports = {
                 inter: ['var(--font-inter)']
             },
             fontSize: {
+                '2xs': '12px',
                 'xs': '14px',
                 'sm': '16px',
                 'md': '24px',
@@ -36,6 +37,8 @@ module.exports = {
                 'primary': '#6647FF',
                 'primary-500': '#6744FF',
                 'secondary': '#F3F2FF',
+                'neutral-200': '#E5E7EB',
+                'neutral-500': '#6B7280',
                 'neutral-900': '#18191A',
                 'neutral-800': '#242526',
                 'neutral-700': '#3A3B3C',
@@ -45,7 +48,12 @@ module.exports = {
                 'gray-1': '#737373',
                 'border': '#D4D4D4',
                 'shade-button-border': '#E9E8FF',
+                'surface-primary-50': '#F3F2FF',
+                'warning-500': '#F59E0B'
             },
+            boxShadow: {
+                'card': '0px 6px 15px -2px rgba(16, 24, 40, 0.08)'
+            }
 
         },
     },
