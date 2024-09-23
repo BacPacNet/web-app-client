@@ -12,6 +12,7 @@ import { LoginForm } from '@/models/auth'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
+import { AxiosError } from 'axios'
 
 const LoginBox = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -20,13 +21,30 @@ const LoginBox = () => {
     register: registerLogin,
     handleSubmit: handleSubmitLogin,
     formState: { errors: loginErrors },
-  } = useForm<LoginForm>()
+    setValue,
+  } = useForm<LoginForm>({
+    defaultValues: {
+      email: '',
+    },
+  })
 
-  const { mutate: mutateLogin, isSuccess } = useHandleLogin()
+  const { mutate: mutateLogin, isSuccess, error } = useHandleLogin()
 
+  const isAxiosError = (error: unknown): error is AxiosError<any> => {
+    return (error as AxiosError)?.isAxiosError === true
+  }
   const onSubmit = async (data: LoginForm) => {
     await mutateLogin(data)
   }
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const emailValue = localStorage.getItem('registeredEmail')
+      if (emailValue) {
+        setValue('email', emailValue)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,6 +76,7 @@ const LoginBox = () => {
                   message: 'Invalid email format',
                 },
               })}
+              err={!!loginErrors.email}
             />
             {loginErrors.email && (
               <InputWarningText>{loginErrors.email.message ? loginErrors.email.message : 'Please enter your email!'}</InputWarningText>
@@ -71,6 +90,7 @@ const LoginBox = () => {
               placeholder="*******************"
               type={showPassword ? 'text' : 'password'}
               {...registerLogin('password', { required: true })}
+              err={!!loginErrors.password}
             />
             <div className={`absolute  right-0 pr-3 flex items-center text-sm ${loginErrors.password ? 'top-1/3' : 'top-[40%]'} `}>
               {showPassword ? (
@@ -88,6 +108,7 @@ const LoginBox = () => {
             <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
           </div>
           <LoginButtons variant="primary">Log in</LoginButtons>
+          <InputWarningText>{isAxiosError(error) && error.response?.data?.message}</InputWarningText>
         </form>
       </div>
       <button className="mt-4 mx-auto">
