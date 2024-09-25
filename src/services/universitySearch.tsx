@@ -11,9 +11,6 @@ interface UniversitySearchResult {
 export function useUniversitySearch(searchTerm: string): UniversitySearchResult {
   // Debounce the search term with a 1-second delay
   const debouncedSearchTerm = useDebounce(searchTerm, 1000)
-  // console.log(searchTerm)
-
-  // console.log(debouncedSearchTerm)
 
   const { isLoading, data } = useQuery({
     enabled: Boolean(debouncedSearchTerm),
