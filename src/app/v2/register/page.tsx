@@ -21,7 +21,7 @@ const Register = () => {
     }
   }, [])
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen bg-white">
       {loading ? (
         <Loading />
       ) : (

@@ -172,7 +172,6 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
       if (res?.isRegistered) {
         localStorage.setItem('registeredEmail', data?.email)
         localStorage.removeItem('registerData')
-
         router.push('/v2/login')
       }
 

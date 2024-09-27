@@ -1,7 +1,7 @@
 'use client'
 import Card from '@/components/atoms/Card'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import avatar from '@assets/avatar.svg'
 import Text from '@/components/atoms/Text'
 import SubText from '@/components/atoms/SubText'
@@ -14,8 +14,19 @@ import GroupSearchBox from '@/components/atoms/GroupSearchBox'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { FiFilter } from 'react-icons/fi'
 import Tabs from '@/components/molecules/Tabs'
+import { useGetCommunityGroups } from '@/services/community-university'
+import { useParams } from 'next/navigation'
+import GroupSelectors from '@/components/communityUniversity/GroupSelectors'
 
-export default function LeftNavbar() {
+export default function LeftNavbar({ setCurrSelectedGroup, currSelectedGroup }: any) {
+  const { id }: any = useParams()
+  // console.log('param', id)
+
+  const { data: communityGroups } = useGetCommunityGroups(id, true)
+  useEffect(() => {
+    setCurrSelectedGroup(communityGroups?.groups[0])
+  }, [communityGroups])
+
   const menuItems = [
     { name: 'Home', icon: <HiHome /> },
     { name: 'Connections', icon: <IoMdPeople /> },
@@ -35,7 +46,13 @@ export default function LeftNavbar() {
   const tabData = [
     {
       label: 'All',
-      content: <div>This is the content of Tab 1.</div>,
+      content: (
+        <div>
+          {communityGroups?.groups.map((item: any) => (
+            <GroupSelectors key={item.title} currSelectedGroup={currSelectedGroup} setCurrSelectedGroup={setCurrSelectedGroup} data={item} />
+          ))}
+        </div>
+      ),
     },
     {
       label: 'Joined',

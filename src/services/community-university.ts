@@ -158,7 +158,7 @@ export const useLeaveCommunity = () => {
 export function useGetCommunityGroups(communityId: string, isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
   const state = useQuery({
-    enabled: isJoined,
+    enabled: isJoined && !!communityId,
     queryKey: ['communityGroups', communityId],
     queryFn: () => getAllCommunityGroups(communityId, cookieValue),
   })
@@ -225,13 +225,13 @@ export const useUpdateCommunityGroup = () => {
   })
 }
 
-export function useGetCommunityGroupPost(communityId: string, isJoined: boolean) {
+export function useGetCommunityGroupPost(communityId: string, isJoined: boolean, isCommunity: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
   const state = useQuery({
     queryKey: ['communityGroupsPost', communityId],
     queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
-    enabled: isJoined,
+    enabled: isJoined && isCommunity,
   })
 
   let errorMessage = null

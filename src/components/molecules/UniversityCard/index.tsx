@@ -1,3 +1,4 @@
+'use client'
 import Image from 'next/image'
 import React from 'react'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
@@ -11,6 +12,7 @@ interface Props {
   joinedSince: string
   description: string
   memberCount: number
+  currSelectedGroup?: any
 }
 
 export default function UniversityCard({
@@ -20,11 +22,21 @@ export default function UniversityCard({
   joinedSince = '7/23/2024',
   description = 'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.',
   memberCount = 242,
+  currSelectedGroup,
 }: Props) {
+  console.log('unisdasd', currSelectedGroup)
+
   return (
     <div className="rounded-2xl bg-white shadow-card">
-      <div className="h-[164px] w-full overflow-hidden rounded-t-2xl">
-        <Image src={universityLogo || universityPlaceholder} alt={'university'} className="h-full w-full object-cover object-top" />
+      <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl">
+        <Image
+          src={currSelectedGroup?.communityGroupLogoCoverUrl?.imageUrl || universityPlaceholder}
+          layout="fill"
+          objectFit="cover"
+          objectPosition="center"
+          alt={'university'}
+          className="h-full w-full object-cover object-top"
+        />
       </div>
       <div className="p-4">
         <div className="card-title flex justify-between items-center">
@@ -35,7 +47,7 @@ export default function UniversityCard({
             >
               <FaUniversity className="text-warning-500 text-[20px]" />
             </div>
-            <p className="text-sm font-bold">{universityName}</p>
+            <p className="text-sm font-bold">{currSelectedGroup?.title}</p>
             {isAiPowered && <p className="ai-power text-xs font-extrabold">AI POWERED </p>}
           </div>
           <p className="text-sm text-primary-500">
@@ -45,7 +57,7 @@ export default function UniversityCard({
         <div>
           <p className="text-2xs text-neutral-500 py-4">{description}</p>
           <p className="text-2xs text-neutral-500">
-            <span>{memberCount}</span> members
+            <span>{currSelectedGroup?.memberCount}</span> members
           </p>
         </div>
       </div>

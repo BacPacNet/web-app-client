@@ -149,13 +149,13 @@ export const useCreateUserPost = () => {
   })
 }
 
-export function useGetTimelinePosts() {
+export function useGetTimelinePosts(isTimeline: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
   const state = useQuery({
     queryKey: ['timelinePosts'],
     queryFn: () => getAllTimelinePosts(cookieValue),
-    enabled: !!cookieValue,
+    enabled: !!cookieValue && isTimeline,
   })
 
   let errorMessage = null
