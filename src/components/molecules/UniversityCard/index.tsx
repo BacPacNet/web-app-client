@@ -24,8 +24,6 @@ export default function UniversityCard({
   memberCount = 242,
   currSelectedGroup,
 }: Props) {
-  console.log('unisdasd', currSelectedGroup)
-
   return (
     <div className="rounded-2xl bg-white shadow-card">
       <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl">

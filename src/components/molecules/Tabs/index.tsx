@@ -34,7 +34,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
       </div>
 
       {/* Tabs Content */}
-      {/* <div className="mt-4 p-4 bg-white border border-gray-200 rounded-md">{tabs[activeTab].content}</div> */}
+
       <div className="mt-4 p-4 bg-white  rounded-md">{tabs[activeTab].content}</div>
     </div>
   )

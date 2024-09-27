@@ -179,9 +179,7 @@ const PostCard = ({
           <span className="flex items-center">
             <FiRepeat className="mr-1 text-neutral-600" /> 2
           </span>
-          {/* <button className="flex items-center">
-            <FiShare2 className="mr-1 text-neutral-600" /> Share
-          </button> */}
+
           <Popover>
             <PopoverTrigger>
               <span className="flex items-center">

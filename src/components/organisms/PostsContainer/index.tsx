@@ -33,7 +33,7 @@ interface communityPostType {
 const PostContainer = ({ currSelectedGroup }: any) => {
   const pathname = usePathname()
   const currentPath = pathname.split('/')[2]
-  // console.log('path', currentPath)
+
   const { userData } = useUniStore()
   const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(currentPath == 'timeline')
   const timelinePosts = TimelinePosts?.timelinePosts

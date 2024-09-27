@@ -82,19 +82,6 @@ const PostCommentBox = ({ showCommentSec, userComments, postID, type, adminId }:
             placeholder="Add a comment..."
             className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none w-full lg:min-w-[370px] xs:text-xs sm:text-sm"
           />
-          {/* <MdGifBox size={24} color="#737373" /> */}
-          {/* <div>
-                  <input
-                    style={{ display: 'none' }}
-                    type="file"
-                    id={`CommentsImage${postID}`}
-                    onChange={(e: any) => setImageValue(e.target.files[0])}
-                    accept="image/gif,image/webp"
-                  />
-                  <label htmlFor={`CommentsImage${postID}`}>
-                    <MdGifBox size={24} color="#737373" />
-                  </label>
-                </div> */}
 
           {comment?.length > 1 && (
             <button onClick={() => handlePostComment()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">

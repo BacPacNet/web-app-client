@@ -14,8 +14,6 @@ import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
 
 function UserPostContainer({ currSelectedGroup, type }: any) {
-  // console.log('post', currSelectedGroup)
-
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
@@ -50,22 +48,6 @@ function UserPostContainer({ currSelectedGroup, type }: any) {
       textareaRef.current.focus()
     }
   }
-
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log('object')
-  //   const files = e.target.files
-  //   if (files) {
-  //     const fileArray = Array.from(files)
-  //     const newImages = fileArray.map((file) => {
-  //       return URL.createObjectURL(file)
-  //     })
-  //     setImages((prevImages) => [...prevImages, ...newImages])
-  //   }
-  // }
-
-  // const handleImageRemove = (index: number) => {
-  //   setImages((prevImages) => prevImages.filter((_, i) => i !== index))
-  // }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -125,7 +107,6 @@ function UserPostContainer({ currSelectedGroup, type }: any) {
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted value:', valueRef.current) // The current value stored in the ref
     // You can do something with the value here, like an API call
     handleGroupPost(valueRef.current)
   }
