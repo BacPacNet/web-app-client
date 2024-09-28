@@ -70,7 +70,7 @@ const Timeline = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { userData, userProfileData } = useUniStore()
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { isLoading, data: TimelinePosts, error } = useGetTimelinePosts()
+  const { isLoading, data: TimelinePosts, error } = useGetTimelinePosts(true)
   const timelinePosts = TimelinePosts?.timelinePosts
 
   const modalContent = (modalContentType: string) => {

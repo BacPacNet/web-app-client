@@ -62,7 +62,7 @@ const Page = () => {
     data: communityGroupPost,
     isFetching: communityGroupPostLoading,
     isError,
-  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup)
+  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup, true)
 
   const modalContent = (modalContentType: string) => {
     switch (modalContentType) {

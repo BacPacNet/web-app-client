@@ -1,13 +1,17 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 export default function NavbarUniversityItem() {
   const { data: SubscribedData, isFetching, isLoading } = useGetUserSubscribedCommunityGroups()
   const [selectUniversity, setSelectUniversity] = useState(0)
+  const router = useRouter()
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     setSelectUniversity(index)
+    const indextoPush = Number(index)
+    router.push(`/v2/community/${SubscribedData?.community[indextoPush]._id}`)
   }
 
   if (isFetching || isLoading) return <UserListItemSkeleton />

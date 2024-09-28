@@ -8,11 +8,17 @@ import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import { CommunityPostData, PostInputData, PostInputType } from '@/types/constants'
+import { useCreateGroupPost } from '@/services/community-university'
+import { useCreateUserPost } from '@/services/community-timeline'
+import { replaceImage } from '@/services/uploadImage'
 
-function UserPostContainer() {
+function UserPostContainer({ currSelectedGroup, type }: any) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
-  const [images, setImages] = useState<string[]>([])
+  const [images, setImages] = useState<File[]>([])
+  const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
+  const { mutate: CreateTimelinePost } = useCreateUserPost()
 
   const handleInput = () => {
     const textarea = textareaRef.current
@@ -44,14 +50,10 @@ function UserPostContainer() {
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('object')
     const files = e.target.files
     if (files) {
       const fileArray = Array.from(files)
-      const newImages = fileArray.map((file) => {
-        return URL.createObjectURL(file)
-      })
-      setImages((prevImages) => [...prevImages, ...newImages])
+      setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
     }
   }
 
@@ -59,11 +61,54 @@ function UserPostContainer() {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
+  const processImages = async (imagesData: File[]) => {
+    const promises = imagesData.map((image) => replaceImage(image, ''))
+    const results = await Promise.all(promises)
+    return results.map((result) => ({
+      imageUrl: result?.imageUrl,
+      publicId: result?.publicId,
+    }))
+  }
+
+  const handleGroupPost = async (inputValue: string) => {
+    if (images.length) {
+      const imagedata = await processImages(images)
+      const data: PostInputData = {
+        content: inputValue,
+        imageUrl: imagedata,
+      }
+
+      //if type is community , add communityId field to data
+      if (type === PostInputType.Community) {
+        const communityData: CommunityPostData = {
+          ...data,
+          communityId: currSelectedGroup?._id,
+        }
+        CreateGroupPost(communityData)
+      } else if (type === PostInputType.Timeline) {
+        CreateTimelinePost(data)
+      }
+    } else {
+      const data: PostInputData = {
+        content: inputValue,
+      }
+      if (type === PostInputType.Community) {
+        const communityData: CommunityPostData = {
+          ...data,
+          communityId: currSelectedGroup?._id,
+        }
+        CreateGroupPost(communityData)
+      } else if (type === PostInputType.Timeline) {
+        CreateTimelinePost(data)
+      }
+    }
+  }
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted value:', valueRef.current) // The current value stored in the ref
     // You can do something with the value here, like an API call
+    handleGroupPost(valueRef.current)
   }
   return (
     <div className="rounded-2xl bg-white shadow-card mt-8 p-6">
@@ -116,7 +161,7 @@ function UserPostContainer() {
       <div className="flex flex-wrap gap-2 mt-4">
         {images.map((image, index) => (
           <div key={index} className="relative">
-            <img src={image} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
+            <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
             {/* Remove image button */}
             <button
               type="button"
