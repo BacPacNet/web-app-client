@@ -11,18 +11,16 @@ interface WrapperProps {
 }
 
 const LeftNavWrapper: React.FC<WrapperProps> = ({ children }) => {
-  const [currSelectedGroup, setCurrSelectedGroup] = useState(null)
-
   return (
-    <div className="flex h-screen gap-8 py-8 px-4">
+    <div className="flex h-screen gap-8 py-8">
       <div className="w-1/5 hidden md:block">
-        <LeftNavbar setCurrSelectedGroup={setCurrSelectedGroup} currSelectedGroup={currSelectedGroup} />
+        <LeftNavbar />
       </div>
       <div className="w-3/5">
         {' '}
         {React.Children.map(children, (child) => {
           if (React.isValidElement<ChildComponentProps>(child)) {
-            return React.cloneElement(child, { currSelectedGroup })
+            return React.cloneElement(child)
           }
           return child
         })}

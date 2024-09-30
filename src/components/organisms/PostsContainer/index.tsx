@@ -32,17 +32,16 @@ interface communityPostType {
 
 const PostContainer = ({ currSelectedGroup }: any) => {
   const pathname = usePathname()
-  const currentPath = pathname.split('/')[2]
 
   const { userData } = useUniStore()
-  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(currentPath == 'timeline')
+  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(pathname == '/timeline')
   const timelinePosts = TimelinePosts?.timelinePosts
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
   const {
     data: communityGroupPost,
     isFetching: communityGroupPostLoading,
     isError,
-  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup, currentPath == 'community')
+  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup, pathname == '/community')
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -62,7 +61,7 @@ const PostContainer = ({ currSelectedGroup }: any) => {
   }, [userData])
 
   useEffect(() => {
-    if (currSelectedGroup) {
+    if (pathname) {
       const communityGroupId = currSelectedGroup?._id?.toString()
       if (userVerifiedCommunityGroupIds.includes(communityGroupId) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupId)) {
         setIsJoinedInGroup(true)
@@ -73,8 +72,8 @@ const PostContainer = ({ currSelectedGroup }: any) => {
   }, [currSelectedGroup, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
 
   const renderPostWithRespectToPathName = () => {
-    switch (currentPath) {
-      case 'timeline':
+    switch (pathname) {
+      case '/timeline':
         return timelinePosts?.map((post: communityPostType, idx: number) => (
           <PostCard
             key={post._id}
@@ -93,7 +92,7 @@ const PostContainer = ({ currSelectedGroup }: any) => {
             idx={idx}
           />
         ))
-      case 'community':
+      case '/community':
         return communityGroupPost?.communityPosts?.map((post: communityPostType, idx: number) => (
           <PostCard
             key={post._id}

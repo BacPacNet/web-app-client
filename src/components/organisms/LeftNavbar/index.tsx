@@ -1,9 +1,7 @@
 'use client'
 import Card from '@/components/atoms/Card'
-import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import avatar from '@assets/avatar.svg'
-import Text from '@/components/atoms/Text'
 import SubText from '@/components/atoms/SubText'
 import { HiHome } from 'react-icons/hi'
 import { IoMdPeople } from 'react-icons/io'
@@ -15,12 +13,19 @@ import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { FiFilter } from 'react-icons/fi'
 import Tabs from '@/components/molecules/Tabs'
 import { useGetCommunityGroups } from '@/services/community-university'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import GroupSelectors from '@/components/communityUniversity/GroupSelectors'
+import { useUniStore } from '@/store/store'
+import Image from 'next/image'
+import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 
-export default function LeftNavbar({ setCurrSelectedGroup, currSelectedGroup }: any) {
+export default function LeftNavbar() {
+  const [currSelectedGroup, setCurrSelectedGroup] = useState(null)
+
   const { id }: any = useParams()
-  // console.log('param', id)
+  const pathname = usePathname()
+  const router = useRouter()
+  const { userData, userProfileData } = useUniStore()
 
   const { data: communityGroups } = useGetCommunityGroups(id, true)
   useEffect(() => {
@@ -28,19 +33,18 @@ export default function LeftNavbar({ setCurrSelectedGroup, currSelectedGroup }: 
   }, [communityGroups])
 
   const menuItems = [
-    { name: 'Home', icon: <HiHome /> },
-    { name: 'Connections', icon: <IoMdPeople /> },
-    { name: 'Message', icon: <BiSolidMessageDots /> },
-    { name: 'Notification', icon: <FaBell /> },
-    { name: 'AI Assistant', icon: <PiFinnTheHumanFill /> },
+    { name: 'Home', icon: <HiHome />, path: '/timeline' },
+    { name: 'Connections', icon: <IoMdPeople />, path: '/connections' },
+    { name: 'Message', icon: <BiSolidMessageDots />, path: '/messages' },
+    { name: 'Notification', icon: <FaBell />, path: '/notifications' },
+    { name: 'AI Assistant', icon: <PiFinnTheHumanFill />, path: '/ai-assistant' },
   ]
 
-  const [activeMenu, setActiveMenu] = useState(menuItems[0].name)
+  const [activeMenu, setActiveMenu] = useState(pathname)
 
-  const handleMenuClick = (name: React.SetStateAction<string>) => {
-    console.log('name', name)
-
-    setActiveMenu(name)
+  const handleMenuClick = (item: { name: string; icon?: React.JSX.Element; path: string }) => {
+    setActiveMenu(item.path)
+    router.push(item.path)
   }
 
   const tabData = [
@@ -63,28 +67,44 @@ export default function LeftNavbar({ setCurrSelectedGroup, currSelectedGroup }: 
       content: <div>This is the content of Tab 3.</div>,
     },
   ]
+  console.log(userProfileData.cover_dp)
+  const renderProfile = () => {
+    if (userProfileData.cover_dp?.imageUrl) {
+      return (
+        <Image
+          width={40}
+          height={40}
+          objectFit="cover"
+          className="w-[40px] h-[40px] rounded-full"
+          src={userProfileData.cover_dp?.imageUrl || avatar}
+          alt="profile.png"
+        />
+      )
+    }
+    return <UserListItemSkeleton />
+  }
   return (
-    <div>
-      <Card className="rounded-2xl">
+    <div className="">
+      <Card className="rounded-2xl h-screen overflow-y-auto ">
         <div className="px-4 flex gap-4">
+          {renderProfile()}
           <div>
-            <Image width={60} height={60} src={avatar} alt="avatar.png" />
-          </div>
-          <div>
-            <p className="text-sm text-neutral-700">Anonymous</p>
+            <p className="text-sm text-neutral-700">
+              {userData.firstName} {userData.lastName}
+            </p>
             <SubText>University Details</SubText>
             <SubText>Degree Details</SubText>
           </div>
         </div>
-        <div className="px-4 pt-9">
+        <div className="px-4 pt-9 ">
           <p className="text-2xs text-neutral-500 font-bold">EXPLORE</p>
           {menuItems.map((item, index) => (
             <div
               key={index}
               className={`flex gap-2 cursor-pointer text-sm pt-[10px] ${
-                activeMenu === item.name ? 'text-[#3A169C] font-semibold' : 'text-neutral-500'
+                activeMenu === item.path ? 'text-[#3A169C] font-semibold' : 'text-neutral-500'
               }`}
-              onClick={() => handleMenuClick(item.name)}
+              onClick={() => handleMenuClick(item)}
             >
               <span className="text-[20px]">{item.icon}</span>
               <span className="">{item.name}</span>
@@ -94,12 +114,6 @@ export default function LeftNavbar({ setCurrSelectedGroup, currSelectedGroup }: 
         <p className=" px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
         <NavbarUniversityItem />
 
-        {/*<div className="bg-[#F3F2FF] flex items-center gap-3 py-2 px-4">
-        <div className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px]">
-          <PiFilesFill className="text-[#3A169C] text-[20px]" />
-        </div>
-        <p className="text-sm font-bold">Lorem University</p>
-      </div>*/}
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
         <div className="flex items-center justify-center gap-6 py-2">
           <div className="flex items-center justify-center bg-white rounded-full gap-3 ">
