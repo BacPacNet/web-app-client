@@ -14,7 +14,7 @@ const LeftNavWrapper: React.FC<WrapperProps> = ({ children }) => {
   const [currSelectedGroup, setCurrSelectedGroup] = useState(null)
 
   return (
-    <div className="flex h-screen gap-8 py-8 px-4">
+    <div className="flex h-screen gap-8 py-8">
       <div className="w-1/5 hidden md:block">
         <LeftNavbar setCurrSelectedGroup={setCurrSelectedGroup} currSelectedGroup={currSelectedGroup} />
       </div>

@@ -57,9 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-surface-primary-50">
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
-            {/*<Navbar />*/}
             <LogoNavbar />
-            <SecondaryNavbar />
             {children}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>
