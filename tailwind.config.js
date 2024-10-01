@@ -64,7 +64,7 @@ module.exports = {
         function ({addUtilities}) {
             addUtilities({
                 '.h-with-navbar': {
-                    height: 'calc(100vh - 4rem)', // Replace 4rem with your actual navbar height
+                    height: 'calc(100vh - 68px)',
                 },
             });
         },

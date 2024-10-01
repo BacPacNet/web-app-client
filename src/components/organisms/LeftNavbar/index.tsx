@@ -51,7 +51,7 @@ export default function LeftNavbar() {
   }
   return (
     <div className="pt-1 ">
-      <Card className="">
+      <Card className="h-with-navbar  overflow-y-auto">
         <div className="px-4 flex gap-4">
           {renderProfile()}
           <div>
