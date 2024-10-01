@@ -17,7 +17,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
   }
 
   return (
-    <div className="w-full mt-8 px-2">
+    <div className="w-full mt-8">
       {/* Tabs List */}
       <div className="flex justify-center  border-gray-200">
         {tabs.map((tab, index) => (
@@ -35,7 +35,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs }) => {
 
       {/* Tabs Content */}
 
-      <div className="mt-4 p-4 bg-white  rounded-md">{tabs[activeTab].content}</div>
+      <div className="mt-4  bg-white  rounded-md">{tabs[activeTab].content}</div>
     </div>
   )
 }

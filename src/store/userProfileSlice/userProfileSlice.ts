@@ -15,7 +15,7 @@ type userProfileAction = {
 const initialState: userProfileState = {
   userProfileData: {
     _id: '',
-    users_id: '',
+    users_id: null,
     profile_dp: { imageUrl: '', publicId: '' },
     email: [{ UniversityName: '', UniversityEmail: '' }],
     cover_dp: { imageUrl: '', publicId: '' },
