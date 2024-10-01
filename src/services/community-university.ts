@@ -231,7 +231,7 @@ export function useGetCommunityGroupPost(communityId: string, isJoined: boolean,
   const state = useQuery({
     queryKey: ['communityGroupsPost', communityId],
     queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
-    enabled: isJoined && isCommunity,
+    enabled: isJoined && isCommunity && !!cookieValue,
   })
 
   let errorMessage = null

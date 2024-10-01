@@ -18,7 +18,7 @@ module.exports = {
                 'sm': '16px',
                 'md': '24px',
                 'lg': '36px',
-                'xl': '42px'
+                'xl': '40px'
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -36,6 +36,7 @@ module.exports = {
             colors: {
                 'primary': '#6647FF',
                 'primary-500': '#6744FF',
+                'primary-700': '#3A169C',
                 'secondary': '#F3F2FF',
                 'neutral-200': '#E5E7EB',
                 'neutral-500': '#6B7280',
@@ -52,10 +53,20 @@ module.exports = {
                 'warning-500': '#F59E0B'
             },
             boxShadow: {
-                'card': '0px 6px 15px -2px rgba(16, 24, 40, 0.08)'
+                'card': '0px 6px 15px -2px rgba(16, 24, 40, 0.08)',
+                'button': '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04);',
+                'popper': '0px 8px 24px -3px rgba(16, 24, 40, 0.05), 0px 8px 24px -3px rgba(16, 24, 40, 0.10);'
             }
 
         },
     },
-    plugins: [],
+    plugins: [
+        function ({addUtilities}) {
+            addUtilities({
+                '.h-with-navbar': {
+                    height: 'calc(100vh - 68px)',
+                },
+            });
+        },
+    ],
 }

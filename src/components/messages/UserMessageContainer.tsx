@@ -143,7 +143,7 @@ const UserMessageContainer = ({ name, profileCover, chatId, users, isRequest, is
       </div>
       {/* // input box  */}
       {isRequest ? (
-        <MessageInputBox chatId={chatId} userProfileId={userProfileData._id} />
+        <MessageInputBox chatId={chatId} userProfileId={userProfileData._id || ''} />
       ) : (
         <div>
           <p>Accept request to message</p>

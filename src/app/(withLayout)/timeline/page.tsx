@@ -7,7 +7,7 @@ export default function Timeline() {
   return (
     <>
       <UserPostContainer type={PostInputType.Timeline} />
-      <PostContainer />
+      <PostContainer isTimeline={true} />
     </>
   )
 }

@@ -1,5 +1,5 @@
 'use client'
-import Loading from '@/app/v2/register/loading'
+import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
 import PostContainerPostTypeSelector from '@/components/molecules/PostContainerPostTypeSelector'
@@ -30,18 +30,18 @@ interface communityPostType {
   imageUrl: []
 }
 
-const PostContainer = ({ currSelectedGroup }: any) => {
-  const pathname = usePathname()
-
+const PostContainer = ({ isTimeline = false, communityId }: any) => {
   const { userData } = useUniStore()
-  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(pathname == '/timeline')
+  console.log(isTimeline, 'isTimelineisTimelineisTimeline')
+  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(isTimeline)
   const timelinePosts = TimelinePosts?.timelinePosts
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
   const {
     data: communityGroupPost,
     isFetching: communityGroupPostLoading,
     isError,
-  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup, pathname == '/community')
+  } = useGetCommunityGroupPost('668648f21cf42b7942f3ece6', isJoinedInGroup, !!communityId)
+
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -61,58 +61,60 @@ const PostContainer = ({ currSelectedGroup }: any) => {
   }, [userData])
 
   useEffect(() => {
-    if (pathname) {
-      const communityGroupId = currSelectedGroup?._id?.toString()
+    if (communityId) {
+      const communityGroupId = communityId.toString()
       if (userVerifiedCommunityGroupIds.includes(communityGroupId) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupId)) {
         setIsJoinedInGroup(true)
       } else {
         setIsJoinedInGroup(false)
       }
     }
-  }, [currSelectedGroup, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
+  }, [communityId, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
 
   const renderPostWithRespectToPathName = () => {
-    switch (pathname) {
-      case '/timeline':
-        return timelinePosts?.map((post: communityPostType, idx: number) => (
-          <PostCard
-            key={post._id}
-            user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
-            university={post?.user_id?.university_name}
-            year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
-            text={post?.content}
-            date={post?.createdAt}
-            avatarLink={post?.user_id?.profile_dp?.imageUrl}
-            comments={post?.comments}
-            likes={post.likeCount}
-            postID={post?._id}
-            type={PostType.Timeline}
-            images={post?.imageUrl || []}
-            setImageCarasol={setImageCarasol}
-            idx={idx}
-          />
-        ))
-      case '/community':
-        return communityGroupPost?.communityPosts?.map((post: communityPostType, idx: number) => (
-          <PostCard
-            key={post._id}
-            user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
-            university={post?.user_id?.university_name}
-            year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
-            text={post?.content}
-            date={post?.createdAt}
-            avatarLink={post?.user_id?.profile_dp?.imageUrl}
-            comments={post?.comments}
-            likes={post.likeCount}
-            postID={post?._id}
-            type={PostType.Community}
-            images={post?.imageUrl}
-            setImageCarasol={setImageCarasol}
-            idx={idx}
-          />
-        ))
-      default:
-        return <div>No valid path selected</div>
+    if (isTimeline) {
+      return (
+        <>
+          {timelinePosts?.map((post: communityPostType, idx: number) => (
+            <PostCard
+              key={post._id}
+              user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
+              university={post?.user_id?.university_name}
+              year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
+              text={post?.content}
+              date={post?.createdAt}
+              avatarLink={post?.user_id?.profile_dp?.imageUrl}
+              comments={post?.comments}
+              likes={post.likeCount}
+              postID={post?._id}
+              type={PostType.Timeline}
+              images={post?.imageUrl || []}
+              setImageCarasol={setImageCarasol}
+              idx={idx}
+            />
+          ))}
+        </>
+      )
+    }
+    if (communityId) {
+      return communityGroupPost?.communityPosts?.map((post: communityPostType, idx: number) => (
+        <PostCard
+          key={post._id}
+          user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
+          university={post?.user_id?.university_name}
+          year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
+          text={post?.content}
+          date={post?.createdAt}
+          avatarLink={post?.user_id?.profile_dp?.imageUrl}
+          comments={post?.comments}
+          likes={post.likeCount}
+          postID={post?._id}
+          type={PostType.Community}
+          images={post?.imageUrl}
+          setImageCarasol={setImageCarasol}
+          idx={idx}
+        />
+      ))
     }
   }
 

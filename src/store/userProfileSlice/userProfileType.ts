@@ -8,7 +8,7 @@ interface following {
 }
 
 export interface userProfileType {
-  users_id: string
+  users_id: string | null
   profile_dp?: { imageUrl: string; publicId: string }
   email: emailType[]
   cover_dp?: { imageUrl: string; publicId: string }

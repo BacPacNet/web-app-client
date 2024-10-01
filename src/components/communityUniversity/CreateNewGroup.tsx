@@ -66,7 +66,6 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   }
 
   const { data } = useGetCommunityUsers(id, userPopUp, values.communityGroupType, searchInput)
-  console.log('com', data)
 
   return (
     <>

@@ -1,13 +1,15 @@
-import LeftNavWrapper from '@/components/molecules/LeftNavWrapper'
+'use client'
 import UniversityCard from '@/components/molecules/UniversityCard'
 import PostContainer from '@/components/organisms/PostsContainer'
 import UserPostContainer from '@/components/organisms/UserPostContainer'
 import { PostInputType } from '@/types/constants'
+import { useParams } from 'next/navigation'
 import React from 'react'
 
 const Community = () => {
+  const { id } = useParams()
   return (
-    <LeftNavWrapper>
+    <>
       <UniversityCard
         universityLogo={''}
         universityName={'Lorem University'}
@@ -19,8 +21,8 @@ const Community = () => {
         memberCount={200}
       />
       <UserPostContainer type={PostInputType.Community} />
-      <PostContainer />
-    </LeftNavWrapper>
+      <PostContainer communityId={id} />
+    </>
   )
 }
 
