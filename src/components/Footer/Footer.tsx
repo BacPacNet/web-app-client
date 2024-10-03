@@ -3,10 +3,11 @@ import './Footer.css'
 
 import Image from 'next/image'
 import React from 'react'
-import facebook from '@assets/facebook.svg'
-import insta from '@assets/instagram.svg'
-import linkedin from '@assets/linkedin.svg'
-import x from '@assets/X.svg'
+//import facebook from '@assets/facebook.svg'
+//import insta from '@assets/instagram.svg'
+//import linkedin from '@assets/linkedin.svg'
+//import x from '@assets/X.svg'
+import unibuzzLogo from '@assets/unibuzz_logo.svg'
 
 const Footer: React.FC = () => {
   const handleRedirect = (platform: number) => {
@@ -36,19 +37,24 @@ const Footer: React.FC = () => {
     window.open(url, '_blank')
   }
   return (
-    <div className="w-[90%] mx-auto relative flex flex-col center-v py-2 lg:pt-8 ">
+    <div className="w-[90%] mx-auto relative flex flex-col center-v py-2 lg:pt-8 mt-20">
       <div className="w-full text-gray-dark text-sm lg:text-lg">
-        <div className="flex justify-between md:justify-start gap-2 md:gap-16 text-sm">
+        {/*<div className="flex justify-between md:justify-start gap-2 md:gap-16 text-sm">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms and Conditions</a>
           <a href="#">Contact Us</a>
-        </div>
+        </div>*/}
         <div className="flex flex-col-reverse md:flex-row items-center justify-center md:justify-between my-4 gap-4 text-sm">
-          <div>
-            <p>Copyright © 2024, Unibuzz Networks</p>
+          <div className="flex gap-4 items-start">
+            <Image width={84} height={21} src={unibuzzLogo} alt="logo" />
+            <p className="text-neutral-500 text-xs font-normal">Copyright © 2024, Unibuzz Networks</p>
           </div>
-          <div className="flex gap-4">
-            <div className="icons instagram center" onClick={() => handleRedirect(1)}>
+          <div className="flex gap-4 text-neutral-500 text-xs font-normal">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms and Conditions</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Business Service</a>
+            {/*<div className="icons instagram center" onClick={() => handleRedirect(1)}>
               <Image src={facebook} className="icon" alt="facebook" />
             </div>
             <div className="icons facebook center" onClick={() => handleRedirect(2)}>
@@ -59,7 +65,7 @@ const Footer: React.FC = () => {
             </div>
             <div className="icons discord center" onClick={() => handleRedirect(4)}>
               <Image src={insta} className="icon" alt="instagram" />
-            </div>
+            </div>*/}
           </div>
         </div>
       </div>

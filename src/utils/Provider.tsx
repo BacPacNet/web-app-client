@@ -12,7 +12,7 @@ export const ReactQueryClientProvider = ({ children }: ReactQueryClientProviderP
       new QueryClient({
         defaultOptions: {
           queries: {
-            refetchOnWindowFocus: true,
+            refetchOnWindowFocus: false,
           },
         },
       })
