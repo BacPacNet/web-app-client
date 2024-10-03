@@ -6,7 +6,7 @@ import PostContainerPostTypeSelector from '@/components/molecules/PostContainerP
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
-import { PostType } from '@/types/constants'
+import { PostInputType, PostType } from '@/types/constants'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 
@@ -30,18 +30,24 @@ interface communityPostType {
   imageUrl: []
 }
 
-const PostContainer = ({ currSelectedGroup }: any) => {
+type props = {
+  communityID?: string
+  communityGroupID?: string
+  type: PostType.Community | PostType.Timeline
+}
+const PostContainer = ({ communityID = '', communityGroupID = '', type }: props) => {
   const pathname = usePathname()
 
   const { userData } = useUniStore()
-  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(pathname == '/timeline')
+  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(type == PostType.Timeline)
   const timelinePosts = TimelinePosts?.timelinePosts
   const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
   const {
     data: communityGroupPost,
     isFetching: communityGroupPostLoading,
     isError,
-  } = useGetCommunityGroupPost(currSelectedGroup?._id, isJoinedInGroup, pathname == '/community')
+  } = useGetCommunityGroupPost(communityID, communityGroupID, true, type == PostType.Community)
+
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -62,18 +68,18 @@ const PostContainer = ({ currSelectedGroup }: any) => {
 
   useEffect(() => {
     if (pathname) {
-      const communityGroupId = currSelectedGroup?._id?.toString()
+      const communityGroupId = communityID?.toString()
       if (userVerifiedCommunityGroupIds.includes(communityGroupId) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupId)) {
         setIsJoinedInGroup(true)
       } else {
         setIsJoinedInGroup(false)
       }
     }
-  }, [currSelectedGroup, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
+  }, [communityID, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
 
   const renderPostWithRespectToPathName = () => {
-    switch (pathname) {
-      case '/timeline':
+    switch (type) {
+      case PostType.Timeline:
         return timelinePosts?.map((post: communityPostType, idx: number) => (
           <PostCard
             key={post._id}
@@ -86,13 +92,13 @@ const PostContainer = ({ currSelectedGroup }: any) => {
             comments={post?.comments}
             likes={post.likeCount}
             postID={post?._id}
-            type={PostType.Timeline}
+            type={'communityId' in post ? PostType.Community : PostType.Timeline}
             images={post?.imageUrl || []}
             setImageCarasol={setImageCarasol}
             idx={idx}
           />
         ))
-      case '/community':
+      case PostType.Community:
         return communityGroupPost?.communityPosts?.map((post: communityPostType, idx: number) => (
           <PostCard
             key={post._id}

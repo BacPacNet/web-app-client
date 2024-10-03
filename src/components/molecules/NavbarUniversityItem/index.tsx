@@ -12,7 +12,7 @@ export default function NavbarUniversityItem() {
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     setSelectUniversity(index)
     const indextoPush = Number(index)
-    router.push(`/v2/community/${SubscribedData?.community[indextoPush]._id}`)
+    router.push(`/community/${SubscribedData?.community[indextoPush]._id}`)
   }
 
   if (isFetching || isLoading) return <UserListItemSkeleton />

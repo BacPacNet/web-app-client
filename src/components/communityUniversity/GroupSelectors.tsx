@@ -1,10 +1,16 @@
+import { useRouter } from 'next/navigation'
 import React from 'react'
 import { FaStar } from 'react-icons/fa'
 
 const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data }: any) => {
+  const router = useRouter()
+  const handleGroupNavigate = () => {
+    setCurrSelectedGroup(data)
+    router.push(`/community/${data?.communityId}/${data?._id}`)
+  }
   return (
     <div
-      onClick={() => setCurrSelectedGroup(data)}
+      onClick={() => handleGroupNavigate()}
       className={`${
         currSelectedGroup?.title == data?.title
           ? 'bg-[#F3F2FF] max-md:bg-white max-md:after:h-[4px] after:rounded-full'

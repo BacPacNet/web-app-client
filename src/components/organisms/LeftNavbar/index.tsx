@@ -27,7 +27,7 @@ export default function LeftNavbar() {
   const router = useRouter()
   const { userData, userProfileData } = useUniStore()
 
-  const { data: communityGroups } = useGetCommunityGroups(id, true)
+  const { data: communityGroups } = useGetCommunityGroups(id && id[0], true)
   useEffect(() => {
     setCurrSelectedGroup(communityGroups?.groups[0])
   }, [communityGroups])
@@ -67,7 +67,7 @@ export default function LeftNavbar() {
       content: <div>This is the content of Tab 3.</div>,
     },
   ]
-  console.log(userProfileData.cover_dp)
+
   const renderProfile = () => {
     if (userProfileData.cover_dp?.imageUrl) {
       return (
@@ -84,7 +84,7 @@ export default function LeftNavbar() {
     return <UserListItemSkeleton />
   }
   return (
-    <div className="">
+    <div className=" ">
       <Card className="rounded-2xl h-screen overflow-y-auto ">
         <div className="px-4 flex gap-4">
           {renderProfile()}

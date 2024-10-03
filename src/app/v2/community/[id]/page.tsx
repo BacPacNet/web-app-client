@@ -8,7 +8,7 @@ import React from 'react'
 const Community = () => {
   return (
     <LeftNavWrapper>
-      <UniversityCard
+      {/* <UniversityCard
         universityLogo={''}
         universityName={'Lorem University'}
         isAiPowered={true}
@@ -17,9 +17,9 @@ const Community = () => {
           'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.'
         }
         memberCount={200}
-      />
+      /> */}
       <UserPostContainer type={PostInputType.Community} />
-      <PostContainer />
+      {/* <PostContainer /> */}
     </LeftNavWrapper>
   )
 }

@@ -3,6 +3,7 @@ import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
+import { PostType } from '@/types/constants'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -67,8 +68,10 @@ export async function LikeUnilikeGroupPost(communityGroupPostId: string, token: 
   return response
 }
 
-export async function getAllCommunityGroupPost(communityId: string, token: any) {
-  const response: any = await client(`/communitypost/${communityId}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getAllCommunityGroupPost(communityId: string, communityGroupID: string, token: any) {
+  const response: any = await client(`/communitypost/${communityId}/${communityGroupID ? communityGroupID : ''}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -225,12 +228,12 @@ export const useUpdateCommunityGroup = () => {
   })
 }
 
-export function useGetCommunityGroupPost(communityId: string, isJoined: boolean, isCommunity: boolean) {
+export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isJoined: boolean, isCommunity: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
 
   const state = useQuery({
     queryKey: ['communityGroupsPost', communityId],
-    queryFn: () => getAllCommunityGroupPost(communityId, cookieValue),
+    queryFn: () => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue),
     enabled: isJoined && isCommunity,
   })
 
@@ -245,11 +248,15 @@ export function useGetCommunityGroupPost(communityId: string, isJoined: boolean,
 export const useLikeUnilikeGroupPost = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

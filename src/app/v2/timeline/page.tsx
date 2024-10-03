@@ -10,7 +10,7 @@ export default function Timeline() {
   return (
     <LeftNavWrapper>
       <UserPostContainer type={PostInputType.Timeline} />
-      <PostContainer />
+      {/* <PostContainer /> */}
     </LeftNavWrapper>
   )
 }
