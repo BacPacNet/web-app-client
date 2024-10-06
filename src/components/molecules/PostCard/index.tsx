@@ -26,13 +26,6 @@ import { IoMdCode } from 'react-icons/io'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 
 dayjs.extend(relativeTime)
-const dummyImageData = [
-  'https://cdn.pixabay.com/photo/2022/10/23/13/43/canoe-7541311_1280.jpg',
-  'https://cdn.pixabay.com/photo/2022/05/17/22/44/car-7203855_1280.jpg',
-  'https://cdn.pixabay.com/photo/2023/01/15/22/48/river-7721287_640.jpg',
-  'https://cdn.pixabay.com/photo/2024/06/12/16/25/plant-8825881_640.png',
-  'https://cdn.pixabay.com/photo/2024/06/12/16/25/plant-8825881_640.png',
-]
 
 const SharePopup = () => {
   return (
@@ -86,6 +79,7 @@ interface Like {
 interface PostProps {
   user: string
   university: string
+  adminId: string
   year: string
   text: string
   link?: string
@@ -111,6 +105,7 @@ interface PostProps {
 const PostCard = ({
   user,
   university,
+  adminId,
   year,
   text,
   link,
@@ -137,8 +132,19 @@ const PostCard = ({
     }
   }
 
+  const PostData = {
+    user,
+    avatarLink: avatarLink,
+    date,
+    university,
+    year,
+    text,
+    type,
+    adminId,
+  }
+
   return (
-    <div className="bg-white rounded-b-2xl">
+    <div className={` bg-white ${idx == 0 ? 'rounded-b-2xl' : 'rounded-b-2xl rounded-t-2xl'}  `}>
       <div className="flex items-center p-4 gap-4">
         <Image src={avatarLink || avatar} width={56} height={56} className="rounded-full" alt="avatar.png" />
         <div>
@@ -167,7 +173,11 @@ const PostCard = ({
       </p>
 
       {/* Post Meta */}
-      <div className="flex items-center justify-between px-4 py-2 border-t border-neutral-200 text-xs text-neutral-500 ">
+      <div
+        className={`flex items-center justify-between px-4 py-2 border-t ${
+          showCommentSection && 'border-b'
+        } border-neutral-200 text-xs text-neutral-500 `}
+      >
         <div className="flex items-center gap-10">
           <span onClick={() => LikeUnlikeHandler(postID)} className="flex items-center">
             <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />{' '}
@@ -192,7 +202,7 @@ const PostCard = ({
           </Popover>
         </div>
       </div>
-      <PostCommentBox showCommentSec={showCommentSection} userComments={comments} postID={postID} type={type} adminId={userData.id} />
+      <PostCommentBox showCommentSec={showCommentSection} userComments={comments} postID={postID} type={type} adminId={userData.id} data={PostData} />
     </div>
   )
 }

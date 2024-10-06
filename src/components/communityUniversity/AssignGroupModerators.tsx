@@ -1,25 +1,99 @@
-import { useGetCommunityGroupUsers, useUserGroupRole } from '@/services/community-university'
+import { useGetCommunityGroupUsers, useGetCommunityUsers, useUserCommunityRole, useUserGroupRole } from '@/services/community-university'
 import React, { useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
 type Props = {
   setAssignUsers: (value: boolean) => void
   assignUsers: boolean
   id: string
+  isGroup: boolean
 }
 
-const AssignGroupModerators = ({ setAssignUsers, assignUsers, id }: Props) => {
+const AssignGroupModerators = ({ setAssignUsers, assignUsers, id, isGroup }: Props) => {
   const [searchInput, setSearchInput] = useState('')
-  const { data } = useGetCommunityGroupUsers(id, assignUsers, searchInput)
+  const { data } = useGetCommunityGroupUsers(id, assignUsers, searchInput, isGroup)
+  const { data: communityUsers } = useGetCommunityUsers(id, !isGroup, 'Private', searchInput)
   const { mutate: userGroupRole } = useUserGroupRole()
+  const { mutate: userCommunityRole } = useUserCommunityRole()
 
-  const handleChange = (e: any, communityGroupId: string, id: string) => {
-    const data = {
-      role: e.target.value,
-      communityGroupId: communityGroupId,
-      id: id,
+  const handleChange = (e: any, communityGroupId: string, postId: string, item: any) => {
+    if (!isGroup) {
+      const data = {
+        role: e.target.value,
+        communityId: id,
+        userID: item?._id,
+      }
+      userCommunityRole(data)
+    } else {
+      const data = {
+        role: e.target.value,
+        communityGroupId: communityGroupId,
+        id: postId,
+      }
+      userGroupRole(data)
     }
-    userGroupRole(data)
   }
+
+  const render = () => {
+    switch (isGroup) {
+      case true:
+        return data?.user?.map((item: any) => (
+          <div key={item._id} className="flex justify-between w-full">
+            <div className="flex items-center gap-2">
+              {item?.profile?.profile_dp?.imageUrl ? (
+                <img className="w-10 h-10 rounded-full object-cover" src={item?.profile?.profile_dp?.imageUrl} alt="" />
+              ) : (
+                <div className="bg-orange w-10 h-10 rounded-full"></div>
+              )}
+              <div>
+                <p className="text-sm font-semibold">{item?.firstName}</p>
+                <p className="text-xs ">{item?.profile?.university_name ? item?.profile?.university_name : 'Not Availaible'}</p>
+                <p className="text-xs">
+                  {item?.profile?.study_year} {item?.profile?.study_year ? 'Year' : ''} {item?.profile?.degree}
+                </p>
+              </div>
+            </div>
+            <select
+              onChange={(e) => handleChange(e, item.communityGroup.communityGroupId, item._id, item)}
+              defaultValue={item.communityGroup.role}
+              className="border outline-none py-2 rounded-lg border-gray-light font-normal text-sm text-center w-40"
+            >
+              <option value="Member">Member</option>
+              <option value="Moderator">Moderator</option>
+            </select>
+          </div>
+        ))
+
+      case false:
+        return communityUsers?.user?.map((item: any) => (
+          <div key={item._id} className="flex justify-between w-full">
+            <div className="flex items-center gap-2">
+              {item?.profile?.profile_dp?.imageUrl ? (
+                <img className="w-10 h-10 rounded-full object-cover" src={item?.profile?.profile_dp?.imageUrl} alt="" />
+              ) : (
+                <div className="bg-orange w-10 h-10 rounded-full"></div>
+              )}
+              <div>
+                <p className="text-sm font-semibold">{item?.firstName}</p>
+                <p className="text-xs ">{item?.profile?.university_name ? item?.profile?.university_name : 'Not Availaible'}</p>
+                <p className="text-xs">
+                  {item?.profile?.study_year} {item?.profile?.study_year ? 'Year' : ''} {item?.profile?.degree}
+                </p>
+              </div>
+            </div>
+
+            <select
+              onChange={(e) => handleChange(e, item?.communityGroup?.communityGroupId, item?._id, item)}
+              defaultValue={item.userVerifiedCommunities.find((university: any) => university.communityId == id).role}
+              className="border outline-none py-2 rounded-lg border-gray-light font-normal text-sm text-center w-40"
+            >
+              <option value="Member">Member</option>
+              <option value="Moderator">Moderator</option>
+            </select>
+          </div>
+        ))
+    }
+  }
+
   return (
     <>
       {assignUsers && (
@@ -27,7 +101,7 @@ const AssignGroupModerators = ({ setAssignUsers, assignUsers, id }: Props) => {
           <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-10"></div>
 
           <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
-          <div className="fixed w-2/4 max-sm:w-11/12 z-50 h-3/4   top-[10%] bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
+          <div className="fixed w-1/3 max-sm:w-11/12 z-50 h-3/4   top-[10%] left-1/3 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
             <div className="flex justify-between w-full">
               <h3>Change User Role</h3>
               <RxCross2 onClick={() => setAssignUsers(false)} size={24} color="#737373" />
@@ -52,34 +126,7 @@ const AssignGroupModerators = ({ setAssignUsers, assignUsers, id }: Props) => {
               />
             </div>
             {/* uses  */}
-            {data?.user?.map((item: any) => (
-              <div key={item._id} className="flex justify-between w-full">
-                <div className="flex items-center gap-2">
-                  {item?.profile?.profile_dp?.imageUrl ? (
-                    <img className="w-10 h-10 rounded-full object-cover" src={item?.profile?.profile_dp?.imageUrl} alt="" />
-                  ) : (
-                    <div className="bg-orange w-10 h-10 rounded-full"></div>
-                  )}
-                  <div>
-                    <p className="text-sm font-semibold">{item?.firstName}</p>
-                    <p className="text-xs ">{item?.profile?.university_name ? item?.profile?.university_name : 'Not Availaible'}</p>
-                    <p className="text-xs">
-                      {item?.profile?.study_year} {item?.profile?.study_year ? 'Year' : ''} {item?.profile?.degree}
-                    </p>
-                  </div>
-                </div>
-                {/* <input onChange={handleClick} className="w-4" type="checkbox" checked={isSelected} /> */}
-                <select
-                  onChange={(e) => handleChange(e, item.communityGroup.communityGroupId, item._id)}
-                  defaultValue={item.communityGroup.role}
-                  className="border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-40"
-                >
-                  {/* <option value="" disabled selected></option> */}
-                  <option value="Member">Member</option>
-                  <option value="Moderator">Moderator</option>
-                </select>
-              </div>
-            ))}
+            {render()}
           </div>
         </>
       )}

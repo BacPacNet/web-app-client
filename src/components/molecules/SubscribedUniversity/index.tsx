@@ -1,4 +1,4 @@
-// import Loading from '@/app/community/loading'
+// import Loading from '@/app/old-community/loading'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
 import React from 'react'
 

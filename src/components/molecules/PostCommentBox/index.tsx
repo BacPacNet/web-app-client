@@ -10,6 +10,10 @@ import { useCreateGroupPostComment, useLikeUnlikeGroupPostComment } from '@/serv
 import { PostCommentData, PostType } from '@/types/constants'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '@/components/spinner/Spinner'
+import Image from 'next/image'
+import avatar from '@assets/avatar.svg'
+import { FaPlusCircle } from 'react-icons/fa'
+import NewPostComment from '../NewPostComment'
 
 dayjs.extend(relativeTime)
 type Props = {
@@ -18,125 +22,95 @@ type Props = {
   postID: string
   type: PostType.Community | PostType.Timeline
   adminId: string
+  data: {
+    user: string
+    avatarLink: string
+    date: string
+    university: string
+    year: string
+    text: string
+    type: PostType.Community | PostType.Timeline
+    adminId: string
+  }
 }
 
-const PostCommentBox = ({ showCommentSec, userComments, postID, type, adminId }: Props) => {
-  const { userData } = useUniStore()
-  const { mutate: CreateGroupPostComment, isPending: CreateGroupPostCommentLoading } = useCreateGroupPostComment(
-    type == PostType.Community ? true : false
-  )
+const PostCommentBox = ({ showCommentSec, userComments, postID, type, adminId, data }: Props) => {
+  const { userData, userProfileData } = useUniStore()
+
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment()
-  const { mutate: CreateUserPostComment, isPending: CreateUserPostCommentLoading } = useCreateUserPostComment(
-    type == PostType.Timeline ? true : false
-  )
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment()
-  const [comment, setComment] = useState('')
-  const [ImageValue, setImageValue] = useState<File | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
-  const handlePostComment = async () => {
-    if (comment.length <= 1) {
-      return console.log('Please type something to comment!')
+  const [newPost, setNewPost] = useState(false)
+
+  const likePostCommentHandler = (commentId: string) => {
+    if (type === PostType.Timeline) {
+      likeUserPostComment(commentId)
+    } else if (type === PostType.Community) {
+      likeGroupPostComment(commentId)
     }
-    setIsLoading(true)
-    if (ImageValue) {
-      const imagedata: any = await replaceImage(ImageValue, '')
-
-      const data: PostCommentData = {
-        postID: postID,
-        content: comment,
-        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
-      }
-
-      if (type === PostType.Timeline) {
-        CreateUserPostComment(data)
-      } else if (type === PostType.Community) {
-        data.adminId = adminId
-        CreateGroupPostComment(data)
-      }
-    } else {
-      const data: PostCommentData = {
-        postID: postID,
-        content: comment,
-      }
-
-      if (type === PostType.Timeline) {
-        CreateUserPostComment(data)
-      } else if (type === PostType.Community) {
-        data.adminId = adminId
-        CreateGroupPostComment(data)
-      }
-    }
-    setIsLoading(false)
-    setImageValue(null)
-    setComment('')
   }
-  return (
-    <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''} xs:max-w-xs sm:max-w-max flex flex-col gap-2 `}>
-      <div>
-        <div className="w-11/12 border border-gray-light rounded-full py-2 pr-3 flex items-center">
-          <input
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-            type="text"
-            placeholder="Add a comment..."
-            className="flex-grow mx-1 sm:mx-4 p-1 border-none focus:outline-none w-full lg:min-w-[370px] xs:text-xs sm:text-sm"
-          />
 
-          {comment?.length > 1 && (
-            <button onClick={() => handlePostComment()} className="text-white bg-primary px-3 my-[2px] sm:px-3 sm:py-2 rounded-full text-sm">
-              {CreateGroupPostCommentLoading || CreateUserPostCommentLoading || isLoading ? <Spinner /> : <p>Post</p>}
-            </button>
-          )}
+  return (
+    <div className={`${!showCommentSec ? 'h-0 overflow-y-hidden' : ''}  flex flex-col gap-2 px-4 w-full`}>
+      <div>
+        <div className="w-11/12  rounded-full py-2 pr-3 flex items-center">
+          <Image
+            src={userProfileData.cover_dp?.imageUrl || avatar}
+            alt={`${userData?.firstName}'s avatar`}
+            width={44}
+            height={44}
+            objectFit="cover"
+            className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
+          />
+          <button onClick={() => setNewPost(true)} className="border-2 border-primary py-2 px-3 text-xs rounded-lg flex items-center gap-3 ms-2">
+            {' '}
+            <span>
+              <FaPlusCircle color="#6647ff" />
+            </span>{' '}
+            <span className="text-primary"> Add a comment</span>
+          </button>
         </div>
       </div>
+      <p className="text-xs text-neutral-400">
+        <span className="text-neutral-900">Top Comment</span> / <span>Most Recent</span>
+      </p>
       {userComments?.map((comment: any) => (
-        <div key={comment._id} className="my-4 xs:mr-4 sm:mr-0">
-          {/* Comment Info */}
-          <div className="flex gap-4">
-            {comment?.commenterId?.profile_dp?.imageUrl ? (
-              <img
-                src={comment?.commenterId?.profile_dp?.imageUrl}
-                alt={`${comment?.user}'s avatar`}
-                width={14}
-                height={14}
-                className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
-              />
-            ) : (
-              <div className="rounded-full w-12 h-12 sm:w-14 sm:h-14 bg-gray" />
-            )}
-
-            <div className="px-4 py-2 border border-gray rounded-lg">
-              <div className="flex justify-between">
-                <div>
-                  <p className="font-medium text-base text-gray-dark">{comment?.commenterId?.firstName}</p>
-                  <p className="text-xs text-gray">{comment.createdAt && dayjs(new Date(comment?.createdAt).toString()).fromNow()}</p>
-                </div>
-                <SlOptions color="gray" />
+        <div key={comment._id} className="my-4 xs:mr-4 sm:mr-0 w-full">
+          <div>
+            <div className="flex  p-4 gap-4">
+              <Image src={comment?.commenterId?.profile_dp?.imageUrl || avatar} width={56} height={56} className="rounded-full" alt="avatar.png" />
+              <div>
+                <h3 className="font-medium text-sm text-neutral-600">{comment?.commenterId?.firstName}</h3>
+                <p className="text-[12px] text-neutral-500">{comment?.commenterId?.university_name}</p>
+                <p className="text-[12px] text-neutral-500">{comment?.commenterId?.study_year + 'nd' + ' Yr ' + comment?.commenterId?.degree}</p>
               </div>
-              {comment?.imageUrl?.imageUrl && <img className="w-full h-80 object-contain" src={comment?.imageUrl?.imageUrl} alt="" />}
-              <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+              <p className="ml-auto text-xs text-gray">
+                {comment.createdAt && dayjs(new Date(comment?.createdAt).toString()).format('h:mm A · MMM D, YYYY')}
+              </p>
             </div>
           </div>
+          {/* Comment Info */}
+          <div className="flex gap-4 px-[90px]">
+            <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+            {/* </div> */}
+          </div>
           {/* Comment Actions */}
-          <div className="flex justify-end mt-3 gap-10">
+          <div className="flex justify-start px-[90px] mt-3 gap-5 text-xs">
             <div className="flex items-center cursor-pointer">
-              <AiOutlineLike color={comment?.likeCount?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
-              <span className="mx-1 text-sm">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
+              <AiOutlineLike
+                onClick={() => likePostCommentHandler(comment._id)}
+                color={comment?.likeCount?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''}
+              />
+              <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
             </div>
-            <div
-              className="flex items-center cursor-pointer"
-              //   onClick={() => {
-              //     setModalContentType('ReplyModal')
-              //     setIsModalOpen(true)
-              //   }}
-            >
-              <HiReply size={20} className="text-gray-dark" />
-              <span className="ml-2 text-sm">Reply</span>
+            <div className="flex items-center cursor-pointer">
+              <HiReply className="text-gray-dark" />
+              <span className="ml-2 ">Reply</span>
             </div>
           </div>
         </div>
       ))}
+      {newPost && <NewPostComment setNewPost={setNewPost} data={data} postId={postID} />}
     </div>
   )
 }

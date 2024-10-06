@@ -1,13 +1,12 @@
 'use client'
-import Loading from '@/app/v2/register/loading'
+import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
 import PostContainerPostTypeSelector from '@/components/molecules/PostContainerPostTypeSelector'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
-import { PostInputType, PostType } from '@/types/constants'
-import { usePathname } from 'next/navigation'
+import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
 
 interface communityPostType {
@@ -36,17 +35,17 @@ type props = {
   type: PostType.Community | PostType.Timeline
 }
 const PostContainer = ({ communityID = '', communityGroupID = '', type }: props) => {
-  const pathname = usePathname()
-
   const { userData } = useUniStore()
   const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(type == PostType.Timeline)
+
   const timelinePosts = TimelinePosts?.timelinePosts
-  const [isJoinedInGroup, setIsJoinedInGroup] = useState(false)
+  const [issJoined, setIsJoined] = useState(false)
+
   const {
     data: communityGroupPost,
     isFetching: communityGroupPostLoading,
     isError,
-  } = useGetCommunityGroupPost(communityID, communityGroupID, true, type == PostType.Community)
+  } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community)
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -58,6 +57,14 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
     currImageIndex: null,
   })
 
+  const userVerifiedCommunityIds = useMemo(() => {
+    return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []
+  }, [userData])
+
+  const userUnverifiedVerifiedCommunityIds = useMemo(() => {
+    return userData?.userUnVerifiedCommunities?.map((c) => c.communityId.toString()) || []
+  }, [userData])
+
   const userVerifiedCommunityGroupIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
   }, [userData])
@@ -67,15 +74,28 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
   }, [userData])
 
   useEffect(() => {
-    if (pathname) {
-      const communityGroupId = communityID?.toString()
-      if (userVerifiedCommunityGroupIds.includes(communityGroupId) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupId)) {
-        setIsJoinedInGroup(true)
+    if (communityID && !communityGroupID) {
+      if (userVerifiedCommunityIds.includes(communityID) || userUnverifiedVerifiedCommunityIds.includes(communityID)) {
+        setIsJoined(true)
       } else {
-        setIsJoinedInGroup(false)
+        setIsJoined(false)
       }
     }
-  }, [communityID, userVerifiedCommunityGroupIds, userUnverifiedVerifiedCommunityGroupIds])
+    if (communityGroupID && communityID) {
+      if (userVerifiedCommunityGroupIds.includes(communityGroupID) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupID)) {
+        setIsJoined(true)
+      } else {
+        setIsJoined(false)
+      }
+    }
+  }, [
+    communityID,
+    communityGroupID,
+    userVerifiedCommunityIds,
+    userUnverifiedVerifiedCommunityIds,
+    userUnverifiedVerifiedCommunityGroupIds,
+    userVerifiedCommunityGroupIds,
+  ])
 
   const renderPostWithRespectToPathName = () => {
     switch (type) {
@@ -84,6 +104,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
           <PostCard
             key={post._id}
             user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
+            adminId={post.user_id?._id}
             university={post?.user_id?.university_name}
             year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
             text={post?.content}
@@ -103,6 +124,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
           <PostCard
             key={post._id}
             user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
+            adminId={post.user_id?._id}
             university={post?.user_id?.university_name}
             year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
             text={post?.content}
@@ -140,11 +162,15 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
 
   return (
     <div className="py-10">
-      {!isFetching && timelinePosts?.length > 0 && <PostContainerPostTypeSelector />}
+      {isFetching || timelinePosts?.length < 1 ? (
+        ' '
+      ) : communityGroupPostLoading || communityGroupPost?.communityPosts?.length < 1 ? (
+        ' '
+      ) : (
+        <PostContainerPostTypeSelector />
+      )}
 
-      <div className="flex flex-col gap-6">
-        <PostCardRender />
-      </div>
+      <div className="flex flex-col gap-6">{!issJoined && type !== PostType.Timeline ? '' : <PostCardRender />}</div>
 
       {imageCarasol.isShow && (
         <div className="relative h-screen w-full ">

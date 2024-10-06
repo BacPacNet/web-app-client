@@ -8,6 +8,7 @@ import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/commun
 import { useParams } from 'next/navigation'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../spinner/Spinner'
+import InputBox from '../atoms/Input/InputBox'
 type Props = {
   setNewGroup: (value: boolean) => void
 }
@@ -61,12 +62,11 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
       ...logoImageData,
       selectedUsersId,
     }
-    createGroup({ communityId: id, data: dataToPush })
+    createGroup({ communityId: id[0], data: dataToPush })
     setIsLoading(false)
   }
 
-  const { data } = useGetCommunityUsers(id, userPopUp, values.communityGroupType, searchInput)
-  console.log('com', data)
+  const { data } = useGetCommunityUsers(id[0], userPopUp, values.communityGroupType, searchInput)
 
   return (
     <>
@@ -74,7 +74,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
       {userPopUp && (
         <>
           <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
-          <div className="fixed w-2/4 max-sm:w-11/12 z-50 h-3/4   top-[10%] bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
+          <div className="fixed w-1/3 max-sm:w-11/12 z-50 h-3/4   top-[10%] left-1/3 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
             <div className="flex justify-between w-full">
               <h3>Add Community members</h3>
               <RxCross2 onClick={() => setUserPopUp(false)} size={24} color="#737373" />
@@ -107,14 +107,14 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
           </div>
         </>
       )}
-      <div className={`absolute w-9/12 max-sm:w-11/12 z-40   top-1/4 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg`}>
-        <div className="flex justify-end w-full">
+      <div className={`fixed w-1/3 max-sm:w-11/12 z-40 left-1/3  top-10  bg-white flex flex-col items-center gap-3 shadow-lg px-10 py-2 rounded-lg`}>
+        <div className="flex justify-end w-full absolute">
           {' '}
           <RxCross2 onClick={() => setNewGroup(false)} size={24} color="#737373" />
         </div>
-        <div className="flex flex-col gap-4 justify-start items-start w-full">
+        <div className="flex flex-col gap-2 justify-start items-start w-full">
           <h3>Create Group</h3>
-          <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-52 `}>
+          <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-40 `}>
             {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
             <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
             <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
@@ -123,45 +123,51 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
             </label>
           </div>
           {/* log0 */}
-          <div className={` relative shadow-lg flex  items-center justify-center w-36 h-36 rounded-full `}>
-            {logoImage && <img className="w-full h-full rounded-full absolute -z-10 object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
+          <div className={` absolute  shadow-lg bg-white flex  items-center justify-center w-20 h-20 rounded-full top-28`}>
+            {logoImage && <img className="w-full h-full rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
             <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
             <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-              <FiCamera size={40} className="text-slate-400" />
+              <FiCamera size={40} className="text-slate-400 z-30" />
             </label>
           </div>
           {/* Forms  */}
-          <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-6">
-            <div className="relative w-full">
+          <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-3">
+            <div className="relative w-full flex flex-col">
               <label htmlFor="name" className="font-semibold">
                 Group Name
               </label>
-              <input
-                {...GroupRegister('title', { required: true })}
-                placeholder="title"
-                className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full"
+              <InputBox
+                placeholder="title "
+                type="title"
+                {...GroupRegister('title', {
+                  required: true,
+                })}
               />
+
               {GroupErrors.title && <span className="text-red-500 font-normal"> Please enter your Group Name!</span>}
             </div>
-            <div className="relative w-full">
+            <div className="relative w-full flex flex-col">
               <label htmlFor="description" className="font-semibold">
                 Description
               </label>
-              <input
-                {...GroupRegister('description', { required: true })}
-                placeholder="description"
-                className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full"
+              <InputBox
+                placeholder="description "
+                type="description"
+                {...GroupRegister('description', {
+                  required: true,
+                })}
               />
+
               {GroupErrors.description && <span className="text-red-500 font-normal"> Please enter your Group description!</span>}
             </div>
-            <div className="relative w-full">
+            <div className="relative w-full flex flex-col">
               <label htmlFor="privacy" className="font-semibold">
                 Choose Privacy
               </label>
 
               <select
                 defaultValue={'Public'}
-                className="border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full"
+                className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-900 placeholder:text-neutral-400 h-10 outline-none border-neutral-200"
                 {...GroupRegister('communityGroupType', { required: true })}
               >
                 {/* <option value="" disabled selected></option> */}
@@ -170,7 +176,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
               </select>
               {GroupErrors.privacy && <span className="text-red-500 font-normal">Please choose a privacy option!</span>}
             </div>
-            <div className="relative w-full">
+            <div className="relative w-full flex flex-col">
               <label htmlFor="inviteFriends" className="font-semibold">
                 Invite Friends
               </label>
