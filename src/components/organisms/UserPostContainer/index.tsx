@@ -13,7 +13,13 @@ import { useCreateGroupPost } from '@/services/community-university'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
 
-function UserPostContainer({ currSelectedGroup, type }: any) {
+type props = {
+  communityID?: string
+  communityGroupID?: string
+  type: PostInputType.Community | PostInputType.Timeline
+}
+
+function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
@@ -82,7 +88,8 @@ function UserPostContainer({ currSelectedGroup, type }: any) {
       if (type === PostInputType.Community) {
         const communityData: CommunityPostData = {
           ...data,
-          communityId: currSelectedGroup?._id,
+          communityId: communityID,
+          ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -95,7 +102,8 @@ function UserPostContainer({ currSelectedGroup, type }: any) {
       if (type === PostInputType.Community) {
         const communityData: CommunityPostData = {
           ...data,
-          communityId: currSelectedGroup?._id,
+          communityId: communityID,
+          ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {

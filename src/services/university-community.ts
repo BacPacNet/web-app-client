@@ -10,6 +10,7 @@ interface community {
   }
   name: string
   collegeID: string
+  adminId: string
 }
 interface CommunityType {
   community: community[]

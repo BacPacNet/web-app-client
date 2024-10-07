@@ -1,11 +1,12 @@
-import Loading from '@/app/old-community/loading'
+// import Loading from '@/app/old-community/loading'
 import { useGetUserSubscribedCommunityGroups } from '@/services/university-community'
 import React from 'react'
 
 export default function SubscribedUniversity() {
   const { data: SubscribedData, isFetching } = useGetUserSubscribedCommunityGroups()
 
-  if (isFetching) return <Loading />
+  // if (isFetching) return <Loading />
+  if (isFetching) return <div>Loading</div>
 
   return <div>index</div>
 }

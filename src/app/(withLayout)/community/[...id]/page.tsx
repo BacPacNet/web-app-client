@@ -1,13 +1,12 @@
-'use client'
 import UniversityCard from '@/components/molecules/UniversityCard'
 import PostContainer from '@/components/organisms/PostsContainer'
 import UserPostContainer from '@/components/organisms/UserPostContainer'
-import { PostInputType } from '@/types/constants'
-import { useParams } from 'next/navigation'
-import React from 'react'
+import { PostInputType, PostType } from '@/types/constants'
 
-const Community = () => {
-  const { id } = useParams()
+export default function Page({ params }: { params: { id: string } }) {
+  const communityID = params.id[0]
+  const communityGroupID = params.id[1]
+
   return (
     <>
       <UniversityCard
@@ -19,11 +18,11 @@ const Community = () => {
           'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.'
         }
         memberCount={200}
+        communityID={communityID}
+        communityGroupID={communityGroupID}
       />
-      <UserPostContainer type={PostInputType.Community} />
-      <PostContainer communityId={id} />
+      <UserPostContainer communityID={communityID} communityGroupID={communityGroupID} type={PostInputType.Community} />
+      <PostContainer communityID={communityID} communityGroupID={communityGroupID} type={PostType.Community} />
     </>
   )
 }
-
-export default Community

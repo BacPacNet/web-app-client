@@ -84,7 +84,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
 
   return (
     <>
-      <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={data?._id} />
+      <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={data?._id} isGroup={true} />
       <div className="w-full overflow-hidden border-2 border-neutral-300 rounded-lg">
         {/* top section  */}
         <div className="h-52 relative flex justify-start items-end   ">

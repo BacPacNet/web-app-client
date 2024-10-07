@@ -4,7 +4,7 @@ type Props = {
   placeholder?: string
   className?: string
   type: string
-  err: boolean
+  err?: boolean
 }
 const InputBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className, type, err, ...rest }, ref) => {
   return (
