@@ -39,7 +39,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   }, [userProfileData])
   useEffect(() => {
     isUserLoggedIn()
-  }, [userProfileData])
+  }, [userProfileData, isUserLoggedIn])
 
   const renderProfile = () => {
     switch (isLogin) {
