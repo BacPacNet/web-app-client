@@ -3,28 +3,24 @@ import { useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { ServerResponse } from '@/models/common/api-client'
 
-interface UniversitySearchResult {
-  isLoading: boolean
-  data: ServerResponse<any> | []
-}
+export function useUniversitySearch(searchTerm: string) {
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
-export function useUniversitySearch(searchTerm: string): UniversitySearchResult {
-  // Debounce the search term with a 1-second delay
-  const debouncedSearchTerm = useDebounce(searchTerm, 1000)
-
-  const { isLoading, data } = useQuery({
-    enabled: Boolean(debouncedSearchTerm),
-    queryKey: ['searchTerm', debouncedSearchTerm],
+  return useQuery<any, Error>({
+    queryKey: ['universitySearch', debouncedSearchTerm],
     queryFn: () => getUniversitySearch(debouncedSearchTerm),
+    enabled: Boolean(debouncedSearchTerm), // Only run if there's a search term
+    staleTime: 1000 * 60 * 5, // Optional: Cache data for 5 minutes
+    retry: false, // Optional: Prevent retries on failure
   })
-
-  return { isLoading, data }
 }
 
-export async function getUniversitySearch(searchTerm: string) {
-  // const [_, debouncedSearchTerm] = queryKey
-  // console.log('deb', debouncedSearchTerm)
+export async function getUniversitySearch(searchTerm: string): Promise<any[]> {
+  if (!searchTerm) return []
 
-  const response = await client(`university/searched?searchTerm=${searchTerm}`)
+  // Fetch university data based on the search term
+  const response = await client(`university/searched?searchTerm=${encodeURIComponent(searchTerm)}`)
+
+  // TypeScript assumes `response` is of type `University[]`
   return response
 }

@@ -50,7 +50,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <LeftNavbar />
         </div>
       </div>
-      <div className="w-3/5">{children}</div>
+      <div className="lg:w-3/5 md:w-4/5 w-full ">{children}</div>
       <div className="w-1/5 py-9 px-4 shadow-2xl bg-white hidden lg:block mt-1 h-auto">
         <UpcomingEvent />
         <Recommendations people={recommendations} />

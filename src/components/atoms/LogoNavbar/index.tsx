@@ -19,12 +19,13 @@ import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
 import { PiChatsBold, PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
 import { HiCubeTransparent } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
+import MobileViewNavbar from '@/components/organism/MobileViewNavbar'
 
 interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/', '/login', '/register']
+const nonPaddingUrls = ['/', '/login', '/register', '/college']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
@@ -109,7 +110,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
         )
       case false:
         return (
-          <div className="pl-8 gap-4">
+          <div className="pl-8 gap-4 flex">
             <LoginButtons variant="border" className="text-xs">
               Sign Up
             </LoginButtons>
@@ -124,15 +125,18 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   return (
     <div className="w-full h-[68px]">
       <div
-        className={`${shouldPadding ? 'px-28' : 'px-4'} w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0`}
+        className={`${
+          shouldPadding ? 'px-4 lg:px-28' : 'px-4'
+        } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0`}
       >
         <div>
           <Link className="flex gap-4 center-v" href="/">
             <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
           </Link>
         </div>
+        <MobileViewNavbar />
         {!showOnlyLogo && (
-          <div className="flex items-center justify-between">
+          <div className="items-center justify-between hidden lg:flex ">
             <div className="flex gap-16 px-8">
               {MENU_LIST.map((menu, index) => {
                 if (menu.name === 'UPGRADE') {
