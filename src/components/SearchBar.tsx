@@ -75,7 +75,10 @@ const SearchBar = () => {
         searchHistoryShown ? (
           <SearchHistoryBox info={item} serialNo={index} key={index} />
         ) : (
-          <CollegeResult info={item} serialNo={index} key={index} />
+          <div key={index}>
+            {' '}
+            <CollegeResult university={item} />
+          </div>
         )
       )
     : []
