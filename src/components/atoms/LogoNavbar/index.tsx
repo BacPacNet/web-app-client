@@ -20,6 +20,9 @@ import { PiChatsBold, PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi
 import { HiCubeTransparent } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
 import MobileViewNavbar from '@/components/organism/MobileViewNavbar'
+import NotificationBox from '@/components/molecules/Notification'
+import MessageNotification from '@/components/molecules/MessageNotification'
+import { useGetMessageNotification, useGetNotification } from '@/services/notification'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -33,7 +36,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   //  const [cookieValue] = useCookie('uni_user_token')
   const { userProfileData } = useUniStore()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
-
+  const { data: notificationData } = useGetNotification(3, true)
+  const { data: messageNotificationData } = useGetMessageNotification(3, true)
+  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
+  const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData.users_id)
   }, [userProfileData])
@@ -46,8 +52,29 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case true:
         return (
           <div className="flex gap-4 items-center pl-4">
-            <FaBell className="text-primary-700 w-[20px] h-[20px]" />
-            <PiChatsBold className="text-primary-700 w-[20px] h-[20px]" />
+            <Popover>
+              <PopoverTrigger>
+                <div className="relative">
+                  <FaBell className="text-primary-700 w-[20px] h-[20px]" />
+                  {notifications.length > 0 && <p className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0"></p>}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 relative right-32 top-6 w-96 bg-white shadow-card border-none">
+                <NotificationBox notifications={notifications} />
+              </PopoverContent>
+            </Popover>
+            {/* // message notification  */}
+            <Popover>
+              <PopoverTrigger>
+                <div className="relative">
+                  <PiChatsBold className="text-primary-700 w-[20px] h-[20px]" />
+                  {messageNotifications.length > 0 && <p className="w-2 h-2 rounded-full bg-red-500 absolute top-0 right-0"></p>}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 relative right-28 top-6 w-96 bg-white shadow-card border-none">
+                <MessageNotification message={messageNotifications} />
+              </PopoverContent>
+            </Popover>
             <Popover>
               <PopoverTrigger>
                 <div className="flex gap-2 items-center">

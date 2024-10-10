@@ -8,6 +8,8 @@ import { ModalContentType } from '@/types/global'
 import React, { useState } from 'react'
 import { useUniStore } from '@/store/store'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
+import { userProfileType } from '@/store/userProfileSlice/userProfileType'
+import { userType } from '@/store/userSlice/userType'
 
 const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -31,13 +33,13 @@ const Profile = () => {
       </Modal>
       <div className="flex justify-center w-full gap-6 mt-20 max-md:flex-col max-md:items-center pb-10  ">
         <ProfileCard
-          userProfileData={userProfileData}
-          userData={userData}
+          userProfileData={userProfileData as userProfileType}
+          userData={userData as userType}
           setModalContentType={setModalContentType}
           setIsModalOpen={setIsModalOpen}
           isUserProfile={true}
-          following={userProfileData?.following?.length}
-          followers={userProfileData?.followers?.length}
+          following={userProfileData?.following?.length || 0}
+          followers={userProfileData?.followers?.length || 0}
         />
         <CommunityProfileContainer />
       </div>

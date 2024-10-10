@@ -204,7 +204,7 @@ export default function UniversityCard({
           <div
             className={`${
               dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
-            }  w-8 h-8 rounded-full bg-white shadow-2xl z-30 top-5 right-[5%] flex items-center justify-center `}
+            }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
           >
             <input style={{ display: 'none' }} type="file" id="CommunityCoverImagefile" onChange={(e) => handleCoverImageUpload(e)} />
             <label htmlFor="CommunityCoverImagefile">
@@ -215,7 +215,7 @@ export default function UniversityCard({
           <div
             className={`${
               dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
-            }  w-8 h-8 rounded-full bg-white shadow-2xl z-30 top-5 right-[5%] flex items-center justify-center `}
+            }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
           >
             <input style={{ display: 'none' }} type="file" id="CommunityGroupCoverImagefile" onChange={(e) => handleGroupCoverImageUpload(e)} />
             <label htmlFor="CommunityGroupCoverImagefile">
@@ -235,7 +235,7 @@ export default function UniversityCard({
                 <div
                   className={`${
                     dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
-                  }  w-8 h-8 rounded-full bg-white shadow-2xl z-30 top-1 right-1 flex items-center justify-center `}
+                  }  w-8 h-8 rounded-full bg-white shadow-2xl z-[2] top-1 right-1 flex items-center justify-center `}
                 >
                   <input style={{ display: 'none' }} type="file" id="communitylogoImagefile" onChange={(e) => handleLogoImageUpload(e)} />
                   <label htmlFor="communitylogoImagefile">
@@ -246,7 +246,7 @@ export default function UniversityCard({
                 <div
                   className={`${
                     dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
-                  }  w-8 h-8 rounded-full bg-white shadow-2xl z-30 top-1 right-1 flex items-center justify-center `}
+                  }  w-8 h-8 rounded-full bg-white shadow-2xl z-[2] top-1 right-1 flex items-center justify-center `}
                 >
                   <input style={{ display: 'none' }} type="file" id="communityGrouplogoImagefile" onChange={(e) => handleGroupLogoImageUpload(e)} />
                   <label htmlFor="communityGrouplogoImagefile">
@@ -256,7 +256,14 @@ export default function UniversityCard({
               )}
 
               {dataToDisplay?.logoImage ? (
-                <Image alt="logo" src={dataToDisplay?.logoImage} fill />
+                <Image
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="center"
+                  alt="logo"
+                  src={dataToDisplay?.logoImage}
+                  className="object-cover object-top"
+                />
               ) : (
                 <FaUniversity className="text-warning-500 text-[20px]" />
               )}

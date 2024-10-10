@@ -1,10 +1,11 @@
 'use client'
 
 import { notificationRoleAccess } from '@/components/Navbar/constant'
-import { useGetNotification } from '@/services/notification'
+import { useGetMessageNotification, useGetNotification } from '@/services/notification'
 import { useGetUserData } from '@/services/user'
 import { useGetUserProfileData } from '@/services/userProfile'
 import { useUniStore } from '@/store/store'
+import { useParams, usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 type ZustandSocketProviderProps = {
@@ -15,7 +16,12 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const initializeSocket = useUniStore((state) => state.initializeSocket)
   const disconnectSocket = useUniStore((state) => state.disconnectSocket)
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
-  const { refetch: refetchNotification } = useGetNotification()
+  const { refetch: refetchNotification } = useGetNotification(3, true)
+  const param = usePathname()
+  // const isRouteMessage = param.split('/')[1] !== 'messages'
+  // console.log('param', param.split('/')[1] !== 'messages')
+  const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
+
   const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(type)
   const {
     refetch: refetchUserProfileData,
@@ -26,13 +32,15 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
 
   useEffect(() => {
     if (userData.id) {
-      initializeSocket(userData.id, refetchUserData, refetchNotification, refetchUserProfileData)
+      const routeSegment = param.split('/')[1]
+      const isRouteMessage = routeSegment !== 'messages'
+      initializeSocket(userData.id, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage)
     }
 
     return () => {
       disconnectSocket()
     }
-  }, [userData.id, initializeSocket, disconnectSocket, refetchNotification])
+  }, [userData.id, initializeSocket, disconnectSocket, refetchNotification, param])
 
   useEffect(() => {
     if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {

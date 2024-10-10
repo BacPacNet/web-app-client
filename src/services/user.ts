@@ -14,7 +14,7 @@ export function useGetUserData(type: string) {
   const { userData } = useUniStore()
   const state = useQuery({
     queryKey: ['getRefetchUserData'],
-    queryFn: () => getUserData(cookieValue, userData.id),
+    queryFn: () => getUserData(cookieValue, userData.id || ''),
     enabled: !!cookieValue && type != '',
   })
 

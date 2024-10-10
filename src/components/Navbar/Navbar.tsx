@@ -45,11 +45,11 @@ const Navbar: React.FC = () => {
   const [, , deleteCookie] = useCookie('uni_user_token')
   const { userProfileData, userData, resetUserData, resetUserProfileData } = useUniStore()
   const router = useRouter()
-  const { refetch: refetchNotification } = useGetNotification()
-  const { data: notificationData } = useGetNotification()
+  const { refetch: refetchNotification } = useGetNotification(3, false)
+  const { data: notificationData } = useGetNotification(3, false)
 
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-
+  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
   useEffect(() => {
     setIsLogin(!!userData?.id)
   }, [userData, userData?.id])
@@ -86,9 +86,9 @@ const Navbar: React.FC = () => {
           <PopoverTrigger>
             <div className="relative">
               <FaBell className="text-primary" size={26} />
-              {notificationData?.length ? (
+              {notifications?.length ? (
                 <p className="absolute bg-red-500 rounded-full w-4 h-4 top-0 right-0 text-center text-white text-xs">
-                  {notificationData?.length > 9 ? '9+' : notificationData?.length}
+                  {notifications?.length > 9 ? '9+' : notifications?.length}
                 </p>
               ) : (
                 ''
@@ -96,8 +96,8 @@ const Navbar: React.FC = () => {
             </div>
           </PopoverTrigger>
           <PopoverContent className="relative right-8 w-72 p-5 border-none shadow-lg bg-white shadow-gray-light z-20 h-96 overflow-y-scroll">
-            {notificationData?.length ? (
-              notificationData?.map((item: notificationInterface) =>
+            {notifications?.length ? (
+              notifications?.map((item: any) =>
                 item.type == notificationRoleAccess.GROUP_INVITE ? (
                   <InviteNotification
                     key={item?._id}

@@ -2,7 +2,7 @@ import { StateCreator } from 'zustand'
 import { userProfileType } from './userProfileType'
 
 type userProfileState = {
-  userProfileData: userProfileType
+  userProfileData: Partial<userProfileType>
 }
 
 type userProfileAction = {
@@ -13,27 +13,7 @@ type userProfileAction = {
 }
 
 const initialState: userProfileState = {
-  userProfileData: {
-    _id: '',
-    users_id: null,
-    profile_dp: { imageUrl: '', publicId: '' },
-    email: [{ UniversityName: '', UniversityEmail: '' }],
-    cover_dp: { imageUrl: '', publicId: '' },
-    bio: '',
-    phone_number: '',
-    dob: '',
-    country: '',
-    city: '',
-    university_name: '',
-    study_year: '',
-    degree: '',
-    major: '',
-    affiliation: '',
-    occupation: '',
-    followers: [{ userId: '' }],
-    following: [{ userId: '' }],
-    totalFilled: 0,
-  },
+  userProfileData: {},
 }
 
 export type userProfileSlice = userProfileState & userProfileAction

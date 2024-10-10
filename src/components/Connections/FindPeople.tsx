@@ -71,7 +71,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
   const [content, setContent] = useState<ContentType>('Find People')
   const [name, setName] = useState('')
   const { userProfileData } = useUniStore()
-  const userFollowingIDs = userProfileData.following.map((following) => following.userId)
+  const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const { data: allUserData, isFetching } = useGetAllUserWithProfileData(name, content == 'Find People')
   const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow(name, content == 'Following')
   const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers(name, content == 'Followers')
@@ -127,7 +127,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
               occupation={item?.occupation}
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
-              userFollowingIDs={userFollowingIDs}
+              userFollowingIDs={userFollowingIDs || []}
             />
           ))
         )}
@@ -154,7 +154,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
               occupation={item?.occupation}
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
-              userFollowingIDs={userFollowingIDs}
+              userFollowingIDs={userFollowingIDs || []}
             />
           ))
         )}
@@ -182,7 +182,7 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
               occupation={item?.profile?.occupation}
               imageUrl={item?.profile?.profile_dp?.imageUrl}
               type={content}
-              userFollowingIDs={userFollowingIDs}
+              userFollowingIDs={userFollowingIDs || []}
             />
           ))
         )}
