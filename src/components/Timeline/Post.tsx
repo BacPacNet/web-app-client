@@ -303,7 +303,7 @@ const Post: React.FC<PostProps> = ({
           <div className="flex justify-between items-center my-4 border-t-2 border-b-2 px-2 lg:px-10 py-2 border-border text-gray-1 xs:max-w-[340px] sm:max-w-md lg:max-w-full">
             {/* Like Button */}
             <div onClick={() => LikeUnlikeHandler(postID!)} className="flex items-center cursor-pointer">
-              <AiOutlineLike color={LikesUserId.includes(userData?.id) ? '#6647FF' : ''} />
+              <AiOutlineLike color={LikesUserId.includes(userData?.id || '') ? '#6647FF' : ''} />
               <span className="mx-1 text-sm xs:text-xs sm:text-sm">{likes?.length ? likes?.length : 0}</span>
             </div>
             <div onClick={() => setShowCommentsec(!showCommentSec)} className="flex items-center">

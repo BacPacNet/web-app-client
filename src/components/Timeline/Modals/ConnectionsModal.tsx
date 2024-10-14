@@ -15,7 +15,7 @@ type props = {
 const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }: props) => {
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
   const { userProfileData } = useUniStore()
-  const userFollowingIDs = userProfileData.following.map((following) => following.userId)
+  const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow('', content == 'Following')
   const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers('', content == 'Followers')
 
@@ -68,7 +68,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
               occupation={item?.occupation}
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
-              userFollowingIDs={userFollowingIDs}
+              userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
             />
           ))
@@ -96,7 +96,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
               occupation={item?.occupation}
               imageUrl={item?.profile_dp?.imageUrl}
               type={content}
-              userFollowingIDs={userFollowingIDs}
+              userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
             />
           ))

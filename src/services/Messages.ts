@@ -187,6 +187,7 @@ export const useUpdateMessageIsSeen = () => {
         )
         queryClient.setQueryData(['userChats'], updatedChatData)
       }
+      queryClient.invalidateQueries({ queryKey: ['message_notification'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

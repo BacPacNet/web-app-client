@@ -1,12 +1,52 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
-import axios from 'axios'
+
 import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
-import { notificationInterface } from '@/types/constants'
+import { MessageNotification } from '@/components/molecules/MessageNotification'
 
-export async function getUserNotification(token: string) {
-  const response: notificationInterface[] = await client(`/notification/`, { headers: { Authorization: `Bearer ${token}` } })
+type Notification = {
+  _id: string
+  sender_id: {
+    _id: string
+    firstName: string
+    lastName: string
+    profileDp?: string
+  }
+  receiverId: string
+  communityGroupId?: string
+  communityPostId?: string
+  userPostId?: string
+  message: string
+  type: string
+  isRead: boolean
+  createdAt: string
+}
+
+type NotificationsProps = {
+  notifications: Notification[]
+  currentPage: number
+  totalPages: number
+  totalNotifications: number
+}
+
+export type MessageNotificationsProps = {
+  message: MessageNotification[]
+  currentPage: number
+  totalPages: number
+  totalNotifications: number
+}
+
+export async function getUserNotification(token: string, page: number, limit: number) {
+  const response: NotificationsProps = await client(`/notification?page=${page}&&limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+export async function getMessageNotification(token: string, page: number, limit: number) {
+  const response: MessageNotificationsProps = await client(`/chat/notification?page=${page}&&limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -20,7 +60,7 @@ export async function UpdateCommunityGroup(data: { id: string }, token: string) 
   return response
 }
 
-export function useGetNotification() {
+export function useGetNotification(limit: number, toCall: boolean) {
   let finalCookie: any = null
 
   if (typeof document !== 'undefined') {
@@ -28,18 +68,18 @@ export function useGetNotification() {
     finalCookie = cookieValue ? cookieValue.split('=')[1] : null
   }
 
-  const state = useQuery({
+  return useInfiniteQuery({
     queryKey: ['notification'],
-    queryFn: () => getUserNotification(finalCookie),
-    enabled: !!finalCookie,
+    queryFn: ({ pageParam = 1 }) => getUserNotification(finalCookie, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!finalCookie && toCall,
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
 }
 
 export const useJoinCommunityGroup = () => {
@@ -72,5 +112,27 @@ export const useUpdateIsSeenCommunityGroupNotification = () => {
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
     },
+  })
+}
+
+export function useGetMessageNotification(limit: number, toCall: boolean) {
+  let finalCookie: any = null
+
+  if (typeof document !== 'undefined') {
+    const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('uni_user_token='))
+    finalCookie = cookieValue ? cookieValue.split('=')[1] : null
+  }
+
+  return useInfiniteQuery({
+    queryKey: ['message_notification'],
+    queryFn: ({ pageParam = 1 }) => getMessageNotification(finalCookie, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!finalCookie && toCall,
   })
 }

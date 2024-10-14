@@ -202,7 +202,14 @@ const PostCard = ({
           </Popover>
         </div>
       </div>
-      <PostCommentBox showCommentSec={showCommentSection} userComments={comments} postID={postID} type={type} adminId={userData.id} data={PostData} />
+      <PostCommentBox
+        showCommentSec={showCommentSection}
+        userComments={comments}
+        postID={postID}
+        type={type}
+        adminId={userData.id || ''}
+        data={PostData}
+      />
     </div>
   )
 }

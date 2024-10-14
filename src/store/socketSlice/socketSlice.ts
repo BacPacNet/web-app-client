@@ -14,7 +14,14 @@ type SocketState = {
 }
 
 type SocketActions = {
-  initializeSocket: (userId: string, refetchUserData: () => void, refetchNotification: () => void, refetchUserProfileData: () => void) => void
+  initializeSocket: (
+    userId: string,
+    refetchUserData: () => void,
+    refetchNotification: () => void,
+    refetchUserProfileData: () => void,
+    refetchMessageNotification: () => void,
+    isRouteMessage: boolean
+  ) => void
 
   disconnectSocket: () => void
   setIsRefetched: (value: string) => void
@@ -31,8 +38,9 @@ const initialState: SocketState = {
 export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
   ...initialState,
 
-  initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData) => {
-    const newSocket = io(process.env.NEXT_PUBLIC_API_BASE_URL as string)
+  initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage) => {
+    const newSocket = io('http://localhost:8000')
+    // console.log('url', process.env.NEXT_PUBLIC_API_BASE_URL)
 
     newSocket.on('connect', () => {
       console.log('Connected to the server')
@@ -56,6 +64,12 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
       }
 
       refetchNotification()
+    })
+
+    newSocket.on(`message_notification_${userId}`, () => {
+      if (isRouteMessage) {
+        refetchMessageNotification()
+      }
     })
 
     set({ socket: newSocket, isConnected: true })

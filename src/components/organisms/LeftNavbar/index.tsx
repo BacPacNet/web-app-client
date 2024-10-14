@@ -35,14 +35,14 @@ export default function LeftNavbar() {
   }
 
   const renderProfile = () => {
-    if (userProfileData.cover_dp?.imageUrl) {
+    if (userProfileData.profile_dp?.imageUrl) {
       return (
         <Image
           width={40}
           height={40}
           objectFit="cover"
           className="w-[40px] h-[40px] rounded-full"
-          src={userProfileData.cover_dp?.imageUrl || avatar}
+          src={userProfileData.profile_dp?.imageUrl || avatar}
           alt="profile.png"
         />
       )

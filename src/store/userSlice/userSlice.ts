@@ -2,7 +2,7 @@ import { StateCreator } from 'zustand'
 import { userType } from './userType'
 
 type userState = {
-  userData: userType
+  userData: Partial<userType>
 }
 
 type userAction = {
@@ -13,22 +13,7 @@ type userAction = {
 }
 
 const initialState: userState = {
-  userData: {
-    id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    // password: '',
-    gender: '',
-    dob: '',
-    role: '',
-    isEmailVerified: false,
-    // createdAt: '',
-    userVerifiedCommunities: [{ communityId: '', communityName: '', communityGroups: [{ communityGroupName: '', communityGroupId: '', role: '' }] }],
-    userUnVerifiedCommunities: [
-      { communityId: '', communityName: '', communityGroups: [{ communityGroupName: '', communityGroupId: '', role: '' }] },
-    ],
-  },
+  userData: {},
 }
 
 export type userSlice = userState & userAction

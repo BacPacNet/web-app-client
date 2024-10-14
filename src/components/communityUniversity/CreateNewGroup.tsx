@@ -70,10 +70,10 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
 
   return (
     <>
-      <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-10"></div>
+      <div className="fixed   w-full h-[100%]  top-0 left-0 bg-[#f3f2ff] backdrop-blur-2xl  opacity-50 z-10"></div>
       {userPopUp && (
         <>
-          <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
+          <div className="fixed   w-full h-[100%] top-0 left-0 bg-black backdrop-blur-xl opacity-50 z-50"></div>
           <div className="fixed w-1/3 max-sm:w-11/12 z-50 h-3/4   top-[10%] left-1/3 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
             <div className="flex justify-between w-full">
               <h3>Add Community members</h3>

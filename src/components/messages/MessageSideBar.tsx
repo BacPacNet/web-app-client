@@ -74,11 +74,11 @@ const MessageSideBar = ({ setSelectedChat, selectedChat, setIsRequest, isRequest
     }
 
     requestOnlineUsers()
-    socket.on('connected', requestOnlineUsers)
+    // socket.on('connected', requestOnlineUsers)
 
-    return () => {
-      socket.off('connected', requestOnlineUsers)
-    }
+    // return () => {
+    //   socket.off('connected', requestOnlineUsers)
+    // }
   }, [socket, uniqUserChatID])
 
   const updateOnlineStatus = (onlineUsers: string[]) => {
@@ -135,7 +135,7 @@ const MessageSideBar = ({ setSelectedChat, selectedChat, setIsRequest, isRequest
       )
       queryClient.setQueryData(['userChats'], updatedChats)
 
-      const isRead = newMessage?.readByUsers?.includes(userData.id)
+      const isRead = newMessage?.readByUsers?.includes(userData.id || '')
 
       if (!isRead) {
         updateIsSeen({ chatId: selectedChat?._id, messageId: chatMessageId, data: { readByUserId: userData.id } })
@@ -194,7 +194,7 @@ const MessageSideBar = ({ setSelectedChat, selectedChat, setIsRequest, isRequest
               groupName={item?.chatName}
               isGroupChat={item?.isGroupChat}
               users={[item?.users]}
-              isSeen={item?.latestMessage?.readByUsers?.includes(userData.id)}
+              isSeen={item?.latestMessage?.readByUsers?.includes(userData.id ?? '')}
               lastMessage={item?.latestMessage?.content}
               date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
               YourID={userData.id}
@@ -220,7 +220,7 @@ const MessageSideBar = ({ setSelectedChat, selectedChat, setIsRequest, isRequest
               groupName={item?.chatName}
               isGroupChat={item?.isGroupChat}
               users={[item?.users]}
-              isSeen={item?.latestMessage?.readByUsers?.includes(userData.id)}
+              isSeen={item?.latestMessage?.readByUsers?.includes(userData.id || ' ')}
               lastMessage={item?.latestMessage?.content}
               date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
               YourID={userData.id}

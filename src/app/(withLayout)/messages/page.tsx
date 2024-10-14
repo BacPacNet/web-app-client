@@ -16,7 +16,7 @@ const ChatScreen = () => {
   const [isRequest, setIsRequest] = useState(true)
 
   const updateMessageSeen = () => {
-    const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData.id)
+    const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData.id || '')
 
     if (!isRead && isRead !== undefined && selectedChat) {
       updateIsSeen({ chatId: selectedChat?._id, messageId: selectedChat?.latestMessage?._id, data: { readByUserId: userData.id } })
