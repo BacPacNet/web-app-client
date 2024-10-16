@@ -28,12 +28,12 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/', '/login', '/register', '/college']
+const nonPaddingUrls = ['/', '/login', '/register', '/university']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
-  const shouldPadding = nonPaddingUrls.includes(pathname)
-  //  const [cookieValue] = useCookie('uni_user_token')
+
+  const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path))
   const { userProfileData } = useUniStore()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { data: notificationData } = useGetNotification(3, true)

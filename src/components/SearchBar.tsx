@@ -76,7 +76,6 @@ const SearchBar = () => {
           <SearchHistoryBox info={item} serialNo={index} key={index} />
         ) : (
           <div key={index}>
-            {' '}
             <CollegeResult university={item} />
           </div>
         )
