@@ -16,7 +16,7 @@ export default function UniversityProfile({ searchParams }: any) {
               <img
                 width={46}
                 height={46}
-                src={university?.logos?.[0] || ImagePlaceholder}
+                src={university?.logos?.[0] || (ImagePlaceholder as unknown as string)}
                 alt="logo"
                 className="max-w-full max-h-40 object-contain"
               />

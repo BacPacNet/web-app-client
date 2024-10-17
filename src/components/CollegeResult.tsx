@@ -13,7 +13,7 @@ const CollegeResult = ({ university }: { university: UniversityInfo }) => {
         className="py-2 px-4 flex items-center w-full justify-start"
       >
         <div className="no w-1/6 flex justify-center align-middle text-black">
-          <img width={40} height={40} alt="logo" src={university?.logos?.[0] || ImagePlaceholder} />
+          <img width={40} height={40} alt="logo" src={university?.logos?.[0] || (ImagePlaceholder as unknown as string)} />
         </div>
         <div className=" w-4/5  text-black">{university?.name}</div>
         {/*<div className="score w-1/6 flex justify-center align-middle text-black">{university?.score}</div>*/}
