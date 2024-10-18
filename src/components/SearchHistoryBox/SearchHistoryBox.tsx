@@ -2,19 +2,17 @@ import './SearchHistoryBox.css'
 
 import Link from 'next/link'
 import { MdAccessTime } from 'react-icons/md'
+import { UniversityInfo } from '@/types/University'
 
 interface SearchHistoryProps {
   serialNo: number
-  info: {
-    id: string
-    name: string
-    score: string
-  }
+  info: UniversityInfo
 }
 const SearchHistoryBox: React.FC<SearchHistoryProps> = (props) => {
+  console.log(props)
   return (
     <div className="history-box">
-      <Link href={{ pathname: '/college', query: { id: props.info.id } }} className="history-link flex items-center">
+      <Link href={{ pathname: '/college', query: { id: props.info._id } }} className="history-link flex items-center">
         <div className="history-icon">
           <MdAccessTime className="history-icon " />
         </div>
