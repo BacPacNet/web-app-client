@@ -58,20 +58,7 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
           <button onClick={() => setShowOneToOne(true)} className="bg-primary-500 px-3 py-2 text-xs font-medium text-white rounded-lg">
             Start a Chat
           </button>
-          {/* <button onClick={() => setShowCreateGroup(true)} className="bg-primary-500 px-3 py-2 text-xs font-medium text-white rounded-lg">
-            Start a Chat
-          </button> */}
         </div>
-
-        {/* <div className="relative w-full flex items-center gap-4 outline-none border border-neutral-300  py-2 px-5 rounded-[100px]">
-          <IoIosSearch />
-          <input
-        
-            type="text"
-            placeholder="Search Messages"
-            className=" outline-none w-full "
-          />
-        </div> */}
       </div>
       {showCreateGroup && <CreateGroupChat setShowCreateGroup={setShowCreateGroup} setShowOneToOne={setShowOneToOne} />}
       {showOneToOne && <OneToChat setShowOneToOne={setShowOneToOne} setShowCreateGroup={setShowCreateGroup} showOneToOne={showOneToOne} />}

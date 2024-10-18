@@ -13,7 +13,6 @@ const UsersModal = ({ setShowOneToOne, showOneToOne, setShowCreateGroup }: Props
   const [searchInput, setSearchInput] = useState('')
   const { data } = useGetUserFollowingAndFollowers(searchInput)
   const { mutate: createUserChat } = useCreateUserChat()
-  console.log('users', data)
 
   return (
     <>
