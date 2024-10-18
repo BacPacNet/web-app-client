@@ -6,6 +6,7 @@ import SearchHistoryBox from '@components/SearchHistoryBox/SearchHistoryBox'
 import searchIcon from '../assets/search-icon.svg'
 import { useEffect, useState } from 'react'
 import { useUniversitySearch } from '@/services/universitySearch'
+import { UniversityInfo } from '@/types/University'
 
 // search bar
 interface FilteredCollege {
@@ -28,7 +29,7 @@ interface College {
 const SearchBar = () => {
   const [open, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterData, setFilterData] = useState<FilteredCollege[]>([])
+  const [filterData, setFilterData] = useState<UniversityInfo[]>([])
   const [searchHistoryShown, setSearchHistoryShown] = useState(true)
 
   const { isLoading, data } = useUniversitySearch(searchTerm)

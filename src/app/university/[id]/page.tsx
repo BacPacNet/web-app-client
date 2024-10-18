@@ -1,12 +1,17 @@
 'use client'
+import Loading from '@/components/atoms/Loading'
+import { useUniversitySearch, useUniversitySearchByName } from '@/services/universitySearch'
 import { UniversityInfo } from '@/types/University'
 import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import { useParams } from 'next/navigation'
 
 import React, { useEffect } from 'react'
 
-export default function UniversityProfile({ searchParams }: any) {
-  const university = JSON.parse(searchParams.search) as UniversityInfo
-
+export default function UniversityProfile() {
+  const params = useParams()
+  const { id: universityName } = params
+  const { data: university, isLoading: isUniversityLoading } = useUniversitySearchByName(universityName as string)
+  if (isUniversityLoading) return <Loading />
   return (
     <div className="p-28 ">
       <div className="flex gap-16">

@@ -39,7 +39,6 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const [, , deleteCookie] = useCookie('uni_user_token')
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { data: notificationData } = useGetNotification(3, true)
-  console.log(notificationData, 'notificationData')
   const { data: messageNotificationData } = useGetMessageNotification(3, true)
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
   const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
