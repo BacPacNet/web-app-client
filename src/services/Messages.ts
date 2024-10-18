@@ -26,6 +26,14 @@ export async function acceptGroupRequest(token: string, data: any) {
   const response = await client(`/chat/acceptGroupRequest`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
   return response
 }
+export async function toggleStarred(token: string, data: any) {
+  const response = await client(`/chat/starred`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
+  return response
+}
+export async function toggleMessageBlock(token: string, data: any, userToBlockId: string) {
+  const response = await client(`/chat/block/${userToBlockId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
+  return response
+}
 
 export async function updateIsSeen(token: string, messageId: string, data: any) {
   const response = await client(`/message/${messageId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
@@ -46,7 +54,7 @@ export async function getChatMessages(token: string, chatId: string) {
 }
 
 export async function createChatMessage(token: string, data: any) {
-  const response = await client(`/message`, { headers: { Authorization: `Bearer ${token}` }, method: 'POST', data })
+  const response: any = await client(`/message`, { headers: { Authorization: `Bearer ${token}` }, method: 'POST', data })
   return response
 }
 
@@ -128,6 +136,33 @@ export const useAcceptGroupRequest = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => acceptGroupRequest(cookieValue, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+
+export const useToggleStarred = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => toggleStarred(cookieValue, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+export const useToggleBlockMessages = (userToBlockID: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => toggleMessageBlock(cookieValue, data, userToBlockID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
     },

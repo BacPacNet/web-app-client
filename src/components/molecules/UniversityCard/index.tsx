@@ -276,25 +276,25 @@ export default function UniversityCard({
               dataToDisplay?.adminId != userData.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
             } flex  items-center`}
           >
-            <p className="text-sm text-primary-500 text-center">
+            {/* <p className="text-sm text-primary-500 text-center">
               since <span>{joinedSince}</span>{' '}
-            </p>
+            </p> */}
             {/* Buttons  */}
             {!isJoined && dataToDisplay?.adminId != userData.id ? (
               <button
                 onClick={() => handleToggleJoinCommunityOrGroup(dataToDisplay?.id, true)}
-                className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl   max-lg:text-sm "
+                className="text-white  font-medium bg-primary-500 px-3 py-1 max-md:py-3 rounded-lg   max-lg:text-sm "
               >
                 Join {communityGroupID ? 'Group' : 'Community '}
               </button>
             ) : dataToDisplay?.adminId == userData.id ? (
-              <button className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full   max-lg:text-sm max-md:mr-0">
+              <button className="text-primary-500  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full   max-lg:text-sm max-md:mr-0">
                 <IoMdSettings />
               </button>
             ) : (
               <button
                 onClick={() => handleToggleJoinCommunityOrGroup(dataToDisplay?.id, false)}
-                className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl   max-lg:text-sm max-md:mr-0"
+                className="text-neutral-700  font-medium drop-shadow-sm border border-neutral-200 px-3 py-1 max-md:py-3 rounded-lg   max-lg:text-sm max-md:mr-0"
               >
                 leave {communityGroupID ? 'Group' : 'Community '}
               </button>

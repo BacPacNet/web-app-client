@@ -46,7 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex gap-8 bg-surface-primary-50">
       <div className="w-1/5 hidden md:block ">
-        <div className="fixed w-[288px] left-0 z-10 ">
+        <div className="fixed w-[288px] left-0 z-20 ">
           <LeftNavbar />
         </div>
       </div>

@@ -50,7 +50,9 @@ module.exports = {
                 'border': '#D4D4D4',
                 'shade-button-border': '#E9E8FF',
                 'surface-primary-50': '#F3F2FF',
-                'warning-500': '#F59E0B'
+                'warning-500': '#F59E0B',
+                'success-500': "#22C55E",
+                'destructive-600':"#DC2626"
             },
             boxShadow: {
                 'medium': '0px 6px 15px -2px rgba(16, 24, 40, 0.08), 0px 6px 15px -2px rgba(16, 24, 40, 0.08);',

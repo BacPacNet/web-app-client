@@ -141,6 +141,10 @@ type ChatUser = {
     _id: string
     firstName: string
     lastName: string
+    degree: string
+    profileDp: string
+    studyYear: string
+    universityName: string
   }
   _id: string
   firstName: string
@@ -148,6 +152,7 @@ type ChatUser = {
   ProfileDp: string | null
   isOnline: boolean
   isRequestAccepted: boolean
+  isStarred: boolean
 }
 
 type GroupLogo = {

@@ -150,11 +150,11 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   }
 
   return (
-    <div className="w-full h-[68px]">
+    <div className="w-full h-[68px] ">
       <div
         className={`${
           shouldPadding ? 'px-4 lg:px-28' : 'px-4'
-        } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0`}
+        } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 z-50`}
       >
         <div>
           <Link className="flex gap-4 center-v" href="/">

@@ -14,7 +14,7 @@ type props = {
     }>
   >
   idx: number
-  type: PostType.Community | PostType.Timeline
+  type?: PostType.Community | PostType.Timeline
 }
 
 const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
