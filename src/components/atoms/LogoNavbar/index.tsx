@@ -7,7 +7,7 @@ import sparkles from '@assets/sparkles.svg'
 import { MENU_LIST } from './constant'
 import LoginButton from '../LoginButton'
 import LoginButtons from '../LoginButtons'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import avatar from '@assets/avatar.svg'
 import { Skeleton } from '@/components/ui/Skeleton'
@@ -23,18 +23,20 @@ import MobileViewNavbar from '@/components/organism/MobileViewNavbar'
 import NotificationBox from '@/components/molecules/Notification'
 import MessageNotification from '@/components/molecules/MessageNotification'
 import { useGetMessageNotification, useGetNotification } from '@/services/notification'
+import useCookie from '@/hooks/useCookie'
 
 interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/', '/login', '/register', '/college']
+const nonPaddingUrls = ['/login', '/register', '/university']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
-  const shouldPadding = nonPaddingUrls.includes(pathname)
-  //  const [cookieValue] = useCookie('uni_user_token')
-  const { userProfileData } = useUniStore()
+  const router = useRouter()
+  const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
+  const { userProfileData, resetUserProfileData } = useUniStore()
+  const [, , deleteCookie] = useCookie('uni_user_token')
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { data: notificationData } = useGetNotification(3, true)
   const { data: messageNotificationData } = useGetMessageNotification(3, true)
@@ -43,6 +45,13 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData.users_id)
   }, [userProfileData])
+
+  const handleLogout = () => {
+    deleteCookie()
+    resetUserProfileData()
+    router.push('/login')
+  }
+
   useEffect(() => {
     isUserLoggedIn()
   }, [userProfileData, isUserLoggedIn])
@@ -124,7 +133,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                       <p>Feedback</p>
                     </li>
                   </ul>
-                  <ul className="">
+                  <ul onClick={handleLogout} className="">
                     <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                       <TbLogout />
                       <p>Logout</p>
@@ -138,10 +147,12 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case false:
         return (
           <div className="pl-8 gap-4 flex">
-            <LoginButtons variant="border" className="text-xs">
+            <LoginButtons onClick={() => router.push('/register')} variant="border" className="text-xs">
               Sign Up
             </LoginButtons>
-            <LoginButton className="text-xs">Login</LoginButton>
+            <LoginButton onClick={() => router.push('/login')} className="text-xs">
+              Login
+            </LoginButton>
           </div>
         )
       default:
@@ -151,41 +162,43 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
 
   return (
     <div className="w-full h-[68px]">
-      <div
-        className={`${
-          shouldPadding ? 'px-4 lg:px-28' : 'px-4'
-        } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0`}
-      >
-        <div>
-          <Link className="flex gap-4 center-v" href="/">
-            <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
-          </Link>
-        </div>
-        <MobileViewNavbar />
-        {!showOnlyLogo && (
-          <div className="items-center justify-between hidden lg:flex ">
-            <div className="flex gap-16 px-8">
-              {MENU_LIST.map((menu, index) => {
-                if (menu.name === 'UPGRADE') {
-                  return (
-                    <div key={index} className="flex">
-                      <Link className="text-primary-500 text-xs" href={menu.path}>
-                        {menu.name}
-                      </Link>
-                      <Image className="ml-1" src={sparkles} alt="upgrade_icon" width={20} height={20} />
-                    </div>
-                  )
-                }
-                return (
-                  <Link key={index} className="text-neutral-800 text-xs" href={menu.path}>
-                    {menu.name}
-                  </Link>
-                )
-              })}
-            </div>
-            <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
+      <div className="fixed w-full top-0 left-0 z-50">
+        <div
+          className={`${
+            shouldPadding ? 'px-4 lg:px-28' : 'px-4'
+          } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0`}
+        >
+          <div>
+            <Link className="flex gap-4 center-v" href="/">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
+            </Link>
           </div>
-        )}
+          <MobileViewNavbar />
+          {!showOnlyLogo && (
+            <div className="items-center justify-between hidden lg:flex ">
+              <div className="flex gap-16 px-8">
+                {MENU_LIST.map((menu, index) => {
+                  if (menu.name === 'UPGRADE') {
+                    return (
+                      <div key={index} className="flex">
+                        <Link className="text-primary-500 text-xs" href={menu.path}>
+                          {menu.name}
+                        </Link>
+                        <Image className="ml-1" src={sparkles} alt="upgrade_icon" width={20} height={20} />
+                      </div>
+                    )
+                  }
+                  return (
+                    <Link key={index} className="text-neutral-800 text-xs" href={menu.path}>
+                      {menu.name}
+                    </Link>
+                  )
+                })}
+              </div>
+              <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

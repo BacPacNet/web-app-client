@@ -50,36 +50,34 @@ export default function LeftNavbar() {
     return <UserListItemSkeleton />
   }
   return (
-    <div className="pt-1 ">
-      <Card className="h-with-navbar  overflow-y-auto">
-        <div className="px-4 flex gap-4">
-          {renderProfile()}
-          <div>
-            <p className="text-sm text-neutral-700">
-              {userData.firstName} {userData.lastName}
-            </p>
-            <SubText>University Details</SubText>
-            <SubText>Degree Details</SubText>
+    <Card className="h-with-navbar  overflow-y-auto">
+      <div className="px-4 flex gap-4">
+        {renderProfile()}
+        <div>
+          <p className="text-sm text-neutral-700">
+            {userData.firstName} {userData.lastName}
+          </p>
+          <SubText>University Details</SubText>
+          <SubText>Degree Details</SubText>
+        </div>
+      </div>
+      <div className="px-4 pt-9 ">
+        <p className="text-2xs text-neutral-500 font-bold">EXPLORE</p>
+        {menuItems.map((item, index) => (
+          <div
+            key={index}
+            className={`flex gap-2 cursor-pointer text-sm pt-[10px] ${
+              activeMenu === item.path ? 'text-[#3A169C] font-semibold' : 'text-neutral-500'
+            }`}
+            onClick={() => handleMenuClick(item)}
+          >
+            <span className="text-[20px]">{item.icon}</span>
+            <span className="">{item.name}</span>
           </div>
-        </div>
-        <div className="px-4 pt-9 ">
-          <p className="text-2xs text-neutral-500 font-bold">EXPLORE</p>
-          {menuItems.map((item, index) => (
-            <div
-              key={index}
-              className={`flex gap-2 cursor-pointer text-sm pt-[10px] ${
-                activeMenu === item.path ? 'text-[#3A169C] font-semibold' : 'text-neutral-500'
-              }`}
-              onClick={() => handleMenuClick(item)}
-            >
-              <span className="text-[20px]">{item.icon}</span>
-              <span className="">{item.name}</span>
-            </div>
-          ))}
-        </div>
-        <p className=" px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
-        <NavbarUniversityItem />
-      </Card>
-    </div>
+        ))}
+      </div>
+      <p className=" px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
+      <NavbarUniversityItem />
+    </Card>
   )
 }

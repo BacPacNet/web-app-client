@@ -24,3 +24,23 @@ export async function getUniversitySearch(searchTerm: string): Promise<any[]> {
   // TypeScript assumes `response` is of type `University[]`
   return response
 }
+
+export function useUniversitySearchByName(universityName: string) {
+  return useQuery<any, Error>({
+    queryKey: ['universitySearch'],
+    queryFn: () => getUniversityByName(universityName),
+    enabled: !!universityName, // Only run if there's a search term
+    staleTime: 0, // Optional: Cache data for 5 minutes
+    retry: false, // Optional: Prevent retries on failure
+  })
+}
+
+export async function getUniversityByName(universityName: string): Promise<any[]> {
+  if (!universityName) return []
+
+  // Fetch university data based on the search term
+  const response = await client(`university/${universityName}`)
+
+  // TypeScript assumes `response` is of type `University[]`
+  return response
+}

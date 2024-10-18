@@ -38,13 +38,13 @@ export type MessageNotificationsProps = {
 }
 
 export async function getUserNotification(token: string, page: number, limit: number) {
-  const response: NotificationsProps = await client(`/notification?page=${page}&&limit=${limit}`, {
+  const response: NotificationsProps = await client(`/notification?page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
 }
 export async function getMessageNotification(token: string, page: number, limit: number) {
-  const response: MessageNotificationsProps = await client(`/chat/notification?page=${page}&&limit=${limit}`, {
+  const response: MessageNotificationsProps = await client(`/chat/notification?page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response

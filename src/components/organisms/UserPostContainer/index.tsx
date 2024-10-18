@@ -12,6 +12,8 @@ import { CommunityPostData, PostInputData, PostInputType } from '@/types/constan
 import { useCreateGroupPost } from '@/services/community-university'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
+import { useUniStore } from '@/store/store'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 type props = {
   communityID?: string
@@ -25,7 +27,8 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const [images, setImages] = useState<File[]>([])
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
-
+  const { userProfileData } = useUniStore()
+  console.log(userProfileData, 'userProfileData')
   const handleInput = () => {
     const textarea = textareaRef.current
     if (textarea) {
@@ -119,13 +122,24 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
     handleGroupPost(valueRef.current)
   }
   return (
-    <div className="rounded-2xl bg-white shadow-card mt-8 p-6">
+    <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
       <div className="flex gap-3 items-center">
         <div
           style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
           className="flex items-center justify-center bg-white rounded-full w-[56px] h-[56px]"
         >
-          <Image src={avatar} alt="avatar.png" />
+          {userProfileData?.profile_dp ? (
+            <Image
+              width={56}
+              height={56}
+              objectFit="cover"
+              className="rounded-full"
+              src={userProfileData?.profile_dp?.imageUrl || avatar}
+              alt="avatar.png"
+            />
+          ) : (
+            <Skeleton className="w-[56px] h-[56px] rounded-full bg-slate-300" />
+          )}
         </div>
         <textarea
           ref={textareaRef}
@@ -166,21 +180,19 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
         </div>
       </div>
       {/* Display selected images */}
-      <div className="flex flex-wrap gap-2 mt-4">
-        {images.map((image, index) => (
-          <div key={index} className="relative">
-            <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
-            {/* Remove image button */}
-            <button
-              type="button"
-              className="absolute top-0 right-0 bg-red-500 opacity-75 px-1 rounded-sm text-white text-2xs"
-              onClick={() => handleImageRemove(index)}
-            >
-              X
-            </button>
-          </div>
-        ))}
-      </div>
+      {images.map((image, index) => (
+        <div key={index} className="relative">
+          <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
+          {/* Remove image button */}
+          <button
+            type="button"
+            className="absolute top-0 right-0 bg-red-500 opacity-75 px-1 rounded-sm text-white text-2xs"
+            onClick={() => handleImageRemove(index)}
+          >
+            X
+          </button>
+        </div>
+      ))}
     </div>
   )
 }

@@ -161,7 +161,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
   }
 
   return (
-    <div className="py-10">
+    <div className="py-8">
       {isFetching || timelinePosts?.length < 1 ? (
         ' '
       ) : communityGroupPostLoading || communityGroupPost?.communityPosts?.length < 1 ? (
