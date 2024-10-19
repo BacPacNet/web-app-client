@@ -3,7 +3,7 @@ import { client } from './api-Client'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-interface community {
+export interface community {
   _id: string
   communityLogoUrl: {
     imageUrl: string

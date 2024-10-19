@@ -28,7 +28,7 @@ const MessageContainer = () => {
   const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
-  const { data: chatsData } = useGetUserChats()
+  const { data: chatsData, isLoading: isChatLoading } = useGetUserChats()
   const [chats, setChats] = useState<ChatsArray>([])
   const [onlineUsersSet, setOnlineUsersSet] = useState<Set<string>>(new Set())
   const [acceptedChatId, setAcceptedId] = useState('')
@@ -219,25 +219,46 @@ const MessageContainer = () => {
     switch (currTab) {
       case 'Inbox':
         return (
-          <UserChats setSelectedChat={setSelectedChat} selectedChat={selectedChat} currTabb={currTab} setIsRequest={setIsRequest} chats={chats} />
+          <UserChats
+            setSelectedChat={setSelectedChat}
+            selectedChat={selectedChat}
+            currTabb={currTab}
+            setIsRequest={setIsRequest}
+            chats={chats}
+            isChatLoading={isChatLoading}
+          />
         )
 
       case 'Message Requests':
         return (
-          <UserChats setSelectedChat={setSelectedChat} selectedChat={selectedChat} currTabb={currTab} setIsRequest={setIsRequest} chats={chats} />
+          <UserChats
+            setSelectedChat={setSelectedChat}
+            selectedChat={selectedChat}
+            currTabb={currTab}
+            setIsRequest={setIsRequest}
+            chats={chats}
+            isChatLoading={isChatLoading}
+          />
         )
 
       case 'Starred':
         return (
-          <UserChats setSelectedChat={setSelectedChat} selectedChat={selectedChat} currTabb={currTab} setIsRequest={setIsRequest} chats={chats} />
+          <UserChats
+            setSelectedChat={setSelectedChat}
+            selectedChat={selectedChat}
+            currTabb={currTab}
+            setIsRequest={setIsRequest}
+            chats={chats}
+            isChatLoading={isChatLoading}
+          />
         )
     }
   }
 
   const renderChat = () => {
-    if (selectedChat !== undefined) {
+    if (selectedChat) {
       return (
-        <div>
+        <>
           <MessageUserStickyBar
             setSelectedChat={setSelectedChat}
             name={selectedChat?.isGroupChat ? selectedChat?.chatName : userName?.userId.firstName ?? 'Unknown'}
@@ -265,14 +286,14 @@ const MessageContainer = () => {
             setImageCarasol={setImageCarasol}
             isRequestNotAccepted={currTab == 'Message Requests'}
           />
-        </div>
+        </>
       )
     } else {
       return renderTab()
     }
   }
   return (
-    <div className="bg-white mt-8 rounded-2xl drop-shadow-lg ">
+    <div className="bg-white mt-4 rounded-2xl drop-shadow-lg h-with-navbar-space">
       <MessageTopBar
         currTab={currTab}
         setCurrTab={setCurrTab}
@@ -280,7 +301,7 @@ const MessageContainer = () => {
         unreadChatsCount={unreadChatsCount}
         unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount}
       />
-      <div className={`${selectedChat !== undefined ? 'pt-5 mb-10' : 'px-14 py-5'}  `}>{renderChat()}</div>
+      <div className={`${selectedChat ? 'h-[90%] relative' : 'h-[90%]'}  `}>{renderChat()}</div>
       {imageCarasol.isShow && (
         <div className="relative h-screen w-full ">
           <div

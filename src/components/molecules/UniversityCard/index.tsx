@@ -191,7 +191,7 @@ export default function UniversityCard({
 
   return (
     <div className="rounded-2xl bg-white shadow-card">
-      <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl">
+      <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
         <Image
           src={dataToDisplay.coverImage || universityPlaceholder}
           layout="fill"

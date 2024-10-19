@@ -1,6 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import avatar from '@assets/avatar.svg'
 import SubText from '@/components/atoms/SubText'
 import { HiHome } from 'react-icons/hi'
@@ -49,8 +49,9 @@ export default function LeftNavbar() {
     }
     return <UserListItemSkeleton />
   }
+
   return (
-    <Card className="h-with-navbar  overflow-y-auto">
+    <Card className="h-with-navbar overflow-y-auto">
       <div className="px-4 flex gap-4">
         {renderProfile()}
         <div>
@@ -67,7 +68,7 @@ export default function LeftNavbar() {
           <div
             key={index}
             className={`flex gap-2 cursor-pointer text-sm pt-[10px] ${
-              activeMenu === item.path ? 'text-[#3A169C] font-semibold' : 'text-neutral-500'
+              activeMenu === item.path ? 'text-primary-700 font-semibold' : 'text-neutral-500'
             }`}
             onClick={() => handleMenuClick(item)}
           >
@@ -77,7 +78,7 @@ export default function LeftNavbar() {
         ))}
       </div>
       <p className=" px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
-      <NavbarUniversityItem />
+      <NavbarUniversityItem setActiveMenu={setActiveMenu} />
     </Card>
   )
 }

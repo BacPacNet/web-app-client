@@ -74,13 +74,13 @@ const MessageUserStickyBar = ({
   }
 
   return (
-    <div className="sticky top-16 z-10 flex justify-between border-y border-neutral-300 px-10 py-5 shadow-medium bg-white">
+    <div className="fixed w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white py-2 px-4">
       <div className="flex items-center gap-4">
         <p onClick={() => setSelectedChat(undefined)}>
-          <IoIosArrowBack className="w-8 h-8 text-[#6744FF]" />
+          <IoIosArrowBack className="w-8 h-8 text-[#6744FF] cursor-pointer" />
         </p>
         <div className="relative">
-          <Image src={profileCover || avatar} alt="dp" width={44} height={44} className="w-14 h-14 rounded-full" />
+          <Image src={profileCover || avatar} alt="dp" width={44} height={44} className="w-12 h-12 rounded-full" />
           <p
             className={`w-4 h-4 ${
               userName?.some((item) => item?.isOnline) ? 'bg-success-500' : 'bg-neutral-300'
@@ -88,20 +88,20 @@ const MessageUserStickyBar = ({
           ></p>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-neutral-700">{name}</h3>
+          <h3 className="text-sm font-semibold text-neutral-700">{name}</h3>
           {isGroupChat ? (
             <p className="text-2xs font-normal text-neutral-500">{description}</p>
           ) : (
             <>
               <p className="text-2xs font-normal text-neutral-500">{universitry}</p>
-              <p className="text-2xs font-normal text-neutral-500">
+              {/*<p className="text-2xs font-normal text-neutral-500">
                 {studyYear} Yr. {degree}
-              </p>
+              </p>*/}
             </>
           )}
         </div>
       </div>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-4 items-center">
         {isRequestNotAccepted && (
           <button
             onClick={() => handleMoveToInbox()}
@@ -111,9 +111,9 @@ const MessageUserStickyBar = ({
           </button>
         )}
         {YourDetails[0]?.isStarred ? (
-          <FaStar onClick={() => handleStarred()} className={` w-8 h-8 text-yellow-300`} />
+          <FaStar onClick={() => handleStarred()} className={`w-6 h-6 text-yellow-300`} />
         ) : (
-          <CiStar onClick={() => handleStarred()} className={` w-8 h-8 `} />
+          <CiStar onClick={() => handleStarred()} className={`w-6 h-6 `} />
         )}
         <Popover>
           <PopoverTrigger>

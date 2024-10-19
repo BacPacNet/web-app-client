@@ -8,8 +8,8 @@ export default function UpcomingEvent({ eventDate = '29/07/2024' }) {
   return (
     <div>
       <p className="text-neutral-700 text-xs font-semibold">Upcoming Event</p>
-      <div className="pt-6 pb-4">
-        <Image src={eventImage} alt="eventImage" />
+      <div className="pt-6 pb-4 flex">
+        <Image className="w-full" src={eventImage} alt="eventImage" />
       </div>
       <div className="flex gap-3 items-center pb-4">
         <div className="shadow-medium w-[50px] h-[50px] rounded-lg border-[1px] border-neutral-200 flex flex-col justify-center items-center">
