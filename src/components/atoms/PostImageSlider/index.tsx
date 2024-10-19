@@ -16,11 +16,12 @@ import Image from 'next/image'
 type prop = {
   images: { imageUrl: string }[]
   initialSlide: number | null
+  messageImage?: boolean
 }
 
-export default function PostImageSlider({ images, initialSlide }: prop) {
+export default function PostImageSlider({ images, initialSlide, messageImage }: prop) {
   return (
-    <div className="z-40 fixed w-[60%] top-1/4 h-3/6 ">
+    <div className={`z-40 fixed ${messageImage ? 'w-full h-[400px]' : 'w-[60%] h-3/6'}  top-1/4  `}>
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
