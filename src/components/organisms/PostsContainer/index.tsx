@@ -43,7 +43,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
 
   const {
     data: communityGroupPost,
-    isFetching: communityGroupPostLoading,
+    isLoading: communityGroupPostLoading,
     isError,
   } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community)
 
@@ -145,7 +145,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
   }
 
   const PostCardRender = () => {
-    if (isFetching) {
+    if (isLoading) {
       return (
         <div>
           <Loading />
@@ -162,7 +162,7 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
 
   return (
     <div className="py-8">
-      {isFetching || timelinePosts?.length < 1 ? (
+      {isLoading || timelinePosts?.length < 1 ? (
         ' '
       ) : communityGroupPostLoading || communityGroupPost?.communityPosts?.length < 1 ? (
         ' '

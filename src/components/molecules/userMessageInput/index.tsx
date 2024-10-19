@@ -137,7 +137,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if (textareaRef.current) {
+    if (textareaRef.current && textareaRef.current.value.trim() !== '') {
       console.log(textareaRef.current.value)
       handleNewMessage(textareaRef.current.value)
       textareaRef.current.value = ''
@@ -169,18 +169,17 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
     }
   }, [])
   return (
-    <div className="rounded-2xl bg-white   px-1 w-full">
-      <div className="border-2 border-neutral-300 w-full rounded-lg p-2 mb-10">
-        <div className="flex gap-3 h-20">
+    <div className="rounded-2xl bg-white w-full p-4">
+      <div className="border-[1px] border-neutral-300 w-full rounded-lg">
+        <div className="flex gap-3 px-4 py-2">
           <textarea
             ref={textareaRef}
-            className="w-full p-2 border-none resize-none focus:outline-none max-h-32 overflow-y-auto"
+            className="w-full border-none resize-none focus:outline-none overflow-y-auto h-8 max-h-36"
             placeholder="What’s on your mind?"
-            rows={1}
             onInput={handleInput}
           ></textarea>
         </div>
-        <div className="flex items-center mt-10 justify-between p-2">
+        <div className="flex items-center justify-between px-4 py-2">
           <div className="flex gap-6 items-center ">
             <Popover>
               <PopoverTrigger>
@@ -204,22 +203,22 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
               <VscSettings size={24} className="text-neutral-400" />
             </label>
           </div>
-          <div className="flex justify-end">
+          <div className="flex">
             <button
               onClick={handleSubmit}
               disabled={isRequestNotAccepted}
               className={`${
                 isRequestNotAccepted ? 'border border-neutral-200 text-neutral-300' : 'bg-primary-500 text-white'
-              }   rounded-lg px-3 py-2 w-[69px] mt-5 `}
+              }   rounded-lg px-3 py-2 w-[69px]`}
             >
-              Post
+              Send
             </button>
           </div>
         </div>
       </div>
 
       {/* Display selected images */}
-      <div className="flex flex-wrap gap-2 mt-2 pb-2">
+      <div className="flex flex-wrap gap-2 pt-4">
         {images.map((image, index) => (
           <div key={index} className="relative">
             <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />

@@ -93,16 +93,16 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
 
   return (
     <div ref={ref} className="flex gap-4 relative w-full" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-      <div className="relative w-14 h-14">
+      <div className="relative w-14 h-14 flex-none">
         <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-14 h-14 rounded-full" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
       </div>
       <div className="w-full">
         <div className="flex gap-2 items-center">
-          <p className="text-[18px] font-semibold text-neutral-700">{name}</p>
+          <p className="text-sm font-semibold text-neutral-700">{name}</p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
-        <p className="text-sm text-neutral-900 max-w-xl">{content}</p>
+        <p className="text-xs text-neutral-900">{content}</p>
         {/* {media.length
           ? media.map((item) => <Image key={item.publicId} src={item?.imageUrl} alt="media" width={140} height={140} className="w-40 " />)
           : ''} */}
@@ -189,8 +189,8 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
   }, [socket])
 
   return (
-    <div className="relative">
-      <div className="max-h-[400px] overflow-y-scroll px-10 flex flex-col gap-12">
+    <div className="relative h-full">
+      <div className="flex flex-col h-[78%] overflow-y-scroll px-4  gap-8 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = formatDate(item.createdAt)
 
@@ -201,8 +201,8 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
           return (
             <Fragment key={idx}>
               {shouldShowDateDivider && (
-                <div className="border-b border-neutral-300 relative pt-5">
-                  <div className="absolute top-2 flex justify-center items-center w-full">
+                <div className="border-b border-neutral-300 relative">
+                  <div className="absolute -top-3 flex justify-center items-center w-full">
                     <span className="   px-4 bg-white text-neutral-500">{currentDate}</span>
                   </div>
                 </div>
@@ -225,7 +225,7 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
           )
         })}
       </div>
-      <div className="w-11/12 mx-auto mt-2">
+      <div className="fixed w-full bottom-0">
         <UserMessageInput chatId={chatId} userProfileId={userProfileData._id || ''} isRequestNotAccepted={isRequestNotAccepted} />
       </div>
     </div>

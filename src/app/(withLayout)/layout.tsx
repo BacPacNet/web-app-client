@@ -57,7 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <LeftNavbar />
         </div>
       </div>
-      <div className="lg:w-3/5 w-full ">{children}</div>
+      <div className="lg:w-3/5 w-full">{children}</div>
       <div className="w-1/5 hidden lg:block ">
         <div className="fixed w-1/5 right-0 z-10 overflow-y-auto ">
           <Card className="h-with-navbar overflow-y-auto px-4">

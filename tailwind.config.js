@@ -52,7 +52,7 @@ module.exports = {
                 'surface-primary-50': '#F3F2FF',
                 'warning-500': '#F59E0B',
                 'success-500': "#22C55E",
-                'destructive-600':"#DC2626"
+                'destructive-600': "#DC2626"
             },
             boxShadow: {
                 'medium': '0px 6px 15px -2px rgba(16, 24, 40, 0.08), 0px 6px 15px -2px rgba(16, 24, 40, 0.08);',
@@ -68,6 +68,9 @@ module.exports = {
             addUtilities({
                 '.h-with-navbar': {
                     height: 'calc(100vh - 68px)',
+                },
+                '.h-with-navbar-space': {
+                    height: 'calc(100vh - 108px)',
                 },
             });
         },

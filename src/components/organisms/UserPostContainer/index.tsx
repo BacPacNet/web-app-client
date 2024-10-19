@@ -28,7 +28,6 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
   const { userProfileData } = useUniStore()
-  console.log(userProfileData, 'userProfileData')
   const handleInput = () => {
     const textarea = textareaRef.current
     if (textarea) {
