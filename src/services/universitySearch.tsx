@@ -27,7 +27,7 @@ export async function getUniversitySearch(searchTerm: string): Promise<any[]> {
 
 export function useUniversitySearchByName(universityName: string) {
   return useQuery<any, Error>({
-    queryKey: ['universitySearch'],
+    queryKey: ['universityByName'],
     queryFn: () => getUniversityByName(universityName),
     enabled: !!universityName, // Only run if there's a search term
     staleTime: 0, // Optional: Cache data for 5 minutes

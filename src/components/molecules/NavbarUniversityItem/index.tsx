@@ -14,6 +14,7 @@ import { useUniStore } from '@/store/store'
 import { IoMdSettings } from 'react-icons/io'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import avatar from '@assets/avatar.svg'
+import LoginButtons from '@/components/atoms/LoginButtons'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
@@ -150,10 +151,24 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
 
-  if (SubscribedData?.community.length === 0) return <p>Join Your University</p>
+  //  if (SubscribedData?.community.length === 0)
+  //    return (
+  //      <div className="px-4 w-full">
+  //        <LoginButtons variant="primary" className="w-full">
+  //          Add Your University
+  //        </LoginButtons>{' '}
+  //      </div>
+  //    )
 
   return (
     <>
+      {SubscribedData?.community.length === 0 && (
+        <div className="px-4 w-full">
+          <LoginButtons variant="primary" className="w-full">
+            Add Your University
+          </LoginButtons>{' '}
+        </div>
+      )}
       {SubscribedData?.community.map((community, index) => {
         return (
           <div key={index} className={`flex items-center justify-between hover:bg-secondary ${id && id[0] === community._id && 'bg-secondary'}`}>
@@ -205,7 +220,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             <GroupSearchBox placeholder="Search Groups" type="text" />
           </div>
         </div>
-        <div className="flex gap-2 justify-evenly cursor-pointer mt-4">
+        <div className="flex gap-2 justify-evenly cursor-pointer my-4">
           <div
             style={{ boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04)' }}
             className="border-2 border-solid border-neutral-200 rounded-lg "
@@ -226,7 +241,15 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           </div>
         </div>
       </>
-      <Tabs tabs={tabData} />
+
+      {SubscribedData?.community.length !== 0 ? (
+        <Tabs tabs={tabData} tabAlign="center" />
+      ) : (
+        <div className="px-4 w-full text-center font-poppins text-neutral-400">
+          <p>Add your university to join or create groups</p>
+        </div>
+      )}
+
       {showNewGroup && <CreateNewGroupBox setNewGroup={setShowNewGroup} />}
       <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
     </>

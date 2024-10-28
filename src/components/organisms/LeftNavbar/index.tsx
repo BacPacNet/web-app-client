@@ -35,19 +35,20 @@ export default function LeftNavbar() {
   }
 
   const renderProfile = () => {
-    if (userProfileData.profile_dp?.imageUrl) {
-      return (
-        <Image
-          width={40}
-          height={40}
-          objectFit="cover"
-          className="w-[40px] h-[40px] rounded-full"
-          src={userProfileData.profile_dp?.imageUrl || avatar}
-          alt="profile.png"
-        />
-      )
+    console.log(userProfileData, 'userProfileData')
+    if (Object.keys(userProfileData).length === 0) {
+      return <UserListItemSkeleton />
     }
-    return <UserListItemSkeleton />
+    return (
+      <Image
+        width={50}
+        height={50}
+        objectFit="cover"
+        className="w-[50px] h-[50px] rounded-full"
+        src={userProfileData.profile_dp?.imageUrl || avatar}
+        alt="profile.png"
+      />
+    )
   }
 
   return (

@@ -7,6 +7,7 @@ import { useGetAllUserWithProfileData, useGetUserFollow, useGetUserFollowers } f
 import UserListItemSkeleton from './UserListItemSkeleton'
 import { useUniStore } from '@/store/store'
 import { FindUsers, FollowingItemProps } from '@/types/constants'
+import { useUsersProfileForConnections } from '@/services/user'
 
 type ContentType = 'Find People' | 'Following' | 'Followers'
 
@@ -71,6 +72,9 @@ const FindPeople = ({ contentDivStyle }: { contentDivStyle?: string }) => {
   const [content, setContent] = useState<ContentType>('Find People')
   const [name, setName] = useState('')
   const { userProfileData } = useUniStore()
+  const [page, setPage] = useState(0)
+  const { data: userProfilesData } = useUsersProfileForConnections(name, page, false)
+
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const { data: allUserData, isFetching } = useGetAllUserWithProfileData(name, content == 'Find People')
   const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow(name, content == 'Following')

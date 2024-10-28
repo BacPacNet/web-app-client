@@ -77,6 +77,7 @@ export function useGetUserFollow(Name: string, content: boolean) {
     queryKey: ['getUserFollow', debouncedSearchTerm],
     queryFn: () => getUserFollow(cookieValue, debouncedSearchTerm),
     enabled: !!cookieValue && content,
+    staleTime: 5000,
   })
 
   let errorMessage = null

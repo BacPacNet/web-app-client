@@ -18,6 +18,7 @@ export interface userProfileType {
   country?: string
   city?: string
   university_name?: string
+  university_id: string
   study_year?: string
   degree?: string
   major?: string

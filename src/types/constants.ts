@@ -12,6 +12,7 @@ export const CommunityNavbarLinks: NavLink[] = [
 ]
 
 export interface FollowingItemProps {
+  _id: any
   users_id: {
     firstName: string
     lastName: string

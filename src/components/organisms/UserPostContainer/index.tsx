@@ -131,7 +131,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
           style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
           className="flex items-center justify-center bg-white rounded-full w-[56px] h-[56px]"
         >
-          {userProfileData?.profile_dp ? (
+          {userProfileData ? (
             <Image
               width={56}
               height={56}
