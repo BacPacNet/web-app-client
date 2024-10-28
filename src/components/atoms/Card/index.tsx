@@ -12,4 +12,5 @@ const Card = React.forwardRef<HTMLDivElement, TitleProps>((props: TitleProps, re
   )
 })
 
+Card.displayName = 'Card'
 export default Card
