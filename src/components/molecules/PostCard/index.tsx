@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import PostCartOption from '@/components/atoms/PostCardOption/PostCartOption'
@@ -11,6 +11,7 @@ import PostCommentBox from '../PostCommentBox'
 import { useUniStore } from '@/store/store'
 import { useLikeUnilikeGroupPost } from '@/services/community-university'
 import { useLikeUnlikeTimelinePost } from '@/services/community-timeline'
+import { FaUser, FaUsers } from 'react-icons/fa'
 import { PostType } from '@/types/constants'
 import {
   FacebookIcon,
@@ -85,7 +86,8 @@ interface PostProps {
   link?: string
   date: string
   avatarLink: string
-  comments: any
+
+  commentCount: number
   likes: Like[]
   postID: string
   type: PostType.Community | PostType.Timeline
@@ -100,6 +102,8 @@ interface PostProps {
     }>
   >
   idx: number
+  showCommentSection: string
+  setShowCommentSection: (value: string) => void
 }
 
 const PostCard = ({
@@ -111,16 +115,18 @@ const PostCard = ({
   link,
   date,
   avatarLink,
-  comments,
   likes,
   type,
   postID,
   images,
   setImageCarasol,
   idx,
+  commentCount,
+  showCommentSection,
+  setShowCommentSection,
 }: PostProps) => {
   const { userData } = useUniStore()
-  const [showCommentSection, setShowCommentSection] = useState(false)
+
   const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
   const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
 
@@ -181,13 +187,32 @@ const PostCard = ({
         <div className="flex items-center gap-10">
           <span onClick={() => LikeUnlikeHandler(postID)} className="flex items-center">
             <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />{' '}
-            {likes.length}
+            {likes?.length}
           </span>
-          <span onClick={() => setShowCommentSection(!showCommentSection)} className="flex items-center">
-            <FiMessageCircle className="mr-1 text-neutral-600" /> {comments.length}
+          <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex items-center">
+            <FiMessageCircle className="mr-1 text-neutral-600" /> {commentCount}
           </span>
           <span className="flex items-center">
-            <FiRepeat className="mr-1 text-neutral-600" /> 2
+            <Popover>
+              <PopoverTrigger>
+                <div className="flex gap-1 items-center">
+                  <FiRepeat className="mr-1 text-neutral-600" />
+                  <span>2</span>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-1">
+                    <FaUser />
+                    <p>Repost on Group</p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <FaUsers />
+                    <p>Repost on Timeline</p>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </span>
 
           <Popover>
@@ -202,14 +227,7 @@ const PostCard = ({
           </Popover>
         </div>
       </div>
-      <PostCommentBox
-        showCommentSec={showCommentSection}
-        userComments={comments}
-        postID={postID}
-        type={type}
-        adminId={userData.id || ''}
-        data={PostData}
-      />
+      <PostCommentBox showCommentSec={showCommentSection} postID={postID} type={type} adminId={userData.id || ''} data={PostData} />
     </div>
   )
 }

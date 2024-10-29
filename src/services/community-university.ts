@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
@@ -7,6 +7,15 @@ import { PostType } from '@/types/constants'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
+  return response
+}
+
+export async function getCommunityPostComments(postId: string, token: string, page: number, limit: number) {
+  const response: any = await client(`/communitypostcomment/${postId}?page=${page}&limit=${limit}`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+export async function getCommunityPostCommentById(commentId: string, token: string) {
+  const response: any = await client(`/communitypostcomment/comment/${commentId}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -72,25 +81,33 @@ export async function LikeUnilikeGroupPost(communityGroupPostId: string, token: 
   return response
 }
 
-export async function getAllCommunityGroupPost(communityId: string, communityGroupID: string, token: any) {
-  const response: any = await client(`/communitypost/${communityId}/${communityGroupID ? communityGroupID : ''}`, {
+export async function getAllCommunityGroupPost(communityId: string, communityGroupID: string, token: any, page: number, limit: number) {
+  const response: any = await client(`/communitypost/${communityId}/${communityGroupID ? communityGroupID : ''}?page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
 }
 
 //posts
-export async function getPost(postID: string, isType: string | null, token: any) {
+export async function getPost(postID: string, isType: string | null, token: string) {
   const response: any = await client(`/communitypost/post/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
-export async function CreateGroupPost(data: any, token: any) {
+export async function CreateGroupPost(data: any, token: string) {
   const response = await client(`/communitypost`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
-export async function CreateGroupPostComment(data: any, token: any) {
+export async function CreateGroupPostComment(data: any, token: string) {
   const response = await client(`/communitypostcomment/${data.postID}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
+  return response
+}
+export async function CreateGroupPostCommentReply(data: any, token: string) {
+  const response = await client(`/communitypostcomment/${data.commentId}/replies`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
   return response
 }
 
@@ -106,6 +123,58 @@ export function useGetCommunity(communityId: string) {
   const state = useQuery({
     queryKey: ['community', communityId],
     queryFn: () => getCommunity(communityId),
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
+  }
+
+  return { ...state, error: errorMessage }
+}
+
+// export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean) {
+//   const [cookieValue] = useCookie('uni_user_token')
+
+//   const state = useQuery({
+//     queryKey: ['communityPostComments'],
+//     queryFn: () => getCommunityPostComments(postId, cookieValue),
+//     enabled: showCommentSection && !!postId && isCommunity && !!cookieValue,
+//   })
+
+//   let errorMessage = null
+//   if (axios.isAxiosError(state.error) && state.error.response) {
+//     errorMessage = state.error.response.data
+//   }
+
+//   return { ...state, error: errorMessage }
+// }
+export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean, limit: number) {
+  {
+    const [cookieValue] = useCookie('uni_user_token')
+
+    return useInfiniteQuery({
+      queryKey: ['communityPostComments'],
+      queryFn: ({ pageParam = 1 }) => getCommunityPostComments(postId, cookieValue, pageParam, limit),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.currentPage < lastPage.totalPages) {
+          return lastPage.currentPage + 1
+        }
+        return undefined
+      },
+      initialPageParam: 1,
+      enabled: showCommentSection && !!postId && isCommunity && !!cookieValue,
+    })
+  }
+}
+
+export function useGetCommunityCommentById(commentId: string, enabled: boolean, isCommunity: boolean) {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  const state = useQuery({
+    queryKey: ['communityCommentById'],
+    queryFn: () => getCommunityPostCommentById(commentId, cookieValue),
+    enabled: !!cookieValue && enabled && isCommunity,
   })
 
   let errorMessage = null
@@ -232,21 +301,38 @@ export const useUpdateCommunityGroup = () => {
   })
 }
 
-export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isJoined: boolean, isCommunity: boolean) {
-  const [cookieValue] = useCookie('uni_user_token')
+export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isJoined: boolean, isCommunity: boolean, limit: number) {
+  // const [cookieValue] = useCookie('uni_user_token')
 
-  const state = useQuery({
-    queryKey: ['communityGroupsPost', communityId],
-    queryFn: () => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue),
-    enabled: isJoined && isCommunity && !!cookieValue,
-  })
+  // const state = useQuery({
+  //   queryKey: ['communityGroupsPost', communityId],
+  //   queryFn: () => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, 1, 2),
+  //   enabled: isJoined && isCommunity && !!cookieValue,
+  // })
 
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
+  // let errorMessage = null
+  // if (axios.isAxiosError(state.error) && state.error.response) {
+  //   errorMessage = state.error.response.data
+  // }
+
+  // return { ...state, error: errorMessage }
+
+  {
+    const [cookieValue] = useCookie('uni_user_token')
+
+    return useInfiniteQuery({
+      queryKey: ['communityGroupsPost', communityId],
+      queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
+      getNextPageParam: (lastPage) => {
+        if (lastPage.currentPage < lastPage.totalPages) {
+          return lastPage.currentPage + 1
+        }
+        return undefined
+      },
+      initialPageParam: 1,
+      enabled: isJoined && isCommunity && !!cookieValue,
+    })
   }
-
-  return { ...state, error: errorMessage }
 }
 
 export const useLikeUnilikeGroupPost = () => {
@@ -295,7 +381,30 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
       if (isSinglePost) {
         queryClient.invalidateQueries({ queryKey: ['getPost'] })
       } else {
-        queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+      }
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: boolean, type: PostType.Community | PostType.Timeline) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => CreateGroupPostCommentReply(data, cookieValue),
+
+    onSuccess: () => {
+      if (isSinglePost) {
+        queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      }
+      if (isNested) {
+        if (type == PostType.Community) {
+          queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
+        }
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
       }
     },
     onError: (res: any) => {
@@ -304,14 +413,18 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
   })
 }
 
-export const useLikeUnlikeGroupPostComment = () => {
+export const useLikeUnlikeGroupPostComment = (isReply: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (communityGroupPostCommentId: any) => LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      if (isReply) {
+        queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

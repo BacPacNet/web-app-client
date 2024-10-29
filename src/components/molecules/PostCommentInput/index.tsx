@@ -9,23 +9,38 @@ import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { PostCommentData, PostType } from '@/types/constants'
-import { useCreateGroupPostComment } from '@/services/community-university'
-import { useCreateUserPostComment } from '@/services/community-timeline'
+import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
+import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
 
 type props = {
-  postID: string
+  postID?: string
   type: PostType.Community | PostType.Timeline
   isSinglePost?: boolean
   adminID: string
+  isReply: boolean
+  isNested?: boolean
+  commentId?: string
+  commenterProfileId: string
+  level: string
 }
 
-function PostCommentInput({ postID, type, isSinglePost, adminID }: props) {
+function PostCommentInput({ postID, type, isSinglePost, adminID, isReply, commentId, commenterProfileId, level, isNested = false }: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
   const { mutate: CreateGroupPostComment, isPending: CreateGroupPostCommentLoading } = useCreateGroupPostComment(isSinglePost ? isSinglePost : false)
   const { mutate: CreateUserPostComment, isPending: CreateUserPostCommentLoading } = useCreateUserPostComment(isSinglePost ? isSinglePost : false)
+  const { mutate: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
+    isSinglePost ? isSinglePost : false,
+    isNested,
+    type
+  )
+  const { mutate: CreateGroupPostCommentReply, isPending: useCreateGroupPostCommentReplyLoading } = useCreateGroupPostCommentReply(
+    isSinglePost ? isSinglePost : false,
+    isNested,
+    type
+  )
 
   const [ImageValue, setImageValue] = useState<File | null>(null)
 
@@ -81,10 +96,21 @@ function PostCommentInput({ postID, type, isSinglePost, adminID }: props) {
         postID: postID,
         content: comment,
         imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        commenterProfileId,
       }
 
       if (type === PostType.Timeline) {
-        CreateUserPostComment(data)
+        if (isReply) {
+          const replyData = {
+            commentId: commentId,
+            content: comment,
+            commenterProfileId,
+            level,
+          }
+          console.log('rep1', replyData)
+        } else {
+          CreateUserPostComment(data)
+        }
       } else if (type === PostType.Community) {
         data.adminId = adminID
         CreateGroupPostComment(data)
@@ -93,13 +119,34 @@ function PostCommentInput({ postID, type, isSinglePost, adminID }: props) {
       const data: PostCommentData = {
         postID: postID,
         content: comment,
+        commenterProfileId,
       }
 
       if (type === PostType.Timeline) {
-        CreateUserPostComment(data)
+        if (isReply) {
+          const replyData = {
+            commentId: commentId,
+            content: comment,
+            commenterProfileId,
+            level,
+          }
+          CreateUserPostCommentReply(replyData)
+        } else {
+          CreateUserPostComment(data)
+        }
       } else if (type === PostType.Community) {
         data.adminId = adminID
-        CreateGroupPostComment(data)
+        if (isReply) {
+          const replyData = {
+            commentId: commentId,
+            content: comment,
+            commenterProfileId,
+            level,
+          }
+          CreateGroupPostCommentReply(replyData)
+        } else {
+          CreateGroupPostComment(data)
+        }
       }
     }
   }
@@ -111,8 +158,8 @@ function PostCommentInput({ postID, type, isSinglePost, adminID }: props) {
     handlePostComment(valueRef.current)
   }
   return (
-    <div className="rounded-2xl bg-white   px-1 w-full">
-      <div className="border-2 border-neutral-300 w-full rounded-lg ">
+    <div className="rounded-2xl bg-white   px-1  w-full">
+      <div className="border-2 border-neutral-300 w-full rounded-lg p-2">
         <div className="flex gap-3 h-24">
           <textarea
             ref={textareaRef}

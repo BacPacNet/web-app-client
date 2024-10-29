@@ -97,13 +97,15 @@ export interface CommunityPostData extends PostInputData {
 }
 
 export interface PostCommentData {
-  postID: string | undefined
+  postID?: string | undefined
   content: string
   imageUrl?: {
     imageUrl: string
     publicId: string
   }
   adminId?: string | number
+  commentId?: string | undefined
+  commenterProfileId: string
 }
 
 interface ErrorResponse {

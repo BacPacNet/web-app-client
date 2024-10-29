@@ -11,10 +11,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 interface communityPostType {
   _id: string
-  user_id: {
+  user: {
     firstName: string
     lastName: string
     _id: string
+  }
+  userProfile: {
     university_name: string
     study_year: string
     degree: string
@@ -27,6 +29,7 @@ interface communityPostType {
   likeCount: []
   comments: []
   imageUrl: []
+  commentCount: number
 }
 
 type props = {
@@ -36,16 +39,28 @@ type props = {
 }
 const PostContainer = ({ communityID = '', communityGroupID = '', type }: props) => {
   const { userData } = useUniStore()
-  const { isLoading, data: TimelinePosts, error, isFetching } = useGetTimelinePosts(type == PostType.Timeline)
+  const {
+    isLoading,
+    data: TimelinePosts,
+    error,
+    fetchNextPage: timelinePostsNextpage,
+    isFetchingNextPage: timelinePostIsFetchingNextPage,
+    hasNextPage: timelinePostHasNextPage,
+    isFetching: timelinePostIsFetching,
+  } = useGetTimelinePosts(type == PostType.Timeline, 5)
 
-  const timelinePosts = TimelinePosts?.timelinePosts
+  const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
+
   const [issJoined, setIsJoined] = useState(false)
-
+  const [showCommentSection, setShowCommentSection] = useState('')
   const {
     data: communityGroupPost,
-    isLoading: communityGroupPostLoading,
-    isError,
-  } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community)
+    fetchNextPage: communityPostNextpage,
+    isFetchingNextPage: communityPostIsFetchingNextPage,
+    hasNextPage: communityPostHasNextPage,
+    isFetching: communityPostIsFetching,
+  } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community, 2)
+  const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -97,46 +112,73 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
     userVerifiedCommunityGroupIds,
   ])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10
+      if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage && type == PostType.Community) {
+        communityPostNextpage()
+      }
+      if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
+        timelinePostsNextpage()
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [
+    communityPostHasNextPage,
+    communityPostIsFetchingNextPage,
+    communityPostNextpage,
+    timelinePostHasNextPage,
+    timelinePostIsFetchingNextPage,
+    timelinePostsNextpage,
+    type,
+  ])
+
   const renderPostWithRespectToPathName = () => {
     switch (type) {
       case PostType.Timeline:
-        return timelinePosts?.map((post: communityPostType, idx: number) => (
+        return timlineDatas?.map((post: communityPostType, idx: number) => (
           <PostCard
             key={post._id}
-            user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
-            adminId={post.user_id?._id}
-            university={post?.user_id?.university_name}
-            year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
+            user={post?.user?.firstName + ' ' + post?.user?.lastName}
+            adminId={post.user?._id}
+            university={post?.userProfile?.university_name}
+            year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
             text={post?.content}
             date={post?.createdAt}
-            avatarLink={post?.user_id?.profile_dp?.imageUrl}
-            comments={post?.comments}
+            avatarLink={post?.userProfile?.profile_dp?.imageUrl}
+            commentCount={post?.commentCount}
             likes={post.likeCount}
             postID={post?._id}
             type={'communityId' in post ? PostType.Community : PostType.Timeline}
             images={post?.imageUrl || []}
             setImageCarasol={setImageCarasol}
             idx={idx}
+            showCommentSection={showCommentSection}
+            setShowCommentSection={setShowCommentSection}
           />
         ))
       case PostType.Community:
-        return communityGroupPost?.communityPosts?.map((post: communityPostType, idx: number) => (
+        return communityDatas?.map((post: communityPostType, idx: number) => (
           <PostCard
-            key={post._id}
-            user={post?.user_id?.firstName + ' ' + post?.user_id?.lastName}
-            adminId={post.user_id?._id}
-            university={post?.user_id?.university_name}
-            year={post?.user_id?.study_year + ' Yr. ' + ' ' + post?.user_id?.degree}
+            key={post?._id}
+            user={post?.user?.firstName + ' ' + post?.user?.lastName}
+            adminId={post?.user?._id}
+            university={post?.userProfile?.university_name}
+            year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
             text={post?.content}
             date={post?.createdAt}
-            avatarLink={post?.user_id?.profile_dp?.imageUrl}
-            comments={post?.comments}
-            likes={post.likeCount}
+            avatarLink={post?.userProfile?.profile_dp?.imageUrl}
+            commentCount={post?.commentCount}
+            likes={post?.likeCount}
             postID={post?._id}
             type={PostType.Community}
             images={post?.imageUrl}
             setImageCarasol={setImageCarasol}
             idx={idx}
+            showCommentSection={showCommentSection}
+            setShowCommentSection={setShowCommentSection}
           />
         ))
       default:
@@ -161,14 +203,8 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
   }
 
   return (
-    <div className="py-8">
-      {isLoading || timelinePosts?.length < 1 ? (
-        ' '
-      ) : communityGroupPostLoading || communityGroupPost?.communityPosts?.length < 1 ? (
-        ' '
-      ) : (
-        <PostContainerPostTypeSelector />
-      )}
+    <div className="py-8  overflow-y-scroll">
+      {isLoading || timlineDatas?.length < 1 ? ' ' : communityPostIsFetching || communityDatas?.length < 1 ? ' ' : <PostContainerPostTypeSelector />}
 
       <div className="flex flex-col gap-6">{!issJoined && type !== PostType.Timeline ? '' : <PostCardRender />}</div>
 
