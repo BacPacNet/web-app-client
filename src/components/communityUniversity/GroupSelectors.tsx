@@ -11,7 +11,7 @@ const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data, setAssi
     router.push(`/community/${data?.communityId}/${data?._id}`)
   }
   const isSelected = paramGroupId && paramGroupId[1] == data?._id
-  console.log(paramGroupId, data?._idect)
+
   return (
     <div
       className={`flex items-center cursor-pointer hover:bg-secondary ${

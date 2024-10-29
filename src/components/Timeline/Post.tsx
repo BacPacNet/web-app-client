@@ -178,9 +178,9 @@ const Post: React.FC<PostProps> = ({
   const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
   const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
   const { mutate: CreateGroupPostComment, isPending: CreateGroupPostCommentLoading } = useCreateGroupPostComment(isSinglePost ? isSinglePost : false)
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment()
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false)
   const { mutate: CreateUserPostComment, isPending: CreateUserPostCommentLoading } = useCreateUserPostComment(isSinglePost ? isSinglePost : false)
-  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment()
+  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false)
   const [comment, setComment] = useState('')
   const [ImageValue, setImageValue] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -201,6 +201,7 @@ const Post: React.FC<PostProps> = ({
         postID: postID,
         content: comment,
         imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        commenterProfileId: '',
       }
 
       if (type === PostType.Timeline) {
@@ -212,6 +213,7 @@ const Post: React.FC<PostProps> = ({
     } else {
       const data: PostCommentData = {
         postID: postID,
+        commenterProfileId: '',
         content: comment,
       }
 
