@@ -504,7 +504,7 @@ export function useGetPost(postId: string, isType: string | null) {
   const state = useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, cookieValue),
-    enabled: !!postId,
+    enabled: !!postId && !!cookieValue,
     retry: 1,
   })
 

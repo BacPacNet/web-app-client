@@ -160,7 +160,7 @@ const PostCard = ({
         </div>
         <div className="ml-auto text-gray-400">
           {' '}
-          <PostCartOption postID="123" isType="group" />{' '}
+          <PostCartOption postID={postID} isType={type} />{' '}
         </div>
       </div>
 
