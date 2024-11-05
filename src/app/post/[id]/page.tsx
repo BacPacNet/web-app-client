@@ -1,85 +1,85 @@
 'use client'
-import Post from '@/components/Timeline/Post'
-import { useGetPost } from '@/services/community-university'
-import { useParams, useSearchParams } from 'next/navigation'
-import Modal from '@/components/Timeline/Modal'
-import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
-import PollModal from '@/components/Timeline/Modals/PollModal'
+import PostCard from '@/components/molecules/PostCard'
 
-import React, { useState } from 'react'
-import { ModalContentType } from '@/types/global'
-
-import { PostType } from '@/types/constants'
-import { useUniStore } from '@/store/store'
-import PostSkeleton from '@/components/Timeline/PostSkeleton'
+import Spinner from '@/components/atoms/spinner'
 import useCookie from '@/hooks/useCookie'
-const UserPost = () => {
+import { useGetPost } from '@/services/community-university'
+import { PostType } from '@/types/constants'
+import { useParams, useSearchParams } from 'next/navigation'
+import React, { useState } from 'react'
+import PostImageSlider from '@/components/atoms/PostImageSlider'
+
+const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
   const searchParams = useSearchParams()
   const Type = searchParams.get('isType')
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { data, isFetching, isPending } = useGetPost(id, Type)
+  const { data, isFetching, isPending, isError } = useGetPost(id, Type)
   const item = data?.post
-  const [cookieValue] = useCookie('uni_user_token')
-  const { userProfileData } = useUniStore()
-  const modalContent = (modalContentType: string) => {
-    switch (modalContentType) {
-      case 'ConnectionsModal':
-        return <ConnectionsModal />
-      case 'PollModal':
-        return <PollModal />
-      default:
-        return null
-    }
+
+  const [showCommentSection, setShowCommentSection] = useState('')
+
+  const [imageCarasol, setImageCarasol] = useState<{
+    isShow: boolean
+    images: any
+    currImageIndex: number | null
+  }>({
+    isShow: false,
+    images: [],
+    currImageIndex: null,
+  })
+
+  if (isError) {
+    return <div className="h-screen flex justify-center items-center">Not Allowed</div>
   }
 
-  const PostHolder = () => {
-    if (!cookieValue && !isPending) {
-      return <div className="text-center">Login to view Post.</div>
-    }
-    if (isFetching || isPending) {
-      return <PostSkeleton />
-    }
-
+  if (isFetching || (!data?.post && !isError)) {
     return (
-      <Post
-        isType={String(Type)}
-        isSinglePost={true}
-        user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
-        adminId={item?.user_id?._id}
-        university={item?.user_id?.university_name}
-        year={item?.user_id?.study_year + ' Yr. ' + ' ' + item?.user_id?.degree}
-        text={item?.content}
-        date={item?.createdAt}
-        avatar={item?.user_id?.profile_dp?.imageUrl}
-        likes={item?.likeCount}
-        comments={item?.comments.length}
-        postID={item?._id}
-        reposts={2}
-        shares={1}
-        userComments={item?.comments}
-        setModalContentType={setModalContentType}
-        setIsModalOpen={setIsModalOpen}
-        isUniversity={true}
-        profileDp={userProfileData?.profile_dp?.imageUrl}
-        media={item?.imageUrl}
-        type={String(Type) == 'userPost' ? PostType.Timeline : PostType.Community}
-      />
+      <div className="h-screen flex justify-center items-center">
+        <Spinner />
+      </div>
     )
   }
 
   return (
-    <div>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {modalContentType && modalContent(modalContentType)}
-      </Modal>
-
-      <div className="border-2 border-neutral-300 rounded-md w-3/4 mx-auto  mt-6">
-        <PostHolder />
+    <div className="w-full   flex justify-center ">
+      <div className="w-10/12 shadow-xl rounded-lg mt-10">
+        <PostCard
+          key={item?._id}
+          user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
+          adminId={item?.user_id?._id}
+          university={item?.profiles[0]?.university_name}
+          year={item?.profiles[0]?.study_year + ' Yr. ' + ' ' + item?.profiles[0]?.degree}
+          text={item?.content}
+          date={item?.createdAt}
+          avatarLink={item?.profiles[0]?.profile_dp?.imageUrl}
+          commentCount={item?.comments}
+          likes={item?.likeCount}
+          postID={item?._id}
+          type={String(Type) == 'Timeline' ? PostType.Timeline : PostType.Community}
+          images={item?.imageUrl || []}
+          setImageCarasol={setImageCarasol}
+          idx={1}
+          showCommentSection={showCommentSection}
+          setShowCommentSection={setShowCommentSection}
+        />
       </div>
+      {imageCarasol.isShow && (
+        <div className="fixed h-screen w-full mx-auto flex items-center justify-center ">
+          <div
+            onClick={() =>
+              setImageCarasol({
+                isShow: false,
+                images: [],
+                currImageIndex: 0,
+              })
+            }
+            className="bg-black w-full h-full fixed -top-0 -left-[0%] z-30 opacity-50"
+          ></div>
+          <PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} />
+        </div>
+      )}
     </div>
   )
 }
 
-export default UserPost
+export default SinglePost
