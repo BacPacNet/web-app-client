@@ -32,6 +32,7 @@ import {
   WhatsappShareButton,
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
+import useDeviceType from '@/hooks/useDeviceType'
 
 const SharePopup = (commentId: { commentId: string }) => {
   return (
@@ -96,10 +97,10 @@ const RepostPopUp = () => {
 const CommentOption = () => {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1">
+      {/* <div className="flex items-center gap-1">
         <FiRepeat className="mr-1 text-neutral-600" />
         <p>Repost </p>
-      </div>
+      </div> */}
       <div className="flex items-center gap-1">
         <FiShare2 className="mr-1 text-neutral-600" />
         <p>Share </p>
@@ -140,13 +141,14 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
   const [isReply, setIsReply] = useState(false)
   const [newPost, setNewPost] = useState(false)
   const [commentId, setCommentId] = useState('')
+  const { isMobile } = useDeviceType()
 
-  const { data, refetch } = useGetCommentById(commentId ? commentId : reply.commentID, reply.enabled, type == PostType.Timeline)
-  const { data: communityComment, refetch: communityCommentRefetch } = useGetCommunityCommentById(
-    commentId ? commentId : reply.commentID,
-    reply.enabled,
-    type == PostType.Community
-  )
+  const { data, refetch, isFetching } = useGetCommentById(commentId ? commentId : reply.commentID, reply.enabled, type == PostType.Timeline)
+  const {
+    data: communityComment,
+    refetch: communityCommentRefetch,
+    isFetching: communityCommentIsFetching,
+  } = useGetCommunityCommentById(commentId ? commentId : reply.commentID, reply.enabled, type == PostType.Community)
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(true)
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(true)
 
@@ -186,8 +188,14 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
   }
 
   const setActiveComments = (clickedComment: any) => {
-    if (clickedComment.level % 3 == 0) {
-      setCommentId(clickedComment._id)
+    console.log('cc', clickedComment)
+
+    if (isMobile && clickedComment.level % 2 == 0) {
+      // console.log(clickedComment.level % 2 == 0)
+      return setCommentId(clickedComment._id)
+    }
+    if (clickedComment.level % 3 == 0 && clickedComment.level !== 3) {
+      return setCommentId(clickedComment._id)
     }
   }
 
@@ -203,8 +211,15 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
   }, [commentId, refetch])
 
   const Comment = ({ comment }: any) => {
+    if (communityCommentIsFetching || isFetching) {
+      return (
+        <div className="min-w-[300px]">
+          <Spinner />
+        </div>
+      )
+    }
     return (
-      <div className={`my-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 w-10/12' : 'w-full'}`}>
+      <div className={`my-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-6 max-sm:ms-3 w-10/12 ' : 'w-full'}`}>
         {/* {comment.replies?.length > 0 && visibleComments[comment._id] && (
           <div className="absolute w-[1px] h-5/6 bg-neutral-300 top-20 left-14 max-sm:hidden"></div>
         )} */}
@@ -215,7 +230,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
             src={comment.commenterProfileId?.profile_dp?.imageUrl || '/avatar.png'}
             width={56}
             height={56}
-            className="rounded-full"
+            className="rounded-full object-cover w-10 h-10 max-sm:w-8 max-sm:h-8"
             alt="avatar.png"
           />
           <div>
@@ -227,11 +242,11 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
         </div>
 
         {/* Comment Content */}
-        <div className="ps-[105px]">
+        <div className="ps-20 max-sm:ps-12">
           <p className="text-xs sm:text-sm pt-1 break-words">{comment.content}</p>
 
           {/* Action Buttons */}
-          <div className="flex justify-start ps-[105px] max-sm:ps-14 mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
+          <div className="flex justify-start   max-sm:ps-0 mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
             <div className="flex items-center cursor-pointer">
               <AiOutlineLike
                 onClick={() => likePostCommentHandler(comment._id)}
@@ -251,7 +266,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
               <HiReply className="text-gray-dark" />
               <span className="ml-2 ">Reply</span>
             </div>
-            <span className="flex items-center">
+            {/* <span className="flex items-center">
               <Popover>
                 <PopoverTrigger>
                   <div className="flex gap-1 items-center">
@@ -263,7 +278,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
                   <RepostPopUp />
                 </PopoverContent>
               </Popover>
-            </span>
+            </span> */}
 
             <Popover>
               <PopoverTrigger>
@@ -307,7 +322,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
         className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-20"
       ></div>
 
-      <div className="fixed w-max bg-white top-40 overflow-y-scroll h-64 z-30 p-2 rounded-xl">
+      <div className="fixed w-1/2 max-sm:w-11/12 bg-white top-40 overflow-y-scroll h-64 z-30 p-2 rounded-xl flex justify-start">
         {(type == PostType.Community ? communityComment?.finalComments : data?.finalComments)?.map((comment: any) => (
           <Comment key={comment._id} comment={comment} />
         ))}

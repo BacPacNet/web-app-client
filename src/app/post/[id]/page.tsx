@@ -13,7 +13,7 @@ const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
   const searchParams = useSearchParams()
   const Type = searchParams.get('isType')
-  const { data, isFetching, isPending } = useGetPost(id, Type)
+  const { data, isFetching, isPending, isError } = useGetPost(id, Type)
   const item = data?.post
 
   const [showCommentSection, setShowCommentSection] = useState('')
@@ -28,13 +28,18 @@ const SinglePost = () => {
     currImageIndex: null,
   })
 
-  if (isFetching || !data?.post) {
+  if (isError) {
+    return <div className="h-screen flex justify-center items-center">Not Allowed</div>
+  }
+
+  if (isFetching || (!data?.post && !isError)) {
     return (
       <div className="h-screen flex justify-center items-center">
         <Spinner />
       </div>
     )
   }
+
   return (
     <div className="w-full   flex justify-center ">
       <div className="w-10/12 shadow-xl rounded-lg mt-10">

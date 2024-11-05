@@ -192,7 +192,7 @@ const PostCard = ({
           <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex items-center">
             <FiMessageCircle className="mr-1 text-neutral-600" /> {commentCount}
           </span>
-          <span className="flex items-center">
+          {/* <span className="flex items-center">
             <Popover>
               <PopoverTrigger>
                 <div className="flex gap-1 items-center">
@@ -213,7 +213,7 @@ const PostCard = ({
                 </div>
               </PopoverContent>
             </Popover>
-          </span>
+          </span> */}
 
           <Popover>
             <PopoverTrigger>

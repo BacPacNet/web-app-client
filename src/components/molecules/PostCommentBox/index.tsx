@@ -33,6 +33,7 @@ import {
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
 import NestedCommentModal from '../nestedCommentModal'
+import useDeviceType from '@/hooks/useDeviceType'
 dayjs.extend(relativeTime)
 
 type Props = {
@@ -85,6 +86,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   const [isReply, setIsReply] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
+  const { isMobile } = useDeviceType()
 
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false)
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false)
@@ -168,6 +170,11 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   }
 
   const setActiveComments = (clickedComment: any) => {
+    // console.log('ismm', isMobile, clickedComment)
+    if (isMobile && clickedComment.level == 1) {
+      return setReplyModal({ enabled: true, commentID: clickedComment._id })
+    }
+
     if (clickedComment.level == 3) {
       setReplyModal({ enabled: true, commentID: clickedComment._id })
     }
@@ -236,10 +243,10 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   const CommentOption = () => {
     return (
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <FiRepeat className="mr-1 text-neutral-600" />
           <p>Repost </p>
-        </div>
+        </div> */}
         <div className="flex items-center gap-1">
           <FiShare2 className="mr-1 text-neutral-600" />
           <p>Share </p>
@@ -273,23 +280,23 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     return comments?.map((comment, index: number) => (
       <div key={comment._id} className={`my-4   h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
-          <div className="absolute w-[1px] h-5/6 bg-neutral-300 top-20 left-14 max-sm:hidden"></div>
+          <div className="absolute w-[1px] h-[90%] bg-neutral-300 top-20 max-sm:top-16 left-14 max-sm:left-8"></div>
         ) : (
           ''
         )}
 
         <div>
           <div className="flex p-4 max-sm:px-0  gap-4 ">
-            <div className="relative max-sm:hidden">
+            <div className="relative ">
               {childCommentsId.includes(comment._id) ? (
                 <>
                   {/* <div className="absolute w-1 h-36 bg-neutral-300 -top-28 -left-14"></div> */}
-                  {index == comments.length - 1 ? <div className="absolute w-2 h-96  bg-white top-5 -left-6"></div> : ''}
+                  {index == comments.length - 1 ? <div className="absolute w-2 h-96  bg-white  top-5  -left-6 max-sm:-left-4"></div> : ''}
 
                   <div
                     className={`absolute 
-                     top-5
-                     -left-6 h-3 w-[43px] border-l border-b border-neutral-300 rounded-bl-xl`}
+                     top-5 max-sm:top-4
+                     -left-6 max-sm:-left-4 h-3 w-[43px] max-sm:w-8 border-l border-b border-neutral-300 rounded-bl-xl`}
                   ></div>
                 </>
               ) : (
@@ -313,10 +320,10 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             </p>
           </div>
         </div>
-        <div className="flex gap-4 ps-[105px] max-sm:ps-14">
+        <div className="flex gap-4 ps-[105px] max-sm:ps-[70px]">
           <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
         </div>
-        <div className="flex justify-start ps-[105px] max-sm:ps-14 mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
+        <div className="flex justify-start ps-[105px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
           <div className="flex items-center cursor-pointer">
             <AiOutlineLike
               onClick={() => likePostCommentHandler(comment._id)}
@@ -336,7 +343,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             <HiReply className="text-gray-dark" />
             <span className="ml-2 ">Reply</span>
           </div>
-          <span className="flex items-center">
+          {/* <span className="flex items-center">
             <Popover>
               <PopoverTrigger>
                 <div className="flex gap-1 items-center">
@@ -348,7 +355,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
                 <RepostPopUp />
               </PopoverContent>
             </Popover>
-          </span>
+          </span> */}
 
           <Popover>
             <PopoverTrigger>
