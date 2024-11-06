@@ -88,6 +88,8 @@ export interface PostInputData {
     imageUrl: string
     publicId: string
   }>
+  PostType?: string
+  communityPostsType?: string
 }
 
 export interface UserPostData extends PostInputData {}
