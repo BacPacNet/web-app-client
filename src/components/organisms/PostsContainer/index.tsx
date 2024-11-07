@@ -47,7 +47,6 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
     fetchNextPage: timelinePostsNextpage,
     isFetchingNextPage: timelinePostIsFetchingNextPage,
     hasNextPage: timelinePostHasNextPage,
-    isFetching: timelinePostIsFetching,
   } = useGetTimelinePosts(type == PostType.Timeline, 5)
 
   const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
@@ -59,13 +58,10 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
     fetchNextPage: communityPostNextpage,
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
-    isFetching: communityPostIsFetching,
   } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community, 2)
   const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
-  const { data: userSelfPosts, error: userSelfPostsError } = useGetUserPosts(userId)
-
-  console.log(userSelfPosts, 'userSelfPostsError')
+  const { data: userSelfPosts } = useGetUserPosts(userId)
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
