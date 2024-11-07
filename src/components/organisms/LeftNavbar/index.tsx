@@ -34,32 +34,37 @@ export default function LeftNavbar() {
     router.push(item.path)
   }
 
+  const handleProfileClicked = () => {
+    router.push(`/profile/${userData.id}`)
+    setActiveMenu('')
+  }
+
   const renderProfile = () => {
-    if (userProfileData.profile_dp?.imageUrl) {
-      return (
-        <Image
-          width={40}
-          height={40}
-          objectFit="cover"
-          className="w-[40px] h-[40px] rounded-full"
-          src={userProfileData.profile_dp?.imageUrl || avatar}
-          alt="profile.png"
-        />
-      )
+    if (Object.keys(userProfileData).length === 0) {
+      return <UserListItemSkeleton />
     }
-    return <UserListItemSkeleton />
+    return (
+      <Image
+        width={50}
+        height={50}
+        objectFit="cover"
+        className="w-[50px] h-[50px] rounded-full"
+        src={userProfileData.profile_dp?.imageUrl || avatar}
+        alt="profile.png"
+      />
+    )
   }
 
   return (
     <Card className="h-with-navbar overflow-y-auto">
-      <div className="px-4 flex gap-4">
+      <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
         {renderProfile()}
         <div>
           <p className="text-sm text-neutral-700">
             {userData.firstName} {userData.lastName}
           </p>
-          <SubText>University Details</SubText>
-          <SubText>Degree Details</SubText>
+          <SubText>{userProfileData.university_name}</SubText>
+          <SubText>{userProfileData.major}</SubText>
         </div>
       </div>
       <div className="px-4 pt-9 ">

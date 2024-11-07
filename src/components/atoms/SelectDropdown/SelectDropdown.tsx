@@ -79,7 +79,7 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
             {search && (
               <input
                 type="text"
-                className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm border-neutral-200 text-neutral-400 h-10 outline-none"
+                className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm border-neutral-200 text-neutral-700 h-10 outline-none"
                 ref={searchRef}
                 placeholder="Search..."
                 onChange={handleSearch}

@@ -14,6 +14,8 @@ import { useUniStore } from '@/store/store'
 import { IoMdSettings } from 'react-icons/io'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import avatar from '@assets/avatar.svg'
+import LoginButtons from '@/components/atoms/LoginButtons'
+import CommunityGroupAll from './Tabs/communityGroupAll'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
@@ -29,7 +31,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { data: SubscribedData, isFetching, isLoading } = useGetUserSubscribedCommunityGroups()
   const [community, setCommunity] = useState<community>()
 
-  const { data: communityGroups } = useGetCommunityGroups(community?._id || '', !!community?._id)
+  const { data: communityGroups, isLoading: isCommunityGroupsLoading } = useGetCommunityGroups(id || '', !!community?._id)
   const allCommunities = [...(userData.userVerifiedCommunities || []), ...(userData.userUnVerifiedCommunities || [])]
 
   const handleCommunityClick = (index: number) => {
@@ -39,14 +41,14 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   }
 
   const matchedGroups = allCommunities.flatMap((community) =>
-    community.communityGroups
-      .map((group: any) => {
-        const matchingApiGroup = communityGroups?.groups.find((apiGroup: any) => apiGroup._id === group.communityGroupId)
+    community.communityGroups.reduce((acc, group: any) => {
+      const matchingApiGroup = communityGroups?.groups.find((apiGroup: any) => apiGroup._id === group.communityGroupId)
 
-        return matchingApiGroup ? matchingApiGroup : null
-      })
-      .filter((group) => group !== null)
+      if (matchingApiGroup) acc.push(matchingApiGroup)
+      return acc
+    }, [] as any[])
   )
+  const yourGroups = communityGroups?.groups?.filter((item: any) => item.adminUserId._id.toString() == userData.id).slice(0, showGroupTill)
 
   useEffect(() => {
     if (SubscribedData) {
@@ -58,80 +60,51 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     {
       label: 'All',
       content: (
-        <>
-          {communityGroups?.groups
-            .slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {communityGroups?.groups.length > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}
-        </>
+        <CommunityGroupAll
+          communityGroups={communityGroups?.groups}
+          showGroupTill={showGroupTill}
+          setShowGroupTill={setShowGroupTill}
+          currSelectedGroup={currSelectedGroup as community}
+          setCurrSelectedGroup={setCurrSelectedGroup}
+          userData={userData}
+          setAssignUsers={setAssignUsers}
+          SetcurrClickedID={SetcurrClickedID}
+          paramGroupId={id}
+        />
       ),
     },
     {
       label: 'Joined',
       content: (
-        <div>
-          {matchedGroups
-            ?.slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {matchedGroups.length > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}
-        </div>
+        <CommunityGroupAll
+          communityGroups={matchedGroups}
+          showGroupTill={showGroupTill}
+          setShowGroupTill={setShowGroupTill}
+          currSelectedGroup={currSelectedGroup as community}
+          setCurrSelectedGroup={setCurrSelectedGroup}
+          userData={userData}
+          setAssignUsers={setAssignUsers}
+          SetcurrClickedID={SetcurrClickedID}
+          paramGroupId={id}
+        />
       ),
     },
     {
       label: 'Your Group',
       content: (
         <div>
-          {' '}
-          {communityGroups?.groups
-            .filter((item: any) => item.adminUserId._id.toString() == userData.id)
-            .slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {communityGroups?.groups > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}
+          <CommunityGroupAll
+            communityGroups={yourGroups}
+            showGroupTill={showGroupTill}
+            setShowGroupTill={setShowGroupTill}
+            currSelectedGroup={currSelectedGroup as community}
+            setCurrSelectedGroup={setCurrSelectedGroup}
+            userData={userData}
+            setAssignUsers={setAssignUsers}
+            SetcurrClickedID={SetcurrClickedID}
+            paramGroupId={id}
+          />
+
           <div className="flex justify-center items-center p-2">
             <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
               Create Group
@@ -150,10 +123,15 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
 
-  if (SubscribedData?.community.length === 0) return <p>Join Your University</p>
-
   return (
     <>
+      {SubscribedData?.community.length === 0 && (
+        <div className="px-4 w-full">
+          <LoginButtons variant="primary" className="w-full">
+            Add Your University
+          </LoginButtons>{' '}
+        </div>
+      )}
       {SubscribedData?.community.map((community, index) => {
         return (
           <div key={index} className={`flex items-center justify-between hover:bg-secondary ${id && id[0] === community._id && 'bg-secondary'}`}>
@@ -205,7 +183,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             <GroupSearchBox placeholder="Search Groups" type="text" />
           </div>
         </div>
-        <div className="flex gap-2 justify-evenly cursor-pointer mt-4">
+        <div className="flex gap-2 justify-evenly cursor-pointer my-4">
           <div
             style={{ boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04)' }}
             className="border-2 border-solid border-neutral-200 rounded-lg "
@@ -226,7 +204,15 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           </div>
         </div>
       </>
-      <Tabs tabs={tabData} />
+
+      {SubscribedData?.community.length !== 0 ? (
+        <Tabs tabs={tabData} tabAlign="center" />
+      ) : (
+        <div className="px-4 w-full text-center font-poppins text-neutral-400">
+          <p>Add your university to join or create groups</p>
+        </div>
+      )}
+
       {showNewGroup && <CreateNewGroupBox setNewGroup={setShowNewGroup} />}
       <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
     </>

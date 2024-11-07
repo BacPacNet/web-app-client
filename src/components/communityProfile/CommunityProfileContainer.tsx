@@ -36,7 +36,7 @@ const CommunityProfileContainer = () => {
   const [selectedOption, setSelectedOption] = useState('Posts')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
-  const { isLoading, data: UserPosts, error } = useGetUserPosts()
+  const { isLoading, data: UserPosts, error } = useGetUserPosts('')
   const userPosts = UserPosts?.userPosts
 
   const modalContent = (modalContentType: string) => {

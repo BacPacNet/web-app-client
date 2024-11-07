@@ -37,6 +37,7 @@ module.exports = {
                 'primary': '#6647FF',
                 'primary-500': '#6744FF',
                 'primary-700': '#3A169C',
+                'primary-800': '#6400E6',
                 'secondary': '#F3F2FF',
                 'neutral-200': '#E5E7EB',
                 'neutral-500': '#6B7280',
@@ -55,6 +56,7 @@ module.exports = {
                 'destructive-600': "#DC2626"
             },
             boxShadow: {
+                'logo': '0px 0px 6px 0px #00000040',
                 'medium': '0px 6px 15px -2px rgba(16, 24, 40, 0.08), 0px 6px 15px -2px rgba(16, 24, 40, 0.08);',
                 'card': '0px 6px 15px -2px rgba(16, 24, 40, 0.08)',
                 'button': '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04);',

@@ -113,7 +113,10 @@ const LoginBox = () => {
       </div>
       <button className="mt-4 mx-auto">
         <p>
-          No account yet? <span className="text-primary-500">Create an account</span>
+          No account yet?{' '}
+          <span className="text-primary-500" onClick={() => router.push('/register')}>
+            Create an account
+          </span>
         </p>
       </button>
     </div>

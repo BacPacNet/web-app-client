@@ -3,11 +3,14 @@ import React, { ReactNode, HTMLAttributes } from 'react'
 interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
   children: ReactNode
 }
-
-export default function Card({ children, className = '', ...rest }: TitleProps) {
+const Card = React.forwardRef<HTMLDivElement, TitleProps>((props: TitleProps, ref) => {
+  const { children, className = '', ...rest } = props
   return (
-    <div className={`relative z-10 shadow-2xl bg-white py-8 ${className}`} {...rest}>
+    <div ref={ref} className={`${className} font-poppins relative z-10 shadow-card bg-white py-4 `} {...rest}>
       {children}
     </div>
   )
-}
+})
+
+Card.displayName = 'Card'
+export default Card

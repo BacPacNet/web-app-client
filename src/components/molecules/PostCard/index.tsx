@@ -25,6 +25,7 @@ import {
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { useRouter } from 'next/navigation'
 
 dayjs.extend(relativeTime)
 
@@ -126,7 +127,7 @@ const PostCard = ({
   setShowCommentSection,
 }: PostProps) => {
   const { userData } = useUniStore()
-
+  const router = useRouter()
   const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
   const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
 
@@ -149,40 +150,43 @@ const PostCard = ({
     adminId,
   }
 
+  const handleProfileClicked = () => {
+    router.push(`/profile/${adminId}`)
+  }
   return (
-    <div className={` bg-white ${idx == 0 ? 'rounded-b-2xl' : 'rounded-b-2xl rounded-t-2xl'}  `}>
-      <div className="flex items-center p-4 gap-4">
-        <Image src={avatarLink || avatar} width={56} height={56} className="rounded-full" alt="avatar.png" />
-        <div>
-          <h3 className="font-medium text-sm text-neutral-600">{user}</h3>
-          <p className="text-[12px] text-neutral-500">{university}</p>
-          <p className="text-[12px] text-neutral-500">{year}</p>
+    <div className={`bg-white rounded-2xl px-4`}>
+      <div className="flex items-center py-4 gap-4 justify-between">
+        <div onClick={handleProfileClicked} className="flex gap-4 cursor-pointer">
+          <Image src={avatarLink || avatar} width={56} height={56} className="rounded-full" alt="avatar.png" />
+          <div>
+            <h3 className="font-medium text-sm text-neutral-600">{user}</h3>
+            <p className="text-[12px] text-neutral-500">{university}</p>
+            <p className="text-[12px] text-neutral-500">{year}</p>
+          </div>
         </div>
-        <div className="ml-auto text-gray-400">
-          {' '}
-          <PostCartOption postID={postID} isType={type} />{' '}
+
+        <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
+          <PostCartOption isSelfPost={adminId === userData.id} postID={postID} isType={type} />{' '}
         </div>
+      </div>
+
+      <div>
+        <p className="text-sm text-neutral-700 font-medium py-4">{text}</p>
       </div>
 
       {/* //post Image  */}
       <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
       {/* Post Content */}
 
-      <div className={`px-4  ${text?.length ? 'py-6' : 'py-2'}`}>
-        <p className="text-xs text-neutral-700 font-medium">{text}</p>
-      </div>
-
       {/* Timestamp */}
-      <p className="px-4 py-2 text-[12px] text-neutral-400 flex items-center">
+      <p className="py-4 text-xs text-neutral-400 flex items-center">
         <span className="text-neutral-500 break-words">{dayjs(new Date(date).toString()).format('h:m a · MMM DD, YYYY')}</span> · Post from {user} at{' '}
         {university}
       </p>
 
       {/* Post Meta */}
       <div
-        className={`flex items-center justify-between px-4 py-2 border-t ${
-          showCommentSection && 'border-b'
-        } border-neutral-200 text-xs text-neutral-500 `}
+        className={`flex items-center justify-between py-2 border-t ${showCommentSection && 'border-b'} border-neutral-200 text-sm text-neutral-500 `}
       >
         <div className="flex items-center gap-10">
           <span onClick={() => LikeUnlikeHandler(postID)} className="flex items-center">
@@ -192,28 +196,6 @@ const PostCard = ({
           <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex items-center">
             <FiMessageCircle className="mr-1 text-neutral-600" /> {commentCount}
           </span>
-          {/* <span className="flex items-center">
-            <Popover>
-              <PopoverTrigger>
-                <div className="flex gap-1 items-center">
-                  <FiRepeat className="mr-1 text-neutral-600" />
-                  <span>2</span>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-1">
-                    <FaUser />
-                    <p>Repost on Group</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaUsers />
-                    <p>Repost on Timeline</p>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </span> */}
 
           <Popover>
             <PopoverTrigger>

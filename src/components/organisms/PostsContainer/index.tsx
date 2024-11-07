@@ -3,7 +3,7 @@ import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
 import PostContainerPostTypeSelector from '@/components/molecules/PostContainerPostTypeSelector'
-import { useGetTimelinePosts } from '@/services/community-timeline'
+import { getAllUserPosts, useGetTimelinePosts, useGetUserPosts } from '@/services/community-timeline'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
@@ -32,12 +32,13 @@ interface communityPostType {
   commentCount: number
 }
 
-type props = {
+type Props = {
   communityID?: string
   communityGroupID?: string
-  type: PostType.Community | PostType.Timeline
+  type: PostType
+  userId?: string
 }
-const PostContainer = ({ communityID = '', communityGroupID = '', type }: props) => {
+const PostContainer = ({ communityID = '', communityGroupID = '', type, userId = '' }: Props) => {
   const { userData } = useUniStore()
   const {
     isLoading,
@@ -46,7 +47,6 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
     fetchNextPage: timelinePostsNextpage,
     isFetchingNextPage: timelinePostIsFetchingNextPage,
     hasNextPage: timelinePostHasNextPage,
-    isFetching: timelinePostIsFetching,
   } = useGetTimelinePosts(type == PostType.Timeline, 5)
 
   const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
@@ -58,9 +58,10 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
     fetchNextPage: communityPostNextpage,
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
-    isFetching: communityPostIsFetching,
   } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community, 2)
   const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+
+  const { data: userSelfPosts } = useGetUserPosts(userId)
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -181,6 +182,29 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
             setShowCommentSection={setShowCommentSection}
           />
         ))
+
+      case PostType.Profile:
+        return userSelfPosts?.map((post: communityPostType, idx: number) => (
+          <PostCard
+            key={post?._id}
+            user={post?.user?.firstName + ' ' + post?.user?.lastName}
+            adminId={post?.user?._id}
+            university={post?.userProfile?.university_name}
+            year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
+            text={post?.content}
+            date={post?.createdAt}
+            avatarLink={post?.userProfile?.profile_dp?.imageUrl}
+            commentCount={post?.commentCount}
+            likes={post?.likeCount}
+            postID={post?._id}
+            type={PostType.Community}
+            images={post?.imageUrl}
+            setImageCarasol={setImageCarasol}
+            idx={idx}
+            showCommentSection={showCommentSection}
+            setShowCommentSection={setShowCommentSection}
+          />
+        ))
       default:
         return <div>No valid path selected</div>
     }
@@ -203,10 +227,10 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type }: props)
   }
 
   return (
-    <div className="py-8  overflow-y-scroll">
-      {isLoading || timlineDatas?.length < 1 ? ' ' : communityPostIsFetching || communityDatas?.length < 1 ? ' ' : <PostContainerPostTypeSelector />}
-
-      <div className="flex flex-col gap-6">{!issJoined && type !== PostType.Timeline ? '' : <PostCardRender />}</div>
+    <div className="py-8">
+      <div className="flex flex-col gap-6">
+        <PostCardRender />
+      </div>
 
       {imageCarasol.isShow && (
         <div className="relative h-screen w-full ">

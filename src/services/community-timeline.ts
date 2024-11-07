@@ -19,8 +19,8 @@ export async function LikeUnilikeUserPost(postId: string, token: string) {
   return response
 }
 
-export async function getAllUserPosts(token: string) {
-  const response: any = await client('/userpost/', { headers: { Authorization: `Bearer ${token}` } })
+export async function getAllUserPosts(token: string, userId: string) {
+  const response: any = await client(`/userpost?userId=${userId}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -160,20 +160,14 @@ export const useUpdateUserPost = () => {
   })
 }
 
-export function useGetUserPosts() {
+export function useGetUserPosts(userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const state = useQuery({
-    queryKey: ['userPosts'],
-    queryFn: () => getAllUserPosts(cookieValue),
+  return useQuery({
+    queryKey: ['userPosts', userId],
+    queryFn: () => getAllUserPosts(cookieValue, userId),
+    enabled: !!userId,
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
 }
 // export function useGetUserPostComments(postId: string, showCommentSection: boolean, isTimeline: boolean) {
 //   const [cookieValue] = useCookie('uni_user_token')

@@ -33,7 +33,7 @@ const register = async (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>): Pr
 }
 
 async function register_v2(data: data) {
-  const response: { isRegistered: boolean } = await client(`auth/v2/register`, { method: 'POST', data })
+  const response: { isRegistered: boolean } = await client(`auth/register`, { method: 'POST', data })
   return response
 }
 

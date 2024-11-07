@@ -51,7 +51,7 @@ const recommendations = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-8 bg-surface-primary-50 px-4">
+    <div className="flex gap-8 bg-surface-primary-50 h-with-navbar overflow-auto px-4">
       <div className="w-1/5 hidden lg:block ">
         <div className="fixed w-1/5 left-0 z-10 ">
           <LeftNavbar />

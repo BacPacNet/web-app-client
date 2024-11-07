@@ -12,6 +12,7 @@ export const CommunityNavbarLinks: NavLink[] = [
 ]
 
 export interface FollowingItemProps {
+  _id: any
   users_id: {
     firstName: string
     lastName: string
@@ -80,6 +81,7 @@ export enum PostInputType {
 export enum PostType {
   Community = 'Community',
   Timeline = 'Timeline',
+  Profile = 'Profile',
 }
 
 export interface PostInputData {

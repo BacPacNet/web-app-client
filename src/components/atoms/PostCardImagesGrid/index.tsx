@@ -47,7 +47,7 @@ const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
   }
 
   return (
-    <div className={`grid gap-2 ${getGridTemplate()} w-full h-80 mx-auto py-4`}>
+    <div className={`grid gap-2 ${getGridTemplate()} w-full h-80 mx-auto`}>
       {images?.slice(0, 4).map((src, index) => (
         <div
           key={index}
@@ -65,7 +65,7 @@ const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
             key={index}
             src={src.imageUrl}
             alt={`Image ${index + 1}`}
-            className="rounded-lg  "
+            className="rounded-xl"
           />
           {imageCount > 4 && index == 2 && (
             <div className="absolute bg-slate-50 shadow-lg w-40 h-40 -right-10 -bottom-10 rounded-full text-neutral-700 flex items-center justify-center">

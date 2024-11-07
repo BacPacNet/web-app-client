@@ -67,9 +67,9 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
 
   if (message.length < 1) {
     return (
-      <div className="h-32 flex justify-center items-center gap-4">
+      <div className="h-14 flex justify-center items-center gap-4">
         <TbMessage2Search size={24} className="text-neutral-700" />
-        <p className="text-[24px] font-semibold text-neutral-700">No Messages</p>
+        <p className="text-sm font-bold text-neutral-700">No Messages</p>
       </div>
     )
   }

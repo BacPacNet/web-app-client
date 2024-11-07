@@ -15,20 +15,7 @@ import { RequestData, ServerResponse } from '../models/common/api-client'
 
 const client = async <T, U>(
   endpoint: string,
-  {
-    id,
-
-    page,
-    size,
-    data,
-    headers,
-    method,
-    transform = true,
-    customBaseUrl = false,
-    userCode,
-    email,
-    ...rest
-  }: RequestData<U> = {}
+  { id, page, size, data, headers, method, transform = true, customBaseUrl = false, userCode, email, ...rest }: RequestData<U> = {}
 ): Promise<ServerResponse<T>> => {
   const config: AxiosRequestConfig = {
     url: customBaseUrl ? `${process.env.NEXT_PUBLIC_CUSTOM_BASE_URL}/${endpoint}` : `${process.env.NEXT_PUBLIC_API_BASE_URL}/${endpoint}`,
@@ -37,7 +24,6 @@ const client = async <T, U>(
     headers: { ...headers, 'Content-Type': 'application/json' },
     params: {
       id,
-
       page,
       size,
       userCode,
