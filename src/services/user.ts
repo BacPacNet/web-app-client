@@ -11,13 +11,12 @@ export async function getUserData(token: any, id: string) {
   return response
 }
 
-export function useGetUserData(type: string) {
+export function useGetUserData(userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
-  const { userData } = useUniStore()
   const state = useQuery({
-    queryKey: ['getRefetchUserData'],
-    queryFn: () => getUserData(cookieValue, userData.id || ''),
-    enabled: !!cookieValue && type != '',
+    queryKey: ['getRefetchUserData', userId],
+    queryFn: () => getUserData(cookieValue, userId),
+    enabled: !!cookieValue && !!userId,
   })
 
   let errorMessage = null

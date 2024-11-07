@@ -498,19 +498,12 @@ export const useUserCommunityRole = () => {
   })
 }
 
-export function useGetPost(postId: string, isType: string | null) {
+export function useGetPost(postId: string, isType: string | null = 'userPost') {
   const [cookieValue] = useCookie('uni_user_token')
 
-  const state = useQuery({
+  return useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, cookieValue),
     enabled: !!postId && !!cookieValue,
-    retry: 1,
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-  return { ...state, error: errorMessage }
 }

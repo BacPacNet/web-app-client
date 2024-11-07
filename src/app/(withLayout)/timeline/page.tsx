@@ -5,7 +5,7 @@ import React from 'react'
 
 export default function Timeline() {
   return (
-    <div className="h-with-navbar overflow-hidden">
+    <div className="h-with-navbar">
       <UserPostContainer type={PostInputType.Timeline} />
       <PostContainer type={PostType.Timeline} />
     </div>

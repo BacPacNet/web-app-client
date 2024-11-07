@@ -10,12 +10,14 @@ import { country_list } from '@/utils/countriesList'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 
 export interface editProfileInputs {
-  fullname: string
+  first_name: string
+  last_name: string
   users_id: string
   profile_dp?: string
   email?: string
   cover_dp?: string
   bio?: string
+  gender: string
   phone_number?: string
   dob?: string
   country?: string
@@ -42,9 +44,11 @@ const EditProfileModal = () => {
     formState: { errors },
   } = useForm<editProfileInputs>({
     defaultValues: {
-      fullname: userData.firstName,
+      first_name: userData.firstName,
+      last_name: userData.lastName,
       bio: userProfileData?.bio,
       phone_number: userProfileData?.phone_number,
+      gender: userData.gender,
       dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
       country: userProfileData?.country,
       city: userProfileData?.city,
@@ -74,34 +78,34 @@ const EditProfileModal = () => {
             First Name
           </label>
           <input
-            {...register('firstname', { required: true })}
+            {...register('first_name', { required: true })}
             placeholder="Enter First Name"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
           />
-          {errors.fullname && <span className="text-red-500 font-normal">Please enter first name</span>}
+          {errors.first_name && <span className="text-red-500 font-normal">Please enter first name</span>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="lastname" className="py-1 text-sm text-neutral-700">
             Last Name
           </label>
           <input
-            {...register('lastname', { required: true })}
+            {...register('last_name', { required: true })}
             placeholder="Enter Last Name"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
           />
-          {errors.fullname && <span className="text-red-500 font-normal">Please enter your date of birth</span>}
+          {errors.last_name && <span className="text-red-500 font-normal">Please enter your date of birth</span>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="dob" className="py-1 text-sm text-neutral-700">
             Date of Birth
           </label>
           <Controller
-            name="birthDate"
+            name="dob"
             control={control}
             rules={{ required: 'birthDate is required!' }}
-            render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!errors.birthDate} />}
+            render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!errors.dob} />}
           />
-          {errors.birthDate && <InputWarningText>Please enter your Birthday!</InputWarningText>}
+          {errors.dob && <InputWarningText>Please enter your Birthday!</InputWarningText>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="gender" className="py-1 text-sm text-neutral-700">
@@ -112,7 +116,7 @@ const EditProfileModal = () => {
             placeholder="Choose Gender"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
           />
-          {errors.fullname && <span className="text-red-500 font-normal">Please enter your full name!</span>}
+          {errors.gender && <span className="text-red-500 font-normal">Please enter your full name!</span>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="country" className="py-1">
@@ -125,7 +129,7 @@ const EditProfileModal = () => {
             render={({ field }) => (
               <SelectDropdown
                 options={country_list}
-                value={field.value}
+                value={field.value || ''}
                 onChange={field.onChange}
                 placeholder="Select a country"
                 icon={'dual'}

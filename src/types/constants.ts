@@ -81,6 +81,7 @@ export enum PostInputType {
 export enum PostType {
   Community = 'Community',
   Timeline = 'Timeline',
+  Profile = 'Profile',
 }
 
 export interface PostInputData {

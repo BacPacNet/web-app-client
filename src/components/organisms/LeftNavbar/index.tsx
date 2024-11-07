@@ -34,8 +34,12 @@ export default function LeftNavbar() {
     router.push(item.path)
   }
 
+  const handleProfileClicked = () => {
+    router.push(`/profile/${userData.id}`)
+    setActiveMenu('')
+  }
+
   const renderProfile = () => {
-    console.log(userProfileData, 'userProfileData')
     if (Object.keys(userProfileData).length === 0) {
       return <UserListItemSkeleton />
     }
@@ -53,14 +57,14 @@ export default function LeftNavbar() {
 
   return (
     <Card className="h-with-navbar overflow-y-auto">
-      <div className="px-4 flex gap-4">
+      <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
         {renderProfile()}
         <div>
           <p className="text-sm text-neutral-700">
             {userData.firstName} {userData.lastName}
           </p>
-          <SubText>University Details</SubText>
-          <SubText>Degree Details</SubText>
+          <SubText>{userProfileData.university_name}</SubText>
+          <SubText>{userProfileData.major}</SubText>
         </div>
       </div>
       <div className="px-4 pt-9 ">

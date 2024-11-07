@@ -19,7 +19,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left' }) 
   }
 
   return (
-    <div className={`w-full h-full ${className} `}>
+    <div className={`w-full ${className} `}>
       {/* Tabs List */}
       <div className={`border-gray-200 text-${tabAlign}`}>
         {tabs.map((tab, index) => (

@@ -36,7 +36,7 @@ export default function ConnectionPage() {
   return (
     <div className="py-8 h-with-navbar">
       <Card className="rounded-2xl h-full overflow-hidden px-4">
-        <Tabs tabs={tabs} className={''} />
+        <Tabs tabs={tabs} className={'h-full'} />
       </Card>
     </div>
   )

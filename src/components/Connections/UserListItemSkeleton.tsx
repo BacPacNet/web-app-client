@@ -1,8 +1,8 @@
 import React from 'react'
 import { Skeleton } from '../ui/Skeleton'
-const UserListItemSkeleton = () => {
+const UserListItemSkeleton = ({ className }: { className?: string }) => {
   return (
-    <div className=" rounded-lg  ">
+    <div className={`${className} rounded-lg`}>
       <div className="my-2 ml-2  flex gap-8 items-center ">
         <Skeleton className=" bg-slate-400 p-2 h-14 w-14 rounded-full" />
         <div>

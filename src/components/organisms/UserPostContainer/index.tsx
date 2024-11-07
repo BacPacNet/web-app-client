@@ -24,13 +24,14 @@ type props = {
 
 function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const valueRef = useRef<string>('')
+  const valueRef = useRef<string | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [postAccessType, setPostAccessType] = useState('Public')
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
   const { userProfileData } = useUniStore()
   const handleInput = () => {
+    console.log(textareaRef)
     const textarea = textareaRef.current
     if (textarea) {
       valueRef.current = textareaRef.current.value
@@ -122,7 +123,10 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // You can do something with the value here, like an API call
-    handleGroupPost(valueRef.current)
+    if (!textareaRef.current?.value) {
+      return alert('Please enter')
+    }
+    return handleGroupPost(valueRef.current as string)
   }
   return (
     <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
@@ -146,7 +150,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
         </div>
         <textarea
           ref={textareaRef}
-          className="w-full p-2 border-none resize-none focus:outline-none max-h-40 overflow-y-auto"
+          className="w-full p-2 border-none resize-none focus:outline-none max-h-40 overflow-y-auto font-sans font-normal"
           placeholder="What’s on your mind?"
           rows={1}
           onInput={handleInput}

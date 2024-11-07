@@ -11,6 +11,7 @@ import badge from '@assets/badge.svg'
 import useDeviceType from '@/hooks/useDeviceType'
 import { format } from 'date-fns'
 import { ModalContentType } from '@/types/global'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 interface UserProfileCardProps {
   name: string
@@ -32,6 +33,7 @@ interface UserProfileCardProps {
   country: string
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isSelfProfile?: boolean
 }
 
 export function UserProfileCard({
@@ -54,6 +56,7 @@ export function UserProfileCard({
   country,
   setModalContentType,
   setIsModalOpen,
+  isSelfProfile,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
 
@@ -61,9 +64,11 @@ export function UserProfileCard({
     setModalContentType(modalType)
     setIsModalOpen(true)
   }
+
+  console.log(university, 'university')
   return (
     <Card className="rounded-2xl px-8">
-      <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start  ">
+      <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start">
         <div className="flex-none  lg:w-[126px] lg:h-[126px] w-[90] h-[90]">
           <Image src={avatarUrl} alt={name} width={isDesktop ? 126 : 90} height={isDesktop ? 126 : 90} className="rounded-full" />
         </div>
@@ -73,16 +78,12 @@ export function UserProfileCard({
               <p className="font-poppins text-neutral-700 text:xl lg:text-2xl font-bold">{name}</p>
               {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-4 text-xs">Premium</p>}
             </div>
-            <div
-              className="flex gap-2 items-center text-xs lg:text-sm text-primary-500"
-              //onClick={() => {
-              //  setModalContentType('EditProfileModal')
-              //  setIsModalOpen(true)
-              //}}
-            >
-              <button onClick={() => handleOpenModal('EditProfileModal')}>Edit Profile</button>
-              <HiPencilAlt size={16} />
-            </div>
+            {isSelfProfile && (
+              <div className="flex gap-2 items-center text-xs lg:text-sm text-primary-500">
+                <button onClick={() => handleOpenModal('EditProfileModal')}>Edit Profile</button>
+                <HiPencilAlt size={16} />
+              </div>
+            )}
           </div>
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
           <div className="flex gap-4 lg:gap-8 items-center font-poppins py-2 flex-wrap">
@@ -102,30 +103,33 @@ export function UserProfileCard({
           </div>
         </div>
       </div>
-      <div className="grid grid-flow-row-dense grid-cols-3 gap-4 pt-8 text-neutral-500">
-        <div className="flex items-center space-x-2">
+      <div
+        //style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(0, max-content))' }}
+        className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-8 text-neutral-500 "
+      >
+        <div className="flex items-center space-x-2 ">
           <FaGraduationCap className="text-md" />
-          <span>{`${degree}, ${major}`}</span>
+          <span className="text-xs">{`${degree}, ${major}`}</span>
         </div>
         <div className="flex items-center space-x-2">
           <FaEnvelope className="text-md flex-none" />
-          <span>{email}</span>
+          <span className="text-xs">{email}</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 lg:justify-center">
           <FaPhone className="text-md flex-none" />
-          <span>{phone}</span>
+          <span className="text-xs">{phone}</span>
         </div>
         <div className="flex items-center space-x-2">
           <FaMapMarkerAlt className="text-md flex-none" />
-          <span>{location}</span>
+          <span className="text-xs">{location}</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 ">
           <FaBirthdayCake className="text-md flex-none" />
-          <span>{format(new Date(birthday), 'dd MMM yyyy')}</span>
+          <span className="text-xs">{birthday && format(new Date(birthday), 'dd MMM yyyy')}</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 lg:justify-center">
           <ImEarth className="text-md flex-none" />
-          <span>{country}</span>
+          <span className="text-xs">{country}</span>
         </div>
       </div>
       {/*<div className="flex items-center justify-between mb-4">

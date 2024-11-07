@@ -1,8 +1,8 @@
 import React from 'react'
 import { useToggleFollow } from '@/services/connection'
-import { useCreateUserChat } from '@/services/Messages'
 import LoginButtons from '../atoms/LoginButtons'
 import avatar from '@assets/avatar.svg'
+import { useRouter } from 'next/navigation'
 
 interface FollowingItemProps {
   firstName: string
@@ -34,17 +34,19 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   isChat,
 }) => {
   const { mutate: toggleFollow } = useToggleFollow(type)
-  const { mutate: createUserChat } = useCreateUserChat()
+  const router = useRouter()
 
   const handleFollowClick = () => {
-    if (!userFollowingIDs?.includes(id)) {
-      toggleFollow(id)
-    }
+    toggleFollow(id)
+  }
+
+  const handleProfileClicked = (id: string) => {
+    router.push(`/profile/${id}`)
   }
 
   return (
     <div className="flex items-center p-2 md:p-4 border-b border-border justify-between">
-      <div className="flex gap-4 items-center">
+      <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
         <img src={imageUrl || avatar.src} alt={firstName} className="w-12 h-12 rounded-full " />
         <div className="">
           <h3 className="font-medium text-base text-gray-dark">
@@ -60,7 +62,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
 
       <div className="p-2 bg-primary-50 rounded-md">
         <LoginButtons onClick={handleFollowClick} variant="shade" size="extra_small">
-          {userFollowingIDs?.includes(id) ? 'View Profile' : 'Follow'}
+          {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
         </LoginButtons>
         {/*<Popover>
           <PopoverTrigger>

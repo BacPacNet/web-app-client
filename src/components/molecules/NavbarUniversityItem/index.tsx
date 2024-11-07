@@ -15,6 +15,7 @@ import { IoMdSettings } from 'react-icons/io'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import avatar from '@assets/avatar.svg'
 import LoginButtons from '@/components/atoms/LoginButtons'
+import CommunityGroupAll from './Tabs/communityGroupAll'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
@@ -30,7 +31,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { data: SubscribedData, isFetching, isLoading } = useGetUserSubscribedCommunityGroups()
   const [community, setCommunity] = useState<community>()
 
-  const { data: communityGroups } = useGetCommunityGroups(community?._id || '', !!community?._id)
+  const { data: communityGroups, isLoading: isCommunityGroupsLoading } = useGetCommunityGroups(id || '', !!community?._id)
   const allCommunities = [...(userData.userVerifiedCommunities || []), ...(userData.userUnVerifiedCommunities || [])]
 
   const handleCommunityClick = (index: number) => {
@@ -40,14 +41,14 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   }
 
   const matchedGroups = allCommunities.flatMap((community) =>
-    community.communityGroups
-      .map((group: any) => {
-        const matchingApiGroup = communityGroups?.groups.find((apiGroup: any) => apiGroup._id === group.communityGroupId)
+    community.communityGroups.reduce((acc, group: any) => {
+      const matchingApiGroup = communityGroups?.groups.find((apiGroup: any) => apiGroup._id === group.communityGroupId)
 
-        return matchingApiGroup ? matchingApiGroup : null
-      })
-      .filter((group) => group !== null)
+      if (matchingApiGroup) acc.push(matchingApiGroup)
+      return acc
+    }, [] as any[])
   )
+  const yourGroups = communityGroups?.groups?.filter((item: any) => item.adminUserId._id.toString() == userData.id).slice(0, showGroupTill)
 
   useEffect(() => {
     if (SubscribedData) {
@@ -59,80 +60,55 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     {
       label: 'All',
       content: (
-        <>
-          {communityGroups?.groups
-            .slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {communityGroups?.groups.length > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}
-        </>
+        <CommunityGroupAll
+          communityGroups={communityGroups?.groups}
+          showGroupTill={showGroupTill}
+          setShowGroupTill={setShowGroupTill}
+          currSelectedGroup={currSelectedGroup as community}
+          setCurrSelectedGroup={setCurrSelectedGroup}
+          userData={userData}
+          setAssignUsers={setAssignUsers}
+          SetcurrClickedID={SetcurrClickedID}
+          paramGroupId={id}
+        />
       ),
     },
     {
       label: 'Joined',
       content: (
-        <div>
-          {matchedGroups
-            ?.slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {matchedGroups.length > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}
-        </div>
+        <CommunityGroupAll
+          communityGroups={matchedGroups}
+          showGroupTill={showGroupTill}
+          setShowGroupTill={setShowGroupTill}
+          currSelectedGroup={currSelectedGroup as community}
+          setCurrSelectedGroup={setCurrSelectedGroup}
+          userData={userData}
+          setAssignUsers={setAssignUsers}
+          SetcurrClickedID={SetcurrClickedID}
+          paramGroupId={id}
+        />
       ),
     },
     {
       label: 'Your Group',
       content: (
         <div>
-          {' '}
-          {communityGroups?.groups
-            .filter((item: any) => item.adminUserId._id.toString() == userData.id)
-            .slice(0, showGroupTill)
-            .map((item: any) => (
-              <GroupSelectors
-                key={item.title}
-                currSelectedGroup={currSelectedGroup}
-                setCurrSelectedGroup={setCurrSelectedGroup}
-                data={item}
-                userId={userData?.id}
-                setAssignUsers={setAssignUsers}
-                SetcurrClickedID={SetcurrClickedID}
-                paramGroupId={id}
-              />
-            ))}
-          {communityGroups?.groups > showGroupTill && (
+          <CommunityGroupAll
+            communityGroups={yourGroups}
+            showGroupTill={showGroupTill}
+            setShowGroupTill={setShowGroupTill}
+            currSelectedGroup={currSelectedGroup as community}
+            setCurrSelectedGroup={setCurrSelectedGroup}
+            userData={userData}
+            setAssignUsers={setAssignUsers}
+            SetcurrClickedID={SetcurrClickedID}
+            paramGroupId={id}
+          />
+          {/*{communityGroups?.groups > showGroupTill && (
             <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
               Load More
             </p>
-          )}
+          )}*/}
           <div className="flex justify-center items-center p-2">
             <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
               Create Group

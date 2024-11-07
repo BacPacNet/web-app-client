@@ -22,7 +22,7 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   // console.log('param', param.split('/')[1] !== 'messages')
   const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
 
-  const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(type)
+  const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData.id as string)
   const {
     refetch: refetchUserProfileData,
     data: RefetcheduserProfileData,

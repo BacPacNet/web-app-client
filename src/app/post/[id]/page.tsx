@@ -2,7 +2,6 @@
 import PostCard from '@/components/molecules/PostCard'
 
 import Spinner from '@/components/atoms/spinner'
-import useCookie from '@/hooks/useCookie'
 import { useGetPost } from '@/services/community-university'
 import { PostType } from '@/types/constants'
 import { useParams, useSearchParams } from 'next/navigation'
@@ -39,24 +38,24 @@ const SinglePost = () => {
       </div>
     )
   }
-
+  const { _id, user, user_id, profile, content, createdAt, imageUrl, comments, likeCount } = item
   return (
     <div className="w-full   flex justify-center ">
-      <div className="w-10/12 shadow-xl rounded-lg mt-10">
+      <div className="w-1/2 shadow-card rounded-2xl mt-10">
         <PostCard
-          key={item?._id}
-          user={item?.user_id?.firstName + ' ' + item?.user_id?.lastName}
-          adminId={item?.user_id?._id}
-          university={item?.profiles[0]?.university_name}
-          year={item?.profiles[0]?.study_year + ' Yr. ' + ' ' + item?.profiles[0]?.degree}
-          text={item?.content}
-          date={item?.createdAt}
-          avatarLink={item?.profiles[0]?.profile_dp?.imageUrl}
-          commentCount={item?.comments}
-          likes={item?.likeCount}
-          postID={item?._id}
+          key={_id}
+          user={user?.firstName + ' ' + user?.lastName}
+          adminId={user_id}
+          university={profile?.university_name}
+          year={profile?.study_year + ' Yr. ' + ' ' + profile?.degree}
+          text={content}
+          date={createdAt}
+          avatarLink={profile?.profile_dp?.imageUrl}
+          commentCount={comments.length}
+          likes={likeCount}
+          postID={_id}
           type={String(Type) == 'Timeline' ? PostType.Timeline : PostType.Community}
-          images={item?.imageUrl || []}
+          images={imageUrl || []}
           setImageCarasol={setImageCarasol}
           idx={1}
           showCommentSection={showCommentSection}
