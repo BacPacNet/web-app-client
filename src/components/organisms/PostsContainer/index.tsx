@@ -223,20 +223,14 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
       return <div>{error.message || 'Error loading posts'}</div>
     }
 
-    //if (timlineDatas.length == 0 || communityDatas.length === 0 || userSelfPosts.length === 0) {
-    //  return <p>No Posts Yet!</p>
-    //}
-
     return renderPostWithRespectToPathName()
   }
 
   return (
     <div className="py-8">
-      {/*{isLoading || timlineDatas?.length < 1 ? ' ' : communityPostIsFetching || communityDatas?.length < 1 ? ' ' : <PostContainerPostTypeSelector />}*/}
       <div className="flex flex-col gap-6">
         <PostCardRender />
       </div>
-      {/*<div className="flex flex-col gap-6">{!issJoined && type !== PostType.Timeline ? '' : <PostCardRender />}</div>*/}
 
       {imageCarasol.isShow && (
         <div className="relative h-screen w-full ">

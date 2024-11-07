@@ -132,60 +132,6 @@ export function UserProfileCard({
           <span className="text-xs">{country}</span>
         </div>
       </div>
-      {/*<div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-4">
-          <Image src={avatarUrl} alt={name} width={100} height={100} className="rounded-full" />
-          <div>
-            <h2 className="text-2xl font-bold">{name}</h2>
-            {isPremium && <p className="bg-purple-600 text-white">Premium</p>}
-          </div>
-        </div>
-        <LoginButtons>Edit Profile</LoginButtons>
-      </div>
-
-      <p className="text-gray-600 mb-4">{description}</p>
-
-      <div className="flex items-center space-x-2 mb-4">
-        <div className="bg-orange-100 rounded-full p-2">
-          <Image src="/path-to-university-icon.png" alt="University" width={24} height={24} />
-        </div>
-        <span className="font-semibold">{university}</span>
-        {isVerified && <p className="bg-blue-500 text-white">✓</p>}
-      </div>
-
-      <div className="flex space-x-4 mb-6">
-        <div>
-          <span className="font-bold">{following}</span> Following
-        </div>
-        <div>
-          <span className="font-bold">{followers}</span> Followers
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex items-center space-x-2">
-          <FaGraduationCap className="text-gray-400" />
-          <span>{`${year}, ${major}`}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaEnvelope className="text-gray-400" />
-          <span>{email}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaPhone className="text-gray-400" />
-          <span>{phone}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaMapMarkerAlt className="text-gray-400" />
-          <span>{location}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaBirthdayCake className="text-gray-400" />
-          <span>{birthday}</span>
-        </div>
-      </div>
-      
-      */}
     </Card>
   )
 }

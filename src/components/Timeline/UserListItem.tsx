@@ -64,18 +64,6 @@ const UserListItem: React.FC<FollowingItemProps> = ({
         <LoginButtons onClick={handleFollowClick} variant="shade" size="extra_small">
           {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
         </LoginButtons>
-        {/*<Popover>
-          <PopoverTrigger>
-            <SlOptionsVertical className="text-primary" />
-          </PopoverTrigger>
-          <PopoverContent className="relative right-24 bottom-10 w-36 p-5 border-none shadow-lg bg-white shadow-gray-light z-50">
-            {isChat ? (
-              <p onClick={() => createUserChat({ userId: id })}>Start-chat</p>
-            ) : (
-              <p onClick={() => toggleFollow(id)}>{userFollowingIDs?.includes(id) ? 'Un-Follow' : 'Follow'}</p>
-            )}
-          </PopoverContent>
-        </Popover>*/}
       </div>
     </div>
   )

@@ -104,11 +104,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             SetcurrClickedID={SetcurrClickedID}
             paramGroupId={id}
           />
-          {/*{communityGroups?.groups > showGroupTill && (
-            <p onClick={() => setShowGroupTill(showGroupTill + 5)} className="text-neutral-500 text-sm underline text-center mt-2 cursor-pointer">
-              Load More
-            </p>
-          )}*/}
+
           <div className="flex justify-center items-center p-2">
             <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
               Create Group
@@ -126,15 +122,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   }
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
-
-  //  if (SubscribedData?.community.length === 0)
-  //    return (
-  //      <div className="px-4 w-full">
-  //        <LoginButtons variant="primary" className="w-full">
-  //          Add Your University
-  //        </LoginButtons>{' '}
-  //      </div>
-  //    )
 
   return (
     <>
