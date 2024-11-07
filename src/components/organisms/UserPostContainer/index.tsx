@@ -14,6 +14,7 @@ import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
 import { Skeleton } from '@/components/ui/Skeleton'
+import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 
 type props = {
   communityID?: string
@@ -25,6 +26,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
+  const [postAccessType, setPostAccessType] = useState('Public')
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
   const { userProfileData } = useUniStore()
@@ -84,6 +86,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
       const data: PostInputData = {
         content: inputValue,
         imageUrl: imagedata,
+        ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
       }
 
       //if type is community , add communityId field to data
@@ -100,6 +103,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
     } else {
       const data: PostInputData = {
         content: inputValue,
+        ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
       }
       if (type === PostInputType.Community) {
         const communityData: CommunityPostData = {
@@ -171,6 +175,17 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
           <label htmlFor="postPool">
             <VscSettings size={24} className="text-neutral-400" />
           </label>
+          <div className="w-28 max-sm:w-20">
+            <SelectDropdown
+              options={['Public', 'Private']}
+              value={postAccessType}
+              onChange={(e) => setPostAccessType(e)}
+              placeholder=""
+              icon={'single'}
+              // search={true}
+              err={false}
+            />
+          </div>
         </div>
         <div>
           <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg px-3 py-2 w-[69px]">
