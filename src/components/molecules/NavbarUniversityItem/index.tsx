@@ -1,38 +1,35 @@
 'use client'
 import GroupSearchBox from '@/components/atoms/GroupSearchBox'
-import GroupSelectors from '@/components/communityUniversity/GroupSelectors'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { useGetCommunityGroups } from '@/services/community-university'
-import { community, useGetUserSubscribedCommunityGroups } from '@/services/university-community'
+import { useGetSubscribedCommunties } from '@/services/university-community'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FiFilter } from 'react-icons/fi'
 import Tabs from '../Tabs'
 import AssignGroupModerators from '@/components/communityUniversity/AssignGroupModerators'
 import { useUniStore } from '@/store/store'
-import { IoMdSettings } from 'react-icons/io'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import avatar from '@assets/avatar.svg'
-import LoginButtons from '@/components/atoms/LoginButtons'
 import CommunityGroupAll from './Tabs/communityGroupAll'
+import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
+import { Community } from '@/types/Community'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
   const router = useRouter()
-  const { id }: any = useParams()
-
-  const [currSelectedGroup, setCurrSelectedGroup] = useState<community>()
+  const { id }: { id: string[] } = useParams()
+  const [selectCommunityId, selectedCommuntyGroupdId] = id || ['', '']
+  const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState(false)
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
+  const [community, setCommunity] = useState<Community>()
 
-  const { data: SubscribedData, isFetching, isLoading } = useGetUserSubscribedCommunityGroups()
-  const [community, setCommunity] = useState<community>()
+  const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
 
-  const { data: communityGroups, isLoading: isCommunityGroupsLoading } = useGetCommunityGroups(id || '', !!community?._id)
-  const allCommunities = [...(userData.userVerifiedCommunities || []), ...(userData.userUnVerifiedCommunities || [])]
+  const userAllCommunities = [...(userData.userVerifiedCommunities || []), ...(userData.userUnVerifiedCommunities || [])]
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
@@ -40,36 +37,50 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     setActiveMenu('')
   }
 
-  const matchedGroups = allCommunities.flatMap((community) =>
-    community.communityGroups.reduce((acc, group: any) => {
-      const matchingApiGroup = communityGroups?.groups.find((apiGroup: any) => apiGroup._id === group.communityGroupId)
-
-      if (matchingApiGroup) acc.push(matchingApiGroup)
-      return acc
-    }, [] as any[])
+  const subscribedCommunitiesAllGroups = useMemo(
+    () => subscribedCommunities?.find((community) => community._id === id?.[0])?.communityGroups,
+    [subscribedCommunities, id]
   )
-  const yourGroups = communityGroups?.groups?.filter((item: any) => item.adminUserId._id.toString() == userData.id).slice(0, showGroupTill)
+
+  const joinedSubscribedCommunitiesGroup = useMemo(() => {
+    const userSelectedCommunityGroup = userAllCommunities?.find((community) => community?.communityId === id?.[0])?.communityGroups
+    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === id?.[0])?.communityGroups
+
+    return userSelectedCommunityGroup?.filter(
+      (userCommunityGroup) =>
+        selectedCommunityGroup?.some((selectCommunityGroup) => selectCommunityGroup?._id === userCommunityGroup?.communityGroupId)
+    )
+  }, [subscribedCommunities, id, userData])
+
+  const subscribedCommunitiesMyGroup = useMemo(
+    () =>
+      subscribedCommunities
+        ?.find((community) => community._id === id?.[0])
+        ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData.id),
+    [subscribedCommunities, id, userData.id]
+  )
 
   useEffect(() => {
-    if (SubscribedData) {
-      setCommunity(SubscribedData?.community[0] as community)
+    if (subscribedCommunities) {
+      setCommunity(subscribedCommunities?.[0] as Community)
     }
-  }, [SubscribedData])
+  }, [subscribedCommunities])
 
   const tabData = [
     {
       label: 'All',
       content: (
         <CommunityGroupAll
-          communityGroups={communityGroups?.groups}
+          communityGroups={subscribedCommunitiesAllGroups}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
-          currSelectedGroup={currSelectedGroup as community}
+          currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
           setAssignUsers={setAssignUsers}
           SetcurrClickedID={SetcurrClickedID}
-          paramGroupId={id}
+          selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+          selectCommunityId={selectCommunityId}
         />
       ),
     },
@@ -77,15 +88,16 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       label: 'Joined',
       content: (
         <CommunityGroupAll
-          communityGroups={matchedGroups}
+          communityGroups={joinedSubscribedCommunitiesGroup}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
-          currSelectedGroup={currSelectedGroup as community}
+          currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
           setAssignUsers={setAssignUsers}
           SetcurrClickedID={SetcurrClickedID}
-          paramGroupId={id}
+          selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+          selectCommunityId={selectCommunityId}
         />
       ),
     },
@@ -94,15 +106,16 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       content: (
         <div>
           <CommunityGroupAll
-            communityGroups={yourGroups}
+            communityGroups={subscribedCommunitiesMyGroup}
             showGroupTill={showGroupTill}
             setShowGroupTill={setShowGroupTill}
-            currSelectedGroup={currSelectedGroup as community}
+            currSelectedGroup={currSelectedGroup as Community}
             setCurrSelectedGroup={setCurrSelectedGroup}
             userData={userData}
             setAssignUsers={setAssignUsers}
             SetcurrClickedID={SetcurrClickedID}
-            paramGroupId={id}
+            selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+            selectCommunityId={selectCommunityId}
           />
 
           <div className="flex justify-center items-center p-2">
@@ -117,56 +130,24 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     const indextoPush = Number(index)
-    setCommunity(SubscribedData?.community[indextoPush] as community)
-    router.push(`/community/${SubscribedData?.community[indextoPush]._id}`)
+    setCommunity(subscribedCommunities?.[indextoPush] as Community)
+    router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
   }
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
 
   return (
     <>
-      {SubscribedData?.community.length === 0 && (
-        <div className="px-4 w-full">
-          <LoginButtons variant="primary" className="w-full">
-            Add Your University
-          </LoginButtons>{' '}
-        </div>
-      )}
-      {SubscribedData?.community.map((community, index) => {
-        return (
-          <div key={index} className={`flex items-center justify-between hover:bg-secondary ${id && id[0] === community._id && 'bg-secondary'}`}>
-            <div
-              onClick={() => {
-                handleCommunityClick(index)
-              }}
-              className={` flex items-center gap-3 py-2 px-4 cursor-pointer`}
-            >
-              <Image
-                width={40}
-                height={40}
-                className="w-[40px] h-[40px] object-cover rounded-full"
-                src={community.communityLogoUrl.imageUrl || avatar}
-                alt={community.name}
-              />
+      <NavbarSubscribedUniversity
+        userData={userData}
+        communityId={id}
+        subscribedCommunities={subscribedCommunities as Community[]}
+        handleCommunityClick={handleCommunityClick}
+      />
 
-              <p className="text-xs">{community.name}</p>
-            </div>
-            {community?.adminId == userData.id && (
-              <button
-                onClick={() => {
-                  setAssignUsers(true), SetcurrClickedID({ id: community?._id, group: false })
-                }}
-                className="text-[#6647FF] font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full max-lg:text-sm max-md:mr-0 mr-4"
-              >
-                <IoMdSettings />
-              </button>
-            )}
-          </div>
-        )
-      })}
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <div className="flex items-center px-4 py-2">
+        <div className="flex items-center px-4 py-2 w-full">
           <div className="flex items-center justify-center bg-white rounded-full gap-3 ">
             <div
               style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
@@ -205,7 +186,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
         </div>
       </>
 
-      {SubscribedData?.community.length !== 0 ? (
+      {subscribedCommunities?.length !== 0 ? (
         <Tabs tabs={tabData} tabAlign="center" />
       ) : (
         <div className="px-4 w-full text-center font-poppins text-neutral-400">

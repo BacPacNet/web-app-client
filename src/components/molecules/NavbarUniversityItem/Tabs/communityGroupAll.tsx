@@ -1,13 +1,13 @@
 import GroupSelectors from '@/components/communityUniversity/GroupSelectors'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { community } from '@/services/university-community'
 import { userType } from '@/store/userSlice/userType'
+import { Community } from '@/types/Community'
 import React from 'react'
 
 type Props = {
   communityGroups: { groups: any[] }
   showGroupTill: number
-  currSelectedGroup: community
+  currSelectedGroup: Community
   userData: Partial<userType>
 }
 
@@ -19,13 +19,13 @@ function CommunityGroupAll({
   setAssignUsers,
   SetcurrClickedID,
   setCurrSelectedGroup,
-  id,
+  selectedCommuntyGroupdId,
   setShowGroupTill,
   isCommunityGroupsLoading,
+  selectCommunityId,
 }: any) {
   if (isCommunityGroupsLoading) return <UserListItemSkeleton className="px-4" />
-  console.log(communityGroups, 'communityGroups')
-  if (communityGroups?.length === 0 || !communityGroups) return <p className="text-center text-neutral-500"> No Groups Available</p>
+  if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> No Groups Available</p>
   return (
     <>
       {communityGroups
@@ -39,7 +39,8 @@ function CommunityGroupAll({
             userId={userData?.id}
             setAssignUsers={setAssignUsers}
             SetcurrClickedID={SetcurrClickedID}
-            paramGroupId={id}
+            selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+            selectCommunityId={selectCommunityId}
           />
         ))}
       {communityGroups?.length > showGroupTill && (

@@ -67,7 +67,7 @@ export default function LeftNavbar() {
           <SubText>{userProfileData.major}</SubText>
         </div>
       </div>
-      <div className="px-4 pt-9 ">
+      <div className="px-4 pt-9">
         <p className="text-2xs text-neutral-500 font-bold">EXPLORE</p>
         {menuItems.map((item, index) => (
           <div

@@ -44,7 +44,7 @@ export async function reactMessageEmoji(token: string, data: any) {
   return response
 }
 export async function userFollowingAndFollowers(name: string, token: string) {
-  const response: any = await client(`userprofile/following_and_followers?name=${name}`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/userprofile/following_and_followers?name=${name}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 

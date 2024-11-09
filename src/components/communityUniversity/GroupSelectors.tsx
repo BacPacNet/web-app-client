@@ -4,13 +4,22 @@ import { FaStar, FaUniversity } from 'react-icons/fa'
 import { IoMdSettings } from 'react-icons/io'
 import { PiStudentFill } from 'react-icons/pi'
 
-const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data, setAssignUsers, userId, paramGroupId, SetcurrClickedID }: any) => {
+const GroupSelectors = ({
+  setCurrSelectedGroup,
+  currSelectedGroup,
+  data,
+  setAssignUsers,
+  userId,
+  selectedCommuntyGroupdId,
+  SetcurrClickedID,
+  selectCommunityId,
+}: any) => {
   const router = useRouter()
   const handleGroupNavigate = () => {
     setCurrSelectedGroup(data)
-    router.push(`/community/${data?.communityId}/${data?._id}`)
+    router.push(`/community/${selectCommunityId}/${data?._id}`)
   }
-  const isSelected = paramGroupId && paramGroupId[1] == data?._id
+  const isSelected = selectedCommuntyGroupdId === data?._id
 
   return (
     <div
@@ -27,9 +36,11 @@ const GroupSelectors = ({ setCurrSelectedGroup, currSelectedGroup, data, setAssi
         ) : (
           <PiStudentFill className="w-10 h-10 p-2 rounded-full text-primary bg-white shadow-lg " />
         )}
-        <label className={`text-xs  text-neutral-700 ${isSelected ? 'font-semibold' : 'font-medium'} `}>{data?.title}</label>
+        <label className={`text-xs  text-neutral-700 ${isSelected ? 'font-semibold' : 'font-medium'} `}>
+          {data?.title || data?.communityGroupName}
+        </label>
       </div>
-      {data?.adminUserId._id == userId && (
+      {data?.adminUserId === userId && (
         <button
           onClick={() => {
             setAssignUsers(true), SetcurrClickedID({ id: data?._id, group: true })

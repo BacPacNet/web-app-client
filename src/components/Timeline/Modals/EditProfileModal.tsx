@@ -68,7 +68,7 @@ const EditProfileModal = () => {
     mutateEditProfile(dataToPush)
   }
   return (
-    <div className=" flex flex-col justify-center rounded-xl w-[85%] lg:w-[500px] font-poppins pb-4">
+    <div className=" flex flex-col justify-center rounded-xl lg:w-[500px] font-poppins w-full">
       <h1 className="text-md font-bold text-neutral-700">Edit Profile</h1>
       <p className="text-xs text-neutral-600">This will show up on your profile for others to see</p>
       <form className="flex flex-col font-medium text-sm gap-4">
