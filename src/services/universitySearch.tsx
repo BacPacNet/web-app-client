@@ -19,7 +19,7 @@ export async function getUniversitySearch(searchTerm: string): Promise<any[]> {
   if (!searchTerm) return []
 
   // Fetch university data based on the search term
-  const response = await client(`university/searched?searchTerm=${encodeURIComponent(searchTerm)}`)
+  const response = await client(`/university/searched?searchTerm=${encodeURIComponent(searchTerm)}`)
 
   // TypeScript assumes `response` is of type `University[]`
   return response
@@ -39,7 +39,7 @@ export async function getUniversityByName(universityName: string): Promise<any[]
   if (!universityName) return []
 
   // Fetch university data based on the search term
-  const response = await client(`university/${universityName}`)
+  const response = await client(`/university/${universityName}`)
 
   // TypeScript assumes `response` is of type `University[]`
   return response

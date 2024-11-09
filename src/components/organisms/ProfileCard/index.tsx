@@ -12,6 +12,8 @@ import useDeviceType from '@/hooks/useDeviceType'
 import { format } from 'date-fns'
 import { ModalContentType } from '@/types/global'
 import { Skeleton } from '@/components/ui/Skeleton'
+import { useUniStore } from '@/store/store'
+import { useToggleFollow } from '@/services/connection'
 
 interface UserProfileCardProps {
   name: string
@@ -34,6 +36,7 @@ interface UserProfileCardProps {
   setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   isSelfProfile?: boolean
+  userId?: string
 }
 
 export function UserProfileCard({
@@ -57,15 +60,19 @@ export function UserProfileCard({
   setModalContentType,
   setIsModalOpen,
   isSelfProfile,
+  userId,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
+  const { userProfileData } = useUniStore()
+  const { mutate: toggleFollow } = useToggleFollow('Following')
+
+  const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
 
   const handleOpenModal = (modalType: ModalContentType) => {
     setModalContentType(modalType)
     setIsModalOpen(true)
   }
 
-  console.log(university, 'university')
   return (
     <Card className="rounded-2xl px-8">
       <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start">
@@ -78,11 +85,15 @@ export function UserProfileCard({
               <p className="font-poppins text-neutral-700 text:xl lg:text-2xl font-bold">{name}</p>
               {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-4 text-xs">Premium</p>}
             </div>
-            {isSelfProfile && (
+            {isSelfProfile ? (
               <div className="flex gap-2 items-center text-xs lg:text-sm text-primary-500">
                 <button onClick={() => handleOpenModal('EditProfileModal')}>Edit Profile</button>
                 <HiPencilAlt size={16} />
               </div>
+            ) : (
+              <LoginButtons onClick={() => toggleFollow(userId as string)} variant="shade" size="extra_small">
+                {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+              </LoginButtons>
             )}
           </div>
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
@@ -93,11 +104,11 @@ export function UserProfileCard({
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>
             <div className="flex gap-4 text-neutral-700 font-semibold">
-              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+              <span onClick={() => isSelfProfile && handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
                 {following || '0'} Following
               </span>
-              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
-                {following || '0'} Followers
+              <span onClick={() => isSelfProfile && handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+                {followers || '0'} Followers
               </span>
             </div>
           </div>
