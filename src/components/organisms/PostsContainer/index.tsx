@@ -2,8 +2,7 @@
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import PostContainerPostTypeSelector from '@/components/molecules/PostContainerPostTypeSelector'
-import { getAllUserPosts, useGetTimelinePosts, useGetUserPosts } from '@/services/community-timeline'
+import { useGetTimelinePosts, useGetUserPosts } from '@/services/community-timeline'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
@@ -37,8 +36,9 @@ type Props = {
   communityGroupID?: string
   type: PostType
   userId?: string
+  containerRef?: React.RefObject<HTMLDivElement> | any
 }
-const PostContainer = ({ communityID = '', communityGroupID = '', type, userId = '' }: Props) => {
+const PostContainer = ({ communityID = '', communityGroupID = '', type, userId = '', containerRef }: Props) => {
   const { userData } = useUniStore()
   const {
     isLoading,
@@ -115,26 +115,55 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
 
   useEffect(() => {
     const handleScroll = () => {
-      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10
-      if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage && type == PostType.Community) {
-        communityPostNextpage()
-      }
-      if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
-        timelinePostsNextpage()
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+        const bottom = scrollTop + clientHeight >= scrollHeight - 10
+        if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
+          timelinePostsNextpage()
+        }
+        if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage && type == PostType.Community) {
+          communityPostNextpage()
+        }
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const container = containerRef.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
   }, [
-    communityPostHasNextPage,
-    communityPostIsFetchingNextPage,
-    communityPostNextpage,
     timelinePostHasNextPage,
     timelinePostIsFetchingNextPage,
     timelinePostsNextpage,
-    type,
+    communityPostHasNextPage,
+    communityPostIsFetchingNextPage,
+    communityPostNextpage,
   ])
+
+  //  useEffect(() => {
+  //    const handleScroll = () => {
+  //      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10
+  //      if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage && type == PostType.Community) {
+  //        communityPostNextpage()
+  //      }
+  //      if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
+  //        timelinePostsNextpage()
+  //      }
+  //    }
+
+  //    window.addEventListener('scroll', handleScroll)
+  //    return () => window.removeEventListener('scroll', handleScroll)
+  //  }, [
+  //    communityPostHasNextPage,
+  //    communityPostIsFetchingNextPage,
+  //    communityPostNextpage,
+  //    timelinePostHasNextPage,
+  //    timelinePostIsFetchingNextPage,
+  //    timelinePostsNextpage,
+  //    type,
+  //  ])
 
   const renderPostWithRespectToPathName = () => {
     switch (type) {

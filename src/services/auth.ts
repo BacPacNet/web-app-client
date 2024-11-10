@@ -23,7 +23,7 @@ interface data {
 }
 
 const login = async (data: LoginForm): Promise<UserResponseType> => {
-  const result = await client<UserResponseType, LoginForm>('auth/login', { data })
+  const result = await client<UserResponseType, LoginForm>('/auth/login', { data })
   return result
 }
 
@@ -33,12 +33,12 @@ const register = async (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>): Pr
 }
 
 async function register_v2(data: data) {
-  const response: { isRegistered: boolean } = await client(`auth/register`, { method: 'POST', data })
+  const response: { isRegistered: boolean } = await client(`/auth/register`, { method: 'POST', data })
   return response
 }
 
 async function userNameAndEmailAvailability(data: { email: string; userName: string }) {
-  const response: { isAvailable: boolean } = await client(`users/checkAvailability`, { method: 'POST', data })
+  const response: { isAvailable: boolean } = await client(`/users/checkAvailability`, { method: 'POST', data })
   return response
 }
 
@@ -47,7 +47,7 @@ async function loginEmailVerificationCodeGenerate(data: { email: string }) {
   return response
 }
 async function loginEmailVerification(data: data) {
-  const response: { isAvailable: boolean } = await client(`useremailverification`, { method: 'PUT', data })
+  const response: { isAvailable: boolean } = await client(`/useremailverification`, { method: 'PUT', data })
   return response
 }
 
@@ -56,7 +56,7 @@ async function universityEmailVerificationCodeGenerate(data: { email: string }) 
   return response
 }
 async function universityEmailVerification(data: data) {
-  const response: { isAvailable: boolean } = await client(`universityemailverification`, { method: 'PUT', data })
+  const response: { isAvailable: boolean } = await client(`/universityemailverification`, { method: 'PUT', data })
   return response
 }
 

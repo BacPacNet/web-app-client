@@ -1,9 +1,10 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
+import { Community } from '@/types/Community'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -120,17 +121,11 @@ export async function LikeUnilikeGroupPostCommnet(communityGroupPostCommentId: s
 }
 
 export function useGetCommunity(communityId: string) {
-  const state = useQuery({
+  return useQuery({
     queryKey: ['community', communityId],
     queryFn: () => getCommunity(communityId),
-  })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
+    enabled: !!communityId,
+  }) as UseQueryResult<Community>
 }
 
 // export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean) {
@@ -302,21 +297,6 @@ export const useUpdateCommunityGroup = () => {
 }
 
 export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isJoined: boolean, isCommunity: boolean, limit: number) {
-  // const [cookieValue] = useCookie('uni_user_token')
-
-  // const state = useQuery({
-  //   queryKey: ['communityGroupsPost', communityId],
-  //   queryFn: () => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, 1, 2),
-  //   enabled: isJoined && isCommunity && !!cookieValue,
-  // })
-
-  // let errorMessage = null
-  // if (axios.isAxiosError(state.error) && state.error.response) {
-  //   errorMessage = state.error.response.data
-  // }
-
-  // return { ...state, error: errorMessage }
-
   {
     const [cookieValue] = useCookie('uni_user_token')
 

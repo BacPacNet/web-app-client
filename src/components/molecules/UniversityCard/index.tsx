@@ -7,6 +7,7 @@ import { FaUniversity } from 'react-icons/fa'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUniStore } from '@/store/store'
 import {
+  useGetCommunity,
   useGetCommunityGroups,
   useJoinCommunity,
   useJoinCommunityGroup,
@@ -17,34 +18,39 @@ import {
 import { IoMdSettings } from 'react-icons/io'
 import { replaceImage } from '@/services/uploadImage'
 import { MdAddAPhoto } from 'react-icons/md'
+import LoginButtons from '@/components/atoms/LoginButtons'
+import { Skeleton } from '@/components/ui/Skeleton'
 
 interface Props {
-  universityLogo: string
-  universityName: string
-  isAiPowered: boolean
-  joinedSince: string
-  description: string
-  memberCount: number
-  currSelectedGroup?: any
+  //  universityLogo: string
+  //  universityName: string
+  //  isAiPowered: boolean
+  //  joinedSince: string
+  //  description: string
+  //  memberCount: number
+  //  currSelectedGroup?: any
   communityID: string
   communityGroupID?: string
 }
 
 export default function UniversityCard({
-  universityLogo,
-  universityName = 'Lorem University',
-  isAiPowered = true,
-  joinedSince = '7/23/2024',
-  description = 'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.',
-  memberCount = 242,
-  currSelectedGroup,
+  //  universityLogo,
+  //  universityName = 'Lorem University',
+  //  isAiPowered = true,
+  //  joinedSince = '7/23/2024',
+  //  description = 'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.',
+  //  memberCount = 242,
+  //  currSelectedGroup,
   communityID,
   communityGroupID,
 }: Props) {
-  const queryClient = useQueryClient()
-  const Communitydata: any = queryClient.getQueryData(['UserSubscribedCommunityGroups'])
-  const CommunityGroupdata: any = queryClient.getQueryData(['communityGroups', communityID])
-  const { data: communityGroups } = useGetCommunityGroups(communityID, true)
+  //  const queryClient = useQueryClient()
+  //  const Communitydata: any = queryClient.getQueryData(['UserSubscribedCommunityGroups'])
+  //  const CommunityGroupdata: any = queryClient.getQueryData(['communityGroups', communityID])
+  //  const { data: communityGroups } = useGetCommunityGroups(communityID, true)
+
+  const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
+
   const [isJoined, setIsJoined] = useState(false)
   const [coverImage, setCoverImage] = useState('')
   const [logoImage, setLogoImage] = useState('')
@@ -54,8 +60,8 @@ export default function UniversityCard({
   const { mutate: JoinCommunityGroup } = useJoinCommunityGroup()
   const { mutate: updateCommunity } = useUpdateCommunity()
   const { mutate: UpdateCommunityGroup } = useUpdateCommunityGroup()
-  const selectedCommunityData = Communitydata?.community?.find((item: any) => item?._id == communityID)
-  const selectedCommunityGroupData = communityGroupID && CommunityGroupdata?.groups?.find((item: any) => item?._id == communityGroupID)
+  //  const selectedCommunityData = Communitydata?.community?.find((item: any) => item?._id == communityID)
+  //  const selectedCommunityGroupData = communityGroupID && CommunityGroupdata?.groups?.find((item: any) => item?._id == communityGroupID)
 
   const { userData } = useUniStore()
 
@@ -99,29 +105,29 @@ export default function UniversityCard({
     userVerifiedCommunityGroupIds,
   ])
 
-  useEffect(() => {
-    if (communityGroupID) {
-      setDataToDisplay({
-        title: selectedCommunityGroupData?.title,
-        desc: selectedCommunityGroupData?.description,
-        membersCount: selectedCommunityGroupData?.memberCount,
-        coverImage: selectedCommunityGroupData?.communityGroupLogoCoverUrl?.imageUrl,
-        logoImage: selectedCommunityGroupData?.communityGroupLogoUrl?.imageUrl,
-        adminId: selectedCommunityGroupData?.adminUserId?._id,
-        id: selectedCommunityGroupData?._id,
-      })
-    } else {
-      setDataToDisplay({
-        title: selectedCommunityData?.name,
-        desc: 'nothing',
-        membersCount: selectedCommunityData?.numberOfUser,
-        coverImage: selectedCommunityData?.communityCoverUrl?.imageUrl,
-        logoImage: selectedCommunityData?.communityLogoUrl?.imageUrl,
-        adminId: selectedCommunityData?.adminId,
-        id: selectedCommunityData?._id,
-      })
-    }
-  }, [communityGroupID, selectedCommunityData, selectedCommunityGroupData])
+  //  useEffect(() => {
+  //    if (communityGroupID) {
+  //      setDataToDisplay({
+  //        title: selectedCommunityGroupData?.title,
+  //        desc: selectedCommunityGroupData?.description,
+  //        membersCount: selectedCommunityGroupData?.memberCount,
+  //        coverImage: selectedCommunityGroupData?.communityGroupLogoCoverUrl?.imageUrl,
+  //        logoImage: selectedCommunityGroupData?.communityGroupLogoUrl?.imageUrl,
+  //        adminId: selectedCommunityGroupData?.adminUserId?._id,
+  //        id: selectedCommunityGroupData?._id,
+  //      })
+  //    } else {
+  //      setDataToDisplay({
+  //        title: selectedCommunityData?.name,
+  //        desc: 'nothing',
+  //        membersCount: selectedCommunityData?.numberOfUser,
+  //        coverImage: selectedCommunityData?.communityCoverUrl?.imageUrl,
+  //        logoImage: selectedCommunityData?.communityLogoUrl?.imageUrl,
+  //        adminId: selectedCommunityData?.adminId,
+  //        id: selectedCommunityData?._id,
+  //      })
+  //    }
+  //  }, [communityGroupID, selectedCommunityData, selectedCommunityGroupData])
 
   const handleToggleJoinCommunityOrGroup = (id: string, join: boolean) => {
     if (communityGroupID) {
@@ -137,11 +143,11 @@ export default function UniversityCard({
     const files = e.target.files
 
     if (files && files[0]) {
-      const imagedata: any = await replaceImage(files[0], selectedCommunityData.communityCoverUrl?.publicId)
+      const imagedata: any = await replaceImage(files[0], communityData?.communityCoverUrl?.publicId)
 
       const dataToPush = { communityCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
 
-      updateCommunity({ id: selectedCommunityData?._id, data: dataToPush })
+      updateCommunity({ id: communityData?._id, data: dataToPush })
     } else {
       console.error('No file selected.')
     }
@@ -151,49 +157,51 @@ export default function UniversityCard({
     const files = e.target.files
 
     if (files && files[0]) {
-      const imagedata: any = await replaceImage(files[0], selectedCommunityData?.communityLogoUrl?.publicId)
+      const imagedata: any = await replaceImage(files[0], communityData?.communityLogoUrl?.publicId)
 
       const dataToPush = { communityLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
 
-      updateCommunity({ id: selectedCommunityData?._id, data: dataToPush })
+      updateCommunity({ id: communityData?._id, data: dataToPush })
     } else {
       console.error('No file selected.')
     }
   }
 
   //group image
-  const handleGroupCoverImageUpload = async (e: any) => {
-    const files = e.target.files
+  //  const handleGroupCoverImageUpload = async (e: any) => {
+  //    const files = e.target.files
 
-    if (files && files[0]) {
-      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoCoverUrl?.publicId)
+  //    if (files && files[0]) {
+  //      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoCoverUrl?.publicId)
 
-      const dataToPush = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+  //      const dataToPush = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
 
-      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
-    } else {
-      console.error('No file selected.')
-    }
-  }
+  //      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
+  //    } else {
+  //      console.error('No file selected.')
+  //    }
+  //  }
 
-  const handleGroupLogoImageUpload = async (e: any) => {
-    const files = e.target.files
+  //  const handleGroupLogoImageUpload = async (e: any) => {
+  //    const files = e.target.files
 
-    if (files && files[0]) {
-      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoUrl?.publicId)
+  //    if (files && files[0]) {
+  //      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoUrl?.publicId)
 
-      const dataToPush = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
-    } else {
-      console.error('No file selected.')
-    }
-  }
+  //      const dataToPush = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+  //      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
+  //    } else {
+  //      console.error('No file selected.')
+  //    }
+  //  }
+
+  if (isCommunityLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
 
   return (
     <div className="rounded-2xl bg-white shadow-card">
       <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
         <Image
-          src={dataToDisplay.coverImage || universityPlaceholder}
+          src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder}
           layout="fill"
           objectFit="cover"
           objectPosition="center"
@@ -217,7 +225,12 @@ export default function UniversityCard({
               dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
             }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
           >
-            <input style={{ display: 'none' }} type="file" id="CommunityGroupCoverImagefile" onChange={(e) => handleGroupCoverImageUpload(e)} />
+            <input
+              style={{ display: 'none' }}
+              type="file"
+              id="CommunityGroupCoverImagefile"
+              // onChange={(e) => handleGroupCoverImageUpload(e)}
+            />
             <label htmlFor="CommunityGroupCoverImagefile">
               <MdAddAPhoto />
             </label>
@@ -248,28 +261,29 @@ export default function UniversityCard({
                     dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
                   }  w-8 h-8 rounded-full bg-white shadow-2xl z-[2] top-1 right-1 flex items-center justify-center `}
                 >
-                  <input style={{ display: 'none' }} type="file" id="communityGrouplogoImagefile" onChange={(e) => handleGroupLogoImageUpload(e)} />
+                  <input
+                    style={{ display: 'none' }}
+                    type="file"
+                    id="communityGrouplogoImagefile"
+                    //  onChange={(e) => handleGroupLogoImageUpload(e)}
+                  />
                   <label htmlFor="communityGrouplogoImagefile">
                     <MdAddAPhoto />
                   </label>
                 </div>
               )}
 
-              {dataToDisplay?.logoImage ? (
-                <Image
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="center"
-                  alt="logo"
-                  src={dataToDisplay?.logoImage}
-                  className="object-cover object-top"
-                />
-              ) : (
-                <FaUniversity className="text-warning-500 text-[20px]" />
-              )}
+              <Image
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                alt="logo"
+                src={communityData?.communityLogoUrl?.imageUrl || universityPlaceholder}
+                className="object-cover object-top"
+              />
             </div>
-            <p className="text-sm font-bold">{dataToDisplay?.title}</p>
-            {isAiPowered && <p className="ai-power text-xs font-extrabold">AI POWERED </p>}
+            <p className="text-sm font-bold">{communityData?.name}</p>
+            <p className="ai-power text-xs font-extrabold">AI POWERED </p>
           </div>
           <div
             className={`${
@@ -279,33 +293,35 @@ export default function UniversityCard({
             {/* <p className="text-sm text-primary-500 text-center">
               since <span>{joinedSince}</span>{' '}
             </p> */}
+
             {/* Buttons  */}
-            {!isJoined && dataToDisplay?.adminId != userData.id ? (
-              <button
-                onClick={() => handleToggleJoinCommunityOrGroup(dataToDisplay?.id, true)}
-                className="text-white  font-medium bg-primary-500 px-3 py-1 max-md:py-3 rounded-lg   max-lg:text-sm "
+            {!isJoined && communityData?.adminId != userData.id ? (
+              <LoginButtons
+                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true)}
+                size="extra_small"
+                variant="primary"
               >
                 Join {communityGroupID ? 'Group' : 'Community '}
-              </button>
-            ) : dataToDisplay?.adminId == userData.id ? (
-              <button className="text-primary-500  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full   max-lg:text-sm max-md:mr-0">
+              </LoginButtons>
+            ) : communityData?.adminId == userData.id ? (
+              <button className="text-primary-500 font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full max-lg:text-sm max-md:mr-0">
                 <IoMdSettings />
               </button>
             ) : (
-              <button
-                onClick={() => handleToggleJoinCommunityOrGroup(dataToDisplay?.id, false)}
-                className="text-neutral-700  font-medium drop-shadow-sm border border-neutral-200 px-3 py-1 max-md:py-3 rounded-lg   max-lg:text-sm max-md:mr-0"
+              <LoginButtons
+                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, false)}
+                size="extra_small"
+                variant="shade"
               >
-                leave {communityGroupID ? 'Group' : 'Community '}
-              </button>
+                Leave {communityGroupID ? 'Group' : 'Community '}
+              </LoginButtons>
             )}
-            {/* Buttons end  */}
           </div>
         </div>
         <div>
-          <p className="text-2xs text-neutral-500 py-4">{dataToDisplay.desc}</p>
+          <p className="text-2xs text-neutral-500 py-4">{communityData?.about}</p>
           <p className="text-2xs text-neutral-500">
-            <span>{dataToDisplay?.membersCount}</span> members
+            <span>{communityData?.numberOfUser}</span> members
           </p>
         </div>
       </div>

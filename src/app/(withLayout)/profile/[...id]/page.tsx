@@ -11,13 +11,14 @@ import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
 import { PostType } from '@/types/constants'
 import { ModalContentType } from '@/types/global'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
   const isSelfProfile = useCheckSelfProfile(userId)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
   const modalContent = (modalContentType: string) => {
@@ -33,7 +34,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   const { dob, profile, firstName, lastName, email } = userProfileData || {}
   const { bio, university_name, followers, following, study_year, major, degree, phone_number, country } = profile || {}
   return (
-    <div className="h-with-navbar py-4">
+    <div className="h-with-navbar py-4 overflow-y-scroll">
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal>
@@ -46,8 +47,8 @@ export default function Profile({ params }: { params: { id: string } }) {
           description={bio || ''}
           university={university_name || 'Lorem University'}
           isVerified={true}
-          following={followers?.length || 0}
-          followers={following?.length || 0}
+          following={following?.length || 0}
+          followers={followers?.length || 0}
           year={study_year || ''}
           degree={degree || ''}
           major={major || ''}
@@ -61,9 +62,10 @@ export default function Profile({ params }: { params: { id: string } }) {
           setModalContentType={setModalContentType}
           setIsModalOpen={setIsModalOpen}
           isSelfProfile={isSelfProfile}
+          userId={userId}
         />
       )}
-      <PostContainer userId={userId} type={PostType.Profile} />
+      <PostContainer userId={userId} type={PostType.Profile} containerRef={containerRef} />
     </div>
   )
 }
