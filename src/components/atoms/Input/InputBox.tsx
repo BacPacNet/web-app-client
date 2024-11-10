@@ -5,8 +5,10 @@ type Props = {
   className?: string
   type: string
   err?: boolean
+  value?: string
+  disabled?: boolean
 }
-const InputBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className, type, err, ...rest }, ref) => {
+const InputBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className, type, err, value, disabled, ...rest }, ref) => {
   return (
     <input
       className={`${className} ${
@@ -15,6 +17,8 @@ const InputBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className, 
       type={type}
       placeholder={placeholder}
       ref={ref}
+      value={value}
+      disabled={disabled}
       {...rest}
     />
   )

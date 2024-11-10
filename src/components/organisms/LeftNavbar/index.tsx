@@ -40,7 +40,7 @@ export default function LeftNavbar() {
   }
 
   const renderProfile = () => {
-    if (Object.keys(userProfileData).length === 0) {
+    if (Object?.keys(userProfileData)?.length === 0) {
       return <UserListItemSkeleton />
     }
     return (

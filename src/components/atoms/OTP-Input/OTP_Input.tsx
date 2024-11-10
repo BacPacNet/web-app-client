@@ -11,7 +11,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length, value, onChange }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(length).fill(null))
 
   useEffect(() => {
-    const formattedValue = value.padEnd(length, ' ').slice(0, length)
+    const formattedValue = value?.padEnd(length, ' ').slice(0, length)
     setOtp(Array.from(formattedValue))
   }, [value, length])
 

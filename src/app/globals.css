@@ -50,7 +50,7 @@ body {
   }
 }
 
-@layer utilities {
+/* @layer utilities {
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
@@ -69,7 +69,7 @@ body {
     border-radius: 20px;
     border: transparent;
   }
-}
+} */
 
 .primary-btn {
   background-color: #6647ff;
@@ -83,4 +83,48 @@ body {
 }
 .primary-btn:active {
   background-color: #553adc;
+}
+
+/* //scrollbar  */
+/* .testScrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #fcfcfc;
+  overflow: auto;
+  border-radius: 100px;
+}
+
+.testScrollbar::-webkit-scrollbar-button {
+  display: none;
+}
+
+.testScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ff0101 !important;
+  transition: all 0.5s ease;
+} */
+
+@layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #fcfcfc;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #fcfcfc;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d30c0c;
+    border-radius: 10px;
+    border: 3px solid #fcfcfc;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none !important;
+  }
 }
