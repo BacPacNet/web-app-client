@@ -14,39 +14,20 @@ import {
   useHandleUserEmailAndUserNameAvailability,
 } from '@/services/auth'
 import { useRouter } from 'next/navigation'
+import ProfileStudentForm from '../forms/ProfileStudentForm'
+import ProfileFacultyForm from '../forms/ProfileFacultyForm'
+import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
 
-interface data {
-  email: string
-  userName: string
-  password: string
-  confirmpassword: string
-  birthDate: string
-  gender: string
-  country: string
-  firstName: string
-  lastName: string
-  verificationEmail: string
-  verificationOtp: string
-  universityEmail: string
-  UniversityOtp: string
-  UniversityOtpOK: string
-  referralCode: string
-}
-
-interface props {
+interface Props {
   step: number
   setStep: (value: number) => void
   subStep: number
   setSubStep: (value: number) => void
+  setUserType: (value: string) => void
 }
 
-enum userCheckError {
-  emailNotAvailable = 'Email is already taken',
-  userNameNotAvailable = 'userName Already taken',
-}
-
-const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
-  const [registerData, setRegisterData] = useState<data | any>(null)
+const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Props) => {
+  const [registerData, setRegisterData] = useState<FormDataType | any>(null)
   const { mutateAsync: handleUserCheck } = useHandleUserEmailAndUserNameAvailability()
   const { mutateAsync: handleUserLoginEmailVerification, isSuccess: userLoginEmailVerificationSuccess } = useHandleLoginEmailVerification()
   const { mutateAsync: handleUserUniversityEmailVerification, isSuccess: userUniversityEmailVerificationSuccess } =
@@ -70,7 +51,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
     }
   }, [])
 
-  const methods = useForm({
+  const methods = useForm<FormDataType>({
     defaultValues: {
       email: '',
       userName: '',
@@ -78,18 +59,25 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
       confirmpassword: '',
       birthDate: '',
       gender: '',
+      userType: '',
       country: '',
       firstName: '',
       lastName: '',
+      year: '',
+      degree: '',
+      major: '',
       verificationEmail: '',
       verificationOtp: '',
-      universityEmail: '',
+      universityName: '',
+      department: '',
+      occupation: '',
+      universityId: '',
       UniversityOtp: '',
       UniversityOtpOK: '',
       referralCode: '',
     },
   })
-
+  const currUserType = methods.watch('userType')
   useEffect(() => {
     if (registerData) {
       methods.reset({
@@ -99,19 +87,31 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
         confirmpassword: registerData?.confirmpassword || '',
         birthDate: registerData?.birthDate || '',
         gender: registerData?.gender || '',
+
+        userType: registerData?.userType || '',
         country: registerData?.country || '',
         firstName: registerData?.firstName || '',
         lastName: registerData?.lastName || '',
+        year: registerData?.year || '',
+        degree: registerData?.degree || '',
+        major: registerData?.major || '',
+        occupation: registerData?.occupation || '',
+        department: registerData?.department || '',
         verificationEmail: registerData?.verificationEmail || '',
+        universityId: registerData?.universityId || '',
         verificationOtp: registerData?.verificationOtp || '000000',
-        universityEmail: registerData?.universityEmail || '',
+        universityName: registerData?.universityName || '',
         UniversityOtp: registerData?.UniversityOtp || '000000',
         referralCode: registerData?.referralCode || '',
       })
     }
   }, [registerData, methods])
 
-  const userCheck = async (data: data) => {
+  useEffect(() => {
+    setUserType(currUserType)
+  }, [currUserType])
+
+  const userCheck = async (data: FormDataType) => {
     try {
       const isAvailable = await handleUserCheck(data)
       return isAvailable
@@ -124,7 +124,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
     }
   }
 
-  const userLoginEmailVerification = async (data: data) => {
+  const userLoginEmailVerification = async (data: FormDataType) => {
     try {
       const isAvailable = await handleUserLoginEmailVerification(data)
       return isAvailable
@@ -133,7 +133,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
     }
   }
 
-  const userUniversityEmailVerification = async (data: data) => {
+  const userUniversityEmailVerification = async (data: FormDataType) => {
     try {
       const isAvailable = await handleUserUniversityEmailVerification(data)
 
@@ -143,7 +143,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
     }
   }
 
-  const onSubmit = async (data: data) => {
+  const onSubmit = async (data: FormDataType) => {
     let currStep = step
     let currSubStep = subStep
 
@@ -201,8 +201,21 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
   }
 
   const handleNext = () => {
-    if (step === 2 && subStep === 0) {
-      setSubStep(1)
+    if (step === 1 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
+      const newStep = step + 1
+      setStep(newStep)
+      return setSubStep(0)
+    }
+    if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      return setSubStep(1)
+    }
+    if (step === 1 && subStep === 1) {
+      const newStep = step + 1
+      setStep(newStep)
+      return setSubStep(0)
+    }
+    if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      return setSubStep(1)
     } else {
       const newStep = step + 1
       setStep(newStep)
@@ -210,19 +223,15 @@ const FormContainer = ({ step, setStep, setSubStep, subStep }: props) => {
     }
   }
 
-  const handlePrev = () => {
-    if (step === 3 && subStep === 1) {
-      setSubStep(0)
-    } else {
-      setStep(step - 1)
-      setSubStep(0)
-    }
-  }
   const renderStep = () => {
     if (step === 0 && subStep === 0) {
       return <AccountCreationForm />
     } else if (step === 1 && subStep === 0) {
       return <ProfileSetupForm />
+    } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Student) {
+      return <ProfileStudentForm />
+    } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Faculty) {
+      return <ProfileFacultyForm />
     } else if (step === 2 && subStep === 0) {
       return <VerificationForm isVerificationSuccess={userLoginEmailVerificationSuccess} />
     } else if (step === 2 && subStep === 1) {

@@ -26,6 +26,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
           item.isRequestAccepted ||
           item.groupAdmin.toString() === userData.id
       )
+
       if (isChatLoading) {
         return <Loading />
       }

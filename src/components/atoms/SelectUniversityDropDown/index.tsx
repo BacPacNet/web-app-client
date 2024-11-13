@@ -2,9 +2,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
+import { useUniversitySearch } from '@/services/universitySearch'
+import ImagePlaceholder from '@assets/unibuzz-orange.png'
 
 interface SelectDropdownProps {
-  options: string[]
   onChange: (value: string) => void
   value: string
   placeholder?: string
@@ -12,20 +13,22 @@ interface SelectDropdownProps {
   search?: boolean
   err: boolean
 }
-const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
+
+const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [filteredOptions, setFilteredOptions] = useState(options)
+  //   const [filteredOptions, setFilteredOptions] = useState(options)
   const searchRef = useRef<HTMLInputElement>(null)
-
-  const handleSelect = (optionValue: string) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const { data: universities, isLoading, error } = useUniversitySearch(searchTerm || ' ')
+  const handleSelect = (optionValue: any) => {
     onChange(optionValue)
     setShow(false)
   }
 
   const handleSearch = () => {
     const searchValue = searchRef.current?.value.toLowerCase() || ''
-    setFilteredOptions(searchValue === '' ? options : options.filter((option: string) => option.toLowerCase().includes(searchValue)))
+    // setFilteredOptions(searchValue === '' ? options : options.filter((option: string) => option.toLowerCase().includes(searchValue)))
   }
 
   useEffect(() => {
@@ -82,19 +85,24 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
                 className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm border-neutral-200 text-neutral-700 h-10 outline-none"
                 ref={searchRef}
                 placeholder="Search..."
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             )}
-            {filteredOptions?.length > 0 ? (
-              filteredOptions?.map((item: string, key: number) => (
-                <p
-                  className={`${key === 0 ? '' : 'border-t'} border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200`}
+            {universities?.result?.length > 0 ? (
+              universities?.result?.map((item: any, key: number) => (
+                <div
+                  className={`${
+                    key === 0 ? '' : 'border-t'
+                  } border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200 flex gap-2 items-center`}
                   onClick={() => handleSelect(item)}
                   key={key}
                 >
-                  {item}
-                </p>
+                  <img className="rounded-full" width={40} height={40} alt="logo" src={item?.logos?.[0] || (ImagePlaceholder as unknown as string)} />
+                  <p> {item?.name}</p>
+                </div>
               ))
+            ) : isLoading ? (
+              <p className="text-neutral-500 p-2">Loading</p>
             ) : (
               <p className="text-neutral-500 p-2">No results found</p>
             )}
@@ -105,4 +113,4 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
   )
 }
 
-export default SelectDropdown
+export default SelectUniversityDropdown

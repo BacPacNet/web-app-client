@@ -1,18 +1,18 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
+
 import LoginButtons from '@/components/atoms/LoginButtons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import { CiLock } from 'react-icons/ci'
+
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import { useChangeUserPassword } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
+import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -60,6 +60,30 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
           <SubText className="text-center">Do you have a email provided by your university?</SubText>
         </div>
         <form className="w-full flex flex-col items-center gap-8" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col  w-11/12 gap-4">
+            <label htmlFor="Email Address" className="font-medium text-neutral-900">
+              University Name
+            </label>
+            <Controller
+              name="universityName"
+              control={control}
+              rules={{ required: 'University Name is required!' }}
+              render={({ field }) => (
+                <SelectUniversityDropdown
+                  value={field.value}
+                  onChange={(selectedUniversity: any) => {
+                    field.onChange(selectedUniversity.name)
+                  }}
+                  placeholder="Select University Name"
+                  icon={'single'}
+                  search={true}
+                  err={!!errors.universityName}
+                />
+              )}
+            />
+            {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
+          </div>
+
           <div className="flex flex-col  w-11/12 gap-4">
             <div className="relative w-full flex flex-col gap-2">
               <label htmlFor="Email Address" className="font-medium text-neutral-900">

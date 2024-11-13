@@ -3,16 +3,10 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import LoginButtons from '@/components/atoms/LoginButtons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
+import { badgeData } from '@/types/RegisterForm'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 
-const badgeData = [
-  { name: 'Custom Emojis', bg: '#FDF4FF', color: '#C026D3' },
-  { name: 'Unlimited AI Prompts', bg: '#ECFEFF', color: '#0891B2' },
-  { name: 'Profile Badge', bg: '#F0FDF4', color: '#16A34A' },
-  { name: 'Join Up 100 Groups', bg: '#F3F2FF', color: '#6744FF' },
-  { name: '500 MB Upload', bg: '#FFFBEB', color: '#D97706' },
-]
 const ClaimBenefitForm = () => {
   const {
     register,
@@ -25,7 +19,7 @@ const ClaimBenefitForm = () => {
         <SupportingText>Enter your referral code for these perks:</SupportingText>
       </div>
       <div className="flex gap-4  flex-wrap w-10/12 xl:w-10/12 ">
-        {badgeData.map((item) => (
+        {badgeData?.map((item) => (
           <p key={item.name} className="rounded-[32px] px-3 py-2 w-max text-xs" style={{ backgroundColor: item.bg, color: item.color }}>
             {item.name}
           </p>

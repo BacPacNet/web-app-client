@@ -104,7 +104,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                       <FaRegUser />
                       <p>Profile</p>
                     </li>
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <li
+                      onClick={() => router.push('/setting')}
+                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                    >
                       <MdOutlineSettings />
                       <p>Settings</p>
                     </li>

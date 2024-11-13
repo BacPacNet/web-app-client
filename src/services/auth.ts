@@ -43,7 +43,7 @@ async function userNameAndEmailAvailability(data: { email: string; userName: str
 }
 
 async function loginEmailVerificationCodeGenerate(data: { email: string }) {
-  const response: any = await client(`useremailverification`, { method: 'POST', data })
+  const response: any = await client(`/useremailverification`, { method: 'POST', data })
   return response
 }
 async function loginEmailVerification(data: data) {
@@ -52,7 +52,7 @@ async function loginEmailVerification(data: data) {
 }
 
 async function universityEmailVerificationCodeGenerate(data: { email: string }) {
-  const response: any = await client(`universityemailverification`, { method: 'POST', data })
+  const response: any = await client(`/universityemailverification`, { method: 'POST', data })
   return response
 }
 async function universityEmailVerification(data: data) {

@@ -23,9 +23,8 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
 
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
-
+  const email = getValues('email')
   const handleLoginEmailSendCode = () => {
-    const email = getValues('email')
     const data = { email }
 
     generateLoginEmailOTP(data)
@@ -63,6 +62,8 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
           <InputBox
             placeholder="Email Address"
             type="email"
+            value={email}
+            disabled
             {...register('email', {
               required: true,
               pattern: {
@@ -102,12 +103,13 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
           {VerificationFormErrors.verificationOtp && (
             <InputWarningText>{VerificationFormErrors.verificationOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>
           )}
-          <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
-          {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}
+          {/* <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
+          {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>} */}
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Next Step</LoginButtons>
+        <LoginButtons variant="primary">Confirm</LoginButtons>
+        {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}
       </div>
     </div>
   )
