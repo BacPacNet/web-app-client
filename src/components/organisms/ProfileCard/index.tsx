@@ -1,12 +1,12 @@
 import Card from '@/components/atoms/Card'
 import Button from '@/components/atoms/Buttons'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 //import { Badge } from "@/components/ui/badge";
 //import { Button } from "@/components/ui/button";
 import { FaGraduationCap, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa'
 import { ImEarth } from 'react-icons/im'
-import { HiPencilAlt } from 'react-icons/hi'
+import { HiDotsHorizontal, HiPencilAlt } from 'react-icons/hi'
 import badge from '@assets/badge.svg'
 import useDeviceType from '@/hooks/useDeviceType'
 import { format } from 'date-fns'
@@ -14,6 +14,11 @@ import { ModalContentType } from '@/types/global'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useUniStore } from '@/store/store'
 import { useToggleFollow } from '@/services/connection'
+import { IoIosShareAlt } from 'react-icons/io'
+import { MdBlockFlipped } from 'react-icons/md'
+import { IoFlagOutline } from 'react-icons/io5'
+import { RiMessage2Fill } from 'react-icons/ri'
+import Buttons from '@/components/atoms/Buttons'
 
 interface UserProfileCardProps {
   name: string
@@ -91,9 +96,37 @@ export function UserProfileCard({
                 <HiPencilAlt size={16} />
               </div>
             ) : (
-              <Button onClick={() => toggleFollow(userId as string)} variant="shade" size="extra_small">
-                {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
-              </Button>
+              <div className="flex items-center gap-4">
+                <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
+                  <Popover>
+                    <PopoverTrigger>
+                      <HiDotsHorizontal className="text-primary" />
+                    </PopoverTrigger>
+                    <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
+                      <ul>
+                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                          <IoIosShareAlt />
+                          <p>Share Profile</p>
+                        </li>
+                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                          <MdBlockFlipped />
+                          <p>Block User</p>
+                        </li>
+                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                          <IoFlagOutline />
+                          <p>Report User</p>
+                        </li>
+                      </ul>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <Buttons className="flex items-center gap-2" variant="shade" size="extra_small">
+                  Message <RiMessage2Fill />
+                </Buttons>
+                <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
+                  {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+                </Buttons>
+              </div>
             )}
           </div>
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>

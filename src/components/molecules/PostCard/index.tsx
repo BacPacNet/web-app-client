@@ -170,7 +170,7 @@ const PostCard = ({
         </div>
 
         <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
-          <PostCartOption isSelfPost={adminId === userData.id} postID={postID} isType={type} />{' '}
+          <PostCartOption isSelfPost={adminId === userData.id} postID={postID} isType={type} />
         </div>
       </div>
 

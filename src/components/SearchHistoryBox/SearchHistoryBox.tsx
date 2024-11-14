@@ -9,7 +9,6 @@ interface SearchHistoryProps {
   info: UniversityInfo
 }
 const SearchHistoryBox: React.FC<SearchHistoryProps> = (props) => {
-  console.log(props)
   return (
     <div className="history-box">
       <Link href={{ pathname: '/college', query: { id: props.info._id } }} className="history-link flex items-center">

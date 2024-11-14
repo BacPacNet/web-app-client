@@ -8,9 +8,8 @@ import { Community } from '@/types/Community'
 import { PostInputType, PostType } from '@/types/constants'
 import { useMemo, useRef } from 'react'
 
-export default function Page({ params }: { params: { id: string } }) {
-  const communityID = params.id[0]
-  const communityGroupID = params.id[1]
+export default function Page({ params }: { params: { id: string; groupId: string } }) {
+  const { id: communityID, groupId: communityGroupID } = params
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (

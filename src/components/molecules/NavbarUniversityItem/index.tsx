@@ -14,12 +14,13 @@ import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
+import { FaAngleDown } from 'react-icons/fa'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
   const router = useRouter()
-  const { id }: { id: string[] } = useParams()
-  const [selectCommunityId, selectedCommuntyGroupdId] = id || ['', '']
+  const { id, groupId: communityGroupId }: { id: string; groupId: string } = useParams()
+  const [selectCommunityId, selectedCommuntyGroupdId] = [id, communityGroupId]
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState(false)
@@ -37,14 +38,17 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     setActiveMenu('')
   }
 
-  const subscribedCommunitiesAllGroups = useMemo(
-    () => subscribedCommunities?.find((community) => community._id === id?.[0])?.communityGroups,
-    [subscribedCommunities, id]
-  )
+  const subscribedCommunitiesAllGroups = useMemo(() => {
+    if (id) {
+      return subscribedCommunities?.find((community) => community._id === id)?.communityGroups
+    } else {
+      return subscribedCommunities && subscribedCommunities[0].communityGroups
+    }
+  }, [subscribedCommunities, id])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const userSelectedCommunityGroup = userAllCommunities?.find((community) => community?.communityId === id?.[0])?.communityGroups
-    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === id?.[0])?.communityGroups
+    const userSelectedCommunityGroup = userAllCommunities?.find((community) => community?.communityId === id)?.communityGroups
+    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === id)?.communityGroups
 
     return userSelectedCommunityGroup?.filter(
       (userCommunityGroup) =>
@@ -55,14 +59,16 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const subscribedCommunitiesMyGroup = useMemo(
     () =>
       subscribedCommunities
-        ?.find((community) => community._id === id?.[0])
+        ?.find((community) => community._id === id)
         ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData.id),
     [subscribedCommunities, id, userData.id]
   )
 
   useEffect(() => {
-    if (subscribedCommunities) {
-      setCommunity(subscribedCommunities?.[0] as Community)
+    if (id && subscribedCommunities) {
+      setCommunity(subscribedCommunities?.find((community) => community._id === id))
+    } else {
+      subscribedCommunities && setCommunity(subscribedCommunities?.[0] as Community)
     }
   }, [subscribedCommunities])
 
@@ -151,7 +157,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           <div className="flex items-center justify-center bg-white rounded-full gap-3 ">
             <div
               style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
-              className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px]"
+              className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px] cursor-pointer"
             >
               <Image
                 width={40}
@@ -194,7 +200,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
         </div>
       )}
 
-      {showNewGroup && <CreateNewGroupBox setNewGroup={setShowNewGroup} />}
+      {showNewGroup && <CreateNewGroupBox communityId={id} setNewGroup={setShowNewGroup} />}
       <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
     </>
   )

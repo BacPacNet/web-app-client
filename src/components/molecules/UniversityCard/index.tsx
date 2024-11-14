@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useUniStore } from '@/store/store'
 import {
   useGetCommunity,
+  useGetCommunityGroup,
   useGetCommunityGroups,
   useJoinCommunity,
   useJoinCommunityGroup,
@@ -20,38 +21,30 @@ import { replaceImage } from '@/services/uploadImage'
 import { MdAddAPhoto } from 'react-icons/md'
 import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
+import useCookie from '@/hooks/useCookie'
 
 interface Props {
-  //  universityLogo: string
-  //  universityName: string
-  //  isAiPowered: boolean
-  //  joinedSince: string
-  //  description: string
-  //  memberCount: number
-  //  currSelectedGroup?: any
   communityID: string
   communityGroupID?: string
 }
 
-export default function UniversityCard({
-  //  universityLogo,
-  //  universityName = 'Lorem University',
-  //  isAiPowered = true,
-  //  joinedSince = '7/23/2024',
-  //  description = 'Official community page for Lorem University. For inquiries contact the Human Resources Department in B-Wing of Northern Campus.',
-  //  memberCount = 242,
-  //  currSelectedGroup,
-  communityID,
-  communityGroupID,
-}: Props) {
+export default function UniversityCard({ communityID, communityGroupID }: Props) {
   //  const queryClient = useQueryClient()
   //  const Communitydata: any = queryClient.getQueryData(['UserSubscribedCommunityGroups'])
   //  const CommunityGroupdata: any = queryClient.getQueryData(['communityGroups', communityID])
   //  const { data: communityGroups } = useGetCommunityGroups(communityID, true)
+  const [isJoined, setIsJoined] = useState(false)
+  const [cookieValue] = useCookie('uni_user_token')
 
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
+  const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityID, communityGroupID, isJoined)
 
-  const [isJoined, setIsJoined] = useState(false)
+  useEffect(() => {
+    if (communityGroupID) {
+      refetch()
+    }
+  }, [communityGroupID])
+
   const [coverImage, setCoverImage] = useState('')
   const [logoImage, setLogoImage] = useState('')
   const [dataToDisplay, setDataToDisplay] = useState({ title: '', desc: '', membersCount: 0, coverImage: '', logoImage: '', adminId: '', id: '' })
@@ -195,7 +188,7 @@ export default function UniversityCard({
   //    }
   //  }
 
-  if (isCommunityLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
+  if (isCommunityLoading || isCommunityGroupsLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
 
   return (
     <div className="rounded-2xl bg-white shadow-card">
@@ -282,7 +275,7 @@ export default function UniversityCard({
                 className="object-cover object-top"
               />
             </div>
-            <p className="text-sm font-bold">{communityData?.name}</p>
+            <p className="text-sm font-bold">{communityGroups?.title || communityData?.name}</p>
             <p className="ai-power text-xs font-extrabold">AI POWERED </p>
           </div>
           <div

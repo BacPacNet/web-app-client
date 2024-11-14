@@ -35,3 +35,26 @@ export interface CommunityGroup {
   communityGroupType: string
   about: string
 }
+
+export interface communityPostType {
+  _id: string
+  user: {
+    firstName: string
+    lastName: string
+    _id: string
+  }
+  userProfile: {
+    university_name: string
+    study_year: string
+    degree: string
+    profile_dp: {
+      imageUrl: string
+    }
+  }
+  content: string
+  createdAt: string
+  likeCount: []
+  comments: []
+  imageUrl: []
+  commentCount: number
+}
