@@ -6,7 +6,7 @@ import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import { useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
@@ -22,8 +22,14 @@ export interface passwordForm {
   confirmPassword: string
 }
 
+type PasswordVisibilityState = {
+  showPassword: boolean
+  showNewPassword: boolean
+  showConfirmPassword: boolean
+}
+
 const ChangePasswordModal = ({ setModal }: Props) => {
-  const [passwordVisibility, setPasswordVisibility] = useState({
+  const [passwordVisibility, setPasswordVisibility] = useState<PasswordVisibilityState>({
     showPassword: false,
     showNewPassword: false,
     showConfirmPassword: false,
@@ -36,13 +42,13 @@ const ChangePasswordModal = ({ setModal }: Props) => {
   } = useForm<passwordForm>({})
   const password = watch('newPassword')
 
-  const { mutate, data, error } = useChangeUserPassword()
+  const { mutate, error } = useChangeUserPassword()
 
   const onSubmit = async (data: passwordForm) => {
     mutate(data)
   }
 
-  const togglePasswordVisibility = (field: any) => {
+  const togglePasswordVisibility = (field: keyof PasswordVisibilityState) => {
     setPasswordVisibility((prevState: any) => ({
       ...prevState,
       [field]: !prevState[field],
@@ -146,9 +152,9 @@ const ChangePasswordModal = ({ setModal }: Props) => {
             </div>
             {errors.confirmPassword && <InputWarningText>{errors.confirmPassword?.message || 'Please enter your password!'}</InputWarningText>}
           </div>
-          <LoginButtons type="submit" className=" w-11/12" size="small">
+          <Button type="submit" className=" w-11/12" size="small">
             Push Change
-          </LoginButtons>
+          </Button>
         </form>
         {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}
       </div>

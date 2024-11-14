@@ -1,9 +1,10 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { IoIosArrowDown } from 'react-icons/io'
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useUniversitySearch } from '@/services/universitySearch'
 import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import { Spinner } from '@/components/spinner/Spinner'
 
 interface SelectDropdownProps {
   onChange: (value: string) => void
@@ -14,21 +15,21 @@ interface SelectDropdownProps {
   err: boolean
 }
 
+const motionStyle = {
+  initial: { opacity: 0, y: '-10%' },
+  animate: { opacity: 1, y: '5%' },
+  exit: { opacity: 0, y: '-10%', transition: { duration: 0.35 } },
+  transition: { type: 'spring', stiffness: 100, duration: 0.75 },
+}
 const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  //   const [filteredOptions, setFilteredOptions] = useState(options)
   const searchRef = useRef<HTMLInputElement>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const { data: universities, isLoading, error } = useUniversitySearch(searchTerm || ' ')
+  const { data: universities, isFetching } = useUniversitySearch(searchTerm || ' ')
   const handleSelect = (optionValue: any) => {
     onChange(optionValue)
     setShow(false)
-  }
-
-  const handleSearch = () => {
-    const searchValue = searchRef.current?.value.toLowerCase() || ''
-    // setFilteredOptions(searchValue === '' ? options : options.filter((option: string) => option.toLowerCase().includes(searchValue)))
   }
 
   useEffect(() => {
@@ -58,15 +59,10 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
           {icon == 'single' ? (
             <IoIosArrowDown />
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M4.7998 5.5999L7.9998 2.3999L11.1998 5.5999M11.1998 10.3999L7.9998 13.5999L4.7998 10.3999"
-                stroke="#4B5563"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <div className="flex flex-col text-xs">
+              <IoIosArrowUp />
+              <IoIosArrowDown />
+            </div>
           )}
         </div>
       </div>
@@ -74,10 +70,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
         {show && (
           <motion.div
             className="flex flex-col  gap-2 w-full absolute right-0  bg-white p-2 shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 overflow-y-scroll"
-            initial={{ opacity: 0, y: '-10%' }}
-            animate={{ opacity: 1, y: '5%' }}
-            exit={{ opacity: 0, y: '-10%', transition: { duration: '0.35' } }}
-            transition={{ type: 'spring', stiffness: '100', duration: '0.75' }}
+            {...motionStyle}
           >
             {search && (
               <input
@@ -101,8 +94,10 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                   <p> {item?.name}</p>
                 </div>
               ))
-            ) : isLoading ? (
-              <p className="text-neutral-500 p-2">Loading</p>
+            ) : isFetching ? (
+              <div className="w-full flex justify-center">
+                <Spinner />
+              </div>
             ) : (
               <p className="text-neutral-500 p-2">No results found</p>
             )}

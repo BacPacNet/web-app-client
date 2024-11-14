@@ -5,7 +5,7 @@ import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
 
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 
@@ -13,9 +13,16 @@ import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import { useChangeUserPassword } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type Props = {
   setModal: (value: string | null) => void
+}
+
+type FormDataType = {
+  UniversityOtp: string
+  universityEmail: string
+  universityName: string
 }
 
 const UniversityVerificationModal = ({ setModal }: Props) => {
@@ -27,8 +34,8 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
     setError,
     clearErrors,
     getValues,
-  } = useForm({})
-  const { mutate: generateUniversityEmailOTP, data: otpData } = useHandleUniversityEmailVerificationGenerate()
+  } = useForm<FormDataType>({})
+  const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
   const { mutate, error } = useChangeUserPassword()
 
   const handleUniversityEmailSendCode = () => {
@@ -48,7 +55,7 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
     generateUniversityEmailOTP(data)
   }
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormDataType) => {
     mutate(data)
   }
 
@@ -107,11 +114,16 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
                   {errors.universityEmail.message ? errors.universityEmail.message.toString() : 'Please enter your email!'}
                 </InputWarningText>
               )}
-              <LoginButtons onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+              <Button onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
                 Send Code
-              </LoginButtons>
+              </Button>
             </div>
 
+            {isPending && (
+              <div className="w-full flex justify-center">
+                <Spinner />
+              </div>
+            )}
             {/* otp  */}
             {otpData?.isAvailable ? (
               <div className="relative w-full flex flex-col gap-2">
@@ -129,16 +141,16 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
                   render={({ field }) => <OTPInput length={6} value={field.value || '000000'} onChange={(otp) => field.onChange(otp)} />}
                 />
                 {errors.UniversityOtp && <InputWarningText>{errors.UniversityOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>}
-                {/* <LoginButtons variant="border_primary">Confirm Code</LoginButtons> */}
+                {/* <Button variant="border_primary">Confirm Code</Button> */}
               </div>
             ) : (
               ''
             )}
           </div>
           {otpData?.isAvailable ? (
-            <LoginButtons type="submit" className=" w-11/12" size="small">
+            <Button type="submit" className=" w-11/12" size="small">
               Complete Verification
-            </LoginButtons>
+            </Button>
           ) : (
             ''
           )}

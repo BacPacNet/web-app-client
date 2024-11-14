@@ -1,6 +1,6 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
@@ -80,9 +80,9 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
                 : 'Please enter your email!'}
             </InputWarningText>
           )}
-          <LoginButtons disabled={isCounting} onClick={() => handleLoginEmailSendCode()} type="button" variant="border_primary">
+          <Button disabled={isCounting} onClick={() => handleLoginEmailSendCode()} type="button" variant="border_primary">
             Send Code
-          </LoginButtons>
+          </Button>
           {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
         </div>
         {/* otp  */}
@@ -103,12 +103,10 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
           {VerificationFormErrors.verificationOtp && (
             <InputWarningText>{VerificationFormErrors.verificationOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>
           )}
-          {/* <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
-          {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>} */}
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Confirm</LoginButtons>
+        <Button variant="primary">Confirm</Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}
       </div>
     </div>

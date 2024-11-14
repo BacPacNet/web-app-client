@@ -1,6 +1,6 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
 import { badgeData } from '@/types/RegisterForm'
@@ -46,13 +46,13 @@ const ClaimBenefitForm = () => {
                 : 'Please enter your referral code!'}
             </InputWarningText>
           )}
-          <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
+          <Button variant="border_primary">Confirm Code</Button>
           <p className="text-xs text-neutral-500 text-center">Plan will immediately apply to account after confirmation.</p>
           {/* <p className="text-xs text-green-500 text-center">Congratulations! You received 1 month of our Upgrade Plan!</p> */}
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Complete Sign Up</LoginButtons>
+        <Button variant="primary">Complete Sign Up</Button>
       </div>
     </div>
   )

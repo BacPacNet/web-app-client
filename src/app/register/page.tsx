@@ -4,6 +4,7 @@ import RegisterSIdebar from '@/components/organism/Register/sidebar/RegisterSIde
 import React, { useEffect, useState } from 'react'
 import Loading from './loading'
 import { useForm } from 'react-hook-form'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 const Register = () => {
   const [step, setStep] = useState<number>(0)
@@ -31,22 +32,15 @@ const Register = () => {
       setSubStep(0)
     } else if (step === 3) {
       setStep(step - 1)
-      if (userType == 'Applicant') {
+      if (userType == userTypeEnum.Applicant) {
         setSubStep(0)
-      } else if (userType == 'Student' || userType == 'Faculty') {
+      } else if (userType == userTypeEnum.Student || userType == userTypeEnum.Faculty) {
         setSubStep(1)
       }
     } else {
       setStep(step - 1)
       setSubStep(0)
     }
-
-    // if (step === 2 && subStep === 0) {
-    //   currSubStep += 1
-    // } else {
-    //   currStep += 1
-    //   currSubStep = 0
-    // }
   }
   return (
     <div className="flex h-screen bg-white">

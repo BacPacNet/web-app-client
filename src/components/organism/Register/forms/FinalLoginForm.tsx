@@ -1,7 +1,7 @@
 'use client'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
 import Image from 'next/image'
@@ -72,9 +72,9 @@ const FinalLoginForm = () => {
           <input className="w-4 h-4 border-neutral-300" type="checkbox" />
           <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
         </div>
-        <LoginButtons className="mt-5" variant="primary">
+        <Button className="mt-5" variant="primary">
           Log in
-        </LoginButtons>
+        </Button>
       </div>
     </div>
   )

@@ -6,7 +6,7 @@ import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Title from '@/components/atoms/Title'
 import SupportingText from '@/components/atoms/SupportingText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import { useForm } from 'react-hook-form'
 import { LoginForm } from '@/models/auth'
 import InputWarningText from '@/components/atoms/InputWarningText'
@@ -107,7 +107,7 @@ const LoginBox = () => {
             <input className="w-4 h-4 border-neutral-300" type="checkbox" />
             <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
           </div>
-          <LoginButtons variant="primary">Log in</LoginButtons>
+          <Button variant="primary">Log in</Button>
           <InputWarningText>{isAxiosError(error) && error.response?.data?.message}</InputWarningText>
         </form>
       </div>

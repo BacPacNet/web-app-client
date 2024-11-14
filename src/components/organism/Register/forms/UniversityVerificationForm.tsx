@@ -1,6 +1,6 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
@@ -115,9 +115,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
                 : 'Please enter your email!'}
             </InputWarningText>
           )}
-          <LoginButtons onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+          <Button onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
             Send Code
-          </LoginButtons>
+          </Button>
         </div>
         {/* otp  */}
         <div className="relative w-full flex flex-col gap-2">
@@ -137,15 +137,13 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           {UniversityVerificationFormErrors.UniversityOtp && (
             <InputWarningText>{UniversityVerificationFormErrors.UniversityOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>
           )}
-          {/* <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
-          {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>} */}
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="shade" onClick={() => handleNext()} type="button">
+        <Button variant="shade" onClick={() => handleNext()} type="button">
           Skip University Verification
-        </LoginButtons>
-        <LoginButtons variant="primary">Confirm</LoginButtons>
+        </Button>
+        <Button variant="primary">Confirm</Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}
       </div>
     </div>

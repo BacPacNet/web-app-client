@@ -7,10 +7,9 @@ import React, { useState } from 'react'
 import blueTick from '@/assets/blueBGTick.svg'
 import { FaCirclePlus } from 'react-icons/fa6'
 import uniLogo from '@/assets/unibuzz-orange.png'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import InputBox from '@/components/atoms/Input/InputBox'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
+
 import { useUniStore } from '@/store/store'
 type props = {
   setModal: (value: string) => void
@@ -20,7 +19,7 @@ const SettingAccount = ({ setModal }: props) => {
   const { email } = useUniStore((state) => state.userProfileData)
   const { userName, email: userEmail } = useUniStore((state) => state.userData)
   return (
-    <div className="flex flex-col  py-4 px-12 max-sm:px-2 max-md:px-4 gap-10">
+    <div className="flex flex-col  py-4 px-0  max-md:px-4 gap-10">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <SettingsText className="text-md">University Verification</SettingsText>
@@ -64,9 +63,9 @@ const SettingAccount = ({ setModal }: props) => {
             </div>
           </div>
         )}
-        <LoginButtons onClick={() => setModal('University')} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
+        <Button onClick={() => setModal('University')} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
           Verify Account {email?.length ? <FaCirclePlus /> : ''}
-        </LoginButtons>
+        </Button>
       </div>
       {/* //userName  */}
       <div className="flex flex-col gap-6">
@@ -78,9 +77,9 @@ const SettingAccount = ({ setModal }: props) => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userName} disabled />
         </div>
-        <LoginButtons onClick={() => setModal('Username')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => setModal('Username')} className="w-max" size="extra_small_paddind_2">
           Change Username
-        </LoginButtons>
+        </Button>
       </div>
       {/* //Password  */}
       <div className="flex flex-col gap-6">
@@ -100,9 +99,9 @@ const SettingAccount = ({ setModal }: props) => {
             </div>
           </div> */}
         {/* </div> */}
-        <LoginButtons onClick={() => setModal('Password')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => setModal('Password')} className="w-max" size="extra_small_paddind_2">
           Change Password
-        </LoginButtons>
+        </Button>
       </div>
       {/* //Change Email  */}
       <div className="flex flex-col gap-6">
@@ -114,9 +113,9 @@ const SettingAccount = ({ setModal }: props) => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userEmail} disabled />
         </div>
-        <LoginButtons onClick={() => setModal('Email')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => setModal('Email')} className="w-max" size="extra_small_paddind_2">
           Change Email
-        </LoginButtons>
+        </Button>
       </div>
 
       {/* deactivate  */}
@@ -128,9 +127,9 @@ const SettingAccount = ({ setModal }: props) => {
             restore your Unibuzz account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.{' '}
           </SubText>
         </div>
-        <LoginButtons onClick={() => setModal('Deactivate')} className="w-max" size="extra_small_paddind_2" variant="danger">
+        <Button onClick={() => setModal('Deactivate')} className="w-max" size="extra_small_paddind_2" variant="danger">
           Deactivate Account
-        </LoginButtons>
+        </Button>
       </div>
     </div>
   )

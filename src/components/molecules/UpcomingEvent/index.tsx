@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import eventImage from '@assets/event-image.jpg'
 import format from 'date-fns/format'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 
 export default function UpcomingEvent({ eventDate = '29/07/2024' }) {
   return (
@@ -22,9 +22,9 @@ export default function UpcomingEvent({ eventDate = '29/07/2024' }) {
         </div>
       </div>
       <div className="text-right">
-        <LoginButtons variant="primary" size="extra_small">
+        <Button variant="primary" size="extra_small">
           Check Post
-        </LoginButtons>
+        </Button>
       </div>
     </div>
   )

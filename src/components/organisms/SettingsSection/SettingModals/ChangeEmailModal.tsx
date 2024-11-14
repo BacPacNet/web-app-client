@@ -1,25 +1,30 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
-import LoginButtons from '@/components/atoms/LoginButtons'
+
+import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import { CiLock } from 'react-icons/ci'
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
 import { useChangeUserEmail } from '@/services/user'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type Props = {
   setModal: (value: string | null) => void
 }
 
+type FormDataType = {
+  currentEmail: string
+  emailOtp: string
+  newMail: string
+}
+
 const ChangeEmailModal = ({ setModal }: Props) => {
-  const { mutate: generateEmailOTP, data: otpData } = useHandleLoginEmailVerificationGenerate()
+  const { mutate: generateEmailOTP, data: otpData, isPending } = useHandleLoginEmailVerificationGenerate()
   const { mutate, error } = useChangeUserEmail()
   const {
     register,
@@ -29,7 +34,7 @@ const ChangeEmailModal = ({ setModal }: Props) => {
     clearErrors,
     setError,
     getValues,
-  } = useForm({})
+  } = useForm<FormDataType>({})
 
   const handleEmailSendCode = () => {
     const email = getValues('newMail')
@@ -48,7 +53,7 @@ const ChangeEmailModal = ({ setModal }: Props) => {
     generateEmailOTP(data)
   }
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormDataType) => {
     mutate(data)
   }
 
@@ -105,12 +110,17 @@ const ChangeEmailModal = ({ setModal }: Props) => {
               {errors.newMail && (
                 <InputWarningText>{errors.newMail.message ? errors.newMail.message.toString() : 'Please enter your email!'}</InputWarningText>
               )}
-              <LoginButtons onClick={() => handleEmailSendCode()} type="button" variant="border_primary">
+              <Button onClick={() => handleEmailSendCode()} type="button" variant="border_primary">
                 Send Code
-              </LoginButtons>
+              </Button>
             </div>
 
             {/* otp  */}
+            {isPending && (
+              <div className="w-full flex justify-center">
+                <Spinner />
+              </div>
+            )}
             {otpData?.isAvailable ? (
               <div className="relative w-full flex flex-col gap-2">
                 <label htmlFor="Email Address" className="font-medium text-neutral-900">
@@ -127,16 +137,16 @@ const ChangeEmailModal = ({ setModal }: Props) => {
                   render={({ field }) => <OTPInput length={6} value={field.value || '000000'} onChange={(otp) => field.onChange(otp)} />}
                 />
                 {errors.emailOtp && <InputWarningText>{errors.emailOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>}
-                {/* <LoginButtons variant="border_primary">Confirm Code</LoginButtons> */}
+                {/* <Button variant="border_primary">Confirm Code</Button> */}
               </div>
             ) : (
               ''
             )}
           </div>
           {otpData?.isAvailable ? (
-            <LoginButtons type="submit" className=" w-11/12" size="small">
+            <Button type="submit" className=" w-11/12" size="small">
               Push Change
-            </LoginButtons>
+            </Button>
           ) : (
             ''
           )}

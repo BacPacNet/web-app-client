@@ -6,7 +6,7 @@ import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import sparkles from '@assets/sparkles.svg'
 import { MENU_LIST } from './constant'
 import LoginButton from '../LoginButton'
-import LoginButtons from '../LoginButtons'
+import Button from '../Buttons'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import avatar from '@assets/avatar.svg'
@@ -149,9 +149,9 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case false:
         return (
           <div className="pl-8 gap-4 flex">
-            <LoginButtons onClick={() => router.push('/register')} variant="border" className="text-xs">
+            <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
               Sign Up
-            </LoginButtons>
+            </Button>
             <LoginButton onClick={() => router.push('/login')} className="text-xs">
               Login
             </LoginButton>

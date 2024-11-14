@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { cn } from '@/lib/utils'
 import React from 'react'
-import LoginButtons from '../atoms/LoginButtons'
+import Button from '../atoms/Buttons'
 
 interface User {
   name: string
@@ -28,12 +28,12 @@ const UserCard = ({ user }: { user: User }) => {
         </div>
       </div>
       <div>
-        {/*<LoginButtons variant="border" size="extra_small">
+        {/*<Button variant="border" size="extra_small">
           Following
-        </LoginButtons>*/}
-        <LoginButtons variant="shade" size="extra_small">
+        </Button>*/}
+        <Button variant="shade" size="extra_small">
           Follow
-        </LoginButtons>
+        </Button>
       </div>
     </div>
   )

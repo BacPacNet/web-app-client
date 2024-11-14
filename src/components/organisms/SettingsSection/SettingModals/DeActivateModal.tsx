@@ -6,7 +6,7 @@ import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import { useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
@@ -16,8 +16,22 @@ type Props = {
   setModal: (value: string | null) => void
 }
 
+type FormDataType = {
+  Password: string
+  confirmPassword: string
+  email: string
+  userName: string
+  sure: boolean
+}
+
+type PasswordVisibilityState = {
+  showPassword: boolean
+  showNewPassword: boolean
+  showConfirmPassword: boolean
+}
+
 const DeActivateModal = ({ setModal }: Props) => {
-  const [passwordVisibility, setPasswordVisibility] = useState({
+  const [passwordVisibility, setPasswordVisibility] = useState<PasswordVisibilityState>({
     showPassword: false,
     showNewPassword: false,
     showConfirmPassword: false,
@@ -29,14 +43,13 @@ const DeActivateModal = ({ setModal }: Props) => {
     formState: { errors },
     watch,
     control,
-  } = useForm({})
+  } = useForm<FormDataType>({})
   const password = watch('Password')
-  const onSubmit = async (data: any) => {
-    // console.log('data', data)
+  const onSubmit = async (data: FormDataType) => {
     mutate(data)
   }
 
-  const togglePasswordVisibility = (field: any) => {
+  const togglePasswordVisibility = (field: keyof PasswordVisibilityState) => {
     setPasswordVisibility((prevState: any) => ({
       ...prevState,
       [field]: !prevState[field],
@@ -109,7 +122,7 @@ const DeActivateModal = ({ setModal }: Props) => {
                   placeholder="************"
                   type={passwordVisibility.showNewPassword ? 'text' : 'password'}
                   {...register('Password', { required: true })}
-                  err={!!errors.newPassword}
+                  err={!!errors.Password}
                 />
                 <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>
                   {!passwordVisibility.showNewPassword ? (
@@ -171,9 +184,9 @@ const DeActivateModal = ({ setModal }: Props) => {
             </div>
             {errors.sure && <InputWarningText>{'Please accept to continue'}</InputWarningText>}
           </div>
-          <LoginButtons type="submit" className=" w-11/12" size="small" variant="danger">
+          <Button type="submit" className=" w-11/12" size="small" variant="danger">
             Deactivate Account
-          </LoginButtons>
+          </Button>
         </form>
         {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}
       </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useToggleFollow } from '@/services/connection'
-import LoginButtons from '../atoms/LoginButtons'
+import Button from '../atoms/Buttons'
 import avatar from '@assets/avatar.svg'
 import { useRouter } from 'next/navigation'
 
@@ -61,9 +61,9 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       </div>
 
       <div className="p-2 bg-primary-50 rounded-md">
-        <LoginButtons onClick={handleFollowClick} variant="shade" size="extra_small">
+        <Button onClick={handleFollowClick} variant="shade" size="extra_small">
           {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
-        </LoginButtons>
+        </Button>
       </div>
     </div>
   )

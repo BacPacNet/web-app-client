@@ -3,7 +3,7 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import React from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import Title from '@/components/atoms/Title'
 import SupportingText from '@/components/atoms/SupportingText'
 import InputWarningText from '@/components/atoms/InputWarningText'
@@ -119,7 +119,7 @@ const ProfileSetupForm = () => {
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Next Step</LoginButtons>
+        <Button variant="primary">Next Step</Button>
       </div>
 
       <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>
