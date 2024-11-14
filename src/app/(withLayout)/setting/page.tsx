@@ -2,11 +2,7 @@ import SettingContainer from '@/components/organisms/SettingsSection/SettingsCon
 import React from 'react'
 
 const Settings = () => {
-  return (
-    <div>
-      <SettingContainer />
-    </div>
-  )
+  return <SettingContainer />
 }
 
 export default Settings
