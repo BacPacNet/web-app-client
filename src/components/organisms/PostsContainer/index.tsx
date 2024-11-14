@@ -5,31 +5,9 @@ import PostCard from '@/components/molecules/PostCard'
 import { useGetTimelinePosts, useGetUserPosts } from '@/services/community-timeline'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
+import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
-
-interface communityPostType {
-  _id: string
-  user: {
-    firstName: string
-    lastName: string
-    _id: string
-  }
-  userProfile: {
-    university_name: string
-    study_year: string
-    degree: string
-    profile_dp: {
-      imageUrl: string
-    }
-  }
-  content: string
-  createdAt: string
-  likeCount: []
-  comments: []
-  imageUrl: []
-  commentCount: number
-}
 
 type Props = {
   communityID?: string

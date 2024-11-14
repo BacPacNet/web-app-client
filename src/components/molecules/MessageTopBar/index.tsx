@@ -5,6 +5,9 @@ import React, { useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
 import CreateGroupChat from '../CreateGroupChat'
 import OneToChat from '../OneToOneChat'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/Popover'
+import StartChatModal from '../StartChatModal'
+import Buttons from '@/components/atoms/Buttons'
 
 type Props = {
   setCurrTab: (value: string) => void
@@ -57,17 +60,20 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
             Starred
           </p>
 
-          <Button size="extra_small" onClick={() => setShowOneToOne(true)}>
-            {' '}
+          <Buttons size="extra_small" onClick={() => setShowOneToOne(true)}>
             Start a Chat
-          </Button>
-          {/*<button className="bg-primary-500 px-3 py-2 text-xs font-medium text-white rounded-lg">
-            Start a Chat
-          </button>*/}
+          </Buttons>
         </div>
       </div>
       {showCreateGroup && <CreateGroupChat setShowCreateGroup={setShowCreateGroup} setShowOneToOne={setShowOneToOne} />}
-      {showOneToOne && <OneToChat setShowOneToOne={setShowOneToOne} setShowCreateGroup={setShowCreateGroup} showOneToOne={showOneToOne} />}
+      {showOneToOne && (
+        <OneToChat
+          setSelectedChat={setSelectedChat}
+          setShowOneToOne={setShowOneToOne}
+          setShowCreateGroup={setShowCreateGroup}
+          showOneToOne={showOneToOne}
+        />
+      )}
     </>
   )
 }

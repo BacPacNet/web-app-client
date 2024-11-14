@@ -7,7 +7,7 @@ import { Community } from '@/types/Community'
 
 interface Props {
   subscribedCommunities: Community[]
-  communityId: string[]
+  communityId: string
   userData: Partial<userType>
   handleCommunityClick: (index: number) => void
 }
@@ -27,7 +27,7 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
       <div
         onClick={() => handleCommunityClick(index)}
         key={index}
-        className={`flex items-center justify-between hover:bg-secondary ${communityId?.[0] === community._id && 'bg-secondary'}`}
+        className={`flex items-center justify-between hover:bg-secondary ${communityId === community._id && 'bg-secondary'}`}
       >
         <div className={` flex items-center gap-3 py-2 px-4 cursor-pointer`}>
           <Image

@@ -57,8 +57,10 @@ export async function changeUserCommunityRole(data: any, token: any) {
   return response
 }
 
-export async function getAllCommunityGroups(communityId: string, token: any) {
-  const response: any = await client(`/communitygroup/${communityId}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getAllCommunityGroups(communityId: string, communityGroupId: string, token: any) {
+  const response: any = await client(`/communitygroup/${communityId}?${communityGroupId ? `communityGroupId=${communityGroupId}` : ''}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -224,22 +226,23 @@ export const useLeaveCommunity = () => {
   })
 }
 
-//Community Groups
-
-export function useGetCommunityGroups(communityId: string, isJoined: boolean) {
+export function useGetCommunityGroup(communityId: string, communityGroupId: string = '', isJoined: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
-  const state = useQuery({
+
+  return useQuery({
+    enabled: isJoined && !!communityId && !!cookieValue && !!communityGroupId,
+    queryKey: ['communityGroup', communityId, communityGroupId],
+    queryFn: () => getAllCommunityGroups(communityId, communityGroupId, cookieValue),
+  })
+}
+
+export function useGetCommunityGroups(communityId: string, communityGroupId: string = '', isJoined: boolean) {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
     enabled: isJoined && !!communityId && !!cookieValue,
     queryKey: ['communityGroups', communityId],
-    queryFn: () => getAllCommunityGroups(communityId, cookieValue),
+    queryFn: () => getAllCommunityGroups(communityId, communityGroupId, cookieValue),
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
 }
 
 export const useJoinCommunityGroup = () => {
@@ -301,7 +304,7 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
     const [cookieValue] = useCookie('uni_user_token')
 
     return useInfiniteQuery({
-      queryKey: ['communityGroupsPost', communityId],
+      queryKey: ['communityGroupsPost', communityId, communityGroupID],
       queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
       getNextPageParam: (lastPage) => {
         if (lastPage.currentPage < lastPage.totalPages) {

@@ -12,6 +12,7 @@ import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
 
 type Props = {
+  communityId: string
   setNewGroup: (value: boolean) => void
 }
 
@@ -29,8 +30,7 @@ type User = {
   }
 }
 
-const CreateNewGroup = ({ setNewGroup }: Props) => {
-  const { id } = useParams<{ id: string }>()
+const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [userPopUp, setUserPopUp] = useState(false)
@@ -65,11 +65,11 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
       ...logoImageData,
       selectedUsersId,
     }
-    createGroup({ communityId: id[0], data: dataToPush })
+    createGroup({ communityId: communityId, data: dataToPush })
     setIsLoading(false)
   }
 
-  const { data } = useGetCommunityUsers(id[0], userPopUp, values.communityGroupType, searchInput)
+  const { data } = useGetCommunityUsers(communityId, userPopUp, values.communityGroupType, searchInput)
 
   return (
     <>

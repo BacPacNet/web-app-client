@@ -5,7 +5,7 @@ import GroupSelectors from './GroupSelectors'
 import GroupFilterPopUp from './GroupFilterPopUp'
 import CreateNewGroup from './CreateNewGroup'
 
-const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined }: any) => {
+const GroupSideBar = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined }: any) => {
   const [currGroup, setCurrGroup] = useState('All')
   const [showPopUp, setShowPopUp] = useState(false)
   const [showNewGroup, setShowNewGroup] = useState(false)
@@ -107,4 +107,4 @@ const GroupSideBsr = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
   )
 }
 
-export default GroupSideBsr
+export default GroupSideBar
