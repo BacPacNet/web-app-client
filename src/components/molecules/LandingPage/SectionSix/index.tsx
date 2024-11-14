@@ -1,4 +1,4 @@
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import React from 'react'
 
 export default function SectionSix() {
@@ -18,8 +18,8 @@ export default function SectionSix() {
         </p>
       </div>
       <div className="flex gap-4 justify-center">
-        <LoginButtons>Get Started</LoginButtons>
-        <LoginButtons variant="shade">Get Started</LoginButtons>
+        <Button>Get Started</Button>
+        <Button variant="shade">Get Started</Button>
       </div>
     </div>
   )

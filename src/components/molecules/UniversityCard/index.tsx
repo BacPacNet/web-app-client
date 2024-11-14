@@ -18,7 +18,7 @@ import {
 import { IoMdSettings } from 'react-icons/io'
 import { replaceImage } from '@/services/uploadImage'
 import { MdAddAPhoto } from 'react-icons/md'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
 
 interface Props {
@@ -296,25 +296,17 @@ export default function UniversityCard({
 
             {/* Buttons  */}
             {!isJoined && communityData?.adminId != userData.id ? (
-              <LoginButtons
-                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true)}
-                size="extra_small"
-                variant="primary"
-              >
+              <Button onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true)} size="extra_small" variant="primary">
                 Join {communityGroupID ? 'Group' : 'Community '}
-              </LoginButtons>
+              </Button>
             ) : communityData?.adminId == userData.id ? (
               <button className="text-primary-500 font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full max-lg:text-sm max-md:mr-0">
                 <IoMdSettings />
               </button>
             ) : (
-              <LoginButtons
-                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, false)}
-                size="extra_small"
-                variant="shade"
-              >
+              <Button onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, false)} size="extra_small" variant="shade">
                 Leave {communityGroupID ? 'Group' : 'Community '}
-              </LoginButtons>
+              </Button>
             )}
           </div>
         </div>

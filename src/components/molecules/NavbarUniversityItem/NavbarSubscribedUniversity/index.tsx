@@ -1,4 +1,4 @@
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import React from 'react'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
@@ -16,9 +16,9 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
   if (subscribedCommunities?.length === 0)
     return (
       <div className="px-4 w-full">
-        <LoginButtons variant="primary" className="w-full">
+        <Button variant="primary" className="w-full">
           Add Your University
-        </LoginButtons>
+        </Button>
       </div>
     )
 

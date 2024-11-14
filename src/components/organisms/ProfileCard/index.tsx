@@ -1,5 +1,5 @@
 import Card from '@/components/atoms/Card'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import Image from 'next/image'
 import Link from 'next/link'
 //import { Badge } from "@/components/ui/badge";
@@ -91,9 +91,9 @@ export function UserProfileCard({
                 <HiPencilAlt size={16} />
               </div>
             ) : (
-              <LoginButtons onClick={() => toggleFollow(userId as string)} variant="shade" size="extra_small">
+              <Button onClick={() => toggleFollow(userId as string)} variant="shade" size="extra_small">
                 {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
-              </LoginButtons>
+              </Button>
             )}
           </div>
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>

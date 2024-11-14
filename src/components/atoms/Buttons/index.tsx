@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface LoginButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary'
-  size?: 'small' | 'medium' | 'large' | 'extra_small'
+  size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
 }
 
-const LoginButtons: React.FC<LoginButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, ...props }) => {
+const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, ...props }) => {
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
@@ -20,6 +20,7 @@ const LoginButtons: React.FC<LoginButtonProps> = ({ className = '', variant = 'p
     medium: 'text-md py-2 px-4 ',
     large: 'text-lg py-2 px-4 ',
     extra_small: 'text-2xs py-1 px-2',
+    extra_small_paddind_2: 'text-2xs py-2 px-2',
   }
 
   const variantClass = variantClasses[variant]
@@ -31,4 +32,4 @@ const LoginButtons: React.FC<LoginButtonProps> = ({ className = '', variant = 'p
   )
 }
 
-export default LoginButtons
+export default Buttons

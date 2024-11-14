@@ -1,13 +1,14 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import blueTick from '@/assets/blueBGTick.svg'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import Image from 'next/image'
+import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 
 interface props {
   setStep: (value: number) => void
@@ -25,8 +26,10 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP } = useHandleUniversityEmailVerificationGenerate()
   const all = getValues()
+
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
+
     const data = { email }
     generateUniversityEmailOTP(data)
   }
@@ -38,7 +41,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   }
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center">
+    <div className="w-1/2 flex flex-col gap-6 items-center">
       <div className="text-center px-3">
         <h1 className={` text-[28px] font-bold text-neutral-900 font-poppins`}>University Verification</h1>
         <SupportingText>Do you have a email provided by your university?</SupportingText>
@@ -60,7 +63,34 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           <p className="text-sm text-neutral-600 text-center">Can create groups in university community </p>
         </div>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-10 ">
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-5 ">
+        {all?.status == 'Applicant' && (
+          <div className="w-full flex flex-col relative">
+            <label htmlFor="Email Address" className="font-medium text-neutral-900">
+              University Name
+            </label>
+
+            <Controller
+              name="universityName"
+              control={control}
+              rules={{ required: 'University Name is required!' }}
+              render={({ field }) => (
+                <SelectUniversityDropdown
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Select University Name"
+                  icon={'single'}
+                  search={true}
+                  err={!!UniversityVerificationFormErrors.universityName}
+                />
+              )}
+            />
+            {UniversityVerificationFormErrors.universityName && (
+              <InputWarningText>{UniversityVerificationFormErrors?.universityName?.message?.toString()}</InputWarningText>
+            )}
+          </div>
+        )}
+
         <div className="relative w-full flex flex-col gap-2">
           <label htmlFor="Email Address" className="font-medium text-neutral-900">
             University Email
@@ -85,9 +115,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
                 : 'Please enter your email!'}
             </InputWarningText>
           )}
-          <LoginButtons onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+          <Button onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
             Send Code
-          </LoginButtons>
+          </Button>
         </div>
         {/* otp  */}
         <div className="relative w-full flex flex-col gap-2">
@@ -107,15 +137,14 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           {UniversityVerificationFormErrors.UniversityOtp && (
             <InputWarningText>{UniversityVerificationFormErrors.UniversityOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>
           )}
-          <LoginButtons variant="border_primary">Confirm Code</LoginButtons>
-          {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="shade" onClick={() => handleNext()} type="button">
+        <Button variant="shade" onClick={() => handleNext()} type="button">
           Skip University Verification
-        </LoginButtons>
-        <LoginButtons variant="primary">Complete Verification</LoginButtons>
+        </Button>
+        <Button variant="primary">Confirm</Button>
+        {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}
       </div>
     </div>
   )

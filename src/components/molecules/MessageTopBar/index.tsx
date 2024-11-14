@@ -1,6 +1,6 @@
 'use client'
 import LoginButton from '@/components/atoms/LoginButton'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import React, { useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
 import CreateGroupChat from '../CreateGroupChat'
@@ -57,10 +57,10 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
             Starred
           </p>
 
-          <LoginButtons size="extra_small" onClick={() => setShowOneToOne(true)}>
+          <Button size="extra_small" onClick={() => setShowOneToOne(true)}>
             {' '}
             Start a Chat
-          </LoginButtons>
+          </Button>
           {/*<button className="bg-primary-500 px-3 py-2 text-xs font-medium text-white rounded-lg">
             Start a Chat
           </button>*/}

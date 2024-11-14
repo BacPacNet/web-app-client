@@ -1,7 +1,7 @@
 'use client'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { ButtonPrimary } from '@/components/Buttons/PrimaryButton'
 import { useEditProfile } from '@/services/edit-profile'
@@ -219,12 +219,12 @@ const EditProfileModal = () => {
         />
         {errors.phone_number && <span className="text-red-500 font-normal">Please enter your phone number!</span>}
 
-        <LoginButtons variant="primary" onClick={handleSubmit(onSubmit)} disabled={isPending}>
+        <Button variant="primary" onClick={handleSubmit(onSubmit)} disabled={isPending}>
           Update Profile
-        </LoginButtons>
-        <LoginButtons variant="shade" onClick={() => reset()}>
+        </Button>
+        <Button variant="shade" onClick={() => reset()}>
           Redo Changes
-        </LoginButtons>
+        </Button>
       </form>
     </div>
   )

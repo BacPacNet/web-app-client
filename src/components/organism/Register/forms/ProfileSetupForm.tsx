@@ -3,7 +3,7 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import React from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import Title from '@/components/atoms/Title'
 import SupportingText from '@/components/atoms/SupportingText'
 import InputWarningText from '@/components/atoms/InputWarningText'
@@ -11,14 +11,14 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { country_list } from '@/utils/countriesList'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
+import { GenderOptions, userType } from '@/types/RegisterForm'
+
 const ProfileSetupForm = () => {
   const {
     register,
     formState: { errors: ProfileFormErrors },
     control,
   } = useFormContext()
-
-  const GenderOptions = ['Male', 'Female']
 
   return (
     <div className="w-1/2 flex flex-col gap-8 items-center">
@@ -78,6 +78,7 @@ const ProfileSetupForm = () => {
           />
           {ProfileFormErrors.gender && <InputWarningText>{ProfileFormErrors?.gender?.message?.toString()}</InputWarningText>}
         </div>
+
         <div className="w-full flex flex-col relative">
           <Controller
             name="country"
@@ -97,9 +98,28 @@ const ProfileSetupForm = () => {
           />
           {ProfileFormErrors.country && <InputWarningText>{ProfileFormErrors?.country?.message?.toString()}</InputWarningText>}
         </div>
+
+        <div className="w-full flex flex-col relative">
+          <Controller
+            name="userType"
+            control={control}
+            rules={{ required: 'userType is required!' }}
+            render={({ field }) => (
+              <SelectDropdown
+                options={userType}
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Select a Type"
+                icon={'single'}
+                err={!!ProfileFormErrors.userType}
+              />
+            )}
+          />
+          {ProfileFormErrors.userType && <InputWarningText>{ProfileFormErrors?.userType?.message?.toString()}</InputWarningText>}
+        </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Next Step</LoginButtons>
+        <Button variant="primary">Next Step</Button>
       </div>
 
       <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>

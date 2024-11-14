@@ -2,9 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { useUniversitySearch } from '@/services/universitySearch'
+import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import { Spinner } from '@/components/spinner/Spinner'
 
 interface SelectDropdownProps {
-  options: string[]
   onChange: (value: string) => void
   value: string
   placeholder?: string
@@ -16,23 +18,18 @@ interface SelectDropdownProps {
 const motionStyle = {
   initial: { opacity: 0, y: '-10%' },
   animate: { opacity: 1, y: '5%' },
-  exit: { opacity: 0, y: '-10%', transition: { duration: '0.35' } },
-  transition: { type: 'spring', stiffness: '100', duration: '0.75' },
+  exit: { opacity: 0, y: '-10%', transition: { duration: 0.35 } },
+  transition: { type: 'spring', stiffness: 100, duration: 0.75 },
 }
-const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
+const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [filteredOptions, setFilteredOptions] = useState(options)
   const searchRef = useRef<HTMLInputElement>(null)
-
-  const handleSelect = (optionValue: string) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const { data: universities, isFetching } = useUniversitySearch(searchTerm || ' ')
+  const handleSelect = (optionValue: any) => {
     onChange(optionValue)
     setShow(false)
-  }
-
-  const handleSearch = () => {
-    const searchValue = searchRef.current?.value.toLowerCase() || ''
-    setFilteredOptions(searchValue === '' ? options : options.filter((option: string) => option.toLowerCase().includes(searchValue)))
   }
 
   useEffect(() => {
@@ -81,19 +78,26 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
                 className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm border-neutral-200 text-neutral-700 h-10 outline-none"
                 ref={searchRef}
                 placeholder="Search..."
-                onChange={handleSearch}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             )}
-            {filteredOptions?.length > 0 ? (
-              filteredOptions?.map((item: string, key: number) => (
-                <p
-                  className={`${key === 0 ? '' : 'border-t'} border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200`}
+            {universities?.result?.length > 0 ? (
+              universities?.result?.map((item: any, key: number) => (
+                <div
+                  className={`${
+                    key === 0 ? '' : 'border-t'
+                  } border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200 flex gap-2 items-center`}
                   onClick={() => handleSelect(item)}
                   key={key}
                 >
-                  {item}
-                </p>
+                  <img className="rounded-full" width={40} height={40} alt="logo" src={item?.logos?.[0] || (ImagePlaceholder as unknown as string)} />
+                  <p> {item?.name}</p>
+                </div>
               ))
+            ) : isFetching ? (
+              <div className="w-full flex justify-center">
+                <Spinner />
+              </div>
             ) : (
               <p className="text-neutral-500 p-2">No results found</p>
             )}
@@ -104,4 +108,4 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
   )
 }
 
-export default SelectDropdown
+export default SelectUniversityDropdown

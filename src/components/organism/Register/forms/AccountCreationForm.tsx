@@ -1,7 +1,7 @@
 'use client'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import LoginButtons from '@/components/atoms/LoginButtons'
+import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -141,10 +141,10 @@ const AccountCreationForm = () => {
         </div>
       </div>
       <div className="w-10/12 flex flex-col gap-2">
-        <LoginButtons variant="primary">Create an account</LoginButtons>
-        <LoginButtons variant="border" className="flex items-center justify-center gap-2">
+        <Button variant="primary">Create an account</Button>
+        <Button variant="border" className="flex items-center justify-center gap-2">
           <Image src={googleIcon} alt="go" /> Sign up with Google
-        </LoginButtons>
+        </Button>
       </div>
       <button className="mt-4 mx-auto">
         <p>
