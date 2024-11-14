@@ -256,7 +256,6 @@ const MessageContainer = () => {
   }
 
   const renderChat = () => {
-    console.log(selectedChat, 'selectedChat')
     if (selectedChat) {
       return (
         <>
