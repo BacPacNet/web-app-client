@@ -7,24 +7,39 @@ import Title from '@/components/atoms/Title'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { Spinner } from '@/components/spinner/Spinner'
 
 interface props {
   isVerificationSuccess: boolean
+  isPending: boolean
 }
 
-const VerificationForm = ({ isVerificationSuccess }: props) => {
+const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
+  const [countdown, setCountdown] = useState(30)
+  const [isCounting, setIsCounting] = useState(false)
   const {
     register,
     formState: { errors: VerificationFormErrors },
     control,
     getValues,
+    setError,
+    clearErrors,
   } = useFormContext()
   const { mutate: generateLoginEmailOTP } = useHandleLoginEmailVerificationGenerate()
 
-  const [countdown, setCountdown] = useState(30)
-  const [isCounting, setIsCounting] = useState(false)
   const email = getValues('email')
   const handleLoginEmailSendCode = () => {
+    if (!email) {
+      setError('email', { type: 'manual', message: 'Please enter your email!' })
+      return
+    }
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i
+    if (!emailRegex.test(email)) {
+      setError('email', { type: 'manual', message: 'Invalid email format' })
+      return
+    }
+
+    clearErrors('email')
     const data = { email }
 
     generateLoginEmailOTP(data)
@@ -106,7 +121,10 @@ const VerificationForm = ({ isVerificationSuccess }: props) => {
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <Button variant="primary">Confirm</Button>
+        <Button disabled={isPending} variant="primary">
+          {' '}
+          {isPending ? <Spinner /> : 'Confirm'}
+        </Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}
       </div>
     </div>

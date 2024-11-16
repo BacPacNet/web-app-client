@@ -122,11 +122,11 @@ export default function UniversityCard({ communityID, communityGroupID }: Props)
   //    }
   //  }, [communityGroupID, selectedCommunityData, selectedCommunityGroupData])
 
-  const handleToggleJoinCommunityOrGroup = (id: string, join: boolean) => {
+  const handleToggleJoinCommunityOrGroup = (id: string, join: boolean, communityName?: string) => {
     if (communityGroupID) {
       JoinCommunityGroup(id)
     } else if (join) {
-      JoinCommunity(id)
+      JoinCommunity({ id, communityName })
     } else {
       LeaveCommunity(id)
     }
@@ -289,7 +289,11 @@ export default function UniversityCard({ communityID, communityGroupID }: Props)
 
             {/* Buttons  */}
             {!isJoined && communityData?.adminId != userData.id ? (
-              <Button onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true)} size="extra_small" variant="primary">
+              <Button
+                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true, communityData?.name)}
+                size="extra_small"
+                variant="primary"
+              >
                 Join {communityGroupID ? 'Group' : 'Community '}
               </Button>
             ) : communityData?.adminId == userData.id ? (

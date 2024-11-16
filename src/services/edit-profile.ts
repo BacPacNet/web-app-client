@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
@@ -26,14 +26,27 @@ export const useEditProfile = () => {
   })
 }
 
-export const useChangeUserPassword = () => {
-  const setUserProfileData = useUniStore((state) => state.setUserProfileData)
+export const useAddUniversityEmail = () => {
+  // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
+  const { setUserData, setUserProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: any) => addUniversityEmail(data, cookieValue),
     onSuccess: (response: any) => {
-      setUserProfileData(response)
-      console.log('unive', response)
+      setUserProfileData(response.userProfile)
+      if (!response.user.status.isAlreadyJoined && response.user.status.isUniversityCommunity) {
+        setUserData(response.user.updatedUser)
+        return queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      }
+
+      if (response.user.isAlreadyJoined) {
+        return console.log('already Joined')
+      }
+      if (!response.user.isUniversityCommunity) {
+        return console.log('No community')
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

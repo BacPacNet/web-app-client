@@ -42,7 +42,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     if (id) {
       return subscribedCommunities?.find((community) => community._id === id)?.communityGroups
     } else {
-      return subscribedCommunities && subscribedCommunities[0].communityGroups
+      return subscribedCommunities && subscribedCommunities[0]?.communityGroups
     }
   }, [subscribedCommunities, id])
 

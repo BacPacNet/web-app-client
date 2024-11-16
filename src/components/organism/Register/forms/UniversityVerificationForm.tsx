@@ -5,32 +5,49 @@ import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import blueTick from '@/assets/blueBGTick.svg'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import Image from 'next/image'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
+import Spinner from '@/components/atoms/spinner'
 
 interface props {
   setStep: (value: number) => void
 
   setSubStep: (value: number) => void
   isVerificationSuccess: boolean
+  isPending: boolean
 }
 
-const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess }: props) => {
+const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess, isPending }: props) => {
+  const [countdown, setCountdown] = useState(30)
+  const [isCounting, setIsCounting] = useState(false)
   const {
     register,
     formState: { errors: UniversityVerificationFormErrors },
     control,
     getValues,
+    setError,
+    clearErrors,
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP } = useHandleUniversityEmailVerificationGenerate()
   const all = getValues()
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
+    if (!email) {
+      setError('universityEmail', { type: 'manual', message: 'Please enter your email!' })
+      return
+    }
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i
+    if (!emailRegex.test(email)) {
+      setError('universityEmail', { type: 'manual', message: 'Invalid email format' })
+      return
+    }
 
+    clearErrors('universityEmail')
     const data = { email }
+    handleLoginEmailSendCodeCount()
     generateUniversityEmailOTP(data)
   }
 
@@ -39,6 +56,21 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     setSubStep(0)
     localStorage.setItem('registerData', JSON.stringify({ ...all, step: 3, subStep: 0 }))
   }
+
+  const handleLoginEmailSendCodeCount = () => {
+    setIsCounting(true)
+    setCountdown(30)
+  }
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCounting && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+    } else if (countdown === 0) {
+      setIsCounting(false)
+    }
+    return () => clearTimeout(timer)
+  }, [countdown, isCounting])
 
   return (
     <div className="w-1/2 flex flex-col gap-6 items-center">
@@ -115,9 +147,10 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
                 : 'Please enter your email!'}
             </InputWarningText>
           )}
-          <Button onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+          <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
             Send Code
           </Button>
+          {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
         </div>
         {/* otp  */}
         <div className="relative w-full flex flex-col gap-2">
@@ -140,10 +173,11 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <Button variant="shade" onClick={() => handleNext()} type="button">
+        <Button disabled={isPending} variant="shade" onClick={() => handleNext()} type="button">
           Skip University Verification
         </Button>
-        <Button variant="primary">Confirm</Button>
+
+        <Button variant="primary"> {isPending ? <Spinner /> : 'Confirm'}</Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}
       </div>
     </div>
