@@ -40,7 +40,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     isPending: UniversityEmailVerificationIsPending,
   } = useHandleUniversityEmailVerification()
 
-  const { mutateAsync: HandleRegister } = useHandleRegister_v2()
+  const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
   const router = useRouter()
 
   useEffect(() => {
@@ -263,7 +263,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
         />
       )
     } else if (step === 3) {
-      return <ClaimBenefitForm />
+      return <ClaimBenefitForm isPending={registerIsPending} />
     } else if (step === 4) {
       return <FinalLoginForm />
     }

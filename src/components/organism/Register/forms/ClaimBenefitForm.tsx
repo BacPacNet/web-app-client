@@ -6,8 +6,13 @@ import Title from '@/components/atoms/Title'
 import { badgeData } from '@/types/RegisterForm'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
+import { Spinner } from '@/components/spinner/Spinner'
 
-const ClaimBenefitForm = () => {
+interface Props {
+  isPending: boolean
+}
+
+const ClaimBenefitForm = ({ isPending }: Props) => {
   const {
     register,
     formState: { errors: VerificationFormErrors },
@@ -52,7 +57,7 @@ const ClaimBenefitForm = () => {
         </div>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
-        <Button variant="primary">Complete Sign Up</Button>
+        <Button variant="primary">{isPending ? <Spinner /> : 'Complete Sign Up '}</Button>
       </div>
     </div>
   )
