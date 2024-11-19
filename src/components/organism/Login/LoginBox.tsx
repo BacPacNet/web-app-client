@@ -13,6 +13,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { AxiosError } from 'axios'
+import { Spinner } from '@/components/spinner/Spinner'
 
 const LoginBox = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -28,7 +29,7 @@ const LoginBox = () => {
     },
   })
 
-  const { mutate: mutateLogin, isSuccess, error } = useHandleLogin()
+  const { mutate: mutateLogin, isSuccess, error, isPending } = useHandleLogin()
 
   const isAxiosError = (error: unknown): error is AxiosError<any> => {
     return (error as AxiosError)?.isAxiosError === true
@@ -107,7 +108,7 @@ const LoginBox = () => {
             <input className="w-4 h-4 border-neutral-300" type="checkbox" />
             <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
           </div>
-          <Button variant="primary">Log in</Button>
+          <Button variant="primary">{isPending ? <Spinner /> : 'Log in'}</Button>
           <InputWarningText>{isAxiosError(error) && error.response?.data?.message}</InputWarningText>
         </form>
       </div>

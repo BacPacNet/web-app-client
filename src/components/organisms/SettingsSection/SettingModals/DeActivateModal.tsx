@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
 import { useDeActivateUserAccount } from '@/services/user'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -36,7 +37,7 @@ const DeActivateModal = ({ setModal }: Props) => {
     showNewPassword: false,
     showConfirmPassword: false,
   })
-  const { mutate, error } = useDeActivateUserAccount()
+  const { mutate, error, isPending: isPendingChangeApi } = useDeActivateUserAccount()
   const {
     register,
     handleSubmit,
@@ -185,7 +186,7 @@ const DeActivateModal = ({ setModal }: Props) => {
             {errors.sure && <InputWarningText>{'Please accept to continue'}</InputWarningText>}
           </div>
           <Button type="submit" className=" w-11/12" size="small" variant="danger">
-            Deactivate Account
+            {isPendingChangeApi ? <Spinner /> : '  Deactivate Account'}
           </Button>
         </form>
         {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}

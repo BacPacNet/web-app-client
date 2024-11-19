@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 
 import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
-import { useChangeUserPassword } from '@/services/edit-profile'
+import { useAddUniversityEmail } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -26,6 +26,8 @@ type FormDataType = {
 }
 
 const UniversityVerificationModal = ({ setModal }: Props) => {
+  const [countdown, setCountdown] = useState(30)
+  const [isCounting, setIsCounting] = useState(false)
   const {
     register,
     handleSubmit,
@@ -36,7 +38,7 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
     getValues,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
-  const { mutate, error } = useChangeUserPassword()
+  const { mutate, error, isPending: isPendingChangeApi } = useAddUniversityEmail()
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -52,12 +54,27 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
 
     clearErrors('universityEmail')
     const data = { email }
+    handleUniversityEmailSendCodeCount()
     generateUniversityEmailOTP(data)
   }
 
   const onSubmit = async (data: FormDataType) => {
     mutate(data)
   }
+  const handleUniversityEmailSendCodeCount = () => {
+    setIsCounting(true)
+    setCountdown(30)
+  }
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCounting && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+    } else if (countdown === 0) {
+      setIsCounting(false)
+    }
+    return () => clearTimeout(timer)
+  }, [countdown, isCounting])
 
   return (
     <SettingModalWrapper setModal={setModal}>
@@ -114,9 +131,10 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
                   {errors.universityEmail.message ? errors.universityEmail.message.toString() : 'Please enter your email!'}
                 </InputWarningText>
               )}
-              <Button onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+              <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
                 Send Code
               </Button>
+              {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
             </div>
 
             {isPending && (
@@ -148,8 +166,8 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
             )}
           </div>
           {otpData?.isAvailable ? (
-            <Button type="submit" className=" w-11/12" size="small">
-              Complete Verification
+            <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+              {isPendingChangeApi ? <Spinner /> : 'Complete Verification'}
             </Button>
           ) : (
             ''

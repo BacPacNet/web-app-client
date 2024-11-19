@@ -46,7 +46,7 @@ async function loginEmailVerificationCodeGenerate(data: { email: string }) {
   const response: any = await client(`/useremailverification`, { method: 'POST', data })
   return response
 }
-async function loginEmailVerification(data: data) {
+async function loginEmailVerification(data: { email: string; verificationOtp: string }) {
   const response: { isAvailable: boolean } = await client(`/useremailverification`, { method: 'PUT', data })
   return response
 }
@@ -55,7 +55,7 @@ async function universityEmailVerificationCodeGenerate(data: { email: string }) 
   const response: any = await client(`/universityemailverification`, { method: 'POST', data })
   return response
 }
-async function universityEmailVerification(data: data) {
+async function universityEmailVerification(data: { universityEmail: string; UniversityOtp: string }) {
   const response: { isAvailable: boolean } = await client(`/universityemailverification`, { method: 'PUT', data })
   return response
 }
@@ -116,7 +116,7 @@ export const useHandleLoginEmailVerificationGenerate = () => {
 
 export const useHandleLoginEmailVerification = () => {
   return useMutation({
-    mutationFn: (data: data) => loginEmailVerification(data),
+    mutationFn: (data: { email: string; verificationOtp: string }) => loginEmailVerification(data),
   })
 }
 export const useHandleUniversityEmailVerificationGenerate = () => {
@@ -127,6 +127,6 @@ export const useHandleUniversityEmailVerificationGenerate = () => {
 
 export const useHandleUniversityEmailVerification = () => {
   return useMutation({
-    mutationFn: (data: data) => universityEmailVerification(data),
+    mutationFn: (data: { universityEmail: string; UniversityOtp: string }) => universityEmailVerification(data),
   })
 }

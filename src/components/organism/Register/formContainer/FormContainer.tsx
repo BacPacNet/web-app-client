@@ -28,12 +28,19 @@ interface Props {
 
 const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
-  const { mutateAsync: handleUserCheck } = useHandleUserEmailAndUserNameAvailability()
-  const { mutateAsync: handleUserLoginEmailVerification, isSuccess: userLoginEmailVerificationSuccess } = useHandleLoginEmailVerification()
-  const { mutateAsync: handleUserUniversityEmailVerification, isSuccess: userUniversityEmailVerificationSuccess } =
-    useHandleUniversityEmailVerification()
+  const { mutateAsync: handleUserCheck, isPending: handleUserCheckIsPending } = useHandleUserEmailAndUserNameAvailability()
+  const {
+    mutateAsync: handleUserLoginEmailVerification,
+    isSuccess: userLoginEmailVerificationSuccess,
+    isPending: userLoginEmailVerificationIsPending,
+  } = useHandleLoginEmailVerification()
+  const {
+    mutateAsync: handleUserUniversityEmailVerification,
+    isSuccess: userUniversityEmailVerificationSuccess,
+    isPending: UniversityEmailVerificationIsPending,
+  } = useHandleUniversityEmailVerification()
 
-  const { mutateAsync: HandleRegister } = useHandleRegister_v2()
+  const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
   const router = useRouter()
 
   useEffect(() => {
@@ -111,9 +118,13 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     setUserType(currUserType)
   }, [currUserType])
 
-  const userCheck = async (data: FormDataType) => {
+  const userCheck = async (data: { email: string; userName: string }) => {
     try {
-      const isAvailable = await handleUserCheck(data)
+      const dataToSend = {
+        email: data.email,
+        userName: data.userName,
+      }
+      const isAvailable = await handleUserCheck(dataToSend)
       return isAvailable
     } catch (error: any) {
       if (error.response.data.message == userCheckError.emailNotAvailable) {
@@ -124,18 +135,26 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     }
   }
 
-  const userLoginEmailVerification = async (data: FormDataType) => {
+  const userLoginEmailVerification = async (data: { email: string; verificationOtp: string }) => {
     try {
-      const isAvailable = await handleUserLoginEmailVerification(data)
+      const dataToSend = {
+        email: data.email,
+        verificationOtp: data.verificationOtp,
+      }
+      const isAvailable = await handleUserLoginEmailVerification(dataToSend)
       return isAvailable
     } catch (error: any) {
       methods.setError('verificationOtp', { message: error.response.data.message })
     }
   }
 
-  const userUniversityEmailVerification = async (data: FormDataType) => {
+  const userUniversityEmailVerification = async (data: { universityEmail: string; UniversityOtp: string }) => {
     try {
-      const isAvailable = await handleUserUniversityEmailVerification(data)
+      const dataToSend = {
+        universityEmail: data.universityEmail,
+        UniversityOtp: data.UniversityOtp,
+      }
+      const isAvailable = await handleUserUniversityEmailVerification(dataToSend)
 
       return isAvailable
     } catch (error: any) {
@@ -225,7 +244,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
 
   const renderStep = () => {
     if (step === 0 && subStep === 0) {
-      return <AccountCreationForm />
+      return <AccountCreationForm isPending={handleUserCheckIsPending} />
     } else if (step === 1 && subStep === 0) {
       return <ProfileSetupForm />
     } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Student) {
@@ -233,11 +252,18 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Faculty) {
       return <ProfileFacultyForm />
     } else if (step === 2 && subStep === 0) {
-      return <VerificationForm isVerificationSuccess={userLoginEmailVerificationSuccess} />
+      return <VerificationForm isVerificationSuccess={userLoginEmailVerificationSuccess} isPending={userLoginEmailVerificationIsPending} />
     } else if (step === 2 && subStep === 1) {
-      return <UniversityVerificationForm setStep={setStep} setSubStep={setSubStep} isVerificationSuccess={userUniversityEmailVerificationSuccess} />
+      return (
+        <UniversityVerificationForm
+          setStep={setStep}
+          setSubStep={setSubStep}
+          isVerificationSuccess={userUniversityEmailVerificationSuccess}
+          isPending={UniversityEmailVerificationIsPending}
+        />
+      )
     } else if (step === 3) {
-      return <ClaimBenefitForm />
+      return <ClaimBenefitForm isPending={registerIsPending} />
     } else if (step === 4) {
       return <FinalLoginForm />
     }

@@ -25,8 +25,11 @@ export async function UpdateCommunity(communityId: string, data: any) {
   return response
 }
 
-export async function JoinCommunity(communityId: string, token: any) {
-  const response = await client(`/users/${communityId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+export async function JoinCommunity(communityId: string, communityName: string, token: any) {
+  const response = await client(`/users/${communityId}?communityName=${communityName}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 export async function getCommunityUsers(communityId: string, privacy: string, name: string, token: any) {
@@ -199,11 +202,12 @@ export const useUpdateCommunity = () => {
 export const useJoinCommunity = () => {
   const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
-
+  const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (communityId: any) => JoinCommunity(communityId, cookieValue),
+    mutationFn: ({ id, communityName }: any) => JoinCommunity(id, communityName, cookieValue),
     onSuccess: (response: any) => {
       setUserData(response.user)
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -214,11 +218,12 @@ export const useJoinCommunity = () => {
 export const useLeaveCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const { setUserData } = useUniStore()
-
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
       setUserData(response.user)
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

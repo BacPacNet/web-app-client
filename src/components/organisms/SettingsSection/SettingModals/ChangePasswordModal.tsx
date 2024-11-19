@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
 import { useChangeUserPassword } from '@/services/user'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -42,7 +43,7 @@ const ChangePasswordModal = ({ setModal }: Props) => {
   } = useForm<passwordForm>({})
   const password = watch('newPassword')
 
-  const { mutate, error } = useChangeUserPassword()
+  const { mutate, error, isPending: isPendingChangeApi } = useChangeUserPassword()
 
   const onSubmit = async (data: passwordForm) => {
     mutate(data)
@@ -152,8 +153,8 @@ const ChangePasswordModal = ({ setModal }: Props) => {
             </div>
             {errors.confirmPassword && <InputWarningText>{errors.confirmPassword?.message || 'Please enter your password!'}</InputWarningText>}
           </div>
-          <Button type="submit" className=" w-11/12" size="small">
-            Push Change
+          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+            {isPendingChangeApi ? <Spinner /> : 'Push Change'}
           </Button>
         </form>
         {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}

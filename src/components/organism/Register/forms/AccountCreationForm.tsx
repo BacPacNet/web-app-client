@@ -10,10 +10,17 @@ import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import googleIcon from '@/assets/Social icon.svg'
 import Image from 'next/image'
+import { Spinner } from '@/components/spinner/Spinner'
+import { useRouter } from 'next/navigation'
 
-const AccountCreationForm = () => {
+type Props = {
+  isPending: boolean
+}
+
+const AccountCreationForm = ({ isPending }: Props) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const router = useRouter()
   const {
     register,
     formState: { errors: registerFormErrors },
@@ -141,16 +148,22 @@ const AccountCreationForm = () => {
         </div>
       </div>
       <div className="w-10/12 flex flex-col gap-2">
-        <Button variant="primary">Create an account</Button>
-        <Button variant="border" className="flex items-center justify-center gap-2">
+        <Button disabled={isPending} variant="primary">
+          {isPending ? <Spinner /> : ' Create an account'}
+        </Button>
+        <Button type="button" variant="border" className="flex items-center justify-center gap-2">
           <Image src={googleIcon} alt="go" /> Sign up with Google
         </Button>
       </div>
-      <button className="mt-4 mx-auto">
+      <div className="mt-4 mx-auto">
         <p>
-          Already have an account? <span className="text-primary-500"> Log in</span>
+          Already have an account?{' '}
+          <span onClick={() => router.push('/login')} className="text-primary-500 cursor-pointer">
+            {' '}
+            Log in
+          </span>
         </p>
-      </button>
+      </div>
     </div>
   )
 }

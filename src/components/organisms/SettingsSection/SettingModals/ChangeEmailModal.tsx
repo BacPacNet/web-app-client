@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
@@ -24,8 +24,10 @@ type FormDataType = {
 }
 
 const ChangeEmailModal = ({ setModal }: Props) => {
+  const [countdown, setCountdown] = useState(30)
+  const [isCounting, setIsCounting] = useState(false)
   const { mutate: generateEmailOTP, data: otpData, isPending } = useHandleLoginEmailVerificationGenerate()
-  const { mutate, error } = useChangeUserEmail()
+  const { mutate, error, isPending: isPendingChangeApi } = useChangeUserEmail()
   const {
     register,
     handleSubmit,
@@ -50,12 +52,28 @@ const ChangeEmailModal = ({ setModal }: Props) => {
 
     clearErrors('newMail')
     const data = { email }
+    handleLoginEmailSendCodeCount()
     generateEmailOTP(data)
   }
 
   const onSubmit = async (data: FormDataType) => {
     mutate(data)
   }
+
+  const handleLoginEmailSendCodeCount = () => {
+    setIsCounting(true)
+    setCountdown(30)
+  }
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCounting && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+    } else if (countdown === 0) {
+      setIsCounting(false)
+    }
+    return () => clearTimeout(timer)
+  }, [countdown, isCounting])
 
   return (
     <SettingModalWrapper setModal={setModal}>
@@ -110,9 +128,10 @@ const ChangeEmailModal = ({ setModal }: Props) => {
               {errors.newMail && (
                 <InputWarningText>{errors.newMail.message ? errors.newMail.message.toString() : 'Please enter your email!'}</InputWarningText>
               )}
-              <Button onClick={() => handleEmailSendCode()} type="button" variant="border_primary">
+              <Button disabled={isCounting} onClick={() => handleEmailSendCode()} type="button" variant="border_primary">
                 Send Code
               </Button>
+              {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
             </div>
 
             {/* otp  */}
@@ -137,15 +156,14 @@ const ChangeEmailModal = ({ setModal }: Props) => {
                   render={({ field }) => <OTPInput length={6} value={field.value || '000000'} onChange={(otp) => field.onChange(otp)} />}
                 />
                 {errors.emailOtp && <InputWarningText>{errors.emailOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>}
-                {/* <Button variant="border_primary">Confirm Code</Button> */}
               </div>
             ) : (
               ''
             )}
           </div>
           {otpData?.isAvailable ? (
-            <Button type="submit" className=" w-11/12" size="small">
-              Push Change
+            <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+              {isPendingChangeApi ? <Spinner /> : 'Push Change'}
             </Button>
           ) : (
             ''
