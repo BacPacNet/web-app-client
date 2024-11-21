@@ -12,6 +12,7 @@ import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
 import { useChangeUserEmail } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -27,7 +28,7 @@ const ChangeEmailModal = ({ setModal }: Props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const { mutate: generateEmailOTP, data: otpData, isPending } = useHandleLoginEmailVerificationGenerate()
-  const { mutate, error, isPending: isPendingChangeApi } = useChangeUserEmail()
+  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useChangeUserEmail()
   const {
     register,
     handleSubmit,
@@ -74,6 +75,13 @@ const ChangeEmailModal = ({ setModal }: Props) => {
     }
     return () => clearTimeout(timer)
   }, [countdown, isCounting])
+
+  useEffect(() => {
+    if (isSuccess) {
+      showCustomSuccessToast('Email Changed Successfully!')
+      setModal(null)
+    }
+  }, [isSuccess])
 
   return (
     <SettingModalWrapper setModal={setModal}>

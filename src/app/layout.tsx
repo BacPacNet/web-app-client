@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 
 import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
-
+import { Toaster } from 'react-hot-toast'
 import SecondaryNavbar from '@/components/Timeline/Navbar'
 import LogoNavbar from '@/components/atoms/LogoNavbar'
 type FontClassName = string
@@ -58,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
             <LogoNavbar />
+            <Toaster />
             {children}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>

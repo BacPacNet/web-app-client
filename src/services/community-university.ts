@@ -5,6 +5,7 @@ import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -133,22 +134,6 @@ export function useGetCommunity(communityId: string) {
   }) as UseQueryResult<Community>
 }
 
-// export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean) {
-//   const [cookieValue] = useCookie('uni_user_token')
-
-//   const state = useQuery({
-//     queryKey: ['communityPostComments'],
-//     queryFn: () => getCommunityPostComments(postId, cookieValue),
-//     enabled: showCommentSection && !!postId && isCommunity && !!cookieValue,
-//   })
-
-//   let errorMessage = null
-//   if (axios.isAxiosError(state.error) && state.error.response) {
-//     errorMessage = state.error.response.data
-//   }
-
-//   return { ...state, error: errorMessage }
-// }
 export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean, limit: number) {
   {
     const [cookieValue] = useCookie('uni_user_token')
@@ -208,6 +193,8 @@ export const useJoinCommunity = () => {
     onSuccess: (response: any) => {
       setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+
+      showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -222,8 +209,12 @@ export const useLeaveCommunity = () => {
   return useMutation({
     mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
     onSuccess: (response: any) => {
-      setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.setQueryData(['communityGroupsPost'], [])
+      setUserData(response.user)
+
+      showCustomDangerToast(`Left Community aa`)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

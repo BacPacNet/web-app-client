@@ -14,6 +14,7 @@ import { useAddUniversityEmail } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -38,7 +39,7 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
     getValues,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
-  const { mutate, error, isPending: isPendingChangeApi } = useAddUniversityEmail()
+  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail()
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -75,6 +76,13 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
     }
     return () => clearTimeout(timer)
   }, [countdown, isCounting])
+
+  useEffect(() => {
+    if (isSuccess) {
+      showCustomSuccessToast('University Email Added Successfully!')
+      setModal(null)
+    }
+  }, [isSuccess])
 
   return (
     <SettingModalWrapper setModal={setModal}>

@@ -83,6 +83,17 @@ export enum PostType {
   Timeline = 'Timeline',
   Profile = 'Profile',
 }
+export enum CommunityPostType {
+  PUBLIC = 'PUBLIC',
+  FOLLOWER_ONLY = 'FOLLOWER_ONLY',
+}
+
+export enum UserPostType {
+  PUBLIC = 'PUBLIC',
+  FOLLOWER_ONLY = 'FOLLOWER_ONLY',
+  MUTUAL = 'MUTUAL',
+  ONLY_ME = 'ONLY_ME',
+}
 
 export interface PostInputData {
   content: string
