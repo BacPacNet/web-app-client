@@ -8,7 +8,7 @@ import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
-import { CommunityPostData, PostInputData, PostInputType } from '@/types/constants'
+import { CommunityPostData, CommunityPostType, PostInputData, PostInputType, UserPostType } from '@/types/constants'
 import { useCreateGroupPost } from '@/services/community-university'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
@@ -26,10 +26,13 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string | null>(null)
   const [images, setImages] = useState<File[]>([])
-  const [postAccessType, setPostAccessType] = useState('Public')
+  const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostType>(UserPostType.PUBLIC)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
   const { userProfileData } = useUniStore()
+
+  const communityPostTypeKey = Object.values(CommunityPostType)
+  const userPostTypeKey = Object.values(UserPostType)
   const handleInput = () => {
     console.log(textareaRef)
     const textarea = textareaRef.current
@@ -106,6 +109,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
         content: inputValue,
         ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
       }
+      // return console.log('coomm', data)
       if (type === PostInputType.Community) {
         const communityData: CommunityPostData = {
           ...data,
@@ -180,15 +184,27 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
             <VscSettings size={24} className="text-neutral-400" />
           </label>
           <div className="w-28 max-sm:w-20">
-            <SelectDropdown
-              options={['Public', 'Private']}
-              value={postAccessType}
-              onChange={(e) => setPostAccessType(e)}
-              placeholder=""
-              icon={'single'}
-              // search={true}
-              err={false}
-            />
+            {type == PostInputType.Community ? (
+              <SelectDropdown
+                options={communityPostTypeKey}
+                value={postAccessType}
+                onChange={(e: any) => setPostAccessType(e)}
+                placeholder=""
+                icon={'single'}
+                // search={true}
+                err={false}
+              />
+            ) : (
+              <SelectDropdown
+                options={userPostTypeKey}
+                value={postAccessType}
+                onChange={(e: any) => setPostAccessType(e)}
+                placeholder=""
+                icon={'single'}
+                // search={true}
+                err={false}
+              />
+            )}
           </div>
         </div>
         <div>

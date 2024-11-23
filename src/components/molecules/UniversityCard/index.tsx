@@ -308,7 +308,7 @@ export default function UniversityCard({ communityID, communityGroupID }: Props)
           </div>
         </div>
         <div>
-          <p className="text-2xs text-neutral-500 py-4">{communityData?.about}</p>
+          <p className="text-2xs text-neutral-500 py-4 ">{communityData?.about}</p>
           <p className="text-2xs text-neutral-500">
             <span>{communityData?.numberOfUser}</span> members
           </p>

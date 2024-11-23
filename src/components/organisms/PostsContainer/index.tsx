@@ -8,6 +8,8 @@ import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
+import { AxiosError } from 'axios'
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
   communityID?: string
@@ -18,6 +20,7 @@ type Props = {
 }
 const PostContainer = ({ communityID = '', communityGroupID = '', type, userId = '', containerRef }: Props) => {
   const { userData } = useUniStore()
+  const queryClient = useQueryClient()
   const {
     isLoading,
     data: TimelinePosts,
@@ -36,8 +39,15 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
     fetchNextPage: communityPostNextpage,
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
+    error: communityPostError,
+    isError: communityPostIsError,
+    dataUpdatedAt,
+    isFetching,
   } = useGetCommunityGroupPost(communityID, communityGroupID, issJoined, type == PostType.Community, 2)
-  const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+  // const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+  const [communityDatas, setCommunityDatas] = useState([])
+
+  console.log('clo', isFetching)
 
   const { data: userSelfPosts } = useGetUserPosts(userId)
 
@@ -120,28 +130,16 @@ const PostContainer = ({ communityID = '', communityGroupID = '', type, userId =
     communityPostNextpage,
   ])
 
-  //  useEffect(() => {
-  //    const handleScroll = () => {
-  //      const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10
-  //      if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage && type == PostType.Community) {
-  //        communityPostNextpage()
-  //      }
-  //      if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
-  //        timelinePostsNextpage()
-  //      }
-  //    }
+  useEffect(() => {
+    if (isFetching) {
+      setCommunityDatas([])
+    }
+  }, [isFetching, queryClient])
 
-  //    window.addEventListener('scroll', handleScroll)
-  //    return () => window.removeEventListener('scroll', handleScroll)
-  //  }, [
-  //    communityPostHasNextPage,
-  //    communityPostIsFetchingNextPage,
-  //    communityPostNextpage,
-  //    timelinePostHasNextPage,
-  //    timelinePostIsFetchingNextPage,
-  //    timelinePostsNextpage,
-  //    type,
-  //  ])
+  useEffect(() => {
+    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
+    setCommunityDatas(communityDatas)
+  }, [communityGroupPost, dataUpdatedAt])
 
   const renderPostWithRespectToPathName = () => {
     switch (type) {

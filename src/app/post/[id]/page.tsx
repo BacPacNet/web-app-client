@@ -38,7 +38,8 @@ const SinglePost = () => {
       </div>
     )
   }
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, comments, likeCount } = item
+
+  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount } = item
   return (
     <div className="w-full   flex justify-center ">
       <div className="w-1/2 shadow-card rounded-2xl mt-10">
@@ -51,7 +52,7 @@ const SinglePost = () => {
           text={content}
           date={createdAt}
           avatarLink={profile?.profile_dp?.imageUrl}
-          commentCount={comments.length}
+          commentCount={commentCount}
           likes={likeCount}
           postID={_id}
           type={String(Type) == 'Timeline' ? PostType.Timeline : PostType.Community}

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
@@ -12,6 +12,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
 import { useDeActivateUserAccount } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   setModal: (value: string | null) => void
@@ -37,7 +38,7 @@ const DeActivateModal = ({ setModal }: Props) => {
     showNewPassword: false,
     showConfirmPassword: false,
   })
-  const { mutate, error, isPending: isPendingChangeApi } = useDeActivateUserAccount()
+  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useDeActivateUserAccount()
   const {
     register,
     handleSubmit,
@@ -56,6 +57,13 @@ const DeActivateModal = ({ setModal }: Props) => {
       [field]: !prevState[field],
     }))
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      showCustomSuccessToast('Account De-Activated Successfully!')
+      setModal(null)
+    }
+  }, [isSuccess])
 
   return (
     <SettingModalWrapper setModal={setModal}>

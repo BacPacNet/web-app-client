@@ -2,6 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { FiUserCheck, FiUser } from 'react-icons/fi'
+
+import { MdOutlinePublic } from 'react-icons/md'
+import { FiUsers } from 'react-icons/fi'
+const icons = [MdOutlinePublic, FiUserCheck, FiUsers, FiUser]
 
 interface SelectDropdownProps {
   options: string[]
@@ -57,7 +62,10 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'}`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${value.length > 8 ? 'text-[8px]' : 'text-2xs'}`}>
+          {' '}
+          {value || placeholder}
+        </p>
         <div>
           {icon == 'single' ? (
             <IoIosArrowDown />
@@ -72,7 +80,7 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
       <AnimatePresence>
         {show && (
           <motion.div
-            className="flex flex-col  gap-2 w-full absolute right-0  bg-white p-2 shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 overflow-y-scroll"
+            className="flex flex-col  gap-1 absolute right-0  bg-white p-1 shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto"
             {...motionStyle}
           >
             {search && (
@@ -85,15 +93,21 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
               />
             )}
             {filteredOptions?.length > 0 ? (
-              filteredOptions?.map((item: string, key: number) => (
-                <p
-                  className={`${key === 0 ? '' : 'border-t'} border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200`}
-                  onClick={() => handleSelect(item)}
-                  key={key}
-                >
-                  {item}
-                </p>
-              ))
+              filteredOptions?.map((item: string, key: number) => {
+                const IconComponent = icons[key % icons.length]
+                return (
+                  <div
+                    className={`${
+                      key === 0 ? '' : 'border-t'
+                    } flex gap-2 items-center border-neutral-300 text-2xs text-neutral-900 p-1 cursor-pointer hover:bg-gray-200`}
+                    onClick={() => handleSelect(item)}
+                    key={key}
+                  >
+                    <IconComponent size={16} className="text-neutral-900" />
+                    <p>{item}</p>
+                  </div>
+                )
+              })
             ) : (
               <p className="text-neutral-500 p-2">No results found</p>
             )}

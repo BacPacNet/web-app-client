@@ -13,7 +13,7 @@ export default function Page({ params }: { params: { id: string; groupId: string
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll ">
       <UniversityCard communityID={communityID} communityGroupID={communityGroupID} />
       <UserPostContainer communityID={communityID} communityGroupID={communityGroupID} type={PostInputType.Community} />
       <PostContainer communityID={communityID} communityGroupID={communityGroupID} type={PostType.Community} containerRef={containerRef} />

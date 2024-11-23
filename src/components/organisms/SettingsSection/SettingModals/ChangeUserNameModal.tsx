@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
@@ -12,6 +12,8 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { CiLock } from 'react-icons/ci'
 import { useChangeUserName } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+
 type props = {
   setModal: (value: string | null) => void
 }
@@ -29,11 +31,18 @@ const ChangeUserNameModal = ({ setModal }: props) => {
     formState: { errors },
   } = useForm<UserForm>({})
 
-  const { mutate, error, isPending: isPendingChangeApi } = useChangeUserName()
+  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useChangeUserName()
 
   const onSubmit = async (data: UserForm) => {
     mutate(data)
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      showCustomSuccessToast('User Name Changed Successfully!')
+      setModal(null)
+    }
+  }, [isSuccess])
 
   return (
     <SettingModalWrapper setModal={setModal}>

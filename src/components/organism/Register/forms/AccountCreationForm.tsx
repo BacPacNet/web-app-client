@@ -4,7 +4,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
@@ -107,6 +107,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
             ) : (
               <AiOutlineEye className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
             )}
+            {/* <PasswordToggleIcon showPassword={showPassword} onClick={(value: any) => setShowPassword(value)} /> */}
           </div>
           {password?.length ? (
             <div className="flex w-full gap-1 ">
