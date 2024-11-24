@@ -193,6 +193,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
                 icon={'single'}
                 // search={true}
                 err={false}
+                showIcon={true}
               />
             ) : (
               <SelectDropdown
@@ -203,6 +204,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
                 icon={'single'}
                 // search={true}
                 err={false}
+                showIcon={true}
               />
             )}
           </div>

@@ -16,6 +16,7 @@ interface SelectDropdownProps {
   icon: string
   search?: boolean
   err: boolean
+  showIcon?: boolean
 }
 
 const motionStyle = {
@@ -24,7 +25,7 @@ const motionStyle = {
   exit: { opacity: 0, y: '-10%', transition: { duration: '0.35' } },
   transition: { type: 'spring', stiffness: '100', duration: '0.75' },
 }
-const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
+const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err, showIcon = false }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [filteredOptions, setFilteredOptions] = useState(options)
@@ -103,7 +104,7 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
                     onClick={() => handleSelect(item)}
                     key={key}
                   >
-                    <IconComponent size={16} className="text-neutral-900" />
+                    {showIcon && <IconComponent size={16} className="text-neutral-900" />}
                     <p>{item}</p>
                   </div>
                 )
