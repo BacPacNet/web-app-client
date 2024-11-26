@@ -20,13 +20,13 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
   const router = useRouter()
   const { id, groupId: communityGroupId }: { id: string; groupId: string } = useParams()
-  const [selectCommunityId, selectedCommuntyGroupdId] = [id, communityGroupId]
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState(false)
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
+  const [selectCommunityId, selectedCommuntyGroupdId] = [id || community?._id, communityGroupId]
 
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
 

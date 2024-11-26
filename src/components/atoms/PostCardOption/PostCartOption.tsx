@@ -1,5 +1,6 @@
 'use client'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { useDeleteCommunityPost } from '@/services/community-post'
 import { useDeleteUserPost } from '@/services/community-timeline'
 import Link from 'next/link'
 
@@ -10,15 +11,21 @@ import { MdDeleteForever, MdOutlineBookmarkBorder, MdOutlineOpenInNew } from 're
 
 interface PostOptionType {
   postID: string
-  isType: string
+  isType: 'Community' | 'Timeline'
   isSelfPost: boolean
 }
 
 const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
   const { mutate: mutateDeletePost } = useDeleteUserPost()
+  const { mutate: mutateDeleteCommunityPost } = useDeleteCommunityPost()
 
   const handleDeletePost = () => {
-    mutateDeletePost(postID)
+    if (isType === 'Community') {
+      mutateDeleteCommunityPost(postID)
+    }
+    if (isType === 'Timeline') {
+      mutateDeletePost(postID)
+    }
   }
   return (
     <Popover>

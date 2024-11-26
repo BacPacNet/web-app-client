@@ -2,7 +2,7 @@
 import Button from '@/components/atoms/Buttons'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import avatar from '@assets/avatar.svg'
+import avatar from '@assets/unibuzz_rounded.svg'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'

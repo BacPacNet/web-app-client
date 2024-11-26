@@ -188,10 +188,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
   }
 
   const setActiveComments = (clickedComment: any) => {
-    console.log('cc', clickedComment)
-
     if (isMobile && clickedComment.level % 2 == 0) {
-      // console.log(clickedComment.level % 2 == 0)
       return setCommentId(clickedComment._id)
     }
     if (clickedComment.level % 3 == 0 && clickedComment.level !== 3) {

@@ -1,18 +1,19 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import SelectUsers from '../../communityUniversity/SelectUsers'
-import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/community-university'
+import { useCreateCommunityGroup, useGetCommunityUsers, useUpdateCommunityGroup } from '@/services/community-university'
 import { useParams } from 'next/navigation'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
+import { CommunityGroupType } from '@/types/CommuityGroup'
 
 type Props = {
-  communityId: string
+  communityGroups: CommunityGroupType
   setNewGroup: (value: boolean) => void
 }
 
@@ -30,23 +31,37 @@ type User = {
   }
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
-  const [logoImage, setLogoImage] = useState()
-  const [coverImage, setCoverImage] = useState()
+const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
+  const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
+  const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
   const [userPopUp, setUserPopUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const selectedUsersId = selectedUsers.map((item: any) => item._id)
+  const selectedUsersId = selectedUsers.map((item: any) => {
+    return { userId: item._id }
+  })
   const [searchInput, setSearchInput] = useState('')
-  const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
     formState: { errors: GroupErrors },
     getValues,
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      title: communityGroups.title,
+      description: communityGroups.description,
+      communityGroupType: communityGroups.communityGroupType,
+      groupType: 'Casual',
+      groupCategory: '',
+    },
+  })
 
   const values = getValues()
+  const { data: allCommunityUsers } = useGetCommunityUsers(communityGroups?.communityId, userPopUp, values.communityGroupType, searchInput)
+  const handleSelectAll = useCallback(() => {
+    //const allUsers = communityGroups.users
+  }, [])
 
   const onGroupSubmit = async (data: any) => {
     let CoverImageData
@@ -67,12 +82,10 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       ...logoImageData,
       selectedUsersId,
     }
-    createGroup({ communityId: communityId, data: dataToPush })
+    mutateEditGroup({ communityId: communityGroups?._id, payload: dataToPush })
     setIsLoading(false)
     setNewGroup(false)
   }
-
-  const { data } = useGetCommunityUsers(communityId, userPopUp, values.communityGroupType, searchInput)
 
   return (
     <>
@@ -80,7 +93,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       {userPopUp && (
         <>
           <div className="fixed w-full h-[100%] top-0 left-0 bg-black backdrop-blur-xl opacity-50 z-50"></div>
-          <div className="fixed w-1/3 max-sm:w-11/12 z-50 h-3/4 top-[50%] -translate-y-[50%] left-1/3 bg-white flex flex-col items-center gap-4 shadow-lg px-6 py-4 rounded-lg">
+          <div className="fixed w-[90%] lg:w-[40%]  h-[70%] z-50 left-[50%]  top-[50%] -translate-x-[50%] -translate-y-[50%] bg-white flex flex-col items-center gap-4 shadow-lg px-6 py-4 rounded-lg">
             <div className="flex justify-between w-full">
               <h3>Add Community members</h3>
               <RxCross2 onClick={() => setUserPopUp(false)} size={24} color="#737373" />
@@ -104,10 +117,10 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 className="w-full pl-12 pr-3 py-1 text-gray-500 bg-transparent outline-none border border-neutral-300 rounded-2xl text-xs"
               />
             </div>
-            <button onClick={() => setSelectedUsers(data?.user)} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
+            <button onClick={handleSelectAll} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
               Select All
             </button>
-            {data?.user?.map((item: any) => (
+            {allCommunityUsers?.user?.map((item: any) => (
               <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
             ))}
           </div>
@@ -127,7 +140,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               !coverImage ? 'border-2 border-neutral-200' : ''
             } rounded-md relative  flex flex-col w-full items-center justify-center h-40 `}
           >
-            {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
+            {coverImage && (
+              <img
+                className="w-full h-full  absolute -z-10 object-cover rounded-lg"
+                src={typeof coverImage === 'object' ? URL.createObjectURL(coverImage) : coverImage}
+                alt=""
+              />
+            )}
             <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
             <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
               <FiCamera size={40} className="text-primary-500" />
@@ -142,7 +161,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
           <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-4">
             <div className="flex gap-4 items-center justify-between">
               <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
-                {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
+                {logoImage && (
+                  <img
+                    className="w-24 h-24 rounded-full absolute  object-cover"
+                    src={typeof logoImage === 'object' ? URL.createObjectURL(logoImage) : logoImage}
+                    alt=""
+                  />
+                )}
                 <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
                 <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
                   <FiCamera size={40} className="text-slate-400 z-30" />
@@ -286,7 +311,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               </div>
             </div>
             <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
-              {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
+              {isLoading || isPending ? <Spinner /> : <p>Update Changes</p>}
             </button>
             {/* <button
               type="reset"
@@ -302,4 +327,4 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   )
 }
 
-export default CreateNewGroup
+export default EditCommunityGroupModal

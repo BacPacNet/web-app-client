@@ -1,5 +1,4 @@
 'use client'
-import Loading from '@/components/atoms/Loading'
 import PostCard from '@/components/molecules/PostCard'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
@@ -29,9 +28,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     isLoading,
     error,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, true, 2)
-  const CommunityGroupPost = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
-
-  console.log(communityGroupPost, 'communityGroupPost')
+  const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +37,6 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
         console.log(scrollTop, scrollHeight, clientHeight)
         const bottom = scrollTop + clientHeight >= scrollHeight - 10
         if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage) {
-          console.log('true')
           communityPostNextpage()
         }
       }
@@ -57,12 +53,13 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   if (isLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-8" />
 
   if (error) {
-    return <div>{error.message || 'Error loading posts'}</div>
+    return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
+  if (communityGroupPostData.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6">
-      {CommunityGroupPost?.map((post: communityPostType, idx: number) => (
+      {communityGroupPostData?.map((post: communityPostType, idx: number) => (
         <PostCard
           key={post?._id}
           user={post?.user?.firstName + ' ' + post?.user?.lastName}

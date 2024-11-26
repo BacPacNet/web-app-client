@@ -107,7 +107,6 @@ function PostCommentInput({ postID, type, isSinglePost, adminID, isReply, commen
             commenterProfileId,
             level,
           }
-          console.log('rep1', replyData)
         } else {
           CreateUserPostComment(data)
         }

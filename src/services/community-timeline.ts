@@ -97,9 +97,6 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
           queryClient.invalidateQueries({ queryKey: ['commentById'] })
         }
       } else {
-        // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-        console.log(data)
-
         queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
       }
     },
@@ -283,7 +280,6 @@ export const useLikeUnlikeTimelinePost = () => {
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: AxiosErrorType) => {
-      console.log(res)
       console.log(res.response?.data.message, 'res')
     },
   })

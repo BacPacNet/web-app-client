@@ -62,7 +62,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
       setUploadFunc('cover')
       const dataToPush = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
 
-      UpdateCommunityGroup({ dataToPush, id: data._id })
+      UpdateCommunityGroup({ communityId: data._id, payload: dataToPush })
     } else {
       console.error('No file selected.')
     }
@@ -76,7 +76,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
       setTempImg(imagedata?.imageUrl)
       setUploadFunc('logo')
       const dataToPush = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-      UpdateCommunityGroup({ dataToPush, id: data._id })
+      UpdateCommunityGroup({ communityId: data._id, payload: dataToPush })
     } else {
       console.error('No file selected.')
     }

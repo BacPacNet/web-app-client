@@ -34,7 +34,6 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   const communityPostTypeKey = Object.values(CommunityPostType)
   const userPostTypeKey = Object.values(UserPostType)
   const handleInput = () => {
-    console.log(textareaRef)
     const textarea = textareaRef.current
     if (textarea) {
       valueRef.current = textareaRef.current.value
