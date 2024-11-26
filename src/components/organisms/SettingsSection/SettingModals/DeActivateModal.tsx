@@ -60,7 +60,7 @@ const DeActivateModal = ({ setModal }: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      showCustomSuccessToast('Account De-Activated Successfully!')
+      showCustomSuccessToast('Account De-Activated successfully!')
       setModal(null)
     }
   }, [isSuccess])
@@ -93,7 +93,7 @@ const DeActivateModal = ({ setModal }: Props) => {
                 })}
                 err={!!errors.userName}
               />
-              {errors.userName && <InputWarningText>{'Please enter your userName!'}</InputWarningText>}
+              {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
             </div>
 
             <div className="relative w-full flex flex-col gap-2">

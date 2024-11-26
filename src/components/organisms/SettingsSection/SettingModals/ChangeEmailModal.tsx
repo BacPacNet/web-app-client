@@ -8,7 +8,8 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
+import { OTPInput } from 'input-otp'
+import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
 import { useChangeUserEmail } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -139,7 +140,7 @@ const ChangeEmailModal = ({ setModal }: Props) => {
               <Button disabled={isCounting} onClick={() => handleEmailSendCode()} type="button" variant="border_primary">
                 Send Code
               </Button>
-              {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
+              {isCounting && <p className="text-xs text-neutral-500 text-center">Resend available after {countdown}s</p>}
             </div>
 
             {/* otp  */}
@@ -161,9 +162,25 @@ const ChangeEmailModal = ({ setModal }: Props) => {
                     required: 'OTP is required!',
                     validate: (value) => value.length === 6 || 'OTP must be 6 digits long!',
                   }}
-                  render={({ field }) => <OTPInput length={6} value={field.value || '000000'} onChange={(otp) => field.onChange(otp)} />}
+                  render={({ field }) => (
+                    <OTPInput
+                      {...field}
+                      maxLength={6}
+                      containerClassName="group flex items-center has-[:disabled]:opacity-30  "
+                      value={field.value}
+                      placeholder="000000"
+                      inputMode="numeric"
+                      render={({ slots }) => (
+                        <div className={`flex gap-2 ${field.value ? 'text-neutral-700' : 'text-neutral-300'} `}>
+                          {slots.map((slot, idx) => (
+                            <Slot key={idx} {...slot} />
+                          ))}
+                        </div>
+                      )}
+                    />
+                  )}
                 />
-                {errors.emailOtp && <InputWarningText>{errors.emailOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>}
+                {errors.emailOtp && <InputWarningText>{errors.emailOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>}
               </div>
             ) : (
               ''

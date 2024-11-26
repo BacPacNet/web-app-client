@@ -106,7 +106,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
         department: registerData?.department || '',
         verificationEmail: registerData?.verificationEmail || '',
         universityId: registerData?.universityId || '',
-        verificationOtp: registerData?.verificationOtp || '000000',
+        verificationOtp: registerData?.verificationOtp || '',
         universityName: registerData?.universityName || '',
         UniversityOtp: registerData?.UniversityOtp || '000000',
         referralCode: registerData?.referralCode || '',
@@ -166,8 +166,14 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     let currStep = step
     let currSubStep = subStep
 
-    if (step === 2 && subStep === 0) {
+    if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       currSubStep += 1
+    } else if (step == 1 && subStep == 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
+      currStep = 2
+    } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      currSubStep += 1
+    } else if (step === 2 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
+      currStep = 3
     } else {
       currStep += 1
       currSubStep = 0
@@ -199,6 +205,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
 
     if (step === 2 && subStep === 0) {
       const isAvailable = await userLoginEmailVerification(data)
+
       if (isAvailable?.isAvailable) {
         handleNext()
         saveToLocalStorage()
@@ -214,6 +221,12 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
       }
       return
     }
+    if (step === 1 && subStep === 0) {
+      handleNext()
+      saveToLocalStorage()
+
+      return
+    }
 
     handleNext()
     saveToLocalStorage()
@@ -224,16 +237,13 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
       const newStep = step + 1
       setStep(newStep)
       return setSubStep(0)
-    }
-    if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+    } else if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       return setSubStep(1)
-    }
-    if (step === 1 && subStep === 1) {
+    } else if (step === 1 && subStep === 1) {
       const newStep = step + 1
       setStep(newStep)
       return setSubStep(0)
-    }
-    if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+    } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       return setSubStep(1)
     } else {
       const newStep = step + 1
@@ -271,7 +281,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
 
   return (
     <FormProvider {...methods}>
-      <form className="flex flex-col items-center justify-center w-2/3" onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className="flex flex-col items-center justify-center w-2/3 max-lg:w-full" onSubmit={methods.handleSubmit(onSubmit)}>
         {renderStep()}
       </form>
     </FormProvider>

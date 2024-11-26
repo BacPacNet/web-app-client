@@ -1,13 +1,16 @@
+'use client'
+import { OTPInput } from 'input-otp'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
-import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
+// import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
+import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 
 interface props {
   isVerificationSuccess: boolean
@@ -63,7 +66,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
   }, [countdown, isCounting])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center">
+    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
       <div className="text-center px-3">
         <Title>Verification</Title>
         <SupportingText>Verify your login credentials.</SupportingText>
@@ -92,10 +95,10 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
             <InputWarningText>
               {VerificationFormErrors.verificationEmail.message
                 ? VerificationFormErrors.verificationEmail.message.toString()
-                : 'Please enter your email!'}
+                : 'please enter your email!'}
             </InputWarningText>
           )}
-          <Button disabled={isCounting} onClick={() => handleLoginEmailSendCode()} type="button" variant="border_primary">
+          <Button disabled={isCounting} onClick={() => handleLoginEmailSendCode()} type="button" variant="border_primary" className="h-10">
             Send Code
           </Button>
           {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
@@ -110,13 +113,29 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
             name="verificationOtp"
             control={control}
             rules={{
-              required: 'OTP is required!',
+              required: 'otp is required!',
               validate: (value) => value.length === 6 || 'OTP must be 6 digits long!',
             }}
-            render={({ field }) => <OTPInput length={6} value={field.value} onChange={(otp) => field.onChange(otp)} />}
+            render={({ field }) => (
+              <OTPInput
+                {...field}
+                maxLength={6}
+                containerClassName="group flex items-center has-[:disabled]:opacity-30  "
+                value={field.value}
+                placeholder="000000"
+                inputMode="numeric"
+                render={({ slots }) => (
+                  <div className={`flex gap-2 ${field.value ? 'text-neutral-700' : 'text-neutral-300'} `}>
+                    {slots.map((slot, idx) => (
+                      <Slot key={idx} {...slot} />
+                    ))}
+                  </div>
+                )}
+              />
+            )}
           />
           {VerificationFormErrors.verificationOtp && (
-            <InputWarningText>{VerificationFormErrors.verificationOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>
+            <InputWarningText>{VerificationFormErrors.verificationOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>
           )}
         </div>
       </div>

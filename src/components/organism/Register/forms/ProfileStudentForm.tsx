@@ -31,17 +31,17 @@ const ProfileStudentForm = () => {
   }, [currDegree, setValue])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center">
+    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
       <div className="text-center px-3">
-        <Title>Profile Setup</Title>
-        <SupportingText>Enter your profile information for networking</SupportingText>
+        <Title>University Setup</Title>
+        <SupportingText>Enter your university information for networking</SupportingText>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
         <div className="w-full flex flex-col relative">
           <Controller
             name="universityName"
             control={control}
-            rules={{ required: 'University Name is required!' }}
+            rules={{ required: 'University name is required!' }}
             render={({ field }) => (
               <SelectUniversityDropdown
                 value={field.value}
@@ -62,7 +62,7 @@ const ProfileStudentForm = () => {
           <Controller
             name="year"
             control={control}
-            rules={{ required: 'year is required!' }}
+            rules={{ required: 'Year is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={currYear}
@@ -81,7 +81,7 @@ const ProfileStudentForm = () => {
           <Controller
             name="degree"
             control={control}
-            rules={{ required: 'degree is required!' }}
+            rules={{ required: 'Degree is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={Object.keys(degreeAndMajors)}
@@ -100,7 +100,7 @@ const ProfileStudentForm = () => {
           <Controller
             name="major"
             control={control}
-            rules={{ required: 'major is required!' }}
+            rules={{ required: 'Major is required!' }}
             disabled={!currDegree}
             render={({ field }) => (
               <SelectDropdown

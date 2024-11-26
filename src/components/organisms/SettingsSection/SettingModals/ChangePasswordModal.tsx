@@ -59,7 +59,7 @@ const ChangePasswordModal = ({ setModal }: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      showCustomSuccessToast('Password Changed Successfully!')
+      showCustomSuccessToast('Password changed successfully!')
       setModal(null)
     }
   }, [isSuccess])

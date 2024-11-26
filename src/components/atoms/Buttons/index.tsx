@@ -10,7 +10,7 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
-    border: 'border border-neutral-200 text-neutral-800 shadow-button',
+    border: 'border border-neutral-200 text-neutral-800 shadow-button ',
     border_primary: 'border border-primary text-primary ',
     danger: 'bg-red-500 text-white',
     shade: 'bg-secondary border border-shade-button-border text-primary-500 drop-shadow-sm',

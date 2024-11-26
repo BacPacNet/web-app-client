@@ -9,7 +9,8 @@ import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
 
-import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
+import { OTPInput } from 'input-otp'
+import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import { useAddUniversityEmail } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
@@ -79,7 +80,7 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      showCustomSuccessToast('University Email Added Successfully!')
+      showCustomSuccessToast('University email added successfully!')
       setModal(null)
     }
   }, [isSuccess])
@@ -99,7 +100,7 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
             <Controller
               name="universityName"
               control={control}
-              rules={{ required: 'University Name is required!' }}
+              rules={{ required: 'University name is required!' }}
               render={({ field }) => (
                 <SelectUniversityDropdown
                   value={field.value}
@@ -164,9 +165,25 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
                     required: 'OTP is required!',
                     validate: (value) => value.length === 6 || 'OTP must be 6 digits long!',
                   }}
-                  render={({ field }) => <OTPInput length={6} value={field.value || '000000'} onChange={(otp) => field.onChange(otp)} />}
+                  render={({ field }) => (
+                    <OTPInput
+                      {...field}
+                      maxLength={6}
+                      containerClassName="group flex items-center has-[:disabled]:opacity-30  "
+                      value={field.value}
+                      placeholder="000000"
+                      inputMode="numeric"
+                      render={({ slots }) => (
+                        <div className={`flex gap-2 ${field.value ? 'text-neutral-700' : 'text-neutral-300'} `}>
+                          {slots.map((slot, idx) => (
+                            <Slot key={idx} {...slot} />
+                          ))}
+                        </div>
+                      )}
+                    />
+                  )}
                 />
-                {errors.UniversityOtp && <InputWarningText>{errors.UniversityOtp.message?.toString() || 'Please enter your OTP!'}</InputWarningText>}
+                {errors.UniversityOtp && <InputWarningText>{errors.UniversityOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>}
                 {/* <Button variant="border_primary">Confirm Code</Button> */}
               </div>
             ) : (

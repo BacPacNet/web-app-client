@@ -2,10 +2,11 @@ import React from 'react'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import Image from 'next/image'
 import RegisterStepper from '../stepper/RegisterStepper'
-
+import { IoIosArrowBack } from 'react-icons/io'
 interface props {
   step: number
   subStep: number
+  onPrev: () => void
 }
 
 const StepHeaders = [
@@ -19,11 +20,19 @@ const StepHeaders = [
   },
   { header: 'All done.', desc: 'You can now join communities, interact with students and faculty, receive consultation, and more!' },
 ]
-const RegisterSIdebar = ({ step, subStep }: props) => {
+const RegisterSIdebar = ({ step, subStep, onPrev }: props) => {
   return (
-    <div className="bg-neutral-100 w-1/3 flex flex-col items-center justify-center">
+    <div className="bg-neutral-100 w-1/3 flex flex-col items-center justify-center max-lg:hidden">
       <div className="flex flex-col w-10/12 gap-8">
-        <Image src={unibuzzLogo} alt="BACPAC LOGO" width={119} height={27} className="h-full cursor-pointer" />
+        <div>
+          <Image src={unibuzzLogo} alt="BACPAC LOGO" width={119} height={27} className="h-full cursor-pointer" />
+          {step !== 0 && (
+            <div onClick={onPrev} className="  text-neutral-600  flex items-center rounded-full text-start cursor-pointer">
+              <IoIosArrowBack />
+              back
+            </div>
+          )}
+        </div>
         <div>
           <h4 className="text-neutral-900 font-semibold text-[28px]">{StepHeaders[step + subStep].header}</h4>
 
