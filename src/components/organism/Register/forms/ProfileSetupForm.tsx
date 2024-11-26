@@ -21,7 +21,7 @@ const ProfileSetupForm = () => {
   } = useFormContext()
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center">
+    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
       <div className="text-center px-3">
         <Title>Profile Setup</Title>
         <SupportingText>Enter your profile information for networking</SupportingText>
@@ -36,7 +36,7 @@ const ProfileSetupForm = () => {
             })}
             err={!!ProfileFormErrors.firstName}
           />
-          {ProfileFormErrors.firstName && <InputWarningText>Please enter your First Name!</InputWarningText>}
+          {ProfileFormErrors.firstName && <InputWarningText>Please enter your first name!</InputWarningText>}
         </div>
         <div className="w-full flex flex-col">
           <InputBox
@@ -47,18 +47,18 @@ const ProfileSetupForm = () => {
             })}
             err={!!ProfileFormErrors.lastName}
           />
-          {ProfileFormErrors.lastName && <InputWarningText>Please enter your Last Name!</InputWarningText>}
+          {ProfileFormErrors.lastName && <InputWarningText>Please enter your last name!</InputWarningText>}
         </div>
         <div className="w-full flex flex-col">
           <Controller
             name="birthDate"
             control={control}
-            rules={{ required: 'birthDate is required!' }}
+            rules={{ required: 'BirthDate is required!' }}
             render={({ field }) => (
               <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!ProfileFormErrors.birthDate} />
             )}
           />
-          {ProfileFormErrors.birthDate && <InputWarningText>Please enter your Birthday!</InputWarningText>}
+          {ProfileFormErrors.birthDate && <InputWarningText>Please enter your birthday!</InputWarningText>}
         </div>
         <div className="w-full flex flex-col relative">
           <Controller
@@ -83,7 +83,7 @@ const ProfileSetupForm = () => {
           <Controller
             name="country"
             control={control}
-            rules={{ required: 'country is required!' }}
+            rules={{ required: 'Country is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={country_list}
@@ -103,7 +103,7 @@ const ProfileSetupForm = () => {
           <Controller
             name="userType"
             control={control}
-            rules={{ required: 'userType is required!' }}
+            rules={{ required: 'User type is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={userType}

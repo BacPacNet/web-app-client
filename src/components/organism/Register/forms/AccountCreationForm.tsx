@@ -48,7 +48,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
   }, [password, calculateStrength])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center">
+    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
       <div className="text-center px-3">
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
@@ -84,7 +84,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
           />
           {registerFormErrors.userName && (
             <InputWarningText>
-              {registerFormErrors.userName?.message ? registerFormErrors.userName.message.toString() : 'Please enter your userName!'}
+              {registerFormErrors.userName?.message ? registerFormErrors.userName.message.toString() : 'Please enter your user name!'}
             </InputWarningText>
           )}
         </div>
@@ -143,16 +143,18 @@ const AccountCreationForm = ({ isPending }: Props) => {
               <AiOutlineEye className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
             )}
           </div>
-          {registerFormErrors.confirmpassword && <InputWarningText>{registerFormErrors.confirmpassword.message?.toString()}</InputWarningText>}
+          {registerFormErrors.confirmpassword && (
+            <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password'}</InputWarningText>
+          )}
 
-          <label className="text-neutral-500 text-xs">Must be at least 8 characters</label>
+          <label className="text-neutral-500 text-xs">must be at least 8 characters</label>
         </div>
       </div>
       <div className="w-10/12 flex flex-col gap-2">
         <Button disabled={isPending} variant="primary">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
-        <Button type="button" variant="border" className="flex items-center justify-center gap-2">
+        <Button type="button" variant="border" className="flex items-center justify-center gap-2 h-10">
           <Image src={googleIcon} alt="go" /> Sign up with Google
         </Button>
       </div>

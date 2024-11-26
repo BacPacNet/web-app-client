@@ -18,7 +18,7 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
     formState: { errors: VerificationFormErrors },
   } = useFormContext()
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center ">
+    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
       <div className="text-center px-3">
         <Title>Claim your benefit</Title>
         <SupportingText>Enter your referral code for these perks:</SupportingText>
@@ -51,7 +51,9 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
                 : 'Please enter your referral code!'}
             </InputWarningText>
           )}
-          <Button variant="border_primary">Confirm Code</Button>
+          <Button variant="border_primary" className="h-10">
+            Confirm Code
+          </Button>
           <p className="text-xs text-neutral-500 text-center">Plan will immediately apply to account after confirmation.</p>
           {/* <p className="text-xs text-green-500 text-center">Congratulations! You received 1 month of our Upgrade Plan!</p> */}
         </div>

@@ -39,7 +39,7 @@ const ChangeUserNameModal = ({ setModal }: props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      showCustomSuccessToast('User Name Changed Successfully!')
+      showCustomSuccessToast('User name changed successfully!')
       setModal(null)
     }
   }, [isSuccess])
@@ -66,7 +66,7 @@ const ChangeUserNameModal = ({ setModal }: props) => {
                 })}
                 err={!!errors.userName}
               />
-              {errors.userName && <InputWarningText>{'Please enter your userName!'}</InputWarningText>}
+              {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
             </div>
           </div>
           <div className="flex flex-col  w-11/12">
@@ -84,7 +84,7 @@ const ChangeUserNameModal = ({ setModal }: props) => {
                 err={!!errors.newUserName}
               />
             </div>
-            {errors.newUserName && <InputWarningText>{'Please enter your userName!'}</InputWarningText>}
+            {errors.newUserName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
           </div>
           <div className="flex flex-col  w-11/12">
             <div className="relative w-full flex flex-col gap-2">

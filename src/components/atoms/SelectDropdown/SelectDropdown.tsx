@@ -63,7 +63,11 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${value.length > 8 ? 'text-[8px]' : 'text-2xs'}`}>
+        <p
+          className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${
+            !showIcon && value.length > 8 ? 'text-[8px]' : !showIcon ? '' : 'text-2xs'
+          }`}
+        >
           {' '}
           {value || placeholder}
         </p>
@@ -81,7 +85,9 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
       <AnimatePresence>
         {show && (
           <motion.div
-            className="flex flex-col  gap-1 absolute right-0  bg-white p-1 shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto"
+            className={`flex flex-col custom-scrollbar  ${
+              !showIcon ? 'gap-2 w-full p-2' : 'gap-1 p-1'
+            }   absolute right-0  bg-white  shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (
