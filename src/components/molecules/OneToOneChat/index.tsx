@@ -20,7 +20,6 @@ const UsersModal = ({ setShowOneToOne, showOneToOne, setShowCreateGroup, setSele
   const handleUserClick = async () => {
     setShowOneToOne(false)
     const createChatResponse = mutateCreateUserChat({ userId: data._id })
-    console.log(createChatResponse, 'createChatResponse')
     setSelectedChat(createChatResponse)
   }
 

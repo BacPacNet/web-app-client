@@ -6,6 +6,7 @@ import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { CommunityGroupType } from '@/types/CommuityGroup'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -26,8 +27,8 @@ export async function UpdateCommunity(communityId: string, data: any) {
   return response
 }
 
-export async function JoinCommunity(communityId: string, communityName: string, token: any) {
-  const response = await client(`/users/${communityId}?communityName=${communityName}`, {
+export async function joinCommunity(communityId: string, token: string) {
+  const response = await client(`/community/${communityId}/join`, {
     method: 'PUT',
     headers: { Authorization: `Bearer ${token}` },
   })
@@ -47,8 +48,8 @@ export async function getCommunityGroupUsers(communityGroupId: string, name: str
   return response
 }
 
-export async function LeaveCommunity(communityId: string, token: any) {
-  const response = await client(`/users/leave/${communityId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+export async function leaveCommunity(communityId: string, token: any) {
+  const response = await client(`/community/${communityId}/leave`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -68,7 +69,7 @@ export async function getAllCommunityGroups(communityId: string, communityGroupI
   return response
 }
 
-export async function JoinCommunityGroup(communityGroupId: string, token: any) {
+export async function joinCommunityGroup(communityGroupId: string, token: string) {
   const response = await client(`/communitygroup/togglegroup/${communityGroupId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
   return response
 }
@@ -174,8 +175,7 @@ export const useUpdateCommunity = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, data }: any) => UpdateCommunity(id, data),
-    onSuccess: (response: any) => {
-      console.log(response, 'response')
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['community'] })
     },
     onError: (res: any) => {
@@ -185,51 +185,45 @@ export const useUpdateCommunity = () => {
 }
 
 export const useJoinCommunity = () => {
-  const { setUserData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, communityName }: any) => JoinCommunity(id, communityName, cookieValue),
-    onSuccess: (response: any) => {
-      setUserData(response.user)
-      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-
+    mutationFn: (communityId: string) => joinCommunity(communityId, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communityPost'] })
+      queryClient.invalidateQueries({ queryKey: ['community'] })
       showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      console.error(res.response.data.message)
     },
   })
 }
 
 export const useLeaveCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
-  const { setUserData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (communityId: any) => LeaveCommunity(communityId, cookieValue),
-    onSuccess: (response: any) => {
-      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      queryClient.setQueryData(['communityGroupsPost'], [])
-      setUserData(response.user)
-
-      showCustomDangerToast(`Left Community aa`)
+    mutationFn: (communityId: string) => leaveCommunity(communityId, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communityPost'] })
+      queryClient.invalidateQueries({ queryKey: ['community'] })
+      showCustomDangerToast(`Left Community`)
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      console.error(res.response.data.message)
     },
   })
 }
 
-export function useGetCommunityGroup(communityId: string, communityGroupId: string = '', isJoined: boolean) {
+export function useGetCommunityGroup(communityId: string, communityGroupId: string = '') {
   const [cookieValue] = useCookie('uni_user_token')
 
   return useQuery({
-    enabled: isJoined && !!communityId && !!cookieValue && !!communityGroupId,
+    enabled: !!communityId && !!cookieValue && !!communityGroupId,
     queryKey: ['communityGroup', communityId, communityGroupId],
     queryFn: () => getAllCommunityGroups(communityId, communityGroupId, cookieValue),
-  })
+  }) as UseQueryResult<CommunityGroupType>
 }
 
 export function useGetCommunityGroups(communityId: string, communityGroupId: string = '', isJoined: boolean) {
@@ -246,7 +240,7 @@ export const useJoinCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (communityGroupId: any) => JoinCommunityGroup(communityGroupId, cookieValue),
+    mutationFn: (communityGroupId: string) => joinCommunityGroup(communityGroupId, cookieValue),
 
     onSuccess: (response: any) => {
       setUserData(response.user)
@@ -268,7 +262,6 @@ export const useCreateCommunityGroup = () => {
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
 
     onSuccess: (response: any) => {
-      console.log(response)
       setUserData(response.userData)
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
     },
@@ -282,15 +275,12 @@ export const useUpdateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ dataToPush, id }: { dataToPush: any; id: any }) => UpdateCommunityGroup(dataToPush, id, cookieValue),
-
+    mutationFn: ({ communityId, payload }: { communityId: string; payload: any }) => UpdateCommunityGroup(payload, communityId, cookieValue),
     onSuccess: (response: any) => {
-      console.log(response, 'response')
-
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      console.error(res.response.data.message)
     },
   })
 }

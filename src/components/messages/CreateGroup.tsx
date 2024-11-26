@@ -44,7 +44,6 @@ const CreateGroup = () => {
       groupDescription: data.description,
       users: selectedUsersId,
     }
-    // console.log('finalData', dataTopush)
     createGroupChat(dataTopush)
   }
 

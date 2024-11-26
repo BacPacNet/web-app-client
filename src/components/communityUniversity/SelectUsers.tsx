@@ -44,8 +44,8 @@ const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: props) => {
         )}
         <div>
           <p className="text-sm font-semibold">{data?.firstName}</p>
-          <p className="text-xs ">{data?.profile?.university_name ? data?.profile?.university_name : 'Not Availaible'}</p>
-          <p className="text-xs">
+          <p className="text-2xs text-neutral-500">{data?.profile?.university_name ? data?.profile?.university_name : 'Not Availaible'}</p>
+          <p className="text-2xs text-neutral-500">
             {data?.profile?.study_year} {data?.profile?.study_year ? 'Year' : ''} {data?.profile?.degree}
           </p>
         </div>

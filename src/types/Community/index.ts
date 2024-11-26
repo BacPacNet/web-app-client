@@ -1,3 +1,5 @@
+import mongoose from 'mongoose'
+
 export interface Community {
   _id: string
   communityLogoUrl: {
@@ -16,6 +18,17 @@ export interface Community {
   numberOfFaculty: number
   about: string
   communityGroups: CommunityGroup[]
+  users: users[]
+}
+
+interface users {
+  id: string
+  isRequestAccepted: boolean
+  firstName: string
+  lastName: string
+  year: string
+  degree: string
+  major: string
 }
 
 export interface CommunityGroup {

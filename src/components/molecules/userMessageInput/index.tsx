@@ -82,7 +82,6 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
     let data
     if (images) {
       fileLink = await processImages(images)
-      console.log('imgLink', fileLink)
 
       data = {
         content: message,
@@ -138,7 +137,6 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
       return
     }
     if (textareaRef.current && textareaRef.current.value.trim() !== '') {
-      console.log(textareaRef.current.value)
       handleNewMessage(textareaRef.current.value)
       textareaRef.current.value = ''
       textareaRef.current.style.height = 'auto'
