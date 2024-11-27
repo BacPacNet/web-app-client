@@ -47,7 +47,7 @@ const CreateGroupChat = ({ setShowCreateGroup, setShowOneToOne }: Props) => {
   const [userPopUp, setUserPopUp] = useState(false)
   const [groupLogoImage, setGroupLogoImage] = useState()
   const [searchInput, setSearchInput] = useState('')
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const values = getValues()
 
@@ -109,7 +109,7 @@ const CreateGroupChat = ({ setShowCreateGroup, setShowOneToOne }: Props) => {
               Select All
             </button>
             {data?.user?.map((item: any) => (
-              <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+              <SelectUsers key={item._id} user={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
             ))}
           </div>
         </>
@@ -202,7 +202,7 @@ const CreateGroupChat = ({ setShowCreateGroup, setShowOneToOne }: Props) => {
                   className="bg-[#F3F2FF] py-[2px] px-[6px] text-[10px] text-primary-500 rounded-3xl h-5 flex items-center justify-center"
                 >
                   <p key={item.id}>{item.firstName}</p>
-                  <button type="button" onClick={() => setSelectedUsers(selectedUsers.filter((currItem) => currItem._id !== item._id))}>
+                  <button type="button" onClick={() => setSelectedUsers(selectedUsers.filter((currItem) => currItem !== item._id))}>
                     <IoClose className="w-3 h-3" />
                   </button>
                 </div>

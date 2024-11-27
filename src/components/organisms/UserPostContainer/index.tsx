@@ -108,7 +108,6 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
         content: inputValue,
         ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
       }
-      // return console.log('coomm', data)
       if (type === PostInputType.Community) {
         const communityData: CommunityPostData = {
           ...data,

@@ -2,19 +2,33 @@
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import { useGetUserPosts } from '@/services/community-timeline'
+import { useGetCommunityGroupPost } from '@/services/community-university'
+import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
-  userId?: string
+  communityID?: string
+  communityGroupID?: string
   containerRef?: React.RefObject<HTMLDivElement> | any
 }
-const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
+const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef }: Props) => {
+  const queryClient = useQueryClient()
   const [showCommentSection, setShowCommentSection] = useState('')
 
-  const { data: userSelfPosts, isLoading, error } = useGetUserPosts(userId)
+  const {
+    data: communityGroupPost,
+    fetchNextPage: communityPostNextpage,
+    isFetchingNextPage: communityPostIsFetchingNextPage,
+    hasNextPage: communityPostHasNextPage,
+    error: communityPostError,
+    dataUpdatedAt,
+    isFetching,
+    isLoading,
+  } = useGetCommunityGroupPost(communityID, communityGroupID, true, 10)
+  const [communityDatas, setCommunityDatas] = useState([])
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -31,9 +45,10 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
         const bottom = scrollTop + clientHeight >= scrollHeight - 10
-        //if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
-        //  timelinePostsNextpage()
-        //}
+
+        if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage) {
+          communityPostNextpage()
+        }
       }
     }
 
@@ -43,10 +58,21 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
     return () => {
       container?.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
+
+  useEffect(() => {
+    if (isFetching) {
+      setCommunityDatas([])
+    }
+  }, [isFetching, queryClient])
+
+  useEffect(() => {
+    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
+    setCommunityDatas(communityDatas)
+  }, [communityGroupPost, dataUpdatedAt])
 
   const renderPostWithRespectToPathName = () => {
-    return userSelfPosts?.map((post: communityPostType, idx: number) => (
+    return communityDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post?._id}
         user={post?.user?.firstName + ' ' + post?.user?.lastName}
@@ -78,7 +104,9 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
       )
     }
 
-    if (error) return <div>{error.message || 'Error loading posts'}</div>
+    if (communityPostError) {
+      return <div>{communityPostError.message || 'Error loading posts'}</div>
+    }
 
     return renderPostWithRespectToPathName()
   }
@@ -108,4 +136,4 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
   )
 }
 
-export default ProfilePostContainer
+export default CommunityPostsContainer

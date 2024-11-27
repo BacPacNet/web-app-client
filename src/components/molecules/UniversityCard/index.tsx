@@ -16,10 +16,11 @@ import Spinner from '@/components/atoms/spinner'
 interface Props {
   communityID: string
   communityGroupID?: string
+  isGroupAdmin: boolean
+  setIsGroupAdmin: (isGroupAdmin: boolean) => void
 }
 
-export default function UniversityCard({ communityID, communityGroupID }: Props) {
-  const [cookieValue] = useCookie('uni_user_token')
+export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
 
@@ -34,6 +35,13 @@ export default function UniversityCard({ communityID, communityGroupID }: Props)
   useEffect(() => {
     if (communityData && userData) {
       setIsUserJoinedCommunity(communityData.users.some((user) => user?.id?.toString() === userData.id))
+    }
+  }, [communityData, userData])
+
+  useEffect(() => {
+    if (communityData && userData) {
+      const { id } = userData
+      setIsGroupAdmin(communityData.adminId.toString() === id?.toString())
     }
   }, [communityData, userData])
 

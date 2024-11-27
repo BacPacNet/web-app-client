@@ -29,7 +29,7 @@ export const useJoinCommunityGroup = () => {
 
     onSuccess: () => {
       // Invalidate relevant query caches
-      queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
 
@@ -66,7 +66,7 @@ export const useLeaveCommunityGroup = () => {
 
     onSuccess: () => {
       // Invalidate relevant query caches
-      queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
 

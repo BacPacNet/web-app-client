@@ -1,16 +1,17 @@
 'use client'
 import PostContainer from '@/components/organisms/PostsContainer'
+import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
 import UserPostContainer from '@/components/organisms/UserPostContainer'
 import { PostInputType, PostType } from '@/types/constants'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll communityContainer">
       <UserPostContainer type={PostInputType.Timeline} />
-      <PostContainer containerRef={containerRef} type={PostType.Timeline} />
+      <TimelinePostContainer containerRef={containerRef} />
     </div>
   )
 }

@@ -190,7 +190,7 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: (communityId: string) => joinCommunity(communityId, cookieValue),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityPost'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['community'] })
       showCustomSuccessToast(`Joined Community `)
     },
@@ -206,7 +206,7 @@ export const useLeaveCommunity = () => {
   return useMutation({
     mutationFn: (communityId: string) => leaveCommunity(communityId, cookieValue),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityPost'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['community'] })
       showCustomDangerToast(`Left Community`)
     },
@@ -235,34 +235,13 @@ export function useGetCommunityGroups(communityId: string, communityGroupId: str
   })
 }
 
-export const useJoinCommunityGroup = () => {
-  const { setUserData } = useUniStore()
-  const [cookieValue] = useCookie('uni_user_token')
-  const queryClient = useQueryClient()
-  return useMutation({
-    mutationFn: (communityGroupId: string) => joinCommunityGroup(communityGroupId, cookieValue),
-
-    onSuccess: (response: any) => {
-      setUserData(response.user)
-      queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-    },
-    onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
-    },
-  })
-}
-
 //create community
 export const useCreateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-  const { setUserData } = useUniStore()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
-
     onSuccess: (response: any) => {
-      setUserData(response.userData)
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
     },
     onError: (res: any) => {
@@ -285,23 +264,21 @@ export const useUpdateCommunityGroup = () => {
   })
 }
 
-export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isJoined: boolean, isCommunity: boolean, limit: number) {
-  {
-    const [cookieValue] = useCookie('uni_user_token')
-
-    return useInfiniteQuery({
-      queryKey: ['communityGroupsPost', communityId, communityGroupID],
-      queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
-      getNextPageParam: (lastPage) => {
-        if (lastPage.currentPage < lastPage.totalPages) {
-          return lastPage.currentPage + 1
-        }
-        return undefined
-      },
-      initialPageParam: 1,
-      enabled: isJoined && isCommunity && !!cookieValue,
-    })
-  }
+export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isCommunity: boolean, limit: number) {
+  const [cookieValue] = useCookie('uni_user_token')
+  console.log(communityId, 'communityId')
+  return useInfiniteQuery({
+    queryKey: ['communityGroupsPost', communityId, communityGroupID],
+    queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: isCommunity && !!cookieValue,
+  })
 }
 
 export const useLikeUnilikeGroupPost = () => {

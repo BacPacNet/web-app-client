@@ -17,6 +17,10 @@
   }
 }
 
+.communityContainer::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: white;

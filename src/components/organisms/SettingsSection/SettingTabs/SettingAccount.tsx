@@ -18,7 +18,6 @@ type props = {
 const SettingAccount = ({ setModal }: props) => {
   const { email } = useUniStore((state) => state.userProfileData)
   const { userName, email: userEmail } = useUniStore((state) => state.userData)
-  console.log('email', email)
 
   return (
     <div className="flex flex-col  py-4 px-0  max-md:px-4 gap-10">

@@ -32,7 +32,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const [coverImage, setCoverImage] = useState()
   const [userPopUp, setUserPopUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
@@ -102,7 +102,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
               Select All
             </button>
             {data?.user?.map((item: any) => (
-              <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+              <SelectUsers key={item._id} user={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
             ))}
           </div>
         </>

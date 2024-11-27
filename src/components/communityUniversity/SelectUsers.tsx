@@ -1,3 +1,4 @@
+import { CommunityUsers } from '@/types/Community'
 import React from 'react'
 
 type media = {
@@ -17,40 +18,37 @@ type User = {
   }
 }
 
-type props = {
-  setSelectedUsers: (value: User[]) => void
-  selectedUsers: User[]
-  data: User
+type Props = {
+  setSelectedUsers: (value: string[]) => void
+  selectedUsers: string[]
+  user: any
 }
 
-const SelectUsers = ({ data, selectedUsers, setSelectedUsers }: props) => {
-  const handleClick = () => {
-    if (selectedUsers?.some((item) => item._id == data._id)) {
-      const filterd = selectedUsers.filter((item) => item._id !== data._id)
+const SelectUsers = ({ user, selectedUsers, setSelectedUsers }: Props) => {
+  const handleClick = (userId: string) => {
+    //setSelectedUsers([...selectedUsers, userId])
+    if (selectedUsers?.some((id) => id == user.id)) {
+      const filterd = selectedUsers.filter((id) => id !== user.id)
       setSelectedUsers(filterd)
     } else {
-      setSelectedUsers([...selectedUsers, data])
+      setSelectedUsers([...selectedUsers, userId])
     }
   }
 
-  const isSelected = selectedUsers.some((item) => item._id === data._id)
+  const isSelected = selectedUsers?.some((userId) => userId === user.id)
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-2">
-        {data?.profile?.profile_dp?.imageUrl ? (
-          <img className="w-10 h-10 rounded-full object-cover" src={data?.profile?.profile_dp?.imageUrl} alt="" />
-        ) : (
-          <div className="bg-orange w-10 h-10 rounded-full"></div>
-        )}
+        <img className="w-10 h-10 rounded-full object-cover" src={user?.profileImageUrl} alt="" />
         <div>
-          <p className="text-sm font-semibold">{data?.firstName}</p>
-          <p className="text-2xs text-neutral-500">{data?.profile?.university_name ? data?.profile?.university_name : 'Not Availaible'}</p>
+          <p className="text-sm font-semibold">{user?.firstName}</p>
+          {/*<p className="text-2xs text-neutral-500">{data?.profile?.university_name ? data?.profile?.university_name : 'Not Availaible'}</p>*/}
           <p className="text-2xs text-neutral-500">
-            {data?.profile?.study_year} {data?.profile?.study_year ? 'Year' : ''} {data?.profile?.degree}
+            {user.year} {user.degree} {user.major}
           </p>
         </div>
       </div>
-      <input onChange={handleClick} className="w-4" type="checkbox" checked={isSelected} />
+      <input onChange={() => handleClick(user.id as string)} className="w-4" type="checkbox" checked={isSelected} />
     </div>
   )
 }

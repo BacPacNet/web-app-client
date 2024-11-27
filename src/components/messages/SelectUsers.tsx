@@ -18,8 +18,8 @@ type User = {
 }
 
 type Props = {
-  setSelectedUsers: (value: User[]) => void
-  selectedUsers: User[]
+  setSelectedUsers: (value: string[]) => void
+  selectedUsers: string[]
 }
 
 const SelectGroupUsers = ({ setSelectedUsers, selectedUsers }: Props) => {
@@ -53,7 +53,7 @@ const SelectGroupUsers = ({ setSelectedUsers, selectedUsers }: Props) => {
           Select All
         </button>
         {data?.user?.map((item: User) => (
-          <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+          <SelectUsers key={item._id} user={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
         ))}
       </div>
     </>

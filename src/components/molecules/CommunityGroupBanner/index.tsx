@@ -37,14 +37,15 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
   }, [communityGroupID])
 
   useEffect(() => {
-    if (communityGroups && setIsGroupAdmin) {
-      setIsGroupAdmin(communityGroups?.adminUserId?._id === userData?.id)
+    if (communityGroups && userData) {
+      const { id } = userData
+      setIsGroupAdmin(communityGroups.adminUserId.toString() === id?.toString())
     }
-  }, [communityGroups])
+  }, [communityGroups, userData])
 
   useEffect(() => {
     if (communityGroups && userData) {
-      setIsUserJoinedCommunityGroup(communityGroups.users.some((user) => user.userId.toString() === userData.id))
+      setIsUserJoinedCommunityGroup(communityGroups?.users?.some((user) => user.userId.toString() === userData.id))
     }
   }, [communityGroups])
 
@@ -64,12 +65,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     }
   }
 
-  const [coverImage, setCoverImage] = useState('')
-  const [logoImage, setLogoImage] = useState('')
   const [dataToDisplay, setDataToDisplay] = useState({ title: '', desc: '', membersCount: 0, coverImage: '', logoImage: '', adminId: '', id: '' })
-
-  //  const selectedCommunityData = Communitydata?.community?.find((item: any) => item?._id == communityID)
-  //  const selectedCommunityGroupData = communityGroupID && CommunityGroupdata?.groups?.find((item: any) => item?._id == communityGroupID)
 
   const userVerifiedCommunityIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []
@@ -86,54 +82,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
   const userUnverifiedVerifiedCommunityGroupIds = useMemo(() => {
     return userData?.userUnVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
   }, [userData])
-
-  //  useEffect(() => {
-  //    if (communityID && !communityGroupID) {
-  //      if (userVerifiedCommunityIds.includes(communityID) || userUnverifiedVerifiedCommunityIds.includes(communityID)) {
-  //        setIsJoined(true)
-  //      } else {
-  //        setIsJoined(false)
-  //      }
-  //    }
-  //    if (communityGroupID && communityID) {
-  //      if (userVerifiedCommunityGroupIds.includes(communityGroupID) || userUnverifiedVerifiedCommunityGroupIds.includes(communityGroupID)) {
-  //        setIsJoined(true)
-  //      } else {
-  //        setIsJoined(false)
-  //      }
-  //    }
-  //  }, [
-  //    communityID,
-  //    communityGroupID,
-  //    userVerifiedCommunityIds,
-  //    userUnverifiedVerifiedCommunityIds,
-  //    userUnverifiedVerifiedCommunityGroupIds,
-  //    userVerifiedCommunityGroupIds,
-  //  ])
-
-  //  useEffect(() => {
-  //    if (communityGroupID) {
-  //      setDataToDisplay({
-  //        title: selectedCommunityGroupData?.title,
-  //        desc: selectedCommunityGroupData?.description,
-  //        membersCount: selectedCommunityGroupData?.memberCount,
-  //        coverImage: selectedCommunityGroupData?.communityGroupLogoCoverUrl?.imageUrl,
-  //        logoImage: selectedCommunityGroupData?.communityGroupLogoUrl?.imageUrl,
-  //        adminId: selectedCommunityGroupData?.adminUserId?._id,
-  //        id: selectedCommunityGroupData?._id,
-  //      })
-  //    } else {
-  //      setDataToDisplay({
-  //        title: selectedCommunityData?.name,
-  //        desc: 'nothing',
-  //        membersCount: selectedCommunityData?.numberOfUser,
-  //        coverImage: selectedCommunityData?.communityCoverUrl?.imageUrl,
-  //        logoImage: selectedCommunityData?.communityLogoUrl?.imageUrl,
-  //        adminId: selectedCommunityData?.adminId,
-  //        id: selectedCommunityData?._id,
-  //      })
-  //    }
-  //  }, [communityGroupID, selectedCommunityData, selectedCommunityGroupData])
 
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
@@ -299,24 +247,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                   {!isUserJoinedCommunityGroup ? 'Join Group' : 'Leave Group'}
                 </Button>
               )}
-              {/*
-            {!isJoined && communityGroups?.adminId != userData.id ? (
-              <Button
-                onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, true, communityGroups?.title)}
-                size="extra_small"
-                variant="primary"
-              >
-                Join {communityGroupID ? 'Group' : 'Community '}
-              </Button>
-            ) : communityGroups?.adminId == userData.id ? (
-              <button className="text-primary-500 font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full max-lg:text-sm max-md:mr-0">
-                <IoMdSettings />
-              </button>
-            ) : (
-              <Button onClick={() => handleToggleJoinCommunityOrGroup(communityGroupID || communityID, false)} size="extra_small" variant="shade">
-                Leave {communityGroupID ? 'Group' : 'Community '}
-              </Button>
-            )}*/}
             </div>
           </div>
           <div>

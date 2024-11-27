@@ -90,7 +90,6 @@ export const useJoinCommunityGroup = () => {
     mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
-      setUserData(response.user)
       queryClient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (res: any) => {

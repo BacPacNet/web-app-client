@@ -4,8 +4,7 @@ import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import SelectUsers from '../../communityUniversity/SelectUsers'
-import { useCreateCommunityGroup, useGetCommunityUsers, useUpdateCommunityGroup } from '@/services/community-university'
-import { useParams } from 'next/navigation'
+import { useGetCommunity, useGetCommunityUsers, useUpdateCommunityGroup } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
@@ -36,10 +35,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
   const [userPopUp, setUserPopUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const selectedUsersId = selectedUsers.map((item: any) => {
-    return { userId: item._id }
-  })
+  const [selectedUsersId, setSelectedUsers] = useState<string[]>([...communityGroups.users.map((user) => user.userId.toString())])
+
   const [searchInput, setSearchInput] = useState('')
   const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const {
@@ -58,10 +55,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   })
 
   const values = getValues()
-  const { data: allCommunityUsers } = useGetCommunityUsers(communityGroups?.communityId, userPopUp, values.communityGroupType, searchInput)
-  const handleSelectAll = useCallback(() => {
-    //const allUsers = communityGroups.users
-  }, [])
+  const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId)
+  const handleSelectAll = useCallback(() => {}, [])
 
   const onGroupSubmit = async (data: any) => {
     let CoverImageData
@@ -120,8 +115,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             <button onClick={handleSelectAll} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
               Select All
             </button>
-            {allCommunityUsers?.user?.map((item: any) => (
-              <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+            {allCommunityUsers?.users?.map((user) => (
+              <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsersId} />
             ))}
           </div>
         </>
@@ -129,10 +124,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       <div
         className={`fixed w-[90%] lg:w-[40%]  h-[70%] z-40 left-[50%]  top-[50%] -translate-x-[50%] -translate-y-[50%]  bg-white flex flex-col items-center gap-3 px-8 py-4 rounded-lg overflow-y-scroll`}
       >
-        {/* <div className="flex justify-end w-full absolute">
-          {' '}
-          <RxCross2 onClick={() => setNewGroup(false)} size={24} color="#737373" />
-        </div> */}
         <div className="flex flex-col gap-4 justify-start items-start w-full">
           <h3 className="text-neutral-700 text-base font-semibold">Create Group</h3>
           <div
@@ -296,30 +287,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
               ></div>
               <div className="flex flex-wrap mt-2">
-                {' '}
-                {selectedUsers.map((item: any) => (
-                  <div
-                    key={item._id}
-                    className="bg-[#F3F2FF] py-[2px] px-[6px] text-[10px] text-primary-500 rounded-3xl h-5 flex items-center justify-center"
-                  >
-                    <p key={item.id}>{item.firstName}</p>
-                    <button type="button" onClick={() => setSelectedUsers(selectedUsers.filter((currItem) => currItem._id !== item._id))}>
-                      <IoClose className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
+                <div className="bg-secondary py-[2px] px-[6px] text-[10px] text-primary-500 rounded-sm h-5">{selectedUsersId?.length} selected</div>
               </div>
             </div>
             <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
               {isLoading || isPending ? <Spinner /> : <p>Update Changes</p>}
             </button>
-            {/* <button
-              type="reset"
-              onClick={() => (setLogoImage(undefined), setCoverImage(undefined), setSelectedUsers([]))}
-              className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]"
-            >
-              Reset
-            </button> */}
           </form>
         </div>
       </div>

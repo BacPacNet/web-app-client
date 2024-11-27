@@ -12,7 +12,7 @@ interface users {
 
 export interface CommunityGroupType {
   _id: string
-  adminUserId: AdminUserId
+  adminUserId: AdminUserId | string
   communityId: string
   title: string
   description: string
