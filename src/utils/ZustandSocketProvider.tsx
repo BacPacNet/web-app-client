@@ -18,11 +18,9 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
   const { refetch: refetchNotification } = useGetNotification(3, true)
   const param = usePathname()
-  // const isRouteMessage = param.split('/')[1] !== 'messages'
-  // console.log('param', param.split('/')[1] !== 'messages')
   const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
 
-  const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData.id as string)
+  const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData?.id as string)
   const {
     refetch: refetchUserProfileData,
     data: RefetcheduserProfileData,

@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
-  const { id: communityId, groupId: communityGroupId }: { id: string; groupId: string } = useParams()
+  const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -27,14 +27,13 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     hasNextPage: communityPostHasNextPage,
     isLoading,
     error,
-  } = useGetCommunityGroupPost(communityId, communityGroupId, true, true, 2)
+  } = useGetCommunityGroupPost(communityId, communityGroupId, true, 2)
   const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log(scrollTop, scrollHeight, clientHeight)
         const bottom = scrollTop + clientHeight >= scrollHeight - 10
         if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage) {
           communityPostNextpage()

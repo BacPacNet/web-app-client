@@ -19,14 +19,14 @@ import { FaAngleDown } from 'react-icons/fa'
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData } = useUniStore()
   const router = useRouter()
-  const { id, groupId: communityGroupId }: { id: string; groupId: string } = useParams()
+  const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState(false)
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
-  const [selectCommunityId, selectedCommuntyGroupdId] = [id || community?._id, communityGroupId]
+  const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
 
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
 
@@ -39,34 +39,33 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   }
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
-    if (id) {
-      return subscribedCommunities?.find((community) => community._id === id)?.communityGroups
+    if (communityId) {
+      return subscribedCommunities?.find((community) => community._id === communityId)?.communityGroups
     } else {
       return subscribedCommunities && subscribedCommunities[0]?.communityGroups
     }
-  }, [subscribedCommunities, id])
+  }, [subscribedCommunities, communityId])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const userSelectedCommunityGroup = userAllCommunities?.find((community) => community?.communityId === id)?.communityGroups
-    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === id)?.communityGroups
-
-    return userSelectedCommunityGroup?.filter(
+    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
+      ?.communityGroups
+    return selectedCommunityGroup?.filter(
       (userCommunityGroup) =>
-        selectedCommunityGroup?.some((selectCommunityGroup) => selectCommunityGroup?._id === userCommunityGroup?.communityGroupId)
+        userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
     )
-  }, [subscribedCommunities, id, userData])
+  }, [subscribedCommunities, communityId, userData])
 
   const subscribedCommunitiesMyGroup = useMemo(
     () =>
       subscribedCommunities
-        ?.find((community) => community._id === id)
+        ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
         ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData.id),
-    [subscribedCommunities, id, userData.id]
+    [subscribedCommunities, communityId, userData.id]
   )
 
   useEffect(() => {
-    if (id && subscribedCommunities) {
-      setCommunity(subscribedCommunities?.find((community) => community._id === id))
+    if (communityId && subscribedCommunities) {
+      setCommunity(subscribedCommunities?.find((community) => community._id === communityId))
     } else {
       subscribedCommunities && setCommunity(subscribedCommunities?.[0] as Community)
     }
@@ -146,7 +145,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     <>
       <NavbarSubscribedUniversity
         userData={userData}
-        communityId={id}
+        communityId={communityId}
         subscribedCommunities={subscribedCommunities as Community[]}
         handleCommunityClick={handleCommunityClick}
       />
@@ -170,7 +169,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             <GroupSearchBox placeholder="Search Groups" type="text" />
           </div>
         </div>
-        <div className="flex gap-2 justify-evenly cursor-pointer my-4">
+        {/*<div className="flex gap-2 justify-evenly cursor-pointer my-4">
           <div
             style={{ boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04)' }}
             className="border-2 border-solid border-neutral-200 rounded-lg "
@@ -189,7 +188,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
               <FiFilter width={16} height={16} className="text-primary-500 font-bold" />
             </div>
           </div>
-        </div>
+        </div>*/}
       </>
 
       {subscribedCommunities?.length !== 0 ? (
@@ -200,7 +199,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
         </div>
       )}
 
-      {showNewGroup && <CreateNewGroupBox communityId={id} setNewGroup={setShowNewGroup} />}
+      {showNewGroup && <CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />}
       <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
     </>
   )

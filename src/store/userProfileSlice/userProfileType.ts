@@ -1,6 +1,7 @@
 interface emailType {
   UniversityName: string
   UniversityEmail: string
+  communityId: string
 }
 
 interface following {

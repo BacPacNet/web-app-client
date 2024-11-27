@@ -1,6 +1,7 @@
 'use client'
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
+import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
 import Modal from '@/components/Timeline/Modal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
@@ -52,7 +53,7 @@ export default function Profile() {
         setModalContentType={setModalContentType}
         setIsModalOpen={setIsModalOpen}
       />
-      <PostContainer type={PostType.Timeline} />
+      <TimelinePostContainer />
     </div>
   )
 }

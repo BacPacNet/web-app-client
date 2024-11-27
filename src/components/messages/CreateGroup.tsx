@@ -26,10 +26,9 @@ const CreateGroup = () => {
     formState: { errors: GroupChatErrors },
   } = useForm()
   const [coverImage, setCoverImage] = useState()
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const selectedUsersId = selectedUsers.map((item: { _id: string }) => item._id)
 
   const { mutate: createGroupChat } = useCreateGroupChat()
   const onGroupChatSubmit = async (data: any) => {
@@ -42,7 +41,7 @@ const CreateGroup = () => {
       groupLogo: CoverImageData?.groupLogo,
       groupName: data.title,
       groupDescription: data.description,
-      users: selectedUsersId,
+      users: selectedUsers,
     }
     createGroupChat(dataTopush)
   }
@@ -93,8 +92,8 @@ const CreateGroup = () => {
               className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
             >
               {selectedUsers.map((item) => (
-                <p className="bg-[#6647FF] py-1 px-2 text-xs text-white" key={item._id}>
-                  {item.firstName}
+                <p className="bg-[#6647FF] py-1 px-2 text-xs text-white" key={item}>
+                  {item}
                 </p>
               ))}
             </div>

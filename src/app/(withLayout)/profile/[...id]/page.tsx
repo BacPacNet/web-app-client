@@ -1,5 +1,6 @@
 'use client'
 import Spinner from '@/components/atoms/spinner'
+import ProfilePostContainer from '@/components/organisms/PostsContainer'
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
 import Modal from '@/components/Timeline/Modal'
@@ -65,7 +66,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           userId={userId}
         />
       )}
-      <PostContainer userId={userId} type={PostType.Profile} containerRef={containerRef} />
+      <ProfilePostContainer userId={userId} containerRef={containerRef} />
     </div>
   )
 }

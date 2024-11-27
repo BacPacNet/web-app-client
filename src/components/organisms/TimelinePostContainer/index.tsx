@@ -2,19 +2,27 @@
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import { useGetUserPosts } from '@/services/community-timeline'
+import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useState } from 'react'
 
 type Props = {
-  userId?: string
   containerRef?: React.RefObject<HTMLDivElement> | any
 }
-const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
-  const [showCommentSection, setShowCommentSection] = useState('')
+const TimelinePostContainer = ({ containerRef }: Props) => {
+  const {
+    isLoading,
+    data: TimelinePosts,
+    error,
+    fetchNextPage: timelinePostsNextpage,
+    isFetchingNextPage: timelinePostIsFetchingNextPage,
+    hasNextPage: timelinePostHasNextPage,
+  } = useGetTimelinePosts(10)
 
-  const { data: userSelfPosts, isLoading, error } = useGetUserPosts(userId)
+  const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
+
+  const [showCommentSection, setShowCommentSection] = useState('')
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -31,9 +39,9 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
         const bottom = scrollTop + clientHeight >= scrollHeight - 10
-        //if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
-        //  timelinePostsNextpage()
-        //}
+        if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage) {
+          timelinePostsNextpage()
+        }
       }
     }
 
@@ -43,24 +51,24 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
     return () => {
       container?.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [timelinePostHasNextPage, timelinePostIsFetchingNextPage, timelinePostsNextpage])
 
   const renderPostWithRespectToPathName = () => {
-    return userSelfPosts?.map((post: communityPostType, idx: number) => (
+    return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
-        key={post?._id}
+        key={post._id}
         user={post?.user?.firstName + ' ' + post?.user?.lastName}
-        adminId={post?.user?._id}
+        adminId={post.user?._id}
         university={post?.userProfile?.university_name}
         year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
         text={post?.content}
         date={post?.createdAt}
         avatarLink={post?.userProfile?.profile_dp?.imageUrl}
         commentCount={post?.commentCount}
-        likes={post?.likeCount}
+        likes={post.likeCount}
         postID={post?._id}
-        type={PostType.Community}
-        images={post?.imageUrl}
+        type={'communityId' in post ? PostType.Community : PostType.Timeline}
+        images={post?.imageUrl || []}
         setImageCarasol={setImageCarasol}
         idx={idx}
         showCommentSection={showCommentSection}
@@ -78,7 +86,9 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
       )
     }
 
-    if (error) return <div>{error.message || 'Error loading posts'}</div>
+    if (error) {
+      return <div>{error.message || 'Error loading posts'}</div>
+    }
 
     return renderPostWithRespectToPathName()
   }
@@ -108,4 +118,4 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
   )
 }
 
-export default ProfilePostContainer
+export default TimelinePostContainer

@@ -1,4 +1,4 @@
-import { useJoinCommunityGroup, useUpdateCommunityGroup } from '@/services/community-university'
+import { useUpdateCommunityGroup } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import { FaLock } from 'react-icons/fa'
 import { CiImageOn } from 'react-icons/ci'
 import { IoMdSettings } from 'react-icons/io'
 import AssignGroupModerators from './AssignGroupModerators'
+import { useJoinCommunityGroup } from '@/services/community-group'
 
 const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGroup }: any) => {
   const { mutate: JoinCommunityGroup } = useJoinCommunityGroup()

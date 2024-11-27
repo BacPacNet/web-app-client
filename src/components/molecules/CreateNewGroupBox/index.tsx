@@ -1,10 +1,10 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import SelectUsers from '../../communityUniversity/SelectUsers'
-import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/community-university'
+import { useCreateCommunityGroup, useGetCommunity, useGetCommunityUsers } from '@/services/community-university'
 import { useParams } from 'next/navigation'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
@@ -35,8 +35,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const [coverImage, setCoverImage] = useState()
   const [userPopUp, setUserPopUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const selectedUsersId = selectedUsers.map((item: any) => item._id)
+  const [selectedUsersId, setSelectedUsers] = useState<string[]>([])
   const [searchInput, setSearchInput] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
   const {
@@ -72,8 +71,12 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
     setNewGroup(false)
   }
 
-  const { data } = useGetCommunityUsers(communityId, userPopUp, values.communityGroupType, searchInput)
+  const { data: communityData } = useGetCommunity(communityId)
 
+  const handleSelectAll = useCallback(() => {
+    const getAlluserIds = communityData?.users?.map((user) => user?.id)
+    setSelectedUsers(getAlluserIds as string[])
+  }, [])
   return (
     <>
       <div onClick={() => setNewGroup(false)} className="fixed w-full h-[100%] top-0 left-0 bg-black backdrop-blur-2xl opacity-50 z-30"></div>
@@ -104,11 +107,11 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 className="w-full pl-12 pr-3 py-1 text-gray-500 bg-transparent outline-none border border-neutral-300 rounded-2xl text-xs"
               />
             </div>
-            <button onClick={() => setSelectedUsers(data?.user)} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
+            <button onClick={handleSelectAll} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
               Select All
             </button>
-            {data?.user?.map((item: any) => (
-              <SelectUsers key={item._id} data={item} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+            {communityData?.users?.map((user) => (
+              <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsersId as string[]} />
             ))}
           </div>
         </>
@@ -271,18 +274,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
               ></div>
               <div className="flex flex-wrap mt-2">
-                {' '}
-                {selectedUsers.map((item: any) => (
-                  <div
-                    key={item._id}
-                    className="bg-[#F3F2FF] py-[2px] px-[6px] text-[10px] text-primary-500 rounded-3xl h-5 flex items-center justify-center"
-                  >
-                    <p key={item.id}>{item.firstName}</p>
-                    <button type="button" onClick={() => setSelectedUsers(selectedUsers.filter((currItem) => currItem._id !== item._id))}>
-                      <IoClose className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
+                <div className="bg-secondary py-[2px] px-[6px] text-[10px] text-primary-500 rounded-sm h-5">{selectedUsersId?.length} selected</div>
               </div>
             </div>
             <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">

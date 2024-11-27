@@ -18,14 +18,16 @@ export interface Community {
   numberOfFaculty: number
   about: string
   communityGroups: CommunityGroup[]
-  users: users[]
+  users: CommunityUsers[]
 }
 
-interface users {
-  id: string
+export interface CommunityUsers {
+  id?: string
+  userId?: string
   isRequestAccepted: boolean
   firstName: string
   lastName: string
+  profileImageUrl: string
   year: string
   degree: string
   major: string
@@ -47,6 +49,7 @@ export interface CommunityGroup {
   memberCount: number
   communityGroupType: string
   about: string
+  users: CommunityUsers[]
 }
 
 export interface communityPostType {

@@ -87,7 +87,7 @@ export function UserProfileCard({
         <div className="w-full">
           <div className="flex w-full items-center justify-between flex-wrap">
             <div className="flex gap-4 items-center">
-              <p className="font-poppins text-neutral-700 text:xl lg:text-2xl font-bold">{name}</p>
+              <p className="font-poppins text-neutral-700 text:md lg:text-[20px] font-bold">{name}</p>
               {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-4 text-xs">Premium</p>}
             </div>
             {isSelfProfile ? (
@@ -159,7 +159,7 @@ export function UserProfileCard({
           <FaEnvelope className="text-md flex-none" />
           <span className="text-xs">{email}</span>
         </div>
-        <div className="flex items-center space-x-2 lg:justify-center">
+        <div className="flex items-center space-x-2 ">
           <FaPhone className="text-md flex-none" />
           <span className="text-xs">{phone}</span>
         </div>
@@ -171,7 +171,7 @@ export function UserProfileCard({
           <FaBirthdayCake className="text-md flex-none" />
           <span className="text-xs">{birthday && format(new Date(birthday), 'dd MMM yyyy')}</span>
         </div>
-        <div className="flex items-center space-x-2 lg:justify-center">
+        <div className="flex items-center space-x-2 ">
           <ImEarth className="text-md flex-none" />
           <span className="text-xs">{country}</span>
         </div>

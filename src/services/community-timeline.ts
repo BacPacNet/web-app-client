@@ -235,38 +235,21 @@ export const useCreateUserPost = () => {
   })
 }
 
-export function useGetTimelinePosts(isTimeline: boolean, limit: number) {
-  // const [cookieValue] = useCookie('uni_user_token')
+export function useGetTimelinePosts(limit: number) {
+  const [cookieValue] = useCookie('uni_user_token')
 
-  // const state = useQuery({
-  //   queryKey: ['timelinePosts'],
-  //   queryFn: () => getAllTimelinePosts(cookieValue),
-  //   enabled: !!cookieValue && isTimeline,
-  // })
-
-  // let errorMessage = null
-  // if (axios.isAxiosError(state.error) && state.error.response) {
-  //   errorMessage = state.error.response.data
-  // }
-
-  // return { ...state, error: errorMessage }
-
-  {
-    const [cookieValue] = useCookie('uni_user_token')
-
-    return useInfiniteQuery({
-      queryKey: ['timelinePosts'],
-      queryFn: ({ pageParam = 1 }) => getAllTimelinePosts(cookieValue, pageParam, limit),
-      getNextPageParam: (lastPage) => {
-        if (lastPage.currentPage < lastPage.totalPages) {
-          return lastPage.currentPage + 1
-        }
-        return undefined
-      },
-      initialPageParam: 1,
-      enabled: !!cookieValue && isTimeline,
-    })
-  }
+  return useInfiniteQuery({
+    queryKey: ['timelinePosts'],
+    queryFn: ({ pageParam = 1 }) => getAllTimelinePosts(cookieValue, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!cookieValue,
+  })
 }
 
 export const useLikeUnlikeTimelinePost = () => {
