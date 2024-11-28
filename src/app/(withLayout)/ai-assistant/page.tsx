@@ -2,11 +2,7 @@ import Ai_AssistantContainer from '@/components/organisms/AI_Chatbot/Ai_Assistan
 import React from 'react'
 
 const Page = () => {
-  return (
-    <div>
-      <Ai_AssistantContainer />
-    </div>
-  )
+  return <Ai_AssistantContainer />
 }
 
 export default Page
