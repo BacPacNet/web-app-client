@@ -1,5 +1,5 @@
 import Card from '@/components/atoms/Card'
-import Button from '@/components/atoms/Buttons'
+import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 //import { Badge } from "@/components/ui/badge";
@@ -42,6 +42,7 @@ interface UserProfileCardProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
   isSelfProfile?: boolean
   userId?: string
+  universityLogo: string
 }
 
 export function UserProfileCard({
@@ -66,6 +67,7 @@ export function UserProfileCard({
   setIsModalOpen,
   isSelfProfile,
   userId,
+  universityLogo,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
@@ -77,12 +79,18 @@ export function UserProfileCard({
     setModalContentType(modalType)
     setIsModalOpen(true)
   }
-
+  console.log(universityLogo, 'avatarUrl')
   return (
     <Card className="rounded-2xl px-8">
       <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start">
         <div className="flex-none  lg:w-[126px] lg:h-[126px] w-[90] h-[90]">
-          <Image src={avatarUrl} alt={name} width={isDesktop ? 126 : 90} height={isDesktop ? 126 : 90} className="rounded-full" />
+          <Image
+            src={avatarUrl ? avatarUrl : avatar}
+            alt={name}
+            width={isDesktop ? 126 : 90}
+            height={isDesktop ? 126 : 90}
+            className="rounded-full"
+          />
         </div>
         <div className="w-full">
           <div className="flex w-full items-center justify-between flex-wrap">
@@ -132,7 +140,7 @@ export function UserProfileCard({
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
           <div className="flex gap-4 lg:gap-8 items-center font-poppins py-2 flex-wrap">
             <div className="flex items-center ">
-              <Image src={avatarUrl} alt="" width={30} height={30} className="rounded-full shadow-logo" />
+              <Image src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo" />
               <p className="text-neutral-500 ml-3 font-semibold text-xs lg:text-sm">{university}</p>
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>

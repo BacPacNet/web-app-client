@@ -5,7 +5,6 @@ import { useGetSubscribedCommunties } from '@/services/university-community'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
-import { FiFilter } from 'react-icons/fi'
 import Tabs from '../Tabs'
 import AssignGroupModerators from '@/components/communityUniversity/AssignGroupModerators'
 import { useUniStore } from '@/store/store'
@@ -14,10 +13,9 @@ import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
-import { FaAngleDown } from 'react-icons/fa'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
@@ -29,8 +27,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
 
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
-
-  const userAllCommunities = [...(userData.userVerifiedCommunities || []), ...(userData.userUnVerifiedCommunities || [])]
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
