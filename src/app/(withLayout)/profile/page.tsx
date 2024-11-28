@@ -52,7 +52,7 @@ export default function Profile() {
         country={country || ''}
         setModalContentType={setModalContentType}
         setIsModalOpen={setIsModalOpen}
-        universityLogo={university_id?.logos?.[0] || ''}
+        universityLogo={(university_id as any)?.logos?.[0] || ''}
       />
       <TimelinePostContainer />
     </div>
