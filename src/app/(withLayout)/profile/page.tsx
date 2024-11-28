@@ -25,7 +25,7 @@ export default function Profile() {
         return null
     }
   }
-  const { bio, university_name, followers, following, study_year, major, phone_number, dob, degree, country } = userProfileData
+  const { bio, university_name, university_id, followers, following, study_year, major, phone_number, dob, degree, country } = userProfileData
   const { firstName, lastName, email } = userData
   return (
     <div className="h-with-navbar py-4">
@@ -52,6 +52,7 @@ export default function Profile() {
         country={country || ''}
         setModalContentType={setModalContentType}
         setIsModalOpen={setIsModalOpen}
+        universityLogo={university_id?.logos?.[0] || ''}
       />
       <TimelinePostContainer />
     </div>

@@ -32,8 +32,9 @@ export default function Profile({ params }: { params: { id: string } }) {
         return null
     }
   }
-  const { dob, profile, firstName, lastName, email } = userProfileData || {}
+  const { dob, profile, firstName, lastName, email, university_id, university } = userProfileData || {}
   const { bio, university_name, followers, following, study_year, major, degree, phone_number, country } = profile || {}
+  const { logos } = university || {}
   return (
     <div className="h-with-navbar py-4 overflow-y-scroll">
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -64,6 +65,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           setIsModalOpen={setIsModalOpen}
           isSelfProfile={isSelfProfile}
           userId={userId}
+          universityLogo={logos?.[0] || ''}
         />
       )}
       <ProfilePostContainer userId={userId} containerRef={containerRef} />
