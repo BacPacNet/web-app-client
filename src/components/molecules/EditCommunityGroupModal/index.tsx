@@ -3,13 +3,14 @@ import React, { useCallback, useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
-import SelectUsers from '../../communityUniversity/SelectUsers'
+import SelectUsers from '@/components/atoms/SelectUsers'
 import { useGetCommunity, useGetCommunityUsers, useUpdateCommunityGroup } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
 import { CommunityGroupType } from '@/types/CommuityGroup'
+import Buttons from '@/components/atoms/Buttons'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -21,7 +22,7 @@ type media = {
   publicId: string
 }
 type User = {
-  _id: string
+  id: string
   firstName: string
   isOnline?: boolean
   profile: {
@@ -30,15 +31,51 @@ type User = {
   }
 }
 
+type Category = 'Academic Focus' | 'Recreation and Hobbies' | 'Advocacy and Awareness' | 'Personal Growth' | 'Professional Development' | 'Others'
+
+const subCategories: Record<Category, string[]> = {
+  'Academic Focus': [
+    'Science & Technology',
+    'Arts & Humanities',
+    'Social Sciences',
+    'Education',
+    'Business & Economics',
+    'Health & Medicine',
+    'Environmental Studies',
+    'Law & Policy',
+    'Mathematics & Statistics',
+    'Engineering',
+  ],
+  'Recreation and Hobbies': ['f', 'g', 'h'],
+  'Advocacy and Awareness': ['i', 'j'],
+  'Personal Growth': ['k', 'l', 'm'],
+  'Professional Development': ['n', 'o'],
+  Others: [],
+}
+
+const categories: Category[] = [
+  'Academic Focus',
+  'Recreation and Hobbies',
+  'Advocacy and Awareness',
+  'Personal Growth',
+  'Professional Development',
+  'Others',
+]
+
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
-  const [userPopUp, setUserPopUp] = useState(false)
+
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsersId, setSelectedUsers] = useState<string[]>([...communityGroups.users.map((user) => user.userId.toString())])
+  const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
+  const [selectedUsers, setSelectedUsers] = useState<User[] | []>([])
+
+  const [selectedGroupCategory, setSelectedGroupCategory] = useState<Category | null>(null)
+  const [groupSubCategory, setGroupSubCategory] = useState<string[]>([])
 
   const [searchInput, setSearchInput] = useState('')
   const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
+  const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId)
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
@@ -54,9 +91,26 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     },
   })
 
-  const values = getValues()
-  const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId)
-  const handleSelectAll = useCallback(() => {}, [])
+  const handleSelectAll = useCallback(() => {
+    const getAlluser: any = allCommunityUsers?.users?.map((user) => user)
+    setSelectedUsers(getAlluser)
+  }, [])
+
+  const handleCategoryChange = (category: Category) => {
+    setSelectedGroupCategory(category)
+    setGroupSubCategory([])
+  }
+
+  const handleSubCategoryChange = (subCategory: string) => {
+    setGroupSubCategory((prev) => (prev.includes(subCategory) ? prev.filter((item) => item !== subCategory) : [...prev, subCategory]))
+  }
+
+  const handleClick = (userId: string) => {
+    if (selectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
+      const filterd = selectedUsers.filter((selectedUser) => selectedUser.id !== userId)
+      setSelectedUsers(filterd)
+    }
+  }
 
   const onGroupSubmit = async (data: any) => {
     let CoverImageData
@@ -70,7 +124,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       const imagedata: any = await replaceImage(logoImage, '')
       logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
     }
-
+    const selectedUsersId = selectedUsers.map((item) => item.id)
     const dataToPush = {
       ...data,
       ...CoverImageData,
@@ -82,54 +136,17 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     setNewGroup(false)
   }
 
+  console.log('user', selectedUsers)
+
   return (
     <>
-      <div onClick={() => setNewGroup(false)} className="fixed w-full h-[100%] top-0 left-0 bg-black backdrop-blur-2xl opacity-50 z-30"></div>
-      {userPopUp && (
-        <>
-          <div className="fixed w-full h-[100%] top-0 left-0 bg-black backdrop-blur-xl opacity-50 z-50"></div>
-          <div className="fixed w-[90%] lg:w-[40%]  h-[70%] z-50 left-[50%]  top-[50%] -translate-x-[50%] -translate-y-[50%] bg-white flex flex-col items-center gap-4 shadow-lg px-6 py-4 rounded-lg">
-            <div className="flex justify-between w-full">
-              <h3>Add Community members</h3>
-              <RxCross2 onClick={() => setUserPopUp(false)} size={24} color="#737373" />
-            </div>
-            {/* search  */}
-            <div className="relative w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="absolute top-0 bottom-0 w-4 h-4 my-auto text-gray-400 left-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                onChange={(e) => setSearchInput(e.target.value)}
-                value={searchInput}
-                type="text"
-                placeholder="Search users by name"
-                className="w-full pl-12 pr-3 py-1 text-gray-500 bg-transparent outline-none border border-neutral-300 rounded-2xl text-xs"
-              />
-            </div>
-            <button onClick={handleSelectAll} className="self-end bg-slate-200 px-4 py-1 text-xs rounded-xl shadow-sm">
-              Select All
-            </button>
-            {allCommunityUsers?.users?.map((user) => (
-              <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsersId} />
-            ))}
-          </div>
-        </>
-      )}
-      <div
-        className={`fixed w-[90%] lg:w-[40%]  h-[70%] z-40 left-[50%]  top-[50%] -translate-x-[50%] -translate-y-[50%]  bg-white flex flex-col items-center gap-3 px-8 py-4 rounded-lg overflow-y-scroll`}
-      >
+      <div className="flex justify-start items-center gap-4 w-full ">
         <div className="flex flex-col gap-4 justify-start items-start w-full">
           <h3 className="text-neutral-700 text-base font-semibold">Create Group</h3>
           <div
             className={` ${
               !coverImage ? 'border-2 border-neutral-200' : ''
-            } rounded-md relative  flex flex-col w-full items-center justify-center h-40 `}
+            } rounded-md relative  flex flex-col w-full items-center justify-center h-40 z-20`}
           >
             {coverImage && (
               <img
@@ -151,7 +168,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           {/* Forms  */}
           <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-4">
             <div className="flex gap-4 items-center justify-between">
-              <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
+              <div className={` border-2 relative border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
                 {logoImage && (
                   <img
                     className="w-24 h-24 rounded-full absolute  object-cover"
@@ -259,12 +276,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             </div>*/}
 
             {/* category  */}
+            {/* category  */}
             <div>
               <h2 className="font-medium text-xs py-2">Group Category</h2>
               <div className="flex flex-col gap-3">
-                {['Academic Focus', 'Recreation and Hobbies', 'Advocacy and Awareness', 'Personal Growth', 'Professional Development', 'Others'].map(
-                  (category) => (
-                    <label key={category} className="flex items-center gap-3">
+                {categories.map((category) => (
+                  <>
+                    <label onClick={() => handleCategoryChange(category)} key={category} className="flex items-center gap-3">
                       <input
                         type="radio"
                         value={category.toLowerCase().replace(/ /g, '-')}
@@ -273,8 +291,25 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                       />
                       <span className="text-neutral-900 text-[12px] font-medium">{category}</span>
                     </label>
-                  )
-                )}
+
+                    {selectedGroupCategory === category && (
+                      <div className="mt-2 grid grid-cols-2 gap-4 ps-4">
+                        {subCategories[category].map((subCategory) => (
+                          <label key={subCategory} className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              value={subCategory}
+                              checked={groupSubCategory.includes(subCategory)}
+                              onChange={() => handleSubCategoryChange(subCategory)}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-neutral-700 text-2xs">{subCategory}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ))}
               </div>
               {GroupErrors.groupCategory && <p className="text-red-500 text-2xs ">This field is required</p>}
             </div>
@@ -283,13 +318,47 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 Add Members
               </label>
               <div
-                onClick={() => (setUserPopUp(true), values)}
+                onClick={() => setShowSelectUsers(!showSelectUsers)}
                 className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
               ></div>
+              {showSelectUsers && (
+                <div className="w-full min-h-[200px] shadow-lg p-2">
+                  <div className="flex flex-wrap gap-2 pb-6">
+                    <Buttons type="button" onClick={handleSelectAll} size="extra_small" variant="border_primary">
+                      Select All from Community
+                    </Buttons>
+                  </div>
+                  <div className="flex flex-col gap-4 h-[200px] overflow-y-scroll">
+                    {!allCommunityUsers?.users.length ? (
+                      <p className="text-center">No Data!</p>
+                    ) : (
+                      allCommunityUsers?.users?.map((user: any) => (
+                        <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
               <div className="flex flex-wrap mt-2">
-                <div className="bg-secondary py-[2px] px-[6px] text-[10px] text-primary-500 rounded-sm h-5">{selectedUsersId?.length} selected</div>
+                {selectedUsers?.length < 9 ? (
+                  <div className="flex gap-2 flex-wrap">
+                    {selectedUsers.map((item: User) => (
+                      <div key={item.id} className="bg-secondary py-[2px] px-[6px] text-xs text-primary-500 rounded-sm h-5 flex items-center gap-2">
+                        {item?.firstName}{' '}
+                        <span onClick={() => handleClick(item.id)} className="cursor-pointer text-sm">
+                          <IoClose />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-secondary py-[2px] px-[6px] text-[10px] text-primary-500 rounded-sm h-5">
+                    {selectedUsers?.length} <span></span>
+                  </div>
+                )}
               </div>
             </div>
+
             <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
               {isLoading || isPending ? <Spinner /> : <p>Update Changes</p>}
             </button>

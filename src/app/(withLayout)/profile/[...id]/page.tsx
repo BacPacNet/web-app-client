@@ -1,5 +1,7 @@
 'use client'
 import Spinner from '@/components/atoms/spinner'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
+import ModalWrapper from '@/components/molecules/ModalWrapper'
 import ProfilePostContainer from '@/components/organisms/PostsContainer'
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
@@ -12,7 +14,7 @@ import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
 import { PostType } from '@/types/constants'
 import { ModalContentType } from '@/types/global'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
@@ -22,24 +24,45 @@ export default function Profile({ params }: { params: { id: string } }) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
-  const modalContent = (modalContentType: string) => {
-    switch (modalContentType) {
-      case 'EditProfileModal':
-        return <EditProfileModal />
-      case 'ConnectionsModal':
-        return <ConnectionsModal />
-      default:
-        return null
+  // const modalContent = (modalContentType: string) => {
+  //   switch (modalContentType) {
+  //     case 'EditProfileModal':
+  //       return <EditProfileModal />
+  //     case 'ConnectionsModal':
+  //       return <ConnectionsModal />
+  //     default:
+  //       return null
+  //   }
+  // }
+
+  const handleShowModal = (modalType: string) => {
+    const modalContent = (modalContentType: string) => {
+      switch (modalContentType) {
+        case 'EditProfileModal':
+          return openModal(<EditProfileModal />)
+        case 'ConnectionsModal':
+          return openModal(<ConnectionsModal />)
+        default:
+          return null
+      }
     }
+
+    modalContent(modalType)
   }
-  const { dob, profile, firstName, lastName, email, university_id, university } = userProfileData || {}
-  const { bio, university_name, followers, following, study_year, major, degree, phone_number, country } = profile || {}
+
+  const { profile, firstName, lastName, email, university_id, university } = userProfileData || {}
+  const { bio, university_name, followers, following, study_year, major, degree, phone_number, country, dob, city, affiliation, occupation } =
+    profile || {}
   const { logos } = university || {}
+
   return (
-    <div className="h-with-navbar py-4 overflow-y-scroll">
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <div className="h-with-navbar py-4 overflow-y-scroll hideScrollbar">
+      {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
-      </Modal>
+      </Modal> */}
+      {/* <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true} takingFullWidth={true}>
+        {modalContentType && modalContent(modalContentType)}
+      </ModalWrapper> */}
       {isUserProfileDataLoading || !userProfileData ? (
         <Skeleton className="w-full h-60 bg-slate-300" />
       ) : (
@@ -54,15 +77,18 @@ export default function Profile({ params }: { params: { id: string } }) {
           year={study_year || ''}
           degree={degree || ''}
           major={major || ''}
+          affiliation={affiliation || ''}
+          occupation={occupation || ''}
           email={email || ''}
-          phone={phone_number || '0000'}
-          location={'Bangalore'}
+          phone={phone_number || ''}
+          location={city}
           birthday={dob || ''}
           avatarUrl={profile?.profile_dp?.imageUrl || ''}
           isVerifiedUniversity={true}
           country={country || ''}
           setModalContentType={setModalContentType}
           setIsModalOpen={setIsModalOpen}
+          handleShowModal={handleShowModal}
           isSelfProfile={isSelfProfile}
           userId={userId}
           universityLogo={logos?.[0] || ''}

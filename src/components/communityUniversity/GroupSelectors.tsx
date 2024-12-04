@@ -8,11 +8,11 @@ const GroupSelectors = ({
   setCurrSelectedGroup,
   currSelectedGroup,
   data,
-  setAssignUsers,
   userId,
   selectedCommuntyGroupdId,
   SetcurrClickedID,
   selectCommunityId,
+  handleAssignUsersModal,
 }: any) => {
   const router = useRouter()
   const handleGroupNavigate = () => {
@@ -43,7 +43,7 @@ const GroupSelectors = ({
       {data?.adminUserId === userId && (
         <button
           onClick={() => {
-            setAssignUsers(true), SetcurrClickedID({ id: data?._id, group: true })
+            handleAssignUsersModal(), SetcurrClickedID({ id: data?._id, group: true })
           }}
           className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max mr-4 rounded-full   max-lg:text-sm max-md:mr-0"
         >

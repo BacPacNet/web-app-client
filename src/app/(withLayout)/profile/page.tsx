@@ -1,4 +1,5 @@
 'use client'
+import ModalWrapper from '@/components/molecules/ModalWrapper'
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
 import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
@@ -29,9 +30,12 @@ export default function Profile() {
   const { firstName, lastName, email } = userData
   return (
     <div className="h-with-navbar py-4">
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
-      </Modal>
+      </Modal> */}
+      <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true}>
+        {modalContentType && modalContent(modalContentType)}
+      </ModalWrapper>
       <UserProfileCard
         name={`${firstName} ${lastName}`}
         isPremium={true}

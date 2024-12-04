@@ -17,7 +17,7 @@
   }
 }
 
-.communityContainer::-webkit-scrollbar {
+.hideScrollbar::-webkit-scrollbar {
   display: none;
 }
 

@@ -1,13 +1,9 @@
-'use client'
-import LoginButton from '@/components/atoms/LoginButton'
-import Button from '@/components/atoms/Buttons'
-import React, { useState } from 'react'
-import { IoIosSearch } from 'react-icons/io'
-import CreateGroupChat from '../CreateGroupChat'
+import React from 'react'
 import OneToChat from '../OneToOneChat'
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/Popover'
-import StartChatModal from '../StartChatModal'
+
 import Buttons from '@/components/atoms/Buttons'
+
+import { openModal } from '../Modal/ModalManager'
 
 type Props = {
   setCurrTab: (value: string) => void
@@ -18,8 +14,9 @@ type Props = {
 }
 
 const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSelectedChat, unreadChatsCount }: Props) => {
-  const [showCreateGroup, setShowCreateGroup] = useState(false)
-  const [showOneToOne, setShowOneToOne] = useState(false)
+  const handleShowModal = () => {
+    openModal(<OneToChat setSelectedChat={setSelectedChat} />)
+  }
 
   return (
     <>
@@ -60,20 +57,27 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
             Starred
           </p>
 
-          <Buttons size="extra_small" onClick={() => setShowOneToOne(true)}>
+          <Buttons size="extra_small" onClick={() => handleShowModal()}>
             Start a Chat
           </Buttons>
+          {/* <Buttons size="extra_small" onClick={() => setShowOneToOne(true)}>
+            Start a Chat
+          </Buttons> */}
         </div>
       </div>
-      {showCreateGroup && <CreateGroupChat setShowCreateGroup={setShowCreateGroup} setShowOneToOne={setShowOneToOne} />}
-      {showOneToOne && (
+
+      {/* <ModalWrapper setModal={setShowCreateGroup} isShown={showCreateGroup} smallHeight={true} takingFullWidth={true} isMessage={true}>
+        <CreateGroupChat />
+      </ModalWrapper>
+
+      <ModalWrapper setModal={setShowOneToOne} isShown={showOneToOne} smallHeight={true} takingFullWidth={true} isMessage={true}>
         <OneToChat
           setSelectedChat={setSelectedChat}
           setShowOneToOne={setShowOneToOne}
           setShowCreateGroup={setShowCreateGroup}
           showOneToOne={showOneToOne}
         />
-      )}
+      </ModalWrapper> */}
     </>
   )
 }

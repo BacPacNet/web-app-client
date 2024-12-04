@@ -22,20 +22,21 @@ type Props = {
   setSelectedUsers: (value: string[]) => void
   selectedUsers: string[]
   user: any
+  userID?: string
 }
 
-const SelectUsers = ({ user, selectedUsers, setSelectedUsers }: Props) => {
+const SelectUsers = ({ user, selectedUsers, setSelectedUsers, userID }: Props) => {
   const handleClick = (userId: string) => {
     //setSelectedUsers([...selectedUsers, userId])
-    if (selectedUsers?.some((id) => id == user.id)) {
-      const filterd = selectedUsers.filter((id) => id !== user.id)
+    if (selectedUsers?.some((id) => id == userID)) {
+      const filterd = selectedUsers.filter((id) => id !== userID)
       setSelectedUsers(filterd)
     } else {
       setSelectedUsers([...selectedUsers, userId])
     }
   }
 
-  const isSelected = selectedUsers?.some((userId) => userId === user.id)
+  const isSelected = selectedUsers?.some((userId) => userId === userID)
   return (
     <div className="flex justify-between w-full">
       <div className="flex items-center gap-2">
@@ -48,7 +49,7 @@ const SelectUsers = ({ user, selectedUsers, setSelectedUsers }: Props) => {
           </p>
         </div>
       </div>
-      <input onChange={() => handleClick(user.id as string)} className="w-4" type="checkbox" checked={isSelected} />
+      <input onChange={() => handleClick(userID as string)} className="w-4" type="checkbox" checked={isSelected} />
     </div>
   )
 }

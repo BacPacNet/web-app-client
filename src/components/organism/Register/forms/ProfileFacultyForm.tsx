@@ -21,7 +21,6 @@ const ProfileFacultyForm = () => {
   type occupationKeys = keyof typeof occupationAndDepartment
   const currOccupation: occupationKeys = watch('occupation')
   const currFormDepartment: occupationKeys = watch('department')
-  const watchUniverSityName = watch('universityId')
 
   const [currDepartment, setCurrDepartment] = useState<any>([])
 
