@@ -24,16 +24,6 @@ export default function Profile({ params }: { params: { id: string } }) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
-  // const modalContent = (modalContentType: string) => {
-  //   switch (modalContentType) {
-  //     case 'EditProfileModal':
-  //       return <EditProfileModal />
-  //     case 'ConnectionsModal':
-  //       return <ConnectionsModal />
-  //     default:
-  //       return null
-  //   }
-  // }
 
   const handleShowModal = (modalType: string) => {
     const modalContent = (modalContentType: string) => {
@@ -57,12 +47,6 @@ export default function Profile({ params }: { params: { id: string } }) {
 
   return (
     <div className="h-with-navbar py-4 overflow-y-scroll hideScrollbar">
-      {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {modalContentType && modalContent(modalContentType)}
-      </Modal> */}
-      {/* <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true} takingFullWidth={true}>
-        {modalContentType && modalContent(modalContentType)}
-      </ModalWrapper> */}
       {isUserProfileDataLoading || !userProfileData ? (
         <Skeleton className="w-full h-60 bg-slate-300" />
       ) : (

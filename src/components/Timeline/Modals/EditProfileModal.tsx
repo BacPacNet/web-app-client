@@ -177,7 +177,7 @@ const EditProfileModal = () => {
         affiliation: '',
       }
     }
-    return console.log('submit', dataToPush)
+    // return console.log('submit', dataToPush)
 
     mutateEditProfile(dataToPush)
   }

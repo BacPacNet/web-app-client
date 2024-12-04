@@ -36,7 +36,7 @@ export default function Profile() {
       <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true}>
         {modalContentType && modalContent(modalContentType)}
       </ModalWrapper>
-      <UserProfileCard
+      {/* <UserProfileCard
         name={`${firstName} ${lastName}`}
         isPremium={true}
         description={bio || ''}
@@ -57,7 +57,7 @@ export default function Profile() {
         setModalContentType={setModalContentType}
         setIsModalOpen={setIsModalOpen}
         universityLogo={(university_id as any)?.logos?.[0] || ''}
-      />
+      /> */}
       <TimelinePostContainer />
     </div>
   )
