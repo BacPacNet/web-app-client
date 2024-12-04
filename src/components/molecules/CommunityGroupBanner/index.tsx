@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { HiPencilAlt } from 'react-icons/hi'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup, useLeaveCommunityGroup } from '@/services/community-group'
+import { openModal } from '../Modal/ModalManager'
 
 interface Props {
   communityID: string
@@ -83,6 +84,11 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     return userData?.userUnVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
   }, [userData])
 
+  const handleEditCommunityGroupModal = () => {
+    if (!communityGroups) return
+    openModal(<EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />)
+  }
+
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
 
@@ -143,8 +149,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
 
   return (
     <>
-      {showEditGroupMoadal && communityGroups && <EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />}
-
       <div className="rounded-2xl bg-white shadow-card">
         <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
           <Image
@@ -239,7 +243,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
             >
               {isGroupAdmin ? (
                 <div className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500">
-                  <button onClick={() => setShowEditGroupMoadal(true)}>Edit Group</button>
+                  <button onClick={() => handleEditCommunityGroupModal()}>Edit Group</button>
                   <HiPencilAlt size={16} />
                 </div>
               ) : (

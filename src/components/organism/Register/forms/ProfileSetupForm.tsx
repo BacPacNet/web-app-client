@@ -86,7 +86,7 @@ const ProfileSetupForm = () => {
             rules={{ required: 'Country is required!' }}
             render={({ field }) => (
               <SelectDropdown
-                options={country_list}
+                options={Object.keys(country_list)}
                 value={field.value}
                 onChange={field.onChange}
                 placeholder="Select a country"

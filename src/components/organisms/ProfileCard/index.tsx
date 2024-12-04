@@ -18,7 +18,13 @@ import { IoIosShareAlt } from 'react-icons/io'
 import { MdBlockFlipped } from 'react-icons/md'
 import { IoFlagOutline } from 'react-icons/io5'
 import { RiMessage2Fill } from 'react-icons/ri'
+import { FaCalendarCheck } from 'react-icons/fa6'
+import { MdSubject } from 'react-icons/md'
+import { FaCamera } from 'react-icons/fa'
 import Buttons from '@/components/atoms/Buttons'
+import { useEditProfile } from '@/services/edit-profile'
+import { replaceImage } from '@/services/uploadImage'
+import { ChangeEvent } from 'react'
 
 interface UserProfileCardProps {
   name: string
@@ -43,6 +49,9 @@ interface UserProfileCardProps {
   isSelfProfile?: boolean
   userId?: string
   universityLogo: string
+  occupation: string
+  affiliation: string
+  handleShowModal: (value: string) => void
 }
 
 export function UserProfileCard({
@@ -68,29 +77,54 @@ export function UserProfileCard({
   isSelfProfile,
   userId,
   universityLogo,
+  occupation,
+  affiliation,
+  handleShowModal,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
-  const { mutate: toggleFollow } = useToggleFollow('Following')
 
+  const { mutate: toggleFollow } = useToggleFollow('Following')
+  const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
 
   const handleOpenModal = (modalType: ModalContentType) => {
     setModalContentType(modalType)
     setIsModalOpen(true)
+    handleShowModal(modalType || '')
   }
-  console.log(universityLogo, 'avatarUrl')
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files[0]) {
+      const data: any = await replaceImage(files[0], userProfileData?.profile_dp?.publicId)
+
+      const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
+
+      mutateEditProfile(dataToPush)
+    } else {
+      console.error('No file selected.')
+    }
+  }
   return (
     <Card className="rounded-2xl px-8">
       <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start">
-        <div className="flex-none  lg:w-[126px] lg:h-[126px] w-[90] h-[90]">
+        <div className="flex-none lg:w-[126px] lg:h-[126px] w-[90px] h-[90px] group relative">
           <Image
             src={avatarUrl ? avatarUrl : avatar}
             alt={name}
             width={isDesktop ? 126 : 90}
             height={isDesktop ? 126 : 90}
-            className="rounded-full"
+            className="rounded-full object-cover lg:w-[126px] lg:h-[126px] w-[90px] h-[90px]"
           />
+          {isSelfProfile && (
+            <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
+              <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e) => handleImageUpload(e)} />
+              <label htmlFor="changeProfileImage" className="bg-red-500 w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800">
+                <FaCamera />
+              </label>
+            </div>
+          )}
         </div>
         <div className="w-full">
           <div className="flex w-full items-center justify-between flex-wrap">
@@ -155,34 +189,76 @@ export function UserProfileCard({
           </div>
         </div>
       </div>
-      <div
-        //style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(0, max-content))' }}
-        className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-8 text-neutral-500 "
-      >
-        <div className="flex items-center space-x-2 ">
-          <FaGraduationCap className="text-md" />
-          <span className="text-xs">{`${degree}, ${major}`}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaEnvelope className="text-md flex-none" />
-          <span className="text-xs">{email}</span>
-        </div>
-        <div className="flex items-center space-x-2 ">
-          <FaPhone className="text-md flex-none" />
-          <span className="text-xs">{phone}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <FaMapMarkerAlt className="text-md flex-none" />
-          <span className="text-xs">{location}</span>
-        </div>
-        <div className="flex items-center space-x-2 ">
-          <FaBirthdayCake className="text-md flex-none" />
-          <span className="text-xs">{birthday && format(new Date(birthday), 'dd MMM yyyy')}</span>
-        </div>
-        <div className="flex items-center space-x-2 ">
-          <ImEarth className="text-md flex-none" />
-          <span className="text-xs">{country}</span>
-        </div>
+      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-8 text-neutral-500">
+        {affiliation && occupation && (
+          <>
+            {occupation && (
+              <div className="flex items-center space-x-2">
+                <FaGraduationCap className="text-md" />
+                <span className="text-xs">{`${occupation}`}</span>
+              </div>
+            )}
+            {affiliation && (
+              <div className="flex items-center space-x-2">
+                <MdSubject className="text-md" />
+                <span className="text-xs">{`${affiliation}`}</span>
+              </div>
+            )}
+          </>
+        )}
+
+        {!affiliation && !occupation && (
+          <>
+            {degree && (
+              <div className="flex items-center space-x-2">
+                <FaGraduationCap className="text-md" />
+                <span className="text-xs">{degree}</span>
+              </div>
+            )}
+            {major && (
+              <div className="flex items-center space-x-2">
+                <MdSubject className="text-md" />
+                <span className="text-xs">{major}</span>
+              </div>
+            )}
+            {year && (
+              <div className="flex items-center space-x-2">
+                <FaCalendarCheck className="text-md" />
+                <span className="text-xs">{`${year} Year`}</span>
+              </div>
+            )}
+          </>
+        )}
+        {email && (
+          <div className="flex items-center space-x-2">
+            <FaEnvelope className="text-md flex-none" />
+            <span className="text-xs">{email}</span>
+          </div>
+        )}
+        {phone && (
+          <div className="flex items-center space-x-2">
+            <FaPhone className="text-md flex-none" />
+            <span className="text-xs">{phone}</span>
+          </div>
+        )}
+        {location && (
+          <div className="flex items-center space-x-2">
+            <FaMapMarkerAlt className="text-md flex-none" />
+            <span className="text-xs">{location}</span>
+          </div>
+        )}
+        {birthday && (
+          <div className="flex items-center space-x-2">
+            <FaBirthdayCake className="text-md flex-none" />
+            <span className="text-xs">{format(new Date(birthday), 'dd MMM yyyy')}</span>
+          </div>
+        )}
+        {country && (
+          <div className="flex items-center space-x-2">
+            <ImEarth className="text-md flex-none" />
+            <span className="text-xs">{country}</span>
+          </div>
+        )}
       </div>
     </Card>
   )

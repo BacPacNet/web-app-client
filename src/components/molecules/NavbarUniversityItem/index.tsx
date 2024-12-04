@@ -13,6 +13,7 @@ import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
+import { openModal } from '../Modal/ModalManager'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData, userProfileData } = useUniStore()
@@ -20,7 +21,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
-  const [showNewGroup, setShowNewGroup] = useState(false)
+  const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
@@ -32,6 +33,13 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     handleUniversityClick(index)
     setCurrSelectedGroup(community)
     setActiveMenu('')
+  }
+
+  const handleNewGroupModal = () => {
+    openModal(<CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />)
+  }
+  const handleAssignUsersModal = () => {
+    openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
   }
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
@@ -78,7 +86,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          setAssignUsers={setAssignUsers}
+          handleAssignUsersModal={handleAssignUsersModal}
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
@@ -95,7 +103,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          setAssignUsers={setAssignUsers}
+          handleAssignUsersModal={handleAssignUsersModal}
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
@@ -113,14 +121,14 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             currSelectedGroup={currSelectedGroup as Community}
             setCurrSelectedGroup={setCurrSelectedGroup}
             userData={userData}
-            setAssignUsers={setAssignUsers}
+            handleAssignUsersModal={handleAssignUsersModal}
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
           />
 
           <div className="flex justify-center items-center p-2">
-            <button onClick={() => setShowNewGroup(true)} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
+            <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
               Create Group
             </button>
           </div>
@@ -165,26 +173,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             <GroupSearchBox placeholder="Search Groups" type="text" />
           </div>
         </div>
-        {/*<div className="flex gap-2 justify-evenly cursor-pointer my-4">
-          <div
-            style={{ boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04)' }}
-            className="border-2 border-solid border-neutral-200 rounded-lg "
-          >
-            <div className="flex gap-6 justify-center items-center h-8 px-4 ">
-              <p className="text-xs text-neutral-700">Filter</p>
-              <FiFilter width={16} height={16} className="text-primary-500 font-bold" />
-            </div>
-          </div>
-          <div
-            style={{ boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.04), 0px 1px 2px 0px rgba(16, 24, 40, 0.04)' }}
-            className="border-2 border-solid border-neutral-200 rounded-lg "
-          >
-            <div className="flex gap-6 justify-center items-center h-8 px-4">
-              <p className="text-xs text-neutral-700">Filter</p>
-              <FiFilter width={16} height={16} className="text-primary-500 font-bold" />
-            </div>
-          </div>
-        </div>*/}
       </>
 
       {subscribedCommunities?.length !== 0 ? (
@@ -194,9 +182,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           <p>Add your university to join or create groups</p>
         </div>
       )}
-
-      {showNewGroup && <CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />}
-      <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
     </>
   )
 }

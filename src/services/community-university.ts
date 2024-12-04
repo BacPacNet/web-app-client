@@ -2,7 +2,6 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult
 import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
-import { useUniStore } from '@/store/store'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'

@@ -9,6 +9,7 @@ type Props = {
   showGroupTill: number
   currSelectedGroup: Community
   userData: Partial<userType>
+  handleAssignUsersModal: () => void
 }
 
 function CommunityGroupAll({
@@ -16,13 +17,13 @@ function CommunityGroupAll({
   showGroupTill,
   currSelectedGroup,
   userData,
-  setAssignUsers,
   SetcurrClickedID,
   setCurrSelectedGroup,
   selectedCommuntyGroupdId,
   setShowGroupTill,
   isCommunityGroupsLoading,
   selectCommunityId,
+  handleAssignUsersModal,
 }: any) {
   if (isCommunityGroupsLoading || communityGroups === 'undefined') return <UserListItemSkeleton className="px-4" />
   if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> No Groups Available</p>
@@ -37,7 +38,7 @@ function CommunityGroupAll({
             setCurrSelectedGroup={setCurrSelectedGroup}
             data={item}
             userId={userData?.id}
-            setAssignUsers={setAssignUsers}
+            handleAssignUsersModal={handleAssignUsersModal}
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}

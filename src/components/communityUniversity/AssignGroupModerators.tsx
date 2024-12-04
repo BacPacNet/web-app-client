@@ -95,42 +95,33 @@ const AssignGroupModerators = ({ setAssignUsers, assignUsers, id, isGroup }: Pro
   }
 
   return (
-    <>
-      {assignUsers && (
-        <>
-          <div className="fixed   w-full h-[100%] top-0 left-0 bg-[#f3f2ff] backdrop-blur-2xl opacity-50 z-10"></div>
-
-          {/* <div className="fixed   w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div> */}
-          <div className="fixed w-1/3 max-sm:w-11/12 z-50 h-3/4   top-[10%] left-1/3 bg-white flex flex-col items-center gap-6 shadow-lg px-10 py-6 rounded-lg">
-            <div className="flex justify-between w-full">
-              <h3>Change User Role</h3>
-              <RxCross2 onClick={() => setAssignUsers(false)} size={24} color="#737373" />
-            </div>
-            {/* search  */}
-            <div className="relative w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                onChange={(e) => setSearchInput(e.target.value)}
-                value={searchInput}
-                type="text"
-                placeholder="Search users by name"
-                className="w-full pl-12 pr-3 py-2 text-gray-500 bg-transparent outline-none border border-neutral-300  rounded-2xl"
-              />
-            </div>
-            {/* uses  */}
-            {render()}
-          </div>
-        </>
-      )}
-    </>
+    <div className="h-96">
+      <div className="flex justify-between w-full">
+        <h3>Change User Role</h3>
+      </div>
+      {/* search  */}
+      <div className="relative w-full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          onChange={(e) => setSearchInput(e.target.value)}
+          value={searchInput}
+          type="text"
+          placeholder="Search users by name"
+          className="w-full pl-12 pr-3 py-2 text-gray-500 bg-transparent outline-none border border-neutral-300  rounded-2xl"
+        />
+      </div>
+      {/* uses  */}
+      {render()}
+      {/* </div> */}
+    </div>
   )
 }
 
