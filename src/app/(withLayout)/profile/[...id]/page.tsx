@@ -1,7 +1,6 @@
 'use client'
 import Spinner from '@/components/atoms/spinner'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
-import ModalWrapper from '@/components/molecules/ModalWrapper'
 import ProfilePostContainer from '@/components/organisms/PostsContainer'
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'

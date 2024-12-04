@@ -136,8 +136,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     setNewGroup(false)
   }
 
-  console.log('user', selectedUsers)
-
   return (
     <>
       <div className="flex justify-start items-center gap-4 w-full ">

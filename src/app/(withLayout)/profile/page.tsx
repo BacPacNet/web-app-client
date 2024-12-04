@@ -1,5 +1,5 @@
 'use client'
-import ModalWrapper from '@/components/molecules/ModalWrapper'
+
 import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
 import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
@@ -33,9 +33,9 @@ export default function Profile() {
       {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {modalContentType && modalContent(modalContentType)}
       </Modal> */}
-      <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true}>
+      {/* <ModalWrapper setModal={setIsModalOpen} isShown={isModalOpen} smallHeight={true}>
         {modalContentType && modalContent(modalContentType)}
-      </ModalWrapper>
+      </ModalWrapper> */}
       {/* <UserProfileCard
         name={`${firstName} ${lastName}`}
         isPremium={true}

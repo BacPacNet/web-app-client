@@ -60,24 +60,8 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
           <Buttons size="extra_small" onClick={() => handleShowModal()}>
             Start a Chat
           </Buttons>
-          {/* <Buttons size="extra_small" onClick={() => setShowOneToOne(true)}>
-            Start a Chat
-          </Buttons> */}
         </div>
       </div>
-
-      {/* <ModalWrapper setModal={setShowCreateGroup} isShown={showCreateGroup} smallHeight={true} takingFullWidth={true} isMessage={true}>
-        <CreateGroupChat />
-      </ModalWrapper>
-
-      <ModalWrapper setModal={setShowOneToOne} isShown={showOneToOne} smallHeight={true} takingFullWidth={true} isMessage={true}>
-        <OneToChat
-          setSelectedChat={setSelectedChat}
-          setShowOneToOne={setShowOneToOne}
-          setShowCreateGroup={setShowCreateGroup}
-          showOneToOne={showOneToOne}
-        />
-      </ModalWrapper> */}
     </>
   )
 }

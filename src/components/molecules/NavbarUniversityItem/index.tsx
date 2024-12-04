@@ -13,7 +13,6 @@ import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
-import ModalWrapper from '../ModalWrapper'
 import { openModal } from '../Modal/ModalManager'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
@@ -183,16 +182,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           <p>Add your university to join or create groups</p>
         </div>
       )}
-
-      {/* <ModalWrapper setModal={setShowNewGroup} isShown={showNewGroup}>
-        <CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />
-      </ModalWrapper> */}
-      {/* <ModalWrapper setModal={setUserPopUp} isShown={userPopUp}>
-        <CommunityGroupUserSelectModal setSelectedUsers={setSelectedUsers} communityId={communityId} selectedUsersId={selectedUsersId} />
-      </ModalWrapper> */}
-      {/* <ModalWrapper setModal={setAssignUsers} isShown={assignUsers}>
-        <AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />
-      </ModalWrapper> */}
     </>
   )
 }
