@@ -122,7 +122,7 @@ const EditProfileModal = () => {
 
     const wordCount = value.trim().split(/\s+/).filter(Boolean).length
 
-    return wordCount <= 2 || 'Bio must not exceed 10 words'
+    return wordCount <= 10 || 'Bio must not exceed 10 words'
   }
 
   const handleImageUpload = async () => {
