@@ -18,7 +18,7 @@ export default function FindPeople() {
     isLoading: isUserProfilesLoading,
   } = useUsersProfileForConnections(name, 10, true)
 
-  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users) || []
+  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following: { userId: string }) => following.userId)
 
   useEffect(() => {

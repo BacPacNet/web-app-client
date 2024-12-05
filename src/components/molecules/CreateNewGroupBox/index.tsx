@@ -10,6 +10,7 @@ import InputBox from '../../atoms/Input/InputBox'
 import Buttons from '@/components/atoms/Buttons'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
+import { useUniStore } from '@/store/store'
 
 type Props = {
   communityId: string
@@ -57,6 +58,7 @@ const categories: Category[] = [
 ]
 
 const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
+  const { userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [isLoading, setIsLoading] = useState(false)
