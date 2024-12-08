@@ -15,20 +15,14 @@ import { RequestData, ServerResponse } from '../models/common/api-client'
 
 const client = async <T, U>(
   endpoint: string,
-  { id, page, size, data, headers, method, transform = true, customBaseUrl = false, userCode, email, ...rest }: RequestData<U> = {}
+  { id, page, size, data, headers, method, transform = true, customBaseUrl = false, userCode, email, params, ...rest }: RequestData<U> = {}
 ): Promise<ServerResponse<T>> => {
   const config: AxiosRequestConfig = {
     url: customBaseUrl ? `${process.env.NEXT_PUBLIC_CUSTOM_BASE_URL}/${endpoint}` : `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`,
     method: method || (data ? 'POST' : 'GET'),
     data: data ? JSON.stringify(data) : undefined,
     headers: { ...headers, 'Content-Type': 'application/json' },
-    params: {
-      id,
-      page,
-      size,
-      userCode,
-      email,
-    },
+    params,
     transformResponse: [].concat(
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

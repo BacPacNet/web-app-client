@@ -18,6 +18,7 @@ export interface RequestData<T> {
   size?: number
   userCode?: string
   email?: string
+  params?: Record<string, any>
 }
 
 export interface ServerData<T> {
