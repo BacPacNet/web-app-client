@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
@@ -9,7 +9,7 @@ import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
-import { CommunityGroupType } from '@/types/CommuityGroup'
+import { categories, Category, CommunityGroupType, subCategories } from '@/types/CommuityGroup'
 import Buttons from '@/components/atoms/Buttons'
 
 type Props = {
@@ -31,37 +31,6 @@ type User = {
   }
 }
 
-type Category = 'Academic Focus' | 'Recreation and Hobbies' | 'Advocacy and Awareness' | 'Personal Growth' | 'Professional Development' | 'Others'
-
-const subCategories: Record<Category, string[]> = {
-  'Academic Focus': [
-    'Science & Technology',
-    'Arts & Humanities',
-    'Social Sciences',
-    'Education',
-    'Business & Economics',
-    'Health & Medicine',
-    'Environmental Studies',
-    'Law & Policy',
-    'Mathematics & Statistics',
-    'Engineering',
-  ],
-  'Recreation and Hobbies': ['f', 'g', 'h'],
-  'Advocacy and Awareness': ['i', 'j'],
-  'Personal Growth': ['k', 'l', 'm'],
-  'Professional Development': ['n', 'o'],
-  Others: [],
-}
-
-const categories: Category[] = [
-  'Academic Focus',
-  'Recreation and Hobbies',
-  'Advocacy and Awareness',
-  'Personal Growth',
-  'Professional Development',
-  'Others',
-]
-
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
@@ -81,6 +50,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     handleSubmit: handleGroupCreate,
     formState: { errors: GroupErrors },
     getValues,
+    watch,
+    setValue,
+    setError,
   } = useForm({
     defaultValues: {
       title: communityGroups.title,
@@ -88,8 +60,11 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       communityGroupType: communityGroups.communityGroupType,
       groupType: 'Casual',
       groupCategory: '',
+      communityGroupAccess: communityGroups.communityGroupAccess,
     },
   })
+
+  const category = watch('groupCategory')
 
   const handleSelectAll = useCallback(() => {
     const getAlluser: any = allCommunityUsers?.users?.map((user) => user)
@@ -112,6 +87,20 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     }
   }
 
+  useEffect(() => {
+    const key = Object.keys(communityGroups?.communityGroupCategory)[0] as any
+    const value: any = communityGroups?.communityGroupCategory[key]
+    setSelectedGroupCategory(key)
+    setGroupSubCategory(value)
+    setValue('groupCategory', key)
+
+    const usersWithIdField: any = communityGroups.users.map((user) => ({
+      ...user,
+      id: user.userId,
+    }))
+    setSelectedUsers(usersWithIdField)
+  }, [communityGroups])
+
   const onGroupSubmit = async (data: any) => {
     let CoverImageData
     let logoImageData
@@ -124,13 +113,23 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       const imagedata: any = await replaceImage(logoImage, '')
       logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
     }
+
+    if (selectedGroupCategory !== 'Others' && groupSubCategory.length < 1) {
+      setIsLoading(false)
+      return setError('groupCategory', { type: 'manual', message: 'Sub category required!' })
+    }
     const selectedUsersId = selectedUsers.map((item) => item.id)
     const dataToPush = {
       ...data,
       ...CoverImageData,
       ...logoImageData,
       selectedUsersId,
+      selectedGroupCategory,
+      groupSubCategory,
     }
+
+    // return console.log('push', dataToPush, 'id', selectedUsersId)
+
     mutateEditGroup({ communityId: communityGroups?._id, payload: dataToPush })
     setIsLoading(false)
     setNewGroup(false)
@@ -140,7 +139,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     <>
       <div className="flex justify-start items-center gap-4 w-full ">
         <div className="flex flex-col gap-4 justify-start items-start w-full">
-          <h3 className="text-neutral-700 text-base font-semibold">Create Group</h3>
+          <h3 className="text-neutral-700 text-base font-semibold">Update Group</h3>
           <div
             className={` ${
               !coverImage ? 'border-2 border-neutral-200' : ''
@@ -215,7 +214,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             <div>
               <h2 className="font-medium text-xs">Group Access</h2>
               <label className="flex items-center gap-3">
-                <input type="radio" value="Public" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
+                <input type="radio" value="Public" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
                 <div className="py-2">
                   <span className="text-neutral-900 text-[12px] font-medium">Public</span>
                   <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
@@ -223,13 +222,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </label>
 
               <label className="flex items-center gap-3">
-                <input type="radio" value="Private" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
+                <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
                 <div>
                   <span className="text-neutral-900 text-[12px] font-medium">Private</span>
                   <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
                 </div>
               </label>
-              {GroupErrors.communityGroupType && <p className="text-red-500 text-2xs">This field is required</p>}
+              {GroupErrors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
             </div>
 
             {/* communty group type  */}
@@ -237,7 +236,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             <div>
               <h2 className="font-medium text-xs">Group Type</h2>
               <label className="flex items-center gap-3">
-                <input type="radio" value="Casual" {...GroupRegister('groupType', { required: true })} className="w-5 h-5" />
+                <input type="radio" value="Casual" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
                 <div className="py-2">
                   <span className="text-neutral-900 text-[12px] font-medium">Casual</span>
                   <p className="text-neutral-400 text-[12px] ">No approval required</p>
@@ -245,13 +244,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </label>
 
               <label className="flex items-center gap-3">
-                <input type="radio" value="Official" {...GroupRegister('groupType', { required: true })} className="w-5 h-5" />
+                <input type="radio" value="Official" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
                 <div>
                   <span className="text-neutral-900 text-[12px] font-medium">Official</span>
                   <p className="text-neutral-400 text-[12px] ">Require university approval</p>
                 </div>
               </label>
-              {GroupErrors.groupType && <p className="text-red-500 text-2xs ">This field is required</p>}
+              {GroupErrors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
             </div>
 
             {/* Repost setting  */}
@@ -284,6 +283,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                       <input
                         type="radio"
                         value={category.toLowerCase().replace(/ /g, '-')}
+                        checked={selectedGroupCategory == category}
                         {...GroupRegister('groupCategory', { required: true })}
                         className="w-5 h-5"
                       />

@@ -14,6 +14,7 @@ import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
 import { openModal } from '../Modal/ModalManager'
+import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData, userProfileData } = useUniStore()
@@ -41,6 +42,9 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const handleAssignUsersModal = () => {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
   }
+  const handleCommunityGroupFilter = () => {
+    openModal(<CommunityGroupFilterComponent communityId={community?._id || ''} />)
+  }
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
     if (communityId) {
@@ -64,22 +68,25 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       subscribedCommunities
         ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
         ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData.id),
-    [subscribedCommunities, communityId, userData.id]
+    [subscribedCommunities, communityId, userData.id, community]
   )
 
   useEffect(() => {
     if (communityId && subscribedCommunities) {
-      setCommunity(subscribedCommunities?.find((community) => community._id === communityId))
-    } else {
-      subscribedCommunities && setCommunity(subscribedCommunities?.[0] as Community)
+      setCommunity(subscribedCommunities.find((community) => community._id === communityId))
+    } else if (subscribedCommunities) {
+      setCommunity(subscribedCommunities[0] as Community)
     }
-  }, [subscribedCommunities])
+  }, [subscribedCommunities, communityId])
+
+  console.log('comm', subscribedCommunities, 'groups', subscribedCommunitiesAllGroups)
 
   const tabData = [
     {
       label: 'All',
       content: (
         <CommunityGroupAll
+          key={subscribedCommunities}
           communityGroups={subscribedCommunitiesAllGroups}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
@@ -97,6 +104,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       label: 'Joined',
       content: (
         <CommunityGroupAll
+          key={subscribedCommunities}
           communityGroups={joinedSubscribedCommunitiesGroup}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
@@ -115,6 +123,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       content: (
         <div>
           <CommunityGroupAll
+            key={subscribedCommunities}
             communityGroups={subscribedCommunitiesMyGroup}
             showGroupTill={showGroupTill}
             setShowGroupTill={setShowGroupTill}
@@ -145,6 +154,8 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
 
+  // console.log('id', community?._id)
+
   return (
     <>
       <NavbarSubscribedUniversity
@@ -156,6 +167,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
+        <button onClick={() => handleCommunityGroupFilter()}>Filter</button>
         <div className="flex items-center px-4 py-2 w-full">
           <div className="flex items-center justify-center bg-white rounded-full gap-3 ">
             <div

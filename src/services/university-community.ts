@@ -1,10 +1,14 @@
 import useCookie from '@/hooks/useCookie'
 import { client } from './api-Client'
-import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 import { Community } from '@/types/Community'
 
 export async function getUserSubscribedCommunities(token: any) {
   const response = await client(`/community`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+export async function getUserFilteredSubscribedCommunities(communityId: string, token: string, data: any) {
+  const response = await client(`/community/filtered/${communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
 
@@ -15,4 +19,36 @@ export function useGetSubscribedCommunties() {
     queryFn: () => getUserSubscribedCommunities(cookieValue),
     enabled: !!cookieValue,
   }) as UseQueryResult<Community[]>
+}
+export function useGetFilteredSubscribedCommunities(communityId: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => getUserFilteredSubscribedCommunities(communityId, cookieValue, data),
+    onSuccess: (response: any) => {
+      const communityData: any = queryClient.getQueryData(['useGetSubscribedCommunties'])
+
+      if (communityData) {
+        // Find the community to update
+        const updatedCommunityData = communityData.map((item: any) => {
+          if (item._id === response._id) {
+            // Return the updated item
+            return {
+              ...item,
+              communityGroups: response.communityGroups, // Update the necessary field
+            }
+          }
+          return item // Return the original item if it doesn't match
+        })
+
+        // Update the query cache with the modified array
+        queryClient.setQueryData(['useGetSubscribedCommunties'], updatedCommunityData)
+
+        // console.log(updatedCommunityData, 'res', communityData)
+      }
+    },
+    onError: (res: any) => {
+      console.error(res.response.data.message)
+    },
+  })
 }
