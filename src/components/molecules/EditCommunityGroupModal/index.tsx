@@ -130,8 +130,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       groupSubCategory,
     }
 
-    // return console.log('push', dataToPush, 'id', selectedUsersId)
-
     mutateEditGroup({ communityId: communityGroups?._id, payload: dataToPush })
     setIsLoading(false)
     setNewGroup(false)

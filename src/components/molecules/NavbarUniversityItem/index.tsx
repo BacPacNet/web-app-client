@@ -162,8 +162,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
   if (isFetching || isLoading) return <UserListItemSkeleton />
 
-  // console.log('id', community?._id)
-
   return (
     <>
       <NavbarSubscribedUniversity

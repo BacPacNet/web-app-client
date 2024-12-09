@@ -16,8 +16,6 @@ interface Props {
 }
 
 function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handleCommunityClick }: Props) {
-  // const [modal, setModal] = useState<string | null>(null)
-
   const handleAddUniversityEmailUsersModal = () => {
     openModal(<UniversityVerificationModal />)
   }
@@ -28,15 +26,6 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
         <Button onClick={() => handleAddUniversityEmailUsersModal()} variant="primary" className="w-full">
           Add Your University
         </Button>
-        {/* <Button onClick={() => setModal(modal?.length ? null : 'University')} variant="primary" className="w-full">
-          Add Your University
-        </Button> */}
-        {/* {modal?.length && (
-          <div className="fixed w-1/2 h-full left-[30%] top-0 flex justify-center items-center ">
-            <div onClick={() => setModal(null)} className="bg-secondary opacity-70 w-2/3 h-full fixed -z-10 rounded-2xl"></div>
-            <UniversityVerificationModal setModal={setModal} />
-          </div>
-        )} */}
       </div>
     )
 

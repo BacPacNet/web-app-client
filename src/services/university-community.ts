@@ -29,22 +29,17 @@ export function useGetFilteredSubscribedCommunities(communityId: string) {
       const communityData: any = queryClient.getQueryData(['useGetSubscribedCommunties'])
 
       if (communityData) {
-        // Find the community to update
         const updatedCommunityData = communityData.map((item: any) => {
           if (item._id === response._id) {
-            // Return the updated item
             return {
               ...item,
-              communityGroups: response.communityGroups, // Update the necessary field
+              communityGroups: response.communityGroups,
             }
           }
-          return item // Return the original item if it doesn't match
+          return item
         })
 
-        // Update the query cache with the modified array
         queryClient.setQueryData(['useGetSubscribedCommunties'], updatedCommunityData)
-
-        // console.log(updatedCommunityData, 'res', communityData)
       }
     },
     onError: (res: any) => {

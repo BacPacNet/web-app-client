@@ -26,23 +26,6 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   const [selectedType, setSelectedType] = useState<string[]>([])
   const { mutate } = useGetFilteredSubscribedCommunities(communityId)
 
-  // const handleSelect = (category: string, option: string) => {
-  //   setSelectedFilters((prev) => {
-  //     const categoryFilters = prev[category] || []
-  //     if (categoryFilters.includes(option)) {
-  //       return {
-  //         ...prev,
-  //         [category]: categoryFilters.filter((item) => item !== option),
-  //       }
-  //     } else {
-  //       return {
-  //         ...prev,
-  //         [category]: [...categoryFilters, option],
-  //       }
-  //     }
-  //   })
-  // }
-
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
       const categoryFilters = prev[category] || []
