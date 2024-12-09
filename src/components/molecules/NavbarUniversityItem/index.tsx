@@ -15,6 +15,7 @@ import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
 import { openModal } from '../Modal/ModalManager'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
+import Buttons from '@/components/atoms/Buttons'
 
 export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const { userData, userProfileData } = useUniStore()
@@ -23,11 +24,12 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
+  const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
+  const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
-
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
 
   const handleCommunityClick = (index: number) => {
@@ -43,7 +45,15 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
   }
   const handleCommunityGroupFilter = () => {
-    openModal(<CommunityGroupFilterComponent communityId={community?._id || ''} />)
+    openModal(
+      <CommunityGroupFilterComponent
+        communityId={community?._id || ''}
+        setSelectedFiltersMain={setSelectedFiltersMain}
+        selectedFiltersMain={selectedFiltersMain}
+        setSelectedTypeMain={setSelectedTypeMain}
+        selectedTypeMain={selectedTypeMain}
+      />
+    )
   }
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
@@ -78,8 +88,6 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       setCommunity(subscribedCommunities[0] as Community)
     }
   }, [subscribedCommunities, communityId])
-
-  console.log('comm', subscribedCommunities, 'groups', subscribedCommunitiesAllGroups)
 
   const tabData = [
     {
@@ -167,9 +175,16 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
 
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <button onClick={() => handleCommunityGroupFilter()}>Filter</button>
+        <div className="flex justify-start gap-2 px-4">
+          <Buttons onClick={() => handleCommunityGroupFilter()} size="extra_small" variant="border_primary">
+            Filter
+          </Buttons>
+          <Buttons size="extra_small" variant="border_primary">
+            Sort
+          </Buttons>
+        </div>
         <div className="flex items-center px-4 py-2 w-full">
-          <div className="flex items-center justify-center bg-white rounded-full gap-3 ">
+          <div className="flex items-center justify-start bg-white rounded-full gap-3 w-full">
             <div
               style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
               className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px] cursor-pointer"
@@ -188,7 +203,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
       </>
 
       {subscribedCommunities?.length !== 0 ? (
-        <Tabs tabs={tabData} tabAlign="center" />
+        <Tabs tabs={tabData} tabAlign="left" className="px-4 my-4" />
       ) : (
         <div className="px-4 w-full text-center font-poppins text-neutral-400">
           <p>Add your university to join or create groups</p>

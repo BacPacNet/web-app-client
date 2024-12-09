@@ -10,6 +10,7 @@ import InputBox from '../../atoms/Input/InputBox'
 import Buttons from '@/components/atoms/Buttons'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
+import { useUniStore } from '@/store/store'
 import { categories, Category, subCategories } from '@/types/CommuityGroup'
 
 type Props = {

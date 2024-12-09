@@ -278,7 +278,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     // console.log('comments', comments)
 
     return comments?.map((comment, index: number) => (
-      <div key={comment._id} className={`my-4   h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
+      <div key={comment._id} className={`mb-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
           <div className="absolute w-[1px] h-[90%] bg-neutral-300 top-20 max-sm:top-16 left-14 max-sm:left-8"></div>
         ) : (
@@ -286,7 +286,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
         )}
 
         <div>
-          <div className="flex p-4 max-sm:px-0  gap-4 ">
+          <div className="flex py-2 max-sm:px-0 gap-4 justify-start">
             <div className="relative ">
               {childCommentsId.includes(comment._id) ? (
                 <>
@@ -303,13 +303,17 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
                 ''
               )}
             </div>
-            <Image
-              src={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-              width={56}
-              height={56}
-              className="rounded-full max-sm:w-10 max-sm:h-10"
-              alt="avatar.png"
-            />
+            <div>
+              <Image
+                src={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
+                width={56}
+                height={56}
+                objectFit="fill"
+                className="rounded-full max-sm:w-10 max-sm:h-10"
+                alt="avatar.png"
+              />
+            </div>
+
             <div>
               <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
               <p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>
@@ -388,30 +392,27 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   }
 
   return (
-    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden' : ''}  flex flex-col gap-2 px-4 w-full`}>
-      <div>
-        <div className="w-11/12  rounded-full py-2 pr-3 flex items-center">
-          <Image
-            src={userProfileData.cover_dp?.imageUrl || avatar}
-            alt={`${userData?.firstName}'s avatar`}
-            width={44}
-            height={44}
-            objectFit="cover"
-            className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
-          />
-          <button
-            onClick={() => {
-              setNewPost(true), setIsReply(false)
-            }}
-            className="border-2 border-primary py-2 px-3 text-xs rounded-lg flex items-center gap-3 ms-2"
-          >
-            {' '}
-            <span>
-              <FaPlusCircle color="#6647ff" />
-            </span>{' '}
-            <span className="text-primary"> Add a comment</span>
-          </button>
-        </div>
+    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden' : ''}  flex flex-col gap-2 w-full`}>
+      <div className="rounded-full pt-4 pb-2 flex gap-2 items-center">
+        <Image
+          src={userProfileData.cover_dp?.imageUrl || avatar}
+          alt={`${userData?.firstName}'s avatar`}
+          width={44}
+          height={44}
+          objectFit="cover"
+          className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
+        />
+        <button
+          onClick={() => {
+            setNewPost(true), setIsReply(false)
+          }}
+          className="border-2 border-primary py-2 px-3 text-xs rounded-lg flex items-center gap-3 ms-2"
+        >
+          <span>
+            <FaPlusCircle color="#6647ff" />
+          </span>{' '}
+          <span className="text-primary"> Add a comment</span>
+        </button>
       </div>
 
       {communitCommentsDatas.length || commentsDatas.length ? (

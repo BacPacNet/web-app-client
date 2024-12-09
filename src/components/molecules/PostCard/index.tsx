@@ -193,17 +193,17 @@ const PostCard = ({
         className={`flex items-center justify-between py-2 border-t ${showCommentSection && 'border-b'} border-neutral-200 text-sm text-neutral-500 `}
       >
         <div className="flex items-center gap-10">
-          <span onClick={() => LikeUnlikeHandler(postID)} className="flex items-center">
-            <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />{' '}
+          <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-2 items-center cursor-pointer">
             {likes?.length}
+            <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
           </span>
-          <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex items-center">
-            <FiMessageCircle className="mr-1 text-neutral-600" /> {commentCount}
+          <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex gap-2 items-center cursor-pointer">
+            {commentCount} <FiMessageCircle className="mr-1 text-neutral-600" />
           </span>
 
           <Popover>
             <PopoverTrigger>
-              <span className="flex items-center">
+              <span className="flex items-center gap-2">
                 <FiShare2 className="mr-1 text-neutral-600" /> Share
               </span>
             </PopoverTrigger>

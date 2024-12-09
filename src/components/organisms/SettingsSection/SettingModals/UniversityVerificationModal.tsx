@@ -17,17 +17,13 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
-type Props = {
-  setModal: (value: string | null) => void
-}
-
 type FormDataType = {
   UniversityOtp: string
   universityEmail: string
   universityName: string
 }
 
-const UniversityVerificationModal = ({ setModal }: Props) => {
+const UniversityVerificationModal = () => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const {
@@ -81,126 +77,123 @@ const UniversityVerificationModal = ({ setModal }: Props) => {
   useEffect(() => {
     if (isSuccess) {
       showCustomSuccessToast('University email added successfully!')
-      setModal(null)
     }
   }, [isSuccess])
 
   return (
-    <SettingModalWrapper setModal={setModal}>
-      <div className="flex flex-col items-center gap-8">
-        <div>
-          <SettingsText className="text-md text-center">University Verification</SettingsText>
-          <SubText className="text-center">Do you have a email provided by your university?</SubText>
+    <div className="flex flex-col items-center gap-8">
+      <div>
+        <SettingsText className="text-md text-center">University Verification</SettingsText>
+        <SubText className="text-center">Do you have a email provided by your university?</SubText>
+      </div>
+      <form className="w-full flex flex-col items-center gap-8" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col  w-11/12 gap-4">
+          <label htmlFor="Email Address" className="font-medium text-neutral-900">
+            University Name
+          </label>
+          <Controller
+            name="universityName"
+            control={control}
+            rules={{ required: 'University name is required!' }}
+            render={({ field }) => (
+              <SelectUniversityDropdown
+                value={field.value}
+                onChange={(selectedUniversity: any) => {
+                  field.onChange(selectedUniversity.name)
+                }}
+                placeholder="Select University Name"
+                icon={'single'}
+                search={true}
+                err={!!errors.universityName}
+              />
+            )}
+          />
+          {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
         </div>
-        <form className="w-full flex flex-col items-center gap-8" onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col  w-11/12 gap-4">
+
+        <div className="flex flex-col  w-11/12 gap-4">
+          <div className="relative w-full flex flex-col gap-2">
             <label htmlFor="Email Address" className="font-medium text-neutral-900">
-              University Name
+              University Email
             </label>
-            <Controller
-              name="universityName"
-              control={control}
-              rules={{ required: 'University name is required!' }}
-              render={({ field }) => (
-                <SelectUniversityDropdown
-                  value={field.value}
-                  onChange={(selectedUniversity: any) => {
-                    field.onChange(selectedUniversity.name)
-                  }}
-                  placeholder="Select University Name"
-                  icon={'single'}
-                  search={true}
-                  err={!!errors.universityName}
-                />
-              )}
+
+            <InputBox
+              placeholder="Email Address"
+              type="email"
+              {...register('universityEmail', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Invalid email format',
+                },
+              })}
+              err={!!errors.universityEmail}
             />
-            {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
+            {errors.universityEmail && (
+              <InputWarningText>
+                {errors.universityEmail.message ? errors.universityEmail.message.toString() : 'Please enter your email!'}
+              </InputWarningText>
+            )}
+            <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
+              Send Code
+            </Button>
+            {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
           </div>
 
-          <div className="flex flex-col  w-11/12 gap-4">
+          {isPending && (
+            <div className="w-full flex justify-center">
+              <Spinner />
+            </div>
+          )}
+          {/* otp  */}
+          {otpData?.isAvailable ? (
             <div className="relative w-full flex flex-col gap-2">
               <label htmlFor="Email Address" className="font-medium text-neutral-900">
-                University Email
+                Input Verification Code
               </label>
 
-              <InputBox
-                placeholder="Email Address"
-                type="email"
-                {...register('universityEmail', {
-                  required: true,
-                  pattern: {
-                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                    message: 'Invalid email format',
-                  },
-                })}
-                err={!!errors.universityEmail}
+              <Controller
+                name="UniversityOtp"
+                control={control}
+                rules={{
+                  required: 'OTP is required!',
+                  validate: (value) => value.length === 6 || 'OTP must be 6 digits long!',
+                }}
+                render={({ field }) => (
+                  <OTPInput
+                    {...field}
+                    maxLength={6}
+                    containerClassName="group flex items-center has-[:disabled]:opacity-30  "
+                    value={field.value}
+                    placeholder="000000"
+                    inputMode="numeric"
+                    render={({ slots }) => (
+                      <div className={`flex gap-2 ${field.value ? 'text-neutral-700' : 'text-neutral-300'} `}>
+                        {slots.map((slot, idx) => (
+                          <Slot key={idx} {...slot} />
+                        ))}
+                      </div>
+                    )}
+                  />
+                )}
               />
-              {errors.universityEmail && (
-                <InputWarningText>
-                  {errors.universityEmail.message ? errors.universityEmail.message.toString() : 'Please enter your email!'}
-                </InputWarningText>
-              )}
-              <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
-                Send Code
-              </Button>
-              {isCounting && <p className="text-xs text-neutral-500 text-center">Resend Available after {countdown}s</p>}
+              {errors.UniversityOtp && <InputWarningText>{errors.UniversityOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>}
+              {/* <Button variant="border_primary">Confirm Code</Button> */}
             </div>
-
-            {isPending && (
-              <div className="w-full flex justify-center">
-                <Spinner />
-              </div>
-            )}
-            {/* otp  */}
-            {otpData?.isAvailable ? (
-              <div className="relative w-full flex flex-col gap-2">
-                <label htmlFor="Email Address" className="font-medium text-neutral-900">
-                  Input Verification Code
-                </label>
-
-                <Controller
-                  name="UniversityOtp"
-                  control={control}
-                  rules={{
-                    required: 'OTP is required!',
-                    validate: (value) => value.length === 6 || 'OTP must be 6 digits long!',
-                  }}
-                  render={({ field }) => (
-                    <OTPInput
-                      {...field}
-                      maxLength={6}
-                      containerClassName="group flex items-center has-[:disabled]:opacity-30  "
-                      value={field.value}
-                      placeholder="000000"
-                      inputMode="numeric"
-                      render={({ slots }) => (
-                        <div className={`flex gap-2 ${field.value ? 'text-neutral-700' : 'text-neutral-300'} `}>
-                          {slots.map((slot, idx) => (
-                            <Slot key={idx} {...slot} />
-                          ))}
-                        </div>
-                      )}
-                    />
-                  )}
-                />
-                {errors.UniversityOtp && <InputWarningText>{errors.UniversityOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>}
-                {/* <Button variant="border_primary">Confirm Code</Button> */}
-              </div>
-            ) : (
-              ''
-            )}
-          </div>
-          {otpData?.isAvailable ? (
-            <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
-              {isPendingChangeApi ? <Spinner /> : 'Complete Verification'}
-            </Button>
           ) : (
             ''
           )}
-        </form>
-        {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}
-      </div>
-    </SettingModalWrapper>
+        </div>
+        {otpData?.isAvailable ? (
+          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+            {isPendingChangeApi ? <Spinner /> : 'Complete Verification'}
+          </Button>
+        ) : (
+          ''
+        )}
+      </form>
+      {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}
+    </div>
   )
 }
 

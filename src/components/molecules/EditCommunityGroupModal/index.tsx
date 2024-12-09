@@ -4,13 +4,14 @@ import { RxCross2 } from 'react-icons/rx'
 import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import SelectUsers from '@/components/atoms/SelectUsers'
-import { useGetCommunity, useGetCommunityUsers, useUpdateCommunityGroup } from '@/services/community-university'
+import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
 import { categories, Category, CommunityGroupType, subCategories } from '@/types/CommuityGroup'
 import Buttons from '@/components/atoms/Buttons'
+import { useUniStore } from '@/store/store'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -32,6 +33,7 @@ type User = {
 }
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
+  const { userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
 

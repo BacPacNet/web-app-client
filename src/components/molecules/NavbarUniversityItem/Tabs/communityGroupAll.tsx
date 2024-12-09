@@ -34,7 +34,7 @@ function CommunityGroupAll({
         ?.slice(0, showGroupTill)
         .map((item: any) => (
           <GroupSelectors
-            key={item.title}
+            key={item._id}
             currSelectedGroup={currSelectedGroup}
             setCurrSelectedGroup={setCurrSelectedGroup}
             data={item}
