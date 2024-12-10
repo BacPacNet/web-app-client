@@ -8,22 +8,23 @@ import UniversityVerificationModal from '../SettingModals/UniversityVerification
 import ChangeEmailModal from '../SettingModals/ChangeEmailModal'
 import DeActivateModal from '../SettingModals/DeActivateModal'
 import Tabs from '@/components/molecules/Tabs'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
 
 const SettingContainer = () => {
   const [modal, setModal] = useState<string | null>(null)
 
-  const renderModals = () => {
+  const renderModals: any = () => {
     switch (modal) {
       case 'Username':
-        return <ChangeUserNameModal setModal={setModal} />
+        return openModal(<ChangeUserNameModal />)
       case 'Password':
-        return <ChangePasswordModal setModal={setModal} />
+        return openModal(<ChangePasswordModal />)
       case 'University':
-        return <UniversityVerificationModal setModal={setModal} />
+        return openModal(<UniversityVerificationModal />)
       case 'Email':
-        return <ChangeEmailModal setModal={setModal} />
+        return openModal(<ChangeEmailModal />)
       case 'Deactivate':
-        return <DeActivateModal setModal={setModal} />
+        return openModal(<DeActivateModal />)
     }
   }
 
@@ -48,12 +49,7 @@ const SettingContainer = () => {
   return (
     <div className="bg-white mt-4 rounded-2xl drop-shadow-lg h-with-navbar-space">
       <Tabs tabs={tabs} className={'h-full overflow-y-scroll custom-scrollbar py-2 ps-10'} />
-      {modal?.length && (
-        <div className="fixed w-full h-full  top-0 flex justify-center items-center">
-          <div onClick={() => setModal(null)} className="bg-secondary opacity-70 w-full h-full fixed -z-10 rounded-2xl"></div>
-          {renderModals()}
-        </div>
-      )}
+      {modal?.length && renderModals()}
     </div>
   )
 }

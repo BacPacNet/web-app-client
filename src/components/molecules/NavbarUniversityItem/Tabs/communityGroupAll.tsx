@@ -27,13 +27,14 @@ function CommunityGroupAll({
 }: any) {
   if (isCommunityGroupsLoading || communityGroups === 'undefined') return <UserListItemSkeleton className="px-4" />
   if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> No Groups Available</p>
+
   return (
     <>
       {communityGroups
         ?.slice(0, showGroupTill)
         .map((item: any) => (
           <GroupSelectors
-            key={item.title}
+            key={item._id}
             currSelectedGroup={currSelectedGroup}
             setCurrSelectedGroup={setCurrSelectedGroup}
             data={item}

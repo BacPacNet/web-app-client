@@ -14,7 +14,6 @@ const AssignGroupModerators = ({ setAssignUsers, assignUsers, id, isGroup }: Pro
   const { data: communityUsers } = useGetCommunityUsers(id, !isGroup, 'Private', searchInput)
   const { mutate: userGroupRole } = useUserGroupRole()
   const { mutate: userCommunityRole } = useUserCommunityRole()
-
   const handleChange = (e: any, communityGroupId: string, postId: string, item: any) => {
     if (!isGroup) {
       const data = {

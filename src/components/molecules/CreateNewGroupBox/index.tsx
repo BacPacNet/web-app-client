@@ -11,6 +11,7 @@ import Buttons from '@/components/atoms/Buttons'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
+import { categories, Category, subCategories } from '@/types/CommuityGroup'
 
 type Props = {
   communityId: string
@@ -26,39 +27,7 @@ type user = {
   major: string
 }
 
-type Category = 'Academic Focus' | 'Recreation and Hobbies' | 'Advocacy and Awareness' | 'Personal Growth' | 'Professional Development' | 'Others'
-
-const subCategories: Record<Category, string[]> = {
-  'Academic Focus': [
-    'Science & Technology',
-    'Arts & Humanities',
-    'Social Sciences',
-    'Education',
-    'Business & Economics',
-    'Health & Medicine',
-    'Environmental Studies',
-    'Law & Policy',
-    'Mathematics & Statistics',
-    'Engineering',
-  ],
-  'Recreation and Hobbies': ['f', 'g', 'h'],
-  'Advocacy and Awareness': ['i', 'j'],
-  'Personal Growth': ['k', 'l', 'm'],
-  'Professional Development': ['n', 'o'],
-  Others: [],
-}
-
-const categories: Category[] = [
-  'Academic Focus',
-  'Recreation and Hobbies',
-  'Advocacy and Awareness',
-  'Personal Growth',
-  'Professional Development',
-  'Others',
-]
-
 const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
-  const { userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [isLoading, setIsLoading] = useState(false)
@@ -75,6 +44,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
     handleSubmit: handleGroupCreate,
     formState: { errors: GroupErrors },
     getValues,
+    setError,
   } = useForm()
 
   const handleSelectAll = useCallback(() => {
@@ -103,13 +73,22 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       const imagedata: any = await replaceImage(logoImage, '')
       logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
     }
+
+    if (selectedGroupCategory !== 'Others' && groupSubCategory.length < 1) {
+      setIsLoading(false)
+      return setError('groupCategory', { type: 'manual', message: 'Sub category required!' })
+    }
     const selectedUsersId = selectedUsers.map((item) => item.id)
     const dataToPush = {
       ...data,
       ...CoverImageData,
       ...logoImageData,
       selectedUsersId,
+      selectedGroupCategory,
+      groupSubCategory,
     }
+
+    // return console.log('push', dataToPush)
 
     createGroup({ communityId: communityId, data: dataToPush })
     setIsLoading(false)
@@ -189,7 +168,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
           <div>
             <h2 className="font-medium text-xs">Group Access</h2>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Public" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
+              <input type="radio" value="Public" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
               <div className="py-2">
                 <span className="text-neutral-900 text-[12px] font-medium">Public</span>
                 <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
@@ -197,13 +176,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Private" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
+              <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
               <div>
                 <span className="text-neutral-900 text-[12px] font-medium">Private</span>
                 <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
               </div>
             </label>
-            {GroupErrors.communityGroupType && <p className="text-red-500 text-2xs">This field is required</p>}
+            {GroupErrors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
           </div>
 
           {/* communty group type  */}
@@ -211,7 +190,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
           <div>
             <h2 className="font-medium text-xs">Group Type</h2>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Casual" {...GroupRegister('groupType', { required: true })} className="w-5 h-5" />
+              <input type="radio" value="Casual" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
               <div className="py-2">
                 <span className="text-neutral-900 text-[12px] font-medium">Casual</span>
                 <p className="text-neutral-400 text-[12px] ">No approval required</p>
@@ -219,13 +198,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Official" {...GroupRegister('groupType', { required: true })} className="w-5 h-5" />
+              <input type="radio" value="Official" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
               <div>
                 <span className="text-neutral-900 text-[12px] font-medium">Official</span>
                 <p className="text-neutral-400 text-[12px] ">Require university approval</p>
               </div>
             </label>
-            {GroupErrors.groupType && <p className="text-red-500 text-2xs ">This field is required</p>}
+            {GroupErrors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
 
           {/* Repost setting  */}
@@ -282,7 +261,9 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 </>
               ))}
             </div>
-            {GroupErrors.groupCategory && <p className="text-red-500 text-2xs ">This field is required</p>}
+            {GroupErrors.groupCategory && (
+              <p className="text-red-500 text-2xs ">{GroupErrors.groupCategory.message?.toString() || 'This field is required'}</p>
+            )}
           </div>
           <div className="relative w-full flex flex-col">
             <label htmlFor="inviteFriends" className="font-medium text-xs">
@@ -335,7 +316,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               )}
             </div>
           </div>
-          <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
+          <button disabled={isPending} type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
             {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
           </button>
           {/* <button
