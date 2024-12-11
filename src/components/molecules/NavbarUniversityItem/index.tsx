@@ -17,8 +17,13 @@ import { openModal } from '../Modal/ModalManager'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 import Buttons from '@/components/atoms/Buttons'
 
-export default function NavbarUniversityItem({ setActiveMenu }: any) {
-  const { userData, userProfileData } = useUniStore()
+interface Props {
+  setActiveMenu: (activeMenu: string) => void
+  toggleLeftNavbar: () => void | null
+}
+
+export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
+  const { userData } = useUniStore()
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
@@ -36,6 +41,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     handleUniversityClick(index)
     setCurrSelectedGroup(community)
     setActiveMenu('')
+    toggleLeftNavbar()
   }
 
   const handleNewGroupModal = () => {
@@ -105,6 +111,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
+          toggleLeftNavbar={toggleLeftNavbar}
         />
       ),
     },
@@ -123,6 +130,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
+          toggleLeftNavbar={toggleLeftNavbar}
         />
       ),
     },
@@ -142,6 +150,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
+            toggleLeftNavbar={toggleLeftNavbar}
           />
 
           <div className="flex justify-center items-center p-2">

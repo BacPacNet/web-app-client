@@ -1,48 +1,159 @@
-import { useState } from 'react'
+import { useUniStore } from '@/store/store'
+import Image from 'next/image'
+import { FaAngleDown, FaRegUser } from 'react-icons/fa'
+import avatar from '@assets/avatar.svg'
+import { RxCross2 } from 'react-icons/rx'
+import Tooltip from '@/components/atoms/Tooltip'
+import SubText from '@/components/atoms/SubText'
+import { truncateString } from '@/lib/utils'
+import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
+import { PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
+import { HiCubeTransparent } from 'react-icons/hi'
+import { TbLogout } from 'react-icons/tb'
+import { useRouter } from 'next/navigation'
+import useCookie from '@/hooks/useCookie'
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+interface Props {
+  closeLeftNavbar: () => void
+  toggleRightMenu: () => void
+  showRightMenu: boolean
+}
+
+export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, showRightMenu }: Props) {
+  const router = useRouter()
+  const { userProfileData, userData, resetUserProfileData } = useUniStore()
+  const [, , deleteCookie] = useCookie('uni_user_token')
+
+  const handleProfileClicked = () => {
+    router.push(`/profile/${userData.id}`)
+    toggleRightMenu()
+  }
+  const handleMenuClicked = (path: string) => {
+    router.push(`/${path}`)
+    toggleRightMenu()
+  }
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen)
+    toggleRightMenu()
+    closeLeftNavbar()
+  }
+  const handleLogout = () => {
+    deleteCookie()
+    resetUserProfileData()
+    router.push('/login')
+  }
+
+  const renderProfile = () => {
+    if (!userProfileData.profile_dp) {
+      return null
+    }
+    if (Object?.keys(userProfileData)?.length === 0) {
+      return <UserListItemSkeleton />
+    }
+    return (
+      <Image
+        width={50}
+        height={50}
+        objectFit="cover"
+        className="w-[50px] h-[50px] rounded-full"
+        src={userProfileData.profile_dp?.imageUrl || avatar}
+        alt="profile.png"
+      />
+    )
   }
 
   return (
     <div>
-      {/* Hamburger Icon (Visible only on mobile) */}
-      <div className="lg:hidden flex items-center">
-        <button onClick={toggleMenu} className="flex flex-col justify-evenly h-8 w-8 focus:outline-none" aria-label="Toggle menu">
-          {/* Three horizontal lines */}
-          <span className={`block h-0.5 w-full bg-black transition-transform ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-          <span className={`block h-0.5 w-full bg-black transition-opacity ${isOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`block h-0.5 w-full bg-black transition-transform ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-        </button>
+      <div className="lg:hidden flex gap-2 items-center" onClick={toggleMenu}>
+        <Image
+          width={40}
+          height={40}
+          objectFit="cover"
+          className="w-[40px] h-[40px] rounded-full"
+          src={userProfileData?.profile_dp?.imageUrl || avatar}
+          alt="profile.png"
+        />
+        <FaAngleDown />
       </div>
 
       {/* Sidebar Menu (Visible on mobile when open) */}
       <div
-        className={`fixed top-0 right-0 h-full w-2/5 bg-white transition-transform duration-300 transform ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-[68px] right-0 py-6 h-full w-3/4 md:w-1/2 bg-white transition-transform duration-300 transform ${
+          showRightMenu ? 'translate-x-0' : 'translate-x-full'
         } lg:hidden`}
       >
         <button onClick={toggleMenu} className="p-4 text-black focus:outline-none absolute right-0 top-2">
-          {/* X Icon for Close */}
-          <div className="rotate-45 w-6 h-0.5 bg-black "></div>
-          <div className="-rotate-45 w-6 h-0.5 bg-black mb-[1px]"></div>
+          <RxCross2 size={32} className="text-primary" />
         </button>
-        <div className="px-4 py-8">
-          <a href="/discover" className="block py-2 text-black">
-            Discover
-          </a>
-          <a href="/timeline" className="block py-2 text-black">
-            Community
-          </a>
-          <a href="/about" className="block py-2 text-black">
-            About Us
-          </a>
-          <a href="/upgrade" className="block py-2 text-black">
-            Upgrade
-          </a>
+        <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
+          {renderProfile()}
+          <div>
+            <p className="text-sm text-neutral-700">
+              {userData.firstName} {userData.lastName}
+            </p>
+            <Tooltip text={userProfileData?.university_name || ''}>
+              <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
+            </Tooltip>
+            <SubText>{userProfileData.major}</SubText>
+          </div>
+        </div>
+
+        <div className="pt-5">
+          <ul className="border-b-[1px] border-neutral-200 ">
+            <li
+              onClick={handleProfileClicked}
+              className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+            >
+              <FaRegUser />
+              <p>Profile</p>
+            </li>
+            <li
+              onClick={() => handleMenuClicked('setting')}
+              className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+            >
+              <MdOutlineSettings />
+              <p>Settings</p>
+            </li>
+            <li
+              onClick={() => handleMenuClicked('privacy')}
+              className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+            >
+              <MdOutlineLock />
+              <p>Privacy</p>
+            </li>
+
+            <li
+              onClick={() => handleMenuClicked('preferences')}
+              className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+            >
+              <PiPaintBrushDuotone />
+              <p>Preferences</p>
+            </li>
+            <li
+              onClick={() => () => handleMenuClicked('upgrades')}
+              className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+            >
+              <HiCubeTransparent />
+              <p>Upgrades</p>
+            </li>
+          </ul>
+          <ul className="border-b-[1px] border-neutral-200 ">
+            <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+              <MdInfoOutline />
+              <p>Help Center</p>
+            </li>
+            <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+              <PiChatTextBold />
+              <p>Feedback</p>
+            </li>
+          </ul>
+          <ul onClick={handleLogout} className="">
+            <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+              <TbLogout />
+              <p>Logout</p>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
