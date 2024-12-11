@@ -24,6 +24,7 @@ function CommunityGroupAll({
   isCommunityGroupsLoading,
   selectCommunityId,
   handleAssignUsersModal,
+  toggleLeftNavbar,
 }: any) {
   if (isCommunityGroupsLoading || communityGroups === 'undefined') return <UserListItemSkeleton className="px-4" />
   if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> No Groups Available</p>
@@ -42,6 +43,7 @@ function CommunityGroupAll({
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
+            toggleLeftNavbar={toggleLeftNavbar}
           />
         ))}
       {communityGroups?.length > showGroupTill && (

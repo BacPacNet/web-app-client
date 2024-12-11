@@ -23,6 +23,9 @@ import NotificationBox from '@/components/molecules/Notification'
 import MessageNotification from '@/components/molecules/MessageNotification'
 import { useGetMessageNotification, useGetNotification } from '@/services/notification'
 import useCookie from '@/hooks/useCookie'
+import { IoMenu } from 'react-icons/io5'
+import { RxCross2 } from 'react-icons/rx'
+import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -44,6 +47,8 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData.users_id)
   }, [userProfileData])
+  const [showLeftNavbar, setShowLeftNavbar] = useState(false)
+  const [showRightMenu, setShowRightMenu] = useState(false)
 
   const handleLogout = () => {
     deleteCookie()
@@ -54,6 +59,14 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   useEffect(() => {
     isUserLoggedIn()
   }, [userProfileData, isUserLoggedIn])
+
+  const toggleRightMenu = () => {
+    setShowRightMenu(!showRightMenu)
+    closeLeftNavbar()
+  }
+  const closeRightMenu = () => {
+    setShowRightMenu(false)
+  }
 
   const renderProfile = () => {
     switch (isLogin) {
@@ -161,47 +174,60 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
         return <Skeleton className="bg-slate-400 p-2 h-10 w-10 rounded-full ml-4" />
     }
   }
+  const toggleLeftNavbar = () => {
+    setShowLeftNavbar(!showLeftNavbar)
+    closeRightMenu()
+  }
+  const closeLeftNavbar = () => {
+    setShowLeftNavbar(false)
+  }
 
   return (
-    <div className="w-full h-[68px] ">
-      <div className="fixed w-full top-0 left-0 z-50">
-        <div
-          className={`${
-            shouldPadding ? 'px-4 lg:px-28' : 'px-4'
-          } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 border-b-[1px] border-neutral-200`}
-        >
-          <div>
-            <Link className="flex gap-4 center-v" href="/">
-              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
-            </Link>
-          </div>
-          <MobileViewNavbar />
-          {!showOnlyLogo && (
-            <div className="items-center justify-between hidden lg:flex ">
-              <div className="flex gap-16 px-8">
-                {MENU_LIST.map((menu, index) => {
-                  if (menu.name === 'UPGRADE') {
-                    return (
-                      <div key={index} className="flex">
-                        <Link className="text-primary-500 text-xs" href={menu.path}>
-                          {menu.name}
-                        </Link>
-                        <Image className="ml-1" src={sparkles} alt="upgrade_icon" width={20} height={20} />
-                      </div>
-                    )
-                  }
-                  return (
-                    <Link key={index} className="text-neutral-800 text-xs" href={menu.path}>
-                      {menu.name}
-                    </Link>
-                  )
-                })}
+    <>
+      <div className="w-full h-[68px] ">
+        <div className="fixed w-full top-0 left-0 z-50">
+          <div
+            className={`${
+              shouldPadding ? 'px-4 lg:px-28' : 'px-4'
+            } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 border-b-[1px] border-neutral-200`}
+          >
+            <div className="flex gap-3 items-center">
+              <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
+                {!showLeftNavbar ? <IoMenu size={32} className="text-primary" /> : <RxCross2 size={32} className="text-primary" />}
               </div>
-              <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
+              <Link className="flex gap-4 center-v" href="/">
+                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
+              </Link>
             </div>
-          )}
+            {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
+            {!showOnlyLogo && (
+              <div className="items-center justify-between hidden lg:flex">
+                <div className="flex gap-16 px-8">
+                  {MENU_LIST.map((menu, index) => {
+                    if (menu.name === 'UPGRADE') {
+                      return (
+                        <div key={index} className="flex">
+                          <Link className="text-primary-500 text-xs" href={menu.path}>
+                            {menu.name}
+                          </Link>
+                          <Image className="ml-1" src={sparkles} alt="upgrade_icon" width={20} height={20} />
+                        </div>
+                      )
+                    }
+                    return (
+                      <Link key={index} className="text-neutral-800 text-xs" href={menu.path}>
+                        {menu.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+                <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <MobileLeftNavbar toggleLeftNavbar={toggleLeftNavbar} isOpen={showLeftNavbar} />
+    </>
   )
 }

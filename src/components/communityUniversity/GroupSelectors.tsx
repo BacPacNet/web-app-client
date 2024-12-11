@@ -13,11 +13,13 @@ const GroupSelectors = ({
   SetcurrClickedID,
   selectCommunityId,
   handleAssignUsersModal,
+  toggleLeftNavbar,
 }: any) => {
   const router = useRouter()
   const handleGroupNavigate = () => {
     setCurrSelectedGroup(data)
     router.push(`/community/${selectCommunityId}/${data?._id}`)
+    toggleLeftNavbar()
   }
   const isSelected = selectedCommuntyGroupdId === data?._id
 
