@@ -19,7 +19,7 @@ const GroupSelectors = ({
   const handleGroupNavigate = () => {
     setCurrSelectedGroup(data)
     router.push(`/community/${selectCommunityId}/${data?._id}`)
-    toggleLeftNavbar()
+    toggleLeftNavbar && toggleLeftNavbar()
   }
   const isSelected = selectedCommuntyGroupdId === data?._id
 

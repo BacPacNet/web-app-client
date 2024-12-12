@@ -1,13 +1,13 @@
 'use client'
 import Button from '@/components/atoms/Buttons'
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import avatar from '@assets/unibuzz_rounded.svg'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
 import { openModal } from '../../Modal/ModalManager'
-
+import { FaCircleCheck } from 'react-icons/fa6'
 interface Props {
   subscribedCommunities: Community[]
   communityId: string
@@ -45,7 +45,12 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
             alt={community.name}
           />
 
-          <p className="text-xs">{community.name}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs  xl:w-max ">{community.name} </p>
+            <p>
+              <FaCircleCheck color="#6647ff" size={16} />
+            </p>
+          </div>
         </div>
       </div>
     )

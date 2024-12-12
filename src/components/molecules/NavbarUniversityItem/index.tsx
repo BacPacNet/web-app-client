@@ -19,6 +19,7 @@ import Buttons from '@/components/atoms/Buttons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
+import useDebounce from '@/hooks/useDebounce'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -28,6 +29,7 @@ interface Props {
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
+
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
@@ -36,6 +38,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [sort, setSort] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebounce(searchQuery, 1000)
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
@@ -49,7 +53,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     handleUniversityClick(index)
     setCurrSelectedGroup(community)
     setActiveMenu('')
-    toggleLeftNavbar()
+    toggleLeftNavbar && toggleLeftNavbar()
   }
 
   const handleNewGroupModal = () => {
@@ -71,30 +75,34 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     )
   }
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase())
+  }
+
   const subscribedCommunitiesAllGroups = useMemo(() => {
-    if (communityId) {
-      return subscribedCommunities?.find((community) => community._id === communityId)?.communityGroups
-    } else {
-      return subscribedCommunities && subscribedCommunities[0]?.communityGroups
-    }
-  }, [subscribedCommunities, communityId])
+    const groups = communityId
+      ? subscribedCommunities?.find((community) => community._id === communityId)?.communityGroups
+      : subscribedCommunities?.[0]?.communityGroups
+    return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  }, [subscribedCommunities, communityId, debouncedSearchQuery])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
     const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
       ?.communityGroups
-    return selectedCommunityGroup?.filter(
-      (userCommunityGroup) =>
-        userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
-    )
-  }, [subscribedCommunities, communityId, userData])
+    return selectedCommunityGroup
+      ?.filter(
+        (userCommunityGroup) =>
+          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
+      )
+      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
 
-  const subscribedCommunitiesMyGroup = useMemo(
-    () =>
-      subscribedCommunities
-        ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
-        ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id),
-    [subscribedCommunities, communityId, userData?.id, community]
-  )
+  const subscribedCommunitiesMyGroup = useMemo(() => {
+    const groups = subscribedCommunities
+      ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
+      ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id)
+    return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  }, [subscribedCommunities, communityId, userData?.id, community, debouncedSearchQuery])
 
   useEffect(() => {
     if (communityId && subscribedCommunities) {
@@ -136,8 +144,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Joined',
       content: (
         <CommunityGroupAll
-          key={subscribedCommunities}
-          communityGroups={joinedSubscribedCommunitiesGroup}
+          key={subscribedCommunitiesMyGroup}
+          communityGroups={subscribedCommunitiesMyGroup}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
           currSelectedGroup={currSelectedGroup as Community}
@@ -156,8 +164,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       content: (
         <div>
           <CommunityGroupAll
-            key={subscribedCommunities}
-            communityGroups={subscribedCommunitiesMyGroup}
+            key={joinedSubscribedCommunitiesGroup}
+            communityGroups={joinedSubscribedCommunitiesGroup}
             showGroupTill={showGroupTill}
             setShowGroupTill={setShowGroupTill}
             currSelectedGroup={currSelectedGroup as Community}
@@ -199,18 +207,18 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <div className="flex justify-start gap-2 px-4">
-          <Buttons onClick={() => handleCommunityGroupFilter()} size="extra_small" variant="border_primary">
+        <div className="flex justify-between gap-4 px-4 w-full pb-4">
+          <Buttons onClick={() => handleCommunityGroupFilter()} className="w-32" size="extra_small" variant="border_primary">
             Filter
           </Buttons>
           <Popover>
             <PopoverTrigger>
-              <div className="border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
+              <div className="w-32 border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
                 Sort
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-auto px-2 border-none bg-white shadow-lg shadow-gray-light">
-              <div className="">
+            <PopoverContent className="w-32 px-2 py-0 border-none bg-white shadow-lg shadow-gray-light">
+              <div className="flex flex-col justify-between">
                 {sortBy.map((item) => (
                   <p onClick={() => setSort(item)} key={item} className="capitalize cursor-pointer">
                     {item}
@@ -234,7 +242,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
                 alt="communtiy image"
               />
             </div>
-            <GroupSearchBox placeholder="Search Groups" type="text" />
+            <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
           </div>
         </div>
       </>

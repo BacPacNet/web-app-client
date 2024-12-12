@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { useState, useMemo, forwardRef } from 'react'
 import { IoSearch } from 'react-icons/io5'
 import './index.css'
 
@@ -6,8 +6,10 @@ type Props = {
   placeholder?: string
   className?: string
   type: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-const GroupSearchBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className = '', type, ...rest }, ref) => {
+
+const GroupSearchBox = forwardRef<HTMLInputElement, Props>(({ placeholder, className = '', type, onChange, ...rest }, ref) => {
   return (
     <div className="relative w-full">
       <IoSearch className="text-neutral-500 absolute top-[50%] right-6 translate-y-[-50%] z-10" width={20} height={20} />
@@ -16,6 +18,7 @@ const GroupSearchBox = forwardRef<HTMLInputElement, Props>(({ placeholder, class
         type={type}
         placeholder={placeholder}
         ref={ref}
+        onChange={onChange}
         {...rest}
       />
     </div>
