@@ -1,6 +1,6 @@
 'use client'
 import Button from '@/components/atoms/Buttons'
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import avatar from '@assets/unibuzz_rounded.svg'
 import { userType } from '@/store/userSlice/userType'
@@ -46,9 +46,9 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
           />
 
           <div className="flex items-center gap-2">
-            <p className="text-xs  ">{community.name} </p>
+            <p className="text-xs  xl:w-max ">{community.name} </p>
             <p>
-              <FaCircleCheck color="blue" size={16} />
+              <FaCircleCheck color="#6647ff" size={16} />
             </p>
           </div>
         </div>

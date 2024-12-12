@@ -207,18 +207,18 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <div className="flex justify-start gap-2 px-4 w-full pb-4">
-          <Buttons onClick={() => handleCommunityGroupFilter()} className="w-40" size="extra_small" variant="border_primary">
+        <div className="flex justify-between gap-4 px-4 w-full pb-4">
+          <Buttons onClick={() => handleCommunityGroupFilter()} className="w-32" size="extra_small" variant="border_primary">
             Filter
           </Buttons>
           <Popover>
             <PopoverTrigger>
-              <div className="w-20 border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
+              <div className="w-32 border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
                 Sort
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-auto px-2 border-none bg-white shadow-lg shadow-gray-light">
-              <div className="">
+            <PopoverContent className="w-32 px-2 py-0 border-none bg-white shadow-lg shadow-gray-light">
+              <div className="flex flex-col justify-between">
                 {sortBy.map((item) => (
                   <p onClick={() => setSort(item)} key={item} className="capitalize cursor-pointer">
                     {item}
