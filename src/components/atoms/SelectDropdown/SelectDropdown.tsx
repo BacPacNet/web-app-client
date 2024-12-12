@@ -61,7 +61,7 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
         onClick={() => setShow(!show)}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
+        } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
         <p
           className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${

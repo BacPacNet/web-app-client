@@ -11,6 +11,7 @@ import { TiCameraOutline } from 'react-icons/ti'
 import { useEffect, useState } from 'react'
 import { replaceImage } from '@/services/uploadImage'
 import { currYear, degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
+import { FaCamera } from 'react-icons/fa'
 
 export interface editProfileInputs {
   first_name: string
@@ -39,7 +40,7 @@ const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userData, userProfileData } = useUniStore()
   const [userType, setUserType] = useState('student')
-  const [profileImage, setProfileImage] = useState<File | null>(null)
+  const [profileImage, setProfileImage] = useState<File | null | string>(userProfileData?.profile_dp?.imageUrl as string)
   const {
     register,
     handleSubmit,
@@ -128,7 +129,7 @@ const EditProfileModal = () => {
   const handleImageUpload = async () => {
     const files = profileImage
     if (files) {
-      const data: any = await replaceImage(files, userProfileData?.profile_dp?.publicId)
+      const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
 
       const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
 
@@ -167,6 +168,7 @@ const EditProfileModal = () => {
         major: '',
         degree: '',
         study_year: '',
+        ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
       }
     } else {
       const { occupation, affiliation, ...rest } = data
@@ -175,10 +177,11 @@ const EditProfileModal = () => {
         ...rest,
         occupation: '',
         affiliation: '',
+        ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
       }
     }
     // return console.log('submit', dataToPush)
-
+    console.log(dataToPush)
     mutateEditProfile(dataToPush)
   }
   return (
@@ -189,12 +192,31 @@ const EditProfileModal = () => {
         <span className="text-destructive-600">*</span> Are required fields to fill.
       </p>
       <form className="flex flex-col font-medium text-sm gap-4">
-        <div className="flex items-center gap-2  mt-4">
-          {profileImage && <img className="w-20 h-20  absolute -z-10 object-cover rounded-full" src={URL.createObjectURL(profileImage)} alt="aa" />}
-          <label htmlFor="changeProfileImage" className="w-20 h-20 rounded-full border border-neutral-200 flex items-center justify-center">
-            <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e: any) => setProfileImage(e.target.files[0])} />
-            <TiCameraOutline className="text-primary text-lg" />
-          </label>
+        <div className="flex items-center gap-4 mt-4">
+          {profileImage ? (
+            <div className="relative w-20 h-20 rounded-full border border-neutral-200 group">
+              <img
+                className="rounded-full object-cover w-20 h-20"
+                src={typeof profileImage === 'string' ? profileImage : URL.createObjectURL(profileImage)}
+                alt="aa"
+              />
+              <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
+                <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e: any) => setProfileImage(e.target.files[0])} />
+                <label
+                  htmlFor="changeProfileImage"
+                  className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800"
+                >
+                  <FaCamera color="white" />
+                </label>
+              </div>
+            </div>
+          ) : (
+            <label htmlFor="changeProfileImage" className="w-20 h-20 rounded-full border border-neutral-200 flex items-center justify-center">
+              <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e: any) => setProfileImage(e.target.files[0])} />
+              <TiCameraOutline className="text-primary text-lg" />
+            </label>
+          )}
+
           <p className="text-sm text-neutral-700">Edit Profile Picture</p>
         </div>
         <div className="flex flex-col">

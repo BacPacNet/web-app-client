@@ -80,7 +80,13 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
         <div key={item?._id} className="py-2 px-3 border-b border-neutral-300 flex justify-between">
           <div className="flex gap-2">
             <div className="flex gap-2 items-center">
-              <Image className="shadow-lg rounded-full" src={item?.groupLogoImage || avatar} width={36} height={36} alt="avatar" />
+              <Image
+                className="shadow-lg rounded-full w-9 h-9 object-none"
+                src={item?.groupLogoImage || avatar}
+                width={36}
+                height={36}
+                alt="avatar"
+              />
             </div>
             <div>
               <p>

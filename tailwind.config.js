@@ -10,18 +10,20 @@ module.exports = {
         extend: {
             keyframes: {
                 'caret-blink': {
-                  '0%,70%,100%': { opacity: '1' },
-                  '20%,50%': { opacity: '0' },
+                    '0%,70%,100%': {opacity: '1'},
+                    '20%,50%': {opacity: '0'},
                 },
-              },
-              animation: {
+            },
+            animation: {
                 'caret-blink': 'caret-blink 1.2s ease-out infinite',
-              },
+            },
             fontFamily: {
                 poppins: ['var(--font-poppins)'],
                 inter: ['var(--font-inter)']
             },
             fontSize: {
+                '4xs': '8px',
+                '3xs': '10px',
                 '2xs': '12px',
                 'xs': '14px',
                 'sm': '16px',

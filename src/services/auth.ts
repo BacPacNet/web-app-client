@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
+import { useRouter } from 'next/navigation'
 
 interface data {
   email: string
@@ -63,7 +64,7 @@ async function universityEmailVerification(data: { universityEmail: string; Univ
 export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-
+  const router = useRouter()
   const [, setCookieValue] = useCookie('uni_user_token')
   const [, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 
@@ -72,9 +73,9 @@ export const useHandleLogin = () => {
     onSuccess: (response: any) => {
       setUserData(response.user)
       setUserProfileData(response.userProfile)
-      // setToken(response.tokens)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
+      router.push('/timeline')
     },
   })
 }

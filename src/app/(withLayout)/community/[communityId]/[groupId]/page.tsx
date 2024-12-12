@@ -11,7 +11,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const [isGroupAdmin, setIsGroupAdmin] = useState<boolean>(false)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll">
+    <div ref={containerRef} className="h-with-navbar">
       <CommunityGroupBanner
         communityID={communityId}
         communityGroupID={communityGroupID}

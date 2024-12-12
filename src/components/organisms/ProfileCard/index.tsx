@@ -120,8 +120,8 @@ export function UserProfileCard({
           {isSelfProfile && (
             <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
               <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e) => handleImageUpload(e)} />
-              <label htmlFor="changeProfileImage" className="bg-red-500 w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800">
-                <FaCamera />
+              <label htmlFor="changeProfileImage" className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800">
+                <FaCamera color="white" />
               </label>
             </div>
           )}
@@ -130,7 +130,7 @@ export function UserProfileCard({
           <div className="flex w-full items-center justify-between flex-wrap">
             <div className="flex gap-4 items-center">
               <p className="font-poppins text-neutral-700 text:md lg:text-[20px] font-bold">{name}</p>
-              {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-4 text-xs">Premium</p>}
+              {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}
             </div>
             {isSelfProfile ? (
               <div className="flex gap-2 items-center text-xs lg:text-sm text-primary-500">
