@@ -21,6 +21,12 @@
   display: none;
 }
 
+@media only screen and (max-width: 769px) {
+  .hideScrollbar::-webkit-scrollbar {
+    display: block;
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: white;

@@ -20,8 +20,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
 
-export default function NavbarUniversityItem({ setActiveMenu }: any) {
-  const { userData, userProfileData } = useUniStore()
+interface Props {
+  setActiveMenu: (activeMenu: string) => void
+  toggleLeftNavbar: () => void | null
+}
+
+export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
+  const { userData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
@@ -44,6 +49,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
     handleUniversityClick(index)
     setCurrSelectedGroup(community)
     setActiveMenu('')
+    toggleLeftNavbar()
   }
 
   const handleNewGroupModal = () => {
@@ -122,6 +128,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
+          toggleLeftNavbar={toggleLeftNavbar}
         />
       ),
     },
@@ -140,6 +147,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
+          toggleLeftNavbar={toggleLeftNavbar}
         />
       ),
     },
@@ -159,6 +167,7 @@ export default function NavbarUniversityItem({ setActiveMenu }: any) {
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
+            toggleLeftNavbar={toggleLeftNavbar}
           />
 
           <div className="flex justify-center items-center p-2">

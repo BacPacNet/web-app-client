@@ -13,8 +13,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import Image from 'next/image'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { truncateString } from '@/lib/utils'
+import Tooltip from '@/components/atoms/Tooltip'
 
-export default function LeftNavbar() {
+interface Props {
+  toggleLeftNavbar?: () => void | null
+}
+
+export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const { userData, userProfileData } = useUniStore()
@@ -32,15 +38,20 @@ export default function LeftNavbar() {
   const handleMenuClick = (item: { name: string; icon?: React.JSX.Element; path: string }) => {
     setActiveMenu(item.path)
     router.push(item.path)
+    toggleLeftNavbar && toggleLeftNavbar()
   }
 
   const handleProfileClicked = () => {
     router.push(`/profile/${userData?.id}`)
     setActiveMenu('')
+    toggleLeftNavbar && toggleLeftNavbar()
   }
-
+  // if (userProfileData && Object?.keys(userProfileData)?.length === 0) {
   const renderProfile = () => {
-    if (userProfileData && Object?.keys(userProfileData)?.length === 0) {
+    if (!userProfileData?.profile_dp) {
+      return null
+    }
+    if (Object?.keys(userProfileData)?.length === 0) {
       return <UserListItemSkeleton />
     }
     return (
@@ -63,7 +74,10 @@ export default function LeftNavbar() {
           <p className="text-sm text-neutral-700">
             {userData?.firstName} {userData?.lastName}
           </p>
-          <SubText>{userProfileData?.university_name}</SubText>
+          <Tooltip text={userProfileData?.university_name || ''}>
+            <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
+          </Tooltip>
+
           <SubText>{userProfileData?.major}</SubText>
         </div>
       </div>
@@ -83,7 +97,7 @@ export default function LeftNavbar() {
         ))}
       </div>
       <p className=" px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
-      <NavbarUniversityItem setActiveMenu={setActiveMenu} />
+      <NavbarUniversityItem setActiveMenu={setActiveMenu} toggleLeftNavbar={toggleLeftNavbar!} />
     </Card>
   )
 }
