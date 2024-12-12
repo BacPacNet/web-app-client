@@ -24,7 +24,7 @@ const MessageContainer = () => {
   const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
 
   const { userData, socket } = useUniStore()
-  const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData.id)
+  const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData?.id)
   const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
@@ -45,7 +45,7 @@ const MessageContainer = () => {
 
   const unreadChatsCount = chats.filter((item) => {
     if (item.isGroupChat) {
-      return item.unreadMessagesCount > 0 && item.users.some((user) => user.userId._id == userData.id && user.isRequestAccepted)
+      return item.unreadMessagesCount > 0 && item.users.some((user) => user.userId._id == userData?.id && user.isRequestAccepted)
     } else {
       return item.unreadMessagesCount > 0 && item.isRequestAccepted
     }
@@ -59,10 +59,10 @@ const MessageContainer = () => {
   }).length
 
   const updateMessageSeen = () => {
-    const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData.id || '')
+    const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData?.id || '')
 
     if (!isRead && isRead !== undefined && selectedChat) {
-      updateIsSeen({ chatId: selectedChat?._id, messageId: selectedChat?.latestMessage?._id, data: { readByUserId: userData.id } })
+      updateIsSeen({ chatId: selectedChat?._id, messageId: selectedChat?.latestMessage?._id, data: { readByUserId: userData?.id } })
     }
   }
 
@@ -107,10 +107,10 @@ const MessageContainer = () => {
       )
       queryClient.setQueryData(['userChats'], updatedChats)
 
-      const isRead = newMessage?.readByUsers?.includes(userData.id || '')
+      const isRead = newMessage?.readByUsers?.includes(userData?.id || '')
 
       if (!isRead && selectedChat?._id) {
-        updateIsSeen({ chatId: selectedChat?._id, messageId: chatMessageId, data: { readByUserId: userData.id } })
+        updateIsSeen({ chatId: selectedChat?._id, messageId: chatMessageId, data: { readByUserId: userData?.id } })
       }
     } else if (!chatData.some((chat) => chat._id == messageChatId)) {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
@@ -120,9 +120,9 @@ const MessageContainer = () => {
 
   const userChatsId = useMemo(() => {
     return chatsData?.flatMap((chat) =>
-      chat.users.map((user) => (user.userId._id !== userData.id ? user.userId._id : null)).filter((id) => id !== null)
+      chat.users.map((user) => (user.userId._id !== userData?.id ? user.userId._id : null)).filter((id) => id !== null)
     )
-  }, [chatsData, userData.id])
+  }, [chatsData, userData?.id])
 
   const uniqUserChatID = useMemo(() => new Set(userChatsId), [userChatsId])
 
@@ -266,7 +266,7 @@ const MessageContainer = () => {
             degree={userName?.userId.degree ?? 'Unknown'}
             universitry={userName?.userId.universityName ?? 'Unknown'}
             users={selectedChat?.users}
-            yourID={userData.id || ''}
+            yourID={userData?.id || ''}
             isGroupChat={selectedChat?.isGroupChat}
             isRequestNotAccepted={currTab == 'Message Requests'}
             chatId={selectedChat?._id}
@@ -282,7 +282,7 @@ const MessageContainer = () => {
             profileCover={selectedChat?.groupLogoImage ?? ''}
             isRequest={isRequest}
             isGroupChat={selectedChat?.isGroupChat}
-            yourID={userData.id || ''}
+            yourID={userData?.id || ''}
             setImageCarasol={setImageCarasol}
             isRequestNotAccepted={currTab == 'Message Requests'}
           />

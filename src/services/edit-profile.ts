@@ -16,7 +16,7 @@ export const useEditProfile = () => {
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const { userProfileData } = useUniStore()
   return useMutation({
-    mutationFn: (data: any) => editProfile(data, userProfileData._id || ''),
+    mutationFn: (data: any) => editProfile(data, userProfileData?._id || ''),
     onSuccess: (response: any) => {
       setUserProfileData(response.updatedUserProfile)
     },

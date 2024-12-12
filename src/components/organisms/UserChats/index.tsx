@@ -22,9 +22,9 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
         (item: Chat) =>
-          item.users.find((user) => user?.userId._id.toString() === userData.id && user?.isRequestAccepted) ||
+          item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
           item.isRequestAccepted ||
-          item.groupAdmin.toString() === userData.id
+          item.groupAdmin.toString() === userData?.id
       )
 
       if (isChatLoading) {
@@ -41,10 +41,10 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             groupName={item?.chatName}
             isGroupChat={item?.isGroupChat}
             users={[item?.users]}
-            isSeen={item?.latestMessage?.readByUsers?.includes(userData.id || ' ')}
+            isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
             date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
-            YourID={userData.id}
+            YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
         </div>
@@ -52,8 +52,8 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     } else if (currTabb === 'Message Requests') {
       const filteredChats = chats?.filter((item: Chat) =>
         item.isGroupChat
-          ? item.users.some((user) => user.userId._id.toString() === userData.id && !user.isRequestAccepted)
-          : !item.isRequestAccepted && item.groupAdmin.toString() !== userData.id
+          ? item.users.some((user) => user.userId._id.toString() === userData?.id && !user.isRequestAccepted)
+          : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
       )
 
       if (filteredChats.length === 0) {
@@ -67,16 +67,16 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             groupName={item?.chatName}
             isGroupChat={item?.isGroupChat}
             users={[item?.users]}
-            isSeen={item?.latestMessage?.readByUsers?.includes(userData.id || ' ')}
+            isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
             date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
-            YourID={userData.id}
+            YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
         </div>
       ))
     } else {
-      const filteredChats = chats?.filter((item: Chat) => item.users.find((user) => user?.userId._id.toString() === userData.id && user?.isStarred))
+      const filteredChats = chats?.filter((item: Chat) => item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isStarred))
 
       if (filteredChats.length === 0) {
         return <p className="text-neutral-500 text-center">You have no starred chats.</p>
@@ -89,10 +89,10 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             groupName={item?.chatName}
             isGroupChat={item?.isGroupChat}
             users={[item?.users]}
-            isSeen={item?.latestMessage?.readByUsers?.includes(userData.id || ' ')}
+            isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
             date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
-            YourID={userData.id}
+            YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
         </div>

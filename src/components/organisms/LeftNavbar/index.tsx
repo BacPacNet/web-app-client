@@ -35,12 +35,12 @@ export default function LeftNavbar() {
   }
 
   const handleProfileClicked = () => {
-    router.push(`/profile/${userData.id}`)
+    router.push(`/profile/${userData?.id}`)
     setActiveMenu('')
   }
 
   const renderProfile = () => {
-    if (Object?.keys(userProfileData)?.length === 0) {
+    if (userProfileData && Object?.keys(userProfileData)?.length === 0) {
       return <UserListItemSkeleton />
     }
     return (
@@ -49,7 +49,7 @@ export default function LeftNavbar() {
         height={50}
         objectFit="cover"
         className="w-[50px] h-[50px] rounded-full"
-        src={userProfileData.profile_dp?.imageUrl || avatar}
+        src={userProfileData?.profile_dp?.imageUrl || avatar}
         alt="profile.png"
       />
     )
@@ -61,10 +61,10 @@ export default function LeftNavbar() {
         {renderProfile()}
         <div>
           <p className="text-sm text-neutral-700">
-            {userData.firstName} {userData.lastName}
+            {userData?.firstName} {userData?.lastName}
           </p>
-          <SubText>{userProfileData.university_name}</SubText>
-          <SubText>{userProfileData.major}</SubText>
+          <SubText>{userProfileData?.university_name}</SubText>
+          <SubText>{userProfileData?.major}</SubText>
         </div>
       </div>
       <div className="px-4 pt-9">

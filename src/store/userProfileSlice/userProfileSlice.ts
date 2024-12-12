@@ -2,18 +2,18 @@ import { StateCreator } from 'zustand'
 import { userProfileType } from './userProfileType'
 
 type userProfileState = {
-  userProfileData: Partial<userProfileType>
+  userProfileData: Partial<userProfileType> | null
 }
 
 type userProfileAction = {
   setUserProfileData: (userProfileData: userProfileType) => void
   setUserFollowers: (communities: userProfileType['followers']) => void
   setUserfollowing: (communities: userProfileType['following']) => void
-  resetUserProfileData: () => void
 }
 
 const initialState: userProfileState = {
-  userProfileData: {},
+  userProfileData: null,
+  // userProfileData: {},
 }
 
 export type userProfileSlice = userProfileState & userProfileAction
@@ -35,5 +35,4 @@ export const createUserProfileSlice: StateCreator<userProfileSlice> = (set) => (
         following: followings,
       },
     })),
-  resetUserProfileData: () => set(initialState),
 })

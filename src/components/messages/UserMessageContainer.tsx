@@ -39,7 +39,7 @@ const UserMessageContainer = ({ name, profileCover, chatId, users, isRequest, is
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()
 
-  const user = users?.find((me) => me.userId._id !== userData.id)
+  const user = users?.find((me) => me.userId._id !== userData?.id)
   let previousDate: any = ''
 
   const { socket } = useUniStore()
@@ -130,7 +130,7 @@ const UserMessageContainer = ({ name, profileCover, chatId, users, isRequest, is
                 profilePic={item?.senderProfile?.profile_dp?.imageUrl}
                 name={item?.sender?.firstName}
                 content={item?.content}
-                myMessage={item?.sender.id === userData.id}
+                myMessage={item?.sender.id === userData?.id}
                 date={item.createdAt}
                 id={item?._id}
                 reactions={item?.reactions}
@@ -143,7 +143,7 @@ const UserMessageContainer = ({ name, profileCover, chatId, users, isRequest, is
       </div>
       {/* // input box  */}
       {isRequest ? (
-        <MessageInputBox chatId={chatId} userProfileId={userProfileData._id || ''} />
+        <MessageInputBox chatId={chatId} userProfileId={userProfileData?._id || ''} />
       ) : (
         <div>
           <p>Accept request to message</p>

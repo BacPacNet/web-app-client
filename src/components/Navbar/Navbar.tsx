@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
   const [hover, setHover] = useState<boolean>(false)
   const [activeItem, setActiveItem] = useState('')
   const [, , deleteCookie] = useCookie('uni_user_token')
-  const { userProfileData, userData, resetUserData, resetUserProfileData } = useUniStore()
+  const { userProfileData, userData, resetUserData } = useUniStore()
   const router = useRouter()
   const { refetch: refetchNotification } = useGetNotification(3, false)
   const { data: notificationData } = useGetNotification(3, false)
@@ -67,7 +67,6 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     deleteCookie()
     resetUserData()
-    resetUserProfileData()
     setIsLogin(false)
     router.push('/login')
   }

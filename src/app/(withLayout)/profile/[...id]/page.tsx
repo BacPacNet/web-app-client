@@ -1,19 +1,14 @@
 'use client'
-import Spinner from '@/components/atoms/spinner'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import ProfilePostContainer from '@/components/organisms/PostsContainer'
-import PostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
-import Modal from '@/components/Timeline/Modal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
-import ProfileCard from '@/components/Timeline/ProfileCard'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
-import { PostType } from '@/types/constants'
 import { ModalContentType } from '@/types/global'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]

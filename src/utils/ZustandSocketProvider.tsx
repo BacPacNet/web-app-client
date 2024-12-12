@@ -29,16 +29,23 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   } = useGetUserProfileData(type)
 
   useEffect(() => {
-    if (userData.id) {
+    if (userData?.id) {
       const routeSegment = param.split('/')[1]
       const isRouteMessage = routeSegment !== 'messages'
-      initializeSocket(userData.id, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage)
+      initializeSocket(userData?.id, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage)
     }
 
+    // return () => {
+    //   disconnectSocket()
+    // }
     return () => {
-      disconnectSocket()
+      if (typeof disconnectSocket === 'function') {
+        disconnectSocket()
+      } else {
+        console.warn('disconnectSocket is not defined or not a function')
+      }
     }
-  }, [userData.id, initializeSocket, disconnectSocket, refetchNotification, param])
+  }, [userData?.id, initializeSocket, disconnectSocket, refetchNotification, param])
 
   useEffect(() => {
     if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {
