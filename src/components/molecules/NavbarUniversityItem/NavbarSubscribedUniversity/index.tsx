@@ -7,7 +7,7 @@ import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
 import { openModal } from '../../Modal/ModalManager'
-
+import { FaCircleCheck } from 'react-icons/fa6'
 interface Props {
   subscribedCommunities: Community[]
   communityId: string
@@ -45,7 +45,12 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
             alt={community.name}
           />
 
-          <p className="text-xs">{community.name}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs  ">{community.name} </p>
+            <p>
+              <FaCircleCheck color="blue" size={16} />
+            </p>
+          </div>
         </div>
       </div>
     )
