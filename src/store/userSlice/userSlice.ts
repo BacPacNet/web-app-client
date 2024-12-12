@@ -2,7 +2,8 @@ import { StateCreator } from 'zustand'
 import { userType } from './userType'
 
 type userState = {
-  userData: Partial<userType>
+  // userData: Partial<userType>
+  userData: Partial<userType> | null
 }
 
 type userAction = {
@@ -13,7 +14,8 @@ type userAction = {
 }
 
 const initialState: userState = {
-  userData: {},
+  // userData: {},
+  userData: null,
 }
 
 export type userSlice = userState & userAction

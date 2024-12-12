@@ -93,7 +93,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
             <>
               <img className="absolute bottom-8 -z-10 object-cover w-full" src={coverImage} alt="bg" />
               <div className="absolute bottom-8 z-0 w-full h-full  group">
-                <div className={`${data?.adminUserId._id == userData.id ? 'block ' : 'hidden'} w-full  text-end  mt-10 pr-4 `}>
+                <div className={`${data?.adminUserId._id == userData?.id ? 'block ' : 'hidden'} w-full  text-end  mt-10 pr-4 `}>
                   <input style={{ display: 'none' }} type="file" id="file" onChange={(e) => handleCoverImageUpload(e)} />
                   <label htmlFor="file">Change cover image</label>
                 </div>
@@ -102,7 +102,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
           ) : (
             <>
               <div className="absolute bottom-8 -z-10 w-full h-full bg-gray group" />
-              <div className={`${data?.adminUserId._id == userData.id ? 'block absolute ' : 'hidden'} w-full z-30 top-0 left-2/3 `}>
+              <div className={`${data?.adminUserId._id == userData?.id ? 'block absolute ' : 'hidden'} w-full z-30 top-0 left-2/3 `}>
                 <input style={{ display: 'none' }} type="file" id="file" onChange={(e) => handleCoverImageUpload(e)} />
                 <label htmlFor="file">Change cover image</label>
               </div>
@@ -111,7 +111,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
           {logoImage ? (
             <div className="group relative">
               <img className="w-20 h-20 object-cover rounded-full ms-10 max-md:hidden " src={logoImage} alt="dp" />
-              <div className={`${data?.adminUserId._id == userData.id ? 'block absolute ' : 'hidden'} absolute top-3 right-1/4`}>
+              <div className={`${data?.adminUserId._id == userData?.id ? 'block absolute ' : 'hidden'} absolute top-3 right-1/4`}>
                 <input style={{ display: 'none' }} type="file" id="file2" onChange={(e) => handleLogoImageUpload(e)} />
                 <label htmlFor="file2">
                   <p className="">
@@ -122,7 +122,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
             </div>
           ) : (
             <div className="w-20 h-20 object-cover rounded-full ms-10 max-md:hidden bg-orange relative group ">
-              <div className={`${data?.adminUserId._id == userData.id ? 'group-hover:block' : 'hidden'} absolute top-1/3 right-1/3`}>
+              <div className={`${data?.adminUserId._id == userData?.id ? 'group-hover:block' : 'hidden'} absolute top-1/3 right-1/3`}>
                 <input style={{ display: 'none' }} type="file" id="file2" onChange={(e) => handleLogoImageUpload(e)} />
                 <label htmlFor="file2">
                   <p className="">
@@ -146,7 +146,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
             <p className="text-sm font-semibold text-neutral-500 mt-2 max-lg:hidden">{data?.memberCount} Members </p>
             <div className="lg:hidden flex justify-between items-center">
               <p className="text-sm font-semibold text-neutral-500 mt-4">{data?.memberCount} Members </p>
-              {data?.adminUserId?._id == userData.id ? (
+              {data?.adminUserId?._id == userData?.id ? (
                 <button onClick={() => setAssignUsers(true)} className=" bg-[#6647FF] py-3 px-3 text-white rounded-full min-w-fit">
                   <IoMdSettings />
                 </button>
@@ -157,7 +157,7 @@ const GroupInfo = ({ data, isJoinedinCommunity, setIsJoinedInGroup, isJoinedInGr
               )}
             </div>
           </div>
-          {data?.adminUserId?._id == userData.id ? (
+          {data?.adminUserId?._id == userData?.id ? (
             <button onClick={() => setAssignUsers(true)} className="max-lg:hidden bg-[#6647FF] py-3 px-3 text-white rounded-full min-w-fit">
               <IoMdSettings />
             </button>

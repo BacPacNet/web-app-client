@@ -1,7 +1,7 @@
 'use client'
 import GroupSearchBox from '@/components/atoms/GroupSearchBox'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { useGetSubscribedCommunties } from '@/services/university-community'
+import { useGetFilteredSubscribedCommunities, useGetSubscribedCommunties } from '@/services/university-community'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -16,6 +16,9 @@ import { Community } from '@/types/Community'
 import { openModal } from '../Modal/ModalManager'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 import Buttons from '@/components/atoms/Buttons'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { sortBy } from '@/types/CommuityGroup'
+import useCookie from '@/hooks/useCookie'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -24,6 +27,7 @@ interface Props {
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData } = useUniStore()
+  const [cookieValue] = useCookie('uni_user_token')
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
@@ -31,11 +35,15 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
+  const [sort, setSort] = useState<string>('')
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
+  // console.log('comm', communityId, 'iii', community?._id)
+
+  const { mutate: mutateFilterCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
@@ -58,6 +66,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         selectedFiltersMain={selectedFiltersMain}
         setSelectedTypeMain={setSelectedTypeMain}
         selectedTypeMain={selectedTypeMain}
+        sort={sort}
       />
     )
   }
@@ -83,8 +92,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     () =>
       subscribedCommunities
         ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
-        ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData.id),
-    [subscribedCommunities, communityId, userData.id, community]
+        ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id),
+    [subscribedCommunities, communityId, userData?.id, community]
   )
 
   useEffect(() => {
@@ -94,6 +103,14 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       setCommunity(subscribedCommunities[0] as Community)
     }
   }, [subscribedCommunities, communityId])
+
+  //sort
+  useEffect(() => {
+    const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
+    if (cookieValue && community?._id && (selectedFiltersMain?.length || selectedTypeMain?.length || sort.length)) {
+      mutateFilterCommunityGroups(data)
+    }
+  }, [sort, cookieValue, community?._id])
 
   const tabData = [
     {
@@ -174,7 +191,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   return (
     <>
       <NavbarSubscribedUniversity
-        userData={userData}
+        userData={userData || {}}
         communityId={communityId}
         subscribedCommunities={subscribedCommunities as Community[]}
         handleCommunityClick={handleCommunityClick}
@@ -186,9 +203,22 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           <Buttons onClick={() => handleCommunityGroupFilter()} size="extra_small" variant="border_primary">
             Filter
           </Buttons>
-          <Buttons size="extra_small" variant="border_primary">
-            Sort
-          </Buttons>
+          <Popover>
+            <PopoverTrigger>
+              <div className="border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
+                Sort
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto px-2 border-none bg-white shadow-lg shadow-gray-light">
+              <div className="">
+                {sortBy.map((item) => (
+                  <p onClick={() => setSort(item)} key={item} className="capitalize cursor-pointer">
+                    {item}
+                  </p>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex items-center px-4 py-2 w-full">
           <div className="flex items-center justify-start bg-white rounded-full gap-3 w-full">

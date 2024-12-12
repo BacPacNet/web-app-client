@@ -9,6 +9,7 @@ const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 
 type Props = {
   communityId: string
+  sort: string
   selectedFiltersMain: Record<string, string[]>
   setSelectedFiltersMain: React.Dispatch<React.SetStateAction<Record<string, string[]>>>
   selectedTypeMain: string[]
@@ -21,6 +22,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   selectedFiltersMain,
   setSelectedTypeMain,
   selectedTypeMain,
+  sort,
 }) => {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [selectedType, setSelectedType] = useState<string[]>([])
@@ -58,9 +60,10 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   }
 
   const handleClick = () => {
-    const data = { selectedType, selectedFilters }
+    const data = { selectedType, selectedFilters, sort }
     setSelectedFiltersMain(selectedFilters)
     setSelectedTypeMain(selectedType)
+
     mutate(data)
   }
 

@@ -170,7 +170,7 @@ const PostCard = ({
         </div>
 
         <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
-          <PostCartOption isSelfPost={adminId === userData.id} postID={postID} isType={type} />
+          <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
         </div>
       </div>
 
@@ -213,7 +213,7 @@ const PostCard = ({
           </Popover>
         </div>
       </div>
-      <PostCommentBox showCommentSec={showCommentSection} postID={postID} type={type} adminId={userData.id || ''} data={PostData} />
+      <PostCommentBox showCommentSec={showCommentSection} postID={postID} type={type} adminId={userData?.id || ''} data={PostData} />
     </div>
   )
 }

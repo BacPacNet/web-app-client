@@ -73,7 +73,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
             />
             <div
               className={`${
-                data?.community?.adminId == userData.id ? 'block  ' : 'hidden'
+                data?.community?.adminId == userData?.id ? 'block  ' : 'hidden'
               } absolute w-full z-30 top-[5%] left-[84%] max-lg:left-3/4 max-md:left-2/3 max-sm:left-1/3`}
             >
               <input style={{ display: 'none' }} type="file" id="CommunityCoverImagefile" onChange={(e) => handleCoverImageUpload(e)} />
@@ -82,7 +82,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
           </>
         ) : (
           <div className="absolute bottom-20 z-0 object-cover w-full h-full max-md:bottom-52 bg-gray">
-            <div className={`${data?.community?.adminId == userData.id ? 'block  ' : 'hidden'} absolute w-full z-30 top-1/4 left-[84%] `}>
+            <div className={`${data?.community?.adminId == userData?.id ? 'block  ' : 'hidden'} absolute w-full z-30 top-1/4 left-[84%] `}>
               <input style={{ display: 'none' }} type="file" id="CommunityCoverImagefile" onChange={(e) => handleCoverImageUpload(e)} />
               <label htmlFor="CommunityCoverImagefile">Change cover image</label>
             </div>
@@ -111,7 +111,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
                 src={data?.community?.communityLogoUrl.imageUrl}
                 alt="dp"
               />
-              <div className={`${data?.community?.adminId == userData.id ? 'block  ' : 'hidden'} absolute top-1/4`}>
+              <div className={`${data?.community?.adminId == userData?.id ? 'block  ' : 'hidden'} absolute top-1/4`}>
                 <input style={{ display: 'none' }} type="file" id="communitylogoImagefile" onChange={(e) => handleLogoImageUpload(e)} />
                 <label htmlFor="communitylogoImagefile">
                   <p className="">
@@ -122,7 +122,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
             </>
           ) : (
             <div className="w-28 h-28 object-contain border-4 border-neutral-300 rounded-full bg-white flex items-center justify-center z-10">
-              <div className={`${data?.community?.adminId == userData.id ? 'block  ' : 'hidden'}  `}>
+              <div className={`${data?.community?.adminId == userData?.id ? 'block  ' : 'hidden'}  `}>
                 <input style={{ display: 'none' }} type="file" id="communitylogoImagefile" onChange={(e) => handleLogoImageUpload(e)} />
                 <label htmlFor="communitylogoImagefile">
                   <p className="">
@@ -140,14 +140,14 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
             <img className="object-contain" src={chatboticon.src} alt="chatboticon" />
             <label className="text-neutral-500 font-medium max-lg:text-sm">Chatbot Support</label>
           </div>
-          {!isJoined && data?.community?.adminId != userData.id ? (
+          {!isJoined && data?.community?.adminId != userData?.id ? (
             <button
               onClick={() => JoinCommunity(data?.community?._id)}
               className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0"
             >
               Join Community
             </button>
-          ) : data?.community?.adminId == userData.id ? (
+          ) : data?.community?.adminId == userData?.id ? (
             <button className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-2 w-max h-max  rounded-full mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0">
               <IoMdSettings />
             </button>

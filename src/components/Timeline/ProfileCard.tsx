@@ -142,7 +142,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
           <div className="flex">
             <div className="group relative">
               <img
-                src={`${userProfileData?.profile_dp?.imageUrl ? userProfileData.profile_dp.imageUrl : '/icons/avatar.svg'} `}
+                src={`${userProfileData?.profile_dp?.imageUrl ? userProfileData?.profile_dp.imageUrl : '/icons/avatar.svg'} `}
                 alt="Profile"
                 className="h-24 w-24 rounded-full border-4 border-white"
                 width={24}
@@ -169,7 +169,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
         </div>
       </div>
       <div className="px-8 mt-8 py-5">
-        <h2 className="text-lg font-semibold">{userData.firstName}</h2>
+        <h2 className="text-lg font-semibold">{userData?.firstName}</h2>
         <p className="text-gray-dark text-xs py-1">{userProfileData?.bio}</p>
         {!isUserProfile && <button className="w-full bg-primary text-white py-2 mt-2 rounded-lg text-xs font-medium">Create Avatar</button>}
         <div className="mt-5 flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-x-6 lg:flex">
@@ -180,7 +180,7 @@ const ProfileCard: React.FC<ProfileProps> = ({
           />
           <ProfileItem iconName={HiLibrary} text={'Department of ' + userProfileData?.major} field="Department" />
           <ProfileItem iconName={FaLocationDot} text={userProfileData?.city + ' ' + userProfileData?.country} field="Location" />
-          <ProfileItem iconName={MdEmail} text={userData.email} textClassName="break-all" field="Email" />
+          <ProfileItem iconName={MdEmail} text={userData?.email} textClassName="break-all" field="Email" />
           <ProfileItem iconName={MdPhone} text={userProfileData?.phone_number} field="Contact" />
           <ProfileItem
             iconName={FaBirthdayCake}

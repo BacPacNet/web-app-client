@@ -4,11 +4,13 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
+import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
+  const queryClient = useQueryClient()
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -27,8 +29,11 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     hasNextPage: communityPostHasNextPage,
     isLoading,
     error,
+    isFetching,
+    dataUpdatedAt,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, 2)
-  const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+  const [communityGroupPostDatas, setCommunityGroupPostDatas] = useState([])
+  // const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,16 +54,27 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
+  useEffect(() => {
+    if (isFetching) {
+      setCommunityGroupPostDatas([])
+    }
+  }, [isFetching, queryClient])
+
+  useEffect(() => {
+    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
+    setCommunityGroupPostDatas(communityDatas)
+  }, [communityGroupPost, dataUpdatedAt])
+
   if (isLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-8" />
 
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
-  if (communityGroupPostData.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+  if (communityGroupPostDatas.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6">
-      {communityGroupPostData?.map((post: communityPostType, idx: number) => (
+      {communityGroupPostDatas?.map((post: communityPostType, idx: number) => (
         <PostCard
           key={post?._id}
           user={post?.user?.firstName + ' ' + post?.user?.lastName}

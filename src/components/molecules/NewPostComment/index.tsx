@@ -45,7 +45,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
         </div>
         <div className="flex  p-2 gap-4">
           <Image
-            src={userProfileData.profile_dp?.imageUrl || avatar}
+            src={userProfileData?.profile_dp?.imageUrl || avatar}
             width={56}
             height={56}
             objectFit="cover"
@@ -56,7 +56,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
             <PostCommentInput
               adminID={data.adminId}
               postID={postId}
-              commenterProfileId={userProfileData._id || ''}
+              commenterProfileId={userProfileData?._id || ''}
               commentId={data.commentId}
               type={data.type}
               isReply={isReply}

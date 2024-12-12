@@ -18,7 +18,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
         isGroupAdmin={isGroupAdmin}
         setIsGroupAdmin={setIsGroupAdmin}
       />
-      {isGroupAdmin && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}
+      <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />
       <CommunityGroupPostContainer containerRef={containerRef} />
     </div>
   )

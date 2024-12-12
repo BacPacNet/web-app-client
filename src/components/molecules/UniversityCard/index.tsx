@@ -34,7 +34,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   useEffect(() => {
     if (communityData && userData) {
-      setIsUserJoinedCommunity(communityData.users.some((user) => user?.id?.toString() === userData.id))
+      setIsUserJoinedCommunity(communityData.users.some((user) => user?.id?.toString() === userData?.id))
     }
   }, [communityData, userData])
 

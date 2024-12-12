@@ -143,3 +143,5 @@ export const subCategories: Record<Category, string[]> = {
   ],
   Others: [],
 }
+
+export const sortBy = ['name', 'latest', 'users', 'oldest']

@@ -51,11 +51,11 @@ const EditProfileModal = () => {
     formState: { errors },
   } = useForm<editProfileInputs>({
     defaultValues: {
-      first_name: userData.firstName,
-      last_name: userData.lastName,
+      first_name: userData?.firstName,
+      last_name: userData?.lastName,
       bio: userProfileData?.bio,
       phone_number: userProfileData?.phone_number,
-      gender: userData.gender,
+      gender: userData?.gender,
       dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
       country: userProfileData?.country,
       city: userProfileData?.city,

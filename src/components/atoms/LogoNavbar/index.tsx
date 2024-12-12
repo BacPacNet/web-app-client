@@ -26,6 +26,7 @@ import useCookie from '@/hooks/useCookie'
 import { IoMenu } from 'react-icons/io5'
 import { RxCross2 } from 'react-icons/rx'
 import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
+import { useLogout } from '@/hooks/useLogOut'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -37,24 +38,19 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
-  const { userProfileData, resetUserProfileData } = useUniStore()
-  const [, , deleteCookie] = useCookie('uni_user_token')
+  const { userProfileData, userData } = useUniStore()
+
+  const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { data: notificationData } = useGetNotification(3, true)
   const { data: messageNotificationData } = useGetMessageNotification(3, true)
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
   const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
   const isUserLoggedIn = useCallback(() => {
-    setIsLogin(!!userProfileData.users_id)
+    setIsLogin(!!userProfileData?.users_id)
   }, [userProfileData])
   const [showLeftNavbar, setShowLeftNavbar] = useState(false)
   const [showRightMenu, setShowRightMenu] = useState(false)
-
-  const handleLogout = () => {
-    deleteCookie()
-    resetUserProfileData()
-    router.push('/login')
-  }
 
   useEffect(() => {
     isUserLoggedIn()

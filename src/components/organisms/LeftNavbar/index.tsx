@@ -42,13 +42,13 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }
 
   const handleProfileClicked = () => {
-    router.push(`/profile/${userData.id}`)
+    router.push(`/profile/${userData?.id}`)
     setActiveMenu('')
     toggleLeftNavbar && toggleLeftNavbar()
   }
-
+  // if (userProfileData && Object?.keys(userProfileData)?.length === 0) {
   const renderProfile = () => {
-    if (!userProfileData.profile_dp) {
+    if (!userProfileData?.profile_dp) {
       return null
     }
     if (Object?.keys(userProfileData)?.length === 0) {
@@ -60,7 +60,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
         height={50}
         objectFit="cover"
         className="w-[50px] h-[50px] rounded-full"
-        src={userProfileData.profile_dp?.imageUrl || avatar}
+        src={userProfileData?.profile_dp?.imageUrl || avatar}
         alt="profile.png"
       />
     )
@@ -72,13 +72,13 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
         {renderProfile()}
         <div>
           <p className="text-sm text-neutral-700">
-            {userData.firstName} {userData.lastName}
+            {userData?.firstName} {userData?.lastName}
           </p>
           <Tooltip text={userProfileData?.university_name || ''}>
             <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
           </Tooltip>
 
-          <SubText>{userProfileData.major}</SubText>
+          <SubText>{userProfileData?.major}</SubText>
         </div>
       </div>
       <div className="px-4 pt-9">

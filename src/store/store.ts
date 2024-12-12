@@ -5,13 +5,30 @@ import { createUserProfileSlice } from './userProfileSlice/userProfileSlice'
 import { createSocketSlice } from './socketSlice/socketSlice'
 import { storeType } from './storeType'
 
+let finalCookie: any = null
+
+if (typeof document !== 'undefined') {
+  const cookieValue = document.cookie.split('; ').find((row) => row.startsWith('uni_user_token='))
+  finalCookie = cookieValue ? cookieValue.split('=')[1] : null
+}
+
 export const useUniStore = create<storeType>()(
   devtools(
+    // persist(
+    //   (...a) => ({
+    //     ...createUserSlice(...a),
+    //     ...createUserProfileSlice(...a),
+    //     ...createSocketSlice(...a),
+    //   }),
     persist(
-      (...a) => ({
-        ...createUserSlice(...a),
-        ...createUserProfileSlice(...a),
-        ...createSocketSlice(...a),
+      (set, get, api) => ({
+        ...createUserSlice(set, get, api),
+        ...createUserProfileSlice(set, get, api),
+        ...createSocketSlice(set, get, api),
+        reset: () => {
+          set({}, true)
+          api.persist.clearStorage()
+        },
       }),
       {
         name: 'store',
@@ -19,6 +36,7 @@ export const useUniStore = create<storeType>()(
           ...state,
           socket: undefined, // Exclude socket from persisted state
         }),
+        skipHydration: !finalCookie,
         // partialize: (state) => ({ products: state.products,userName:state.userName }),
         // skipHydration: true
       }

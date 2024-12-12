@@ -46,7 +46,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
 
   useEffect(() => {
     if (communityGroups && userData) {
-      setIsUserJoinedCommunityGroup(communityGroups?.users?.some((user) => user.userId.toString() === userData.id))
+      setIsUserJoinedCommunityGroup(communityGroups?.users?.some((user) => user.userId.toString() === userData?.id))
     }
   }, [communityGroups])
 
@@ -162,7 +162,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
           {!communityGroupID ? (
             <div
               className={`${
-                dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
+                dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
               }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
             >
               <input style={{ display: 'none' }} type="file" id="CommunityCoverImagefile" onChange={(e) => handleCoverImageUpload(e)} />
@@ -173,7 +173,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
           ) : (
             <div
               className={`${
-                dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
+                dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
               }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
             >
               <input
@@ -198,7 +198,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                 {!communityGroupID ? (
                   <div
                     className={`${
-                      dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
+                      dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
                     }  w-8 h-8 rounded-full bg-white shadow-2xl z-[2] top-1 right-1 flex items-center justify-center `}
                   >
                     <input style={{ display: 'none' }} type="file" id="communitylogoImagefile" onChange={(e) => handleLogoImageUpload(e)} />
@@ -209,7 +209,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                 ) : (
                   <div
                     className={`${
-                      dataToDisplay?.adminId == userData.id ? 'absolute  ' : 'hidden'
+                      dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
                     }  w-8 h-8 rounded-full bg-white shadow-2xl z-[2] top-1 right-1 flex items-center justify-center `}
                   >
                     <input
@@ -238,7 +238,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
             </div>
             <div
               className={`${
-                dataToDisplay?.adminId != userData.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
+                dataToDisplay?.adminId != userData?.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
               } flex  items-center`}
             >
               {isGroupAdmin ? (

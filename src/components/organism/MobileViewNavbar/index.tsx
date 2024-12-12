@@ -13,6 +13,7 @@ import { HiCubeTransparent } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
 import { useRouter } from 'next/navigation'
 import useCookie from '@/hooks/useCookie'
+import { useLogout } from '@/hooks/useLogOut'
 
 interface Props {
   closeLeftNavbar: () => void
@@ -22,11 +23,11 @@ interface Props {
 
 export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, showRightMenu }: Props) {
   const router = useRouter()
-  const { userProfileData, userData, resetUserProfileData } = useUniStore()
+  const { userProfileData, userData } = useUniStore()
   const [, , deleteCookie] = useCookie('uni_user_token')
-
+  const { handleLogout } = useLogout()
   const handleProfileClicked = () => {
-    router.push(`/profile/${userData.id}`)
+    router.push(`/profile/${userData?.id}`)
     toggleRightMenu()
   }
   const handleMenuClicked = (path: string) => {
@@ -38,14 +39,9 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
     toggleRightMenu()
     closeLeftNavbar()
   }
-  const handleLogout = () => {
-    deleteCookie()
-    resetUserProfileData()
-    router.push('/login')
-  }
 
   const renderProfile = () => {
-    if (!userProfileData.profile_dp) {
+    if (!userProfileData?.profile_dp) {
       return null
     }
     if (Object?.keys(userProfileData)?.length === 0) {
@@ -90,12 +86,12 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
           {renderProfile()}
           <div>
             <p className="text-sm text-neutral-700">
-              {userData.firstName} {userData.lastName}
+              {userData?.firstName} {userData?.lastName}
             </p>
             <Tooltip text={userProfileData?.university_name || ''}>
               <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
             </Tooltip>
-            <SubText>{userProfileData.major}</SubText>
+            <SubText>{userProfileData?.major}</SubText>
           </div>
         </div>
 

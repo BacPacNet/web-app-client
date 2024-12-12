@@ -20,7 +20,7 @@ export function useGetSubscribedCommunties() {
     enabled: !!cookieValue,
   }) as UseQueryResult<Community[]>
 }
-export function useGetFilteredSubscribedCommunities(communityId: string) {
+export function useGetFilteredSubscribedCommunities(communityId: string = '') {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({

@@ -86,8 +86,8 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
               <p>
                 {item?.isGroupChat
                   ? item?.chatName
-                  : `${item?.users?.find((user) => user?.userId._id.toString() !== userData.id)?.userId.firstName || ''} ${
-                      item?.users?.find((user) => user?.userId._id.toString() !== userData.id)?.userId.lastName || ''
+                  : `${item?.users?.find((user) => user?.userId._id.toString() !== userData?.id)?.userId.firstName || ''} ${
+                      item?.users?.find((user) => user?.userId._id.toString() !== userData?.id)?.userId.lastName || ''
                     }`}
               </p>
 

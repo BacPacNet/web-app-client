@@ -395,7 +395,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden' : ''}  flex flex-col gap-2 w-full`}>
       <div className="rounded-full pt-4 pb-2 flex gap-2 items-center">
         <Image
-          src={userProfileData.cover_dp?.imageUrl || avatar}
+          src={userProfileData?.cover_dp?.imageUrl || avatar}
           alt={`${userData?.firstName}'s avatar`}
           width={44}
           height={44}
