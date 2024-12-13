@@ -102,7 +102,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
       ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id)
     return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData?.id, community, debouncedSearchQuery])
+  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
+
+  console.log('myGroup', subscribedCommunitiesMyGroup)
 
   useEffect(() => {
     if (communityId && subscribedCommunities) {
@@ -144,8 +146,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Joined',
       content: (
         <CommunityGroupAll
-          key={subscribedCommunitiesMyGroup}
-          communityGroups={subscribedCommunitiesMyGroup}
+          key={joinedSubscribedCommunitiesGroup}
+          communityGroups={joinedSubscribedCommunitiesGroup}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
           currSelectedGroup={currSelectedGroup as Community}
@@ -164,8 +166,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       content: (
         <div>
           <CommunityGroupAll
-            key={joinedSubscribedCommunitiesGroup}
-            communityGroups={joinedSubscribedCommunitiesGroup}
+            key={subscribedCommunitiesMyGroup}
+            communityGroups={subscribedCommunitiesMyGroup}
             showGroupTill={showGroupTill}
             setShowGroupTill={setShowGroupTill}
             currSelectedGroup={currSelectedGroup as Community}
