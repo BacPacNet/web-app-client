@@ -4,6 +4,7 @@ import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
 import { MessageNotification } from '@/components/molecules/MessageNotification'
+import { useRouter } from 'next/navigation'
 
 type Notification = {
   _id: string
@@ -99,6 +100,10 @@ export async function UpdateCommunityGroup(data: { id: string }, token: string) 
   const response = await client(`/notification`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
+export async function UpdateIsRead(data: { id: string }, token: string) {
+  const response = await client(`/notification`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
+  return response
+}
 
 export function useGetNotification(limit: number, toCall: boolean) {
   let finalCookie: any = null
@@ -146,11 +151,14 @@ export function useGetUserNotification(limit: number, toCall: boolean) {
 export const useJoinCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const router = useRouter()
   return useMutation({
     mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+
+      router.push(`/community/${response.communityId}/${response._id}`)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -165,8 +173,24 @@ export const useUpdateIsSeenCommunityGroupNotification = () => {
     mutationFn: (data: { id: string }) => UpdateCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
-      console.log(response)
       queryClient.invalidateQueries({ queryKey: ['notification'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
+}
+export const useUpdateIsRead = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  return useMutation({
+    mutationFn: (data: { id: string }) => UpdateIsRead(data, cookieValue),
+
+    onSuccess: (response: any) => {
+      console.log('rrrr', response)
+      queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+      router.push(`/profile/${response.notification.sender_id}}`)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

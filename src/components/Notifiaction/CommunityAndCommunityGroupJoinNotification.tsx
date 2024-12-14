@@ -5,7 +5,7 @@ import { FaUsers } from 'react-icons/fa'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useJoinCommunityGroup } from '@/services/notification'
-
+import { useRouter } from 'next/navigation'
 dayjs.extend(relativeTime)
 
 interface Props {
@@ -39,8 +39,12 @@ interface Props {
 
 const CommunityAndCommunityGroupJoinNotification = ({ data }: Props) => {
   const { mutate: joinGroup } = useJoinCommunityGroup()
+  const router = useRouter()
   const handleJoinGroup = (groupId: string = '', id: string) => {
     if (!groupId || !id) return
+
+    if (data?.isRead) return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}`)
+
     const dataToPush = {
       groupId: groupId,
       id: id,

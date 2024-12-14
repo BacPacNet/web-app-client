@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { FaUserPlus } from 'react-icons/fa6'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { useUpdateIsRead } from '@/services/notification'
+import { useRouter } from 'next/navigation'
 
 dayjs.extend(relativeTime)
 
@@ -37,8 +39,22 @@ interface Props {
 }
 
 const StartedFollowingYouNotification = ({ data }: Props) => {
+  const { mutate: updateIsSeen } = useUpdateIsRead()
+  const router = useRouter()
+  const handleUpdateIsRead = (id: string) => {
+    const dataToPush = {
+      id: id,
+    }
+    if (data?.isRead) return router.push(`/profile/${data.sender_id?._id}`)
+
+    updateIsSeen(dataToPush)
+  }
+
   return (
-    <div className="flex flex-col gap-2  border-b-2 border-neutral-300 pb-5 me-10">
+    <div
+      onClick={() => handleUpdateIsRead(data?._id)}
+      className={`flex flex-col gap-2  border-b-2 border-neutral-300 pb-5 me-10 hover:bg-neutral-200 hover:p-5 transition-all duration-200 cursor-pointer`}
+    >
       <div className="flex justify-between ">
         <div className="flex gap-4 items-center  ">
           <Image width={48} height={48} src={data?.sender_id?.profileDp || dummy.src} alt="dp" objectFit="cover" className="w-12 h-12 rounded-full" />
