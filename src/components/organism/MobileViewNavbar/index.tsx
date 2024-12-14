@@ -52,7 +52,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
         width={50}
         height={50}
         objectFit="cover"
-        className="w-[50px] h-[50px] rounded-full"
+        className="w-[50px] h-[50px] rounded-full flex-none"
         src={userProfileData.profile_dp?.imageUrl || avatar}
         alt="profile.png"
       />

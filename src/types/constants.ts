@@ -98,8 +98,8 @@ export enum UserPostType {
 export interface PostInputData {
   content: string
   imageUrl?: Array<{
-    imageUrl: string
-    publicId: string
+    imageUrl: string | null
+    publicId: string | null
   }>
   PostType?: string
   communityPostsType?: string

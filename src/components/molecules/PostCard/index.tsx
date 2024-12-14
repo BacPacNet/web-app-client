@@ -26,6 +26,7 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
+import { formatDistanceToNow } from 'date-fns'
 
 dayjs.extend(relativeTime)
 
@@ -155,27 +156,27 @@ const PostCard = ({
   }
   return (
     <div className={`bg-white rounded-2xl px-4`}>
-      <div className="flex items-center py-4 gap-4 justify-between">
+      <div className="flex items-start py-4 gap-4 justify-between">
         <div onClick={handleProfileClicked} className="flex gap-4 cursor-pointer">
-          <div>
-            <Image src={avatarLink || avatar} width={45} height={45} className="rounded-full" alt="avatar.png" />
+          <div className="rounded-full w-[45px] h-[45px]">
+            <Image src={avatarLink || avatar} width={45} height={45} className="object-none rounded-full h-[inherit]" alt="avatar.png" />
           </div>
           <div>
             <h3 className="font-medium text-sm text-neutral-600">{user}</h3>
             <div className="flex items-center gap-1">
-              <p className="text-[12px] text-neutral-500">{year},</p>
+              <p className="hidden md:block text-[12px] text-neutral-500">{year},</p>
               <p className="text-[12px] text-neutral-500">{university}</p>
             </div>
           </div>
         </div>
 
-        <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
+        <div className=" text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
           <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
         </div>
       </div>
 
       <div>
-        <p className="text-sm text-neutral-700 font-medium py-4">{text}</p>
+        <p className="text-sm text-neutral-700 py-4">{text}</p>
       </div>
 
       {/* //post Image  */}
@@ -183,9 +184,8 @@ const PostCard = ({
       {/* Post Content */}
 
       {/* Timestamp */}
-      <p className="py-4 text-xs text-neutral-400 flex items-center">
-        <span className="text-neutral-500 break-words">{dayjs(new Date(date).toString()).format('h:m a · MMM DD, YYYY')}</span> · Post from {user} at{' '}
-        {university}
+      <p className="py-2 text-xs text-neutral-400 flex items-center">
+        <span className="text-neutral-500 break-words"> {formatDistanceToNow(date as unknown as Date, { addSuffix: true })}</span>
       </p>
 
       {/* Post Meta */}

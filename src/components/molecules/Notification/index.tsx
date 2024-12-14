@@ -72,7 +72,13 @@ const NotificationBox = ({ notifications }: NotificationsProps) => {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 items-center">
               <MdPersonAddAlt1 size={18} className="text-green-400" />
-              <Image className="shadow-lg rounded-full" src={item?.sender_id?.profileDp || avatar} width={36} height={36} alt="avatar" />
+              <Image
+                className="shadow-lg rounded-full w-9 h-9 object-none"
+                src={item?.sender_id?.profileDp || avatar}
+                width={36}
+                height={36}
+                alt="avatar"
+              />
             </div>
             <div>
               <p>{item?.sender_id?.firstName + ' ' + item?.sender_id?.lastName}</p>

@@ -78,8 +78,8 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
     const promises = imagesData.map((image) => replaceImage(image, ''))
     const results = await Promise.all(promises)
     return results.map((result) => ({
-      imageUrl: result?.imageUrl,
-      publicId: result?.publicId,
+      imageUrl: result?.imageUrl || null,
+      publicId: result?.publicId || null,
     }))
   }
 
@@ -133,16 +133,13 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
   return (
     <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
       <div className="flex gap-3 items-center">
-        <div
-          style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
-          className="flex items-center justify-center bg-white rounded-full w-[56px] h-[56px]"
-        >
+        <div style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }} className="flex-none rounded-full w-[45px] h-[45px]">
           {userProfileData ? (
             <Image
-              width={56}
-              height={56}
+              width={45}
+              height={45}
               objectFit="cover"
-              className="rounded-full"
+              className="object-none rounded-full h-[inherit]"
               src={userProfileData?.profile_dp?.imageUrl || avatar}
               alt="avatar.png"
             />
@@ -178,9 +175,6 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
             <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
             <GoFileMedia size={24} className="text-neutral-400" />
           </label>
-          <label htmlFor="postPool">
-            <VscSettings size={24} className="text-neutral-400" />
-          </label>
           <div className="w-28 max-sm:w-20">
             {type == PostInputType.Community ? (
               <SelectDropdown
@@ -208,7 +202,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
           </div>
         </div>
         <div>
-          <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg px-3 py-2 w-[69px]">
+          <button onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
             Post
           </button>
         </div>

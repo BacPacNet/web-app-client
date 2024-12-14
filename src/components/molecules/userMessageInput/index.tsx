@@ -197,9 +197,6 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
               <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="postPool">
-              <VscSettings size={24} className="text-neutral-400" />
-            </label>
           </div>
           <div className="flex">
             <button

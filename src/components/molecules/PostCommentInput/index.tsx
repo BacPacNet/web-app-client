@@ -188,9 +188,6 @@ function PostCommentInput({ postID, type, isSinglePost, adminID, isReply, commen
               <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="postPool">
-              <VscSettings size={24} className="text-neutral-400" />
-            </label>
           </div>
         </div>
       </div>

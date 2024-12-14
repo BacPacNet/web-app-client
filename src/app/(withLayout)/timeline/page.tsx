@@ -9,7 +9,7 @@ export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar">
+    <div ref={containerRef} className="h-with-navbar hideScrollbar">
       <UserPostContainer type={PostInputType.Timeline} />
       <TimelinePostContainer containerRef={containerRef} />
     </div>
