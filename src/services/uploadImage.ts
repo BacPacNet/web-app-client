@@ -1,4 +1,5 @@
-import axios from 'axios'
+import { CloudinaryResponse } from '@/types/Cloudinary'
+import axios, { AxiosResponse } from 'axios'
 import CryptoJS from 'crypto-js'
 
 const presetKey: any = process.env.NEXT_PUBLIC_preset_key
@@ -37,7 +38,7 @@ export async function uploadNewImage(img: any) {
   formData.append('upload_preset', presetKey)
 
   try {
-    const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData)
+    const res: AxiosResponse<CloudinaryResponse, any> = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, formData)
     if (res?.data?.secure_url) {
       const imageUrl = res.data.secure_url
       const publicId = res.data.public_id

@@ -29,13 +29,13 @@ const LoginBox = () => {
     },
   })
 
-  const { mutate: mutateLogin, isSuccess, error, isPending } = useHandleLogin()
+  const { mutate: mutateLogin, error, isPending } = useHandleLogin()
 
   const isAxiosError = (error: unknown): error is AxiosError<any> => {
     return (error as AxiosError)?.isAxiosError === true
   }
   const onSubmit = async (data: LoginForm) => {
-    await mutateLogin(data)
+    mutateLogin(data)
   }
 
   useEffect(() => {
@@ -46,12 +46,6 @@ const LoginBox = () => {
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (isSuccess) {
-      router.push(`/timeline`)
-    }
-  }, [isSuccess])
 
   return (
     <div className="flex flex-col  max-lg:w-1/2 max-md:w-2/3 max-sm:w-11/12">

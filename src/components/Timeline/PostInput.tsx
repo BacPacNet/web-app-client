@@ -37,8 +37,8 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
     const promises = images.map((image) => replaceImage(image, ''))
     const results = await Promise.all(promises)
     return results.map((result) => ({
-      imageUrl: result?.imageUrl,
-      publicId: result?.publicId,
+      imageUrl: result?.imageUrl || null,
+      publicId: result?.publicId || null,
     }))
   }
 

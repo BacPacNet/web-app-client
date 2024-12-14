@@ -40,7 +40,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   const { logos } = university || {}
 
   return (
-    <div className="h-with-navbar py-4 overflow-y-scroll hideScrollbar">
+    <div className="h-with-navbar py-4 hideScrollbar">
       {isUserProfileDataLoading || !userProfileData ? (
         <Skeleton className="w-full h-60 bg-slate-300" />
       ) : (
