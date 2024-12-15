@@ -86,12 +86,17 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                 <div
                   className={`${
                     key === 0 ? '' : 'border-t'
-                  } border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200 flex gap-2 items-center`}
+                  } border-neutral-300 text-sm text-neutral-900 p-2 cursor-pointer hover:bg-gray-200 flex gap-3 items-center`}
                   onClick={() => handleSelect(item)}
                   key={key}
                 >
-                  <img className="rounded-full" width={40} height={40} alt="logo" src={item?.logos?.[0] || (ImagePlaceholder as unknown as string)} />
-                  <p> {item?.name}</p>
+                  <img
+                    className="rounded-full"
+                    style={{ width: '40px', height: '40px' }}
+                    alt="logo"
+                    src={item?.logos?.[0] || (ImagePlaceholder as unknown as string)}
+                  />
+                  <p className="text-2xs"> {item?.name}</p>
                 </div>
               ))
             ) : isFetching ? (

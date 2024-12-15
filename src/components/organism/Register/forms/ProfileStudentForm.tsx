@@ -36,7 +36,7 @@ const ProfileStudentForm = () => {
         <Title>University Setup</Title>
         <SupportingText>Enter your university information for networking</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
         <div className="w-full flex flex-col relative">
           <Controller
             name="universityName"
@@ -62,13 +62,13 @@ const ProfileStudentForm = () => {
           <Controller
             name="year"
             control={control}
-            rules={{ required: 'Year is required!' }}
+            rules={{ required: 'year is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={currYear}
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="year"
+                placeholder="Year"
                 icon={'single'}
                 err={!!ProfileFormErrors.year}
               />
@@ -117,7 +117,7 @@ const ProfileStudentForm = () => {
           {ProfileFormErrors.major && <InputWarningText>{ProfileFormErrors?.major?.message?.toString()}</InputWarningText>}
         </div>
       </div>
-      <div className="w-10/12 xl:wGender-9/12 flex flex-col gap-2">
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
       </div>
 

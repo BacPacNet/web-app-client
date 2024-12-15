@@ -82,7 +82,7 @@ const LoginBox = () => {
               Password
             </label>
             <InputBox
-              placeholder="*******************"
+              placeholder="*********"
               type={showPassword ? 'text' : 'password'}
               {...registerLogin('password', { required: true })}
               err={!!loginErrors.password}
@@ -95,14 +95,16 @@ const LoginBox = () => {
               )}
             </div>
             {loginErrors.password && <InputWarningText>Please enter your password!</InputWarningText>}
-            <label className="text-neutral-500 text-xs">Forgot Password?</label>
+            <label className="w-fit text-neutral-500 text-xs cursor-pointer hover:text-primary hover:underline">Forgot Password?</label>
           </div>
 
-          <div className="flex gap-2 items-center">
+          {/*<div className="flex gap-2 items-center">
             <input className="w-4 h-4 border-neutral-300" type="checkbox" />
             <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
-          </div>
-          <Button variant="primary">{isPending ? <Spinner /> : 'Log in'}</Button>
+          </div>*/}
+          <Button disabled={isPending} variant="primary">
+            {isPending ? <Spinner /> : 'Log in'}
+          </Button>
           <InputWarningText>{isAxiosError(error) && error.response?.data?.message}</InputWarningText>
         </form>
       </div>
