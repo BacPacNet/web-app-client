@@ -54,6 +54,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
           />
           <div className="w-full">
             <PostCommentInput
+              setNewPost={setNewPost}
               adminID={data.adminId}
               postID={postId}
               commenterProfileId={userProfileData?._id || ''}

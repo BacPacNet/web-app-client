@@ -5,6 +5,7 @@ export interface LoginForm {
 export interface RegisterForm {
   firstName: string
   lastName: string
+  userName: string
   email: string
   gender: string
   dob: any
@@ -39,15 +40,21 @@ export interface User {
   role: string
   isEmailVerified: boolean
   id: string
-  userVerifiedCommunities: verifiedInterface[]
-  userUnVerifiedCommunities: unverifiedInterface[]
+}
+export interface EmailType {
+  UniversityName: string
+  UniversityEmail?: string
+  communityId?: string
+  _id: string
 }
 
 export interface UserProfile {
   users_id: string
-  profile_dp?: string
-  email: string[]
-  cover_dp?: string
+  profile_dp?: {
+    imageUrl: string
+    publicId: string
+  }
+  email: EmailType[]
   bio?: string
   phone_number?: string
   dob?: string

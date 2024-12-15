@@ -1,7 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
-import React, { useEffect, useState } from 'react'
-import avatar from '@assets/avatar.svg'
+import React, { useState } from 'react'
 import SubText from '@/components/atoms/SubText'
 import { HiHome } from 'react-icons/hi'
 import { IoMdPeople } from 'react-icons/io'
@@ -11,10 +10,9 @@ import { PiFinnTheHumanFill } from 'react-icons/pi'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import Image from 'next/image'
-import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { truncateString } from '@/lib/utils'
 import Tooltip from '@/components/atoms/Tooltip'
+import ProfilePicture from '@/components/atoms/RenderProfileDP'
 
 interface Props {
   toggleLeftNavbar?: () => void | null
@@ -46,30 +44,11 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
     setActiveMenu('')
     toggleLeftNavbar && toggleLeftNavbar()
   }
-  // if (userProfileData && Object?.keys(userProfileData)?.length === 0) {
-  const renderProfile = () => {
-    if (!userProfileData?.profile_dp) {
-      return null
-    }
-    if (Object?.keys(userProfileData)?.length === 0) {
-      return <UserListItemSkeleton />
-    }
-    return (
-      <Image
-        width={50}
-        height={50}
-        objectFit="cover"
-        className="w-[50px] h-[50px] rounded-full flex-none"
-        src={userProfileData?.profile_dp?.imageUrl || avatar}
-        alt="profile.png"
-      />
-    )
-  }
 
   return (
     <Card className="h-with-navbar overflow-y-auto">
       <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
-        {renderProfile()}
+        <ProfilePicture userProfileData={userProfileData} />
         <div>
           <p className="text-sm text-neutral-700">
             {userData?.firstName} {userData?.lastName}

@@ -11,14 +11,8 @@ import Button from '@/components/atoms/Buttons'
 import InputBox from '@/components/atoms/Input/InputBox'
 
 import { useUniStore } from '@/store/store'
-import { userProfileType } from '@/store/userProfileSlice/userProfileType'
-import { userType } from '@/store/userSlice/userType'
+import { EmailType } from '@/models/auth'
 
-interface emailType {
-  UniversityName: string
-  UniversityEmail: string
-  communityId: string
-}
 type props = {
   setModal: (value: string) => void
 }
@@ -26,7 +20,7 @@ type props = {
 const SettingAccount = ({ setModal }: props) => {
   const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
 
-  const email: emailType[] = userProfileData.email || []
+  const email: EmailType[] = userProfileData.email || []
 
   const userData = useUniStore((state) => state.userData) || {}
   const userName = userData.userName || ''
@@ -44,7 +38,7 @@ const SettingAccount = ({ setModal }: props) => {
           )}
         </div>
         {email?.length ? (
-          email?.map((item: emailType, idx) => (
+          email?.map((item: EmailType, idx) => (
             <div key={idx}>
               <div className="flex flex-col gap-6">
                 <div className="relative w-full flex flex-col gap-2">

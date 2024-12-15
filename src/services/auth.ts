@@ -70,12 +70,12 @@ export const useHandleLogin = () => {
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
-    onSuccess: (response: any) => {
+    onSuccess: (response: UserResponseType) => {
+      router.push('/timeline')
       setUserData(response.user)
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
-      router.push('/timeline')
     },
   })
 }
