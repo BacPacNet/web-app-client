@@ -39,8 +39,7 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
   ...initialState,
 
   initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage) => {
-    const newSocket = io('http://localhost:8000')
-    // console.log('url', process.env.NEXT_PUBLIC_API_BASE_URL)
+    const newSocket = io(process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000')
 
     newSocket.on('connect', () => {
       console.log('Connected to the server')

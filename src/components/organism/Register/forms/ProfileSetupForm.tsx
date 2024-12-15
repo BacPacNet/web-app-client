@@ -26,7 +26,7 @@ const ProfileSetupForm = () => {
         <Title>Profile Setup</Title>
         <SupportingText>Enter your profile information for networking</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
         <div className="w-full flex flex-col">
           <InputBox
             placeholder="First Name"

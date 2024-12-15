@@ -53,7 +53,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
       </div>
-      <div className="w-10/12 flex flex-col gap-2 ">
+      <div className="w-10/12 flex flex-col gap-3 ">
         <div className="w-full flex flex-col">
           <InputBox
             placeholder="Email Address"
@@ -88,7 +88,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
             </InputWarningText>
           )}
         </div>
-        <div className="relative w-full flex flex-col gap-2">
+        <div className="relative w-full flex flex-col">
           <InputBox
             placeholder="Create password"
             type={showPassword ? 'text' : 'password'}
@@ -110,7 +110,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
             {/* <PasswordToggleIcon showPassword={showPassword} onClick={(value: any) => setShowPassword(value)} /> */}
           </div>
           {password?.length ? (
-            <div className="flex w-full gap-1 ">
+            <div className="flex w-full gap-1 py-2 ">
               {[1, 2, 3, 4].map((item) => (
                 <span
                   key={item}
@@ -129,7 +129,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
             registerFormErrors.password && <InputWarningText>Please enter your password!</InputWarningText>
           )}
         </div>
-        <div className="relative w-full flex flex-col gap-2">
+        <div className="relative w-full flex flex-col">
           <InputBox
             placeholder="Confirm password"
             type={showConfirmPassword ? 'text' : 'password'}
@@ -147,25 +147,26 @@ const AccountCreationForm = ({ isPending }: Props) => {
             <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password'}</InputWarningText>
           )}
 
-          <label className="text-neutral-500 text-xs">must be at least 8 characters</label>
+          <label className="text-neutral-500 text-xs py-1">must be at least 8 characters</label>
         </div>
       </div>
-      <div className="w-10/12 flex flex-col gap-2">
+      <div className="w-10/12 flex flex-col gap-4">
         <Button disabled={isPending} variant="primary">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
         <Button type="button" variant="border" className="flex items-center justify-center gap-2 h-10">
           <Image src={googleIcon} alt="go" /> Sign up with Google
         </Button>
-      </div>
-      <div className="mt-4 mx-auto">
-        <p>
-          Already have an account?{' '}
-          <span onClick={() => router.push('/login')} className="text-primary-500 cursor-pointer">
-            {' '}
-            Log in
-          </span>
-        </p>
+
+        <div className="mx-auto">
+          <p>
+            Already have an account?{' '}
+            <span onClick={() => router.push('/login')} className="text-primary-500 cursor-pointer">
+              {' '}
+              Log in
+            </span>
+          </p>
+        </div>
       </div>
     </div>
   )
