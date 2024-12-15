@@ -3,9 +3,6 @@ import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import { MdOutlineGifBox } from 'react-icons/md'
-import { VscSettings } from 'react-icons/vsc'
-import avatar from '@assets/avatar.svg'
-import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { PostCommentData, PostType } from '@/types/constants'
@@ -23,9 +20,21 @@ type props = {
   commentId?: string
   commenterProfileId: string
   level: string
+  setNewPost: (value: boolean) => void
 }
 
-function PostCommentInput({ postID, type, isSinglePost, adminID, isReply, commentId, commenterProfileId, level, isNested = false }: props) {
+function PostCommentInput({
+  postID,
+  type,
+  isSinglePost,
+  adminID,
+  isReply,
+  commentId,
+  commenterProfileId,
+  level,
+  isNested = false,
+  setNewPost,
+}: props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
@@ -155,6 +164,7 @@ function PostCommentInput({ postID, type, isSinglePost, adminID, isReply, commen
     e.preventDefault()
     // You can do something with the value here, like an API call
     handlePostComment(valueRef.current)
+    setNewPost(false)
   }
   return (
     <div className="rounded-2xl bg-white   px-1  w-full">

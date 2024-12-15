@@ -6,7 +6,6 @@ import { RxCross2 } from 'react-icons/rx'
 import Tooltip from '@/components/atoms/Tooltip'
 import SubText from '@/components/atoms/SubText'
 import { truncateString } from '@/lib/utils'
-import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
 import { PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
 import { HiCubeTransparent } from 'react-icons/hi'
@@ -14,6 +13,7 @@ import { TbLogout } from 'react-icons/tb'
 import { useRouter } from 'next/navigation'
 import useCookie from '@/hooks/useCookie'
 import { useLogout } from '@/hooks/useLogOut'
+import ProfilePicture from '@/components/atoms/RenderProfileDP'
 
 interface Props {
   closeLeftNavbar: () => void
@@ -40,28 +40,9 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
     closeLeftNavbar()
   }
 
-  const renderProfile = () => {
-    if (!userProfileData?.profile_dp) {
-      return null
-    }
-    if (Object?.keys(userProfileData)?.length === 0) {
-      return <UserListItemSkeleton />
-    }
-    return (
-      <Image
-        width={50}
-        height={50}
-        objectFit="cover"
-        className="w-[50px] h-[50px] rounded-full flex-none"
-        src={userProfileData.profile_dp?.imageUrl || avatar}
-        alt="profile.png"
-      />
-    )
-  }
-
   return (
     <div>
-      <div className="lg:hidden flex gap-2 items-center" onClick={toggleMenu}>
+      <div className="lg:hidden flex gap-2 items-center cursor-pointer" onClick={toggleMenu}>
         <Image
           width={40}
           height={40}
@@ -83,7 +64,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
           <RxCross2 size={32} className="text-primary" />
         </button>
         <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
-          {renderProfile()}
+          <ProfilePicture userProfileData={userProfileData} />
           <div>
             <p className="text-sm text-neutral-700">
               {userData?.firstName} {userData?.lastName}
