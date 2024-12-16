@@ -42,7 +42,7 @@ const GroupSelectors = ({
           {data?.title || data?.communityGroupName}
         </label>
       </div>
-      {data?.adminUserId === userId && (
+      {/* {data?.adminUserId === userId && (
         <button
           onClick={() => {
             handleAssignUsersModal(), SetcurrClickedID({ id: data?._id, group: true })
@@ -51,7 +51,7 @@ const GroupSelectors = ({
         >
           <IoMdSettings />
         </button>
-      )}
+      )} */}
     </div>
   )
 }

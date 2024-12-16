@@ -188,9 +188,8 @@ export const useUpdateIsRead = () => {
     mutationFn: (data: { id: string }) => UpdateIsRead(data, cookieValue),
 
     onSuccess: (response: any) => {
-      console.log('rrrr', response)
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
-      router.push(`/profile/${response.notification.sender_id}}`)
+      router.push(`/profile/${response.notification.sender_id}`)
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

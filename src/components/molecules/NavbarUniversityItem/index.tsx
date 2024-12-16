@@ -104,8 +104,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
   }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
 
-  console.log('myGroup', subscribedCommunitiesMyGroup)
-
   useEffect(() => {
     if (communityId && subscribedCommunities) {
       setCommunity(subscribedCommunities.find((community) => community._id === communityId))
