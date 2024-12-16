@@ -11,9 +11,6 @@ export const useLogout = () => {
     deleteCookie()
     deleteRefreshCookie()
     useUniStore.getState().reset()
-
-    localStorage.removeItem('store')
-
     router.push('/login')
   }
 

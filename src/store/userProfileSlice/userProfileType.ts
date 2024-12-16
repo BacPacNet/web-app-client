@@ -1,3 +1,5 @@
+import { EmailType } from '@/models/auth'
+
 interface emailType {
   UniversityName: string
   UniversityEmail: string
@@ -11,7 +13,7 @@ interface following {
 export interface userProfileType {
   users_id: string | null
   profile_dp?: { imageUrl: string; publicId: string }
-  email: emailType[]
+  email: EmailType[]
   cover_dp?: { imageUrl: string; publicId: string }
   bio?: string
   phone_number?: string

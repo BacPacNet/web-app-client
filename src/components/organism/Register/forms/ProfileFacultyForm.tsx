@@ -100,7 +100,7 @@ const ProfileFacultyForm = () => {
           {ProfileFormErrors.department && <InputWarningText>{ProfileFormErrors?.department?.message?.toString()}</InputWarningText>}
         </div>
       </div>
-      <div className="w-10/12 xl:wGender-9/12 flex flex-col gap-2">
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
       </div>
 

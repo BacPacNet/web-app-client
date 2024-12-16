@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools, persist, createJSONStorage } from 'zustand/middleware'
 import { createUserSlice } from './userSlice/userSlice'
 import { createUserProfileSlice } from './userProfileSlice/userProfileSlice'
 import { createSocketSlice } from './socketSlice/socketSlice'
@@ -14,21 +14,12 @@ if (typeof document !== 'undefined') {
 
 export const useUniStore = create<storeType>()(
   devtools(
-    // persist(
-    //   (...a) => ({
-    //     ...createUserSlice(...a),
-    //     ...createUserProfileSlice(...a),
-    //     ...createSocketSlice(...a),
-    //   }),
     persist(
       (set, get, api) => ({
         ...createUserSlice(set, get, api),
         ...createUserProfileSlice(set, get, api),
         ...createSocketSlice(set, get, api),
-        reset: () => {
-          set({}, true)
-          api.persist.clearStorage()
-        },
+        reset: () => set({ userData: null, userProfileData: null }),
       }),
       {
         name: 'store',
@@ -36,9 +27,8 @@ export const useUniStore = create<storeType>()(
           ...state,
           socket: undefined, // Exclude socket from persisted state
         }),
+        storage: createJSONStorage(() => localStorage),
         skipHydration: !finalCookie,
-        // partialize: (state) => ({ products: state.products,userName:state.userName }),
-        // skipHydration: true
       }
     )
   )
