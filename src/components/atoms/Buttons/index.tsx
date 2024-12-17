@@ -6,7 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
 }
 
-const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, ...props }) => {
+const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, disabled, ...props }) => {
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
@@ -26,7 +26,11 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
   const variantClass = variantClasses[variant]
   const variantSize = variantSizes[size]
   return (
-    <button className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 ${className}`} {...props}>
+    <button
+      disabled={disabled}
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 ${className}`}
+      {...props}
+    >
       {children}
     </button>
   )

@@ -41,6 +41,12 @@ body {
   overflow-y: hidden;
 }
 
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @layer components {
   .btn {
     @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;

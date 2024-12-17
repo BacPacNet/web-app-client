@@ -38,8 +38,8 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
       >
         <div className={` flex items-center gap-3 py-2 px-4 cursor-pointer`}>
           <Image
-            width={40}
-            height={40}
+            width={30}
+            height={30}
             className="w-[40px] h-[40px] object-cover rounded-full"
             src={community.communityLogoUrl.imageUrl || avatar}
             alt={community.name}
@@ -47,9 +47,7 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
 
           <div className="flex items-center gap-2">
             <p className="text-xs  xl:w-max ">{community.name} </p>
-            <p>
-              <FaCircleCheck color="#6647ff" size={16} />
-            </p>
+            <FaCircleCheck color="#6647ff" size={16} />
           </div>
         </div>
       </div>
