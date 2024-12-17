@@ -174,43 +174,10 @@ const EditProfileModal = () => {
 
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
     let profileImageData = user?.profile_dp
-    let dataToPush
     if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
 
-    //if (userType === 'applicant') {
-    //  const { major, degree, study_year, occupation, affiliation, university_name, ...rest } = data
-
-    //  dataToPush = {
-    //    major: '',
-    //    degree: '',
-    //    study_year: '',
-    //    occupation: '',
-    //    affiliation: '',
-    //    university_name: '',
-    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-    //  }
-    //} else if (userType === 'faculty') {
-    //  const { major, degree, study_year, ...rest } = data
-
-    //  dataToPush = {
-    //    ...rest,
-    //    major: '',
-    //    degree: '',
-    //    study_year: '',
-    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-    //  }
-    //} else {
-    //  const { occupation, affiliation, ...rest } = data
-
-    //  dataToPush = {
-    //    ...rest,
-    //    occupation: '',
-    //    affiliation: '',
-    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-    //  }
-    //}
     mutateEditProfile({ ...data, profile_dp: profileImageData })
   }
 
