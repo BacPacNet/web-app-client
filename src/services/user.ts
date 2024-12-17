@@ -30,18 +30,11 @@ const deActivateUserAccount = async (data: any, token: string) => {
 
 export function useGetUserData(userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
-  const state = useQuery({
+  return useQuery({
     queryKey: ['getRefetchUserData', userId],
     queryFn: () => getUserData(cookieValue, userId),
     enabled: !!cookieValue && !!userId,
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
 }
 
 export async function getAllUsersForConnections(token: string, page: number, limit: number, name: string): Promise<ProfileConnection> {

@@ -12,10 +12,13 @@ import { useEffect, useState } from 'react'
 import { replaceImage } from '@/services/uploadImage'
 import { currYear, degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
+import { useGetUserData } from '@/services/user'
+import { profile } from 'console'
 
 export interface editProfileInputs {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
+  profilePicture: string | null
   users_id: string
   profile_dp?: string
   email?: string
@@ -39,8 +42,11 @@ export interface editProfileInputs {
 const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userData, userProfileData } = useUniStore()
+  const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
+
+  const [user, setUser] = useState<any>(null)
   const [userType, setUserType] = useState('student')
-  const [profileImage, setProfileImage] = useState<File | null | string>(userProfileData?.profile_dp?.imageUrl as string)
+  const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
   const {
     register,
     handleSubmit,
@@ -49,26 +55,55 @@ const EditProfileModal = () => {
     watch,
     setError,
     setValue,
-    formState: { errors },
-  } = useForm<editProfileInputs>({
-    defaultValues: {
-      first_name: userData?.firstName,
-      last_name: userData?.lastName,
-      bio: userProfileData?.bio,
-      phone_number: userProfileData?.phone_number,
-      gender: userData?.gender,
-      dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
-      country: userProfileData?.country,
-      city: userProfileData?.city,
-      university_name: userProfileData?.university_name,
-      study_year: userProfileData?.study_year,
-      degree: userProfileData?.degree,
-      major: userProfileData?.major,
-      affiliation: userProfileData?.affiliation,
-      occupation: userProfileData?.occupation,
-      totalFilled: userProfileData?.totalFilled,
-    },
-  })
+    formState: { errors, isDirty },
+  } = useForm<editProfileInputs>()
+  //    {
+  //    defaultValues: {
+  //      first_name: userData?.firstName,
+  //      last_name: userData?.lastName,
+  //      bio: userProfileData?.bio,
+  //      phone_number: userProfileData?.phone_number,
+  //      gender: userData?.gender,
+  //      dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
+  //      country: userProfileData?.country,
+  //      city: userProfileData?.city,
+  //      university_name: userProfileData?.university_name,
+  //      study_year: userProfileData?.study_year,
+  //      degree: userProfileData?.degree,
+  //      major: userProfileData?.major,
+  //      affiliation: userProfileData?.affiliation,
+  //      occupation: userProfileData?.occupation,
+  //      totalFilled: userProfileData?.totalFilled,
+  //    },
+  //  }
+
+  const profilePicture = watch('profilePicture')
+
+  useEffect(() => {
+    if (userProfile) {
+      const { firstName, lastName, gender, profile, email } = userProfile || {}
+      const userDefault = {
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: email || '',
+        gender: gender || '',
+        affiliation: profile.affiliation || '',
+        bio: profile.bio || '',
+        city: profile.city || '',
+        country: profile.country || '',
+        degree: profile.degree || '',
+        dob: profile.dob || '',
+        major: profile.major || '',
+        occupation: profile.occupation || '',
+        phone_number: profile.phone_number || '',
+        study_year: profile.study_year || '',
+        profilePicture: null,
+      }
+      reset(userDefault)
+      setUser({ ...userDefault, profile_dp: profile.profile_dp })
+      setPreviewProfileImage(profile.profile_dp.imageUrl)
+    }
+  }, [userProfile, reset])
 
   const [cityOptions, setCityOptions] = useState<string[]>([])
   const [isCityAvailable, setIsCityAvailable] = useState(true)
@@ -103,19 +138,11 @@ const EditProfileModal = () => {
 
   useEffect(() => {
     setCurrMajor(degreeAndMajors[currDegree] || [])
-    if (!degreeAndMajors[currDegree]?.includes(currMa)) {
-      setValue('major', '')
-    }
   }, [currDegree, setValue])
 
   useEffect(() => {
     const cities = country_list[currCountry] || []
-
     setCityOptions(cities.length > 0 ? cities : ['Not available'])
-
-    if (!country_list[currCountry].includes(currCity)) {
-      setValue('city', '')
-    }
   }, [currCountry, setValue])
 
   const validateBio = (value: string | undefined): string | boolean => {
@@ -127,63 +154,66 @@ const EditProfileModal = () => {
   }
 
   const handleImageUpload = async () => {
-    const files = profileImage
+    const files = profilePicture
     if (files) {
       const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
-
-      const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
-
-      return dataToPush
+      return { imageUrl: data?.imageUrl, publicId: data?.publicId }
     } else {
       console.error('No file selected.')
     }
   }
 
-  const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
-    let profileImageData
-    let dataToPush
+  // Handle image preview
+  const handleImagePreview = (e: any) => {
+    const file = e.target.files[0]
+    if (file) {
+      setPreviewProfileImage(URL.createObjectURL(file))
+      setValue('profilePicture', file)
+    }
+  }
 
-    if (profileImage) {
+  const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
+    let profileImageData = user?.profile_dp
+    let dataToPush
+    if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
 
-    if (userType === 'applicant') {
-      const { major, degree, study_year, occupation, affiliation, university_name, ...rest } = data
+    //if (userType === 'applicant') {
+    //  const { major, degree, study_year, occupation, affiliation, university_name, ...rest } = data
 
-      dataToPush = {
-        ...rest,
-        major: '',
-        degree: '',
-        study_year: '',
-        occupation: '',
-        affiliation: '',
-        university_name: '',
-        ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-      }
-    } else if (userType === 'faculty') {
-      const { major, degree, study_year, ...rest } = data
+    //  dataToPush = {
+    //    major: '',
+    //    degree: '',
+    //    study_year: '',
+    //    occupation: '',
+    //    affiliation: '',
+    //    university_name: '',
+    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
+    //  }
+    //} else if (userType === 'faculty') {
+    //  const { major, degree, study_year, ...rest } = data
 
-      dataToPush = {
-        ...rest,
-        major: '',
-        degree: '',
-        study_year: '',
-        ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-      }
-    } else {
-      const { occupation, affiliation, ...rest } = data
+    //  dataToPush = {
+    //    ...rest,
+    //    major: '',
+    //    degree: '',
+    //    study_year: '',
+    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
+    //  }
+    //} else {
+    //  const { occupation, affiliation, ...rest } = data
 
-      dataToPush = {
-        ...rest,
-        occupation: '',
-        affiliation: '',
-        ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
-      }
-    }
-    // return console.log('submit', dataToPush)
-    console.log(dataToPush)
-    mutateEditProfile(dataToPush)
+    //  dataToPush = {
+    //    ...rest,
+    //    occupation: '',
+    //    affiliation: '',
+    //    ...(profileImageData && { profile_dp: profileImageData.profile_dp }),
+    //  }
+    //}
+    mutateEditProfile({ ...data, profile_dp: profileImageData })
   }
+
   return (
     <div className=" flex flex-col justify-center rounded-xl  font-poppins w-full">
       <h1 className="text-md font-bold text-neutral-700">Edit Profile</h1>
@@ -193,15 +223,21 @@ const EditProfileModal = () => {
       </p>
       <form className="flex flex-col font-medium text-sm gap-4">
         <div className="flex items-center gap-4 mt-4">
-          {profileImage ? (
+          {previewProfileImage ? (
             <div className="relative w-20 h-20 rounded-full border border-neutral-200 group">
               <img
                 className="rounded-full object-cover w-20 h-20"
-                src={typeof profileImage === 'string' ? profileImage : URL.createObjectURL(profileImage)}
+                src={typeof previewProfileImage === 'string' ? previewProfileImage : URL.createObjectURL(previewProfileImage)}
                 alt="aa"
               />
               <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
-                <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e: any) => setProfileImage(e.target.files[0])} />
+                <input
+                  {...register('profilePicture')}
+                  style={{ display: 'none' }}
+                  type="file"
+                  id="changeProfileImage"
+                  onChange={handleImagePreview}
+                />
                 <label
                   htmlFor="changeProfileImage"
                   className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800"
@@ -212,7 +248,7 @@ const EditProfileModal = () => {
             </div>
           ) : (
             <label htmlFor="changeProfileImage" className="w-20 h-20 rounded-full border border-neutral-200 flex items-center justify-center">
-              <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e: any) => setProfileImage(e.target.files[0])} />
+              <input style={{ display: 'none' }} {...register('profilePicture')} type="file" id="changeProfileImage" onChange={handleImagePreview} />
               <TiCameraOutline className="text-primary text-lg" />
             </label>
           )}
@@ -225,22 +261,22 @@ const EditProfileModal = () => {
             First Name <span className="text-destructive-600">*</span>
           </label>
           <input
-            {...register('first_name', { required: true })}
+            {...register('firstName', { required: true })}
             placeholder="Enter First Name"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
           />
-          {errors.first_name && <span className="text-red-500 font-normal">Please enter first name</span>}
+          {errors.firstName && <span className="text-red-500 font-normal">Please enter first name</span>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="lastname" className="py-1 text-sm text-neutral-700">
             Last Name <span className="text-destructive-600">*</span>
           </label>
           <input
-            {...register('last_name', { required: true })}
+            {...register('lastName', { required: true })}
             placeholder="Enter Last Name"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
           />
-          {errors.last_name && <span className="text-red-500 font-normal">Please enter your date of birth</span>}
+          {errors.lastName && <span className="text-red-500 font-normal">Please enter your date of birth</span>}
         </div>
         <div className="flex flex-col">
           <label htmlFor="dob" className="py-1 text-sm text-neutral-700">
@@ -339,7 +375,7 @@ const EditProfileModal = () => {
         {/* contact information start */}
         <div>
           <div className="flex flex-col gap-4">
-            <p className="text-sm font-bold py-2 ">Contact Information</p>
+            <p className="text-sm font-bold ">Contact Information</p>
             <div className="flex flex-col gap-2">
               <label htmlFor="phone_number" className="py-1 ">
                 Email
@@ -348,7 +384,7 @@ const EditProfileModal = () => {
                 {...register('email')}
                 placeholder="Enter an email you would like to show others"
                 type="email"
-                className=" text-base border pl-3 py-2 rounded-lg border-gray-light font-normal"
+                className="border pl-3 py-2 rounded-lg border-gray-light text-2xs"
               />
               {errors.phone_number && <span className="text-red-500 font-normal">Please enter your phone number!</span>}
             </div>
@@ -360,7 +396,7 @@ const EditProfileModal = () => {
                 {...register('phone_number')}
                 placeholder=""
                 type="number"
-                className=" text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
+                className=" text-xs border pl-3 py-1 rounded-lg border-gray-light font-normal"
               />
               {errors.phone_number && <span className="text-red-500 font-normal">Please enter your phone number!</span>}
             </div>
@@ -391,7 +427,7 @@ const EditProfileModal = () => {
 
           {userType === 'student' && (
             <>
-              <div className="flex flex-col">
+              <div className="flex flex-col py-2">
                 <label htmlFor="study_year" className="py-1">
                   Year <span className="text-destructive-600">*</span>
                 </label>
@@ -414,7 +450,7 @@ const EditProfileModal = () => {
                   {errors.study_year && <InputWarningText>{errors?.study_year?.message?.toString()}</InputWarningText>}
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col py-2">
                 <label htmlFor="degree" className="py-1">
                   Degree <span className="text-destructive-600">*</span>
                 </label>
@@ -438,7 +474,7 @@ const EditProfileModal = () => {
                   {errors.degree && <InputWarningText>{errors?.degree?.message?.toString()}</InputWarningText>}
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col py-2">
                 <label htmlFor="major" className="py-1">
                   Field of Study <span className="text-destructive-600">*</span>
                 </label>
@@ -498,7 +534,7 @@ const EditProfileModal = () => {
                 <label htmlFor="occupation" className="py-1">
                   Occupation <span className="text-destructive-600">*</span>
                 </label>
-                <div className="w-full flex flex-col relative">
+                <div className="w-full flex flex-col py-2 relative">
                   <Controller
                     name="occupation"
                     control={control}
@@ -518,7 +554,7 @@ const EditProfileModal = () => {
                   {errors.occupation && <InputWarningText>{errors?.occupation?.message?.toString()}</InputWarningText>}
                 </div>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col py-2">
                 <label htmlFor="affiliation" className="py-1">
                   Affiliation <span className="text-destructive-600">*</span>
                 </label>
@@ -547,7 +583,7 @@ const EditProfileModal = () => {
           )}
         </div>
 
-        <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)} disabled={isPending}>
+        <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)} disabled={!isDirty}>
           Update Profile
         </Button>
         <Button variant="shade" onClick={() => reset()}>

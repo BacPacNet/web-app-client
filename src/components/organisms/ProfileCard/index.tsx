@@ -133,13 +133,16 @@ export function UserProfileCard({
               {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}
             </div>
             {isSelfProfile ? (
-              <div className="flex gap-2 items-center text-xs lg:text-sm text-primary-500">
-                <button onClick={() => handleOpenModal('EditProfileModal')}>Edit Profile</button>
+              <div
+                onClick={() => handleOpenModal('EditProfileModal')}
+                className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 cursor-pointer"
+              >
+                <button>Edit Profile</button>
                 <HiPencilAlt size={16} />
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <div className=" text-primary-500 text-md bg-surface-primary-50 rounded-full flex p-1">
+                <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
                   <Popover>
                     <PopoverTrigger>
                       <HiDotsHorizontal className="text-primary" />
@@ -174,7 +177,7 @@ export function UserProfileCard({
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
           <div className="flex gap-4 lg:gap-8 items-center font-poppins py-2 flex-wrap">
             <div className="flex items-center ">
-              <Image src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo" />
+              <Image src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo h-[30px]" />
               <p className="text-neutral-500 ml-3 font-semibold text-xs lg:text-sm">{university}</p>
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>
@@ -194,13 +197,13 @@ export function UserProfileCard({
           <>
             {occupation && (
               <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-md" />
+                <FaGraduationCap className="text-sm" />
                 <span className="text-xs">{`${occupation}`}</span>
               </div>
             )}
             {affiliation && (
               <div className="flex items-center space-x-2">
-                <MdSubject className="text-md" />
+                <MdSubject className="text-sm" />
                 <span className="text-xs">{`${affiliation}`}</span>
               </div>
             )}
@@ -211,19 +214,19 @@ export function UserProfileCard({
           <>
             {degree && (
               <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-md" />
+                <FaGraduationCap className="text-sm" />
                 <span className="text-xs">{degree}</span>
               </div>
             )}
             {major && (
               <div className="flex items-center space-x-2">
-                <MdSubject className="text-md" />
+                <MdSubject className="text-sm" />
                 <span className="text-xs">{major}</span>
               </div>
             )}
             {year && (
               <div className="flex items-center space-x-2">
-                <FaCalendarCheck className="text-md" />
+                <FaCalendarCheck className="text-sm" />
                 <span className="text-xs">{`${year} Year`}</span>
               </div>
             )}
@@ -231,31 +234,33 @@ export function UserProfileCard({
         )}
         {email && (
           <div className="flex items-center space-x-2">
-            <FaEnvelope className="text-md flex-none" />
-            <span className="text-xs">{email}</span>
+            <FaEnvelope className="text-sm flex-none" />
+            {/*<Tooltip text={email}>*/}
+            <span className="text-xs truncate-text">{email}</span>
+            {/*</Tooltip>*/}
           </div>
         )}
         {phone && (
           <div className="flex items-center space-x-2">
-            <FaPhone className="text-md flex-none" />
+            <FaPhone className="text-sm flex-none" />
             <span className="text-xs">{phone}</span>
           </div>
         )}
         {location && (
           <div className="flex items-center space-x-2">
-            <FaMapMarkerAlt className="text-md flex-none" />
+            <FaMapMarkerAlt className="text-sm flex-none" />
             <span className="text-xs">{location}</span>
           </div>
         )}
         {birthday && (
           <div className="flex items-center space-x-2">
-            <FaBirthdayCake className="text-md flex-none" />
+            <FaBirthdayCake className="text-sm flex-none" />
             <span className="text-xs">{format(new Date(birthday), 'dd MMM yyyy')}</span>
           </div>
         )}
         {country && (
           <div className="flex items-center space-x-2">
-            <ImEarth className="text-md flex-none" />
+            <ImEarth className="text-sm flex-none" />
             <span className="text-xs">{country}</span>
           </div>
         )}
