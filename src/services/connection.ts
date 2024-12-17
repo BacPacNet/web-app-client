@@ -18,12 +18,16 @@ export async function getUsersWithProfile(token: string, Name: string) {
   const response: userItemsProps = await client(`/users?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
-export async function getUserFollow(token: string, Name: string) {
-  const response: FollowingItemPropss = await client(`/userprofile/following?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getUserFollow(token: string, Name: string, userId: string) {
+  const response: FollowingItemPropss = await client(`/userprofile/following?name=${Name}&userId=${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
-export async function getUserFollowers(token: string, Name: string) {
-  const response: FollowingItemPropss = await client(`/userprofile/followers?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getUserFollowers(token: string, Name: string, userId: string) {
+  const response: FollowingItemPropss = await client(`/userprofile/followers?name=${Name}&userId=${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -70,31 +74,24 @@ export const useToggleFollow = (type: string) => {
   })
 }
 
-export function useGetUserFollow(Name: string, content: boolean) {
+export function useGetUserFollow(Name: string, content: boolean, userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(Name, 1000)
-  const state = useQuery({
+  return useQuery({
     queryKey: ['getUserFollow', debouncedSearchTerm],
-    queryFn: () => getUserFollow(cookieValue, debouncedSearchTerm),
-    enabled: !!cookieValue && content,
-    staleTime: 5000,
+    queryFn: () => getUserFollow(cookieValue, debouncedSearchTerm, userId),
+    enabled: !!cookieValue && content && !!userId,
+    staleTime: 0,
   })
-
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
-
-  return { ...state, error: errorMessage }
 }
 
-export function useGetUserFollowers(Name: string, content: boolean) {
+export function useGetUserFollowers(Name: string, content: boolean, userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(Name, 1000)
   const state = useQuery({
     queryKey: ['getUserFollowers', debouncedSearchTerm],
-    queryFn: () => getUserFollowers(cookieValue, debouncedSearchTerm),
-    enabled: !!cookieValue && content,
+    queryFn: () => getUserFollowers(cookieValue, debouncedSearchTerm, userId),
+    enabled: !!cookieValue && content && !!userId,
   })
 
   let errorMessage = null

@@ -1,6 +1,7 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import UserListItem from '@/components/Timeline/UserListItem'
 import { useGetUserFollow } from '@/services/connection'
+import { useUniStore } from '@/store/store'
 import React, { useState } from 'react'
 import { GoSearch } from 'react-icons/go'
 
@@ -10,7 +11,8 @@ interface Props {
 
 export default function Following({ userFollowingIDs }: Props) {
   const [name, setName] = useState('')
-  const { data: userFollowing, isFetching: isFollowingLoading } = useGetUserFollow(name, true)
+  const { userProfileData } = useUniStore()
+  const { data: userFollowing, isFetching: isFollowingLoading } = useGetUserFollow(name, true, userProfileData?.users_id || '')
 
   const renderUserFollowing = () => {
     if (isFollowingLoading) {
@@ -38,6 +40,7 @@ export default function Following({ userFollowingIDs }: Props) {
             imageUrl={userProfile.profile_dp?.imageUrl || ''}
             userFollowingIDs={userFollowingIDs || []}
             type={'Find People'}
+            isSelfProfile={userProfileData?.users_id === userProfile?.users_id?.id}
           />
         ))}
       </>
@@ -56,7 +59,7 @@ export default function Following({ userFollowingIDs }: Props) {
           placeholder="Search People"
         />
       </div>
-      <div className="overflow-y-auto h-[inherit]">{renderUserFollowing()}</div>
+      <div className="overflow-y-auto h-[85%]">{renderUserFollowing()}</div>
     </>
   )
 }

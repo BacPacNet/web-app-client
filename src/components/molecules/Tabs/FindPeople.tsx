@@ -66,6 +66,7 @@ export default function FindPeople() {
             imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
             userFollowingIDs={userFollowingIDs || []}
             type={'Find People'}
+            isSelfProfile={userProfileData?.users_id === item?._id}
           />
         ))}
       </>
@@ -84,7 +85,7 @@ export default function FindPeople() {
           placeholder="Search People"
         />
       </div>
-      <div ref={ref} className="overflow-y-auto h-[inherit]">
+      <div ref={ref} className="overflow-y-auto h-[85%]">
         {renderUserProfileList()}
       </div>
     </>

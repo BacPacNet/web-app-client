@@ -11,7 +11,8 @@ interface Props {
 
 export default function Followers({ userFollowingIDs }: Props) {
   const [name, setName] = useState('')
-  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers(name, true)
+  const { userProfileData } = useUniStore()
+  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers(name, true, userProfileData?.users_id || '')
 
   const renderUserFollowing = () => {
     if (isFollowersLoading) {
@@ -39,6 +40,7 @@ export default function Followers({ userFollowingIDs }: Props) {
             imageUrl={userProfile.profile_dp?.imageUrl || ''}
             userFollowingIDs={userFollowingIDs || []}
             type={'Find People'}
+            isSelfProfile={userProfileData?.users_id === userProfile?.users_id?.id}
           />
         ))}
       </>
@@ -57,7 +59,7 @@ export default function Followers({ userFollowingIDs }: Props) {
           placeholder="Search People"
         />
       </div>
-      <div className="overflow-y-auto h-[inherit]">{renderUserFollowing()}</div>
+      <div className="overflow-y-auto h-[85%]">{renderUserFollowing()}</div>
     </>
   )
 }

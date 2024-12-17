@@ -16,7 +16,6 @@ export default function Profile({ params }: { params: { id: string } }) {
   const [modalContentType, setModalContentType] = useState<ModalContentType>()
   const isSelfProfile = useCheckSelfProfile(userId)
   const containerRef = useRef<HTMLDivElement>(null)
-
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
 
   const handleShowModal = (modalType: string) => {
@@ -25,7 +24,7 @@ export default function Profile({ params }: { params: { id: string } }) {
         case 'EditProfileModal':
           return openModal(<EditProfileModal />)
         case 'ConnectionsModal':
-          return openModal(<ConnectionsModal />)
+          return openModal(<ConnectionsModal userId={userId} />)
         default:
           return null
       }
