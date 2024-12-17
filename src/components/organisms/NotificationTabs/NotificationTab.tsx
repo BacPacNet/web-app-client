@@ -4,32 +4,34 @@ import StartedFollowingYouNotification from '@/components/Notifiaction/StartedFo
 import ReactionToPostNotification from '@/components/Notifiaction/ReactionToPostNotification'
 import React, { useEffect, useRef } from 'react'
 import CommunityAndCommunityGroupJoinNotification from '@/components/Notifiaction/CommunityAndCommunityGroupJoinNotification'
-import { useGetNotification, useGetUserNotification, useUpdateIsSeenCommunityGroupNotification } from '@/services/notification'
+import { useGetUserNotification } from '@/services/notification'
+import ReactionToCommunityPostNotification from '@/components/Notifiaction/ReactionToCommunityPostNotification'
+import UserPostCommentNotification from '@/components/Notifiaction/UserPostCommentNotification'
+import CommunityPostCommentNotification from '@/components/Notifiaction/CommunityPostCommentNotification'
+
+export const notificationRoleAccess = {
+  GROUP_INVITE: 'GROUP_INVITE',
+  FOLLOW: 'FOLLOW',
+  COMMENT: 'COMMENT',
+  COMMUNITY_COMMENT: 'COMMUNITY_COMMENT',
+  REACTED_TO_POST: 'REACTED_TO_POST',
+  REACTED_TO_COMMUNITY_POST: 'REACTED_TO_COMMUNITY_POST',
+}
 
 const NotificationTab = () => {
   const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(5, true)
-  const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
 
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // const handleIsSeenGroup = (id: string) => {
-  //   const dataToPush = {
-  //     id: id,
-  //   }
-  //   updateIsSeen(dataToPush)
-  // }
-
   useEffect(() => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        console.log('yest')
 
         if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !isFetchingNextPage) {
           fetchNextPage()
-          console.log('next')
         }
       }
     }
@@ -42,26 +44,28 @@ const NotificationTab = () => {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  console.log('noti', notifications)
-
   return (
-    // <div className="flex flex-col  py-4 px-0  max-md:px-4 gap-10 ">
-    <div ref={containerRef} className=" overflow-y-scroll custom-scrollbar flex flex-col  py-4 px-0  max-md:px-4 gap-10   h-[550px]">
+    <div ref={containerRef} className=" p-4 overflow-y-scroll custom-scrollbar flex flex-col    gap-10   h-[600px]">
       {notifications?.map((item) => {
-        if (item.type == 'GROUP_INVITE') {
+        if (item.type == notificationRoleAccess.GROUP_INVITE) {
           return <CommunityAndCommunityGroupJoinNotification key={item?._id} data={item} />
         }
-        if (item.type == 'FOLLOW') {
+        if (item.type == notificationRoleAccess.FOLLOW) {
           return <StartedFollowingYouNotification key={item?._id} data={item} />
         }
+        if (item.type == notificationRoleAccess.REACTED_TO_POST) {
+          return <ReactionToPostNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
+          return <ReactionToCommunityPostNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.COMMENT) {
+          return <UserPostCommentNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.COMMUNITY_COMMENT) {
+          return <CommunityPostCommentNotification key={item?._id} data={item} />
+        }
       })}
-      {/* <StartedFollowingYouNotification />
-      <ReactionToPostNotification />
-      <CommunityAndCommunityGroupJoinNotification />
-      <CommunityAndCommunityGroupJoinNotification />
-      <CommunityAndCommunityGroupJoinNotification /> */}
-
-      {/* </div> */}
     </div>
   )
 }

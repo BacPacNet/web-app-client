@@ -5,6 +5,7 @@ import useCookie from '@/hooks/useCookie'
 import { useUniStore } from '@/store/store'
 import { MessageNotification } from '@/components/molecules/MessageNotification'
 import { useRouter } from 'next/navigation'
+import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
 
 type Notification = {
   _id: string
@@ -169,10 +170,26 @@ export const useJoinCommunityGroup = () => {
 export const useUpdateIsSeenCommunityGroupNotification = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const router = useRouter()
   return useMutation({
     mutationFn: (data: { id: string }) => UpdateCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
+      if (response.notification.type == notificationRoleAccess.REACTED_TO_POST) {
+        router.push(`/post/${response.notification.userPostId}?isType=Timeline`)
+      }
+      if (response.notification.type == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
+        router.push(`/post/${response.notification.communityPostId}?isType=Community`)
+      }
+      if (response.notification.type == notificationRoleAccess.COMMENT) {
+        router.push(`/post/${response.notification.userPostId}?isType=Timeline`)
+      }
+      if (response.notification.type == notificationRoleAccess.COMMUNITY_COMMENT) {
+        router.push(`/post/${response.notification.communityPostId}?isType=Community`)
+      }
+      if (response.notification.type == notificationRoleAccess.FOLLOW) {
+        router.push(`/profile/${response.notification.sender_id}`)
+      }
       queryClient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (res: any) => {
@@ -180,7 +197,7 @@ export const useUpdateIsSeenCommunityGroupNotification = () => {
     },
   })
 }
-export const useUpdateIsRead = () => {
+export const useUpdateIsRead = (type: string = '') => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   const router = useRouter()
@@ -188,8 +205,24 @@ export const useUpdateIsRead = () => {
     mutationFn: (data: { id: string }) => UpdateIsRead(data, cookieValue),
 
     onSuccess: (response: any) => {
+      if (type == notificationRoleAccess.REACTED_TO_POST) {
+        router.push(`/post/${response.notification.userPostId}?isType=Timeline`)
+      }
+      if (type == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
+        router.push(`/post/${response.notification.communityPostId}?isType=Community`)
+      }
+      if (type == notificationRoleAccess.COMMENT) {
+        router.push(`/post/${response.notification.userPostId}?isType=Timeline`)
+      }
+      if (type == notificationRoleAccess.COMMUNITY_COMMENT) {
+        router.push(`/post/${response.notification.communityPostId}?isType=Community`)
+      }
+      if (response.notification.type == notificationRoleAccess.FOLLOW) {
+        router.push(`/profile/${response.notification.sender_id}`)
+      }
+
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
-      router.push(`/profile/${response.notification.sender_id}`)
+      queryClient.invalidateQueries({ queryKey: ['notification'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

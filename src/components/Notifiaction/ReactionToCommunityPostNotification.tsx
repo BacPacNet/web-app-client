@@ -41,14 +41,14 @@ interface Props {
   }
 }
 
-const ReactionToPostNotification = ({ data }: Props) => {
-  const { mutate: updateIsSeen } = useUpdateIsRead(notificationRoleAccess.REACTED_TO_POST)
+const ReactionToCommunityPostNotification = ({ data }: Props) => {
+  const { mutate: updateIsSeen } = useUpdateIsRead(notificationRoleAccess.REACTED_TO_COMMUNITY_POST)
   const router = useRouter()
   const handleUpdateIsRead = (id: string) => {
     const dataToPush = {
       id: id,
     }
-    if (data?.isRead) return router.push(`/post/${data.userPostId}?isType=Timeline`)
+    if (data?.isRead) return router.push(`/post/${data.communityPostId}?isType=Community`)
 
     updateIsSeen(dataToPush)
   }
@@ -88,10 +88,10 @@ const ReactionToPostNotification = ({ data }: Props) => {
       </div>
       <p className="text-sm">
         {/* <span className="font-semibold "> John Morisson and 8 others </span>reacted to your post.{' '} */}
-        <span className="font-semibold "> {data?.sender_id?.firstName + ' ' + data?.sender_id?.lastName}</span> reacted to your post.{' '}
+        <span className="font-semibold "> {data?.sender_id?.firstName + ' ' + data?.sender_id?.lastName}</span> reacted to your Community post.{' '}
       </p>
     </div>
   )
 }
 
-export default ReactionToPostNotification
+export default ReactionToCommunityPostNotification

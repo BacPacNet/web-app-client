@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
 
   const router = useRouter()
@@ -45,7 +45,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
-  // console.log('comm', communityId, 'iii', community?._id)
+
+  const targetCommunityId = subscribedCommunities?.[0]?._id
+  const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
 
   const { mutate: mutateFilterCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
@@ -57,7 +59,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   const handleNewGroupModal = () => {
-    openModal(<CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />)
+    openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
   }
   const handleAssignUsersModal = () => {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)

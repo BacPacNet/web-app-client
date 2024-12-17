@@ -280,7 +280,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     return comments?.map((comment, index: number) => (
       <div key={comment._id} className={`mb-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
-          <div className="absolute w-[1px] h-[90%] bg-neutral-300 top-20 max-sm:top-16 left-14 max-sm:left-8"></div>
+          <div className="absolute w-[1px] h-[90%] bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
           ''
         )}

@@ -27,7 +27,7 @@ type user = {
   major: string
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
+const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const { userData } = useUniStore()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
