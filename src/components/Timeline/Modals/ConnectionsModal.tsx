@@ -6,19 +6,21 @@ import { useGetUserFollow, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { FollowingItemProps } from '@/types/constants'
+import { useGetUserData } from '@/services/user'
 
 type props = {
   isChat?: boolean
   setIsCreateGroupModalOpen?: (value: boolean) => void
   setIsModalOpen?: (value: boolean) => void
+  userId?: string
 }
-const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }: props) => {
+const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, userId }: props) => {
+  console.log(userId, 'userId')
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
   const { userProfileData } = useUniStore()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
-  const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow('', content == 'Following')
-  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers('', content == 'Followers')
-
+  const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow('', content == 'Following', userId || '')
+  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers('', content == 'Followers', userId || '')
   return (
     <div>
       <div className="flex items-center justify-start cursor-pointer">
@@ -44,7 +46,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
           </p>
         )}
       </div>
-      <div className="mx-auto min-w-[300px] bg-white rounded-lg shadow-md overflow-hidden overflow-y-auto ">
+      <div className="mx-auto min-w-[300px] bg-white rounded-lg overflow-hidden overflow-y-auto ">
         {content === 'Following' && isFollowingLoading ? (
           <>
             <UserListItemSkeleton />
@@ -70,6 +72,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
               type={content}
               userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
+              isSelfProfile={userProfileData?.users_id === item?.users_id?.id}
             />
           ))
         )}
@@ -79,7 +82,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
             <UserListItemSkeleton />
             <UserListItemSkeleton />
           </>
-        ) : content === 'Followers' && !userFollow?.profile?.length ? (
+        ) : content === 'Followers' && !userFollowers?.profile?.length ? (
           <p className="text-center p-4">You have 0 Followers</p>
         ) : (
           content === 'Followers' &&
@@ -98,6 +101,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen }:
               type={content}
               userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
+              isSelfProfile={userProfileData?.users_id === item?.users_id?.id}
             />
           ))
         )}

@@ -182,10 +182,10 @@ export function UserProfileCard({
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>
             <div className="flex gap-4 text-neutral-700 font-semibold">
-              <span onClick={() => isSelfProfile && handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
                 {following || '0'} Following
               </span>
-              <span onClick={() => isSelfProfile && handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
                 {followers || '0'} Followers
               </span>
             </div>

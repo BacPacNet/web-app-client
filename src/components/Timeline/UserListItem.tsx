@@ -17,6 +17,7 @@ interface FollowingItemProps {
   type: string
   userFollowingIDs: string[]
   isChat?: boolean
+  isSelfProfile?: boolean
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -32,6 +33,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   imageUrl,
   userFollowingIDs,
   isChat,
+  isSelfProfile,
 }) => {
   const { mutate: toggleFollow } = useToggleFollow(type)
   const router = useRouter()
@@ -61,9 +63,11 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       </div>
 
       <div className="p-2 bg-primary-50 rounded-md">
-        <Button onClick={handleFollowClick} variant="shade" size="extra_small">
-          {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
-        </Button>
+        {!isSelfProfile && (
+          <Button onClick={handleFollowClick} variant="shade" size="extra_small">
+            {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
+          </Button>
+        )}
       </div>
     </div>
   )
