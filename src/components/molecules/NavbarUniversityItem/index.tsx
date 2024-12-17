@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
 
   const router = useRouter()
@@ -45,7 +45,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
-  // console.log('comm', communityId, 'iii', community?._id)
+
+  const targetCommunityId = subscribedCommunities?.[0]?._id
+  const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
 
   const { mutate: mutateFilterCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
@@ -57,7 +59,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   const handleNewGroupModal = () => {
-    openModal(<CreateNewGroupBox communityId={communityId} setNewGroup={setShowNewGroup} />)
+    openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
   }
   const handleAssignUsersModal = () => {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
@@ -102,7 +104,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
       ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id)
     return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData?.id, community, debouncedSearchQuery])
+  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
 
   useEffect(() => {
     if (communityId && subscribedCommunities) {
@@ -144,8 +146,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Joined',
       content: (
         <CommunityGroupAll
-          key={subscribedCommunitiesMyGroup}
-          communityGroups={subscribedCommunitiesMyGroup}
+          key={joinedSubscribedCommunitiesGroup}
+          communityGroups={joinedSubscribedCommunitiesGroup}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
           currSelectedGroup={currSelectedGroup as Community}
@@ -164,8 +166,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       content: (
         <div>
           <CommunityGroupAll
-            key={joinedSubscribedCommunitiesGroup}
-            communityGroups={joinedSubscribedCommunitiesGroup}
+            key={subscribedCommunitiesMyGroup}
+            communityGroups={subscribedCommunitiesMyGroup}
             showGroupTill={showGroupTill}
             setShowGroupTill={setShowGroupTill}
             currSelectedGroup={currSelectedGroup as Community}

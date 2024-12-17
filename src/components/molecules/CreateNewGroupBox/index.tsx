@@ -27,7 +27,8 @@ type user = {
   major: string
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
+const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
+  const { userData } = useUniStore()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +49,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   } = useForm()
 
   const handleSelectAll = useCallback(() => {
-    const getAlluser: any = communityData?.users?.map((user) => user)
+    const getAlluser: any = communityData?.users?.filter((user) => user?.id !== userData?.id).map((user) => user)
     setSelectedUsers(getAlluser)
   }, [])
 
@@ -290,9 +291,9 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                   {!communityData?.users.length ? (
                     <p className="text-center">No Data!</p>
                   ) : (
-                    communityData?.users?.map((user: any) => (
-                      <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
-                    ))
+                    communityData?.users
+                      ?.filter((user) => user?.id !== userData?.id)
+                      .map((user: any) => <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />)
                   )}
                 </div>
               </div>

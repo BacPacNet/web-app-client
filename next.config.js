@@ -15,7 +15,7 @@ const withPWA = require("next-pwa")({
 const nextConfig = {
     // Allow images from external domains
     images: {
-        domains: ['cdn.pixabay.com', "res.cloudinary.com", "upload.wikimedia.org", 'www.servizisegreti.com'],
+        domains: ['cdn.pixabay.com', "res.cloudinary.com", "upload.wikimedia.org", 'www.servizisegreti.com',"saig.physics.ualberta.ca"],
     },
 
     // Custom headers for API routes

@@ -1,0 +1,73 @@
+'use client'
+import StartedFollowingYouNotification from '@/components/Notifiaction/StartedFollowingYouNotification'
+
+import ReactionToPostNotification from '@/components/Notifiaction/ReactionToPostNotification'
+import React, { useEffect, useRef } from 'react'
+import CommunityAndCommunityGroupJoinNotification from '@/components/Notifiaction/CommunityAndCommunityGroupJoinNotification'
+import { useGetUserNotification } from '@/services/notification'
+import ReactionToCommunityPostNotification from '@/components/Notifiaction/ReactionToCommunityPostNotification'
+import UserPostCommentNotification from '@/components/Notifiaction/UserPostCommentNotification'
+import CommunityPostCommentNotification from '@/components/Notifiaction/CommunityPostCommentNotification'
+
+export const notificationRoleAccess = {
+  GROUP_INVITE: 'GROUP_INVITE',
+  FOLLOW: 'FOLLOW',
+  COMMENT: 'COMMENT',
+  COMMUNITY_COMMENT: 'COMMUNITY_COMMENT',
+  REACTED_TO_POST: 'REACTED_TO_POST',
+  REACTED_TO_COMMUNITY_POST: 'REACTED_TO_COMMUNITY_POST',
+}
+
+const NotificationTab = () => {
+  const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(5, true)
+
+  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
+
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+
+        if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      }
+    }
+
+    const container = containerRef.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+
+  return (
+    <div ref={containerRef} className=" p-4 overflow-y-scroll custom-scrollbar flex flex-col    gap-10   h-[600px]">
+      {notifications?.map((item) => {
+        if (item.type == notificationRoleAccess.GROUP_INVITE) {
+          return <CommunityAndCommunityGroupJoinNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.FOLLOW) {
+          return <StartedFollowingYouNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.REACTED_TO_POST) {
+          return <ReactionToPostNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
+          return <ReactionToCommunityPostNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.COMMENT) {
+          return <UserPostCommentNotification key={item?._id} data={item} />
+        }
+        if (item.type == notificationRoleAccess.COMMUNITY_COMMENT) {
+          return <CommunityPostCommentNotification key={item?._id} data={item} />
+        }
+      })}
+    </div>
+  )
+}
+
+export default NotificationTab

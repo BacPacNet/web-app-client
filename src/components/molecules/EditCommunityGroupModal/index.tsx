@@ -66,10 +66,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     },
   })
 
-  const category = watch('groupCategory')
-
   const handleSelectAll = useCallback(() => {
-    const getAlluser: any = allCommunityUsers?.users?.map((user) => user)
+    const getAlluser: any = allCommunityUsers?.users?.filter((user) => user?.id !== communityGroups.adminUserId).map((user) => user)
     setSelectedUsers(getAlluser)
   }, [])
 
@@ -83,6 +81,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   }
 
   const handleClick = (userId: string) => {
+    if (userId == communityGroups.adminUserId) return console.log('you can not remove yourself')
+
     if (selectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
       const filterd = selectedUsers.filter((selectedUser) => selectedUser.id !== userId)
       setSelectedUsers(filterd)
@@ -330,9 +330,11 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                     {!allCommunityUsers?.users.length ? (
                       <p className="text-center">No Data!</p>
                     ) : (
-                      allCommunityUsers?.users?.map((user: any) => (
-                        <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
-                      ))
+                      allCommunityUsers?.users
+                        ?.filter((user) => user?.id !== communityGroups.adminUserId)
+                        .map((user: any) => (
+                          <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />
+                        ))
                     )}
                   </div>
                 </div>
