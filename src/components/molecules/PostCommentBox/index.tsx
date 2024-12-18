@@ -275,7 +275,6 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
       return <Spinner />
     }
-    // console.log('comments', comments)
 
     return comments?.map((comment, index: number) => (
       <div key={comment._id} className={`mb-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>

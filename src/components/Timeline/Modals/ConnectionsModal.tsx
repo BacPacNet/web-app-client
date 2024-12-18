@@ -6,7 +6,6 @@ import { useGetUserFollow, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { FollowingItemProps } from '@/types/constants'
-import { useGetUserData } from '@/services/user'
 
 type props = {
   isChat?: boolean
@@ -15,7 +14,6 @@ type props = {
   userId?: string
 }
 const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, userId }: props) => {
-  console.log(userId, 'userId')
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
   const { userProfileData } = useUniStore()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)

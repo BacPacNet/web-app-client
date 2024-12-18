@@ -190,7 +190,7 @@ export const useJoinCommunity = () => {
     mutationFn: (communityId: string) => joinCommunity(communityId, cookieValue),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      queryClient.invalidateQueries({ queryKey: ['community'] })
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
@@ -206,7 +206,7 @@ export const useLeaveCommunity = () => {
     mutationFn: (communityId: string) => leaveCommunity(communityId, cookieValue),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      queryClient.invalidateQueries({ queryKey: ['community'] })
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       showCustomDangerToast(`Left Community`)
     },
     onError: (res: any) => {
