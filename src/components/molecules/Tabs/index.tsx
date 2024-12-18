@@ -21,7 +21,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left' }) 
   return (
     <div className={`w-full ${className} `}>
       {/* Tabs List */}
-      <div className={`border-gray-200 text-${tabAlign}`}>
+      <div className={`border-gray-200 text-${tabAlign} px-4`}>
         {tabs.map((tab, index) => (
           <button
             key={index}
