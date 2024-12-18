@@ -22,7 +22,7 @@ const ModalWrapper = ({ children, setModal, isShown, smallHeight = false, taking
       } ${smallHeight ? 'h-[99%]' : 'h-screen'} top-0 flex justify-center items-center z-50`}
     >
       <div onClick={() => setModal(false)} className="bg-black opacity-70 w-full h-screen fixed -z-10"></div>
-      <div className="relative bg-white w-[550px] max-sm:w-11/12 max-md:w-2/3 min-w-[550px] min-h-[85%] max-h-[85%] overflow-y-auto rounded-2xl shadow-lg px-4 py-4">
+      <div className="relative bg-white w-[550px] max-sm:w-11/12 max-md:w-2/3  min-h-[85%] max-h-[85%] overflow-y-auto rounded-2xl shadow-lg px-4 py-4">
         <div className="absolute right-0 top-0">
           <button onClick={() => setModal(false)} className="p-2">
             <IoClose size={24} />

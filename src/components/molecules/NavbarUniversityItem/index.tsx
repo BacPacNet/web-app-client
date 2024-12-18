@@ -45,6 +45,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
+  const [communityOpen, setCommunityOpen] = useState(false)
 
   const targetCommunityId = subscribedCommunities?.[0]?._id
   const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
@@ -57,6 +58,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     setActiveMenu('')
     toggleLeftNavbar && toggleLeftNavbar()
   }
+
+  const isUserJoinedSelectedCommunity = useMemo(() => {
+    return community?.users?.some((user) => user?.id?.toString() === userData?.id)
+  }, [community])
 
   const handleNewGroupModal = () => {
     openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
@@ -180,17 +185,20 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             toggleLeftNavbar={toggleLeftNavbar}
           />
 
-          <div className="flex justify-center items-center p-2">
-            <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
-              Create Group
-            </button>
-          </div>
+          {isUserJoinedSelectedCommunity && (
+            <div className="flex justify-center items-center p-2">
+              <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
+                Create Group
+              </button>
+            </div>
+          )}
         </div>
       ),
     },
   ]
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
+    setCommunityOpen(false)
     const indextoPush = Number(index)
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
@@ -236,13 +244,32 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
               style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
               className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px] cursor-pointer"
             >
-              <Image
-                width={40}
-                height={40}
-                className="w-[40px] h-[40px] object-cover rounded-full"
-                src={community?.communityLogoUrl?.imageUrl || avatar}
-                alt="communtiy image"
-              />
+              <Popover open={communityOpen} onOpenChange={() => setCommunityOpen(!communityOpen)}>
+                <PopoverTrigger asChild>
+                  <Image
+                    width={40}
+                    height={40}
+                    className="w-[40px] h-[40px] object-cover rounded-full"
+                    src={community?.communityLogoUrl?.imageUrl || avatar}
+                    alt="communtiy image"
+                  />
+                </PopoverTrigger>
+                <PopoverContent className="bg-white border-none shadow-lg w-fit px-0 rounded-full flex flex-col gap-2 cursor-pointer">
+                  {subscribedCommunities?.map((community, index) => {
+                    return (
+                      <Image
+                        key={community?._id}
+                        onClick={() => handleUniversityClick(index)}
+                        width={40}
+                        height={40}
+                        className="w-[40px] h-[40px] object-cover rounded-full"
+                        src={community?.communityLogoUrl?.imageUrl || avatar}
+                        alt="communtiy image"
+                      />
+                    )
+                  })}
+                </PopoverContent>
+              </Popover>
             </div>
             <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
           </div>
@@ -250,7 +277,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
 
       {subscribedCommunities?.length !== 0 ? (
-        <Tabs tabs={tabData} tabAlign="left" className="px-4 my-4" />
+        <Tabs tabs={tabData} tabAlign="left" className="my-4" />
       ) : (
         <div className="px-4 w-full text-center font-poppins text-neutral-400">
           <p>Add your university to join or create groups</p>

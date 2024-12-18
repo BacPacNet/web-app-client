@@ -49,7 +49,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   return (
     <div className="flex items-center p-2 md:p-4 border-b border-border justify-between">
       <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
-        <img src={imageUrl || avatar.src} alt={firstName} className="w-12 h-12 rounded-full " />
+        <img src={imageUrl || avatar.src} alt={firstName} className="w-12 h-12 rounded-full flex-none" />
         <div className="">
           <h3 className="font-medium text-base text-gray-dark">
             {firstName} {lastName}

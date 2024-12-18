@@ -120,10 +120,10 @@ export function UserProfileCard({
           )}
         </div>
         <div className="w-full">
-          <div className="flex w-full items-center justify-between flex-wrap">
+          <div className="flex w-full items-center justify-between flex-wrap gap-4">
             <div className="flex gap-4 items-center">
               <p className="font-poppins text-neutral-700 text:md lg:text-[20px] font-bold">{name}</p>
-              {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}
+              {/*{isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}*/}
             </div>
             {isSelfProfile ? (
               <div
@@ -185,7 +185,7 @@ export function UserProfileCard({
           </div>
         </div>
       </div>
-      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-8 text-neutral-500">
+      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-3 lg:pt-8 text-neutral-500">
         {affiliation && occupation && (
           <>
             {occupation && (
