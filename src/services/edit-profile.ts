@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 const editProfile = async (data: any, id: string) => {
   const res = await client(`/userprofile/${id}`, { method: 'PUT', data })
@@ -15,12 +16,16 @@ const addUniversityEmail = async (data: any, token: string) => {
 export const useEditProfile = () => {
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const { userProfileData } = useUniStore()
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => editProfile(data, userProfileData?._id || ''),
     onSuccess: (response: any) => {
+      showCustomSuccessToast('Profile Updated Successfully')
       setUserProfileData(response.updatedUserProfile)
+      queryClient.invalidateQueries({ queryKey: ['getRefetchUserData'] })
     },
     onError: (res: any) => {
+      showCustomSuccessToast('Failed to update profile')
       console.log(res.response.data.message, 'res')
     },
   })

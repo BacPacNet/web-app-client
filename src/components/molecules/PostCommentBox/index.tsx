@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
-import { SlOptions } from 'react-icons/sl'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useUniStore } from '@/store/store'
-import { useCreateUserPostCommentReply, useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
+import { useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useGetCommunityPostComments, useLikeUnlikeGroupPostComment } from '@/services/community-university'
 import { PostCommentData, PostType } from '@/types/constants'
-import { replaceImage } from '@/services/uploadImage'
 import Spinner from '@/components/atoms/spinner'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
@@ -17,7 +15,7 @@ import NewPostComment from '../NewPostComment'
 import { FiMessageCircle, FiRepeat, FiShare2, FiThumbsUp } from 'react-icons/fi'
 import { FaUser, FaUsers } from 'react-icons/fa'
 import { BsThreeDots } from 'react-icons/bs'
-import { CiBookmark, CiBellOff, CiFlag1 } from 'react-icons/ci'
+import { CiBellOff, CiFlag1 } from 'react-icons/ci'
 import { MdBlock } from 'react-icons/md'
 import { GoBookmark } from 'react-icons/go'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -87,6 +85,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
   const { isMobile } = useDeviceType()
+  const { isDesktop } = useDeviceType()
 
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false)
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false)
@@ -278,18 +277,18 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
 
     return comments?.map((comment, index: number) => (
       <div key={comment._id} className={`mb-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
-        {comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
-          <div className="absolute w-[1px] h-[90%] bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
+        {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
+          <div className="absolute w-[1px] h-24 bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
           ''
-        )}
+        )}*/}
 
         <div>
           <div className="flex py-2 max-sm:px-0 gap-4 justify-start">
-            <div className="relative ">
+            {/*<div className="relative ">
               {childCommentsId.includes(comment._id) ? (
                 <>
-                  {/* <div className="absolute w-1 h-36 bg-neutral-300 -top-28 -left-14"></div> */}
+                  <div className="absolute w-1 h-36 bg-neutral-300 -top-28 -left-14"></div>
                   {index == comments.length - 1 ? <div className="absolute w-2 h-96  bg-white  top-5  -left-6 max-sm:-left-4"></div> : ''}
 
                   <div
@@ -301,14 +300,14 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
               ) : (
                 ''
               )}
-            </div>
-            <div>
+            </div>*/}
+            <div className="w-[45px] h-[45px] flex-none">
               <Image
                 src={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-                width={56}
-                height={56}
-                objectFit="fill"
-                className="rounded-full max-sm:w-10 max-sm:h-10"
+                width={45}
+                height={45}
+                objectFit="cover"
+                className="rounded-full h-[inherit]"
                 alt="avatar.png"
               />
             </div>
@@ -323,10 +322,10 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             </p>
           </div>
         </div>
-        <div className="flex gap-4 ps-[105px] max-sm:ps-[70px]">
-          <p className="text-xs sm:text-sm pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+        <div className="flex gap-4 ps-[86px] max-sm:ps-[70px]">
+          <pre className="font-poppins text-xs pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</pre>
         </div>
-        <div className="flex justify-start ps-[105px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
+        <div className="flex justify-start ps-[86px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-s max-sm:text-s">
           <div className="flex items-center cursor-pointer">
             <AiOutlineLike
               onClick={() => likePostCommentHandler(comment._id)}
@@ -391,15 +390,15 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   }
 
   return (
-    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden' : ''}  flex flex-col gap-2 w-full`}>
-      <div className="rounded-full pt-4 pb-2 flex gap-2 items-center">
+    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-4'}  flex flex-col gap-2 w-full `}>
+      <div className="rounded-full pb-2 flex gap-2 items-center">
         <Image
-          src={userProfileData?.cover_dp?.imageUrl || avatar}
+          src={userProfileData?.profile_dp?.imageUrl || avatar}
           alt={`${userData?.firstName}'s avatar`}
-          width={44}
-          height={44}
+          width={45}
+          height={45}
           objectFit="cover"
-          className="rounded-full w-12 h-12 sm:w-14 sm:h-14"
+          className="rounded-full h-[45px]"
         />
         <button
           onClick={() => {
@@ -422,9 +421,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
         ''
       )}
 
-      <div ref={containerRef} className="max-h-72 overflow-y-scroll">
+      <div ref={containerRef} className="">
         {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
-        {(isFetchingNextPage || communityCommentsIsFetching) && <Spinner />}
+        {/*{(isFetchingNextPage || communityCommentsIsFetching) && <Spinner />}*/}
       </div>
       {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
       {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}

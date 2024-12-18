@@ -13,7 +13,8 @@ import { replaceImage } from '@/services/uploadImage'
 import { currYear, degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
-import { profile } from 'console'
+import { closeModal } from '@/components/molecules/Modal/ModalManager'
+import { Spinner } from '@/components/spinner/Spinner'
 
 export interface editProfileInputs {
   firstName: string
@@ -41,12 +42,13 @@ export interface editProfileInputs {
 
 const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
-  const { userData, userProfileData } = useUniStore()
+  const { userProfileData } = useUniStore()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
 
   const [user, setUser] = useState<any>(null)
   const [userType, setUserType] = useState('student')
   const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
+  const [isProfileLoading, setIsProfileLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -57,25 +59,6 @@ const EditProfileModal = () => {
     setValue,
     formState: { errors, isDirty },
   } = useForm<editProfileInputs>()
-  //    {
-  //    defaultValues: {
-  //      first_name: userData?.firstName,
-  //      last_name: userData?.lastName,
-  //      bio: userProfileData?.bio,
-  //      phone_number: userProfileData?.phone_number,
-  //      gender: userData?.gender,
-  //      dob: userProfileData?.dob ? new Date(userProfileData?.dob).toISOString().split('T')[0] : '',
-  //      country: userProfileData?.country,
-  //      city: userProfileData?.city,
-  //      university_name: userProfileData?.university_name,
-  //      study_year: userProfileData?.study_year,
-  //      degree: userProfileData?.degree,
-  //      major: userProfileData?.major,
-  //      affiliation: userProfileData?.affiliation,
-  //      occupation: userProfileData?.occupation,
-  //      totalFilled: userProfileData?.totalFilled,
-  //    },
-  //  }
 
   const profilePicture = watch('profilePicture')
 
@@ -173,12 +156,14 @@ const EditProfileModal = () => {
   }
 
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
+    setIsProfileLoading(true)
     let profileImageData = user?.profile_dp
     if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
-
     mutateEditProfile({ ...data, profile_dp: profileImageData })
+    setIsProfileLoading(false)
+    closeModal()
   }
 
   return (
@@ -551,7 +536,7 @@ const EditProfileModal = () => {
         </div>
 
         <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)} disabled={!isDirty}>
-          Update Profile
+          {isProfileLoading ? <Spinner /> : 'Update Profile'}
         </Button>
         <Button variant="shade" onClick={() => reset()}>
           Redo Changes

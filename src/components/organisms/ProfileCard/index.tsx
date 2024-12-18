@@ -130,7 +130,7 @@ export function UserProfileCard({
           <div className="flex w-full items-center justify-between flex-wrap gap-4">
             <div className="flex gap-4 items-center">
               <p className="font-poppins text-neutral-700 text:md lg:text-[20px] font-bold">{name}</p>
-              {isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}
+              {/*{isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}*/}
             </div>
             {isSelfProfile ? (
               <div
