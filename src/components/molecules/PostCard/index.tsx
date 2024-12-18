@@ -176,7 +176,7 @@ const PostCard = ({
       </div>
 
       <div>
-        <p className="text-sm text-neutral-700 py-4">{text}</p>
+        <pre className="text-xs lg:text-sm text-neutral-700 py-4 font-poppins whitespace-pre-wrap break-words">{text}</pre>
       </div>
 
       {/* //post Image  */}
