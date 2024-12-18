@@ -12,12 +12,14 @@ import InputBox from '@/components/atoms/Input/InputBox'
 
 import { useUniStore } from '@/store/store'
 import { EmailType } from '@/models/auth'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
+import ChangeUserNameModal from '../SettingModals/ChangeUserNameModal'
+import ChangePasswordModal from '../SettingModals/ChangePasswordModal'
+import UniversityVerificationModal from '../SettingModals/UniversityVerificationModal'
+import ChangeEmailModal from '../SettingModals/ChangeEmailModal'
+import DeActivateModal from '../SettingModals/DeActivateModal'
 
-type props = {
-  setModal: (value: string) => void
-}
-
-const SettingAccount = ({ setModal }: props) => {
+const SettingAccount = () => {
   const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
 
   const email: EmailType[] = userProfileData.email || []
@@ -71,7 +73,7 @@ const SettingAccount = ({ setModal }: props) => {
             </div>
           </div>
         )}
-        <Button onClick={() => setModal('University')} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<UniversityVerificationModal />)} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
           Verify Account {email?.length ? <FaCirclePlus /> : ''}
         </Button>
       </div>
@@ -85,7 +87,7 @@ const SettingAccount = ({ setModal }: props) => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userName} disabled />
         </div>
-        <Button onClick={() => setModal('Username')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangeUserNameModal />)} className="w-max" size="extra_small_paddind_2">
           Change Username
         </Button>
       </div>
@@ -107,7 +109,7 @@ const SettingAccount = ({ setModal }: props) => {
             </div>
           </div> */}
         {/* </div> */}
-        <Button onClick={() => setModal('Password')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangePasswordModal />)} className="w-max" size="extra_small_paddind_2">
           Change Password
         </Button>
       </div>
@@ -121,7 +123,7 @@ const SettingAccount = ({ setModal }: props) => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userEmail} disabled />
         </div>
-        <Button onClick={() => setModal('Email')} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangeEmailModal />)} className="w-max" size="extra_small_paddind_2">
           Change Email
         </Button>
       </div>
@@ -135,7 +137,7 @@ const SettingAccount = ({ setModal }: props) => {
             restore your Unibuzz account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.{' '}
           </SubText>
         </div>
-        <Button onClick={() => setModal('Deactivate')} className="w-max" size="extra_small_paddind_2" variant="danger">
+        <Button onClick={() => openModal(<DeActivateModal />)} className="w-max" size="extra_small_paddind_2" variant="danger">
           Deactivate Account
         </Button>
       </div>

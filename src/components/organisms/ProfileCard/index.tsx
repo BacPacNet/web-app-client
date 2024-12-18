@@ -25,6 +25,9 @@ import Buttons from '@/components/atoms/Buttons'
 import { useEditProfile } from '@/services/edit-profile'
 import { replaceImage } from '@/services/uploadImage'
 import { ChangeEvent } from 'react'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
+import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
+import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 
 interface UserProfileCardProps {
   name: string
@@ -44,14 +47,12 @@ interface UserProfileCardProps {
   isVerifiedUniversity: boolean
   degree: string
   country: string
-  setModalContentType: React.Dispatch<React.SetStateAction<ModalContentType>>
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+
   isSelfProfile?: boolean
   userId?: string
   universityLogo: string
   occupation: string
   affiliation: string
-  handleShowModal: (value: string) => void
 }
 
 export function UserProfileCard({
@@ -72,14 +73,12 @@ export function UserProfileCard({
   avatarUrl,
   isVerifiedUniversity,
   country,
-  setModalContentType,
-  setIsModalOpen,
+
   isSelfProfile,
   userId,
   universityLogo,
   occupation,
   affiliation,
-  handleShowModal,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
@@ -87,12 +86,6 @@ export function UserProfileCard({
   const { mutate: toggleFollow } = useToggleFollow('Following')
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
-
-  const handleOpenModal = (modalType: ModalContentType) => {
-    setModalContentType(modalType)
-    setIsModalOpen(true)
-    handleShowModal(modalType || '')
-  }
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -134,7 +127,7 @@ export function UserProfileCard({
             </div>
             {isSelfProfile ? (
               <div
-                onClick={() => handleOpenModal('EditProfileModal')}
+                onClick={() => openModal(<EditProfileModal />)}
                 className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 cursor-pointer"
               >
                 <button>Edit Profile</button>
@@ -182,10 +175,10 @@ export function UserProfileCard({
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>
             <div className="flex gap-4 text-neutral-700 font-semibold">
-              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+              <span onClick={() => openModal(<ConnectionsModal userId={userId} />)} className=" text-xs lg:text-sm cursor-pointer">
                 {following || '0'} Following
               </span>
-              <span onClick={() => handleOpenModal('ConnectionsModal')} className=" text-xs lg:text-sm cursor-pointer">
+              <span onClick={() => openModal(<ConnectionsModal userId={userId} />)} className=" text-xs lg:text-sm cursor-pointer">
                 {followers || '0'} Followers
               </span>
             </div>

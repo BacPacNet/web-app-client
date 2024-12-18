@@ -1,37 +1,20 @@
 'use client'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
+
 import ProfilePostContainer from '@/components/organisms/PostsContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
-import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
-import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
+
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
-import { ModalContentType } from '@/types/global'
-import React, { useRef, useState } from 'react'
+
+import React, { useRef } from 'react'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalContentType, setModalContentType] = useState<ModalContentType>()
+
   const isSelfProfile = useCheckSelfProfile(userId)
   const containerRef = useRef<HTMLDivElement>(null)
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
-
-  const handleShowModal = (modalType: string) => {
-    const modalContent = (modalContentType: string) => {
-      switch (modalContentType) {
-        case 'EditProfileModal':
-          return openModal(<EditProfileModal />)
-        case 'ConnectionsModal':
-          return openModal(<ConnectionsModal userId={userId} />)
-        default:
-          return null
-      }
-    }
-
-    modalContent(modalType)
-  }
 
   const { profile, firstName, lastName, email, university_id, university } = userProfileData || {}
   const { bio, university_name, followers, following, study_year, major, degree, phone_number, country, dob, city, affiliation, occupation } =
@@ -63,9 +46,6 @@ export default function Profile({ params }: { params: { id: string } }) {
           avatarUrl={profile?.profile_dp?.imageUrl || ''}
           isVerifiedUniversity={true}
           country={country || ''}
-          setModalContentType={setModalContentType}
-          setIsModalOpen={setIsModalOpen}
-          handleShowModal={handleShowModal}
           isSelfProfile={isSelfProfile}
           userId={userId}
           universityLogo={logos?.[0] || ''}
