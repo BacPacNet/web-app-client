@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
+import Spinner from '@/components/atoms/spinner'
 
 interface Props {
   communityID: string
@@ -73,7 +74,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   return (
     <div className="rounded-2xl bg-white shadow-card">
-      <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
+      <div className=" relative h-[100px] md:h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
         <Image
           src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder}
           layout="fill"
@@ -84,8 +85,8 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
         />
       </div>
       <div className="p-4">
-        <div className="card-title flex justify-between items-center">
-          <div className="flex gap-3 items-center">
+        <div className="card-title flex flex-wrap justify-between items-center gap-2">
+          <div className="flex flex-wrap  gap-2 items-center">
             <div
               style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
               className="relative flex items-center justify-center bg-white rounded-full w-[40px] h-[40px] overflow-hidden"
@@ -100,11 +101,11 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
               />
             </div>
             <p className="text-sm font-bold">{communityData?.name}</p>
-            <p className="ai-power text-xs font-extrabold">AI POWERED </p>
+            <p className="ai-power text-3xs font-extrabold">AI POWERED </p>
           </div>
           <div>
             <Button onClick={() => handleToggleJoinCommunity(communityID)} size="extra_small_paddind_2" variant="primary">
-              {isJoinLoading || isLeaveLoading ? 'Loading...' : !isUserJoinedCommunity ? 'Join Community' : 'Leave Community'}
+              {isJoinLoading || isLeaveLoading ? <Spinner /> : !isUserJoinedCommunity ? 'Join Community' : 'Leave Community'}
             </Button>
           </div>
         </div>

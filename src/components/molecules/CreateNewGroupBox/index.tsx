@@ -51,7 +51,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const handleSelectAll = useCallback(() => {
     const getAlluser: any = communityData?.users?.filter((user) => user?.id !== userData?.id).map((user) => user)
     setSelectedUsers(getAlluser)
-  }, [])
+  }, [communityData])
 
   const handleCategoryChange = (category: Category) => {
     setSelectedGroupCategory(category)
@@ -318,7 +318,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             </div>
           </div>
           <button disabled={isPending} type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
-            {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
+            {isLoading || isPending ? <Spinner /> : <p>Create Groups</p>}
           </button>
           {/* <button
               type="reset"

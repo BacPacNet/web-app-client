@@ -1,3 +1,4 @@
+import { MESSAGES } from '@/content/constant'
 import React from 'react'
 import toast from 'react-hot-toast'
 
@@ -88,7 +89,7 @@ export function showCustomDangerToast(message: string) {
             textAlign: 'center',
           },
         },
-        React.createElement('p', { className: 'text-white' }, message),
+        React.createElement('p', { className: 'text-white' }, message || MESSAGES.SOMETHING_WENT_WRONG),
         React.createElement(
           'button',
           {

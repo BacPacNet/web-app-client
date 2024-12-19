@@ -20,7 +20,7 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
     medium: 'text-md py-2 px-4 ',
     large: 'text-lg py-2 px-4 ',
     extra_small: 'text-2xs py-1 px-2',
-    extra_small_paddind_2: 'text-2xs py-2 px-2',
+    extra_small_paddind_2: 'text-3xs py-2 px-2',
   }
 
   const variantClass = variantClasses[variant]
