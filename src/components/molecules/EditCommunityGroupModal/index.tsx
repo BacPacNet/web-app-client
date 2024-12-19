@@ -33,7 +33,6 @@ type User = {
 }
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
-  const { userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
 
@@ -44,15 +43,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [selectedGroupCategory, setSelectedGroupCategory] = useState<Category | null>(null)
   const [groupSubCategory, setGroupSubCategory] = useState<string[]>([])
 
-  const [searchInput, setSearchInput] = useState('')
   const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId)
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
     formState: { errors: GroupErrors },
-    getValues,
-    watch,
     setValue,
     setError,
   } = useForm({
@@ -69,7 +65,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const handleSelectAll = useCallback(() => {
     const getAlluser: any = allCommunityUsers?.users?.filter((user) => user?.id !== communityGroups.adminUserId).map((user) => user)
     setSelectedUsers(getAlluser)
-  }, [])
+  }, [allCommunityUsers])
 
   const handleCategoryChange = (category: Category) => {
     setSelectedGroupCategory(category)
@@ -164,18 +160,20 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
           {/* Forms  */}
           <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-4">
-            <div className="flex gap-4 items-center justify-between">
-              <div className={` border-2 relative border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
+            <div className="flex gap-3 items-center justify-between">
+              <div
+                className={` border-2 relative border-neutral-200 bg-white flex  items-center justify-center w-14 h-14 lg:w-24 lg:h-24 rounded-full`}
+              >
                 {logoImage && (
                   <img
-                    className="w-24 h-24 rounded-full absolute  object-cover"
+                    className="w-14 h-14 lg:w-24 lg:h-24 rounded-full absolute  object-cover"
                     src={typeof logoImage === 'object' ? URL.createObjectURL(logoImage) : logoImage}
                     alt=""
                   />
                 )}
                 <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
                 <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                  <FiCamera size={40} className="text-slate-400 z-30" />
+                  <FiCamera size={30} className="text-slate-400 z-30" />
                 </label>
               </div>
               <div className="relative w-9/12 flex flex-col gap-2">
@@ -359,8 +357,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </div>
             </div>
 
-            <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
-              {isLoading || isPending ? <Spinner /> : <p>Update Changes</p>}
+            <button disabled={isLoading} type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
+              {isLoading ? <Spinner /> : <p>Update Changes</p>}
             </button>
           </form>
         </div>

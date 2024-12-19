@@ -176,9 +176,11 @@ export const useUpdateCommunity = () => {
     mutationFn: ({ id, data }: any) => UpdateCommunity(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['community'] })
+      showCustomSuccessToast('Community updated successfully')
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -240,11 +242,13 @@ export const useCreateCommunityGroup = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
-    onSuccess: (response: any) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+      showCustomSuccessToast('Community successfully created ')
     },
-    onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+    onError: (error: any) => {
+      console.log(error.response.data.message, 'res')
+      showCustomDangerToast(error.response.data.message)
     },
   })
 }

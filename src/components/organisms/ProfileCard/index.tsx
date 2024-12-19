@@ -123,7 +123,7 @@ export function UserProfileCard({
             {isSelfProfile ? (
               <div
                 onClick={() => openModal(<EditProfileModal />)}
-                className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 cursor-pointer"
+                className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 whitespace-nowrap cursor-pointer"
               >
                 <button>Edit Profile</button>
                 <HiPencilAlt size={16} />
