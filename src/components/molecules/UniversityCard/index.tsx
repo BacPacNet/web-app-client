@@ -12,6 +12,8 @@ import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
 import useCookie from '@/hooks/useCookie'
 import Spinner from '@/components/atoms/spinner'
+import { openModal } from '../Modal/ModalManager'
+import CommunityLeaveModal from '../CommunityLeaveModal'
 
 interface Props {
   communityID: string
@@ -69,11 +71,12 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
         },
       })
     } else {
-      leaveCommunity(communityID, {
-        onSuccess: () => {
-          setIsUserJoinedCommunity(false)
-        },
-      })
+      // leaveCommunity(communityID, {
+      //   onSuccess: () => {
+      //     setIsUserJoinedCommunity(false)
+      //   },
+      // })
+      openModal(<CommunityLeaveModal communityID={communityID} setIsUserJoinedCommunity={setIsUserJoinedCommunity} />, 'h-max w-96')
     }
   }
 

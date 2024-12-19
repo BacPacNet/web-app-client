@@ -2,6 +2,7 @@ import { useUniStore } from '@/store/store'
 import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 /**
  * API call to join a community group
@@ -31,6 +32,7 @@ export const useJoinCommunityGroup = () => {
       // Invalidate relevant query caches
       queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      showCustomSuccessToast(`Joined Community Group`)
     },
 
     onError: (error: any) => {
@@ -68,6 +70,7 @@ export const useLeaveCommunityGroup = () => {
       // Invalidate relevant query caches
       queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      showCustomDangerToast(`Left Community Group!`)
     },
 
     onError: (error: any) => {

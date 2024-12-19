@@ -108,7 +108,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
         universityId: registerData?.universityId || '',
         verificationOtp: registerData?.verificationOtp || '',
         universityName: registerData?.universityName || '',
-        UniversityOtp: registerData?.UniversityOtp || '000000',
+        UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: registerData?.referralCode || '',
       })
     }
@@ -145,6 +145,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
       return isAvailable
     } catch (error: any) {
       methods.setError('verificationOtp', { message: error.response.data.message })
+      methods.setValue('verificationOtp', '')
     }
   }
 
@@ -159,6 +160,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
       return isAvailable
     } catch (error: any) {
       methods.setError('UniversityOtp', { message: error.response.data.message })
+      methods.setValue('UniversityOtp', '')
     }
   }
 

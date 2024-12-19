@@ -6,6 +6,7 @@ import { useUniStore } from '@/store/store'
 import { MessageNotification } from '@/components/molecules/MessageNotification'
 import { useRouter } from 'next/navigation'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Notification = {
   _id: string
@@ -162,7 +163,8 @@ export const useJoinCommunityGroup = () => {
       router.push(`/community/${response.communityId}/${response._id}`)
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      // console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -219,6 +221,8 @@ export const useUpdateIsRead = (type: string = '') => {
       }
       if (response.notification.type == notificationRoleAccess.FOLLOW) {
         router.push(`/profile/${response.notification.sender_id}`)
+      } else {
+        console.log('nothins')
       }
 
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })

@@ -129,10 +129,6 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                       <PiPaintBrushDuotone />
                       <p>Preferences</p>
                     </li>
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
-                      <HiCubeTransparent />
-                      <p>Upgrades</p>
-                    </li>
                   </ul>
                   <ul className="border-b-[1px] border-neutral-200 ">
                     <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">

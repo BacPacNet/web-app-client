@@ -13,6 +13,7 @@ import { HiPencilAlt } from 'react-icons/hi'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup, useLeaveCommunityGroup } from '@/services/community-group'
 import { openModal } from '../Modal/ModalManager'
+import CommunityLeaveModal from '../CommunityLeaveModal'
 
 interface Props {
   communityID: string
@@ -58,11 +59,15 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
         },
       })
     } else {
-      leaveCommunityGroup(communityGroupID, {
-        onSuccess: () => {
-          setIsUserJoinedCommunityGroup(false)
-        },
-      })
+      // leaveCommunityGroup(communityGroupID, {
+      //   onSuccess: () => {
+      //     setIsUserJoinedCommunityGroup(false)
+      //   },
+      // })
+      openModal(
+        <CommunityLeaveModal communityGroupID={communityGroupID} setIsUserJoinedCommunityGroup={setIsUserJoinedCommunityGroup} />,
+        'h-max w-96'
+      )
     }
   }
 

@@ -5,8 +5,9 @@ import Spinner from '@/components/atoms/spinner'
 import { useGetPost } from '@/services/community-university'
 import { PostType } from '@/types/constants'
 import { useParams, useSearchParams } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
+import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 
 const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
@@ -26,6 +27,12 @@ const SinglePost = () => {
     images: [],
     currImageIndex: null,
   })
+
+  useEffect(() => {
+    if (imageCarasol.isShow) {
+      openImageModal(<PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />)
+    }
+  }, [imageCarasol])
 
   // if (!data || Object.keys(data).length === 0) {
   //   return <div className="h-screen flex justify-center items-center">Not Allowed</div>
@@ -67,21 +74,6 @@ const SinglePost = () => {
           setShowCommentSection={setShowCommentSection}
         />
       </div>
-      {imageCarasol.isShow && (
-        <div className="fixed h-screen w-full mx-auto flex items-center justify-center ">
-          <div
-            onClick={() =>
-              setImageCarasol({
-                isShow: false,
-                images: [],
-                currImageIndex: 0,
-              })
-            }
-            className="bg-black w-full h-full fixed -top-0 -left-[0%] z-30 opacity-50"
-          ></div>
-          <PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} />
-        </div>
-      )}
     </div>
   )
 }

@@ -9,6 +9,7 @@ import { useUniStore } from '@/store/store'
 import { useGetUserChats, useUpdateMessageIsSeen } from '@/services/Messages'
 import { useQueryClient } from '@tanstack/react-query'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
+import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 
 interface Message {
   _id: string
@@ -215,6 +216,12 @@ const MessageContainer = () => {
     }
   }, [acceptedChatId])
 
+  useEffect(() => {
+    if (imageCarasol.isShow) {
+      openImageModal(<PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />)
+    }
+  }, [imageCarasol])
+
   const renderTab = () => {
     switch (currTab) {
       case 'Inbox':
@@ -302,21 +309,6 @@ const MessageContainer = () => {
         unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount}
       />
       <div className={`${selectedChat ? 'h-[90%] relative' : 'h-[90%]'}  `}>{renderChat()}</div>
-      {imageCarasol.isShow && (
-        <div className="relative h-screen w-full ">
-          <div
-            onClick={() =>
-              setImageCarasol({
-                isShow: false,
-                images: [],
-                currImageIndex: 0,
-              })
-            }
-            className="bg-black w-full h-full fixed -top-0 -left-[0%] z-30 opacity-50"
-          ></div>
-          <PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />
-        </div>
-      )}
     </div>
   )
 }
