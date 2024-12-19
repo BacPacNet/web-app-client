@@ -19,7 +19,7 @@ export const notificationRoleAccess = {
 }
 
 const NotificationTab = () => {
-  const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(5, true)
+  const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(10, true)
 
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
 
@@ -45,7 +45,7 @@ const NotificationTab = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
-    <div ref={containerRef} className=" p-4 overflow-y-scroll custom-scrollbar flex flex-col    gap-10   h-[600px]">
+    <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit]">
       {notifications?.map((item) => {
         if (item.type == notificationRoleAccess.GROUP_INVITE) {
           return <CommunityAndCommunityGroupJoinNotification key={item?._id} data={item} />

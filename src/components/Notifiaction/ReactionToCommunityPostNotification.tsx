@@ -56,7 +56,7 @@ const ReactionToCommunityPostNotification = ({ data }: Props) => {
   return (
     <div
       onClick={() => handleUpdateIsRead(data?._id)}
-      className={`flex flex-col gap-2  border-b-2 border-neutral-300 pb-5 me-10 hover:bg-neutral-200 hover:p-5 transition-all duration-200 cursor-pointer`}
+      className={`flex flex-col gap-2  border-b-2 border-neutral-300 p-4 hover:bg-neutral-200  transition-all duration-200 cursor-pointer`}
     >
       <div className="flex justify-between ">
         <div className="flex gap-4 items-center  ">

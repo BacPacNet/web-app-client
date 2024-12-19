@@ -112,9 +112,9 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             !coverImage ? 'border-2 border-neutral-200' : ''
           } rounded-md relative  flex flex-col w-full items-center justify-center h-40 `}
         >
-          {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
+          {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
           <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
-          <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
+          <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10">
             <FiCamera size={40} className="text-primary-500" />
             <p className="text-neutral-900 font-medium ">
               <span className="text-primary-500">Upload</span> Banner Image

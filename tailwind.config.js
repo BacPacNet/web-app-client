@@ -40,7 +40,7 @@ module.exports = {
                 'xs': '320px',   // Custom extra small screen
                 'sm': '480px',   // Max Mobile Scren
                 'md': '769px',   // Tab screen
-                'lg': '1024px',  // Max Tab Screen
+                'lg': '1025px',  // Max Tab Screen
                 'xl': '1280px',  // Desktop Screen
                 '2xl': '1536px', // Custom double extra large screen
             },

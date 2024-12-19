@@ -36,7 +36,7 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
         key={index}
         className={`flex items-center justify-between hover:bg-secondary ${communityId === community._id && 'bg-secondary'}`}
       >
-        <div className={` flex items-center gap-3 py-2 px-4 cursor-pointer`}>
+        <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
           <Image
             width={30}
             height={30}
@@ -45,7 +45,7 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
             alt={community.name}
           />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <p className="text-xs  xl:w-max ">{community.name} </p>
             <FaCircleCheck color="#6647ff" size={16} />
           </div>

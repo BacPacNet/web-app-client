@@ -66,22 +66,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
 
   const [dataToDisplay, setDataToDisplay] = useState({ title: '', desc: '', membersCount: 0, coverImage: '', logoImage: '', adminId: '', id: '' })
 
-  const userVerifiedCommunityIds = useMemo(() => {
-    return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []
-  }, [userData])
-
-  const userUnverifiedVerifiedCommunityIds = useMemo(() => {
-    return userData?.userUnVerifiedCommunities?.map((c) => c.communityId.toString()) || []
-  }, [userData])
-
-  const userVerifiedCommunityGroupIds = useMemo(() => {
-    return userData?.userVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
-  }, [userData])
-
-  const userUnverifiedVerifiedCommunityGroupIds = useMemo(() => {
-    return userData?.userUnVerifiedCommunities?.flatMap((x) => x.communityGroups.map((y) => y.communityGroupId.toString())) || []
-  }, [userData])
-
   const handleEditCommunityGroupModal = () => {
     if (!communityGroups) return
     openModal(<EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />)
@@ -115,35 +99,9 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     }
   }
 
-  //group image
-  //  const handleGroupCoverImageUpload = async (e: any) => {
-  //    const files = e.target.files
-
-  //    if (files && files[0]) {
-  //      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoCoverUrl?.publicId)
-
-  //      const dataToPush = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-
-  //      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
-  //    } else {
-  //      console.error('No file selected.')
-  //    }
-  //  }
-
-  //  const handleGroupLogoImageUpload = async (e: any) => {
-  //    const files = e.target.files
-
-  //    if (files && files[0]) {
-  //      const imagedata: any = await replaceImage(files[0], selectedCommunityGroupData?.communityGroupLogoUrl?.publicId)
-
-  //      const dataToPush = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-  //      UpdateCommunityGroup({ dataToPush, id: selectedCommunityGroupData?._id })
-  //    } else {
-  //      console.error('No file selected.')
-  //    }
-  //  }
-
   if (isCommunityGroupsLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
+
+  const { communityGroupCategory } = communityGroups || {}
 
   return (
     <>

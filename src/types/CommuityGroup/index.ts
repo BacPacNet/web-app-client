@@ -20,7 +20,7 @@ export interface CommunityGroupType {
   memberCount: number
   communityGroupType: string
   communityGroupAccess: string
-  communityGroupCategory: string
+  communityGroupCategory: any
   __v: number
   adminUserProfile: AdminUserProfile
   communityGroupLogoCoverUrl?: {

@@ -21,7 +21,7 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
   return (
     <>
       <div className=" px-4 py-4 font-medium text-[20px] flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
-        <div className=" flex gap-8 items-center text-2xs md:text-sm">
+        <div className="flex gap-8 items-center text-2xs md:text-sm break-words">
           <div
             onClick={() => {
               setCurrTab('Inbox'), setSelectedChat(undefined)
@@ -57,7 +57,7 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
             Starred
           </p>
 
-          <Buttons size="extra_small" onClick={() => handleShowModal()}>
+          <Buttons className="hidden md:block" size="extra_small" onClick={() => handleShowModal()}>
             Start a Chat
           </Buttons>
         </div>
