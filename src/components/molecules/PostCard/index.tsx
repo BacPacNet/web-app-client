@@ -159,7 +159,7 @@ const PostCard = ({
       <div className="flex items-start py-4 gap-4 justify-between">
         <div onClick={handleProfileClicked} className="flex gap-4 cursor-pointer">
           <div className="rounded-full w-[45px] h-[45px]">
-            <Image src={avatarLink || avatar} width={45} height={45} className="object-none rounded-full h-[inherit]" alt="avatar.png" />
+            <Image src={avatarLink || avatar} width={45} height={45} className="object-cover rounded-full h-[inherit]" alt="avatar.png" />
           </div>
           <div>
             <h3 className="font-medium text-sm text-neutral-600">{user}</h3>

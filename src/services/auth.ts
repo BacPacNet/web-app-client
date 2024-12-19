@@ -4,6 +4,8 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
 import { useRouter } from 'next/navigation'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { MESSAGES } from '@/content/constant'
 
 interface data {
   email: string
@@ -76,6 +78,10 @@ export const useHandleLogin = () => {
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
+    },
+    onError: (error: any) => {
+      console.log(error)
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
     },
   })
 }

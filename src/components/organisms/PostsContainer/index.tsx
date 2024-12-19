@@ -1,5 +1,6 @@
 'use client'
 import Loading from '@/app/register/loading'
+import Card from '@/components/atoms/Card'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
@@ -53,6 +54,7 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
   }, [imageCarasol])
 
   const renderPostWithRespectToPathName = () => {
+    if (userSelfPosts?.length === 0) return <Card className="rounded-2xl px-4 text-center text-xs">No Post Available</Card>
     return userSelfPosts?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post?._id}

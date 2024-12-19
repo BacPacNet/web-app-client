@@ -57,7 +57,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
             <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
           </Tooltip>
 
-          <SubText>{userProfileData?.major}</SubText>
+          <SubText>{truncateString(userProfileData?.major || '')}</SubText>
         </div>
       </div>
       <div className="px-4 pt-9">

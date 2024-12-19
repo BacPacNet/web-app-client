@@ -2,16 +2,12 @@ import Card from '@/components/atoms/Card'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-//import { Badge } from "@/components/ui/badge";
-//import { Button } from "@/components/ui/button";
 import { FaGraduationCap, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa'
 import { ImEarth } from 'react-icons/im'
 import { HiDotsHorizontal, HiPencilAlt } from 'react-icons/hi'
 import badge from '@assets/badge.svg'
 import useDeviceType from '@/hooks/useDeviceType'
 import { format } from 'date-fns'
-import { ModalContentType } from '@/types/global'
-import { Skeleton } from '@/components/ui/Skeleton'
 import { useUniStore } from '@/store/store'
 import { useToggleFollow } from '@/services/connection'
 import { IoIosShareAlt } from 'react-icons/io'
@@ -47,7 +43,6 @@ interface UserProfileCardProps {
   isVerifiedUniversity: boolean
   degree: string
   country: string
-
   isSelfProfile?: boolean
   userId?: string
   universityLogo: string

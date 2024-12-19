@@ -32,6 +32,7 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
+import { formatDistanceToNow } from 'date-fns'
 dayjs.extend(relativeTime)
 
 type Props = {
@@ -314,18 +315,18 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
 
             <div>
               <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
-              <p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>
-              <p className="text-2xs max-sm:text-[10px] text-neutral-500">{`${comment?.commenterProfileId?.study_year}nd Yr ${comment?.commenterProfileId?.degree}`}</p>
+              {/*<p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>*/}
+              <p className="text-2xs max-sm:text-[10px] text-neutral-500">{`${comment?.commenterProfileId?.study_year} year, ${comment?.commenterProfileId?.degree}`}</p>
             </div>
             <p className="ml-auto text-xs max-sm:text-[10px] text-gray">
-              {comment.createdAt && dayjs(new Date(comment?.createdAt).toString()).format('h:mm A · MMM D, YYYY')}
+              {comment.createdAt && formatDistanceToNow(comment?.createdAt as unknown as Date, { addSuffix: true })}
             </p>
           </div>
         </div>
-        <div className="flex gap-4 ps-[86px] max-sm:ps-[70px]">
+        <div className="flex gap-4 ps-[60px] max-sm:ps-[70px]">
           <pre className="font-poppins text-xs pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</pre>
         </div>
-        <div className="flex justify-start ps-[86px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-s max-sm:text-s">
+        <div className="flex justify-start ps-[60px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-s max-sm:text-s">
           <div className="flex items-center cursor-pointer">
             <AiOutlineLike
               onClick={() => likePostCommentHandler(comment._id)}
