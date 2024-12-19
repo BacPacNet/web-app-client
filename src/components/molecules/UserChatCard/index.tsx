@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import avatar from '@assets/avatar.svg'
 import { FaUsers } from 'react-icons/fa'
+import { format } from 'date-fns'
 type User = {
   userId: {
     _id: string
@@ -29,7 +30,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
     <>
       <div className=" hover:bg-secondary">
         <div className="flex justify-between p-4">
-          <div className="flex gap-4 items-center relative w-5/6">
+          <div className="flex gap-4 items-center relative">
             <div className="w-12 h-12 flex-none">
               {isGroupChat && !profilePic ? (
                 <FaUsers className="w-12 h-12 rounded-full bg-neutral-200 p-2 text-primary-700" />
@@ -57,8 +58,8 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               </p>
             </div>
           </div>
-          <div className="w-1/6 text-right">
-            <p className="text-neutral-400 font-normal text-[12px] ">{date}</p>
+          <div className="text-right">
+            <p className="text-neutral-400 font-normal text-[12px] ">{date && format(new Date(date), 'hh:mm a')}</p>
           </div>
         </div>
       </div>

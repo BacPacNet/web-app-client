@@ -7,6 +7,7 @@ import { MdPersonAddAlt1 } from 'react-icons/md'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { MdOutlineNotificationImportant } from 'react-icons/md'
+import { useRouter } from 'next/navigation'
 dayjs.extend(relativeTime)
 
 type Notification = {
@@ -29,6 +30,7 @@ const NotificationBox = ({ notifications }: NotificationsProps) => {
   const { fetchNextPage, isFetchingNextPage, hasNextPage } = useGetNotification(3, false)
   const { mutate: updateIsSeen } = useUpdateIsSeenCommunityGroupNotification()
   const containerRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   const handleIsSeenGroup = (id: string) => {
     const dataToPush = {
@@ -90,7 +92,9 @@ const NotificationBox = ({ notifications }: NotificationsProps) => {
       ))}
       {hasNextPage && (
         <div className="flex justify-center fixed rounded-b-md -bottom-6 bg-white w-11/12 ">
-          <button className="p-2 text-primary ">See More</button>
+          <button onClick={() => router.push('/notifications')} className="p-2 text-primary ">
+            See More
+          </button>
         </div>
       )}
     </div>

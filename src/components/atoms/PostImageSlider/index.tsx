@@ -22,8 +22,8 @@ type prop = {
 
 export default function PostImageSlider({ images, initialSlide, messageImage }: prop) {
   return (
-    <div className={` w-1/2 h-1/2 max-sm:w-11/12 max-sm:h-5/6  relative bg-red-900`}>
-      <p className="bg-white rounded-full self-end w-max absolute z-50 right-0 text2xs p-2" onClick={() => closeImageModal()}>
+    <div className={` w-1/2 h-1/2 max-sm:w-11/12 max-sm:h-5/6  relative`}>
+      <p className="bg-white rounded-full self-end w-max absolute z-50 right-2 top-2 text2xs p-1" onClick={() => closeImageModal()}>
         <RxCross2 />
       </p>
 
@@ -39,7 +39,7 @@ export default function PostImageSlider({ images, initialSlide, messageImage }: 
         navigation={true}
         modules={[Keyboard, Navigation]}
         initialSlide={initialSlide || 0}
-        className="mySwiper "
+        className="mySwiper rounded-xl"
       >
         {images?.map((item: any) => (
           <SwiperSlide key={item?.imageUrl}>

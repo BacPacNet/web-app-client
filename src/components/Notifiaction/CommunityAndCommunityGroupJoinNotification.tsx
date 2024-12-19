@@ -60,7 +60,7 @@ const CommunityAndCommunityGroupJoinNotification = ({ data }: Props) => {
   }
 
   return (
-    <div className={`flex flex-col gap-2  border-b-2 border-neutral-300 pb-5 me-10 hover:bg-neutral-200 hover:p-5 transition-all duration-200 `}>
+    <div className={`flex flex-col gap-2 p-4 border-b-2 border-neutral-300 pb-5 hover:bg-neutral-200 transition-all duration-200 `}>
       <div className="flex justify-between ">
         <div className="flex gap-4 items-center  ">
           <Image

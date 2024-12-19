@@ -92,17 +92,17 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   }
 
   return (
-    <div ref={ref} className="flex gap-4 relative w-full" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
-      <div className="relative w-14 h-14 flex-none">
-        <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-14 h-14 rounded-full" />
+    <div ref={ref} className="flex gap-2 relative w-full">
+      <div className="relative w-10 h-10 flex-none">
+        <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
       </div>
-      <div className="w-full">
+      <div className="flex-1 overflow-y-auto">
         <div className="flex gap-2 items-center">
           <p className="text-sm font-semibold text-neutral-700">{name}</p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
-        <p className="text-xs text-neutral-900">{content}</p>
+        <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap">{content}</p>
         {/* {media.length
           ? media.map((item) => <Image key={item.publicId} src={item?.imageUrl} alt="media" width={140} height={140} className="w-40 " />)
           : ''} */}
@@ -111,7 +111,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
         </div>
       </div>
       {/* //reaction  */}
-      {isReact && (
+      {/*{isReact && (
         <div className="absolute -bottom-8 bg-slate-200 rounded-full w-44 h-8 z-20 flex justify-between text-2xl ">
           {emojis.map((emoji) => (
             <p key={emoji} className="cursor-pointer" onClick={() => reactToMessage({ data: { messageId: id, emoji } })}>
@@ -119,8 +119,8 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
             </p>
           ))}
         </div>
-      )}
-      {reactions && (
+      )}*/}
+      {/*{reactions && (
         <div className="absolute -bottom-8  rounded-full w-8 h-8  flex justify-between text-2xl ">
           {reactions.map((emoji) => (
             <p key={emoji.userId} className="cursor-pointer">
@@ -128,7 +128,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
             </p>
           ))}
         </div>
-      )}
+      )}*/}
     </div>
   )
 }
@@ -193,7 +193,6 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
       <div className="flex flex-col h-[78%] overflow-y-scroll px-4  gap-8 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = formatDate(item.createdAt)
-
           // Check if the date has changed
           const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
           previousDate = dayjs(item.createdAt)

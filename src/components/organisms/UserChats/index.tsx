@@ -43,7 +43,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             users={[item?.users]}
             isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
-            date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
+            date={item?.latestMessage?.createdAt}
             YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
@@ -69,7 +69,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             users={[item?.users]}
             isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
-            date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
+            date={item?.latestMessage?.createdAt}
             YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
@@ -91,7 +91,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
             users={[item?.users]}
             isSeen={item?.latestMessage?.readByUsers?.includes(userData?.id || ' ')}
             lastMessage={item?.latestMessage?.content}
-            date={item?.latestMessage?.createdAt && dayjs(new Date(item?.latestMessage?.createdAt).toString()).fromNow()}
+            date={item?.latestMessage?.createdAt}
             YourID={userData?.id}
             unRead={item?.unreadMessagesCount}
           />
