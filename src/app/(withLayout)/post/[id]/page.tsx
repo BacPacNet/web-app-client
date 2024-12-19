@@ -34,10 +34,6 @@ const SinglePost = () => {
     }
   }, [imageCarasol])
 
-  // if (!data || Object.keys(data).length === 0) {
-  //   return <div className="h-screen flex justify-center items-center">Not Allowed</div>
-  // }
-
   if (isError) {
     return <div className="h-screen flex justify-center items-center">Not Allowed</div>
   }

@@ -4,14 +4,11 @@ import React, { useEffect, useMemo, useState } from 'react'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
 import './index.css'
 import { useUniStore } from '@/store/store'
-import { useGetCommunity, useJoinCommunity, useLeaveCommunity, useUpdateCommunity } from '@/services/community-university'
-import { IoMdSettings } from 'react-icons/io'
-import { replaceImage } from '@/services/uploadImage'
-import { MdAddAPhoto } from 'react-icons/md'
+import { useGetCommunity, useJoinCommunity, useLeaveCommunity } from '@/services/community-university'
+
 import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
-import useCookie from '@/hooks/useCookie'
-import Spinner from '@/components/atoms/spinner'
+
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 
@@ -28,9 +25,6 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
-  const { mutate: updateCommunity } = useUpdateCommunity()
-  //  const selectedCommunityData = Communitydata?.community?.find((item: any) => item?._id == communityID)
-  //  const selectedCommunityGroupData = communityGroupID && CommunityGroupdata?.groups?.find((item: any) => item?._id == communityGroupID)
 
   const { userData, userProfileData } = useUniStore()
 
@@ -71,42 +65,9 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
         },
       })
     } else {
-      // leaveCommunity(communityID, {
-      //   onSuccess: () => {
-      //     setIsUserJoinedCommunity(false)
-      //   },
-      // })
       openModal(<CommunityLeaveModal communityID={communityID} setIsUserJoinedCommunity={setIsUserJoinedCommunity} />, 'h-max w-96')
     }
   }
-
-  //  const handleCoverImageUpload = async (e: any) => {
-  //    const files = e.target.files
-
-  //    if (files && files[0]) {
-  //      const imagedata: any = await replaceImage(files[0], communityData?.communityCoverUrl?.publicId)
-
-  //      const dataToPush = { communityCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-
-  //      updateCommunity({ id: communityData?._id, data: dataToPush })
-  //    } else {
-  //      console.error('No file selected.')
-  //    }
-  //  }
-
-  //  const handleLogoImageUpload = async (e: any) => {
-  //    const files = e.target.files
-
-  //    if (files && files[0]) {
-  //      const imagedata: any = await replaceImage(files[0], communityData?.communityLogoUrl?.publicId)
-
-  //      const dataToPush = { communityLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-
-  //      updateCommunity({ id: communityData?._id, data: dataToPush })
-  //    } else {
-  //      console.error('No file selected.')
-  //    }
-  //  }
 
   if (isCommunityLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
 

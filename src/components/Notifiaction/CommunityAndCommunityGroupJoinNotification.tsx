@@ -45,8 +45,6 @@ const CommunityAndCommunityGroupJoinNotification = ({ data }: Props) => {
   const handleJoinGroup = (groupId: string = '', id: string) => {
     if (!groupId || !id) return
 
-    // if (data?.isRead) return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}`)
-
     const dataToPush = {
       groupId: groupId,
       id: id,
