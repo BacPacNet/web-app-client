@@ -98,14 +98,9 @@ const LoginBox = () => {
             <label className="w-fit text-neutral-500 text-xs cursor-pointer hover:text-primary hover:underline">Forgot Password?</label>
           </div>
 
-          {/*<div className="flex gap-2 items-center">
-            <input className="w-4 h-4 border-neutral-300" type="checkbox" />
-            <p className="text-neutral-900 text-sm">Remember device for 30 days</p>
-          </div>*/}
           <Button disabled={isPending} variant="primary">
             {isPending ? <Spinner /> : 'Log in'}
           </Button>
-          <InputWarningText>{isAxiosError(error) && error.response?.data?.message}</InputWarningText>
         </form>
       </div>
       <button className="mt-4 mx-auto">

@@ -139,7 +139,7 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
               width={45}
               height={45}
               objectFit="cover"
-              className="object-none rounded-full h-[inherit]"
+              className="object-cover rounded-full h-[inherit]"
               src={userProfileData?.profile_dp?.imageUrl || avatar}
               alt="avatar.png"
             />

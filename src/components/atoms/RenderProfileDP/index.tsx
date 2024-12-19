@@ -16,10 +16,10 @@ function ProfilePicture({ userProfileData }: Props) {
 
   return (
     <Image
-      width={50}
-      height={50}
+      width={60}
+      height={60}
       objectFit="cover"
-      className="w-[50px] h-[50px] rounded-full flex-none"
+      className="w-[60px] h-[60px] rounded-full flex-none"
       src={userProfileData.profile_dp?.imageUrl || avatar}
       alt="profile.png"
     />
