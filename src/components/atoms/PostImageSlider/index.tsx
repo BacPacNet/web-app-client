@@ -1,7 +1,7 @@
 import React from 'react'
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react'
-
+import { RxCross2 } from 'react-icons/rx'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -12,6 +12,7 @@ import './index.css'
 // import required modules
 import { Keyboard, Pagination, Navigation } from 'swiper/modules'
 import Image from 'next/image'
+import { closeImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 
 type prop = {
   images: { imageUrl: string }[]
@@ -21,7 +22,11 @@ type prop = {
 
 export default function PostImageSlider({ images, initialSlide, messageImage }: prop) {
   return (
-    <div className={`z-40 fixed ${messageImage ? 'w-full h-[400px]' : 'w-[60%] h-3/6'}  top-1/4  `}>
+    <div className={` w-1/2 h-1/2 max-sm:w-11/12 max-sm:h-5/6  relative bg-red-900`}>
+      <p className="bg-white rounded-full self-end w-max absolute z-50 right-0 text2xs p-2" onClick={() => closeImageModal()}>
+        <RxCross2 />
+      </p>
+
       <Swiper
         slidesPerView={1}
         spaceBetween={30}
@@ -38,7 +43,7 @@ export default function PostImageSlider({ images, initialSlide, messageImage }: 
       >
         {images?.map((item: any) => (
           <SwiperSlide key={item?.imageUrl}>
-            {<Image layout="fill" objectFit="cover" objectPosition="center" src={item?.imageUrl} alt="item" />}
+            {<Image layout="fill" objectFit="contain" objectPosition="center" src={item?.imageUrl} alt="item" className="bg-neutral-800" />}
           </SwiperSlide>
         ))}
       </Swiper>

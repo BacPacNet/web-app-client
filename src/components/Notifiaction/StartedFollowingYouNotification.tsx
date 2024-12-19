@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useUpdateIsRead } from '@/services/notification'
 import { useRouter } from 'next/navigation'
+import { notificationRoleAccess } from '../organisms/NotificationTabs/NotificationTab'
 
 dayjs.extend(relativeTime)
 
@@ -39,7 +40,7 @@ interface Props {
 }
 
 const StartedFollowingYouNotification = ({ data }: Props) => {
-  const { mutate: updateIsSeen } = useUpdateIsRead()
+  const { mutate: updateIsSeen } = useUpdateIsRead(notificationRoleAccess.FOLLOW)
   const router = useRouter()
   const handleUpdateIsRead = (id: string) => {
     const dataToPush = {

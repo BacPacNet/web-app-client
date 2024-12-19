@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import SecondaryNavbar from '@/components/Timeline/Navbar'
 import LogoNavbar from '@/components/atoms/LogoNavbar'
 import { ModalManager } from '@/components/molecules/Modal/ModalManager'
+import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 type FontClassName = string
 
 const inter = Inter({
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <LogoNavbar />
             <Toaster />
             <ModalManager />
+            <ImageManager />
             {children}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>

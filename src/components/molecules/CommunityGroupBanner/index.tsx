@@ -4,15 +4,16 @@ import React, { useEffect, useMemo, useState } from 'react'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
 import './index.css'
 import { useUniStore } from '@/store/store'
-import { useGetCommunityGroup, useUpdateCommunity, useUpdateCommunityGroup } from '@/services/community-university'
+import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { MdAddAPhoto } from 'react-icons/md'
 import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { HiPencilAlt } from 'react-icons/hi'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
-import { useJoinCommunityGroup, useLeaveCommunityGroup } from '@/services/community-group'
+import { useJoinCommunityGroup } from '@/services/community-group'
 import { openModal } from '../Modal/ModalManager'
+import CommunityLeaveModal from '../CommunityLeaveModal'
 
 interface Props {
   communityID: string
@@ -27,9 +28,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityID, communityGroupID)
   const { mutate: joinCommunityGroup, isPending: isJoinCommunityPending } = useJoinCommunityGroup()
-  const { mutate: leaveCommunityGroup, isPending: isLeaveCommunityPending } = useLeaveCommunityGroup()
   const { mutate: updateCommunity } = useUpdateCommunity()
-  const { mutate: UpdateCommunityGroup } = useUpdateCommunityGroup()
 
   useEffect(() => {
     if (communityGroupID) {
@@ -58,11 +57,10 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
         },
       })
     } else {
-      leaveCommunityGroup(communityGroupID, {
-        onSuccess: () => {
-          setIsUserJoinedCommunityGroup(false)
-        },
-      })
+      openModal(
+        <CommunityLeaveModal communityGroupID={communityGroupID} setIsUserJoinedCommunityGroup={setIsUserJoinedCommunityGroup} />,
+        'h-max w-96'
+      )
     }
   }
 

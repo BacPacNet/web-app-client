@@ -11,8 +11,8 @@ export const MENU_LIST = [
     name: 'About Us',
     path: '/about',
   },
-  {
-    name: 'UPGRADE',
-    path: '/upgrade',
-  },
+  // {
+  //   name: 'UPGRADE',
+  //   path: '/upgrade',
+  // },
 ]

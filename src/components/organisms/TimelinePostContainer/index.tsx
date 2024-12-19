@@ -1,6 +1,7 @@
 'use client'
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
+import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
@@ -53,6 +54,12 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     }
   }, [timelinePostHasNextPage, timelinePostIsFetchingNextPage, timelinePostsNextpage])
 
+  useEffect(() => {
+    if (imageCarasol.isShow) {
+      openImageModal(<PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />)
+    }
+  }, [imageCarasol])
+
   const renderPostWithRespectToPathName = () => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
@@ -98,22 +105,6 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
       <div className="flex flex-col gap-6">
         <PostCardRender />
       </div>
-
-      {imageCarasol.isShow && (
-        <div className="relative h-screen w-full ">
-          <div
-            onClick={() =>
-              setImageCarasol({
-                isShow: false,
-                images: [],
-                currImageIndex: 0,
-              })
-            }
-            className="bg-black w-full h-full fixed -top-0 -left-[0%] z-30 opacity-50"
-          ></div>
-          <PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} />
-        </div>
-      )}
     </div>
   )
 }

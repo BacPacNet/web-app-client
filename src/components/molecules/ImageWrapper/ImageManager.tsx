@@ -1,20 +1,16 @@
 'use client'
 import React, { useState, useCallback } from 'react'
-import ModalWrapper from './ModalWrapper'
 
 let setModalState: any = null
 let setContentState: any = null
-let Style: any = null
 
-export const ModalManager = () => {
+export const ImageManager = () => {
   const [isShown, setIsShown] = useState(false)
   const [modalContent, setModalContent] = useState<React.ReactNode>(null)
-  const [style, setStyle] = useState('')
 
   if (setModalState === null) {
     setModalState = setIsShown
     setContentState = setModalContent
-    Style = setStyle
   }
 
   const showModal = (content: React.ReactNode) => {
@@ -27,27 +23,22 @@ export const ModalManager = () => {
     setModalContent(null)
   }
 
-  const modalActions = {
-    showModal,
-    hideModal,
-  }
-
   return isShown ? (
-    <ModalWrapper setModal={hideModal} isShown={isShown} style={style}>
+    <div className={`z-50 fixed  w-full h-screen top-0 flex items-center justify-center`}>
+      <div onClick={() => setIsShown(false)} className="bg-black opacity-70 top-0 w-full h-screen fixed -z-10"></div>
       {modalContent}
-    </ModalWrapper>
+    </div>
   ) : null
 }
 
-export const openModal = (content: React.ReactNode, style: string = ' h-[700px] w-[550px]') => {
+export const openImageModal = (content: React.ReactNode) => {
   if (setModalState) {
     setModalState(true)
     setContentState(content)
-    Style(style)
   }
 }
 
-export const closeModal = () => {
+export const closeImageModal = () => {
   if (setModalState) {
     setModalState(false)
     setContentState(null)
