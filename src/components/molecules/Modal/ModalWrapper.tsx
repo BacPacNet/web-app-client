@@ -26,7 +26,7 @@ const ModalWrapper = ({
        flex justify-center items-center z-50`}
     >
       <div onClick={() => setModal(false)} className="bg-black opacity-70 w-full h-screen fixed -z-10"></div>
-      <div className={`relative bg-white  ${style}  max-sm:w-11/12 max-md:w-2/3  max-h-[85%] overflow-y-auto rounded-2xl shadow-lg px-4 py-4 `}>
+      <div className={`relative bg-white  ${style}  max-sm:w-11/12 max-md:w-2/3  max-h-[85%] overflow-y-auto rounded-2xl shadow-lg p-4 lg:p-8 `}>
         <div className="absolute right-0 top-0">
           <button onClick={() => setModal(false)} className="p-2">
             <IoClose size={24} />

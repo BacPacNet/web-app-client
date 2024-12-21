@@ -6,6 +6,7 @@ import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
+import { useRouter } from 'next/navigation'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -239,12 +240,15 @@ export function useGetCommunityGroups(communityId: string, communityGroupId: str
 //create community
 export const useCreateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
+  const router = useRouter()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
-      showCustomSuccessToast('Community successfully created ')
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      showCustomSuccessToast('Community created successfully')
+      router.push(`/community/${response?.data?.communityId}/${response?.data?._id}`)
     },
     onError: (error: any) => {
       console.log(error.response.data.message, 'res')
@@ -258,11 +262,14 @@ export const useUpdateCommunityGroup = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ communityId, payload }: { communityId: string; payload: any }) => UpdateCommunityGroup(payload, communityId, cookieValue),
-    onSuccess: (response: any) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+      queryClient.invalidateQueries({ queryKey: ['community'] })
+      showCustomSuccessToast('Updated Sucessfully')
     },
     onError: (res: any) => {
       console.error(res.response.data.message)
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
