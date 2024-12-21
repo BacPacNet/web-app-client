@@ -83,11 +83,11 @@ const NotificationBox = ({ notifications }: NotificationsProps) => {
               />
             </div>
             <div>
-              <p>{item?.sender_id?.firstName + ' ' + item?.sender_id?.lastName}</p>
-              <p className="text-neutral-400 text-sm">{item?.message}</p>
+              <p className="text-xs">{item?.sender_id?.firstName + ' ' + item?.sender_id?.lastName}</p>
+              <p className="text-neutral-400 text-xs">{item?.message}</p>
             </div>
           </div>
-          <div className="flex items-center text-neutral-400">{dayjs(new Date(item?.createdAt).toString()).fromNow()}</div>
+          <div className="flex items-center text-neutral-400 text-2xs">{dayjs(new Date(item?.createdAt).toString()).fromNow()}</div>
         </div>
       ))}
       {hasNextPage && (

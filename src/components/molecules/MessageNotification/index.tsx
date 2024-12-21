@@ -103,7 +103,7 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
               <p className="text-neutral-400 text-sm ">{item?.latestMessage.media.length ? 'Sent a media file' : ''}</p>
             </div>
           </div>
-          <div className="flex items-center text-neutral-400">{dayjs(new Date(item?.latestMessage.createdAt).toString()).fromNow()}</div>
+          <div className="flex items-center text-neutral-400 text-2xs">{dayjs(new Date(item?.latestMessage.createdAt).toString()).fromNow()}</div>
         </div>
       ))}
       {hasNextPage && (

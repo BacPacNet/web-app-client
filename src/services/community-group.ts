@@ -55,6 +55,13 @@ async function leaveCommunityGroupAPI(communityGroupId: string, token: string) {
   })
 }
 
+async function deleteCommunityGroupAPI(communityGroupId: string, token: string) {
+  return await client(`/communitygroup/${communityGroupId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 /**
  * Custom hook to handle leaving a community group
  * @returns Mutation object from react-query
@@ -76,6 +83,30 @@ export const useLeaveCommunityGroup = () => {
     onError: (error: any) => {
       const errorMessage = error?.response?.data?.message || 'Something went wrong'
       console.error('Error leaving community group:', errorMessage)
+    },
+  })
+}
+
+/**
+ * Custom hook to handle delete a community group
+ * @returns Mutation object from react-query
+ */
+export const useDeleteCommunityGroup = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (communityGroupId: string) => deleteCommunityGroupAPI(communityGroupId, cookieValue),
+
+    onSuccess: () => {
+      showCustomSuccessToast(`Community group deleted`)
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+    },
+
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || 'Something went wrong'
+      console.error('Error deleting community group:', errorMessage)
+      showCustomDangerToast(errorMessage)
     },
   })
 }

@@ -64,8 +64,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     }
   }
 
-  const [dataToDisplay, setDataToDisplay] = useState({ title: '', desc: '', membersCount: 0, coverImage: '', logoImage: '', adminId: '', id: '' })
-
   const handleEditCommunityGroupModal = () => {
     if (!communityGroups) return
     openModal(<EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />)
@@ -85,23 +83,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     }
   }
 
-  const handleLogoImageUpload = async (e: any) => {
-    const files = e.target.files
-
-    if (files && files[0]) {
-      const imagedata: any = await replaceImage(files[0], communityGroups?.communityGroupLogoUrl?.publicId)
-
-      const dataToPush = { communityLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-
-      updateCommunity({ id: communityGroups?._id, data: dataToPush })
-    } else {
-      console.error('No file selected.')
-    }
-  }
-
   if (isCommunityGroupsLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
-
-  const { communityGroupCategory } = communityGroups || {}
 
   return (
     <>
@@ -115,34 +97,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
             alt={'university'}
             className="h-full w-full object-cover object-top"
           />
-          {!communityGroupID ? (
-            <div
-              className={`${
-                dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
-              }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
-            >
-              <input style={{ display: 'none' }} type="file" id="CommunityCoverImagefile" onChange={(e) => handleCoverImageUpload(e)} />
-              <label htmlFor="CommunityCoverImagefile">
-                <MdAddAPhoto />
-              </label>
-            </div>
-          ) : (
-            <div
-              className={`${
-                dataToDisplay?.adminId == userData?.id ? 'absolute  ' : 'hidden'
-              }  w-8 h-8 rounded-full bg-white shadow-2xl z-0 top-5 right-[5%] flex items-center justify-center `}
-            >
-              <input
-                style={{ display: 'none' }}
-                type="file"
-                id="CommunityGroupCoverImagefile"
-                // onChange={(e) => handleGroupCoverImageUpload(e)}
-              />
-              <label htmlFor="CommunityGroupCoverImagefile">
-                <MdAddAPhoto />
-              </label>
-            </div>
-          )}
         </div>
         <div className="p-4">
           <div className="card-title flex justify-between items-center">
@@ -166,7 +120,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
             </div>
             <div
               className={`${
-                dataToDisplay?.adminId != userData?.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
+                communityGroups?.adminUserId != userData?.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
               } flex  items-center`}
             >
               {isGroupAdmin ? (
