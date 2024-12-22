@@ -2,13 +2,30 @@ import mongoose from 'mongoose'
 
 interface users {
   userId: mongoose.Types.ObjectId | string
-
   isRequestAccepted: boolean
   firstName: string
   lastName: string
   year: string
   degree: string
   major: string
+}
+
+export interface CreateCommunityGroupType {
+  title: string
+  description: string
+  communityGroupType: string
+  communityGroupAccess: string
+  selectedGroupCategory: string | null
+  groupSubCategory: Array<string>
+  communityGroupLogoUrl: {
+    imageUrl: string
+    publicId: string
+  } | null
+  communityGroupLogoCoverUrl: {
+    imageUrl: string
+    publicId: string
+  } | null
+  selectedUsers: users[]
 }
 
 export interface CommunityGroupType {

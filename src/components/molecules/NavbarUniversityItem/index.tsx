@@ -65,6 +65,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const handleNewGroupModal = () => {
     openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
+    toggleLeftNavbar()
   }
   const handleAssignUsersModal = () => {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)

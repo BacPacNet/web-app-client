@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface PillProps extends React.ButtonHTMLAttributes<HTMLDivElement> {
   className?: string
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
 }
 
-const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, disabled, ...props }) => {
+const Pill: React.FC<PillProps> = ({ className = '', variant = 'primary', size = 'small', children, disabled, ...props }) => {
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
@@ -26,14 +26,13 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
   const variantClass = variantClasses[variant]
   const variantSize = variantSizes[size]
   return (
-    <button
-      disabled={disabled}
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 ${className}`}
+    <div
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 cursor-pointer ${className}`}
       {...props}
     >
       {children}
-    </button>
+    </div>
   )
 }
 
-export default Buttons
+export default Pill

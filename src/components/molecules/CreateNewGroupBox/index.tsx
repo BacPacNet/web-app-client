@@ -7,99 +7,167 @@ import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-u
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
-import Buttons from '@/components/atoms/Buttons'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
-import { categories, Category, subCategories } from '@/types/CommuityGroup'
+import { categories, Category, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
+import Pill from '@/components/atoms/Pill'
+import { closeModal } from '../Modal/ModalManager'
+import { CommunityUsers } from '@/types/Community'
 
 type Props = {
   communityId: string
   setNewGroup: (value: boolean) => void
 }
-
-type user = {
-  id: string
-  profileImageUrl: string
-  firstName: string
-  year: string
-  degree: string
-  major: string
+type media = {
+  imageUrl: string
+  publicId: string
 }
 
+type User = {
+  id: string
+  firstName: string
+  isOnline?: boolean
+  profile: {
+    profile_dp: media
+    _id: string
+  }
+}
+type FilterType = 'ALL' | 'SAME_YEAR' | 'SAME_MAJOR' | null
+
 const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState()
   const [coverImage, setCoverImage] = useState()
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedUsers, setSelectedUsers] = useState<user[] | []>([])
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
-  const [searchInput, setSearchInput] = useState('')
-  const [selectedGroupCategory, setSelectedGroupCategory] = useState<Category | null>(null)
-  const [groupSubCategory, setGroupSubCategory] = useState<string[]>([])
   const { data: communityData } = useGetCommunity(communityId)
+
+  const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
 
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
   const {
     register: GroupRegister,
+    watch,
     handleSubmit: handleGroupCreate,
-    formState: { errors: GroupErrors },
-    getValues,
+    formState: { errors },
     setError,
-  } = useForm()
+    setValue,
+    getValues,
+  } = useForm<CreateCommunityGroupType>({
+    defaultValues: {
+      communityGroupLogoUrl: null,
+      communityGroupLogoCoverUrl: null,
+      title: '',
+      description: '',
+      communityGroupAccess: '',
+      communityGroupType: '',
+      selectedGroupCategory: '',
+      groupSubCategory: [],
+      selectedUsers: [],
+    },
+  })
+
+  const SelectedGroupCategory = watch('selectedGroupCategory') as string
+  const GroupSubCategory = watch('groupSubCategory') as Array<string>
+  const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
 
   const handleSelectAll = useCallback(() => {
-    const getAlluser: any = communityData?.users?.filter((user) => user?.id !== userData?.id).map((user) => user)
-    setSelectedUsers(getAlluser)
-  }, [])
+    if (selectedFilter === 'ALL') {
+      setValue('selectedUsers', [])
+      setSelectedFilter(null)
+    } else {
+      const getAllUsers = communityData?.users?.filter((user) => user?.id !== userData?.id)
+      setValue('selectedUsers', getAllUsers as any)
+      setSelectedFilter('ALL')
+    }
+  }, [selectedFilter, communityData, userData])
+
+  const handleSelectSameYear = useCallback(() => {
+    if (selectedFilter === 'SAME_YEAR') {
+      setValue('selectedUsers', [])
+      setSelectedFilter(null)
+    } else {
+      const getAllUsers = communityData?.users?.filter(
+        (user) => user.year === userProfileData?.study_year && user?.id !== userData?.id
+      ) as unknown as CommunityUsers[]
+      setValue('selectedUsers', getAllUsers as any)
+      setSelectedFilter('SAME_YEAR')
+    }
+  }, [selectedFilter, communityData, userProfileData, userData])
+
+  const handleSelectSameMajor = useCallback(() => {
+    if (selectedFilter === 'SAME_MAJOR') {
+      setValue('selectedUsers', [])
+      setSelectedFilter(null)
+    } else {
+      const getAllUsers = communityData?.users?.filter(
+        (user) => user.major === userProfileData?.major && user?.id !== userData?.id
+      ) as unknown as CommunityUsers[]
+      setValue('selectedUsers', getAllUsers as any)
+      setSelectedFilter('SAME_MAJOR')
+    }
+  }, [selectedFilter, communityData, userProfileData, userData])
 
   const handleCategoryChange = (category: Category) => {
-    setSelectedGroupCategory(category)
-    setGroupSubCategory([])
+    setValue('selectedGroupCategory', category)
+    if (SelectedGroupCategory !== category) {
+      setValue('groupSubCategory', [])
+    }
   }
 
   const handleSubCategoryChange = (subCategory: string) => {
-    setGroupSubCategory((prev) => (prev.includes(subCategory) ? prev.filter((item) => item !== subCategory) : [...prev, subCategory]))
+    const getGroupSubCategory = getValues('groupSubCategory')
+    const filterSubCategory = getGroupSubCategory.includes(subCategory)
+      ? getGroupSubCategory.filter((item: string) => item !== subCategory)
+      : [...getGroupSubCategory, subCategory]
+    setValue('groupSubCategory', filterSubCategory)
+    //setGroupSubCategory((prev) => (prev.includes(subCategory) ? prev.filter((item) => item !== subCategory) : [...prev, subCategory]))
+  }
+
+  const handleImageUpload = async (files: string) => {
+    if (files) {
+      const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
+      return { imageUrl: data?.imageUrl, publicId: data?.publicId }
+    } else {
+      console.error('No file selected.')
+    }
   }
 
   const onGroupSubmit = async (data: any) => {
+    setIsLoading(true)
     let CoverImageData
     let logoImageData
-    setIsLoading(true)
+    if (SelectedGroupCategory !== 'Others' && GroupSubCategory.length < 1) {
+      setIsLoading(false)
+      return setError('selectedGroupCategory', { type: 'manual', message: 'Sub category required!' })
+    }
+    console.log(errors, 'errors')
     if (coverImage) {
-      const imagedata: any = await replaceImage(coverImage, '')
-      CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      CoverImageData = await handleImageUpload(coverImage)
+      setValue('communityGroupLogoCoverUrl', CoverImageData as any)
     }
     if (logoImage) {
-      const imagedata: any = await replaceImage(logoImage, '')
-      logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      logoImageData = await handleImageUpload(logoImage)
+      setValue('communityGroupLogoUrl', logoImageData as any)
     }
 
-    if (selectedGroupCategory !== 'Others' && groupSubCategory.length < 1) {
-      setIsLoading(false)
-      return setError('groupCategory', { type: 'manual', message: 'Sub category required!' })
-    }
-    const selectedUsersId = selectedUsers.map((item) => item.id)
-    const dataToPush = {
+    const payload = {
       ...data,
-      ...CoverImageData,
-      ...logoImageData,
-      selectedUsersId,
-      selectedGroupCategory,
-      groupSubCategory,
+      communityGroupLogoUrl: logoImageData,
+      communityGroupLogoCoverUrl: CoverImageData,
     }
 
-    // return console.log('push', dataToPush)
-
-    createGroup({ communityId: communityId, data: dataToPush })
+    createGroup({ communityId: communityId, data: payload })
     setIsLoading(false)
     setNewGroup(false)
+    closeModal()
   }
 
   const handleClick = (userId: string) => {
-    if (selectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
-      const filterd = selectedUsers.filter((selectedUser) => selectedUser.id !== userId)
-      setSelectedUsers(filterd)
+    if (SelectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
+      const filterUsers = SelectedUsers.filter((selectedUser) => selectedUser.id !== userId)
+      setValue('selectedUsers', filterUsers as any)
     }
   }
 
@@ -124,7 +192,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
         {/* log0 */}
 
         {/* Forms  */}
-        <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-4">
+        <form className="w-full flex flex-col gap-4">
           <div className="flex gap-4 items-center justify-between">
             <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
               {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
@@ -146,7 +214,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 })}
               />
 
-              {GroupErrors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}
+              {errors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}
             </div>
           </div>
 
@@ -163,7 +231,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               placeholder="Enter description"
             ></textarea>
 
-            {GroupErrors.description && <span className="text-red-500 text-2xs font-normal"> This field is required</span>}
+            {errors.description && <span className="text-red-500 text-2xs font-normal"> This field is required</span>}
           </div>
 
           <div>
@@ -183,7 +251,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
               </div>
             </label>
-            {GroupErrors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
+            {errors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
           </div>
 
           {/* communty group type  */}
@@ -205,52 +273,36 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 <p className="text-neutral-400 text-[12px] ">Require university approval</p>
               </div>
             </label>
-            {GroupErrors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
+            {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
 
-          {/* Repost setting  */}
-          {/*<div>
-              <h2 className="font-medium text-xs">Group Type</h2>
-              <label className="flex items-center gap-3">
-                <input type="radio" value="public" {...GroupRegister('repostSetting', { required: true })} className="w-5 h-5" />
-                <div className="py-3">
-                  <span className="text-neutral-900 text-[12px] font-medium">Allow reposting on user’s timelines</span>
-                </div>
-              </label>
-
-              <label className="flex items-center gap-3">
-                <input type="radio" value="private" {...GroupRegister('repostSetting', { required: true })} className="w-5 h-5" />
-                <div>
-                  <span className="text-neutral-900 text-[12px] font-medium">Only allow reposting within group</span>
-                </div>
-              </label>
-              {GroupErrors.repostSetting && <p className="text-red-500 text-2xs text-sm">This field is required</p>}
-            </div>*/}
-
-          {/* category  */}
           <div>
             <h2 className="font-medium text-xs py-2">Group Category</h2>
             <div className="flex flex-col gap-3">
               {categories.map((category) => (
                 <>
-                  <label onClick={() => handleCategoryChange(category)} key={category} className="flex items-center gap-3">
+                  <label key={category} className="flex items-center gap-3">
                     <input
+                      onClick={() => handleCategoryChange(category)}
                       type="radio"
                       value={category.toLowerCase().replace(/ /g, '-')}
-                      {...GroupRegister('groupCategory', { required: true })}
+                      checked={getValues('selectedGroupCategory') === category}
+                      {...GroupRegister('selectedGroupCategory', { required: true })}
                       className="w-5 h-5"
+                      name="group-cateogry"
                     />
                     <span className="text-neutral-900 text-[12px] font-medium">{category}</span>
                   </label>
 
-                  {selectedGroupCategory === category && (
+                  {SelectedGroupCategory === category && (
                     <div className="mt-2 grid grid-cols-2 gap-4 ps-4">
                       {subCategories[category].map((subCategory) => (
                         <label key={subCategory} className="flex items-center gap-2">
                           <input
+                            name="groupSubCategory"
                             type="checkbox"
                             value={subCategory}
-                            checked={groupSubCategory.includes(subCategory)}
+                            checked={GroupSubCategory.includes(subCategory)}
                             onChange={() => handleSubCategoryChange(subCategory)}
                             className="w-4 h-4"
                           />
@@ -262,49 +314,49 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 </>
               ))}
             </div>
-            {GroupErrors.groupCategory && (
-              <p className="text-red-500 text-2xs ">{GroupErrors.groupCategory.message?.toString() || 'This field is required'}</p>
+            {errors.selectedGroupCategory && (
+              <p className="text-red-500 text-2xs ">{errors.selectedGroupCategory.message?.toString() || 'This field is required'}</p>
             )}
           </div>
           <div className="relative w-full flex flex-col">
             <label htmlFor="inviteFriends" className="font-medium text-xs">
               Add Members
             </label>
-            <div
-              onClick={() => setShowSelectUsers(!showSelectUsers)}
-              className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
-            ></div>
+            <InputBox isCancel={true} onCancel={() => setShowSelectUsers(false)} onClick={() => setShowSelectUsers(true)} type="text" />
+
             {showSelectUsers && (
-              <div className="w-full min-h-[200px] shadow-lg p-2">
-                <div className="flex flex-wrap gap-2 pb-6">
-                  <Buttons type="button" onClick={handleSelectAll} size="extra_small" variant="border_primary">
-                    Select All from Community
-                  </Buttons>
-                  <Buttons size="extra_small" variant="border_primary">
-                    Select All Same Year
-                  </Buttons>
-                  <Buttons size="extra_small" variant="border_primary">
-                    Select All Same Major
-                  </Buttons>
+              <div className="w-full min-h-[200px] rounded-b-lg shadow-xl">
+                <div className="flex flex-wrap gap-2 p-4">
+                  <Pill onClick={handleSelectAll} size="extra_small" variant={selectedFilter === 'ALL' ? 'primary' : 'border_primary'}>
+                    {selectedFilter === 'ALL' ? 'Clear All from Community' : 'Select All from Community'}
+                  </Pill>
+
+                  <Pill onClick={handleSelectSameYear} size="extra_small" variant={selectedFilter === 'SAME_YEAR' ? 'primary' : 'border_primary'}>
+                    {selectedFilter === 'SAME_YEAR' ? 'Clear All Same Year' : 'Select all Same Year'}
+                  </Pill>
+
+                  <Pill onClick={handleSelectSameMajor} size="extra_small" variant={selectedFilter === 'SAME_MAJOR' ? 'primary' : 'border_primary'}>
+                    {selectedFilter === 'SAME_MAJOR' ? 'Clear All Same Major' : 'Select All Same Major'}
+                  </Pill>
                 </div>
-                <div className="flex flex-col gap-4 h-[200px] overflow-y-scroll">
+                <div className="flex flex-col overflow-y-scroll">
                   {!communityData?.users.length ? (
                     <p className="text-center">No Data!</p>
                   ) : (
                     communityData?.users
                       ?.filter((user) => user?.id !== userData?.id)
-                      .map((user: any) => <SelectUsers key={user.id} user={user} setSelectedUsers={setSelectedUsers} selectedUsers={selectedUsers} />)
+                      .map((user: any) => <SelectUsers key={user.id} user={user} setValue={setValue} selectedUsers={SelectedUsers} />)
                   )}
                 </div>
               </div>
             )}
             <div className="flex flex-wrap mt-2">
-              {selectedUsers?.length < 9 ? (
+              {SelectedUsers?.length < 9 ? (
                 <div className="flex gap-2 flex-wrap">
-                  {selectedUsers.map((item: user) => (
-                    <div key={item.id} className="bg-secondary py-[2px] px-[6px] text-xs text-primary-500 rounded-sm h-5 flex items-center gap-2">
+                  {SelectedUsers?.map((item) => (
+                    <div key={item.id} className="bg-secondary px-2 py-1 text-xs text-primary-500 rounded-md flex items-center gap-2">
                       {item?.firstName}{' '}
-                      <span onClick={() => handleClick(item.id)} className="cursor-pointer text-sm">
+                      <span onClick={() => handleClick(item.id as string)} className="cursor-pointer text-sm">
                         <IoClose />
                       </span>
                     </div>
@@ -312,24 +364,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 </div>
               ) : (
                 <div className="bg-secondary py-[2px] px-[6px] text-[10px] text-primary-500 rounded-sm h-5">
-                  {selectedUsers?.length} <span></span>
+                  {SelectedUsers?.length} <span></span>
                 </div>
               )}
             </div>
           </div>
-          <button disabled={isPending} type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
-            {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
+          <button disabled={isPending} onClick={handleGroupCreate(onGroupSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
+            {isLoading || isPending ? <Spinner /> : <p>Create Groups</p>}
           </button>
-          {/* <button
-              type="reset"
-              onClick={() => (setLogoImage(undefined), setCoverImage(undefined), setSelectedUsers([]))}
-              className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]"
-            >
-              Reset
-            </button> */}
         </form>
       </div>
-      {/* </div> */}
     </>
   )
 }

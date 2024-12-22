@@ -55,7 +55,6 @@ const EditProfileModal = () => {
     reset,
     control,
     watch,
-    setError,
     setValue,
     formState: { errors, isDirty },
   } = useForm<editProfileInputs>()
@@ -91,7 +90,6 @@ const EditProfileModal = () => {
   const [cityOptions, setCityOptions] = useState<string[]>([])
   const [isCityAvailable, setIsCityAvailable] = useState(true)
   const currCountry = watch('country') || ''
-  const currCity = watch('city') || ''
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
     field.onChange(selectedCountry) // Update the country field value
@@ -103,7 +101,6 @@ const EditProfileModal = () => {
 
   type DegreeKeys = keyof typeof degreeAndMajors
   const currDegree = watch('degree') as DegreeKeys
-  const currMa = watch('major') as DegreeKeys
   const [currMajor, setCurrMajor] = useState<any>([])
 
   type occupationKeys = keyof typeof occupationAndDepartment
