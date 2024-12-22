@@ -10,7 +10,7 @@ export const country_list: Record<string, string[]> = {
   Armenia: [],
   Aruba: [],
   Australia: [],
-  Austria: [],
+  Austria: ['Styria', 'Vienna'],
   Azerbaijan: [],
   Bahamas: [],
   Bahrain: [],

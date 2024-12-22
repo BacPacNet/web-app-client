@@ -1,5 +1,5 @@
 import useDebounce from '@/hooks/useDebounce'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { ServerResponse } from '@/models/common/api-client'
 
@@ -43,4 +43,30 @@ export async function getUniversityByName(universityName: string): Promise<any[]
 
   // TypeScript assumes `response` is of type `University[]`
   return response
+}
+
+type UserMainNotificationsProps = {
+  Universities: any
+  currentPage: number
+  totalPages: number
+  totalNotifications: number
+}
+
+export async function getFilteredUniversity(page: number, limit: number, searchQuery: string) {
+  const response: UserMainNotificationsProps = await client(`/university?page=${page}&limit=${limit}&searchQuery=${searchQuery}`)
+  return response
+}
+
+export function useGetFilteredUniversity(limit: number, query: string = '') {
+  return useInfiniteQuery({
+    queryKey: ['university', { query, limit }],
+    queryFn: ({ pageParam = 1 }) => getFilteredUniversity(pageParam, limit, query),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+  })
 }
