@@ -25,6 +25,7 @@ const motionStyle = {
   exit: { opacity: 0, y: '-10%', transition: { duration: '0.35' } },
   transition: { type: 'spring', stiffness: '100', duration: '0.75' },
 }
+
 const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err, showIcon = false }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -55,17 +56,25 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
     }
   }, [])
 
+  const toggleDropdown = () => {
+    if (!show) {
+      setFilteredOptions(options)
+      if (searchRef.current) searchRef.current.value = ''
+    }
+    setShow((prevShow) => !prevShow)
+  }
+
   return (
     <motion.div ref={dropdownRef} className="relative">
       <div
-        onClick={() => setShow(!show)}
+        onClick={toggleDropdown}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
         <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-2xs`}> {value || placeholder}</p>
         <div>
-          {icon == 'single' ? (
+          {icon === 'single' ? (
             <IoIosArrowDown />
           ) : (
             <div className="flex flex-col text-xs">
@@ -78,9 +87,9 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
       <AnimatePresence>
         {show && (
           <motion.div
-            className={`flex flex-col custom-scrollbar  ${
+            className={`flex flex-col custom-scrollbar ${
               !showIcon ? 'gap-2 w-full p-2' : 'gap-1 p-1'
-            }   absolute right-0  bg-white  shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto`}
+            } absolute right-0 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (
@@ -93,7 +102,7 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
               />
             )}
             {filteredOptions?.length > 0 ? (
-              filteredOptions?.map((item: string, key: number) => {
+              filteredOptions.map((item: string, key: number) => {
                 const IconComponent = icons[key % icons.length]
                 return (
                   <div
@@ -117,5 +126,4 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
     </motion.div>
   )
 }
-
 export default SelectDropdown
