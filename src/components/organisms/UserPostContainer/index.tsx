@@ -1,9 +1,8 @@
 'use client'
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import { MdOutlineGifBox } from 'react-icons/md'
-import { VscSettings } from 'react-icons/vsc'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -15,6 +14,7 @@ import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
 import { Skeleton } from '@/components/ui/Skeleton'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
+import { RxCrossCircled } from 'react-icons/rx'
 
 type props = {
   communityID?: string
@@ -22,7 +22,7 @@ type props = {
   type: PostInputType.Community | PostInputType.Timeline
 }
 
-function UserPostContainer({ communityID, communityGroupID, type }: props) {
+export const UserPostContainer = ({ communityID, communityGroupID, type }: props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string | null>(null)
   const [images, setImages] = useState<File[]>([])
@@ -208,19 +208,17 @@ function UserPostContainer({ communityID, communityGroupID, type }: props) {
         </div>
       </div>
       {/* Display selected images */}
-      {images.map((image, index) => (
-        <div key={index} className="relative">
-          <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
-          {/* Remove image button */}
-          <button
-            type="button"
-            className="absolute top-0 right-0 bg-red-500 opacity-75 px-1 rounded-sm text-white text-2xs"
-            onClick={() => handleImageRemove(index)}
-          >
-            X
-          </button>
-        </div>
-      ))}
+      <div className="flex flex-wrap gap-4 ">
+        {images.map((image, index) => (
+          <div key={index} className="relative w-fit">
+            <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
+            {/* Remove image button */}
+            <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
+              <RxCrossCircled />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

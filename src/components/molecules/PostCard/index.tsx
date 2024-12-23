@@ -4,14 +4,13 @@ import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import PostCartOption from '@/components/atoms/PostCardOption/PostCartOption'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
-import { FiMessageCircle, FiRepeat, FiShare2, FiThumbsUp } from 'react-icons/fi'
+import { FiMessageCircle, FiShare2, FiThumbsUp } from 'react-icons/fi'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import PostCommentBox from '../PostCommentBox'
 import { useUniStore } from '@/store/store'
 import { useLikeUnilikeGroupPost } from '@/services/community-university'
 import { useLikeUnlikeTimelinePost } from '@/services/community-timeline'
-import { FaUser, FaUsers } from 'react-icons/fa'
 import { PostType } from '@/types/constants'
 import {
   FacebookIcon,
@@ -174,10 +173,12 @@ const PostCard = ({
           <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
         </div>
       </div>
-
+      {/*
       <div>
         <pre className="text-xs lg:text-sm text-neutral-700 py-4 font-poppins whitespace-pre-wrap break-words">{text}</pre>
-      </div>
+      </div>*/}
+
+      <div className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: text }} />
 
       {/* //post Image  */}
       <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
