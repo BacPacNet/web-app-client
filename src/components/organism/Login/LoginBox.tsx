@@ -48,7 +48,7 @@ const LoginBox = () => {
   }, [])
 
   return (
-    <div className="flex flex-col  max-lg:w-1/2 max-md:w-2/3 max-sm:w-11/12">
+    <div className="flex flex-col  max-lg:w-1/2 max-md:w-2/3 max-sm:w-11/12 mt-4 md:mt-0">
       <div className="flex flex-col gap-8 border border-neutral-300 py-4 px-6  rounded-xl bg-white drop-shadow-md">
         <img className="w-14 h-14" src={logo.src} alt="lgog" />
         <div>
