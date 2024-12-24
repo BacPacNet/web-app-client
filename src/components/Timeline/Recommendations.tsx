@@ -41,8 +41,8 @@ const UserCard = ({ user }: { user: User }) => {
 
 const Recommendations: React.FC<Props> = ({ people, userItemButtonStyle, containerStyle, itemStyle }) => {
   return (
-    <div className="py-4">
-      <p className="text-neutral-700 text-xs font-semibold py-4">Recommendations</p>
+    <div>
+      <p className="text-neutral-700 text-xs font-semibold pb-4">Recommendations</p>
       <div className="flex flex-col gap-6">
         {people.map((user) => (
           <UserCard user={user} key={`${user?.avatar}${user?.name}`} />
