@@ -320,9 +320,11 @@ export const useCreateGroupPost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      showCustomSuccessToast('Post created successfully')
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response?.data?.message as string)
     },
   })
 }

@@ -47,7 +47,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   }
 
   return (
-    <div className="flex items-center p-2 md:p-4 border-b border-border justify-between">
+    <div className="flex items-center px-2 py-4 md:p-4 border-b border-border justify-between ">
       <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
         <img src={imageUrl || avatar.src} alt={firstName} className="w-12 h-12 rounded-full flex-none" />
         <div className="">
@@ -64,9 +64,17 @@ const UserListItem: React.FC<FollowingItemProps> = ({
 
       <div className="p-2 bg-primary-50 rounded-md">
         {!isSelfProfile && (
-          <Button onClick={handleFollowClick} variant="shade" size="extra_small">
-            {userFollowingIDs?.includes(id) ? 'UnFollow' : 'Follow'}
-          </Button>
+          <>
+            {!userFollowingIDs?.includes(id) ? (
+              <Button onClick={handleFollowClick} variant="primary" size="extra_small">
+                Follow
+              </Button>
+            ) : (
+              <Button onClick={() => handleProfileClicked(id)} className="whitespace-nowrap" variant="shade" size="extra_small">
+                View Profile
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { AxiosErrorType, PostCommentData, PostType, UserPostData } from '@/types/constants'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function DeleteUserPost(postId: string, token: string) {
   const response = await client(`/userpost/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -228,9 +229,11 @@ export const useCreateUserPost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      showCustomSuccessToast('Post created successfully')
     },
     onError: (res: AxiosErrorType) => {
       console.log(res.response?.data.message, 'res')
+      showCustomDangerToast(res.response?.data?.message as string)
     },
   })
 }

@@ -1,8 +1,7 @@
 'use client'
 import dynamic from 'next/dynamic'
 import React, { useRef, useState } from 'react'
-import { EditorState, convertToRaw } from 'draft-js'
-//import { Editor } from 'react-draft-wysiwyg'
+import { EditorState, Modifier, convertToRaw } from 'draft-js'
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false })
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import './index.css'
@@ -18,6 +17,7 @@ import { RxCrossCircled } from 'react-icons/rx'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type Props = {
   communityID?: string
@@ -30,8 +30,9 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string | null>(null)
   const [images, setImages] = useState<File[]>([])
-  const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
+  const { mutate: CreateGroupPost } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
+  const [isPostCreating, setIsPostCreating] = useState(false)
 
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostType>(UserPostType.PUBLIC)
 
@@ -49,22 +50,15 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     const emoji = emojiData.emoji
-    if (textareaRef.current) {
-      const cursorPosition = textareaRef.current.selectionStart
-      const text = textareaRef.current.value
-      const newText = text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition)
 
-      // Update the textarea value
-      textareaRef.current.value = newText
-      valueRef.current = newText // Update ref value
-      handleInput() // Call input handler to update the ref value
+    const contentState = editorState.getCurrentContent()
+    const selectionState = editorState.getSelection()
+    const emojiText = `${emoji} `
 
-      // Move the cursor to the right of the inserted emoji
-      textareaRef.current.selectionStart = textareaRef.current.selectionEnd = cursorPosition + emoji.length
+    const newContentState = Modifier.insertText(contentState, selectionState, emojiText)
 
-      // Refocus the textarea after emoji insertion
-      textareaRef.current.focus()
-    }
+    const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters')
+    setEditorState(newEditorState)
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +82,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   }
 
   const handleGroupPost = async (inputValue: string) => {
+    setIsPostCreating(true)
     if (images.length) {
       const imagedata = await processImages(images)
       const data: PostInputData = {
@@ -124,21 +119,27 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
         CreateTimelinePost(data)
       }
     }
+    setIsPostCreating(false)
+    setEditorState(EditorState.createEmpty())
   }
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // You can do something with the value here, like an API call
-    //if (!textareaRef.current?.value) {
-    //  return alert('Please enter')
-    //}
+
     const contentState = editorState.getCurrentContent()
     const rawContent = convertToRaw(contentState)
-    console.log(rawContent, 'rawContent')
+
+    if (!rawContent.blocks[0].text) {
+      return
+    }
+
     const draftHtml = draftToHtml(rawContent)
-    console.log(draftHtml, 'draftHtml')
+
     return handleGroupPost(draftHtml)
+  }
+  const onEditorStateChange = (state: React.SetStateAction<EditorState>) => {
+    setEditorState(state)
   }
 
   return (
@@ -147,7 +148,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
         <div className="mb-4">
           <Editor
             editorState={editorState}
-            onEditorStateChange={setEditorState}
+            onEditorStateChange={onEditorStateChange}
             wrapperClassName="wrapper-class"
             editorClassName="editor-class font-poppins max-h-40"
             toolbarClassName="toolbar-class"
@@ -173,7 +174,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
               <PopoverTrigger>
                 <HiOutlineEmojiHappy size={24} className="text-neutral-400" />
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 border-none shadow-lg shadow-gray-light">
+              <PopoverContent className="w-auto p-0 border-none shadow-lg shadow-gray-light z-10">
                 <div>
                   <EmojiPicker onEmojiClick={handleEmojiClick} />
                 </div>
@@ -214,8 +215,8 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
             </div>
           </div>
           <div>
-            <button onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
-              Post
+            <button disabled={isPostCreating} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
+              {isPostCreating ? <Spinner /> : 'Post'}
             </button>
           </div>
         </div>
