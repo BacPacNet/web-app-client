@@ -1,4 +1,5 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { Spinner } from '@/components/spinner/Spinner'
 import UserListItem from '@/components/Timeline/UserListItem'
 import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
@@ -47,6 +48,10 @@ export default function FindPeople() {
           <UserListItemSkeleton />
           <UserListItemSkeleton />
           <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
         </>
       )
     }
@@ -85,9 +90,15 @@ export default function FindPeople() {
           placeholder="Search People"
         />
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%]">
+      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar">
         {renderUserProfileList()}
       </div>
+      {isFetchingNextPage && (
+        <div className="text-center pt-2">
+          {' '}
+          <Spinner />
+        </div>
+      )}
     </>
   )
 }

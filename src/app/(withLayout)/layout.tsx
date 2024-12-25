@@ -61,7 +61,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="w-1/5 hidden lg:block ">
         <div className="fixed w-1/5 right-0 z-10 overflow-y-auto ">
           <Card className="h-with-navbar overflow-y-auto px-4">
-            <UpcomingEvent />
+            {/*<UpcomingEvent />*/}
             <Recommendations people={recommendations} />
           </Card>
         </div>

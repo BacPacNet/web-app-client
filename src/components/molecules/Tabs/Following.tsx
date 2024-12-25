@@ -21,6 +21,13 @@ export default function Following({ userFollowingIDs }: Props) {
           <UserListItemSkeleton />
           <UserListItemSkeleton />
           <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
+          <UserListItemSkeleton />
         </>
       )
     }
