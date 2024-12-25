@@ -5,6 +5,7 @@ import { useUniStore } from '@/store/store'
 import dayjs from 'dayjs'
 import UserChatCard from '@/components/molecules/UserChatCard'
 import Loading from '@/components/atoms/Loading'
+import { useRouter } from 'next/navigation'
 
 interface props {
   setSelectedChat: (value: Chat | undefined) => void
@@ -17,7 +18,11 @@ interface props {
 
 const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chats, isChatLoading }: props) => {
   const { userData } = useUniStore()
-
+  const router = useRouter()
+  const handleClick = (item: Chat) => {
+    setSelectedChat(item)
+    router.replace(`/messages?id=${item._id}`)
+  }
   const RenderChats = () => {
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
@@ -35,7 +40,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
       }
 
       return filteredChats.map((item: Chat) => (
-        <div onClick={() => setSelectedChat(item)} key={item?._id} className="flex flex-col gap-2 border-b-[1px] border-neutral-200 cursor-pointer">
+        <div onClick={() => handleClick(item)} key={item?._id} className="flex flex-col gap-2 border-b-[1px] border-neutral-200 cursor-pointer">
           <UserChatCard
             profilePic={item?.isGroupChat ? item?.groupLogo?.imageUrl : item?.groupLogoImage}
             groupName={item?.chatName}

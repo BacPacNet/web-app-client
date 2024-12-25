@@ -48,7 +48,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
   }, [password, calculateStrength])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
+    <div className="w-96 flex flex-col gap-8 items-center lg:w-1/2">
       <div className="text-center px-3">
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
@@ -97,6 +97,10 @@ const AccountCreationForm = ({ isPending }: Props) => {
               minLength: {
                 value: 8,
                 message: 'Password must have at least 8 characters',
+              },
+              pattern: {
+                value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
               },
             })}
             err={!!registerFormErrors.password}

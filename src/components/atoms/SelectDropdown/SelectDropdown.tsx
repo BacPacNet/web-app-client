@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FiUserCheck, FiUser } from 'react-icons/fi'
-
+import { RxCross2 } from 'react-icons/rx'
 import { MdOutlinePublic } from 'react-icons/md'
 import { FiUsers } from 'react-icons/fi'
 const icons = [MdOutlinePublic, FiUserCheck, FiUsers, FiUser]
@@ -74,7 +74,14 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
       >
         <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-2xs`}> {value || placeholder}</p>
         <div>
-          {icon === 'single' ? (
+          {value ? (
+            <RxCross2
+              onClick={(e) => {
+                e.stopPropagation()
+                onChange('')
+              }}
+            />
+          ) : icon === 'single' ? (
             <IoIosArrowDown />
           ) : (
             <div className="flex flex-col text-xs">

@@ -35,7 +35,7 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
       <PopoverContent className="relative right-16 bottom-16 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
         <div className="flex flex-col gap-5">
           <div className="flex gap-1 items-center">
-            <Link className="flex gap-1 items-center" href={`/post/${postID}?isType=${isType}`}>
+            <Link target="_blank" rel="noopener noreferrer" className="flex gap-1 items-center" href={`/post/${postID}?isType=${isType}`}>
               <MdOutlineOpenInNew className="text-primary" size={20} />
               <p className="font-medium text-sm">Open Post</p>
             </Link>

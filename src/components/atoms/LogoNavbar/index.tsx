@@ -46,6 +46,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const { data: messageNotificationData } = useGetMessageNotification(3, true)
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
   const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
+
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData?.users_id)
   }, [userProfileData])

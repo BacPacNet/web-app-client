@@ -12,6 +12,8 @@ import { ChatsArray, LatestMessage, SocketEnums } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 import { useQueryClient } from '@tanstack/react-query'
 import { useCreateChatMessage } from '@/services/Messages'
+import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   userProfileId: string
@@ -23,7 +25,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
-  const { mutate: createNewMessage } = useCreateChatMessage()
+  const { mutate: createNewMessage, isPending } = useCreateChatMessage()
   const queryClient = useQueryClient()
   const { socket } = useUniStore()
 
@@ -140,6 +142,8 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
       handleNewMessage(textareaRef.current.value)
       textareaRef.current.value = ''
       textareaRef.current.style.height = 'auto'
+    } else {
+      showCustomDangerToast('Please enter message!')
     }
   }
 
@@ -206,7 +210,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
                 isRequestNotAccepted ? 'border border-neutral-200 text-neutral-300' : 'bg-primary-500 text-white'
               }   rounded-lg px-3 py-2 w-[69px]`}
             >
-              Send
+              {isPending ? <Spinner /> : 'Send'}
             </button>
           </div>
         </div>
