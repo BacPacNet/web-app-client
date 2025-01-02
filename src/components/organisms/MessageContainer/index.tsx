@@ -304,6 +304,8 @@ const MessageContainer = () => {
             yourID={userData?.id || ''}
             setImageCarasol={setImageCarasol}
             isRequestNotAccepted={currTab == 'Message Requests'}
+            setAcceptedId={setAcceptedId}
+            setCurrTab={setCurrTab}
           />
         </>
       )

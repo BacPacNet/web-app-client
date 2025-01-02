@@ -5,11 +5,22 @@ import React, { useEffect, useState } from 'react'
 import Loading from './loading'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { IoIosArrowBack } from 'react-icons/io'
+import ProgressBar from 'react-customizable-progressbar'
+import useDeviceType from '@/hooks/useDeviceType'
+
+const progressBarData = [
+  { title: 'Account Creation', des: 'Login Information' },
+  { title: 'Profile Setup', des: 'User Information' },
+  { title: 'User Verification', des: 'Sync personal and university email' },
+  { title: 'Almost There', des: 'Do you have a referral code?' },
+]
+
 const Register = () => {
   const [step, setStep] = useState<number>(0)
   const [subStep, setSubStep] = useState(0)
   const [loading, setLoading] = useState(true)
   const [userType, setUserType] = useState('')
+  const { isTablet, isMobile } = useDeviceType()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -45,27 +56,40 @@ const Register = () => {
       setSubStep(0)
     }
   }
+
   return (
-    <div className="flex h-with-navbar bg-white">
+    <div className="flex h-with-navbar bg-white flex-col lg:flex-row">
       {loading ? (
         <Loading />
       ) : (
         <>
-          <RegisterSIdebar step={step} subStep={subStep} onPrev={handlePrev} />
+          {isTablet || isMobile ? (
+            <div className={`flex gap-2 justify-center items-center`}>
+              <div onClick={() => handlePrev()} className={`text-[#6744FF] text-2xl text-start cursor-pointer  ${step == 0 && 'hidden'}`}>
+                <IoIosArrowBack />
+              </div>
+              <ProgressBar
+                radius={25}
+                progress={step + 1}
+                key={step}
+                strokeWidth={6}
+                strokeColor="#6744FF"
+                strokeLinecap="square"
+                trackStrokeWidth={6}
+                steps={4}
+              >
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{step + 1}/4 </div>
+              </ProgressBar>
+              <div>
+                <p className="text-sm text-neutral-900">{progressBarData[step].title}</p>
+                <p className="text-neutral-500 text-xs">{progressBarData[step].des}</p>
+              </div>
+            </div>
+          ) : (
+            <RegisterSIdebar step={step} subStep={subStep} onPrev={handlePrev} />
+          )}
+
           <FormContainer step={step} setStep={setStep} subStep={subStep} setSubStep={setSubStep} setUserType={setUserType} />
-          {/* <div
-            onClick={() => handlePrev()}
-            className="absolute bg-primary w-10 h-10 flex items-center justify-center z-50 top-1/3 max-xl:left-[31%] left-[32%] max-lg:hidden text-white p-2 rounded-full text-center cursor-pointer"
-          >
-            <IoIosArrowBack />
-          </div> */}
-          <div
-            onClick={() => handlePrev()}
-            className="absolute lg:hidden z-20 top-20 left-2  text-neutral-600  flex items-center  text-start cursor-pointer"
-          >
-            <IoIosArrowBack />
-            back
-          </div>
         </>
       )}
     </div>

@@ -81,7 +81,7 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
         <div
           onClick={() => router.push(`messages/?id=${item._id}`)}
           key={item?._id}
-          className="py-2 px-3 border-b border-neutral-300 flex justify-between"
+          className="py-2 px-3 border-b border-neutral-300 flex justify-between cursor-pointer"
         >
           <div className="flex gap-2">
             <div className="flex gap-2 items-center">

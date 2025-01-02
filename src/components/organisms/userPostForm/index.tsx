@@ -199,6 +199,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
                   // search={true}
                   err={false}
                   showIcon={true}
+                  isAllowedToRemove={false}
                 />
               ) : (
                 <SelectDropdown
@@ -210,6 +211,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
                   // search={true}
                   err={false}
                   showIcon={true}
+                  isAllowedToRemove={false}
                 />
               )}
             </div>

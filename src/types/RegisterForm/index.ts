@@ -65,8 +65,8 @@ export enum userTypeEnum {
 }
 
 export enum userCheckError {
-  emailNotAvailable = 'email is already taken',
-  userNameNotAvailable = 'username already taken',
+  emailNotAvailable = 'Email is already taken',
+  userNameNotAvailable = 'userName Already taken',
 }
 
 export const badgeData = [

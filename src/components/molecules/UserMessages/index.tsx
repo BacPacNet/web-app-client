@@ -37,6 +37,8 @@ type props = {
     }>
   >
   isRequestNotAccepted: boolean
+  setAcceptedId: (value: string) => void
+  setCurrTab: (value: string) => void
 }
 
 const formatDate = (date: any) => dayjs(date).calendar()
@@ -133,7 +135,19 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   )
 }
 
-const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupChat, yourID, setImageCarasol, isRequestNotAccepted }: props) => {
+const UserMessages = ({
+  name,
+  profileCover,
+  chatId,
+  users,
+  isRequest,
+  isGroupChat,
+  yourID,
+  setImageCarasol,
+  isRequestNotAccepted,
+  setAcceptedId,
+  setCurrTab,
+}: props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID)
 
   const { userData, userProfileData } = useUniStore()
@@ -225,7 +239,13 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
         })}
       </div>
       <div className="fixed w-full bottom-0">
-        <UserMessageInput chatId={chatId} userProfileId={userProfileData?._id || ''} isRequestNotAccepted={isRequestNotAccepted} />
+        <UserMessageInput
+          chatId={chatId}
+          userProfileId={userProfileData?._id || ''}
+          isRequestNotAccepted={isRequestNotAccepted}
+          setAcceptedId={setAcceptedId}
+          setCurrTab={setCurrTab}
+        />
       </div>
     </div>
   )

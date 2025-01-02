@@ -70,7 +70,11 @@ const NotificationBox = ({ notifications }: NotificationsProps) => {
   return (
     <div ref={containerRef} className="max-h-[300px] w-96 overflow-y-scroll">
       {notifications.map((item) => (
-        <div key={item?._id} onClick={() => handleIsSeenGroup(item?._id)} className="py-2 px-3 border-b border-neutral-300 flex justify-between">
+        <div
+          key={item?._id}
+          onClick={() => handleIsSeenGroup(item?._id)}
+          className="py-2 px-3 border-b border-neutral-300 flex justify-between cursor-pointer"
+        >
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 items-center">
               <MdPersonAddAlt1 size={18} className="text-green-400" />

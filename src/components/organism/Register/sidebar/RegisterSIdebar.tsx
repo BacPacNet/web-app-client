@@ -22,7 +22,7 @@ const StepHeaders = [
 ]
 const RegisterSIdebar = ({ step, subStep, onPrev }: props) => {
   return (
-    <div className="bg-neutral-100 w-1/3 flex flex-col items-center justify-center max-lg:hidden">
+    <div className="bg-neutral-100 w-1/3 flex flex-col items-center justify-center ">
       <div className="flex flex-col w-10/12 gap-8">
         <div>
           <Image src={unibuzzLogo} alt="BACPAC LOGO" width={119} height={27} className="h-full cursor-pointer" />

@@ -48,7 +48,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
   }, [password, calculateStrength])
 
   return (
-    <div className="w-96 flex flex-col gap-8 items-center lg:w-1/2">
+    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
@@ -105,7 +105,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
             })}
             err={!!registerFormErrors.password}
           />
-          <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.password ? 'top-[20%]' : 'top-[30%]'} `}>
+          <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.password ? 'top-[15%]' : 'top-[20%]'} `}>
             {showPassword ? (
               <AiOutlineEyeInvisible className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
             ) : (

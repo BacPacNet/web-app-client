@@ -1,13 +1,8 @@
 'use client'
-import StartedFollowingYouNotification from '@/components/Notifiaction/StartedFollowingYouNotification'
-
-import ReactionToPostNotification from '@/components/Notifiaction/ReactionToPostNotification'
 import React, { useEffect, useRef } from 'react'
-import CommunityAndCommunityGroupJoinNotification from '@/components/Notifiaction/CommunityAndCommunityGroupJoinNotification'
 import { useGetUserNotification } from '@/services/notification'
-import ReactionToCommunityPostNotification from '@/components/Notifiaction/ReactionToCommunityPostNotification'
-import UserPostCommentNotification from '@/components/Notifiaction/UserPostCommentNotification'
-import CommunityPostCommentNotification from '@/components/Notifiaction/CommunityPostCommentNotification'
+
+import NotificationCard from '@/components/Notifiaction/NotificationCard'
 
 export const notificationRoleAccess = {
   GROUP_INVITE: 'GROUP_INVITE',
@@ -47,24 +42,7 @@ const NotificationTab = () => {
   return (
     <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit]">
       {notifications?.map((item) => {
-        if (item.type == notificationRoleAccess.GROUP_INVITE) {
-          return <CommunityAndCommunityGroupJoinNotification key={item?._id} data={item} />
-        }
-        if (item.type == notificationRoleAccess.FOLLOW) {
-          return <StartedFollowingYouNotification key={item?._id} data={item} />
-        }
-        if (item.type == notificationRoleAccess.REACTED_TO_POST) {
-          return <ReactionToPostNotification key={item?._id} data={item} />
-        }
-        if (item.type == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
-          return <ReactionToCommunityPostNotification key={item?._id} data={item} />
-        }
-        if (item.type == notificationRoleAccess.COMMENT) {
-          return <UserPostCommentNotification key={item?._id} data={item} />
-        }
-        if (item.type == notificationRoleAccess.COMMUNITY_COMMENT) {
-          return <CommunityPostCommentNotification key={item?._id} data={item} />
-        }
+        return <NotificationCard key={item?._id} data={item} />
       })}
     </div>
   )
