@@ -110,7 +110,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
               <PopoverContent className="p-0 relative right-4 top-6 w-[168px] bg-white shadow-card border-none">
                 <div>
                   <ul className="border-b-[1px] border-neutral-200 ">
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <li
+                      onClick={() => router.push(`/profile/${userData?.id}`)}
+                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                    >
                       <FaRegUser />
                       <p>Profile</p>
                     </li>

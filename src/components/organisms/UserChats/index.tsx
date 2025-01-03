@@ -23,6 +23,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     setSelectedChat(item)
     router.replace(`/messages?id=${item._id}`)
   }
+
   const RenderChats = () => {
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(

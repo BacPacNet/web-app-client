@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import { useSearchParams } from 'next/navigation'
+import Loading from '@/components/atoms/Loading'
 
 interface Message {
   _id: string
@@ -31,7 +32,7 @@ const MessageContainer = () => {
   const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
-  const { data: chatsData, isLoading: isChatLoading } = useGetUserChats()
+  const { data: chatsData, isLoading: isChatLoading, isFetching } = useGetUserChats()
   const [chats, setChats] = useState<ChatsArray>([])
   const [onlineUsersSet, setOnlineUsersSet] = useState<Set<string>>(new Set())
   const [acceptedChatId, setAcceptedId] = useState('')
@@ -142,7 +143,6 @@ const MessageContainer = () => {
     }))
 
     setChats(updatedChats)
-
     const updateCurrSelectedChat = () => {
       const toWrite = updatedChats.find((item) => item._id == selectedChat?._id)
       setSelectedChat(toWrite)
@@ -221,12 +221,12 @@ const MessageContainer = () => {
 
   useEffect(() => {
     if (selectedUserId) {
-      const selectedChatBySearchQuery = chatsData?.find((item) => item._id.toString() == selectedUserId)
+      const selectedChatBySearchQuery = chats?.find((item) => item._id.toString() == selectedUserId)
       if (selectedChatBySearchQuery) {
         setSelectedChat(selectedChatBySearchQuery)
       }
     }
-  }, [selectedUserId, chatsData])
+  }, [selectedUserId, chats])
 
   useEffect(() => {
     if (imageCarasol.isShow) {
@@ -235,6 +235,10 @@ const MessageContainer = () => {
   }, [imageCarasol])
 
   const renderTab = () => {
+    if (isFetching) {
+      return <Loading />
+    }
+
     switch (currTab) {
       case 'Inbox':
         return (

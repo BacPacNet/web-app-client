@@ -134,6 +134,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
         socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
       },
     })
+    if (textareaRef.current) {
+      textareaRef.current.value = ''
+    }
   }
 
   const handleSubmit = (e: React.FormEvent | KeyboardEvent) => {
@@ -141,10 +144,12 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if (textareaRef.current && textareaRef.current.value.trim() !== '' && !images.length) {
-      handleNewMessage(textareaRef.current.value)
-      textareaRef.current.value = ''
-      textareaRef.current.style.height = 'auto'
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+      handleNewMessage(textareaRef.current?.value || '')
+      if (textareaRef.current) {
+        textareaRef.current.value = ''
+        textareaRef.current.style.height = 'auto'
+      }
     } else {
       showCustomDangerToast('Please enter message!')
     }
@@ -155,10 +160,12 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if (textareaRef.current && textareaRef.current.value.trim() !== '' && !images.length) {
-      acceptRequestAndSendNewMessage(textareaRef.current.value)
-      textareaRef.current.value = ''
-      textareaRef.current.style.height = 'auto'
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+      acceptRequestAndSendNewMessage(textareaRef.current?.value || '')
+      if (textareaRef.current) {
+        textareaRef.current.value = ''
+        textareaRef.current.style.height = 'auto'
+      }
     } else {
       showCustomDangerToast('Please enter message!')
     }
@@ -225,6 +232,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
         setAcceptedId(chatId)
       },
     })
+    if (textareaRef.current) {
+      textareaRef.current.value = ''
+    }
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {

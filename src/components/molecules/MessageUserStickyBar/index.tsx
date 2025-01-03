@@ -54,12 +54,13 @@ const MessageUserStickyBar = ({
   setAcceptedId,
   setCurrTab,
 }: Props) => {
-  const userName = users?.flat().filter((item) => item.userId._id != yourID)
+  const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
+
   const YourDetails = users?.flat().filter((item) => item.userId._id == yourID)
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()
   const { mutate: toggleStarred } = useToggleStarred()
-  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0].userId._id)
+  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id)
   const router = useRouter()
   const handleMoveToInbox = () => {
     if (isGroupChat) {

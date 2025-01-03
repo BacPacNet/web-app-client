@@ -24,6 +24,7 @@ import { ChangeEvent } from 'react'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
+import { Spinner } from '@/components/spinner/Spinner'
 
 interface UserProfileCardProps {
   name: string
@@ -78,8 +79,8 @@ export function UserProfileCard({
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
 
-  const { mutate: toggleFollow } = useToggleFollow('Following')
-  const { mutate: mutateEditProfile, isPending } = useEditProfile()
+  const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
+  const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +158,7 @@ export function UserProfileCard({
                   Message <RiMessage2Fill />
                 </Buttons>
                 <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
-                  {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+                  {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
                 </Buttons>
               </div>
             )}

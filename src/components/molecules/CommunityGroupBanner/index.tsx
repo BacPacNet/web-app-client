@@ -20,9 +20,10 @@ interface Props {
   communityGroupID: string
   isGroupAdmin: boolean
   setIsGroupAdmin: (isGroupAdmin: boolean) => void
+  setIsMember: (setIsMember: boolean) => void
 }
 
-export default function CommunityGroupBanner({ communityID, communityGroupID, isGroupAdmin, setIsGroupAdmin }: Props) {
+export default function CommunityGroupBanner({ communityID, communityGroupID, isGroupAdmin, setIsGroupAdmin, setIsMember }: Props) {
   const { userData } = useUniStore()
   const [showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
@@ -40,6 +41,11 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     if (communityGroups && userData) {
       const { id } = userData
       setIsGroupAdmin(communityGroups.adminUserId.toString() === id?.toString())
+      const usersId = communityGroups.users.map((item) => item.userId.toString())
+      const userIdSet = new Set(usersId)
+      if (userData.id && userIdSet.has(userData.id)) {
+        setIsMember(true)
+      }
     }
   }, [communityGroups, userData])
 
@@ -54,11 +60,16 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
       joinCommunityGroup(communityGroupID, {
         onSuccess: () => {
           setIsUserJoinedCommunityGroup(true)
+          setIsMember(true)
         },
       })
     } else {
       openModal(
-        <CommunityLeaveModal communityGroupID={communityGroupID} setIsUserJoinedCommunityGroup={setIsUserJoinedCommunityGroup} />,
+        <CommunityLeaveModal
+          setIsMember={setIsMember}
+          communityGroupID={communityGroupID}
+          setIsUserJoinedCommunityGroup={setIsUserJoinedCommunityGroup}
+        />,
         'h-max w-96'
       )
     }

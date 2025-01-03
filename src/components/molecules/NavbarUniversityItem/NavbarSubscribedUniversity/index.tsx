@@ -13,9 +13,10 @@ interface Props {
   communityId: string
   userData: Partial<userType>
   handleCommunityClick: (index: number) => void
+  isGroup: boolean
 }
 
-function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handleCommunityClick }: Props) {
+function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handleCommunityClick, isGroup }: Props) {
   const handleAddUniversityEmailUsersModal = () => {
     openModal(<UniversityVerificationModal />)
   }
@@ -34,7 +35,7 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
       <div
         onClick={() => handleCommunityClick(index)}
         key={index}
-        className={`flex items-center justify-between hover:bg-secondary ${communityId === community._id && 'bg-secondary'}`}
+        className={`flex items-center justify-between hover:bg-secondary ${communityId === community._id && !isGroup && 'bg-secondary'}`}
       >
         <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
           <Image
