@@ -179,7 +179,7 @@ const PostCard = ({
         <pre className="text-xs lg:text-sm text-neutral-700 py-4 font-poppins whitespace-pre-wrap break-words">{text}</pre>
       </div>*/}
 
-      <div className="mb-4 text-gray-700 font-poppins" dangerouslySetInnerHTML={{ __html: text }} />
+      <div className="mb-4 text-gray-700 font-poppins break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
 
       {/* //post Image  */}
       <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
