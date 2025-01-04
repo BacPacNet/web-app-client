@@ -27,8 +27,6 @@ type Props = {
 
 const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const valueRef = useRef<string | null>(null)
   const [images, setImages] = useState<File[]>([])
   const { mutate: CreateGroupPost } = useCreateGroupPost()
   const { mutate: CreateTimelinePost } = useCreateUserPost()
@@ -38,15 +36,6 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
 
   const userPostTypeKey = Object.values(UserPostType)
   const communityPostTypeKey = Object.values(CommunityPostType)
-
-  const handleInput = () => {
-    const textarea = textareaRef.current
-    if (textarea) {
-      valueRef.current = textareaRef.current.value
-      textarea.style.height = 'auto'
-      textarea.style.height = `${textarea.scrollHeight}px`
-    }
-  }
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     const emoji = emojiData.emoji

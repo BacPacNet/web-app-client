@@ -26,6 +26,7 @@ import { IoMdCode } from 'react-icons/io'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
+import { Spinner } from '@/components/spinner/Spinner'
 
 dayjs.extend(relativeTime)
 
@@ -128,8 +129,8 @@ const PostCard = ({
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
-  const { mutate: LikeUnlikeGroupPost } = useLikeUnilikeGroupPost()
-  const { mutate: LikeUnlikeTimelinePost } = useLikeUnlikeTimelinePost()
+  const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost()
+  const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost()
 
   const LikeUnlikeHandler = (postId: string) => {
     if (type === PostType.Timeline) {
@@ -178,7 +179,7 @@ const PostCard = ({
         <pre className="text-xs lg:text-sm text-neutral-700 py-4 font-poppins whitespace-pre-wrap break-words">{text}</pre>
       </div>*/}
 
-      <div className="mt-4 text-gray-700" dangerouslySetInnerHTML={{ __html: text }} />
+      <div className="mb-4 text-gray-700 font-poppins" dangerouslySetInnerHTML={{ __html: text }} />
 
       {/* //post Image  */}
       <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
@@ -196,7 +197,11 @@ const PostCard = ({
         <div className="flex items-center gap-10">
           <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-2 items-center cursor-pointer">
             {likes?.length}
-            <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
+            {isLikeUnlikePending || isLikeUnlikeGroupPending ? (
+              <Spinner />
+            ) : (
+              <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
+            )}
           </span>
           <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex gap-2 items-center cursor-pointer">
             {commentCount} <FiMessageCircle className="mr-1 text-neutral-600" />
