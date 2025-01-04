@@ -41,7 +41,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
               <p className="text-[12px] text-neutral-500">{data?.year}</p>
             </div>
 
-            <div className="mt-4 text-gray-700 font-poppins" dangerouslySetInnerHTML={{ __html: data?.text }} />
+            <div className="mt-4 text-gray-700 font-poppins break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: data?.text }} />
             <p className="mt-5 text-xs text-neutral-400">{'Replying to ' + data?.user}</p>
           </div>
           {/*<p className="ml-auto text-xs text-gray">{data?.date && dayjs(new Date(data?.date).toString()).format('h:mm A · MMM D, YYYY')}</p>*/}
