@@ -166,7 +166,7 @@ export function UserProfileCard({
           <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
           <div className="flex gap-4 lg:gap-8 items-center font-poppins py-2 flex-wrap">
             <div className="flex items-center ">
-              <Image src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo h-[30px]" />
+              <Image objectFit="contain" src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo h-[30px]" />
               <p className="text-neutral-500 ml-3 font-semibold text-xs lg:text-sm">{university}</p>
               {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
             </div>

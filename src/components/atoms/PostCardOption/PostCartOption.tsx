@@ -32,28 +32,28 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
       <PopoverTrigger>
         <FiMoreHorizontal />
       </PopoverTrigger>
-      <PopoverContent className="relative right-16 bottom-16 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-        <div className="flex flex-col gap-5">
-          <div className="flex gap-1 items-center">
-            <Link target="_blank" rel="noopener noreferrer" className="flex gap-1 items-center" href={`/post/${postID}?isType=${isType}`}>
+      <PopoverContent className="relative right-16 bottom-16 w-auto border-none shadow-lg bg-white shadow-gray-light p-0">
+        <div className="flex flex-col">
+          <div className="flex gap-1 items-center hover:bg-slate-200 px-3 py-2">
+            <Link target="_blank" rel="noopener noreferrer" className="flex gap-1 items-center " href={`/post/${postID}?isType=${isType}`}>
               <MdOutlineOpenInNew className="text-primary" size={20} />
               <p className="font-medium text-sm">Open Post</p>
             </Link>
           </div>
-          <div className="flex gap-2 items-center cursor-pointer">
+          {/*<div className="flex gap-2 items-center cursor-pointer">
             <MdOutlineBookmarkBorder className="text-primary" size={20} />
             <p className="font-medium text-sm">Save Post</p>
-          </div>
-          <div className="flex gap-2 items-center cursor-pointer">
+          </div>*/}
+          {/*<div className="flex gap-2 items-center cursor-pointer">
             <HiOutlineBell className="text-primary" size={20} />
             <p className="font-medium text-sm">Mute Post from</p>
-          </div>
-          <div className="flex gap-2 items-center cursor-pointer">
+          </div>*/}
+          <div className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
             <HiOutlineFlag className="text-primary" size={20} />
             <p className="font-medium text-sm">Report this Post</p>
           </div>
           {isSelfPost && (
-            <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer">
+            <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
               <MdDeleteForever className="text-primary" size={20} />
               <p className="font-medium text-sm">Delete Post</p>
             </div>

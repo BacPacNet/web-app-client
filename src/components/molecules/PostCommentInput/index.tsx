@@ -167,8 +167,8 @@ function PostCommentInput({
     setNewPost(false)
   }
   return (
-    <div className="rounded-2xl bg-white   px-1  w-full">
-      <div className="border-2 border-neutral-300 w-full rounded-lg p-2">
+    <div className="rounded-2xl bg-white w-full">
+      <div className="border-2 border-neutral-300 w-full rounded-lg px-1">
         <div className="flex gap-3 h-24">
           <textarea
             ref={textareaRef}
@@ -178,7 +178,7 @@ function PostCommentInput({
             onInput={handleInput}
           ></textarea>
         </div>
-        <div className="flex items-center mt-10 justify-between p-2">
+        <div className="flex items-center justify-between p-2">
           <div className="flex gap-6 items-center ">
             <Popover>
               <PopoverTrigger>
@@ -207,7 +207,7 @@ function PostCommentInput({
         </button>
       </div>
       {/* Display selected images */}
-      <div className="flex flex-wrap gap-2 mt-4">
+      <div className="flex flex-wrap gap-2">
         {images.map((image, index) => (
           <div key={index} className="relative">
             <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />

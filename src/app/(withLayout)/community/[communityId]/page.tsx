@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const [isGroupAdmin, setIsGroupAdmin] = useState<boolean>(false)
   const containerRef = useRef<HTMLDivElement>(null)
   return (
-    <div ref={containerRef} className="hideScrollbar h-with-navbar overflow-y-auto">
+    <div ref={containerRef} className="hideScrollbar h-with-navbar">
       <UniversityCard communityID={communityId} communityGroupID={communityGroupID} isGroupAdmin={isGroupAdmin} setIsGroupAdmin={setIsGroupAdmin} />
       {isGroupAdmin && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}
       <CommunityPostsContainer communityID={communityId} communityGroupID={communityGroupID} containerRef={containerRef} />
