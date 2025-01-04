@@ -37,6 +37,8 @@ type props = {
     }>
   >
   isRequestNotAccepted: boolean
+  setAcceptedId: (value: string) => void
+  setCurrTab: (value: string) => void
 }
 
 const formatDate = (date: any) => dayjs(date).calendar()
@@ -75,7 +77,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [content])
 
   const handleMouseDown = () => {
@@ -92,7 +94,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   }
 
   return (
-    <div ref={ref} className="flex gap-2 relative w-full">
+    <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-12">
       <div className="relative w-10 h-10 flex-none">
         <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
@@ -133,7 +135,19 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   )
 }
 
-const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupChat, yourID, setImageCarasol, isRequestNotAccepted }: props) => {
+const UserMessages = ({
+  name,
+  profileCover,
+  chatId,
+  users,
+  isRequest,
+  isGroupChat,
+  yourID,
+  setImageCarasol,
+  isRequestNotAccepted,
+  setAcceptedId,
+  setCurrTab,
+}: props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID)
 
   const { userData, userProfileData } = useUniStore()
@@ -190,7 +204,7 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
 
   return (
     <div className="relative h-full">
-      <div className="flex flex-col h-[78%] overflow-y-scroll px-4  gap-8 ">
+      <div className="flex flex-col h-[78%] overflow-y-auto custom-scrollbar px-4  gap-8 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = formatDate(item.createdAt)
           // Check if the date has changed
@@ -225,7 +239,13 @@ const UserMessages = ({ name, profileCover, chatId, users, isRequest, isGroupCha
         })}
       </div>
       <div className="fixed w-full bottom-0">
-        <UserMessageInput chatId={chatId} userProfileId={userProfileData?._id || ''} isRequestNotAccepted={isRequestNotAccepted} />
+        <UserMessageInput
+          chatId={chatId}
+          userProfileId={userProfileData?._id || ''}
+          isRequestNotAccepted={isRequestNotAccepted}
+          setAcceptedId={setAcceptedId}
+          setCurrTab={setCurrTab}
+        />
       </div>
     </div>
   )

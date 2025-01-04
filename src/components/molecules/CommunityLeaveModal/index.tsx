@@ -10,10 +10,11 @@ type Props = {
   communityID?: string
   setIsUserJoinedCommunity?: (value: boolean) => void
   setIsUserJoinedCommunityGroup?: (value: boolean) => void
+  setIsMember?: (value: boolean) => void
   communityGroupID?: string
 }
 
-const CommunityLeaveModal = ({ communityID, setIsUserJoinedCommunity, communityGroupID, setIsUserJoinedCommunityGroup }: Props) => {
+const CommunityLeaveModal = ({ communityID, setIsUserJoinedCommunity, communityGroupID, setIsUserJoinedCommunityGroup, setIsMember }: Props) => {
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
   const { mutate: leaveCommunityGroup, isPending: isLeaveCommunityPending } = useLeaveCommunityGroup()
   const handleLeaveCommunity = () => {
@@ -21,6 +22,9 @@ const CommunityLeaveModal = ({ communityID, setIsUserJoinedCommunity, communityG
       leaveCommunityGroup(communityGroupID, {
         onSuccess: () => {
           setIsUserJoinedCommunityGroup(false)
+          if (setIsMember) {
+            setIsMember(false)
+          }
           closeModal()
         },
       })

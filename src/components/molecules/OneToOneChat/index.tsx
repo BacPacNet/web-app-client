@@ -7,6 +7,7 @@ import { FaMagnifyingGlass } from 'react-icons/fa6'
 import Buttons from '@/components/atoms/Buttons'
 import { openModal, closeModal } from '../Modal/ModalManager'
 import CreateGroupChat from '../CreateGroupChat'
+import { useRouter } from 'next/navigation'
 type Props = {
   setSelectedChat: (value: any) => void
 }
@@ -14,11 +15,14 @@ type Props = {
 const UsersModal = ({ setSelectedChat }: Props) => {
   const [searchInput, setSearchInput] = useState('')
   const { data } = useGetUserFollowingAndFollowers(searchInput)
-  const { mutate: mutateCreateUserChat } = useCreateUserChat()
-
+  const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
+  const router = useRouter()
   const handleUserClick = async (userId: string) => {
-    const createChatResponse = mutateCreateUserChat({ userId: userId })
+    const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
+
     setSelectedChat(createChatResponse)
+    router.replace(`/messages?id=${createChatResponse._id}`)
+    closeModal()
   }
 
   const handleShowModal = () => {

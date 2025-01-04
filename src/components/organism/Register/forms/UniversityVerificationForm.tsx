@@ -74,7 +74,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   }, [countdown, isCounting])
 
   return (
-    <div className="w-1/2 flex flex-col gap-6 items-center max-lg:w-96">
+    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-6 items-center ">
       <div className="text-center px-3">
         <h1 className={` text-[28px] font-bold text-neutral-900 font-poppins`}>University Verification</h1>
         <SupportingText>Do you have a email provided by your university?</SupportingText>

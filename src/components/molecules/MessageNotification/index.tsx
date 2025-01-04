@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { useUniStore } from '@/store/store'
 import { TbMessage2Search } from 'react-icons/tb'
+import { useRouter } from 'next/navigation'
 
 dayjs.extend(relativeTime)
 
@@ -43,7 +44,7 @@ type MessageNotificationsProps = {
 const MessageNotification = ({ message }: MessageNotificationsProps) => {
   const { fetchNextPage, isFetchingNextPage, hasNextPage } = useGetMessageNotification(3, false)
   const { userData } = useUniStore()
-
+  const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -77,7 +78,11 @@ const MessageNotification = ({ message }: MessageNotificationsProps) => {
   return (
     <div ref={containerRef} className="max-h-[300px] w-96 overflow-y-scroll">
       {message.map((item) => (
-        <div key={item?._id} className="py-2 px-3 border-b border-neutral-300 flex justify-between">
+        <div
+          onClick={() => router.push(`messages/?id=${item._id}`)}
+          key={item?._id}
+          className="py-2 px-3 border-b border-neutral-300 flex justify-between cursor-pointer"
+        >
           <div className="flex gap-2">
             <div className="flex gap-2 items-center">
               <Image

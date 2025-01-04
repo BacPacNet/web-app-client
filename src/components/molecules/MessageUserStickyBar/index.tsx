@@ -10,6 +10,7 @@ import { MdAddCircle } from 'react-icons/md'
 import { MdBlockFlipped } from 'react-icons/md'
 import { FaRegFlag } from 'react-icons/fa6'
 import { FaStar } from 'react-icons/fa6'
+import { useRouter } from 'next/navigation'
 type Props = {
   setSelectedChat: (value: any) => void
   yourID: string
@@ -53,12 +54,14 @@ const MessageUserStickyBar = ({
   setAcceptedId,
   setCurrTab,
 }: Props) => {
-  const userName = users?.flat().filter((item) => item.userId._id != yourID)
+  const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
+
   const YourDetails = users?.flat().filter((item) => item.userId._id == yourID)
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()
   const { mutate: toggleStarred } = useToggleStarred()
-  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0].userId._id)
+  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id)
+  const router = useRouter()
   const handleMoveToInbox = () => {
     if (isGroupChat) {
       acceptGroupRequest({ chatId })
@@ -73,10 +76,15 @@ const MessageUserStickyBar = ({
     toggleStarred({ chatId })
   }
 
+  const handleBack = () => {
+    setSelectedChat(undefined)
+    router.push('/messages')
+  }
+
   return (
     <div className="fixed w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white py-2 px-4">
       <div className="flex items-center gap-4">
-        <p onClick={() => setSelectedChat(undefined)}>
+        <p onClick={() => handleBack()}>
           <IoIosArrowBack className="w-8 h-8 text-[#6744FF] cursor-pointer" />
         </p>
         <div className="relative">

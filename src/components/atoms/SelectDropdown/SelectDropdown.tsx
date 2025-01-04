@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { FiUserCheck, FiUser } from 'react-icons/fi'
-
+import { RxCross2 } from 'react-icons/rx'
 import { MdOutlinePublic } from 'react-icons/md'
 import { FiUsers } from 'react-icons/fi'
 const icons = [MdOutlinePublic, FiUserCheck, FiUsers, FiUser]
@@ -17,6 +17,7 @@ interface SelectDropdownProps {
   search?: boolean
   err: boolean
   showIcon?: boolean
+  isAllowedToRemove?: boolean
 }
 
 const motionStyle = {
@@ -26,7 +27,17 @@ const motionStyle = {
   transition: { type: 'spring', stiffness: '100', duration: '0.75' },
 }
 
-const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = false, err, showIcon = false }: SelectDropdownProps) => {
+const SelectDropdown = ({
+  options,
+  onChange,
+  value,
+  isAllowedToRemove = true,
+  placeholder,
+  icon,
+  search = false,
+  err,
+  showIcon = false,
+}: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [filteredOptions, setFilteredOptions] = useState(options)
@@ -70,11 +81,18 @@ const SelectDropdown = ({ options, onChange, value, placeholder, icon, search = 
         onClick={toggleDropdown}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
+        } h-10 flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
         <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-2xs`}> {value || placeholder}</p>
         <div>
-          {icon === 'single' ? (
+          {value && isAllowedToRemove ? (
+            <RxCross2
+              onClick={(e) => {
+                e.stopPropagation()
+                onChange('')
+              }}
+            />
+          ) : icon === 'single' ? (
             <IoIosArrowDown />
           ) : (
             <div className="flex flex-col text-xs">

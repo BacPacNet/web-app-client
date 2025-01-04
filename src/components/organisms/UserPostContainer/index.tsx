@@ -15,6 +15,7 @@ import { useUniStore } from '@/store/store'
 import { Skeleton } from '@/components/ui/Skeleton'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { RxCrossCircled } from 'react-icons/rx'
+import { Spinner } from '@/components/spinner/Spinner'
 
 type props = {
   communityID?: string
@@ -28,7 +29,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
   const [images, setImages] = useState<File[]>([])
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostType>(UserPostType.PUBLIC)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
-  const { mutate: CreateTimelinePost } = useCreateUserPost()
+  const { mutate: CreateTimelinePost, isPending: userPostPending } = useCreateUserPost()
   const { userProfileData } = useUniStore()
 
   const communityPostTypeKey = Object.values(CommunityPostType)
@@ -119,6 +120,9 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
         CreateTimelinePost(data)
       }
     }
+    if (textareaRef.current) {
+      textareaRef.current.value = ''
+    }
   }
 
   // Handle form submission
@@ -130,6 +134,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
     }
     return handleGroupPost(valueRef.current as string)
   }
+
   return (
     <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
       <div className="flex gap-3 items-center">
@@ -186,6 +191,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
                 // search={true}
                 err={false}
                 showIcon={true}
+                isAllowedToRemove={false}
               />
             ) : (
               <SelectDropdown
@@ -197,13 +203,14 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
                 // search={true}
                 err={false}
                 showIcon={true}
+                isAllowedToRemove={false}
               />
             )}
           </div>
         </div>
         <div>
           <button onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
-            Post
+            {isPending || userPostPending ? <Spinner /> : 'Post'}
           </button>
         </div>
       </div>

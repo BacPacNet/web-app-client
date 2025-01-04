@@ -14,8 +14,7 @@ export const useDeleteCommunityPost = () => {
   return useMutation({
     mutationFn: (postId: string) => deleteCommunityPost(postId, cookieValue),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
     onError: (res: AxiosErrorType) => {
       console.log(res.response?.data.message, 'res')

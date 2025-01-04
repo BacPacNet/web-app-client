@@ -66,7 +66,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
   }, [countdown, isCounting])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
+    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
         <Title>Verification</Title>
         <SupportingText>Verify your login credentials.</SupportingText>

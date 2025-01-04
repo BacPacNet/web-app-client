@@ -11,19 +11,24 @@ import { replaceImage } from '@/services/uploadImage'
 import { ChatsArray, LatestMessage, SocketEnums } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 import { useQueryClient } from '@tanstack/react-query'
-import { useCreateChatMessage } from '@/services/Messages'
+import { useAcceptRequest, useCreateChatMessage } from '@/services/Messages'
+import { Spinner } from '@/components/spinner/Spinner'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   userProfileId: string
   chatId: string
   isRequestNotAccepted: boolean
+  setAcceptedId: (value: string) => void
+  setCurrTab: (value: string) => void
 }
 
-const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props) => {
+const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcceptedId, setCurrTab }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
-  const { mutate: createNewMessage } = useCreateChatMessage()
+  const { mutate: createNewMessage, isPending } = useCreateChatMessage()
+  const { mutateAsync: acceptRequest, data: chatStatus, isError } = useAcceptRequest()
   const queryClient = useQueryClient()
   const { socket } = useUniStore()
 
@@ -129,6 +134,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
         socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
       },
     })
+    if (textareaRef.current) {
+      textareaRef.current.value = ''
+    }
   }
 
   const handleSubmit = (e: React.FormEvent | KeyboardEvent) => {
@@ -136,10 +144,96 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if (textareaRef.current && textareaRef.current.value.trim() !== '') {
-      handleNewMessage(textareaRef.current.value)
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+      handleNewMessage(textareaRef.current?.value || '')
+      if (textareaRef.current) {
+        textareaRef.current.value = ''
+        textareaRef.current.style.height = 'auto'
+      }
+    } else {
+      showCustomDangerToast('Please enter message!')
+    }
+  }
+
+  const handleAcceptRequestAndSendNewMessage = (e: React.FormEvent | KeyboardEvent) => {
+    e.preventDefault()
+    if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
+      return
+    }
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+      acceptRequestAndSendNewMessage(textareaRef.current?.value || '')
+      if (textareaRef.current) {
+        textareaRef.current.value = ''
+        textareaRef.current.style.height = 'auto'
+      }
+    } else {
+      showCustomDangerToast('Please enter message!')
+    }
+  }
+
+  const acceptRequestAndSendNewMessage = async (message: string) => {
+    const response: any = await acceptRequest({ chatId })
+
+    if (!response?.isRequestAccepted || isError) {
+      console.error('Request not accepted. Unable to proceed.')
+      return
+    }
+
+    let fileLink
+    let data
+    if (images) {
+      fileLink = await processImages(images)
+
+      data = {
+        content: message,
+        chatId,
+        UserProfileId: userProfileId,
+
+        media: fileLink ? [fileLink] : '',
+      }
+    } else {
+      data = {
+        content: message,
+        chatId,
+        UserProfileId: userProfileId,
+      }
+    }
+
+    createNewMessage(data, {
+      onSuccess: (newMessage) => {
+        queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[]) => {
+          return [...(oldMessages || []), newMessage]
+        })
+
+        const chatData: ChatsArray | undefined = queryClient.getQueryData(['userChats'])
+        if (chatData) {
+          const updatedChatData = chatData.map((chat) =>
+            chat._id === chatId
+              ? {
+                  ...chat,
+                  latestMessage: newMessage,
+                }
+              : chat
+          )
+
+          updatedChatData.sort((a, b) => {
+            const dateA = a.latestMessage?.createdAt ? new Date(a.latestMessage.createdAt).getTime() : 0
+            const dateB = b.latestMessage?.createdAt ? new Date(b.latestMessage.createdAt).getTime() : 0
+            return dateB - dateA
+          })
+
+          queryClient.setQueryData(['userChats'], updatedChatData)
+        }
+
+        message = ''
+        if (!socket) return
+        socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
+        setCurrTab('Inbox')
+        setAcceptedId(chatId)
+      },
+    })
+    if (textareaRef.current) {
       textareaRef.current.value = ''
-      textareaRef.current.style.height = 'auto'
     }
   }
 
@@ -199,15 +293,25 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted }: Props
             </label>
           </div>
           <div className="flex">
-            <button
-              onClick={handleSubmit}
-              disabled={isRequestNotAccepted}
-              className={`${
-                isRequestNotAccepted ? 'border border-neutral-200 text-neutral-300' : 'bg-primary-500 text-white'
-              }   rounded-lg px-3 py-2 w-[69px]`}
-            >
-              Send
-            </button>
+            {isRequestNotAccepted ? (
+              <button
+                onClick={(e) => handleAcceptRequestAndSendNewMessage(e)}
+                className={`
+                  bg-primary-500 text-white text-2xs
+               rounded-lg px-3 py-2 `}
+              >
+                {isPending ? <Spinner /> : 'Accept & Send Message'}
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                className={`
+                  bg-primary-500 text-white
+                  rounded-lg px-3 py-2 w-[69px]`}
+              >
+                {isPending ? <Spinner /> : 'Send'}
+              </button>
+            )}
           </div>
         </div>
       </div>

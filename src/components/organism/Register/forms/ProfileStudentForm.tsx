@@ -31,7 +31,7 @@ const ProfileStudentForm = () => {
   }, [currDegree, setValue])
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
+    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
         <Title>University Setup</Title>
         <SupportingText>Enter your university information for networking</SupportingText>

@@ -21,7 +21,7 @@ const ProfileSetupForm = () => {
   } = useFormContext()
 
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center max-lg:w-96">
+    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
         <Title>Profile Setup</Title>
         <SupportingText>Enter your profile information for networking</SupportingText>

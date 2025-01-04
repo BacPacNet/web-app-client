@@ -24,6 +24,7 @@ import { ChangeEvent } from 'react'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
+import { Spinner } from '@/components/spinner/Spinner'
 
 interface UserProfileCardProps {
   name: string
@@ -78,8 +79,8 @@ export function UserProfileCard({
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
 
-  const { mutate: toggleFollow } = useToggleFollow('Following')
-  const { mutate: mutateEditProfile, isPending } = useEditProfile()
+  const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
+  const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +158,7 @@ export function UserProfileCard({
                   Message <RiMessage2Fill />
                 </Buttons>
                 <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
-                  {userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+                  {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
                 </Buttons>
               </div>
             )}
@@ -185,13 +186,13 @@ export function UserProfileCard({
           <>
             {occupation && (
               <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-sm" />
+                <FaGraduationCap className="text-sm w-8" size={20} />
                 <span className="text-xs">{`${occupation}`}</span>
               </div>
             )}
             {affiliation && (
               <div className="flex items-center space-x-2">
-                <MdSubject className="text-sm" />
+                <MdSubject className="text-sm w-8" size={20} />
                 <span className="text-xs">{`${affiliation}`}</span>
               </div>
             )}
@@ -202,19 +203,19 @@ export function UserProfileCard({
           <>
             {degree && (
               <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-sm" />
+                <FaGraduationCap className="text-sm w-8" size={20} />
                 <span className="text-xs">{degree}</span>
               </div>
             )}
             {major && (
               <div className="flex items-center space-x-2">
-                <MdSubject className="text-sm" />
+                <MdSubject className="text-sm w-8" size={20} />
                 <span className="text-xs">{major}</span>
               </div>
             )}
             {year && (
               <div className="flex items-center space-x-2">
-                <FaCalendarCheck className="text-sm" />
+                <FaCalendarCheck className="text-sm w-8" size={20} />
                 <span className="text-xs">{`${year} Year`}</span>
               </div>
             )}
@@ -222,7 +223,7 @@ export function UserProfileCard({
         )}
         {email && (
           <div className="flex items-center space-x-2">
-            <FaEnvelope className="text-sm flex-none" />
+            <FaEnvelope className="text-sm w-8" />
             {/*<Tooltip text={email}>*/}
             <span className="text-xs truncate-text">{email}</span>
             {/*</Tooltip>*/}
@@ -230,25 +231,25 @@ export function UserProfileCard({
         )}
         {phone && (
           <div className="flex items-center space-x-2">
-            <FaPhone className="text-sm flex-none" />
+            <FaPhone className="text-sm w-8" />
             <span className="text-xs">{phone}</span>
           </div>
         )}
         {location && (
           <div className="flex items-center space-x-2">
-            <FaMapMarkerAlt className="text-sm flex-none" />
+            <FaMapMarkerAlt className="text-sm w-8" />
             <span className="text-xs">{location}</span>
           </div>
         )}
         {birthday && (
           <div className="flex items-center space-x-2">
-            <FaBirthdayCake className="text-sm flex-none" />
+            <FaBirthdayCake className="text-sm w-8" />
             <span className="text-xs">{format(new Date(birthday), 'dd MMM yyyy')}</span>
           </div>
         )}
         {country && (
           <div className="flex items-center space-x-2">
-            <ImEarth className="text-sm flex-none" />
+            <ImEarth className="text-sm w-8" />
             <span className="text-xs">{country}</span>
           </div>
         )}

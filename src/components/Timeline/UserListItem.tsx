@@ -3,6 +3,7 @@ import { useToggleFollow } from '@/services/connection'
 import Button from '../atoms/Buttons'
 import avatar from '@assets/avatar.svg'
 import { useRouter } from 'next/navigation'
+import { Spinner } from '../spinner/Spinner'
 
 interface FollowingItemProps {
   firstName: string
@@ -35,7 +36,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   isChat,
   isSelfProfile,
 }) => {
-  const { mutate: toggleFollow } = useToggleFollow(type)
+  const { mutate: toggleFollow, isPending } = useToggleFollow(type)
   const router = useRouter()
 
   const handleFollowClick = () => {
@@ -67,7 +68,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           <>
             {!userFollowingIDs?.includes(id) ? (
               <Button onClick={handleFollowClick} variant="primary" size="extra_small">
-                Follow
+                {isPending ? <Spinner /> : 'Follow'}
               </Button>
             ) : (
               <Button onClick={() => handleProfileClicked(id)} className="whitespace-nowrap" variant="shade" size="extra_small">

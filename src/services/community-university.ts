@@ -462,6 +462,6 @@ export function useGetPost(postId: string, isType: string | null = 'userPost') {
   return useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, cookieValue),
-    enabled: !!postId && !!cookieValue,
+    enabled: !!postId,
   })
 }

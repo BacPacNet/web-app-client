@@ -68,7 +68,7 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
         commentCount={post?.commentCount}
         likes={post?.likeCount}
         postID={post?._id}
-        type={PostType.Community}
+        type={'communityId' in post ? PostType.Community : PostType.Timeline}
         images={post?.imageUrl}
         setImageCarasol={setImageCarasol}
         idx={idx}

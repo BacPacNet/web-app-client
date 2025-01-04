@@ -9,6 +9,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const { communityId, groupId: communityGroupID } = params
   const containerRef = useRef<HTMLDivElement>(null)
   const [isGroupAdmin, setIsGroupAdmin] = useState<boolean>(false)
+  const [isMember, setIsMember] = useState<boolean>(false)
 
   return (
     <div ref={containerRef} className="h-with-navbar">
@@ -17,8 +18,10 @@ export default function Page({ params }: { params: { communityId: string; groupI
         communityGroupID={communityGroupID}
         isGroupAdmin={isGroupAdmin}
         setIsGroupAdmin={setIsGroupAdmin}
+        setIsMember={setIsMember}
       />
-      <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />
+
+      {isMember && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}
       <CommunityGroupPostContainer containerRef={containerRef} />
     </div>
   )

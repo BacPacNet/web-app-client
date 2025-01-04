@@ -10,6 +10,8 @@ import { useGetUserChats, useUpdateMessageIsSeen } from '@/services/Messages'
 import { useQueryClient } from '@tanstack/react-query'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
+import { useSearchParams } from 'next/navigation'
+import Loading from '@/components/atoms/Loading'
 
 interface Message {
   _id: string
@@ -21,6 +23,7 @@ interface Message {
 }
 
 const MessageContainer = () => {
+  const searchQuery = useSearchParams()
   const [currTab, setCurrTab] = useState('Inbox')
   const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
 
@@ -29,10 +32,11 @@ const MessageContainer = () => {
   const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
-  const { data: chatsData, isLoading: isChatLoading } = useGetUserChats()
+  const { data: chatsData, isLoading: isChatLoading, isFetching } = useGetUserChats()
   const [chats, setChats] = useState<ChatsArray>([])
   const [onlineUsersSet, setOnlineUsersSet] = useState<Set<string>>(new Set())
   const [acceptedChatId, setAcceptedId] = useState('')
+  const selectedUserId = searchQuery.get('id')
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -139,7 +143,6 @@ const MessageContainer = () => {
     }))
 
     setChats(updatedChats)
-
     const updateCurrSelectedChat = () => {
       const toWrite = updatedChats.find((item) => item._id == selectedChat?._id)
       setSelectedChat(toWrite)
@@ -217,12 +220,25 @@ const MessageContainer = () => {
   }, [acceptedChatId])
 
   useEffect(() => {
+    if (selectedUserId) {
+      const selectedChatBySearchQuery = chats?.find((item) => item._id.toString() == selectedUserId)
+      if (selectedChatBySearchQuery) {
+        setSelectedChat(selectedChatBySearchQuery)
+      }
+    }
+  }, [selectedUserId, chats])
+
+  useEffect(() => {
     if (imageCarasol.isShow) {
       openImageModal(<PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />)
     }
   }, [imageCarasol])
 
   const renderTab = () => {
+    if (isFetching) {
+      return <Loading />
+    }
+
     switch (currTab) {
       case 'Inbox':
         return (
@@ -292,6 +308,8 @@ const MessageContainer = () => {
             yourID={userData?.id || ''}
             setImageCarasol={setImageCarasol}
             isRequestNotAccepted={currTab == 'Message Requests'}
+            setAcceptedId={setAcceptedId}
+            setCurrTab={setCurrTab}
           />
         </>
       )

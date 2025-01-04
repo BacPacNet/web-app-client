@@ -214,6 +214,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         communityId={communityId}
         subscribedCommunities={subscribedCommunities as Community[]}
         handleCommunityClick={handleCommunityClick}
+        isGroup={!!communityGroupId}
       />
 
       <>

@@ -5,7 +5,7 @@ import { useGetMessageNotification, useGetNotification } from '@/services/notifi
 import { useGetUserData } from '@/services/user'
 import { useGetUserProfileData } from '@/services/userProfile'
 import { useUniStore } from '@/store/store'
-import { useParams, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 type ZustandSocketProviderProps = {
