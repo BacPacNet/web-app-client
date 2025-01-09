@@ -198,7 +198,6 @@ export const useJoinCommunity = () => {
       showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any, variables) => {
-      console.error(res.response.data.message, 'ressss')
       showToast(res.response.data.message, {
         variant: 'error',
         isDarkMode: false,
@@ -210,10 +209,6 @@ export const useJoinCommunity = () => {
             onClick: () => router.push(`/community/${variables}`),
             isPrimary: true,
           },
-          // {
-          //   label: 'Dismiss',
-          //   onClick: () => console.log('test'),
-          // },
         ],
       })
     },
@@ -316,8 +311,6 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
     onSuccess: (res: any, communityGroupPostId) => {
-      // queryClient.invalidateQueries({ queryKey: ['communityGroupsPost', communityId, communityGroupId] })
-
       if (isTimeline) {
         queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
           if (!oldData || !oldData.pages) return oldData
@@ -356,47 +349,6 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
           }
         })
       }
-
-      // if (communityGroupId) {
-      //   queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
-      //     if (!oldData || !oldData.pages) return oldData
-      //     return {
-      //       ...oldData,
-      //       pages: oldData.pages.map((page: any) => ({
-      //         ...page,
-      //         finalPost: page.finalPost.map((post: any) =>
-      //           post._id === communityGroupPostId
-      //             ? {
-      //                 ...post,
-      //                 likeCount: res.likeCount, // Update with the new likeCount from API response
-      //               }
-      //             : post
-      //         ),
-      //       })),
-      //     }
-      //   })
-      // } else {
-      //   queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
-      //     if (!oldData || !oldData.pages) return oldData
-      //     return {
-      //       ...oldData,
-      //       pages: oldData.pages.map((page: any) => ({
-      //         ...page,
-      //         finalPost: page.finalPost.map((post: any) =>
-      //           post._id === communityGroupPostId
-      //             ? {
-      //                 ...post,
-      //                 likeCount: res.likeCount, // Update with the new likeCount from API response
-      //               }
-      //             : post
-      //         ),
-      //       })),
-      //     }
-      //   })
-      // }
-
-      // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

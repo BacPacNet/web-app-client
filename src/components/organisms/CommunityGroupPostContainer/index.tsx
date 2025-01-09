@@ -72,7 +72,6 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
         <Spinner />
       </div>
     )
-  // if (isLoading || isFetching) return <Skeleton className="w-full h-60 bg-slate-300 my-8" />
 
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>

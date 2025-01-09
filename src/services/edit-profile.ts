@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useRouter } from 'next/navigation'
 import { closeModal } from '@/components/molecules/Modal/ModalManager'
 
@@ -58,14 +58,23 @@ export const useAddUniversityEmail = (redirect: boolean = false) => {
       }
 
       if (response.user.isAlreadyJoined) {
-        return console.log('already Joined')
+        return showToast('Already Joined', {
+          variant: 'warning',
+          isDarkMode: false,
+        })
       }
       if (!response.user.isUniversityCommunity) {
-        return console.log('response', response)
+        return showToast('No Community', {
+          variant: 'warning',
+          isDarkMode: false,
+        })
       }
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      return showToast(res.response.data.message, {
+        variant: 'error',
+        isDarkMode: false,
+      })
     },
   })
 }
