@@ -16,7 +16,7 @@ export async function UpdateUserPost(data: UserPostData, postId: string, token: 
 }
 
 export async function LikeUnilikeUserPost(postId: string, token: string) {
-  const response = await client(`/userpost/likeunlike/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/userpost/likeunlike/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -255,18 +255,36 @@ export function useGetTimelinePosts(limit: number) {
   })
 }
 
-export const useLikeUnlikeTimelinePost = () => {
+export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+    onSuccess: (res: any, postId: string) => {
+      // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+
+      queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
+        if (!oldData || !oldData.pages) return oldData
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            allPosts: page.allPosts.map((post: any) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    likeCount: res.likeCount,
+                  }
+                : post
+            ),
+          })),
+        }
+      })
     },
-    onError: (res: AxiosErrorType) => {
-      console.log(res.response?.data.message, 'res')
+    onError: (res: any) => {
+      console.log(res.response?.data.message, 'resssss')
     },
   })
 }

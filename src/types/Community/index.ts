@@ -73,4 +73,5 @@ export interface communityPostType {
   comments: []
   imageUrl: []
   commentCount: number
+  communityId?: string
 }

@@ -4,7 +4,7 @@ import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
-import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 
@@ -189,6 +189,7 @@ export const useUpdateCommunity = () => {
 export const useJoinCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const router = useRouter()
   return useMutation({
     mutationFn: (communityId: string) => joinCommunity(communityId, cookieValue),
     onSuccess: () => {
@@ -196,8 +197,25 @@ export const useJoinCommunity = () => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       showCustomSuccessToast(`Joined Community `)
     },
-    onError: (res: any) => {
-      console.error(res.response.data.message)
+    onError: (res: any, variables) => {
+      console.error(res.response.data.message, 'ressss')
+      showToast(res.response.data.message, {
+        variant: 'error',
+        isDarkMode: false,
+        duration: 5000,
+        position: 'bottom-center',
+        actions: [
+          {
+            label: 'View',
+            onClick: () => router.push(`/community/${variables}`),
+            isPrimary: true,
+          },
+          // {
+          //   label: 'Dismiss',
+          //   onClick: () => console.log('test'),
+          // },
+        ],
+      })
     },
   })
 }
@@ -276,7 +294,6 @@ export const useUpdateCommunityGroup = () => {
 
 export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isCommunity: boolean, limit: number) {
   const [cookieValue] = useCookie('uni_user_token')
-  console.log(communityId, 'communityId')
   return useInfiniteQuery({
     queryKey: ['communityGroupsPost', communityId, communityGroupID],
     queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
@@ -291,18 +308,95 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
   })
 }
 
-export const useLikeUnilikeGroupPost = () => {
+export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroupId: string = '', isTimeline: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    onSuccess: (res: any, communityGroupPostId) => {
+      // queryClient.invalidateQueries({ queryKey: ['communityGroupsPost', communityId, communityGroupId] })
 
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      if (isTimeline) {
+        queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
+          if (!oldData || !oldData.pages) return oldData
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              allPosts: page.allPosts.map((post: any) =>
+                post._id === communityGroupPostId
+                  ? {
+                      ...post,
+                      likeCount: res.likeCount,
+                    }
+                  : post
+              ),
+            })),
+          }
+        })
+      } else {
+        queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
+          if (!oldData || !oldData.pages) return oldData
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              finalPost: page.finalPost.map((post: any) =>
+                post._id === communityGroupPostId
+                  ? {
+                      ...post,
+                      likeCount: res.likeCount,
+                    }
+                  : post
+              ),
+            })),
+          }
+        })
+      }
+
+      // if (communityGroupId) {
+      //   queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
+      //     if (!oldData || !oldData.pages) return oldData
+      //     return {
+      //       ...oldData,
+      //       pages: oldData.pages.map((page: any) => ({
+      //         ...page,
+      //         finalPost: page.finalPost.map((post: any) =>
+      //           post._id === communityGroupPostId
+      //             ? {
+      //                 ...post,
+      //                 likeCount: res.likeCount, // Update with the new likeCount from API response
+      //               }
+      //             : post
+      //         ),
+      //       })),
+      //     }
+      //   })
+      // } else {
+      //   queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
+      //     if (!oldData || !oldData.pages) return oldData
+      //     return {
+      //       ...oldData,
+      //       pages: oldData.pages.map((page: any) => ({
+      //         ...page,
+      //         finalPost: page.finalPost.map((post: any) =>
+      //           post._id === communityGroupPostId
+      //             ? {
+      //                 ...post,
+      //                 likeCount: res.likeCount, // Update with the new likeCount from API response
+      //               }
+      //             : post
+      //         ),
+      //       })),
+      //     }
+      //   })
+      // }
+
+      // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

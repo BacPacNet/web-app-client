@@ -108,6 +108,7 @@ const ProfileStudentForm = () => {
                 options={currMajor}
                 value={field.value}
                 onChange={field.onChange}
+                search={true}
                 placeholder="Select a major"
                 icon={'single'}
                 err={!!ProfileFormErrors.major}

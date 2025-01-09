@@ -98,6 +98,8 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         idx={idx}
         showCommentSection={showCommentSection}
         setShowCommentSection={setShowCommentSection}
+        communityId={communityID}
+        communityGroupId={communityGroupID}
       />
     ))
   }

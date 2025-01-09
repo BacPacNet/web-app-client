@@ -18,6 +18,7 @@ import { useCreateUserPost } from '@/services/community-timeline'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   communityID?: string
@@ -29,7 +30,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
   const [images, setImages] = useState<File[]>([])
   const { mutate: CreateGroupPost } = useCreateGroupPost()
-  const { mutate: CreateTimelinePost } = useCreateUserPost()
+  const { mutate: CreateTimelinePost, isPending } = useCreateUserPost()
   const [isPostCreating, setIsPostCreating] = useState(false)
 
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostType>(UserPostType.PUBLIC)
@@ -110,6 +111,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
     }
     setIsPostCreating(false)
     setEditorState(EditorState.createEmpty())
+    setImages([])
   }
 
   // Handle form submission
@@ -119,8 +121,8 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
     const contentState = editorState.getCurrentContent()
     const rawContent = convertToRaw(contentState)
 
-    if (!rawContent.blocks[0].text) {
-      return
+    if (!rawContent.blocks[0].text && !images.length) {
+      return showToast('Enter in Input box to post', { variant: 'warning' })
     }
 
     const draftHtml = draftToHtml(rawContent)
@@ -132,7 +134,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
+    <div className="rounded-2xl bg-white shadow-card mt-4 p-4 ">
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <Editor
@@ -206,8 +208,8 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
             </div>
           </div>
           <div>
-            <button disabled={isPostCreating} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
-              {isPostCreating ? <Spinner /> : 'Post'}
+            <button disabled={isPending} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
+              {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </button>
           </div>
         </div>

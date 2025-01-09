@@ -5,7 +5,7 @@ import universityPlaceholder from '@assets/university_placeholder.jpg'
 import './index.css'
 import { useUniStore } from '@/store/store'
 import { useGetCommunity, useJoinCommunity, useLeaveCommunity } from '@/services/community-university'
-
+import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
 
@@ -22,7 +22,9 @@ interface Props {
 
 export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
+
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
+  const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
 
   const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
@@ -76,7 +78,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
     <div className="rounded-2xl bg-white shadow-card">
       <div className=" relative h-[100px] md:h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
         <Image
-          src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder}
+          src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src}
           layout="fill"
           objectFit="cover"
           objectPosition="center"
@@ -96,7 +98,8 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
                 objectFit="cover"
                 objectPosition="center"
                 alt="logo"
-                src={communityData?.communityLogoUrl?.imageUrl || universityPlaceholder}
+                src={logoSrc}
+                onError={() => setLogoSrc(universityLogoPlaceholder)}
                 className="object-cover object-top"
               />
             </div>

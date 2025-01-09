@@ -3,6 +3,8 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useRouter } from 'next/navigation'
+import { closeModal } from '@/components/molecules/Modal/ModalManager'
 
 const editProfile = async (data: any, id: string) => {
   const res = await client(`/userprofile/${id}`, { method: 'PUT', data })
@@ -31,16 +33,25 @@ export const useEditProfile = () => {
   })
 }
 
-export const useAddUniversityEmail = () => {
+export const useAddUniversityEmail = (redirect: boolean = false) => {
   // const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const { setUserData, setUserProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-
+  const router = useRouter()
   return useMutation({
     mutationFn: (data: any) => addUniversityEmail(data, cookieValue),
-    onSuccess: (response: any) => {
+    onSuccess: (response: any, variables) => {
       setUserProfileData(response.userProfile)
+      closeModal()
+      if (redirect) {
+        const community = response.userProfile.email.find((community: any) => community.UniversityName == variables.universityName)
+        if (community) {
+          router.push(`/community/${community.communityId}`)
+          queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+        }
+      }
+
       if (!response.user.status.isAlreadyJoined && response.user.status.isUniversityCommunity) {
         setUserData(response.user.updatedUser)
         return queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
@@ -50,7 +61,7 @@ export const useAddUniversityEmail = () => {
         return console.log('already Joined')
       }
       if (!response.user.isUniversityCommunity) {
-        return console.log('No community')
+        return console.log('response', response)
       }
     },
     onError: (res: any) => {

@@ -1,5 +1,6 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
+import { Spinner } from '@/components/spinner/Spinner'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
@@ -65,12 +66,18 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     setCommunityGroupPostDatas(communityDatas)
   }, [communityGroupPost, dataUpdatedAt])
 
-  if (isLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-8" />
+  if (isLoading || isFetching)
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Spinner />
+      </div>
+    )
+  // if (isLoading || isFetching) return <Skeleton className="w-full h-60 bg-slate-300 my-8" />
 
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
-  if (communityGroupPostDatas.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+  if (communityGroupPostDatas.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6">
@@ -93,6 +100,8 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           idx={idx}
           showCommentSection={showCommentSection}
           setShowCommentSection={setShowCommentSection}
+          communityId={communityId}
+          communityGroupId={communityGroupId}
         />
       ))}
     </div>

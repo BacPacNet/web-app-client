@@ -23,7 +23,10 @@ type FormDataType = {
   universityName: string
 }
 
-const UniversityVerificationModal = () => {
+type Props = {
+  universityNameProp?: string
+}
+const UniversityVerificationModal = ({ universityNameProp }: Props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const {
@@ -36,7 +39,7 @@ const UniversityVerificationModal = () => {
     getValues,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
-  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail()
+  const { mutate, data: addUniversityEmailData, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -57,8 +60,13 @@ const UniversityVerificationModal = () => {
   }
 
   const onSubmit = async (data: FormDataType) => {
-    mutate(data)
+    if (universityNameProp) {
+      mutate({ ...data, universityName: universityNameProp })
+    } else {
+      mutate(data)
+    }
   }
+
   const handleUniversityEmailSendCodeCount = () => {
     setIsCounting(true)
     setCountdown(30)
@@ -91,24 +99,34 @@ const UniversityVerificationModal = () => {
           <label htmlFor="Email Address" className="font-medium text-neutral-900">
             University Name
           </label>
-          <Controller
-            name="universityName"
-            control={control}
-            rules={{ required: 'University name is required!' }}
-            render={({ field }) => (
-              <SelectUniversityDropdown
-                value={field.value}
-                onChange={(selectedUniversity: any) => {
-                  field.onChange(selectedUniversity.name)
-                }}
-                placeholder="Select University Name"
-                icon={'single'}
-                search={true}
-                err={!!errors.universityName}
+          {universityNameProp ? (
+            <div
+              className={` flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  border-neutral-100 h-10 outline-none`}
+            >
+              <p className={`'text-neutral-900 text-2xs`}> {universityNameProp}</p>
+            </div>
+          ) : (
+            <>
+              <Controller
+                name="universityName"
+                control={control}
+                rules={{ required: 'University name is required!' }}
+                render={({ field }) => (
+                  <SelectUniversityDropdown
+                    value={field.value}
+                    onChange={(selectedUniversity: any) => {
+                      field.onChange(selectedUniversity.name)
+                    }}
+                    placeholder="Select University Name"
+                    icon={'single'}
+                    search={true}
+                    err={!!errors.universityName}
+                  />
+                )}
               />
-            )}
-          />
-          {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
+              {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
+            </>
+          )}
         </div>
 
         <div className="flex flex-col  w-11/12 gap-4">
