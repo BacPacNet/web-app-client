@@ -3,7 +3,7 @@ import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { AxiosErrorType, PostCommentData, PostType, UserPostData } from '@/types/constants'
-import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function DeleteUserPost(postId: string, token: string) {
   const response = await client(`/userpost/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -16,7 +16,7 @@ export async function UpdateUserPost(data: UserPostData, postId: string, token: 
 }
 
 export async function LikeUnilikeUserPost(postId: string, token: string) {
-  const response = await client(`/userpost/likeunlike/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/userpost/likeunlike/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -167,22 +167,6 @@ export function useGetUserPosts(userId: string) {
     enabled: !!userId,
   })
 }
-// export function useGetUserPostComments(postId: string, showCommentSection: boolean, isTimeline: boolean) {
-//   const [cookieValue] = useCookie('uni_user_token')
-
-//   const state = useQuery({
-//     queryKey: ['userPostComments'],
-//     queryFn: () => getUserPostComments(postId, cookieValue),
-//     enabled: showCommentSection && !!postId && isTimeline && !!cookieValue,
-//   })
-
-//   let errorMessage = null
-//   if (axios.isAxiosError(state.error) && state.error.response) {
-//     errorMessage = state.error.response.data
-//   }
-
-//   return { ...state, error: errorMessage }
-// }
 
 export function useGetUserPostComments(postId: string, showCommentSection: boolean, isTimeline: boolean, limit: number) {
   {
@@ -255,18 +239,36 @@ export function useGetTimelinePosts(limit: number) {
   })
 }
 
-export const useLikeUnlikeTimelinePost = () => {
+export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+    onSuccess: (res: any, postId: string) => {
+      queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
+        if (!oldData || !oldData.pages) return oldData
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            allPosts: page.allPosts.map((post: any) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    likeCount: res.likeCount,
+                  }
+                : post
+            ),
+          })),
+        }
+      })
     },
-    onError: (res: AxiosErrorType) => {
-      console.log(res.response?.data.message, 'res')
+    onError: (res: any) => {
+      return showToast(res.response.data.message, {
+        variant: 'error',
+        isDarkMode: false,
+      })
     },
   })
 }

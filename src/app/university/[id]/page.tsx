@@ -3,7 +3,7 @@ import Buttons from '@/components/atoms/Buttons'
 import Loading from '@/components/atoms/Loading'
 import { useUniversitySearchByName } from '@/services/universitySearch'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { MdEmail } from 'react-icons/md'
 import React, { useState } from 'react'
 import { FaPhoneAlt } from 'react-icons/fa'
@@ -14,6 +14,11 @@ import { BsClockFill } from 'react-icons/bs'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import { IconType } from 'react-icons/lib'
+import { useUniStore } from '@/store/store'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
+import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
+import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
+import { useJoinCommunity } from '@/services/community-university'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -29,27 +34,28 @@ export default function UniversityProfile() {
   const params = useParams()
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading } = useUniversitySearchByName(universityName as string)
-
+  const { userData, userProfileData } = useUniStore()
   const [imageSrc, setImageSrc] = useState(university?.images[0] || universityPlaceholder)
   const [logoSrc, setLogoSrc] = useState(university?.logos?.[0] || universityLogoPlaceholder)
-
+  const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
+  const router = useRouter()
   if (isUniversityLoading) return <Loading />
 
   const contactData = [
     {
       icon: MdEmail,
       title: 'Email',
-      info: university.wikiInfoBox?.email,
+      info: university?.wikiInfoBox?.email,
     },
     {
       icon: FaPhoneAlt,
       title: 'Phone',
-      info: university.collegeBoardInfo?.['Phone number'],
+      info: university?.collegeBoardInfo?.['Phone number'],
     },
     {
       icon: MdFax,
       title: 'Fax',
-      info: university.wikiInfoBox?.fax,
+      info: university?.wikiInfoBox?.fax,
     },
   ]
 
@@ -57,22 +63,40 @@ export default function UniversityProfile() {
     {
       icon: IoIosLink,
       title: 'Link',
-      info: university.collegeBoardInfo?.website,
+      info: university?.collegeBoardInfo?.website,
     },
     {
       icon: PiBuildingsFill,
       title: 'Address',
-      info: university.collegeBoardInfo?.Location,
+      info: university?.collegeBoardInfo?.Location,
     },
     {
       icon: BsClockFill,
       title: 'Office Hours',
-      info: university.wikiInfoBox?.['Office Hours'] || 'Monday to Friday 9:00 am - 12:00 p.m. and 1:00 p.m - 5:00 p.m',
+      info: university?.wikiInfoBox?.['Office Hours'] || 'Monday to Friday 9:00 am - 12:00 p.m. and 1:00 p.m - 5:00 p.m',
     },
   ]
 
+  const handleClick = (universityName: string) => {
+    const email = userProfileData?.email?.find((email) => email.UniversityName == universityName)
+    if (!userData?.id) {
+      openModal(
+        <NotLoggedInModal title={'Login to Join Community'} desc={'Login or create an account to become part of Lorem University’s community! '} />,
+        'w-96 p-0 rounded-md'
+      )
+    } else if (email && email.communityId) {
+      joinCommunity(email.communityId, {
+        onSuccess: () => {
+          router.push(`/community/${email.communityId}`)
+        },
+      })
+    } else if (!email) {
+      openModal(<UniversityVerificationModal universityNameProp={universityName} />, 'h-max w-[450px]')
+    }
+  }
+
   return (
-    <div className="p-28 flex flex-col gap-4 max-sm:px-4">
+    <div className="md:p-28 p-4 flex flex-col gap-4 max-sm:px-4 overflow-x-hidden">
       <div className="flex gap-16 max-lg:flex-col-reverse">
         <div className="flex flex-col  gap-5">
           <div className="flex items-center gap-9 py-4">
@@ -90,7 +114,13 @@ export default function UniversityProfile() {
             <p className="text-neutral-900 text-lg font-extrabold w-96 max-xl:w-60 max-xl:text-[24px] max-lg:w-full">{university?.name}</p>
           </div>
           <p className={`text-neutral-500 text-xs line-clamp-6 max-w-lg`}>{university?.topUniInfo?.about || 'Not Available'}</p>
-          {university?.isCommunityCreated ? <Buttons className="w-max">Join Community</Buttons> : <Buttons className="w-max">Endorse</Buttons>}
+          {university?.isCommunityCreated ? (
+            <Buttons className="w-max" onClick={() => handleClick(university?.name)}>
+              Join Community
+            </Buttons>
+          ) : (
+            <Buttons className="w-max">Endorse</Buttons>
+          )}
         </div>
         <div className=" flex justify-center w-8/12 max-lg:w-full max-sm:items-center">
           <Image

@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { RxCrossCircled } from 'react-icons/rx'
 import { Spinner } from '@/components/spinner/Spinner'
+import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type props = {
   communityID?: string
@@ -123,14 +124,15 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
     if (textareaRef.current) {
       textareaRef.current.value = ''
     }
+    setImages([])
   }
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // You can do something with the value here, like an API call
-    if (!textareaRef.current?.value) {
-      return alert('Please enter')
+    if (!textareaRef.current?.value && !images.length) {
+      return showToast('Enter in Input box to post', { variant: 'warning' })
     }
     return handleGroupPost(valueRef.current as string)
   }

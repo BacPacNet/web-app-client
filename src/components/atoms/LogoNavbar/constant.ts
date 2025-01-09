@@ -5,7 +5,7 @@ export const MENU_LIST = [
   },
   {
     name: 'Community',
-    path: '/community',
+    path: '/timeline',
   },
   {
     name: 'About Us',

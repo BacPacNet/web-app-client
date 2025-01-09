@@ -1,6 +1,6 @@
 'use client'
 import Button from '@/components/atoms/Buttons'
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import avatar from '@assets/unibuzz_rounded.svg'
 import { userType } from '@/store/userSlice/userType'
@@ -8,6 +8,9 @@ import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
 import { openModal } from '../../Modal/ModalManager'
 import { FaCircleCheck } from 'react-icons/fa6'
+import { truncateString } from '@/lib/utils'
+import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+
 interface Props {
   subscribedCommunities: Community[]
   communityId: string
@@ -32,28 +35,57 @@ function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handle
 
   return subscribedCommunities?.map((community, index) => {
     return (
-      <div
-        onClick={() => handleCommunityClick(index)}
-        key={index}
-        className={`flex items-center justify-between hover:bg-secondary ${communityId === community._id && !isGroup && 'bg-secondary'}`}
-      >
-        <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
-          <Image
-            width={30}
-            height={30}
-            className="w-[40px] h-[40px] object-cover rounded-full"
-            src={community.communityLogoUrl.imageUrl || avatar}
-            alt={community.name}
-          />
-
-          <div className="flex items-center gap-1">
-            <p className="text-xs  xl:w-max ">{community.name} </p>
-            <FaCircleCheck color="#6647ff" size={16} />
-          </div>
-        </div>
-      </div>
+      <CommunityHolder
+        key={community._id}
+        community={community}
+        index={index}
+        handleCommunityClick={handleCommunityClick}
+        communityId={communityId}
+        isGroup={isGroup}
+      />
     )
   })
 }
 
 export default NavbarSubscribedUniversity
+
+interface CommunityHolderProps {
+  community: {
+    _id: string
+    name: string
+    communityLogoUrl: { imageUrl: string }
+  }
+  index: number
+  handleCommunityClick: (index: number) => void
+  communityId: string
+  isGroup: boolean
+}
+
+const CommunityHolder = ({ community, index, handleCommunityClick, communityId, isGroup }: CommunityHolderProps) => {
+  const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
+  return (
+    <div
+      onClick={() => handleCommunityClick(index)}
+      key={index}
+      className={`flex items-center justify-between overflow-x-hidden hover:bg-secondary ${
+        communityId === community._id && !isGroup && 'bg-secondary'
+      }`}
+    >
+      <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
+        <Image
+          width={30}
+          height={30}
+          className="w-[40px] h-[40px] object-cover rounded-full"
+          src={logoSrc}
+          alt={community.name}
+          onError={() => setLogoSrc(universityLogoPlaceholder)}
+        />
+
+        <div className="flex items-center gap-1">
+          <p className="text-xs  xl:w-max ">{truncateString(community.name)} </p>
+          <FaCircleCheck color="#6647ff" size={16} />
+        </div>
+      </div>
+    </div>
+  )
+}

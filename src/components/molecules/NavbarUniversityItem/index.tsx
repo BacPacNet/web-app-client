@@ -20,6 +20,23 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
+import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+
+const CommunitySelectPop = ({ community, index, handleUniversityClick }: any) => {
+  const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
+  return (
+    <Image
+      key={community?._id}
+      onClick={() => handleUniversityClick(index)}
+      width={40}
+      height={40}
+      className="w-[40px] h-[40px] object-cover rounded-full"
+      src={logoSrc}
+      alt="communtiy image"
+      onError={() => setLogoSrc(universityLogoPlaceholder)}
+    />
+  )
+}
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -33,6 +50,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
+
   const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
   const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
@@ -43,6 +61,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
+  const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl.imageUrl || universityLogoPlaceholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
   const [communityOpen, setCommunityOpen] = useState(false)
@@ -65,7 +84,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const handleNewGroupModal = () => {
     openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
-    toggleLeftNavbar()
+    toggleLeftNavbar && toggleLeftNavbar()
   }
   const handleAssignUsersModal = () => {
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
@@ -252,22 +271,15 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
                     width={40}
                     height={40}
                     className="w-[40px] h-[40px] object-cover rounded-full"
-                    src={community?.communityLogoUrl?.imageUrl || avatar}
+                    src={logoSrc}
                     alt="communtiy image"
+                    onError={() => setLogoSrc(universityLogoPlaceholder)}
                   />
                 </PopoverTrigger>
                 <PopoverContent className="bg-white border-none shadow-lg w-fit px-0 rounded-full flex flex-col gap-2 cursor-pointer">
                   {subscribedCommunities?.map((community, index) => {
                     return (
-                      <Image
-                        key={community?._id}
-                        onClick={() => handleUniversityClick(index)}
-                        width={40}
-                        height={40}
-                        className="w-[40px] h-[40px] object-cover rounded-full"
-                        src={community?.communityLogoUrl?.imageUrl || avatar}
-                        alt="communtiy image"
-                      />
+                      <CommunitySelectPop key={community._id} community={community} index={index} handleUniversityClick={handleUniversityClick} />
                     )
                   })}
                 </PopoverContent>

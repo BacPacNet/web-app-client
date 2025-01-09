@@ -3,6 +3,7 @@ import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
+import { Spinner } from '@/components/spinner/Spinner'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
@@ -19,6 +20,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     fetchNextPage: timelinePostsNextpage,
     isFetchingNextPage: timelinePostIsFetchingNextPage,
     hasNextPage: timelinePostHasNextPage,
+    isFetching,
   } = useGetTimelinePosts(10)
 
   const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
@@ -60,6 +62,13 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     }
   }, [imageCarasol])
 
+  if (isLoading || isFetching)
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Spinner />
+      </div>
+    )
+
   const renderPostWithRespectToPathName = () => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
@@ -80,6 +89,8 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         idx={idx}
         showCommentSection={showCommentSection}
         setShowCommentSection={setShowCommentSection}
+        communityId={post?.communityId}
+        isTimeline={true}
       />
     ))
   }

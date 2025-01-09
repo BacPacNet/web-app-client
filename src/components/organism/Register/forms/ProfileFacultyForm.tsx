@@ -90,6 +90,7 @@ const ProfileFacultyForm = () => {
                 key={currDepartment}
                 options={currDepartment}
                 value={field.value}
+                search={true}
                 onChange={field.onChange}
                 placeholder="Select a department"
                 icon={'single'}

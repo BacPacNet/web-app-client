@@ -88,7 +88,8 @@ interface PostProps {
   link?: string
   date: string
   avatarLink: string
-
+  communityGroupId?: string
+  communityId?: string
   commentCount: number
   likes: Like[]
   postID: string
@@ -106,6 +107,7 @@ interface PostProps {
   idx: number
   showCommentSection: string
   setShowCommentSection: (value: string) => void
+  isTimeline?: boolean
 }
 
 const PostCard = ({
@@ -126,11 +128,14 @@ const PostCard = ({
   commentCount,
   showCommentSection,
   setShowCommentSection,
+  communityGroupId,
+  communityId,
+  isTimeline = false,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
-  const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost()
-  const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost()
+  const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(communityId, communityGroupId, isTimeline)
+  const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(communityId)
 
   const LikeUnlikeHandler = (postId: string) => {
     if (type === PostType.Timeline) {
