@@ -199,23 +199,11 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
                 <div className="flex gap-16 px-8">
-                  {MENU_LIST.map((menu, index) => {
-                    if (menu.name === 'UPGRADE') {
-                      return (
-                        <div key={index} className="flex">
-                          <Link className="text-primary-500 text-xs" href={menu.path}>
-                            {menu.name}
-                          </Link>
-                          <Image className="ml-1" src={sparkles} alt="upgrade_icon" width={20} height={20} />
-                        </div>
-                      )
-                    }
-                    return (
-                      <Link key={index} className="text-neutral-800 text-xs" href={menu.path}>
-                        {menu.name}
-                      </Link>
-                    )
-                  })}
+                  {MENU_LIST.map((menu, index) => (
+                    <p onClick={() => router.push(menu.path)} key={index} className="text-neutral-800 text-xs cursor-pointer">
+                      {menu.name}
+                    </p>
+                  ))}
                 </div>
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
