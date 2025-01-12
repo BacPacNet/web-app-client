@@ -1,6 +1,7 @@
 'use client'
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
+import PostSkeleton from '@/components/atoms/PostSkeleton'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
 import { useGetTimelinePosts } from '@/services/community-timeline'
@@ -86,11 +87,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
 
   const PostCardRender = () => {
     if (isLoading) {
-      return (
-        <div>
-          <Loading />
-        </div>
-      )
+      return <PostSkeleton />
     }
 
     if (error) {

@@ -37,7 +37,8 @@ export function showCustomSuccessToast(message: string) {
       React.createElement(
         'div',
         {
-          className: ' bg-green-200 flex justify-between items-center px-4 py-2 rounded-lg shadow-lg min-w-[500px] max-sm:min-w-[250px]',
+          className:
+            ' bg-success-100 text-xs md:text-sm flex justify-between items-center px-4 py-2 rounded-lg shadow-lg min-w-[500px] max-sm:min-w-[250px]',
           style: {
             margin: '0 auto',
             position: 'relative',
@@ -47,19 +48,19 @@ export function showCustomSuccessToast(message: string) {
             textAlign: 'center',
           },
         },
-        React.createElement('p', { className: 'text-green-500' }, message),
+        React.createElement('p', { className: 'text-success-800' }, message),
         React.createElement(
           'button',
           {
             onClick: () => toast.dismiss(t.id),
-            className: 'text-neutral-400 hover:text-red-700',
+            className: 'text-success-800',
           },
           React.createElement(AiOutlineClose, { size: 20 })
         )
       ),
     {
       position: 'bottom-center',
-      duration: 3000,
+      duration: 30000,
       style: {
         margin: 0,
         padding: 0,
@@ -79,7 +80,8 @@ export function showCustomDangerToast(message: string) {
       React.createElement(
         'div',
         {
-          className: ' bg-destructive-600 flex justify-between items-center px-4 py-2 rounded-lg shadow-lg min-w-[500px] max-sm:min-w-[250px]',
+          className:
+            'bg-destructive-100 text-xs md:text-sm flex justify-between items-center px-4 py-2 rounded-lg shadow-lg min-w-[500px] max-sm:min-w-[250px]',
           style: {
             margin: '0 auto',
             position: 'relative',
@@ -89,19 +91,19 @@ export function showCustomDangerToast(message: string) {
             textAlign: 'center',
           },
         },
-        React.createElement('p', { className: 'text-white' }, message || MESSAGES.SOMETHING_WENT_WRONG),
+        React.createElement('p', { className: 'text-destructive-800' }, message || MESSAGES.SOMETHING_WENT_WRONG),
         React.createElement(
           'button',
           {
             onClick: () => toast.dismiss(t.id),
-            className: 'text-white ',
+            className: 'text-destructive-800 ',
           },
           React.createElement(AiOutlineClose, { size: 20 })
         )
       ),
     {
       position: 'bottom-center',
-      duration: 3000,
+      duration: 30000,
       style: {
         margin: 0,
         padding: 0,

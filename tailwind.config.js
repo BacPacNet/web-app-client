@@ -64,7 +64,14 @@ module.exports = {
                 'surface-primary-50': '#F3F2FF',
                 'warning-500': '#F59E0B',
                 'success-500': "#22C55E",
-                'destructive-600': "#DC2626"
+                'success-100': '#DCFCE7',
+                'success-800': '#166534',
+                'destructive-100': '#FEE2E2',
+                'destructive-600': '#16A34A',
+                'destructive-700': '#15803D',
+
+                'destructive-600': "#DC2626",
+                'destructive-800': '#991B1B'
             },
             boxShadow: {
                 'logo': '0px 0px 6px 0px #00000040',

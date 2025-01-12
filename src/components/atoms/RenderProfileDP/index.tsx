@@ -20,7 +20,7 @@ function ProfilePicture({ userProfileData }: Props) {
       height={60}
       objectFit="cover"
       className="w-[60px] h-[60px] rounded-full flex-none"
-      src={userProfileData.profile_dp?.imageUrl || avatar}
+      src={userProfileData?.profile_dp?.imageUrl || avatar}
       alt="profile.png"
     />
   )

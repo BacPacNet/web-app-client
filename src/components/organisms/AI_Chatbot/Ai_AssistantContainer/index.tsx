@@ -10,6 +10,7 @@ import Buttons from '@/components/atoms/Buttons'
 import StartAIChat from '../AI_Section/StartAIChat'
 import AINoUniversity from '../AI_Section/AINoUniversity'
 import Spinner from '@/components/atoms/spinner'
+import { useGetEndorsementAI } from '@/services/endorsement-ai'
 
 type dataType = {
   _id: string
@@ -24,6 +25,7 @@ const Ai_AssistantContainer = () => {
   const [universityExist, setUniversityExist] = useState(false)
   const { data: subscribedCommunities, isFetching, isLoading, isPending } = useGetSubscribedCommunties()
   const otherUniversity = subscribedCommunities?.filter((item) => item._id !== selectedUniversity?._id)
+
   useEffect(() => {
     if (subscribedCommunities?.length) {
       setSelectedUniversity(subscribedCommunities[0])
@@ -41,7 +43,7 @@ const Ai_AssistantContainer = () => {
   if (!universityExist) {
     return (
       <div className="bg-white mt-4 rounded-2xl drop-shadow-lg py-10 flex flex-col justify-between pb-4 ">
-        <AINoUniversity />
+        <AINoUniversity communityId={subscribedCommunities ? subscribedCommunities![0].collegeID : ''} />
       </div>
     )
   }
