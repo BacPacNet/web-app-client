@@ -1,8 +1,7 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
-import { useGetFilteredUniversity } from '@/services/universitySearch'
-import { country_list } from '@/utils/countriesList'
+import { Country, City } from 'country-state-city'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { IoIosSearch } from 'react-icons/io'
@@ -18,11 +17,13 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
   const currCountry = watch('country') || ''
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
-    field.onChange(selectedCountry)
-    const cities = country_list[selectedCountry] || []
+    const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
+    if (getCountyCode) {
+      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
+      field.onChange(selectedCountry) // Update the country field value
+    }
 
-    setCityOptions(cities.length > 0 ? cities : ['Not available'])
-    setIsCityAvailable(cities.length > 0)
+    //setIsCityAvailable(cities.length > 0)
   }
 
   const handleFilterSubmit = (data: any) => {
@@ -57,7 +58,7 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
               control={control}
               render={({ field }) => (
                 <SelectDropdown
-                  options={Object.keys(country_list)}
+                  options={Country.getAllCountries().map((country) => country.name)}
                   value={field.value || ''}
                   onChange={(selectedCountry: string) => handleCountryChange(selectedCountry, field)}
                   placeholder="Country"

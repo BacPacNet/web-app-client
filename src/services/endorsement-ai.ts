@@ -20,6 +20,22 @@ export const useGetEndorsementAI = (communityId: string) => {
   })
 }
 
+const getEndorsementAIOfUser = async (communityId: string, cookieValue: string) => {
+  const response: EndorsementAIResponse = await client(`/endorsementAI/${communityId}?checkUserEndorse=true`, {
+    headers: { Authorization: `Bearer ${cookieValue}` },
+  })
+  return response
+}
+
+export const useGetEndorsementAIOfUser = (communityId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['endorsementAIOfUser'],
+    queryFn: () => getEndorsementAIOfUser(communityId, cookieValue),
+    enabled: !!cookieValue && !!communityId,
+  })
+}
+
 const createEndorsementAI = async (communityId: string, cookieValue: string) => {
   const response = await client(`/endorsementAI`, {
     headers: { Authorization: `Bearer ${cookieValue}` },

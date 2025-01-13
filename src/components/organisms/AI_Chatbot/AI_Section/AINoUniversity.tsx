@@ -4,7 +4,7 @@ import Image from 'next/image'
 import SettingsText from '@/components/atoms/SettingsText'
 import SupportingText from '@/components/atoms/SupportingText'
 import Buttons from '@/components/atoms/Buttons'
-import { useCreateEndorsementAI, useGetEndorsementAI } from '@/services/endorsement-ai'
+import { useCreateEndorsementAI, useGetEndorsementAI, useGetEndorsementAIOfUser } from '@/services/endorsement-ai'
 
 const AINoUniversity = ({ communityId }: { communityId: string }) => {
   return (
@@ -30,6 +30,7 @@ const EndorsementTracker = ({ communityId }: { communityId: string }) => {
   const [endorsed, setEndorsed] = useState(false)
   const targetGoal = 1000
   const { data: endorsement } = useGetEndorsementAI(communityId)
+  const { data: endorsementUser } = useGetEndorsementAIOfUser(communityId)
   const { mutate: mutateEndorse } = useCreateEndorsementAI()
 
   const progressPercentage = Math.floor((endorsedCount / targetGoal) * 100)
@@ -58,7 +59,7 @@ const EndorsementTracker = ({ communityId }: { communityId: string }) => {
       </div>
       <SupportingText className="text-neutral-700">Target goal: {endorsement?.totalGoal} students</SupportingText>
       <div className="flex justify-end">
-        {endorsed ? (
+        {endorsementUser?.isAlreadyEndorse ? (
           <Buttons onClick={() => handleEndorseClick()} disabled={endorsed} className=" w-24" variant="border" size="extra_small_paddind_2">
             <span className="text-neutral-400">Thank You!</span>
           </Buttons>
