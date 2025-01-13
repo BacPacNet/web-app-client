@@ -9,9 +9,9 @@ import SupportingText from '@/components/atoms/SupportingText'
 import InputWarningText from '@/components/atoms/InputWarningText'
 
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
-import { country_list } from '@/utils/countriesList'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
 import { GenderOptions, userType } from '@/types/RegisterForm'
+import { Country } from 'country-state-city'
 
 const ProfileSetupForm = () => {
   const {
@@ -86,11 +86,11 @@ const ProfileSetupForm = () => {
             rules={{ required: 'Country is required!' }}
             render={({ field }) => (
               <SelectDropdown
-                options={Object.keys(country_list)}
+                options={Country.getAllCountries().map((country) => country.name)}
                 value={field.value}
                 onChange={field.onChange}
                 placeholder="Select a country"
-                icon={'dual'}
+                icon={'single'}
                 search={true}
                 err={!!ProfileFormErrors.country}
               />

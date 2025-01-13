@@ -9,6 +9,7 @@ import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
+import PostSkeleton from '@/components/atoms/PostSkeleton'
 
 type Props = {
   communityID?: string
@@ -106,11 +107,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
 
   const PostCardRender = () => {
     if (isLoading) {
-      return (
-        <div>
-          <Loading />
-        </div>
-      )
+      return <PostSkeleton />
     }
 
     if (communityPostError) {

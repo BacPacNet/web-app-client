@@ -5,7 +5,6 @@ import Button from '@/components/atoms/Buttons'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { useEditProfile } from '@/services/edit-profile'
 import { useUniStore } from '@/store/store'
-import { country_list } from '@/utils/countriesList'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { TiCameraOutline } from 'react-icons/ti'
 import { useEffect, useState } from 'react'
@@ -15,6 +14,7 @@ import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
 import { closeModal } from '@/components/molecules/Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
+import { Country, City } from 'country-state-city'
 
 export interface editProfileInputs {
   firstName: string
@@ -44,7 +44,6 @@ const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userProfileData } = useUniStore()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
-
   const [user, setUser] = useState<any>(null)
   const [userType, setUserType] = useState('student')
   const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
@@ -91,12 +90,12 @@ const EditProfileModal = () => {
   const [isCityAvailable, setIsCityAvailable] = useState(true)
   const currCountry = watch('country') || ''
 
-  const handleCountryChange = (selectedCountry: string, field: any) => {
-    field.onChange(selectedCountry) // Update the country field value
-    const cities = country_list[selectedCountry] || []
-
-    setCityOptions(cities.length > 0 ? cities : ['Not available'])
-    setIsCityAvailable(cities.length > 0)
+  const handleCountryChange = (selectedCountry: string, field?: any) => {
+    const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
+    if (getCountyCode) {
+      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
+      field.onChange(selectedCountry) // Update the country field value
+    }
   }
 
   type DegreeKeys = keyof typeof degreeAndMajors
@@ -121,8 +120,10 @@ const EditProfileModal = () => {
   }, [currDegree, setValue])
 
   useEffect(() => {
-    const cities = country_list[currCountry] || []
-    setCityOptions(cities.length > 0 ? cities : ['Not available'])
+    const getCountyCode = Country.getAllCountries().find((country) => country.name === currCountry)?.isoCode
+    if (getCountyCode) {
+      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
+    }
   }, [currCountry, setValue])
 
   const validateBio = (value: string | undefined): string | boolean => {
@@ -282,7 +283,7 @@ const EditProfileModal = () => {
             rules={{ required: 'country is required!' }}
             render={({ field }) => (
               <SelectDropdown
-                options={Object.keys(country_list)}
+                options={Country.getAllCountries().map((country) => country.name)}
                 value={field.value || ''}
                 onChange={(selectedCountry: string) => handleCountryChange(selectedCountry, field)}
                 placeholder="Select a country"
