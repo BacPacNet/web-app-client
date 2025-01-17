@@ -63,7 +63,7 @@ async function universityEmailVerification(data: { universityEmail: string; Univ
   return response
 }
 
-export const useHandleLogin = () => {
+export const useHandleLogin = (isRemove: boolean = false) => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const router = useRouter()
@@ -72,12 +72,16 @@ export const useHandleLogin = () => {
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
-    onSuccess: (response: UserResponseType) => {
+    onSuccess: (response: UserResponseType, data) => {
       router.push('/timeline')
       setUserData(response.user)
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
+      if (isRemove) {
+        localStorage.setItem('registeredEmail', data?.email)
+        localStorage.removeItem('registerData')
+      }
     },
     onError: (error: any) => {
       console.log(error)

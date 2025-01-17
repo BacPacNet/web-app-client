@@ -53,12 +53,25 @@ const ProfileSetupForm = () => {
           <Controller
             name="birthDate"
             control={control}
-            rules={{ required: 'BirthDate is required!' }}
+            rules={{
+              required: 'BirthDate is required!',
+              validate: (value) => {
+                if (!value) return 'BirthDate is required!'
+                const today = new Date()
+                const birthDate = new Date(value)
+                const age = today.getFullYear() - birthDate.getFullYear()
+                const monthDiff = today.getMonth() - birthDate.getMonth()
+                const dayDiff = today.getDate() - birthDate.getDate()
+                const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
+
+                return adjustedAge >= 14 || 'You must be at least 14 years old!'
+              },
+            }}
             render={({ field }) => (
               <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!ProfileFormErrors.birthDate} />
             )}
           />
-          {ProfileFormErrors.birthDate && <InputWarningText>Please enter your birthday!</InputWarningText>}
+          {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}!</InputWarningText>}
         </div>
         <div className="w-full flex flex-col relative">
           <Controller

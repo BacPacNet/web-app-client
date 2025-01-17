@@ -24,7 +24,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
 
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
-  const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
+  const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl)
 
   const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
@@ -43,6 +43,10 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
       setIsGroupAdmin(communityData.adminId.toString() === id?.toString())
     }
   }, [communityData, userData])
+
+  useEffect(() => {
+    setLogoSrc(communityData?.communityLogoUrl?.imageUrl)
+  }, [communityData])
 
   const userVerifiedCommunityIds = useMemo(() => {
     return userData?.userVerifiedCommunities?.map((c) => c.communityId.toString()) || []
@@ -98,7 +102,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
                 objectFit="cover"
                 objectPosition="center"
                 alt="logo"
-                src={logoSrc}
+                src={logoSrc || universityLogoPlaceholder}
                 onError={() => setLogoSrc(universityLogoPlaceholder)}
                 className="object-cover object-top"
               />

@@ -11,7 +11,7 @@ import Image from 'next/image'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import Spinner from '@/components/atoms/spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
-
+import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 interface props {
   setStep: (value: number) => void
 
@@ -33,6 +33,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP } = useHandleUniversityEmailVerificationGenerate()
   const all = getValues()
+  const univeristyName = getValues('universityName')
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -95,6 +96,18 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
           <p className="text-sm text-neutral-600 text-center">Can create groups in university community </p>
         </div>
+      </div>
+      <div className="flex gap-2 items-center justify-start w-[370px] sm:w-96 sm:ps-4  ps-2">
+        <Image
+          objectFit="cover"
+          objectPosition="center"
+          alt="logo"
+          width={20}
+          height={20}
+          src={universityLogoPlaceholder}
+          className="object-cover object-top"
+        />
+        {univeristyName}
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-5 ">
         {all?.status == 'Applicant' && (
