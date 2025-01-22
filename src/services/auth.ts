@@ -63,7 +63,7 @@ async function universityEmailVerification(data: { universityEmail: string; Univ
   return response
 }
 
-export const useHandleLogin = (isRemove: boolean = false) => {
+export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
   const router = useRouter()
@@ -78,10 +78,6 @@ export const useHandleLogin = (isRemove: boolean = false) => {
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
-      if (isRemove) {
-        localStorage.setItem('registeredEmail', data?.email)
-        localStorage.removeItem('registerData')
-      }
     },
     onError: (error: any) => {
       console.log(error)

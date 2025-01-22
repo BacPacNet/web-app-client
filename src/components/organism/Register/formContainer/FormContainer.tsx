@@ -197,11 +197,9 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     if (step === 3) {
       const res = await HandleRegister(data)
       if (res?.isRegistered) {
-        // localStorage.setItem('registeredEmail', data?.email)
+        localStorage.setItem('registeredEmail', data?.email)
         localStorage.removeItem('registerData')
-        // router.push('/login')
         handleNext()
-        // saveToLocalStorage()
       }
 
       return

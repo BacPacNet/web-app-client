@@ -22,14 +22,16 @@ const FinalLoginForm = ({ email }: { email: string }) => {
     handleSubmit,
     setValue,
   } = useForm<LoginForm>()
-  const { mutate: mutateLogin, error, isPending, isError } = useHandleLogin(true)
+  const { mutate: mutateLogin, error, isPending, isError } = useHandleLogin()
 
   const onSubmit = async (data: LoginForm) => {
     mutateLogin(data)
   }
 
   useEffect(() => {
-    setValue('email', email)
+    const loginEmail: any = localStorage.getItem('registeredEmail')
+
+    setValue('email', loginEmail)
   }, [])
   return (
     <div className="w-1/2 flex flex-col gap-8 items-center ">
