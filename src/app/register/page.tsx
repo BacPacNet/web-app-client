@@ -13,6 +13,7 @@ const progressBarData = [
   { title: 'Profile Setup', des: 'User Information' },
   { title: 'User Verification', des: 'Sync personal and university email' },
   { title: 'Almost There', des: 'Do you have a referral code?' },
+  { title: 'Finalize Account', des: 'Login to your newly made account' },
 ]
 
 const Register = () => {
@@ -70,7 +71,7 @@ const Register = () => {
               </div>
               <ProgressBar
                 radius={25}
-                progress={step + 1}
+                progress={step == 4 ? 4 : step + 1}
                 key={step}
                 strokeWidth={6}
                 strokeColor="#6744FF"
@@ -78,7 +79,7 @@ const Register = () => {
                 trackStrokeWidth={6}
                 steps={4}
               >
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{step + 1}/4 </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{step == 4 ? 4 : step + 1}/4 </div>
               </ProgressBar>
               <div>
                 <p className="text-sm text-neutral-900">{progressBarData[step].title}</p>

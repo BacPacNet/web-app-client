@@ -61,7 +61,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
-  const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl.imageUrl || universityLogoPlaceholder)
+  const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl.imageUrl)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
   const [communityOpen, setCommunityOpen] = useState(false)
@@ -105,6 +105,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value.toLowerCase())
   }
+
+  useEffect(() => {
+    setLogoSrc(community?.communityLogoUrl.imageUrl)
+  }, [community])
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
     const groups = communityId
@@ -271,7 +275,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
                     width={40}
                     height={40}
                     className="w-[40px] h-[40px] object-cover rounded-full"
-                    src={logoSrc}
+                    src={logoSrc || universityLogoPlaceholder}
                     alt="communtiy image"
                     onError={() => setLogoSrc(universityLogoPlaceholder)}
                   />

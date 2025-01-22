@@ -97,7 +97,10 @@ const LoginBox = () => {
             {loginErrors.password && <InputWarningText>Please enter your password!</InputWarningText>}
             <label className="w-fit text-neutral-500 text-xs cursor-pointer hover:text-primary hover:underline">Forgot Password?</label>
           </div>
-
+          <div className="flex gap-2">
+            <input type="checkbox" {...registerLogin('rememberme')} />
+            <p className="text-xs">Remember me</p>
+          </div>
           <Button disabled={isPending} variant="primary">
             {isPending ? <Spinner /> : 'Log in'}
           </Button>

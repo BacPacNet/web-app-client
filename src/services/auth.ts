@@ -72,7 +72,7 @@ export const useHandleLogin = () => {
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
-    onSuccess: (response: UserResponseType) => {
+    onSuccess: (response: UserResponseType, data) => {
       router.push('/timeline')
       setUserData(response.user)
       setUserProfileData(response.userProfile)

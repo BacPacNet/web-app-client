@@ -81,8 +81,8 @@ const EditProfileModal = () => {
         profilePicture: null,
       }
       reset(userDefault)
-      setUser({ ...userDefault, profile_dp: profile.profile_dp })
-      setPreviewProfileImage(profile.profile_dp.imageUrl)
+      setUser({ ...userDefault, profile_dp: profile?.profile_dp })
+      setPreviewProfileImage(profile?.profile_dp?.imageUrl)
     }
   }, [userProfile, reset])
 

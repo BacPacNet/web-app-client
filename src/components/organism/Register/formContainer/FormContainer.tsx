@@ -199,7 +199,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
       if (res?.isRegistered) {
         localStorage.setItem('registeredEmail', data?.email)
         localStorage.removeItem('registerData')
-        router.push('/login')
+        handleNext()
       }
 
       return
@@ -277,7 +277,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     } else if (step === 3) {
       return <ClaimBenefitForm isPending={registerIsPending} />
     } else if (step === 4) {
-      return <FinalLoginForm />
+      return <FinalLoginForm email={registerData?.email || ''} />
     }
   }
 
