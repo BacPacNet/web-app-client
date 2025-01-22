@@ -1,6 +1,7 @@
 export interface LoginForm {
   email: string
   password: string
+  rememberme?: string
 }
 export interface RegisterForm {
   firstName: string

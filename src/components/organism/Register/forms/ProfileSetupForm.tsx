@@ -73,44 +73,6 @@ const ProfileSetupForm = () => {
           />
           {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}!</InputWarningText>}
         </div>
-        <div className="w-full flex flex-col relative">
-          <Controller
-            name="gender"
-            control={control}
-            rules={{ required: 'Gender is required!' }}
-            render={({ field }) => (
-              <SelectDropdown
-                options={GenderOptions}
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Select a Gender"
-                icon={'single'}
-                err={!!ProfileFormErrors.gender}
-              />
-            )}
-          />
-          {ProfileFormErrors.gender && <InputWarningText>{ProfileFormErrors?.gender?.message?.toString()}</InputWarningText>}
-        </div>
-
-        <div className="w-full flex flex-col relative">
-          <Controller
-            name="country"
-            control={control}
-            rules={{ required: 'Country is required!' }}
-            render={({ field }) => (
-              <SelectDropdown
-                options={Country.getAllCountries().map((country) => country.name)}
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Select a country"
-                icon={'single'}
-                search={true}
-                err={!!ProfileFormErrors.country}
-              />
-            )}
-          />
-          {ProfileFormErrors.country && <InputWarningText>{ProfileFormErrors?.country?.message?.toString()}</InputWarningText>}
-        </div>
 
         <div className="w-full flex flex-col relative">
           <Controller
