@@ -33,7 +33,7 @@ const MessageContainer = () => {
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
   const { data: chatsData, isLoading: isChatLoading, isFetching } = useGetUserChats()
-  const [chats, setChats] = useState<ChatsArray>([])
+  const [chats, setChats] = useState<ChatsArray | null>(null)
   const [onlineUsersSet, setOnlineUsersSet] = useState<Set<string>>(new Set())
   const [acceptedChatId, setAcceptedId] = useState('')
   const selectedUserId = searchQuery.get('id')
@@ -48,14 +48,14 @@ const MessageContainer = () => {
     currImageIndex: null,
   })
 
-  const unreadChatsCount = chats.filter((item) => {
+  const unreadChatsCount = chats?.filter((item) => {
     if (item.isGroupChat) {
       return item.unreadMessagesCount > 0 && item.users.some((user) => user.userId._id == userData?.id && user.isRequestAccepted)
     } else {
       return item.unreadMessagesCount > 0 && item.isRequestAccepted
     }
   }).length
-  const unreadNotAcceptedChatsCount = chats.filter((item) => {
+  const unreadNotAcceptedChatsCount = chats?.filter((item) => {
     if (item.isGroupChat) {
       return item.unreadMessagesCount > 0 && item.users.some((user) => !user.isRequestAccepted)
     } else {
@@ -213,7 +213,7 @@ const MessageContainer = () => {
 
   useEffect(() => {
     if (acceptedChatId.length > 0) {
-      const chat = chats.find((item) => item._id == acceptedChatId)
+      const chat = chats?.find((item) => item._id == acceptedChatId)
 
       setSelectedChat(chat)
     }
@@ -323,8 +323,8 @@ const MessageContainer = () => {
         currTab={currTab}
         setCurrTab={setCurrTab}
         setSelectedChat={setSelectedChat}
-        unreadChatsCount={unreadChatsCount}
-        unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount}
+        unreadChatsCount={unreadChatsCount || 0}
+        unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount || 0}
       />
       <div className={`${selectedChat ? 'h-[90%] relative' : 'h-[90%]'}  `}>{renderChat()}</div>
     </div>

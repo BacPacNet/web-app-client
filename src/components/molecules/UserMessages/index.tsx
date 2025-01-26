@@ -94,7 +94,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   }
 
   return (
-    <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-0">
+    <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-4">
       <div className="relative w-10 h-10 flex-none">
         <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
@@ -202,9 +202,11 @@ const UserMessages = ({
     }
   }, [socket])
 
+  console.log('chatMessages', chatMessages)
+
   return (
     <div className="relative h-full">
-      <div className="flex flex-col md:h-[70%] h-[67%]  overflow-y-auto custom-scrollbar px-4  gap-8 ">
+      <div className="flex flex-col h-[calc(100%-130px)] overflow-y-auto custom-scrollbar px-4  gap-6 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = formatDate(item.createdAt)
           // Check if the date has changed
@@ -216,7 +218,7 @@ const UserMessages = ({
               {shouldShowDateDivider && (
                 <div className="border-b border-neutral-300 relative">
                   <div className="absolute -top-3 flex justify-center items-center w-full">
-                    <span className="   px-4 bg-white text-neutral-500">{currentDate}</span>
+                    <span className="px-4 bg-white text-neutral-500 text-2xs">{currentDate}</span>
                   </div>
                 </div>
               )}
