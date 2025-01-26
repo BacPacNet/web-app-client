@@ -109,7 +109,7 @@ const MessageUserStickyBar = ({
           )}
         </div>
       </div>
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center ">
         {isRequestNotAccepted && (
           <button
             onClick={() => handleMoveToInbox()}
@@ -121,7 +121,7 @@ const MessageUserStickyBar = ({
         {YourDetails[0]?.isStarred ? (
           <FaStar onClick={() => handleStarred()} className={`w-6 h-6 text-yellow-300`} />
         ) : (
-          <CiStar onClick={() => handleStarred()} className={`w-6 h-6 `} />
+          <CiStar onClick={() => handleStarred()} className={`w-6 h-6`} />
         )}
         <Popover>
           <PopoverTrigger>

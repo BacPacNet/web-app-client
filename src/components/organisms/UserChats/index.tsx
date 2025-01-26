@@ -2,10 +2,9 @@ import React from 'react'
 import { Chat } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 
-import dayjs from 'dayjs'
 import UserChatCard from '@/components/molecules/UserChatCard'
-import Loading from '@/components/atoms/Loading'
 import { useRouter } from 'next/navigation'
+import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 
 interface props {
   setSelectedChat: (value: Chat | undefined) => void
@@ -28,19 +27,36 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
         (item: Chat) =>
-          item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
-          item.isRequestAccepted ||
-          item.groupAdmin.toString() === userData?.id
+          (item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
+            item.isRequestAccepted ||
+            item.groupAdmin.toString() === userData?.id) &&
+          item.latestMessage
       )
 
       if (isChatLoading) {
-        return <Loading />
+        return (
+          <div className="p-2">
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+          </div>
+        )
       }
+      if (!filteredChats) {
+        return (
+          <div className="p-2">
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+          </div>
+        )
+      }
+
       if (filteredChats.length === 0) {
         return <p className="text-neutral-500 text-center py-16">There are no chats in your Inbox yet.</p>
       }
 
-      return filteredChats.map((item: Chat) => (
+      return filteredChats?.map((item: Chat) => (
         <div onClick={() => handleClick(item)} key={item?._id} className="flex flex-col gap-2 border-b-[1px] border-neutral-200 cursor-pointer">
           <UserChatCard
             profilePic={item?.isGroupChat ? item?.groupLogo?.imageUrl : item?.groupLogoImage}
