@@ -10,6 +10,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import calendar from 'dayjs/plugin/calendar'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
+import { format } from 'date-fns'
 
 dayjs.extend(relativeTime)
 dayjs.extend(calendar)
@@ -94,7 +95,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   }
 
   return (
-    <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-4">
+    <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-2">
       <div className="relative w-10 h-10 flex-none">
         <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
@@ -104,7 +105,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
           <p className="text-sm font-semibold text-neutral-700">{name}</p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
-        <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap">{content}</p>
+        <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
         {/* {media.length
           ? media.map((item) => <Image key={item.publicId} src={item?.imageUrl} alt="media" width={140} height={140} className="w-40 " />)
           : ''} */}
@@ -202,13 +203,11 @@ const UserMessages = ({
     }
   }, [socket])
 
-  console.log('chatMessages', chatMessages)
-
   return (
-    <div className="relative h-full">
-      <div className="flex flex-col h-[calc(100%-130px)] overflow-y-auto custom-scrollbar px-4  gap-6 ">
+    <div>
+      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar px-4 pt-4  gap-6 ">
         {chatMessages?.map((item: Message, idx: number) => {
-          const currentDate = formatDate(item.createdAt)
+          const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
           // Check if the date has changed
           const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
           previousDate = dayjs(item.createdAt)
@@ -218,7 +217,7 @@ const UserMessages = ({
               {shouldShowDateDivider && (
                 <div className="border-b border-neutral-300 relative">
                   <div className="absolute -top-3 flex justify-center items-center w-full">
-                    <span className="px-4 bg-white text-neutral-500 text-2xs">{currentDate}</span>
+                    <span className="px-4 bg-white text-neutral-500 text-2xs"> {currentDate}</span>
                   </div>
                 </div>
               )}
@@ -239,15 +238,6 @@ const UserMessages = ({
             </Fragment>
           )
         })}
-      </div>
-      <div className="fixed w-full bottom-0">
-        <UserMessageInput
-          chatId={chatId}
-          userProfileId={userProfileData?._id || ''}
-          isRequestNotAccepted={isRequestNotAccepted}
-          setAcceptedId={setAcceptedId}
-          setCurrTab={setCurrTab}
-        />
       </div>
     </div>
   )

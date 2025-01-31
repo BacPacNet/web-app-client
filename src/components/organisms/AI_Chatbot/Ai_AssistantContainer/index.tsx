@@ -5,12 +5,13 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { SlReload } from 'react-icons/sl'
 import { IoIosArrowDown } from 'react-icons/io'
-import Ai_AssistantInput from '@/components/atoms/AI_AssistantInput'
 import Buttons from '@/components/atoms/Buttons'
 import StartAIChat from '../AI_Section/StartAIChat'
 import AINoUniversity from '../AI_Section/AINoUniversity'
 import Spinner from '@/components/atoms/spinner'
-import { useGetEndorsementAI } from '@/services/endorsement-ai'
+import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import AIChat from '../AI_Section/AIChat'
+import { useUniStore } from '@/store/store'
 
 type dataType = {
   _id: string
@@ -25,6 +26,11 @@ const Ai_AssistantContainer = () => {
   const [universityExist, setUniversityExist] = useState(false)
   const { data: subscribedCommunities, isFetching, isLoading, isPending } = useGetSubscribedCommunties()
   const otherUniversity = subscribedCommunities?.filter((item) => item._id !== selectedUniversity?._id)
+  const { chatbotData, setChatbotData, resetChatbotData } = useUniStore()
+
+  const handleRefresh = () => {
+    resetChatbotData()
+  }
 
   useEffect(() => {
     if (subscribedCommunities?.length) {
@@ -40,7 +46,7 @@ const Ai_AssistantContainer = () => {
     )
   }
 
-  if (!universityExist) {
+  if (universityExist) {
     return (
       <div className="bg-white mt-4 rounded-2xl drop-shadow-lg py-10 flex flex-col justify-between pb-4 ">
         <AINoUniversity communityId={subscribedCommunities ? subscribedCommunities![0].collegeID : ''} />
@@ -53,36 +59,28 @@ const Ai_AssistantContainer = () => {
       <div className=" px-4 py-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
         <div className="flex justify-between">
           <div className="relative">
-            <div className="flex items-center gap-2 text-2xs ">
+            <div className="flex items-center gap-2 text-2xs cursor-pointer" onClick={() => setShow(!show)}>
               <Image
                 width={20}
                 height={20}
                 className="w-6 h-6 rounded-full bg-white shadow-lg"
-                src={selectedUniversity?.communityLogoUrl?.imageUrl || ''}
-                alt={selectedUniversity?.name || 'img'}
+                src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
+                alt="logo"
               />
               <p>{selectedUniversity?.name}</p>
-              <IoIosArrowDown className="cursor-pointer" onClick={() => setShow(!show)} />
+              <IoIosArrowDown className="cursor-pointer" />
             </div>
 
             <SelectAIUniversityDropdown data={otherUniversity || []} show={show} setShow={setShow} setSelectedUniversity={setSelectedUniversity} />
           </div>
-          <p className="flex items-center gap-2 cursor-pointer">
+          <p className="flex items-center gap-2 cursor-pointer" onClick={handleRefresh}>
             <SlReload className="text-primary-500" /> <span className="text-neutral-700 text-xs max-sm:hidden">Refresh Assistant</span>
           </p>
         </div>
       </div>
       {/* //main  */}
-      <StartAIChat />
-      {/* <AIChat /> */}
 
-      {/* input      */}
-      <div className="w-full flex justify-center relative">
-        <Ai_AssistantInput className="pe-20" />
-        <Buttons className="absolute right-[6%] top-1/2 -translate-y-1/2 w-14" variant="primary" size="extra_small_paddind_2">
-          Ask
-        </Buttons>
-      </div>
+      <AIChat chatbotData={chatbotData} setChatbotData={setChatbotData} communityId={selectedUniversity?._id || ''} />
     </div>
   )
 }

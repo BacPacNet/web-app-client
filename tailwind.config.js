@@ -9,6 +9,12 @@ module.exports = {
     theme: {
         extend: {
             keyframes: {
+                loader: {
+                    to: {
+                        opacity: 0.1,
+                        transform: 'translate3d(0, -4px, 0)'
+                    }
+                },
                 'caret-blink': {
                     '0%,70%,100%': {opacity: '1'},
                     '20%,50%': {opacity: '0'},
@@ -16,6 +22,7 @@ module.exports = {
             },
             animation: {
                 'caret-blink': 'caret-blink 1.2s ease-out infinite',
+                loader: 'loader 0.6s infinite alternate'
             },
             fontFamily: {
                 poppins: ['var(--font-poppins)'],

@@ -4,6 +4,7 @@ import { createUserSlice } from './userSlice/userSlice'
 import { createUserProfileSlice } from './userProfileSlice/userProfileSlice'
 import { createSocketSlice } from './socketSlice/socketSlice'
 import { storeType } from './storeType'
+import { createChatbotSlice } from './chatbotSlice/chatbotSlice'
 
 let finalCookie: any = null
 
@@ -19,7 +20,8 @@ export const useUniStore = create<storeType>()(
         ...createUserSlice(set, get, api),
         ...createUserProfileSlice(set, get, api),
         ...createSocketSlice(set, get, api),
-        reset: () => set({ userData: null, userProfileData: null }),
+        ...createChatbotSlice(set, get, api),
+        reset: () => set({ userData: null, userProfileData: null, chatbotData: [] }),
       }),
       {
         name: 'store',
