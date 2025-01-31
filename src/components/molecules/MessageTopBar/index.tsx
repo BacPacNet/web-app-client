@@ -20,8 +20,8 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
 
   return (
     <>
-      <div className=" px-4 py-4 font-medium text-[20px] flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
-        <div className="flex gap-8 items-center text-2xs md:text-sm break-words">
+      <div className=" px-6 pb-4 font-medium text-[20px] flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
+        <div className="flex gap-8 items-center text-2xs md:text-xs break-words">
           <div
             onClick={() => {
               setCurrTab('Inbox'), setSelectedChat(undefined)

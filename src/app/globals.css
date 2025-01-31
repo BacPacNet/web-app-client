@@ -47,6 +47,15 @@ body {
   white-space: nowrap;
 }
 
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+}
+
 @layer components {
   .btn {
     @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
@@ -63,6 +72,9 @@ body {
   }
   .icon {
     @apply w-8 h-6 text-black;
+  }
+  .circle {
+    @apply w-3 h-3 bg-neutral-500 rounded-full;
   }
 }
 
@@ -162,4 +174,8 @@ body {
 
   margin: 0 auto;
   user-select: none;
+}
+
+.chatbot-container a {
+  color: revert;
 }

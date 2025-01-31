@@ -29,9 +29,9 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
   return (
     <>
       <div className=" hover:bg-secondary">
-        <div className="flex justify-between p-4">
-          <div className="flex gap-4 items-center relative">
-            <div className="w-12 h-12 flex-none">
+        <div className="flex justify-between p-4 overflow-hidden">
+          <div className="flex gap-4 items-center relative w-full">
+            <div className="w-12 h-12 flex-none flex flex-col gap-2 cursor-pointer">
               {isGroupChat && !profilePic ? (
                 <FaUsers className="w-12 h-12 rounded-full bg-neutral-200 p-2 text-primary-700" />
               ) : (
@@ -49,17 +49,23 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               )}
             </div>
 
-            <div>
-              <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
-                {isGroupChat ? groupName : userName[0]?.userId?.firstName}
-              </p>
-              <p className={`text-neutral-500  text-[12px] ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
-                {lastMessage?.length > 20 ? lastMessage?.slice(0, 120) + '...' : lastMessage}
+            <div className="w-[90%]">
+              <div className="flex justify-between">
+                <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
+                  {isGroupChat ? groupName : userName[0]?.userId?.firstName}
+                </p>
+                <div className="text-right min-w-fit">
+                  <p className="text-neutral-400 font-normal text-[12px] ">{date && format(new Date(date), 'hh:mm a')}</p>
+                </div>
+              </div>
+              <p
+                className={`text-neutral-500  text-[12px] line-clamp-2 whitespace-pre-wrap break-words overflow-hidden text-ellipsis w-[90%] ${
+                  unRead > 0 ? 'font-semibold' : 'font-medium'
+                }`}
+              >
+                {lastMessage}
               </p>
             </div>
-          </div>
-          <div className="text-right">
-            <p className="text-neutral-400 font-normal text-[12px] ">{date && format(new Date(date), 'hh:mm a')}</p>
           </div>
         </div>
       </div>

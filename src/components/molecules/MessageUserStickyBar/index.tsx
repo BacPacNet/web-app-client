@@ -82,13 +82,13 @@ const MessageUserStickyBar = ({
   }
 
   return (
-    <div className="fixed w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white py-2 px-4">
+    <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4 px-4">
       <div className="flex items-center gap-4">
         <p onClick={() => handleBack()}>
-          <IoIosArrowBack className="w-8 h-8 text-[#6744FF] cursor-pointer" />
+          <IoIosArrowBack className="w-6 h-6 text-[#6744FF] cursor-pointer" />
         </p>
         <div className="relative">
-          <Image src={profileCover || avatar} alt="dp" width={44} height={44} className="w-12 h-12 rounded-full" />
+          <Image src={profileCover || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
           <p
             className={`w-4 h-4 ${
               userName?.some((item) => item?.isOnline) ? 'bg-success-500' : 'bg-neutral-300'
@@ -96,7 +96,7 @@ const MessageUserStickyBar = ({
           ></p>
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-neutral-700">{name}</h3>
+          <h3 className="text-xs font-semibold text-neutral-700">{name}</h3>
           {isGroupChat ? (
             <p className="text-2xs font-normal text-neutral-500">{description}</p>
           ) : (

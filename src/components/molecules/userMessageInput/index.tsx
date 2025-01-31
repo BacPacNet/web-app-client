@@ -36,8 +36,8 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     const textarea = textareaRef.current
     if (textarea) {
       valueRef.current = textareaRef.current.value
-      textarea.style.height = 'auto'
-      textarea.style.height = `${textarea.scrollHeight}px`
+      //  textarea.style.height = 'auto'
+      //  textarea.style.height = `${textarea.scrollHeight}px`
     }
   }
   // Handle emoji click
@@ -148,7 +148,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       handleNewMessage(textareaRef.current?.value || '')
       if (textareaRef.current) {
         textareaRef.current.value = ''
-        textareaRef.current.style.height = 'auto'
+        //textareaRef.current.style.height = 'auto'
       }
     } else {
       showCustomDangerToast('Please enter message!')
@@ -261,12 +261,12 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     }
   }, [])
   return (
-    <div className="rounded-2xl bg-white w-full p-4">
+    <div className="rounded-2xl bg-white w-full px-4 pt-2">
       <div className="border-[1px] border-neutral-300 w-full rounded-lg">
         <div className="flex gap-3 px-4 py-2">
           <textarea
             ref={textareaRef}
-            className="w-full border-none resize-none focus:outline-none overflow-y-auto h-8 max-h-36"
+            className="w-full border-none resize-none focus:outline-none overflow-y-auto h-8"
             placeholder="What’s on your mind?"
             onInput={handleInput}
           ></textarea>
@@ -317,7 +317,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       </div>
 
       {/* Display selected images */}
-      <div className="flex flex-wrap gap-2 pt-4">
+      <div className="flex flex-wrap gap-2">
         {images.map((image, index) => (
           <div key={index} className="relative">
             <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />

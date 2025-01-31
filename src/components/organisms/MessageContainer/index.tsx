@@ -12,6 +12,7 @@ import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import { useSearchParams } from 'next/navigation'
 import Loading from '@/components/atoms/Loading'
+import UserMessageInput from '@/components/molecules/userMessageInput'
 
 interface Message {
   _id: string
@@ -27,7 +28,7 @@ const MessageContainer = () => {
   const [currTab, setCurrTab] = useState('Inbox')
   const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
 
-  const { userData, socket } = useUniStore()
+  const { userData, socket, userProfileData } = useUniStore()
   const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData?.id)
   const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
@@ -281,7 +282,7 @@ const MessageContainer = () => {
   const renderChat = () => {
     if (selectedChat) {
       return (
-        <>
+        <div className="flex flex-col gap-2">
           <MessageUserStickyBar
             setSelectedChat={setSelectedChat}
             name={selectedChat?.isGroupChat ? selectedChat?.chatName : userName?.userId.firstName ?? 'Unknown'}
@@ -311,23 +312,35 @@ const MessageContainer = () => {
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
           />
-        </>
+          <div className="sticky w-full bottom-0">
+            <UserMessageInput
+              chatId={selectedChat._id}
+              userProfileId={userProfileData?._id || ''}
+              isRequestNotAccepted={currTab == 'Message Requests'}
+              setAcceptedId={setAcceptedId}
+              setCurrTab={setCurrTab}
+            />
+          </div>
+        </div>
       )
     } else {
       return renderTab()
     }
   }
   return (
-    <div className="bg-white mt-4 rounded-2xl drop-shadow-lg h-with-navbar-space">
-      <MessageTopBar
-        currTab={currTab}
-        setCurrTab={setCurrTab}
-        setSelectedChat={setSelectedChat}
-        unreadChatsCount={unreadChatsCount || 0}
-        unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount || 0}
-      />
-      <div className={`${selectedChat ? 'h-[90%] relative' : 'h-[90%]'}  `}>{renderChat()}</div>
-    </div>
+    <>
+      {!selectedChat ? (
+        <MessageTopBar
+          currTab={currTab}
+          setCurrTab={setCurrTab}
+          setSelectedChat={setSelectedChat}
+          unreadChatsCount={unreadChatsCount || 0}
+          unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount || 0}
+        />
+      ) : null}
+
+      <div className={`${selectedChat ? 'h-full relative' : 'h-[90%]'}  `}>{renderChat()}</div>
+    </>
   )
 }
 

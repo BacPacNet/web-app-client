@@ -2,7 +2,6 @@
 import Button from '@/components/atoms/Buttons'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import avatar from '@assets/unibuzz_rounded.svg'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
@@ -73,8 +72,8 @@ const CommunityHolder = ({ community, index, handleCommunityClick, communityId, 
     >
       <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
         <Image
-          width={30}
-          height={30}
+          width={40}
+          height={40}
           className="w-[40px] h-[40px] object-cover rounded-full"
           src={logoSrc}
           alt={community.name}
