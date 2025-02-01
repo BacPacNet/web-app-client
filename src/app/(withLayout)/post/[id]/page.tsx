@@ -49,7 +49,7 @@ const SinglePost = () => {
   const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount } = item
   return (
     <div className="w-full   flex justify-center ">
-      <div className="w-full shadow-card rounded-2xl mt-10">
+      <div className="w-full shadow-card rounded-2xl mt-4">
         <PostCard
           key={_id}
           user={user?.firstName + ' ' + user?.lastName}

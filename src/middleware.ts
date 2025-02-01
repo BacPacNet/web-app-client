@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { isAuthenticated } from './utils/Authentication'
 
-const protectedRoutes = ['/community', '/timeline', '/profile', '/:id', '/messages', '/notifications', '/ai-assistant', '/setting', '/connections']
+const protectedRoutes = [
+  '/community',
+  '/timeline',
+  '/profile',
+  '/:id',
+  '/messages',
+  '/notifications',
+  '/ai-assistant',
+  '/setting',
+  '/connections',
+  '/post',
+]
 export default function middleware(req: NextRequest) {
   const pathName = req.nextUrl.pathname
 

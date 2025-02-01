@@ -9,9 +9,15 @@ interface TabsProps {
   tabs: TabItem[]
   className?: string
   tabAlign?: 'left' | 'center' | 'right'
+  labelSize?: 'small' | 'medium' | 'large'
 }
 
-const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left' }) => {
+const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left', labelSize = 'medium' }) => {
+  const fontSize = {
+    small: 'text-2xs',
+    medium: 'text-xs',
+    large: 'text-sm',
+  }
   const [activeTab, setActiveTab] = useState(0)
 
   const handleTabClick = (index: number) => {
@@ -21,12 +27,12 @@ const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left' }) 
   return (
     <div className={`w-full ${className} `}>
       {/* Tabs List */}
-      <div className={`border-gray-200 text-${tabAlign} px-4`}>
+      <div className={`border-gray-200 text-${tabAlign} flex gap-6`}>
         {tabs.map((tab, index) => (
           <button
             key={index}
             onClick={() => handleTabClick(index)}
-            className={`py-2 px-4 text-xs font-medium focus:outline-none ${
+            className={`py-2 ${fontSize[labelSize]} font-medium focus:outline-none ${
               activeTab === index ? 'border-b-2 border-primary-500 text-primary-500' : 'text-neutral-500 hover:text-primary-500'
             }`}
           >

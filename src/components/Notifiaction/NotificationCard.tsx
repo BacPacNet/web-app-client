@@ -152,8 +152,7 @@ const NotificationCard = ({ data }: Props) => {
             height={48}
             src={data?.communityGroupId?.communityGroupLogoUrl || data?.sender_id?.profileDp || dummy.src}
             alt="dp"
-            objectFit="cover"
-            className="w-12 h-12 rounded-full"
+            className="w-12 h-12 rounded-full object-cover"
           />
 
           {renderIcon()}

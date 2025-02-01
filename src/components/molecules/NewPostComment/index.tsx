@@ -51,8 +51,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
             src={userProfileData?.profile_dp?.imageUrl || avatar}
             width={56}
             height={56}
-            objectFit="cover"
-            className="rounded-full w-12 h-12"
+            className="rounded-full w-12 h-12 object-cover flex-none"
             alt="avatar.png"
           />
           <div className="w-full">
