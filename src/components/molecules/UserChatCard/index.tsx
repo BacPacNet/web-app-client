@@ -2,11 +2,12 @@ import Image from 'next/image'
 import React from 'react'
 import avatar from '@assets/avatar.svg'
 import { FaUsers } from 'react-icons/fa'
-import { format } from 'date-fns'
+import { formatRelativeTime, timeAgo } from '@/lib/utils'
 type User = {
   userId: {
     _id: string
     firstName: string
+    lastName: string
   }
 
   isOnline: boolean
@@ -52,10 +53,10 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
             <div className="w-[90%]">
               <div className="flex justify-between">
                 <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
-                  {isGroupChat ? groupName : userName[0]?.userId?.firstName}
+                  {isGroupChat ? groupName : userName[0]?.userId?.firstName + ' ' + userName[0]?.userId?.lastName}
                 </p>
                 <div className="text-right min-w-fit">
-                  <p className="text-neutral-400 font-normal text-[12px] ">{date && format(new Date(date), 'hh:mm a')}</p>
+                  <p className="text-neutral-400 font-normal text-[12px] ">{formatRelativeTime(new Date(date))}</p>
                 </div>
               </div>
               <p
