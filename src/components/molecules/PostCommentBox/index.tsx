@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { useUniStore } from '@/store/store'
 import { useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useGetCommunityPostComments, useLikeUnlikeGroupPostComment } from '@/services/community-university'
@@ -32,8 +31,8 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
-import { formatDistanceToNow } from 'date-fns'
-dayjs.extend(relativeTime)
+import { formatRelativeTime } from '@/lib/utils'
+//dayjs.extend(relativeTime)
 
 type Props = {
   showCommentSec: string
@@ -277,7 +276,10 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     }
 
     return comments?.map((comment, index: number) => (
-      <div key={comment._id} className={`mb-4 h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}>
+      <div
+        key={comment._id}
+        className={`mb-4 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}
+      >
         {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
           <div className="absolute w-[1px] h-24 bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
@@ -316,17 +318,15 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             <div>
               <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
               {/*<p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>*/}
-              <p className="text-2xs max-sm:text-[10px] text-neutral-500">{`${comment?.commenterProfileId?.study_year} year, ${comment?.commenterProfileId?.degree}`}</p>
+              <p className="text-2xs  text-neutral-500">{`${comment?.commenterProfileId?.study_year} year, ${comment?.commenterProfileId?.degree}`}</p>
             </div>
-            <p className="ml-auto text-xs max-sm:text-[10px] text-gray">
-              {comment.createdAt && formatDistanceToNow(comment?.createdAt as unknown as Date, { addSuffix: true })}
-            </p>
+            <p className="ml-auto text-2xs md:text-xs text-gray">{comment.createdAt && formatRelativeTime(new Date(comment?.createdAt))}</p>
           </div>
         </div>
         <div className="flex gap-4 ps-[60px] max-sm:ps-[70px]">
           <pre className="font-poppins text-xs pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</pre>
         </div>
-        <div className="flex justify-start ps-[60px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-s max-sm:text-s">
+        <div className="flex justify-start ps-[60px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-xs md:text-sm max-sm:text-s">
           <div className="flex items-center cursor-pointer">
             <AiOutlineLike
               onClick={() => likePostCommentHandler(comment._id)}
@@ -384,7 +384,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
         </div>
         {/* Render nested replies if they exist */}
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3 && (
-          <div className="ml-8 mt-4">{renderComments(comment.replies)}</div>
+          <div className="w-full">{renderComments(comment.replies)}</div>
         )}
       </div>
     ))
@@ -405,7 +405,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
           onClick={() => {
             setNewPost(true), setIsReply(false)
           }}
-          className="border-2 border-primary py-2 px-3 text-xs rounded-lg flex items-center gap-3 ms-2"
+          className="border-2 border-primary py-1 px-3 text-2xs md:text-xs rounded-lg flex items-center gap-3 ms-2"
         >
           <span>
             <FaPlusCircle color="#6647ff" />

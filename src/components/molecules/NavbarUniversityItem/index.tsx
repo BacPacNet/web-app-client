@@ -153,7 +153,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const tabData = [
     {
-      label: 'All',
+      label: 'All Group',
       content: (
         <CommunityGroupAll
           key={subscribedCommunities}
@@ -295,7 +295,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
 
       {subscribedCommunities?.length !== 0 ? (
-        <Tabs tabs={tabData} tabAlign="left" className="my-4" />
+        <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
       ) : (
         <div className="px-4 w-full text-center font-poppins text-neutral-400">
           <p>Add your university to join or create groups</p>

@@ -43,7 +43,6 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }, [userProfileData])
 
   const handleMenuClick = (path: string) => {
-    if (!cookie) return router.push('/login')
     router.push(path)
     setActiveMenu(path)
     toggleLeftNavbar?.()

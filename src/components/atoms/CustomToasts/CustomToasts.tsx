@@ -60,7 +60,7 @@ export function showCustomSuccessToast(message: string) {
       ),
     {
       position: 'bottom-center',
-      duration: 30000,
+      duration: 3000,
       style: {
         margin: 0,
         padding: 0,
@@ -103,7 +103,7 @@ export function showCustomDangerToast(message: string) {
       ),
     {
       position: 'bottom-center',
-      duration: 30000,
+      duration: 3000,
       style: {
         margin: 0,
         padding: 0,

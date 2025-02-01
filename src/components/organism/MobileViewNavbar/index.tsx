@@ -8,10 +8,8 @@ import SubText from '@/components/atoms/SubText'
 import { truncateString } from '@/lib/utils'
 import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
 import { PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
-import { HiCubeTransparent } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
 import { useRouter } from 'next/navigation'
-import useCookie from '@/hooks/useCookie'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfilePicture from '@/components/atoms/RenderProfileDP'
 
@@ -24,7 +22,6 @@ interface Props {
 export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, showRightMenu }: Props) {
   const router = useRouter()
   const { userProfileData, userData } = useUniStore()
-  const [, , deleteCookie] = useCookie('uni_user_token')
   const { handleLogout } = useLogout()
   const handleProfileClicked = () => {
     router.push(`/profile/${userData?.id}`)
@@ -40,6 +37,11 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
     closeLeftNavbar()
   }
 
+  const handleLogoutClicked = () => {
+    toggleRightMenu()
+    handleLogout()
+  }
+
   return (
     <div>
       <div className="lg:hidden flex gap-2 items-center cursor-pointer" onClick={toggleMenu}>
@@ -47,7 +49,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
           width={40}
           height={40}
           objectFit="cover"
-          className="w-[40px] h-[40px] rounded-full"
+          className="w-[40px] h-[40px] rounded-full object-cover"
           src={userProfileData?.profile_dp?.imageUrl || avatar}
           alt="profile.png"
         />
@@ -118,7 +120,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
               <p>Feedback</p>
             </li>
           </ul>
-          <ul onClick={handleLogout} className="">
+          <ul onClick={handleLogoutClicked} className="">
             <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
               <TbLogout />
               <p>Logout</p>

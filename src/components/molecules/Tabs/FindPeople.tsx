@@ -80,13 +80,13 @@ export default function FindPeople() {
 
   return (
     <>
-      <div className="px-5 py-2 border border-border rounded-2xl flex items-center gap-4 mb-2">
+      <div className="px-3 py-2 border border-border rounded-2xl flex items-center gap-4 mb-2">
         <GoSearch className="text-neutral-500" size={20} />
         <input
           onChange={(e) => setName(e.target.value)}
           type="text"
           value={name}
-          className="text-sm w-full outline-none"
+          className="text-xs w-full outline-none"
           placeholder="Search People"
         />
       </div>
