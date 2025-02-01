@@ -1,6 +1,7 @@
 import { useUniStore } from '@/store/store'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { formatDistanceToNow, differenceInHours, differenceInDays, differenceInMinutes } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,4 +25,21 @@ export function truncateString(input: string): string {
 
   // Join the first 4 words and return
   return words.slice(0, 4).join(' ')
+}
+
+export const timeAgo = (date: Date | string) => {
+  return formatDistanceToNow(new Date(date), { addSuffix: true })
+}
+
+export const formatRelativeTime = (date: Date | string): string => {
+  const givenDate = typeof date === 'string' ? new Date(date) : date
+
+  const minutesDiff = differenceInMinutes(new Date(), givenDate)
+  if (minutesDiff < 60) return `${minutesDiff}m ago`
+
+  const hoursDiff = differenceInHours(new Date(), givenDate)
+  if (hoursDiff < 24) return `${hoursDiff}h ago`
+
+  const daysDiff = differenceInDays(new Date(), givenDate)
+  return `${daysDiff}d ago`
 }

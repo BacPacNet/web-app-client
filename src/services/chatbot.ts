@@ -43,3 +43,19 @@ export const useAskToChatbot = () => {
     },
   })
 }
+
+const getAssistantAvailability = async (cookieValue: string, communityId: string) => {
+  const response = await client(`/chatbot/check-assistant?communityId=${communityId}`, {
+    headers: { Authorization: `Bearer ${cookieValue}` },
+  })
+  return response
+}
+
+export const useCheckAssistantAvailable = (communityId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery<any>({
+    queryKey: ['getAssistantAvailiblity'],
+    queryFn: () => getAssistantAvailability(cookieValue, communityId),
+    enabled: Boolean(cookieValue) && Boolean(communityId),
+  })
+}

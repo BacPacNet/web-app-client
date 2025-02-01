@@ -8,12 +8,12 @@ import { useCreateEndorsementAI, useGetEndorsementAI, useGetEndorsementAIOfUser 
 
 const AINoUniversity = ({ communityId }: { communityId: string }) => {
   return (
-    <div className="w-full flex justify-center items-center h-full ">
-      <div className="flex max-md:flex-col h-full gap-4 justify-center max-md:items-center w-full">
-        <Image src={aibot} alt="bot" width={40} height={40} className="h-80 w-1/3 max-md:h-60 max-sm:h-52 max-sm:w-60" />
+    <div className="w-full flex justify-center items-center h-full font-poppins ">
+      <div className="flex max-md:flex-col h-full gap-8 justify-center items-center w-full">
+        <Image src={aibot} alt="bot" width={40} height={40} className="w-32 md:w-60 p-4" />
         <div className="w-1/2 max-md:w-11/12 flex flex-col gap-5 justify-center">
-          <SettingsText className="text-[24px] font-poppins">Sorry! It seems your university doesn’t support our AI Assistant!</SettingsText>
-          <SupportingText className="text-neutral-700 font-poppins">
+          <SettingsText className="text-sm md:text-md ">Sorry! It seems your university doesn’t support our AI Assistant!</SettingsText>
+          <SupportingText className="text-neutral-700">
             Let them know you would like it to have this feature for your university! Your voice matters!
           </SupportingText>
           <EndorsementTracker communityId={communityId} />
@@ -43,11 +43,11 @@ const EndorsementTracker = ({ communityId }: { communityId: string }) => {
   return (
     <div className="flex flex-col gap-2 ">
       <div className="flex justify-between">
-        <SettingsText className="text-sm">{endorsement?.totalUsersEndorsed} Have Endorsed</SettingsText>
-        <SettingsText className="text-sm">{endorsement?.percentage}%</SettingsText>
+        <SettingsText className="text-xs">{endorsement?.totalUsersEndorsed} Have Endorsed</SettingsText>
+        <SettingsText className="text-xs">{endorsement?.percentage}%</SettingsText>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden ">
+      <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden bg-neutral-100">
         <div
           className="bg-primary-500 h-6 text-white text-sm font-medium text-center flex items-center justify-center"
           style={{ width: `${endorsement?.percentage}%` }}
@@ -57,7 +57,7 @@ const EndorsementTracker = ({ communityId }: { communityId: string }) => {
           aria-valuemax={endorsement?.totalGoal}
         ></div>
       </div>
-      <SupportingText className="text-neutral-700">Target goal: {endorsement?.totalGoal} students</SupportingText>
+      <SupportingText className="text-neutral-700 text-2xs md:text-xs">Target goal: {endorsement?.totalGoal} students</SupportingText>
       <div className="flex justify-end">
         {endorsementUser?.isAlreadyEndorse ? (
           <Buttons onClick={() => handleEndorseClick()} disabled={endorsed} className=" w-24" variant="border" size="extra_small_paddind_2">
