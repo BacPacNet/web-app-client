@@ -64,7 +64,7 @@ const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
       {isOpen && (
         <Lightbox
           key={key}
-          mainSrc={imageList[photoIndex] || 'https://res.cloudinary.com/dgl8zmniq/image/upload/v1732710443/tdm6s5cguvj4vtvxcede.png'}
+          mainSrc={imageList[photoIndex]}
           nextSrc={imageList[(photoIndex + 1) % imageList.length]}
           prevSrc={imageList[(photoIndex + imageList.length - 1) % imageList.length]}
           onCloseRequest={() => setIsOpen(false)}
