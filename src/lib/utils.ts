@@ -43,3 +43,8 @@ export const formatRelativeTime = (date: Date | string): string => {
   const daysDiff = differenceInDays(new Date(), givenDate)
   return `${daysDiff}d ago`
 }
+
+export const truncateStringTo = (str: string, num: number): string => {
+  if (str.length <= num) return str
+  return str.slice(0, num) + '...'
+}

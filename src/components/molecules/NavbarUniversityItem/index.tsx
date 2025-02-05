@@ -242,7 +242,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
       <>
         <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <div className="flex justify-between gap-4 px-4 w-full pb-4">
+        <div className="flex justify-normal md:justify-between gap-4 px-4 w-full pb-4">
           <Buttons onClick={() => handleCommunityGroupFilter()} className="w-32" size="extra_small" variant="border_primary">
             Filter
           </Buttons>
@@ -293,14 +293,15 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           </div>
         </div>
       </>
-
-      {subscribedCommunities?.length !== 0 ? (
-        <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
-      ) : (
-        <div className="px-4 w-full text-center font-poppins text-neutral-400">
-          <p>Add your university to join or create groups</p>
-        </div>
-      )}
+      <div className="h-fit">
+        {subscribedCommunities?.length !== 0 ? (
+          <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
+        ) : (
+          <div className="px-4 w-full text-center font-poppins text-neutral-400">
+            <p>Add your university to join or create groups</p>
+          </div>
+        )}
+      </div>
     </>
   )
 }

@@ -49,7 +49,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
           width={40}
           height={40}
           objectFit="cover"
-          className="w-[40px] h-[40px] rounded-full object-cover"
+          className="w-[24px] h-[24px] sm:w-[40px] sm:h-[40px] rounded-full object-cover"
           src={userProfileData?.profile_dp?.imageUrl || avatar}
           alt="profile.png"
         />
@@ -58,23 +58,23 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
 
       {/* Sidebar Menu (Visible on mobile when open) */}
       <div
-        className={`fixed top-[68px] right-0 py-6 h-full w-3/4 md:w-1/2 bg-white transition-transform duration-300 transform ${
+        className={`fixed top-[40px] sm:top-[68px] right-0 py-6 h-full w-3/4 md:w-1/2 bg-white transition-transform duration-300 transform border-l-[1px] border-neutral-200 ${
           showRightMenu ? 'translate-x-0' : 'translate-x-full'
         } lg:hidden`}
       >
-        <button onClick={toggleMenu} className="p-4 text-black focus:outline-none absolute right-0 top-2">
-          <RxCross2 size={32} className="text-primary" />
+        <button onClick={toggleMenu} className="p-4 text-black focus:outline-none absolute right-0 -top-2">
+          <RxCross2 size={24} className="text-primary" />
         </button>
         <div onClick={handleProfileClicked} className="px-4 flex gap-4 cursor-pointer">
           <ProfilePicture userProfileData={userProfileData} />
-          <div>
-            <p className="text-sm text-neutral-700">
+          <div className="flex flex-col gap-0">
+            <p className="text-sm text-neutral-700 font-poppins">
               {userData?.firstName} {userData?.lastName}
             </p>
             <Tooltip text={userProfileData?.university_name || ''}>
               <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
             </Tooltip>
-            <SubText>{userProfileData?.major}</SubText>
+            <p className="text-3xs font-normal text-neutral-500 font-inter line-clamp-1">{userProfileData?.major}</p>
           </div>
         </div>
 

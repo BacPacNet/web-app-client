@@ -306,8 +306,8 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
               <button
                 onClick={handleSubmit}
                 className={`
-                  bg-primary-500 text-white
-                  rounded-lg px-3 py-2 w-[69px]`}
+                  bg-primary-500 text-white text-xs
+                  rounded-lg px-3 py-1`}
               >
                 {isPending ? <Spinner /> : 'Send'}
               </button>

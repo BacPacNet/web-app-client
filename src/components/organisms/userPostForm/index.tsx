@@ -142,7 +142,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
             onEditorStateChange={onEditorStateChange}
             wrapperClassName="wrapper-class"
             editorClassName="editor-class font-poppins max-h-40"
-            toolbarClassName="toolbar-class"
+            toolbarClassName="toolbar-class -ml-4"
             placeholder="What’s on your mind?"
             toolbar={{
               options: ['inline', 'list', 'textAlign'],
@@ -159,8 +159,8 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
           />
         </div>
 
-        <div className="flex items-center mt-10 justify-between">
-          <div className="flex gap-6 items-center ">
+        <div className="flex items-center justify-between">
+          <div className="flex gap-3 sm:gap-4 items-center ">
             <Popover>
               <PopoverTrigger>
                 <HiOutlineEmojiHappy size={24} className="text-neutral-400" />

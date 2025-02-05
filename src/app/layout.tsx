@@ -59,10 +59,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ReactQueryClientProvider>
           <ZustandSocketProvider>
-            <LogoNavbar />
             <Toaster />
             <ModalManager />
             <ImageManager />
+            <LogoNavbar />
             {children}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>

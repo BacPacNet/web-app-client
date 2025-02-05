@@ -73,14 +73,14 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
         {isLogin ? (
           <>
             <ProfilePicture userProfileData={userProfileData} />
-            <div>
-              <p className="text-sm text-neutral-700">
+            <div className="flex flex-col gap-0">
+              <p className="text-sm text-neutral-700 font-poppins">
                 {userData?.firstName} {userData?.lastName}
               </p>
               <Tooltip text={userProfileData?.university_name || ''}>
                 <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
               </Tooltip>
-              <SubText>{truncateString(userProfileData?.major || '')}</SubText>
+              <p className="text-3xs font-normal text-neutral-500 font-inter line-clamp-1">{userProfileData?.major}</p>
             </div>
           </>
         ) : (
