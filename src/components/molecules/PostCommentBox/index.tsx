@@ -276,10 +276,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     }
 
     return comments?.map((comment, index: number) => (
-      <div
-        key={comment._id}
-        className={`mb-4 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ms-8 max-sm:ms-4 w-10/12' : 'w-full'} `}
-      >
+      <div key={comment._id} className={`mb-4 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-[60px]' : 'w-full'} `}>
         {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
           <div className="absolute w-[1px] h-24 bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
@@ -309,28 +306,29 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
                 src={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
                 width={45}
                 height={45}
-                objectFit="cover"
-                className="rounded-full h-[inherit]"
+                className="rounded-full h-[inherit] object-cover"
                 alt="avatar.png"
               />
             </div>
 
             <div>
-              <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
+              <div className="flex gap-2 items-center">
+                <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
+                <p className="text-2xs md:text-xs text-gray">{comment.createdAt && formatRelativeTime(new Date(comment?.createdAt))}</p>
+              </div>
               {/*<p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>*/}
               <p className="text-2xs  text-neutral-500">{`${comment?.commenterProfileId?.study_year} year, ${comment?.commenterProfileId?.degree}`}</p>
             </div>
-            <p className="ml-auto text-2xs md:text-xs text-gray">{comment.createdAt && formatRelativeTime(new Date(comment?.createdAt))}</p>
           </div>
         </div>
-        <div className="flex gap-4 ps-[60px] max-sm:ps-[70px]">
-          <pre className="font-poppins text-xs pt-1 break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</pre>
+        <div className="flex gap-4 ml-[62px]">
+          <p className="font-poppins text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
         </div>
-        <div className="flex justify-start ps-[60px] max-sm:ps-[70px] mt-3 gap-5 max-sm:gap-2 text-xs md:text-sm max-sm:text-s">
+        <div className="flex justify-start ml-[62px] my-2 gap-4 text-sm text-neutral-500">
           <div className="flex items-center cursor-pointer">
             <AiOutlineLike
               onClick={() => likePostCommentHandler(comment._id)}
-              color={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? '#6647FF' : ''}
+              className={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? 'text-primary' : ''}
             />
             <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
           </div>
@@ -344,7 +342,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
           </span>
           <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
             <HiReply className="text-gray-dark" />
-            <span className="ml-2 ">Reply</span>
+            <span className="ml-1 font-poppins text-xs">reply</span>
           </div>
           {/* <span className="flex items-center">
             <Popover>
@@ -360,7 +358,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             </Popover>
           </span> */}
 
-          <Popover>
+          {/*<Popover>
             <PopoverTrigger>
               <span className="flex items-center">
                 <FiShare2 className="mr-1 text-neutral-600" /> Share
@@ -369,9 +367,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
               <SharePopup commentId={comment._id} />
             </PopoverContent>
-          </Popover>
+          </Popover>*/}
 
-          <Popover>
+          {/*<Popover>
             <PopoverTrigger>
               <div className="flex gap-1 items-center">
                 <BsThreeDots className="mr-1 text-neutral-600" />
@@ -380,7 +378,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
             <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
               <CommentOption />
             </PopoverContent>
-          </Popover>
+          </Popover>*/}
         </div>
         {/* Render nested replies if they exist */}
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3 && (
@@ -398,8 +396,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
           alt={`${userData?.firstName}'s avatar`}
           width={45}
           height={45}
-          objectFit="cover"
-          className="rounded-full h-[45px]"
+          className="rounded-full h-[45px] object-cover"
         />
         <button
           onClick={() => {

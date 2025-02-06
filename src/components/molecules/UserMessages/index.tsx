@@ -97,7 +97,7 @@ const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, c
   return (
     <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-2">
       <div className="relative w-10 h-10 flex-none">
-        <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
+        <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
       </div>
       <div className="flex-1 overflow-y-auto">

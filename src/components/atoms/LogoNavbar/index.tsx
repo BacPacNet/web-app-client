@@ -16,13 +16,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 
 import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
 import { PiChatsBold, PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
-import { HiCubeTransparent } from 'react-icons/hi'
 import { TbLogout } from 'react-icons/tb'
 import MobileViewNavbar from '@/components/organism/MobileViewNavbar'
 import NotificationBox from '@/components/molecules/Notification'
 import MessageNotification from '@/components/molecules/MessageNotification'
 import { useGetMessageNotification, useGetNotification } from '@/services/notification'
-import useCookie from '@/hooks/useCookie'
 import { IoMenu } from 'react-icons/io5'
 import { RxCross2 } from 'react-icons/rx'
 import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
@@ -180,19 +178,23 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
 
   return (
     <>
-      <div className="w-full h-[68px] ">
+      <div className="w-full h-[40px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50">
           <div
             className={`${
               shouldPadding ? 'px-4 lg:px-28' : 'px-4'
-            } w-ful w-full h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 border-b-[1px] border-neutral-200`}
+            } w-ful w-full h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
               <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
-                {!showLeftNavbar ? <IoMenu size={32} className="text-primary" /> : <RxCross2 size={32} className="text-primary" />}
+                {!showLeftNavbar ? (
+                  <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
+                ) : (
+                  <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
+                )}
               </div>
               <Link className="flex gap-4 center-v" href="/">
-                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer" />
+                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[60px]" />
               </Link>
             </div>
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}

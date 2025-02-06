@@ -11,6 +11,8 @@ import { MdBlockFlipped } from 'react-icons/md'
 import { FaRegFlag } from 'react-icons/fa6'
 import { FaStar } from 'react-icons/fa6'
 import { useRouter } from 'next/navigation'
+import { truncateStringTo } from '@/lib/utils'
+import useDeviceType from '@/hooks/useDeviceType'
 type Props = {
   setSelectedChat: (value: any) => void
   yourID: string
@@ -62,6 +64,7 @@ const MessageUserStickyBar = ({
   const { mutate: toggleStarred } = useToggleStarred()
   const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id)
   const router = useRouter()
+  const { isMobile } = useDeviceType()
   const handleMoveToInbox = () => {
     if (isGroupChat) {
       acceptGroupRequest({ chatId })
@@ -88,7 +91,9 @@ const MessageUserStickyBar = ({
           <IoIosArrowBack className="w-6 h-6 text-[#6744FF] cursor-pointer" />
         </p>
         <div className="relative">
-          <Image src={profileCover || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full" />
+          <div className="w-10 h-10">
+            <Image src={profileCover || avatar} alt="dp" width={40} height={40} className="rounded-full object-cover" />
+          </div>
           <p
             className={`w-4 h-4 ${
               userName?.some((item) => item?.isOnline) ? 'bg-success-500' : 'bg-neutral-300'
@@ -101,7 +106,10 @@ const MessageUserStickyBar = ({
             <p className="text-2xs font-normal text-neutral-500">{description}</p>
           ) : (
             <>
-              <p className="text-2xs font-normal text-neutral-500">{universitry}</p>
+              <p className="text-3xs font-normal text-neutral-500 line-clamp-1">
+                {universitry}
+                {/*{isMobile ? truncateStringTo(universitry + universitry, 30) : universitry}*/}
+              </p>
               {/*<p className="text-2xs font-normal text-neutral-500">
                 {studyYear} Yr. {degree}
               </p>*/}
@@ -118,11 +126,11 @@ const MessageUserStickyBar = ({
             Move to inbox
           </button>
         )}
-        {YourDetails[0]?.isStarred ? (
+        {/*{YourDetails[0]?.isStarred ? (
           <FaStar onClick={() => handleStarred()} className={`w-6 h-6 text-yellow-300`} />
         ) : (
           <CiStar onClick={() => handleStarred()} className={`w-6 h-6`} />
-        )}
+        )}*/}
         <Popover>
           <PopoverTrigger>
             <BiDotsHorizontalRounded className="w-8 h-8" />

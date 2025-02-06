@@ -29,6 +29,7 @@ module.exports = {
                 inter: ['var(--font-inter)']
             },
             fontSize: {
+                '5xs': '4px',
                 '4xs': '8px',
                 '3xs': '10px',
                 '2xs': '12px',
@@ -95,9 +96,15 @@ module.exports = {
             addUtilities({
                 '.h-with-navbar': {
                     height: 'calc(100vh - 68px)',
+                    '@media (max-width: 480px)': {
+                        height: 'calc(100vh - 40px)', // Apply 40px when screen is mobile (max-width: 640px)
+                    },
                 },
                 '.h-with-navbar-space': {
                     height: 'calc(100vh - 108px)',
+                    '@media (max-width: 480px)': {
+                        height: 'calc(100vh - 80px)', // Adjust this value as needed for mobile
+                    },
                 },
             });
         },

@@ -81,9 +81,9 @@ const SelectDropdown = ({
         onClick={toggleDropdown}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        } h-10 flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
+        } h-7 flex justify-between items-center px-2 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-xs`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-2xs`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
