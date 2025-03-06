@@ -3,7 +3,7 @@ import React from 'react'
 
 const Login = () => {
   return (
-    <div className="flex justify-center items-start md:items-center h-auto overflow-y-hidden">
+    <div className="flex justify-center items-center h-screen overflow-y-hidden">
       <LoginBox />
     </div>
   )

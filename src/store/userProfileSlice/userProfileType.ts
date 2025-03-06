@@ -31,4 +31,5 @@ export interface userProfileType {
   followers: following[]
   totalFilled: number
   _id: string
+  isFollowing: boolean
 }

@@ -9,8 +9,9 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { occupationAndDepartment } from '@/types/RegisterForm'
+import { MdOutlineArrowBack } from 'react-icons/md'
 
-const ProfileFacultyForm = () => {
+const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
     formState: { errors: ProfileFormErrors },
     control,
@@ -111,6 +112,9 @@ const ProfileFacultyForm = () => {
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
+        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+          Review Account
+        </Button>
       </div>
 
       <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>

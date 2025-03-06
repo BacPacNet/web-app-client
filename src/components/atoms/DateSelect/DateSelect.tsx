@@ -11,11 +11,12 @@ interface SelectDropdownProps {
   onChange: (value: string) => void
   value: any
   placeholder?: string
+  label?: string
 
   err: boolean
 }
 
-const DateSelect = ({ onChange, value, placeholder, err }: SelectDropdownProps) => {
+const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -39,7 +40,8 @@ const DateSelect = ({ onChange, value, placeholder, err }: SelectDropdownProps) 
   }, [])
 
   return (
-    <motion.div ref={dropdownRef} className="relative ">
+    <motion.div ref={dropdownRef} className="relative flex flex-col gap-2">
+      {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
       <div
         onClick={() => setShow(!show)}
         className={`${
@@ -52,7 +54,7 @@ const DateSelect = ({ onChange, value, placeholder, err }: SelectDropdownProps) 
       <AnimatePresence>
         {show && (
           <motion.div
-            className="shadow-lg w-full absolute top-8 z-10  left-0  max-xl:left-0 bg-white "
+            className="shadow-lg w-full absolute  z-10  left-0 top-full  max-xl:left-0 bg-white "
             initial={{ opacity: 0, y: '-10%' }}
             animate={{ opacity: 1, y: '5%' }}
             exit={{ opacity: 0, y: '-10%', transition: { duration: '0.35' } }}

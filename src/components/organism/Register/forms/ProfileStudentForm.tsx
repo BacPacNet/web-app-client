@@ -9,8 +9,9 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { currYear, degreeAndMajors } from '@/types/RegisterForm'
+import { MdOutlineArrowBack } from 'react-icons/md'
 
-const ProfileStudentForm = () => {
+const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
     formState: { errors: ProfileFormErrors },
     control,
@@ -42,7 +43,7 @@ const ProfileStudentForm = () => {
         <div
           className={`
           border-neutral-200
-        flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
+        flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-900 h-10 outline-none`}
         >
           {userType}
         </div>
@@ -127,8 +128,14 @@ const ProfileStudentForm = () => {
           {ProfileFormErrors.major && <InputWarningText>{ProfileFormErrors?.major?.message?.toString()}</InputWarningText>}
         </div>
       </div>
+      {/*<div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+        <Button variant="primary">Next Step</Button>
+      </div>*/}
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
+        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+          Review Account
+        </Button>
       </div>
 
       <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>

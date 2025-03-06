@@ -235,7 +235,7 @@ const EditProfileModal = () => {
           <Controller
             name="dob"
             control={control}
-            rules={{ required: 'birthDate is required!' }}
+            rules={{ required: 'Birth date is required!' }}
             render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!errors.dob} />}
           />
           {errors.dob && <InputWarningText>Please enter your Birthday!</InputWarningText>}

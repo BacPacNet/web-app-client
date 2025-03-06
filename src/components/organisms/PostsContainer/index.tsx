@@ -16,7 +16,9 @@ type Props = {
 const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
   const [showCommentSection, setShowCommentSection] = useState('')
 
-  const { data: userSelfPosts, isLoading, error } = useGetUserPosts(userId)
+  const { data: userSelfPostsData, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, error } = useGetUserPosts(userId, 10)
+
+  const userSelfPosts = userSelfPostsData?.pages.flatMap((page) => page?.data) || []
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -32,10 +34,9 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
     const handleScroll = () => {
       if (containerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        const bottom = scrollTop + clientHeight >= scrollHeight - 10
-        //if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage && type == PostType.Timeline) {
-        //  timelinePostsNextpage()
-        //}
+        if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
       }
     }
 

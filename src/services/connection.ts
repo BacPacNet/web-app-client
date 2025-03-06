@@ -1,14 +1,11 @@
 import useCookie from '@/hooks/useCookie'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
 import useDebounce from '@/hooks/useDebounce'
 import { useUniStore } from '@/store/store'
 import { FindUsers, FollowingItemProps } from '@/types/constants'
-
-interface FollowingItemPropss {
-  profile: FollowingItemProps[]
-}
+import { ProfileConnection } from '@/types/Connections'
 
 interface userItemsProps {
   user: FindUsers[]
@@ -18,14 +15,21 @@ export async function getUsersWithProfile(token: string, Name: string) {
   const response: userItemsProps = await client(`/users?name=${Name}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
-export async function getUserFollow(token: string, Name: string, userId: string) {
-  const response: FollowingItemPropss = await client(`/userprofile/following?name=${Name}&userId=${userId}`, {
+export async function getUserFollowing(token: string, page: number, limit: number, name: string, userId: string) {
+  const response: ProfileConnection = await client(`/userprofile/following?page=${page}&limit=${limit}&name=${name}&userId=${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
 }
-export async function getUserFollowers(token: string, Name: string, userId: string) {
-  const response: FollowingItemPropss = await client(`/userprofile/followers?name=${Name}&userId=${userId}`, {
+export async function getUserFollowers(token: string, page: number, limit: number, name: string, userId: string) {
+  const response: ProfileConnection = await client(`/userprofile/followers?page=${page}&limit=${limit}&name=${name}&userId=${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
+export async function getUserMututal(token: string, page: number, limit: number, name: string, userId: string) {
+  const response: ProfileConnection = await client(`/userprofile/mutuals?page=${page}&limit=${limit}&name=${name}&userId=${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
@@ -61,9 +65,13 @@ export const useToggleFollow = (type: string) => {
     mutationFn: (id: string) => toggleFollow(id, cookieValue),
 
     onSuccess: (response: any) => {
-      setUserfollowing(response.followed.following)
-      if (type == 'Following') {
-        queryClient.invalidateQueries({ queryKey: ['getUserFollow'] })
+      setUserfollowing(response.following)
+
+      if (type == 'FIND_PEOPLE') {
+        queryClient.invalidateQueries({ queryKey: ['usersProfileForConnections'] })
+      }
+      if (type == 'FOLLOWER') {
+        queryClient.invalidateQueries({ queryKey: ['getUserFollower'] })
       } else {
         queryClient.invalidateQueries({ queryKey: ['getAllUsersWithProfile'] })
       }
@@ -74,30 +82,56 @@ export const useToggleFollow = (type: string) => {
   })
 }
 
-export function useGetUserFollow(Name: string, content: boolean, userId: string) {
+export function useGetUserMutuals(name: string, userId: string, limit: number, enabled: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
-  const debouncedSearchTerm = useDebounce(Name, 1000)
-  return useQuery({
-    queryKey: ['getUserFollow', debouncedSearchTerm],
-    queryFn: () => getUserFollow(cookieValue, debouncedSearchTerm, userId),
-    enabled: !!cookieValue && content && !!userId,
-    staleTime: 0,
+  const debouncedSearchTerm = useDebounce(name, 1000)
+
+  return useInfiniteQuery({
+    queryKey: ['getUserMutuals', debouncedSearchTerm],
+    queryFn: ({ pageParam = 1 }) => getUserMututal(cookieValue, pageParam, limit, debouncedSearchTerm, userId),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!cookieValue && enabled,
   })
 }
 
-export function useGetUserFollowers(Name: string, content: boolean, userId: string) {
+export function useGetUserFollowing(name: string, userId: string, limit: number, enabled: boolean) {
   const [cookieValue] = useCookie('uni_user_token')
-  const debouncedSearchTerm = useDebounce(Name, 1000)
-  const state = useQuery({
-    queryKey: ['getUserFollowers', debouncedSearchTerm],
-    queryFn: () => getUserFollowers(cookieValue, debouncedSearchTerm, userId),
-    enabled: !!cookieValue && content && !!userId,
+  const debouncedSearchTerm = useDebounce(name, 1000)
+
+  return useInfiniteQuery({
+    queryKey: ['getUserFollowing', debouncedSearchTerm],
+    queryFn: ({ pageParam = 1 }) => getUserFollowing(cookieValue, pageParam, limit, debouncedSearchTerm, userId),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!cookieValue && enabled,
   })
+}
 
-  let errorMessage = null
-  if (axios.isAxiosError(state.error) && state.error.response) {
-    errorMessage = state.error.response.data
-  }
+export function useGetUserFollowers(name: string, userId: string, limit: number, enabled: boolean) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const debouncedSearchTerm = useDebounce(name, 1000)
 
-  return { ...state, error: errorMessage }
+  return useInfiniteQuery({
+    queryKey: ['getUserFollower', debouncedSearchTerm],
+    queryFn: ({ pageParam = 1 }) => getUserFollowers(cookieValue, pageParam, limit, debouncedSearchTerm, userId),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!cookieValue && enabled,
+  })
 }

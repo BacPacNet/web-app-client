@@ -1,18 +1,43 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import UserListItem from '@/components/Timeline/UserListItem'
-import { useGetUserFollow } from '@/services/connection'
+import { useGetUserFollowing } from '@/services/connection'
 import { useUniStore } from '@/store/store'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { GoSearch } from 'react-icons/go'
 
-interface Props {
-  userFollowingIDs: string[]
-}
-
-export default function Following({ userFollowingIDs }: Props) {
+export default function Following() {
   const [name, setName] = useState('')
   const { userProfileData } = useUniStore()
-  const { data: userFollowing, isFetching: isFollowingLoading } = useGetUserFollow(name, true, userProfileData?.users_id || '')
+  const ref = useRef<HTMLDivElement>(null)
+
+  const {
+    data: userFollowingData,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isLoading: isFollowingLoading,
+  } = useGetUserFollowing(name, userProfileData?.users_id || '', 10, true)
+
+  const userFollowing = userFollowingData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        const { scrollTop, scrollHeight, clientHeight } = ref.current
+
+        if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      }
+    }
+
+    const container = ref.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   const renderUserFollowing = () => {
     if (isFollowingLoading) {
@@ -33,21 +58,20 @@ export default function Following({ userFollowingIDs }: Props) {
     }
     return (
       <>
-        {userFollowing?.profile?.map((userProfile, index: number) => (
+        {userFollowing?.map((userProfile, index: number) => (
           <UserListItem
             key={index}
-            id={userProfile?.users_id.id}
-            firstName={userProfile?.users_id?.firstName}
-            lastName={userProfile?.users_id?.lastName}
-            university={userProfile?.university || ''}
-            study_year={userProfile.study_year || ''}
-            degree={userProfile.degree || ''}
-            major={userProfile.major || ''}
-            occupation={userProfile.occupation || ''}
-            imageUrl={userProfile.profile_dp?.imageUrl || ''}
-            userFollowingIDs={userFollowingIDs || []}
-            type={'Find People'}
-            isSelfProfile={userProfileData?.users_id === userProfile?.users_id?.id}
+            id={userProfile?._id}
+            firstName={userProfile?.firstName}
+            lastName={userProfile?.lastName}
+            university={userProfile?.profile?.university || ''}
+            study_year={userProfile?.profile?.study_year || ''}
+            degree={userProfile?.profile?.degree || ''}
+            major={userProfile?.profile?.major || ''}
+            occupation={userProfile?.profile?.occupation || ''}
+            imageUrl={userProfile?.profile?.profile_dp?.imageUrl || ''}
+            type={'FOLLOWING'}
+            isFollowing={userProfile?.isFollowing}
           />
         ))}
       </>
@@ -66,7 +90,9 @@ export default function Following({ userFollowingIDs }: Props) {
           placeholder="Search People"
         />
       </div>
-      <div className="overflow-y-auto h-[85%]">{renderUserFollowing()}</div>
+      <div ref={ref} className="overflow-y-auto h-[85%]">
+        {renderUserFollowing()}
+      </div>
     </>
   )
 }

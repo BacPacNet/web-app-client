@@ -70,6 +70,7 @@ module.exports = {
                 'border': '#D4D4D4',
                 'shade-button-border': '#E9E8FF',
                 'surface-primary-50': '#F3F2FF',
+                'surface-neutral-100': '#F3F4F6',
                 'warning-500': '#F59E0B',
                 'success-500': "#22C55E",
                 'success-100': '#DCFCE7',
@@ -81,7 +82,11 @@ module.exports = {
                 'destructive-600': "#DC2626",
                 'destructive-800': '#991B1B'
             },
+            dropShadow: {
+                'card': '0px 2px 6px 0px rgba(16, 24, 40, 0.06)',
+            },
             boxShadow: {
+                'small': '0px 2px 6px 0px rgba(16, 24, 40, 0.06)',
                 'logo': '0px 0px 6px 0px #00000040',
                 'medium': '0px 6px 15px -2px rgba(16, 24, 40, 0.08), 0px 6px 15px -2px rgba(16, 24, 40, 0.08);',
                 'card': '0px 6px 15px -2px rgba(16, 24, 40, 0.08)',

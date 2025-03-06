@@ -59,22 +59,23 @@ const Register = () => {
   }
 
   return (
-    <div className="flex h-with-navbar bg-white flex-col lg:flex-row">
+    <div className="flex h-screen bg-white flex-col lg:flex-row justify-center">
       {loading ? (
         <Loading />
       ) : (
         <>
           {isTablet || isMobile ? (
             <div className={`flex gap-2 justify-center items-center`}>
-              <div onClick={() => handlePrev()} className={`text-[#6744FF] text-2xl text-start cursor-pointer  ${step == 0 && 'hidden'}`}>
+              {/*<div onClick={() => handlePrev()} className={`text-[#6744FF] text-2xl text-start cursor-pointer  ${step == 0 && 'hidden'}`}>
                 <IoIosArrowBack />
-              </div>
+              </div>*/}
               <ProgressBar
                 radius={25}
                 progress={step == 4 ? 4 : step + 1}
                 key={step}
                 strokeWidth={6}
                 strokeColor="#6744FF"
+                trackStrokeColor="#F3F2FF"
                 strokeLinecap="square"
                 trackStrokeWidth={6}
                 steps={4}
@@ -90,7 +91,14 @@ const Register = () => {
             <RegisterSIdebar step={step} subStep={subStep} onPrev={handlePrev} />
           )}
 
-          <FormContainer step={step} setStep={setStep} subStep={subStep} setSubStep={setSubStep} setUserType={setUserType} />
+          <FormContainer
+            handlePrev={() => handlePrev()}
+            step={step}
+            setStep={setStep}
+            subStep={subStep}
+            setSubStep={setSubStep}
+            setUserType={setUserType}
+          />
         </>
       )}
     </div>

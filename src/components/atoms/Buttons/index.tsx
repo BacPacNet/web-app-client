@@ -4,9 +4,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
+  leftIcon?: React.ReactNode
+  onClick?: () => void
 }
 
-const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', size = 'small', children, disabled, ...props }) => {
+const Buttons: React.FC<ButtonProps> = ({
+  className = '',
+  variant = 'primary',
+  size = 'small',
+  children,
+  disabled,
+  leftIcon = null,
+  onClick,
+  ...props
+}) => {
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
@@ -19,7 +30,7 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
     small: 'text-sm py-2 px-4 ',
     medium: 'text-md py-2 px-4 ',
     large: 'text-lg py-2 px-4 ',
-    extra_small: 'text-2xs py-1 px-2',
+    extra_small: 'text-3xs sm:text-2xs py-1 px-2',
     extra_small_paddind_2: 'text-2xs py-2 px-2',
   }
 
@@ -28,9 +39,11 @@ const Buttons: React.FC<ButtonProps> = ({ className = '', variant = 'primary', s
   return (
     <button
       disabled={disabled}
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 ${className}`}
+      onClick={onClick}
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-normal flex items-center justify-center ${className}`}
       {...props}
     >
+      {leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
     </button>
   )

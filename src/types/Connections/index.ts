@@ -22,6 +22,7 @@ export interface Users {
   userUnVerifiedCommunities?: (UserUnVerifiedCommunitiesEntity | null)[] | null
   userVerifiedCommunities?: (UserVerifiedCommunitiesEntity | null)[] | null
   userName?: string | null
+  isFollowing: boolean
 }
 export interface Profile {
   _id: string
@@ -43,6 +44,7 @@ export interface Profile {
   study_year?: string | null
   following?: FollowersEntityOrFollowingEntity[] | null
   university?: string | null
+  university_name?: string | null
   cover_dp?: ProfileDpOrCoverDp1 | null
 }
 export interface FollowersEntity {
