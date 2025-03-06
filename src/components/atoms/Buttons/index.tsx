@@ -5,7 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
   leftIcon?: React.ReactNode
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 const Buttons: React.FC<ButtonProps> = ({
