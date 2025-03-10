@@ -24,9 +24,10 @@ interface Props {
   subStep: number
   setSubStep: (value: number) => void
   setUserType: (value: string) => void
+  handlePrev: () => void
 }
 
-const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Props) => {
+const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handlePrev }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
   const { mutateAsync: handleUserCheck, isPending: handleUserCheckIsPending } = useHandleUserEmailAndUserNameAvailability()
   const {
@@ -258,11 +259,11 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType }: Prop
     if (step === 0 && subStep === 0) {
       return <AccountCreationForm isPending={handleUserCheckIsPending} />
     } else if (step === 1 && subStep === 0) {
-      return <ProfileSetupForm />
+      return <ProfileSetupForm handlePrev={() => handlePrev()} />
     } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Student) {
-      return <ProfileStudentForm />
+      return <ProfileStudentForm handlePrev={() => handlePrev()} />
     } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Faculty) {
-      return <ProfileFacultyForm />
+      return <ProfileFacultyForm handlePrev={() => handlePrev()} />
     } else if (step === 2 && subStep === 0) {
       return <VerificationForm isVerificationSuccess={userLoginEmailVerificationSuccess} isPending={userLoginEmailVerificationIsPending} />
     } else if (step === 2 && subStep === 1) {

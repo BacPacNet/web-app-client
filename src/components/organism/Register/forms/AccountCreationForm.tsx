@@ -4,12 +4,8 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
-import googleIcon from '@/assets/Social icon.svg'
-import Image from 'next/image'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useRouter } from 'next/navigation'
 
@@ -49,14 +45,15 @@ const AccountCreationForm = ({ isPending }: Props) => {
 
   return (
     <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center px-3">
+      <div className="text-center flex flex-col gap-2">
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
       </div>
-      <div className="w-10/12 flex flex-col gap-3 ">
+      <div className="w-10/12 flex flex-col gap-4 ">
         <div className="w-full flex flex-col">
           <InputBox
-            placeholder="Email Address"
+            label="Email Address"
+            placeholder="john@example.com"
             type="email"
             {...register('email', {
               required: true,
@@ -75,7 +72,8 @@ const AccountCreationForm = ({ isPending }: Props) => {
         </div>
         <div className="w-full flex flex-col">
           <InputBox
-            placeholder="Username"
+            label="Username"
+            placeholder="john123"
             type="text"
             {...register('userName', {
               required: true,
@@ -90,7 +88,8 @@ const AccountCreationForm = ({ isPending }: Props) => {
         </div>
         <div className="relative w-full flex flex-col">
           <InputBox
-            placeholder="Create password"
+            label="Password"
+            placeholder="***********"
             type={showPassword ? 'text' : 'password'}
             {...register('password', {
               required: true,
@@ -106,11 +105,6 @@ const AccountCreationForm = ({ isPending }: Props) => {
             err={!!registerFormErrors.password}
           />
           <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.password ? 'top-[15%]' : 'top-[20%]'} `}>
-            {showPassword ? (
-              <AiOutlineEyeInvisible className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
-            ) : (
-              <AiOutlineEye className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
-            )}
             {/* <PasswordToggleIcon showPassword={showPassword} onClick={(value: any) => setShowPassword(value)} /> */}
           </div>
           {password?.length ? (
@@ -132,43 +126,30 @@ const AccountCreationForm = ({ isPending }: Props) => {
           ) : (
             registerFormErrors.password && <InputWarningText>Please enter your password!</InputWarningText>
           )}
+          <label className="text-neutral-500 text-xs py-1">must be at least 8 characters</label>
         </div>
         <div className="relative w-full flex flex-col">
           <InputBox
-            placeholder="Confirm password"
+            label="Confirm password"
+            placeholder="***********"
             type={showConfirmPassword ? 'text' : 'password'}
             {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
             err={!!registerFormErrors.confirmpassword}
           />
-          <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.confirmpassword ? 'top-[15%]' : 'top-[20%]'} `}>
-            {showConfirmPassword ? (
-              <AiOutlineEyeInvisible className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
-            ) : (
-              <AiOutlineEye className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
-            )}
-          </div>
-          {registerFormErrors.confirmpassword && (
-            <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password'}</InputWarningText>
-          )}
 
-          <label className="text-neutral-500 text-xs py-1">must be at least 8 characters</label>
+          {registerFormErrors.confirmpassword && (
+            <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password!'}</InputWarningText>
+          )}
         </div>
       </div>
       <div className="w-10/12 flex flex-col gap-4">
         <Button disabled={isPending} variant="primary">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
-        <Button type="button" variant="border" className="flex items-center justify-center gap-2 h-10">
-          <Image src={googleIcon} alt="go" /> Sign up with Google
-        </Button>
 
         <div className="mx-auto">
-          <p>
-            Already have an account?{' '}
-            <span onClick={() => router.push('/login')} className="text-primary-500 cursor-pointer">
-              {' '}
-              Log in
-            </span>
+          <p className="text-primary-500 cursor-pointer" onClick={() => router.push('/login')}>
+            Already have an account? Log in
           </p>
         </div>
       </div>

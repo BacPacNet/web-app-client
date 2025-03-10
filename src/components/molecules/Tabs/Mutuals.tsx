@@ -1,24 +1,26 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
+import { Spinner } from '@/components/spinner/Spinner'
 import UserListItem from '@/components/Timeline/UserListItem'
-import { useGetUserFollowers } from '@/services/connection'
+import { useGetUserMutuals } from '@/services/connection'
+import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
 import React, { useEffect, useRef, useState } from 'react'
 import { GoSearch } from 'react-icons/go'
 
-export default function Followers() {
+export default function Mutuals() {
   const [name, setName] = useState('')
-  const { userProfileData } = useUniStore()
   const ref = useRef<HTMLDivElement>(null)
 
+  const { userProfileData } = useUniStore()
   const {
-    data: userFollowersData,
+    data: userProfilesData,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-    isLoading: isFollowersLoading,
-  } = useGetUserFollowers(name, userProfileData?.users_id || '', 6, true)
+    isLoading: isUserProfilesLoading,
+  } = useGetUserMutuals(name, userProfileData?.users_id || '', 10, true)
 
-  const userFollowers = userFollowersData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,11 +41,10 @@ export default function Followers() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  const renderUserFollowing = () => {
-    if (isFollowersLoading) {
+  const renderUserProfileList = () => {
+    if (isUserProfilesLoading) {
       return (
         <>
-          <UserListItemSkeleton />
           <UserListItemSkeleton />
           <UserListItemSkeleton />
           <UserListItemSkeleton />
@@ -56,20 +57,20 @@ export default function Followers() {
     }
     return (
       <>
-        {userFollowers?.map((userProfile, index: number) => (
+        {userProfiles?.map((item, index: number) => (
           <UserListItem
             key={index}
-            id={userProfile?._id}
-            firstName={userProfile?.firstName}
-            lastName={userProfile?.lastName}
-            university={userProfile?.profile?.university || ''}
-            study_year={userProfile.profile?.study_year || ''}
-            degree={userProfile.profile?.degree || ''}
-            major={userProfile.profile?.major || ''}
-            occupation={userProfile.profile?.occupation || ''}
-            imageUrl={userProfile.profile?.profile_dp?.imageUrl || ''}
-            type={'FOLLOWER'}
-            isFollowing={userProfile?.isFollowing}
+            id={item?._id}
+            firstName={item?.firstName}
+            lastName={item?.lastName}
+            university={item?.profile?.university || ''}
+            study_year={item?.profile?.study_year || ''}
+            degree={item?.profile?.degree || ''}
+            major={item?.profile?.major || ''}
+            occupation={item?.profile?.occupation || ''}
+            imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
+            type={'FIND_PEOPLE'}
+            isFollowing={item?.isFollowing}
           />
         ))}
       </>
@@ -78,19 +79,25 @@ export default function Followers() {
 
   return (
     <>
-      <div className="px-5 py-2 border border-border rounded-2xl flex items-center gap-4 mb-2">
+      <div className="px-3 py-2 border border-border rounded-2xl flex items-center gap-4 mb-2">
         <GoSearch className="text-neutral-500" size={20} />
         <input
           onChange={(e) => setName(e.target.value)}
           type="text"
           value={name}
-          className="text-sm w-full outline-none"
+          className="text-xs w-full outline-none"
           placeholder="Search People"
         />
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%]">
-        {renderUserFollowing()}
+      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar">
+        {renderUserProfileList()}
       </div>
+      {isFetchingNextPage && (
+        <div className="text-center pt-2">
+          {' '}
+          <Spinner />
+        </div>
+      )}
     </>
   )
 }

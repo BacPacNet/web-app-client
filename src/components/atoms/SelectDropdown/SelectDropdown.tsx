@@ -6,6 +6,9 @@ import { FiUserCheck, FiUser } from 'react-icons/fi'
 import { RxCross2 } from 'react-icons/rx'
 import { MdOutlinePublic } from 'react-icons/md'
 import { FiUsers } from 'react-icons/fi'
+import Image from 'next/image'
+import Tooltip from '../Tooltip'
+import StatusTooltip from '../StatusTooltip'
 const icons = [MdOutlinePublic, FiUserCheck, FiUsers, FiUser]
 
 interface SelectDropdownProps {
@@ -18,6 +21,8 @@ interface SelectDropdownProps {
   err: boolean
   showIcon?: boolean
   isAllowedToRemove?: boolean
+  label?: string
+  isStatus?: boolean
 }
 
 const motionStyle = {
@@ -37,6 +42,8 @@ const SelectDropdown = ({
   search = false,
   err,
   showIcon = false,
+  label,
+  isStatus = false,
 }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -76,14 +83,19 @@ const SelectDropdown = ({
   }
 
   return (
-    <motion.div ref={dropdownRef} className="relative">
+    <motion.div ref={dropdownRef} className="relative flex flex-col gap-2">
+      <div className="flex gap-1">
+        {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
+        {isStatus && <StatusTooltip />}
+      </div>
+
       <div
         onClick={toggleDropdown}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        } h-7 flex justify-between items-center px-2 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
+        }  h-10 flex justify-between items-center px-2 py-2 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-2xs`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-sm`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
@@ -107,7 +119,7 @@ const SelectDropdown = ({
           <motion.div
             className={`flex flex-col custom-scrollbar ${
               !showIcon ? 'gap-2 w-full p-2' : 'gap-1 p-1'
-            } absolute right-0 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto`}
+            } absolute left-0 top-full mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (

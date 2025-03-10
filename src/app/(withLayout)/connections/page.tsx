@@ -4,32 +4,26 @@ import Tabs from '@/components/molecules/Tabs'
 import FindPeople from '@/components/molecules/Tabs/FindPeople'
 import Followers from '@/components/molecules/Tabs/Followers'
 import Following from '@/components/molecules/Tabs/Following'
-import { useUniStore } from '@/store/store'
-import React, { useMemo, useRef } from 'react'
+import Mutuals from '@/components/molecules/Tabs/Mutuals'
+import React from 'react'
 
 export default function ConnectionPage() {
-  const { userProfileData } = useUniStore()
-
-  const userFollowingIDs = useMemo(() => {
-    return userProfileData?.following?.map((following: { userId: string }) => following.userId)
-  }, [userProfileData])
-
-  const userFollowerIDs = useMemo(() => {
-    return userProfileData?.followers?.map((followers: { userId: string }) => followers.userId)
-  }, [userProfileData])
-
   const tabs = [
     {
       label: 'Find People',
       content: <FindPeople />,
     },
     {
-      label: `Following`,
-      content: <Following userFollowingIDs={userFollowingIDs || []} />,
+      label: 'Mutuals',
+      content: <Mutuals />,
     },
     {
-      label: `Follower`,
-      content: <Followers userFollowingIDs={userFollowingIDs || []} />,
+      label: 'Following',
+      content: <Following />,
+    },
+    {
+      label: 'Follower',
+      content: <Followers />,
     },
   ]
 

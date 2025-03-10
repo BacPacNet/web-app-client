@@ -1,119 +1,81 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import logo from '@/assets/Logo Circle.svg'
+import React, { useEffect } from 'react'
+import logo from '@/assets/unibuzz_logo.svg'
 import InputBox from '@/components/atoms/Input/InputBox'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Title from '@/components/atoms/Title'
-import SupportingText from '@/components/atoms/SupportingText'
 import Button from '@/components/atoms/Buttons'
 import { useForm } from 'react-hook-form'
 import { LoginForm } from '@/models/auth'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
-import { AxiosError } from 'axios'
 import { Spinner } from '@/components/spinner/Spinner'
 
 const LoginBox = () => {
-  const [showPassword, setShowPassword] = useState(false)
   const router = useRouter()
   const {
-    register: registerLogin,
-    handleSubmit: handleSubmitLogin,
-    formState: { errors: loginErrors },
+    register,
+    handleSubmit,
+    formState: { errors },
     setValue,
-  } = useForm<LoginForm>({
-    defaultValues: {
-      email: '',
-    },
-  })
+  } = useForm<LoginForm>({ defaultValues: { email: '' } })
 
-  const { mutate: mutateLogin, error, isPending } = useHandleLogin()
-
-  const isAxiosError = (error: unknown): error is AxiosError<any> => {
-    return (error as AxiosError)?.isAxiosError === true
-  }
-  const onSubmit = async (data: LoginForm) => {
-    mutateLogin(data)
-  }
+  const { mutate: login, error, isPending } = useHandleLogin()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const emailValue = localStorage.getItem('registeredEmail')
-      if (emailValue) {
-        setValue('email', emailValue)
-      }
+      if (emailValue) setValue('email', emailValue)
     }
-  }, [])
+  }, [setValue])
+
+  const onSubmit = (data: LoginForm) => login(data)
 
   return (
-    <div className="flex flex-col  max-lg:w-1/2 max-md:w-2/3 max-sm:w-11/12 mt-4 md:mt-0">
-      <div className="flex flex-col gap-8 border border-neutral-300 py-4 px-6  rounded-xl bg-white drop-shadow-md">
-        <img className="w-14 h-14" src={logo.src} alt="lgog" />
-        <div>
-          <Title>Login to your account</Title>
-          <SupportingText>Enter your details to access your account</SupportingText>
-        </div>
-        <form className="flex flex-col gap-5" onSubmit={handleSubmitLogin(onSubmit)}>
-          <div className="relative w-full flex flex-col gap-2">
-            <label htmlFor="Email Address" className="font-medium text-neutral-900">
-              Email Address
-            </label>
-
+    <div className="flex flex-col w-11/12 sm:w-[392px] mx-auto">
+      <div className="flex flex-col gap-8 p-8 rounded-lg bg-white shadow-lg">
+        <img className="w-[119px] h-[27px]" src={logo.src} alt="logo" />
+        <Title>Login to your account</Title>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-2">
             <InputBox
+              label="Email Address"
               placeholder="john.dowry@example.com"
               type="email"
-              {...registerLogin('email', {
-                required: true,
+              {...register('email', {
+                required: 'Please enter your email!',
                 pattern: {
                   value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
                   message: 'Invalid email format',
                 },
               })}
-              err={!!loginErrors.email}
+              err={!!errors.email}
             />
-            {loginErrors.email && (
-              <InputWarningText>{loginErrors.email.message ? loginErrors.email.message : 'Please enter your email!'}</InputWarningText>
-            )}
+            {errors.email && <InputWarningText>{errors.email.message}</InputWarningText>}
           </div>
-          <div className="relative w-full flex flex-col gap-2">
-            <label htmlFor="Email Address" className="font-medium text-neutral-900">
-              Password
-            </label>
+          <div className="flex flex-col gap-2">
             <InputBox
+              label="Password"
               placeholder="*********"
-              type={showPassword ? 'text' : 'password'}
-              {...registerLogin('password', { required: true })}
-              err={!!loginErrors.password}
+              type="password"
+              {...register('password', { required: 'Please enter your password!' })}
+              err={!!errors.password}
             />
-            <div className={`absolute  right-0 pr-3 flex items-center text-sm ${loginErrors.password ? 'top-1/3' : 'top-[40%]'} `}>
-              {showPassword ? (
-                <AiOutlineEyeInvisible className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
-              ) : (
-                <AiOutlineEye className="h-5 w-5 text-gray-700 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
-              )}
-            </div>
-            {loginErrors.password && <InputWarningText>Please enter your password!</InputWarningText>}
-            <label className="w-fit text-neutral-500 text-xs cursor-pointer hover:text-primary hover:underline">Forgot Password?</label>
+            {errors.password && <InputWarningText>{errors.password.message}</InputWarningText>}
           </div>
-          <div className="flex gap-2">
-            <input type="checkbox" {...registerLogin('rememberme')} />
-            <p className="text-xs">Remember me</p>
+          <div className="flex flex-col gap-4">
+            <Button disabled={isPending} variant="primary">
+              {isPending ? <Spinner /> : 'Log in'}
+            </Button>
+            <Button disabled={isPending} variant="border">
+              Forgot Password
+            </Button>
+            <p className="mt-4 mx-auto text-primary-500 font-normal cursor-pointer" onClick={() => router.push('/register')}>
+              No account yet? Sign up.
+            </p>
           </div>
-          <Button disabled={isPending} variant="primary">
-            {isPending ? <Spinner /> : 'Log in'}
-          </Button>
         </form>
       </div>
-      <button className="mt-4 mx-auto">
-        <p>
-          No account yet?{' '}
-          <span className="text-primary-500" onClick={() => router.push('/register')}>
-            Create an account
-          </span>
-        </p>
-      </button>
     </div>
   )
 }

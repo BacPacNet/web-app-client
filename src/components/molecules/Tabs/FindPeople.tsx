@@ -8,7 +8,7 @@ import { GoSearch } from 'react-icons/go'
 
 export default function FindPeople() {
   const [name, setName] = useState('')
-  const ref = useRef<any>()
+  const ref = useRef<HTMLDivElement>(null)
 
   const { userProfileData } = useUniStore()
   const {
@@ -20,7 +20,6 @@ export default function FindPeople() {
   } = useUsersProfileForConnections(name, 10, true)
 
   const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
-  const userFollowingIDs = userProfileData && userProfileData?.following?.map((following: { userId: string }) => following.userId)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,9 +68,8 @@ export default function FindPeople() {
             major={item?.profile?.major || ''}
             occupation={item?.profile?.occupation || ''}
             imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
-            userFollowingIDs={userFollowingIDs || []}
-            type={'Find People'}
-            isSelfProfile={userProfileData?.users_id === item?._id}
+            type={'FIND_PEOPLE'}
+            isFollowing={item?.isFollowing}
           />
         ))}
       </>

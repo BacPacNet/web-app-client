@@ -12,8 +12,9 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
 import { GenderOptions, userType } from '@/types/RegisterForm'
 import { Country } from 'country-state-city'
+import { MdOutlineArrowBack } from 'react-icons/md'
 
-const ProfileSetupForm = () => {
+const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
     register,
     formState: { errors: ProfileFormErrors },
@@ -24,12 +25,12 @@ const ProfileSetupForm = () => {
     <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
         <Title>Profile Setup</Title>
-        <SupportingText>Enter your profile information for networking</SupportingText>
+        <SupportingText>Enter your profile information for networking. You can add more profile information later!</SupportingText>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
         <div className="w-full flex flex-col">
           <InputBox
-            placeholder="First Name"
+            label="First Name"
             type="text"
             {...register('firstName', {
               required: true,
@@ -40,7 +41,7 @@ const ProfileSetupForm = () => {
         </div>
         <div className="w-full flex flex-col">
           <InputBox
-            placeholder="Last Name"
+            label="Last Name"
             type="text"
             {...register('lastName', {
               required: true,
@@ -54,9 +55,9 @@ const ProfileSetupForm = () => {
             name="birthDate"
             control={control}
             rules={{
-              required: 'BirthDate is required!',
+              required: 'Birth Date is required!',
               validate: (value) => {
-                if (!value) return 'BirthDate is required!'
+                if (!value) return 'Birth Date is required!'
                 const today = new Date()
                 const birthDate = new Date(value)
                 const age = today.getFullYear() - birthDate.getFullYear()
@@ -64,12 +65,10 @@ const ProfileSetupForm = () => {
                 const dayDiff = today.getDate() - birthDate.getDate()
                 const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
-                return adjustedAge >= 14 || 'You must be at least 14 years old!'
+                return adjustedAge >= 14 || 'You must be at least 14 years old'
               },
             }}
-            render={({ field }) => (
-              <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!ProfileFormErrors.birthDate} />
-            )}
+            render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} label="Birthday" err={!!ProfileFormErrors.birthDate} />}
           />
           {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}!</InputWarningText>}
         </div>
@@ -81,10 +80,11 @@ const ProfileSetupForm = () => {
             rules={{ required: 'User type is required!' }}
             render={({ field }) => (
               <SelectDropdown
+                isStatus={true}
                 options={userType}
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="Select a Type"
+                label="Status"
                 icon={'single'}
                 err={!!ProfileFormErrors.userType}
               />
@@ -95,6 +95,9 @@ const ProfileSetupForm = () => {
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
+        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+          Review Account
+        </Button>
       </div>
 
       <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>

@@ -6,7 +6,7 @@ interface InputWarningTextProps extends HTMLAttributes<HTMLHeadingElement> {
 
 export default function InputWarningText({ children, className = '', ...rest }: InputWarningTextProps) {
   return (
-    <span className={`text-red-500 font-normal text-2xs py-1 ${className}`} {...rest}>
+    <span className={`text-red-500 font-normal text-2xs ${className}`} {...rest}>
       {children}
     </span>
   )

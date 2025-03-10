@@ -2,10 +2,9 @@
 'use client'
 import React, { useState } from 'react'
 import UserListItem from '../UserListItem'
-import { useGetUserFollow, useGetUserFollowers } from '@/services/connection'
+import { useGetUserFollowing, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { FollowingItemProps } from '@/types/constants'
 
 type props = {
   isChat?: boolean
@@ -13,12 +12,16 @@ type props = {
   setIsModalOpen?: (value: boolean) => void
   userId?: string
 }
-const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, userId }: props) => {
+const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, userId = '' }: props) => {
   const [content, setContent] = useState<'Following' | 'Followers'>('Following')
   const { userProfileData } = useUniStore()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
-  const { data: userFollow, isFetching: isFollowingLoading } = useGetUserFollow('', content == 'Following', userId || '')
-  const { data: userFollowers, isFetching: isFollowersLoading } = useGetUserFollowers('', content == 'Followers', userId || '')
+  const { data: userFollowData, isFetching: isFollowingLoading } = useGetUserFollowing('', userId, 10, content == 'Following')
+  const { data: userFollowersData, isFetching: isFollowersLoading } = useGetUserFollowers('', userId, 10, content == 'Followers')
+
+  const userFollow = userFollowData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  const userFollowers = userFollowersData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+
   return (
     <div>
       <div className="flex items-center justify-start cursor-pointer">
@@ -51,26 +54,25 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, u
             <UserListItemSkeleton />
             <UserListItemSkeleton />
           </>
-        ) : content === 'Following' && !userFollow?.profile?.length ? (
+        ) : content === 'Following' && !userFollow?.length ? (
           <p className="text-center p-4">You are not Following anyone.</p>
         ) : (
           content === 'Following' &&
-          userFollow?.profile?.map((item: FollowingItemProps, index: number) => (
+          userFollow?.map((item, index: number) => (
             <UserListItem
               key={index}
-              id={item?.users_id?.id}
-              firstName={item?.users_id?.firstName}
-              lastName={item?.users_id?.lastName}
-              university={item?.university}
-              study_year={item?.study_year}
-              degree={item?.degree}
-              major={item?.major}
-              occupation={item?.occupation}
-              imageUrl={item?.profile_dp?.imageUrl}
+              id={item?._id}
+              firstName={item?.firstName}
+              lastName={item?.lastName}
+              university={item?.profile?.university_name || ''}
+              study_year={item?.profile?.study_year || ''}
+              degree={item?.profile?.degree || ''}
+              major={item?.profile?.major || ''}
+              occupation={item?.profile?.occupation || ''}
+              imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
               type={content}
-              userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
-              isSelfProfile={userProfileData?.users_id === item?.users_id?.id}
+              isFollowing={item?.isFollowing}
             />
           ))
         )}
@@ -80,26 +82,25 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, u
             <UserListItemSkeleton />
             <UserListItemSkeleton />
           </>
-        ) : content === 'Followers' && !userFollowers?.profile?.length ? (
+        ) : content === 'Followers' && !userFollowers?.length ? (
           <p className="text-center p-4">You have 0 Followers</p>
         ) : (
           content === 'Followers' &&
-          userFollowers?.profile?.map((item: FollowingItemProps, index: number) => (
+          userFollowers?.map((item, index: number) => (
             <UserListItem
               key={index}
-              id={item?.users_id?.id}
-              firstName={item?.users_id?.firstName}
-              lastName={item?.users_id?.lastName}
-              university={item?.university}
-              study_year={item?.study_year}
-              degree={item?.degree}
-              major={item?.major}
-              occupation={item?.occupation}
-              imageUrl={item?.profile_dp?.imageUrl}
+              id={item?._id}
+              firstName={item?.firstName}
+              lastName={item?.lastName}
+              university={item?.profile?.university_name || ''}
+              study_year={item?.profile?.study_year || ''}
+              degree={item?.profile?.degree || ''}
+              major={item?.profile?.major || ''}
+              occupation={item?.profile?.occupation || ''}
+              imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
               type={content}
-              userFollowingIDs={userFollowingIDs || []}
               isChat={isChat}
-              isSelfProfile={userProfileData?.users_id === item?.users_id?.id}
+              isFollowing={item.isFollowing}
             />
           ))
         )}

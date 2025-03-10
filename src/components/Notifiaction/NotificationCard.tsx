@@ -72,16 +72,18 @@ const NotificationCard = ({ data }: Props) => {
     return updateIsSeen(dataToPush)
   }
 
-  const handleAcceptInvite = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    if (data.type == notificationRoleAccess.GROUP_INVITE) {
-      if (!data?.communityGroupId?._id || !id) return
+  const handleAcceptInvite = (id: string) => {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      if (data.type == notificationRoleAccess.GROUP_INVITE) {
+        if (!data?.communityGroupId?._id || !id) return
 
-      const dataToPush = {
-        groupId: data?.communityGroupId?._id,
-        id: id,
+        const dataToPush = {
+          groupId: data?.communityGroupId?._id,
+          id: id,
+        }
+        return joinGroup(dataToPush)
       }
-      return joinGroup(dataToPush)
     }
   }
 
@@ -162,7 +164,7 @@ const NotificationCard = ({ data }: Props) => {
       <div className="flex flex-col gap-2">
         <p className="text-sm">{renderMessage()}</p>
         {data.type == notificationRoleAccess.GROUP_INVITE && (
-          <Buttons onClick={(e) => handleAcceptInvite(data?._id, e)} className="w-max" variant="border_primary" size="extra_small">
+          <Buttons onClick={handleAcceptInvite(data?._id)} className="w-max" variant="border_primary" size="extra_small">
             Accept
           </Buttons>
         )}
