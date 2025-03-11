@@ -13,6 +13,7 @@ interface SelectDropdownProps {
   icon: string
   search?: boolean
   err: boolean
+  label?: string
 }
 
 const motionStyle = {
@@ -21,7 +22,7 @@ const motionStyle = {
   exit: { opacity: 0, y: '-10%', transition: { duration: 0.35 } },
   transition: { type: 'spring', stiffness: 100, duration: 0.75 },
 }
-const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err }: SelectDropdownProps) => {
+const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err, label }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -48,13 +49,14 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
 
   return (
     <motion.div ref={dropdownRef} className="relative">
+      <label className="text-xs text-neutral-700 font-medium">{label}</label>
       <div
         onClick={() => setShow(!show)}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-sm`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-xs line-clamp-1`}> {value || placeholder}</p>
         <div>
           {icon == 'single' ? (
             <IoIosArrowDown />

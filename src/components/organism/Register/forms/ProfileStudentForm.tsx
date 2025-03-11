@@ -36,17 +36,17 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   return (
     <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
       <div className="text-center px-3">
-        <Title>University Setup</Title>
-        <SupportingText>Enter your university information for networking</SupportingText>
+        <Title>Student Setup</Title>
+        <SupportingText>Enter your university information to finish your student profile setup. </SupportingText>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
-        <div
+        {/*<div
           className={`
           border-neutral-200
         flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-900 h-10 outline-none`}
         >
           {userType}
-        </div>
+        </div>*/}
         <div className="w-full flex flex-col relative">
           <Controller
             name="universityName"
@@ -59,6 +59,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                   field.onChange(selectedUniversity.name)
                   setValue('universityId', selectedUniversity._id)
                 }}
+                label="University"
                 placeholder="Select University Name"
                 icon={'single'}
                 search={true}
@@ -68,7 +69,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
           />
           {ProfileFormErrors.universityName && <InputWarningText>{ProfileFormErrors?.universityName?.message?.toString()}</InputWarningText>}
         </div>
-        <div className="w-full flex flex-col relative">
+        {/*<div className="w-full flex flex-col relative">
           <Controller
             name="year"
             control={control}
@@ -78,14 +79,15 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 options={currYear}
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="Year"
+                label="Year"
+                placeholder="Select your current education year."
                 icon={'single'}
                 err={!!ProfileFormErrors.year}
               />
             )}
           />
           {ProfileFormErrors.year && <InputWarningText>{ProfileFormErrors?.year?.message?.toString()}</InputWarningText>}
-        </div>
+        </div>*/}
 
         <div className="w-full flex flex-col relative">
           <Controller
@@ -97,8 +99,9 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 options={Object.keys(degreeAndMajors)}
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="Select a degree"
+                placeholder="Select your current education year."
                 icon={'single'}
+                label="Year"
                 search={true}
                 err={!!ProfileFormErrors.degree}
               />
@@ -106,6 +109,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
           />
           {ProfileFormErrors.degree && <InputWarningText>{ProfileFormErrors?.degree?.message?.toString()}</InputWarningText>}
         </div>
+
         <div className="w-full flex flex-col relative">
           <Controller
             name="major"
@@ -119,7 +123,8 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 value={field.value}
                 onChange={field.onChange}
                 search={true}
-                placeholder="Select a major"
+                label="Major"
+                placeholder="Select your current major"
                 icon={'single'}
                 err={!!ProfileFormErrors.major}
               />
