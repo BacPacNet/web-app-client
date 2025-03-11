@@ -17,6 +17,7 @@ import heroMobileBanner from '@assets/heroMobileBanner.svg'
 import Image from 'next/image'
 import useDeviceType from '@/hooks/useDeviceType'
 import Buttons from '@/components/atoms/Buttons'
+import SupportingText from '@/components/atoms/SupportingText'
 
 const features = [
   {
@@ -87,17 +88,14 @@ const About = () => {
   const { isMobile, isTablet, isDesktop } = useDeviceType()
   return (
     <>
-      {/*remove pt - added for navbar space  */}
-      <div className="md:px-6 sm:px-8 px-4 md:pt-32 pt-24 font-poppins">
+      <div className="md:px-6 sm:px-8 px-4 md:pt-32 pt-16 ">
         <main className="flex flex-col items-center justify-center md:gap-28 gap-16">
           {/* JOin UNiversity Section */}
           <section className="flex md:flex-row flex-col justify-between items-center gap-20 w-full max-w-6xl">
             <div className="md:max-w-xl md:text-left text-center">
-              <h3 className=" text-primary-500 font-semibold uppercase">Join Your University Community</h3>
-              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">All-in-one university network</h1>
-              <p className="md:max-w-lg text-neutral-500 md:mt-5 mt-3">
-                The premier social network platform made entirely for university students and faculty.
-              </p>
+              <h3 className=" text-primary-500 font-semibold uppercase font-poppins">Join Your University Community</h3>
+              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3 font-poppins">All-in-one university network</h1>
+              <SupportingText className="mt-6">The premier social network platform made entirely for university students and faculty.</SupportingText>
             </div>
             <Image
               src={
@@ -115,31 +113,31 @@ const About = () => {
 
           {/* Welcome Unibuzz Section */}
           <section className="flex md:flex-row flex-col justify-between md:gap-20 gap-10 items-center w-full max-w-6xl">
-            <Image src={image1} alt="Welcome Unibuzz" width={500} height={100} />
+            <Image src={image1} alt="Welcome Unibuzz" width={507} height={314} />
             <div className="max-w-xl md:text-left text-center">
-              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Welcome to Unibuzz!</h1>
-              <p className="text-base  md:max-w-lg max-w-2xl text-neutral-500 md:mt-4 mt-3">
+              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Welcome to Unibuzz!</h1>
+              <SupportingText className="mt-4">
                 Welcome to Unibuzz, the global university network that caters to your university needs.
-              </p>
+              </SupportingText>
             </div>
           </section>
 
           {/* Search University Section */}
           <section className="flex md:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-w-6xl space-x-4">
             <div className="md:text-left text-center">
-              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">First, search your university.</h1>
-              <p className=" md:max-w-lg max-w-2xl text-neutral-500 mt-4">
+              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">First, search your university.</h1>
+              <SupportingText className="mt-4">
                 Find your university from our database and get ready to join the vibrant community within it!
-              </p>
+              </SupportingText>
             </div>
-            <Image src={image2} alt="Search University" width={500} height={100} />
+            <Image src={image2} alt="Search University" width={549} height={220} />
           </section>
 
           {/* Join University Section */}
           <section className="flex md:flex-row flex-col justify-between md:gap-20 gap-10 items-center max-w-6xl">
-            <Image src={image3} alt="Join University" width={500} height={100} />
+            <Image src={image3} alt="Join University" width={523} height={202} />
             <div className="md:text-left text-center">
-              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Join your university community.</h1>
+              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Join your university community.</h1>
               <p className=" md:max-w-md max-w-2xl text-neutral-500 mt-4">
                 Gain access to the university community to communicate with current, past, and future students!
               </p>
@@ -149,19 +147,19 @@ const About = () => {
           {/* Enjoy Features Section */}
           <section className="flex md:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-w-6xl">
             <div className="md:text-left text-center">
-              <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Lastly, enjoy the features</h1>
+              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Lastly, enjoy the features</h1>
               <p className=" md:max-w-md max-w-2xl text-neutral-500 mt-4">
                 With a wide range of social networking features, messaging, and an AI powered assistant, we will make your university life a blast.
                 Download our mobile app for syncing!
               </p>
             </div>
-            <Image src={image4} alt="Join University" width={500} height={100} />
+            <Image src={image4} alt="Join University" width={466} height={374} />
           </section>
         </main>
 
         {/* UNiversity features cards section */}
         <section className="bg-surface-neutral-100 flex flex-col items-center gap-6 md:pt-24 sm:pt-16 pt-12 px-8 md:pb-32 sm:pb-20 pb-14 mt-10">
-          <h2 className="md:text-4xl sm:text-3xl text-2xl max-w-lg font-bold text-neutral-700 text-center">
+          <h2 className="font-poppins md:text-4xl sm:text-3xl text-2xl max-w-lg font-bold text-neutral-700 text-center">
             Features made for everything university related.
           </h2>
 
@@ -169,7 +167,7 @@ const About = () => {
             {features.map((feature, index) => (
               <div key={index} className="flex flex-col items-start bg-white py-6 px-4 rounded-sm shadow-lg text-left gap-3">
                 <div className="xs:p-3 p-2 md:text-2xl xs:text-xl text-lg bg-[#F3F2FF] text-primary-500 rounded-full">{feature.icon}</div>
-                <h3 className="text-md font-semibold text-neutral-700">{feature.title}</h3>
+                <h3 className="font-poppins text-md font-semibold text-neutral-700">{feature.title}</h3>
                 <p className="text-sm text-neutral-500 mt-1">{feature.description}</p>
               </div>
             ))}
@@ -177,7 +175,7 @@ const About = () => {
         </section>
         {/* TEam section */}
         <section className="md:py-24 py-16 px-8 text-center">
-          <h2 className="md:text-4xl sm:text-3xl text-2xl font-bold text-neutral-700">Meet our team</h2>
+          <h2 className="font-poppins md:text-4xl sm:text-3xl text-2xl font-bold text-neutral-700">Meet our team</h2>
           <p className="text-gray-500 font-medium mt-4">The Unibuzz team is here to help you with your university life</p>
           <div className="flex flex-wrap justify-center md:gap-24 sm:gap-20 gap-10 mt-8">
             {team.map((member, index) => (
@@ -189,7 +187,7 @@ const About = () => {
                   height={150}
                   className="w-[112px] h-[112px] md:w-[150px] md:h-[150px]  md:min-h-[150px] object-cover rounded-full"
                 />
-                <h3 className="mt-4 font-medium text-neutral-700">{member.name}</h3>
+                <h3 className="font-poppins mt-4 font-medium text-neutral-700">{member.name}</h3>
                 <p className="text-sm text-neutral-500">{member.role}</p>
               </div>
             ))}
@@ -205,15 +203,11 @@ const About = () => {
                   <BsDiscord size={25} className="text-[#6744FF]" />
                 </div>
               </div>
-              <h3 className="md:text-md text-sm text-center font-semibold text-neutral-700">Join our Discord Community</h3>
+              <h3 className="font-poppins md:text-md text-sm text-center font-semibold text-neutral-700">Join our Discord Community</h3>
               <p className="sm:text-sm text-xs text-neutral-700  text-center">
                 Keep up with the latest updates, send us your thoughts or personal feedback, and take part in the development process.
               </p>
               <Buttons variant="primary">Join Discord</Buttons>
-
-              {/*<button className="md:mt-4 sm:mt-8 mt-6 bg-[#6744FF] text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700">
-                                
-                            </button>*/}
             </div>
 
             {/* Contact Support Card */}
@@ -223,14 +217,11 @@ const About = () => {
                   <RiMessage2Fill size={25} className="text-[#6744FF]" />
                 </div>
               </div>
-              <h3 className="md:text-md text-sm font-semibold text-neutral-700 text-center">Contact customer support</h3>
+              <h3 className="font-poppins md:text-md text-sm font-semibold text-neutral-700 text-center">Contact customer support</h3>
               <p className="sm:text-sm text-xs text-neutral-700  text-center">
                 Do you have any issues while using Unibuzz? Contact us through customer support and we will get back to you asap.
               </p>
               <Buttons variant="primary">Contact Support</Buttons>
-              {/*<button className="md:mt-4 sm:mt-8 mt-6 bg-[#6744FF] text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700">
-                                
-                            </button>*/}
             </div>
           </div>
         </section>

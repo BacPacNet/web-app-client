@@ -29,12 +29,12 @@ const RegisterSIdebar = ({ step, subStep, onPrev }: props) => {
       <div className="flex flex-col w-10/12 gap-8">
         <div>
           <Image src={unibuzzLogo} alt="BACPAC LOGO" width={119} height={27} className="h-full cursor-pointer" />
-          {step !== 0 && (
+          {/*{step !== 0 && (
             <div onClick={onPrev} className="  text-neutral-600  flex items-center rounded-full text-start cursor-pointer">
               <IoIosArrowBack />
               back
             </div>
-          )}
+          )}*/}
         </div>
         <div>
           <h4 className="text-neutral-900 font-semibold text-[28px]">{StepHeaders[stepIndex].header}</h4>

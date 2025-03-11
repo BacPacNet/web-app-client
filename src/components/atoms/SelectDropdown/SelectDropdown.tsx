@@ -119,7 +119,7 @@ const SelectDropdown = ({
           <motion.div
             className={`flex flex-col custom-scrollbar ${
               !showIcon ? 'gap-2 w-full p-2' : 'gap-1 p-1'
-            } absolute left-0 top-full mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-52 overflow-y-auto`}
+            } absolute left-0 top-full mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-52 max-h-52 overflow-y-auto`}
             //{...motionStyle}
           >
             {search && (
@@ -136,9 +136,7 @@ const SelectDropdown = ({
                 const IconComponent = icons[key % icons.length]
                 return (
                   <div
-                    className={`${
-                      key === 0 ? '' : 'border-t'
-                    } flex gap-2 items-center border-neutral-300 text-2xs text-neutral-900 p-1 cursor-pointer hover:bg-gray-200`}
+                    className={`border-b flex gap-2 items-center border-neutral-300 text-2xs text-neutral-900 pb-2 px-1 cursor-pointer hover:bg-gray-200`}
                     onClick={() => handleSelect(item)}
                     key={key}
                   >

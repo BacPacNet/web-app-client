@@ -77,37 +77,39 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   return (
     <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-6 items-center ">
       <div className="text-center px-3">
-        <h1 className={` text-[28px] font-bold text-neutral-900 font-poppins`}>University Verification</h1>
+        <h1 className={` text-md font-bold text-neutral-900 font-poppins`}>University Verification</h1>
         <SupportingText>Do you have a email provided by your university?</SupportingText>
       </div>
       <div>
         <div className="flex gap-2">
           <Image src={blueTick} width={24} height={24} alt="tick" />
 
-          <p className="text-sm text-neutral-600 text-center">Can join private groups in university community</p>
+          <p className="text-xs text-neutral-500 text-center">Can join private groups in university community</p>
         </div>
         <div className="flex gap-2">
           <Image src={blueTick} width={24} height={24} alt="tick" />
 
-          <p className="text-sm text-neutral-600 text-center">Can join more than 1 university community</p>
+          <p className="text-xs text-neutral-500 text-center">Can join more than 1 university community</p>
         </div>
         <div className="flex gap-2">
           <Image src={blueTick} width={24} height={24} alt="tick" />
 
-          <p className="text-sm text-neutral-600 text-center">Can create groups in university community </p>
+          <p className="text-xs text-neutral-500 text-center">Can create groups in university community </p>
         </div>
       </div>
       <div className="flex gap-2 items-center justify-start w-[370px] sm:w-96 sm:ps-4  ps-2">
-        <Image
-          objectFit="cover"
-          objectPosition="center"
-          alt="logo"
-          width={20}
-          height={20}
-          src={universityLogoPlaceholder}
-          className="object-cover object-top"
-        />
-        {univeristyName}
+        <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg">
+          <Image
+            objectFit="cover"
+            objectPosition="center"
+            alt="logo"
+            width={22}
+            height={22}
+            src={universityLogoPlaceholder}
+            className="object-cover object-top"
+          />
+        </div>
+        <p className="font-poppins font-semibold">{univeristyName}</p>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-5 ">
         {all?.status == 'Applicant' && (

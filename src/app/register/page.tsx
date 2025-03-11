@@ -59,7 +59,7 @@ const Register = () => {
   }
 
   return (
-    <div className="flex h-screen bg-white flex-col lg:flex-row justify-center">
+    <div className="flex h-screen bg-white flex-col lg:flex-row lg:py-0 py-8">
       {loading ? (
         <Loading />
       ) : (
