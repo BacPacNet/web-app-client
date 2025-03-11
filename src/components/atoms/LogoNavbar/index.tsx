@@ -30,14 +30,14 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/university']
+const nonPaddingUrls = ['/university', '/about']
 const nonHeaderUrls = ['/login', '/register']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
-  const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path)) || pathname === '/'
+  const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
 
   const { userProfileData, userData } = useUniStore()
 

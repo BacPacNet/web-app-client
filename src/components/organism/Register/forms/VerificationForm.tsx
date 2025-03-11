@@ -71,13 +71,10 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
         <Title>Verification</Title>
         <SupportingText>Verify your login credentials.</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
-        <div className="relative w-full flex flex-col gap-2">
-          <label htmlFor="Email Address" className="font-medium text-neutral-900">
-            Login Email
-          </label>
-
+      <div className="w-10/12 xl:w-9/12 flex flex-col gap-8 ">
+        <div className="relative w-full flex flex-col gap-4">
           <InputBox
+            label="Login Email"
             placeholder="Email Address"
             type="email"
             value={email}

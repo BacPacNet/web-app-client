@@ -95,7 +95,7 @@ const SelectDropdown = ({
           err ? 'border-red-400' : 'border-neutral-200'
         }  h-10 flex justify-between items-center px-2 py-2 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-sm`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-xs`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
@@ -120,7 +120,7 @@ const SelectDropdown = ({
             className={`flex flex-col custom-scrollbar ${
               !showIcon ? 'gap-2 w-full p-2' : 'gap-1 p-1'
             } absolute left-0 top-full mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-52 overflow-y-auto`}
-            {...motionStyle}
+            //{...motionStyle}
           >
             {search && (
               <input
