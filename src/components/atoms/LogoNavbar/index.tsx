@@ -25,6 +25,7 @@ import { IoMenu } from 'react-icons/io5'
 import { RxCross2 } from 'react-icons/rx'
 import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 import { useLogout } from '@/hooks/useLogOut'
+import useDeviceType from '@/hooks/useDeviceType'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -36,6 +37,7 @@ const nonHeaderUrls = ['/login', '/register']
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
+  const { isDesktop } = useDeviceType()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
 
@@ -179,7 +181,22 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowLeftNavbar(false)
   }
 
-  if (shouldHeaderRemove) return null
+  if (shouldHeaderRemove && pathname.includes('/login')) {
+    return null
+  }
+
+  if (shouldHeaderRemove)
+    return (
+      <div>
+        {!isDesktop ? (
+          <div className="w-full h-[40px] sm:h-[68px] flex items-center px-8">
+            <Link className="flex gap-4 center-v" href="/">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+            </Link>
+          </div>
+        ) : null}
+      </div>
+    )
 
   return (
     <>

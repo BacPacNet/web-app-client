@@ -21,7 +21,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   } = useFormContext()
 
   type DegreeKeys = keyof typeof degreeAndMajors
-  const currDegree: DegreeKeys = watch('degree')
+  const currDegree: DegreeKeys = watch('year')
   const currMa: DegreeKeys = watch('major')
   const userType = getValues('userType')
   const [currMajor, setCurrMajor] = useState<any>([])
@@ -91,7 +91,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
 
         <div className="w-full flex flex-col relative">
           <Controller
-            name="degree"
+            name="year"
             control={control}
             rules={{ required: 'Degree is required!' }}
             render={({ field }) => (
@@ -132,6 +132,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
           />
           {ProfileFormErrors.major && <InputWarningText>{ProfileFormErrors?.major?.message?.toString()}</InputWarningText>}
         </div>
+        <p className="text-neutral-500 text-xs">If your major is not listed, choose the one that is closest to your current major.</p>
       </div>
       {/*<div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>

@@ -40,13 +40,6 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
         <SupportingText>Enter your faculty information for networking</SupportingText>
       </div>
       <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
-        <div
-          className={`
-          border-neutral-200
-        flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
-        >
-          {userType}
-        </div>
         <div className="w-full flex flex-col relative">
           <Controller
             name="universityName"
