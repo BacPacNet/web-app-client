@@ -44,6 +44,9 @@ module.exports = {
                 'gradient-conic':
                     'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
             },
+            width: {
+                'custom-width': '1058px',
+            },
             screens: {
                 'xs': '320px',   // Custom extra small screen
                 'sm': '480px',   // Max Mobile Scren
@@ -110,6 +113,9 @@ module.exports = {
                     '@media (max-width: 480px)': {
                         height: 'calc(100vh - 80px)', // Adjust this value as needed for mobile
                     },
+                },
+                '.max-width-allowed': {
+                    maxWidth: "1058px"
                 },
             });
         },
