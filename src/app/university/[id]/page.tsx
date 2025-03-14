@@ -97,7 +97,7 @@ export default function UniversityProfile() {
 
   return (
     <div className="flex justify-center">
-      <div className=" p-4 flex flex-col gap-16 lg:gap-[120px] max-sm:px-4 overflow-x-hidden max-width-allowed ">
+      <div className=" py-4 flex flex-col gap-16 lg:gap-[120px] px-4 lg:px-0 overflow-x-hidden max-width-allowed ">
         <div className="flex justify-between flex-col-reverse lg:flex-row gap-8 md:gap-16 lg:gap-[67px]">
           <div className="flex flex-col  gap-4 md:gap-8 flex-1 max-h-[290px]">
             <div className="flex items-center lg:items-start gap-8 pb-4">

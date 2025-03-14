@@ -88,10 +88,10 @@ const About = () => {
   const { isMobile, isTablet, isDesktop } = useDeviceType()
   return (
     <>
-      <div className="md:px-6 sm:px-8 px-4 md:pt-32 pt-16 ">
+      <div className=" md:pt-32 pt-16 ">
         <main className="flex flex-col items-center justify-center md:gap-28 gap-16">
           {/* JOin UNiversity Section */}
-          <section className="flex md:flex-row flex-col justify-between items-center gap-20 w-full max-w-6xl">
+          <section className="lg:px-0 sm:px-8 px-4 flex md:flex-row flex-col justify-between items-center gap-20 w-full max-width-allowed">
             <div className="md:max-w-xl md:text-left text-center">
               <h3 className=" text-primary-500 font-semibold uppercase font-poppins">Join Your University Community</h3>
               <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3 font-poppins">All-in-one university network</h1>
@@ -112,9 +112,9 @@ const About = () => {
           </section>
 
           {/* Welcome Unibuzz Section */}
-          <section className="flex md:flex-row flex-col justify-between md:gap-20 gap-10 items-center w-full max-w-6xl">
+          <section className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center w-full max-width-allowed">
             <Image src={image1} alt="Welcome Unibuzz" width={507} height={314} />
-            <div className="max-w-xl md:text-left text-center">
+            <div className="max-w-xl lg:text-left text-center">
               <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Welcome to Unibuzz!</h1>
               <SupportingText className="mt-4">
                 Welcome to Unibuzz, the global university network that caters to your university needs.
@@ -123,8 +123,8 @@ const About = () => {
           </section>
 
           {/* Search University Section */}
-          <section className="flex md:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-w-6xl space-x-4">
-            <div className="md:text-left text-center">
+          <section className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-width-allowed space-x-4">
+            <div className="lg:text-left text-center">
               <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">First, search your university.</h1>
               <SupportingText className="mt-4">
                 Find your university from our database and get ready to join the vibrant community within it!
@@ -134,9 +134,9 @@ const About = () => {
           </section>
 
           {/* Join University Section */}
-          <section className="flex md:flex-row flex-col justify-between md:gap-20 gap-10 items-center max-w-6xl">
+          <section className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center max-width-allowed">
             <Image src={image3} alt="Join University" width={523} height={202} />
-            <div className="md:text-left text-center">
+            <div className="lg:text-left text-center">
               <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Join your university community.</h1>
               <p className=" md:max-w-md max-w-2xl text-neutral-500 mt-4">
                 Gain access to the university community to communicate with current, past, and future students!
@@ -145,8 +145,8 @@ const About = () => {
           </section>
 
           {/* Enjoy Features Section */}
-          <section className="flex md:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-w-6xl">
-            <div className="md:text-left text-center">
+          <section className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-width-allowed">
+            <div className="lg:text-left text-center">
               <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Lastly, enjoy the features</h1>
               <p className=" md:max-w-md max-w-2xl text-neutral-500 mt-4">
                 With a wide range of social networking features, messaging, and an AI powered assistant, we will make your university life a blast.
@@ -163,7 +163,7 @@ const About = () => {
             Features made for everything university related.
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:mt-8 sm:mt-6 mt-4 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:mt-8 sm:mt-6 mt-4 max-w-5xl my-auto">
             {features.map((feature, index) => (
               <div key={index} className="flex flex-col items-start bg-white py-6 px-4 rounded-sm shadow-lg text-left gap-3">
                 <div className="xs:p-3 p-2 md:text-2xl xs:text-xl text-lg bg-[#F3F2FF] text-primary-500 rounded-full">{feature.icon}</div>
@@ -174,7 +174,7 @@ const About = () => {
           </div>
         </section>
         {/* TEam section */}
-        <section className="md:py-24 py-16 px-8 text-center">
+        <section className="md:py-24 py-16  text-center max-width-allowed mx-auto">
           <h2 className="font-poppins md:text-4xl sm:text-3xl text-2xl font-bold text-neutral-700">Meet our team</h2>
           <p className="text-gray-500 font-medium mt-4">The Unibuzz team is here to help you with your university life</p>
           <div className="flex flex-wrap justify-center md:gap-24 sm:gap-20 gap-10 mt-8">
@@ -183,9 +183,9 @@ const About = () => {
                 <Image
                   src={member.image}
                   alt={member.name}
-                  width={150}
-                  height={150}
-                  className="w-[112px] h-[112px] md:w-[150px] md:h-[150px]  md:min-h-[150px] object-cover rounded-full"
+                  width={112}
+                  height={112}
+                  className="w-[112px] h-[112px] md:w-[112px] md:h-[112px]  md:min-h-[112px] object-cover rounded-full"
                 />
                 <h3 className="font-poppins mt-4 font-medium text-neutral-700">{member.name}</h3>
                 <p className="text-sm text-neutral-500">{member.role}</p>
@@ -195,7 +195,7 @@ const About = () => {
         </section>
         {/* Bottom contact cards */}
         <section className="md:py-24 py-10 md:px-8 bg-white">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-10">
+          <div className="max-width-allowed mx-auto grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-10">
             {/* Discord Community Card */}
             <div className="bg-[#F9FAFB] py-10 md:px-16 sm:px-10 px-6 rounded-sm items-center flex flex-col gap-4">
               <div className="flex justify-center">

@@ -201,11 +201,11 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   return (
     <>
       <div className="w-full h-[40px] sm:h-[68px] ">
-        <div className="fixed w-full top-0 left-0 z-50">
+        <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200">
           <div
             className={`${
-              shouldPadding ? 'px-4 lg:px-28' : 'px-4'
-            } w-ful w-full h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white fixed top-0 border-b-[1px] border-neutral-200`}
+              shouldPadding ? 'px-4 lg:px-0' : 'px-4'
+            } max-width-allowed relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
               <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">

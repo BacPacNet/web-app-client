@@ -35,13 +35,17 @@ const DiscoverContainer = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
-    <div className="flex justify-center">
-      <div className={`max-width-allowed h-with-navbar flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'}   justify-center gap-4 pt-10`}>
-        {isTablet || isMobile ? <DiscoverFilterMobileComponent /> : <DiscoverFilterComponent setQuery={setQuery} />}
+    <div className="flex justify-center w-full">
+      <div
+        className={`max-width-allowed  lg:h-with-navbar flex ${
+          isTablet || isMobile ? 'flex-col' : 'flex-row'
+        }   justify-between gap-[53px] lg:gap-20 pt-10`}
+      >
+        {isTablet || isMobile ? <DiscoverFilterMobileComponent setQuery={setQuery} /> : <DiscoverFilterComponent setQuery={setQuery} />}
 
         <div
           ref={containerRef}
-          className={`grid ${isTablet || isMobile ? 'grid-cols-1 place-items-center' : 'grid-cols-2'}  gap-8 overflow-y-auto custom-scrollbar`}
+          className={`grid ${isTablet || isMobile ? 'grid-cols-1 place-items-center' : 'lg:grid-cols-2'}  gap-8 overflow-y-auto custom-scrollbar`}
         >
           {isLoading ? (
             <>
@@ -52,7 +56,7 @@ const DiscoverContainer = () => {
               <DiscoverUniversityCardSkeleton />
             </>
           ) : !isLoading && !universities.length ? (
-            <div className="w-80 text-center font-bold text-4xl mt-10">No Result</div>
+            <div className="w-80 text-center font-bold text-4xl  font-poppins h-32">No Result Found</div>
           ) : (
             universities?.map((item) => <DiscoverUniversityCard key={item._id} data={item} />)
           )}
