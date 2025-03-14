@@ -32,7 +32,7 @@ interface Props {
 }
 
 const nonPaddingUrls = ['/university', '/about']
-const nonHeaderUrls = ['/login', '/register']
+const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
@@ -181,7 +181,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowLeftNavbar(false)
   }
 
-  if (shouldHeaderRemove && pathname.includes('/login')) {
+  if (shouldHeaderRemove && (pathname.includes('/login') || pathname.includes('/forget-password'))) {
     return null
   }
 

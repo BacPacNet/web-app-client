@@ -265,7 +265,13 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Faculty) {
       return <ProfileFacultyForm handlePrev={() => handlePrev()} />
     } else if (step === 2 && subStep === 0) {
-      return <VerificationForm isVerificationSuccess={userLoginEmailVerificationSuccess} isPending={userLoginEmailVerificationIsPending} />
+      return (
+        <VerificationForm
+          handlePrev={() => handlePrev()}
+          isVerificationSuccess={userLoginEmailVerificationSuccess}
+          isPending={userLoginEmailVerificationIsPending}
+        />
+      )
     } else if (step === 2 && subStep === 1) {
       return (
         <UniversityVerificationForm
@@ -275,9 +281,11 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
           isPending={UniversityEmailVerificationIsPending}
         />
       )
-    } else if (step === 3) {
-      return <ClaimBenefitForm isPending={registerIsPending} />
-    } else if (step === 4) {
+    }
+    //else if (step === 3) {
+    //  return <ClaimBenefitForm isPending={registerIsPending} />
+    //}
+    else if (step === 3) {
       return <FinalLoginForm email={registerData?.email || ''} />
     }
   }

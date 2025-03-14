@@ -37,23 +37,17 @@ const Footer: React.FC = () => {
     window.open(url, '_blank')
   }
   return (
-    <div className="w-[90%] mx-auto relative flex flex-col center-v py-2 lg:pt-8 mt-20">
-      <div className="w-full text-gray-dark text-sm lg:text-lg">
-        {/*<div className="flex justify-between md:justify-start gap-2 md:gap-16 text-sm">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms and Conditions</a>
-          <a href="#">Contact Us</a>
-        </div>*/}
-        <div className="flex flex-col-reverse md:flex-row items-center justify-center md:justify-between my-4 gap-4 text-sm">
+    <div className="w-full mx-auto relative flex flex-col center-v py-2 lg:py-8 mt-20 bg-surface-primary-50">
+      <div className="w-custom-width text-gray-dark text-sm lg:text-lg">
+        <div className="w-full flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between my-4 gap-4 text-sm">
           <div className="flex gap-4 items-start">
-            <Image width={84} height={21} src={unibuzzLogo} alt="logo" />
             <p className="text-neutral-500 text-xs font-normal">Copyright © 2024, Unibuzz Networks</p>
           </div>
-          <div className="flex gap-4 text-neutral-500 text-xs font-normal">
+          <div className="flex lg:flex-row flex-col items-center justify-center gap-4 text-neutral-500 text-xs font-normal">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms and Conditions</a>
             <a href="#">Contact Us</a>
-            <a href="#">Business Service</a>
+            {/*<a href="#">Business Service</a>*/}
             {/*<div className="icons instagram center" onClick={() => handleRedirect(1)}>
               <Image src={facebook} className="icon" alt="facebook" />
             </div>

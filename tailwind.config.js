@@ -73,6 +73,7 @@ module.exports = {
                 'border': '#D4D4D4',
                 'shade-button-border': '#E9E8FF',
                 'surface-primary-50': '#F3F2FF',
+                'surface-neutral-50': '#F9FAFB',
                 'surface-neutral-100': '#F3F4F6',
                 'warning-500': '#F59E0B',
                 'success-500': "#22C55E",
