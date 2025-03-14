@@ -32,7 +32,7 @@ const LoginBox = () => {
   const onSubmit = (data: LoginForm) => login(data)
 
   return (
-    <div className="flex flex-col w-11/12 sm:w-[392px] mx-auto">
+    <div className="flex flex-col sm:w-[475px] mx-auto">
       <div className="flex flex-col gap-8 p-8 rounded-lg bg-white shadow-lg">
         <img className="w-[119px] h-[27px]" src={logo.src} alt="logo" />
         <Title>Login to your account</Title>
@@ -67,7 +67,7 @@ const LoginBox = () => {
             <Button disabled={isPending} variant="primary">
               {isPending ? <Spinner /> : 'Log in'}
             </Button>
-            <Button disabled={isPending} variant="border">
+            <Button type="button" onClick={() => router.push('/forget-password')} disabled={isPending} variant="border">
               Forgot Password
             </Button>
             <p className="mt-4 mx-auto text-primary-500 font-normal cursor-pointer" onClick={() => router.push('/register')}>

@@ -3,7 +3,6 @@ import { OTPInput } from 'input-otp'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
-// import OTPInput from '@/components/atoms/OTP-Input/OTP_Input'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
 import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
@@ -11,13 +10,16 @@ import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
+import { MdOutlineArrowBack } from 'react-icons/md'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 interface props {
   isVerificationSuccess: boolean
   isPending: boolean
+  handlePrev: () => void
 }
 
-const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
+const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const {
@@ -45,8 +47,9 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
     clearErrors('email')
     const data = { email }
 
-    generateLoginEmailOTP(data)
+    showCustomSuccessToast('OTP sent successfully')
 
+    generateLoginEmailOTP(data)
     handleLoginEmailSendCodeCount()
   }
 
@@ -140,6 +143,9 @@ const VerificationForm = ({ isVerificationSuccess, isPending }: props) => {
         <Button disabled={isPending} variant="primary">
           {' '}
           {isPending ? <Spinner /> : 'Confirm'}
+        </Button>
+        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+          Review Account
         </Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}
       </div>
