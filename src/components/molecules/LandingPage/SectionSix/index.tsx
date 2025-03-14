@@ -1,9 +1,10 @@
 import Button from '@/components/atoms/Buttons'
+import Link from 'next/link'
 import React from 'react'
 
 export default function SectionSix() {
   return (
-    <div className="flex flex-col gap-3 text-center">
+    <div className="flex flex-col gap-3 text-center  px-4 sm:px-24 lg:px-0">
       <div>
         <p className="text-primary-500 text-xs lg:text-sm">BECOME A PART OF YOUR UNIVERSITY</p>
       </div>
@@ -18,8 +19,12 @@ export default function SectionSix() {
         </p>
       </div>
       <div className="flex gap-4 justify-center">
-        <Button>Get Started</Button>
-        <Button variant="shade">Get Started</Button>
+        <Link href="/register">
+          <Button>Sign Up</Button>
+        </Link>
+        <Link href="/about">
+          <Button variant="shade">Learn More</Button>
+        </Link>
       </div>
     </div>
   )

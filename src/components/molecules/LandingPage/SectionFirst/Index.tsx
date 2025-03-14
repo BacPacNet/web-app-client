@@ -3,21 +3,17 @@ import Image from 'next/image'
 import React from 'react'
 import UniversitySearchBox from '../../UniversitySearchBox'
 import bannerImage from '@assets/landing-mobile.svg'
+import SupportingText from '@/components/atoms/SupportingText'
 
 export default function SectionFirst() {
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center justify-between mb-10">
-      <div
-        //  initial="hidden"
-        //  animate="visible"
-        //  variants={contentVariants}
-        className="flex flex-col text-center lg:text-left justify-start h-full lg:w-1/2"
-      >
-        <p className="text-primary-500 text-xs lg:text-sm mb-4">YOU&apos;RE ALMOST THERE</p>
+      <div className="flex flex-col text-center lg:text-left justify-start h-full lg:w-1/2">
+        <p className="text-primary-500 font-semibold text-sm mb-3">YOU&apos;RE ALMOST THERE</p>
         <Title className="mb-4">Search your university!</Title>
-        <p className="text-neutral-600 text-xs lg:text-sm mb-5">
+        <SupportingText>
           University not listed? Send us feedback and we will add your university to the database, along with extra perks for you
-        </p>
+        </SupportingText>
         <UniversitySearchBox />
       </div>
       <div
