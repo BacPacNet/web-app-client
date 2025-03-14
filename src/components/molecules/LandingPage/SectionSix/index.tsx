@@ -23,7 +23,7 @@ export default function SectionSix() {
           <Button>Sign Up</Button>
         </Link>
         <Link href="/about">
-          <Button variant="shade">Leran More</Button>
+          <Button variant="shade">Learn More</Button>
         </Link>
       </div>
     </div>
