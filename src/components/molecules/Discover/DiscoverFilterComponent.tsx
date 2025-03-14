@@ -43,7 +43,7 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
               {...register('Search', {})}
             />
           </div>
-          <div className="w-full flex flex-col">
+          {/* <div className="w-full flex flex-col">
             <Controller
               name="region"
               control={control}
@@ -51,7 +51,7 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
                 <SelectDropdown options={['a', 'b']} value={field.value} onChange={field.onChange} placeholder="Region" icon={'single'} err={false} />
               )}
             />
-          </div>
+          </div> */}
           <div className="w-full flex flex-col">
             <Controller
               name="country"
