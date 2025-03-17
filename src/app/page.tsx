@@ -18,7 +18,6 @@ export default function LandingPage() {
         <SectionFive />
         <SectionSix />
       </div>
-      <Footer />
     </div>
   )
 }

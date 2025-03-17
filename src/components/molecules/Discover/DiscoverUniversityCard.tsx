@@ -5,22 +5,23 @@ import universityPlaceholder from '@assets/university_placeholder.jpg'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import { useRouter } from 'next/navigation'
 import { truncateStringTo } from '@/lib/utils'
+import { UniversityInfo } from '@/types/University'
 
 type Props = {
   data: {
-    images: string[]
-    logos: string[]
+    campus: string
+    logo: string
     name: string
-    pathUrl: string
+    pathUrl?: string
   }
 }
-const DiscoverUniversityCard = ({ data }: Props) => {
-  const [imageSrc, setImageSrc] = useState(data?.images[0] || universityPlaceholder)
-  const [logoSrc, setLogoSrc] = useState(data?.logos[0] || universityLogoPlaceholder)
+const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
+  const [imageSrc, setImageSrc] = useState(data?.campus || universityPlaceholder)
+  const [logoSrc, setLogoSrc] = useState(data?.logo || universityLogoPlaceholder)
 
   const router = useRouter()
   return (
-    <div onClick={() => router.push(`/university/${data.pathUrl}`)} className="w-[330px]    relative rounded-lg cursor-pointer">
+    <div onClick={() => router.push(`/discover/${encodeURIComponent(data.name)}`)} className="w-[330px]    relative rounded-lg cursor-pointer">
       <Image
         src={imageSrc}
         width={330}
