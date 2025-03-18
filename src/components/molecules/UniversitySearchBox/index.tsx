@@ -41,7 +41,7 @@ export default function UniversitySearchBox() {
               <>
                 {universities.result.map((university: any, index: number) => (
                   <div key={university?.id} className=" bg-white hover:bg-surface-primary-50 py-1">
-                    <CollegeResult university={university} />
+                    {/*<CollegeResult university={university} />*/}
                   </div>
                 ))}
               </>

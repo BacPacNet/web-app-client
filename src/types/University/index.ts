@@ -1,31 +1,22 @@
 export type UniversityInfo = {
-  collegeBoardInfo: {
-    name: string
-    Location: string
-    Phone: string | null
-    Website: string | null
-  }
-  topUniInfo: {
-    about: string
-  }
   _id: string
   name: string
+  address: string
+  city: string
+  email: string
+  long_description: string
+  office_hours: string
+  phone: string
+  ranking: string
+  short_overview: string
+  total_students: string
+  tuitionFee: string
+  campus: string
   country: string
-  logos: string[]
-  images: string[]
-  about: string
-  isCommunityCreated: boolean
-  wikiInfoBox: {
-    Motto: string
-    Type: string
-    Established: string
-    Affiliation: string
-    President: string
-    Location: string
-    Campus: string
-    Colours: string
-    Website: string
-  }
-  pathUrl: string
+  country_code: string
+  domains: string[]
+  logo: string
+  state_province?: string | null
+  web_pages: string[]
   __v: number
 }

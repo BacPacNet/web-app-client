@@ -7,7 +7,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { MdEmail } from 'react-icons/md'
 import React from 'react'
 import { FaPhoneAlt, FaUsers } from 'react-icons/fa'
-import { MdFax } from 'react-icons/md'
 import { IoIosLink } from 'react-icons/io'
 import { PiBuildingsFill } from 'react-icons/pi'
 import { BsClockFill } from 'react-icons/bs'
@@ -45,17 +44,17 @@ export default function UniversityProfile() {
     {
       icon: MdEmail,
       title: 'Email',
-      info: university?.wikiInfoBox?.email,
+      info: university?.email,
     },
     {
       icon: FaPhoneAlt,
       title: 'Phone',
-      info: university?.collegeBoardInfo?.['Phone number'],
+      info: university?.phone,
     },
     {
       icon: PiBuildingsFill,
       title: 'Address',
-      info: university?.collegeBoardInfo?.Location,
+      info: university?.address,
     },
   ]
 
@@ -63,17 +62,18 @@ export default function UniversityProfile() {
     {
       icon: IoIosLink,
       title: 'Link',
-      info: university?.collegeBoardInfo?.website,
+      info: university?.web_pages,
     },
     {
       icon: FaUsers,
       title: 'Total Students',
-      info: university?.topUniInfo?.studentsAndFacultiesData?.Total_students?.Total_students || university?.wikiInfoBox?.Students,
+      info: university?.total_students,
     },
     {
       icon: BsClockFill,
       title: 'Office Hours',
-      info: university?.wikiInfoBox?.['Office Hours'] || 'Monday to Friday 9:00 am - 12:00 p.m. and 1:00 p.m - 5:00 p.m',
+      info: university?.office_hours,
+      //  university?.wikiInfoBox?.['Office Hours'] || 'Monday to Friday 9:00 am - 12:00 p.m. and 1:00 p.m - 5:00 p.m',
     },
   ]
 
@@ -97,18 +97,18 @@ export default function UniversityProfile() {
 
   return (
     <div className="flex justify-center">
-      <div className=" py-4 flex flex-col gap-16 lg:gap-[120px] px-4 lg:px-0 overflow-x-hidden max-width-allowed ">
+      <div className="py-16 flex flex-col gap-16 lg:gap-24 px-4 lg:px-0 overflow-x-hidden max-width-allowed">
         <div className="flex justify-between flex-col-reverse lg:flex-row gap-8 md:gap-16 lg:gap-[67px]">
           <div className="flex flex-col  gap-4 md:gap-8 flex-1 max-h-[290px]">
             <div className="flex items-center lg:items-start gap-8 pb-4">
-              <div className=" flex justify-start items-start  drop-shadow-lg rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
-                <Image fill src={university?.logos?.[0] || universityLogoPlaceholder} alt="logo" className=" object-contain" />
+              <div className="flex justify-start items-start  drop-shadow-lg rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
+                <Image fill src={university?.logo || universityLogoPlaceholder} alt="logo" className="object-contain" />
               </div>
 
-              <p className="text-neutral-900 md:text-[32px] text-md font-extrabold font-poppins">{university?.name}</p>
+              <p className="text-neutral-900 md:text-lg-small text-md font-extrabold font-poppins">{university?.name}</p>
             </div>
-            <SupportingText className={` ${university?.name?.length > 36 ? 'line-clamp-2' : 'line-clamp-4'} `}>
-              {university?.topUniInfo?.about || 'Not Available'}
+            <SupportingText className={`${university?.name?.length > 36 ? 'line-clamp-2' : ''} `}>
+              {university?.short_overview || 'Not Available'}
             </SupportingText>
             {university?.isCommunityCreated ? (
               <Buttons className="w-max" onClick={() => handleClick(university?.name)}>
@@ -119,21 +119,16 @@ export default function UniversityProfile() {
             )}
           </div>
           <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px]">
-            <Image fill className="rounded-lg  object-cover   " src={university?.images[0] || universityPlaceholder} alt="university_image" />
+            <Image fill className="rounded-lg  object-cover   " src={university?.campus || universityPlaceholder} alt="university_image" />
           </div>
         </div>
         {/* //overview  */}
         <div className="flex flex-col gap-4">
-          <p className="text-neutral-900 text-base font-extrabold font-poppins text-md">Overview</p>
+          <p className="text-neutral-900 font-extrabold font-poppins text-md md:text-md-big">Overview</p>
           <div className="flex flex-col gap-4">
-            <SupportingText>
-              Loremium University boasts a world-class faculty, many of whom are leaders in their respective fields. The university’s commitment to
-              innovation and research has led to groundbreaking discoveries and advancements, particularly in the realms of biotechnology,
-              environmental science, and digital arts. The state-of-the-art laboratories and creative studios provide students with the resources and
-              inspiration needed to push the boundaries of knowledge and creativity.
-            </SupportingText>
+            <SupportingText>{university?.long_description}</SupportingText>
 
-            <SupportingText>
+            {/*<SupportingText>
               In addition to its scientific prowess, Loremium University is a thriving cultural hub. The university’s School of Arts is renowned for
               its avant-garde approach to art and design, producing graduates who have gone on to achieve international acclaim. Regular exhibitions,
               performances, and lectures by visiting artists and scholars enrich the campus life and foster a dynamic exchange of ideas.
@@ -142,13 +137,13 @@ export default function UniversityProfile() {
               Loremium University is a magnet for students from around the globe, drawn by its stellar reputation and welcoming atmosphere. The
               university’s diverse student body, hailing from over 80 countries, creates a rich tapestry of cultures and perspectives. Dedicated
               support services ensure that international students feel at home, making their transition to life in Loremium seamless and enjoyable.
-            </SupportingText>
+            </SupportingText>*/}
           </div>
         </div>
         {/* //contact  */}
         <div className="flex flex-col gap-4 ">
           <p className="text-neutral-900 text-base font-extrabold font-poppins text-md">Contact Info</p>
-          <div className="flex justify-between gap-[31px]  flex-col md:flex-row max-sm:gap-5">
+          <div className="flex justify-between gap-8  flex-col md:flex-row max-sm:gap-5">
             <div className="bg-neutral-200 p-5 md:w-[474px] w-full h-[300px] rounded-lg flex flex-col gap-8">
               {contactData.map((item, index) => (
                 <UniversityCard key={index} icon={item.icon} title={item.title} info={item.info} />

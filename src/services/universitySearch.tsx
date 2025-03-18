@@ -2,6 +2,7 @@ import useDebounce from '@/hooks/useDebounce'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { ServerResponse } from '@/models/common/api-client'
+import axios from 'axios'
 
 export function useUniversitySearch(searchTerm: string) {
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -49,7 +50,7 @@ type UserMainNotificationsProps = {
   Universities: any
   currentPage: number
   totalPages: number
-  totalNotifications: number
+  totalUniversities: number
 }
 
 export async function getFilteredUniversity(page: number, limit: number, searchQuery: string) {
@@ -57,16 +58,16 @@ export async function getFilteredUniversity(page: number, limit: number, searchQ
   return response
 }
 
-export function useGetFilteredUniversity(limit: number, query: string = '') {
-  return useInfiniteQuery({
-    queryKey: ['university', { query, limit }],
-    queryFn: ({ pageParam = 1 }) => getFilteredUniversity(pageParam, limit, query),
-    getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
-      }
-      return undefined
-    },
-    initialPageParam: 1,
+export function useGetFilteredUniversity(page: number, limit: number, query: string = '') {
+  const state = useQuery({
+    queryKey: ['university', { query, limit, page }],
+    queryFn: () => getFilteredUniversity(page, limit, query),
   })
+
+  let errorMessage = null
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
+  }
+
+  return { ...state, error: errorMessage }
 }
