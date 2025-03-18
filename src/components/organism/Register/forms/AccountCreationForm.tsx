@@ -44,12 +44,12 @@ const AccountCreationForm = ({ isPending }: Props) => {
   }, [password, calculateStrength])
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center flex flex-col gap-2">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-center flex flex-col gap-4">
         <Title>Join Our Community</Title>
         <SupportingText>Enter your credentials to create an account</SupportingText>
       </div>
-      <div className="w-10/12 flex flex-col gap-4 ">
+      <div className="w-full flex flex-col gap-4 ">
         <div className="w-full flex flex-col">
           <InputBox
             label="Email Address"
@@ -59,7 +59,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
               required: true,
               pattern: {
                 value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Invalid email format',
+                message: 'Enter a valid email address.',
               },
             })}
             err={!!registerFormErrors.email}
@@ -82,7 +82,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
           />
           {registerFormErrors.userName && (
             <InputWarningText>
-              {registerFormErrors.userName?.message ? registerFormErrors.userName.message.toString() : 'Please enter your user name!'}
+              {registerFormErrors.userName?.message ? registerFormErrors.userName.message.toString() : 'Please enter your user name.'}
             </InputWarningText>
           )}
         </div>
@@ -95,11 +95,13 @@ const AccountCreationForm = ({ isPending }: Props) => {
               required: true,
               minLength: {
                 value: 8,
-                message: 'Password must have at least 8 characters',
+                message:
+                  'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
               },
               pattern: {
                 value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
-                message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+                message:
+                  'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
               },
             })}
             err={!!registerFormErrors.password}
@@ -107,42 +109,39 @@ const AccountCreationForm = ({ isPending }: Props) => {
           <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.password ? 'top-[15%]' : 'top-[20%]'} `}>
             {/* <PasswordToggleIcon showPassword={showPassword} onClick={(value: any) => setShowPassword(value)} /> */}
           </div>
-          {password?.length ? (
-            <div className="flex w-full gap-1 py-2 ">
-              {[1, 2, 3, 4].map((item) => (
-                <span
-                  key={item}
-                  className={`h-1 w-full  transition-colors ${passwordStrength >= item ? 'bg-green-400' : 'bg-neutral-300'} ${
-                    item == 1 ? 'rounded-l-md' : item == 4 ? 'rounded-r-md' : ''
-                  } `}
-                ></span>
-              ))}
-            </div>
-          ) : (
-            ''
-          )}
+
+          <div className="flex w-full gap-1 py-2 ">
+            {[1, 2, 3, 4].map((item) => (
+              <span
+                key={item}
+                className={`h-1 w-full  transition-colors ${passwordStrength >= item ? 'bg-green-400' : 'bg-neutral-300'} ${
+                  item == 1 ? 'rounded-l-md' : item == 4 ? 'rounded-r-md' : ''
+                } `}
+              ></span>
+            ))}
+          </div>
+
           {registerFormErrors?.password?.message ? (
             <InputWarningText>{registerFormErrors.password.message?.toString()}</InputWarningText>
           ) : (
-            registerFormErrors.password && <InputWarningText>Please enter your password!</InputWarningText>
+            <label className="text-neutral-500 text-xs py-1">Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special (!@#$%^&*).</label>
           )}
-          <label className="text-neutral-500 text-xs py-1">must be at least 8 characters</label>
         </div>
         <div className="relative w-full flex flex-col">
           <InputBox
             label="Confirm password"
             placeholder="***********"
             type={showConfirmPassword ? 'text' : 'password'}
-            {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
+            {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match.' })}
             err={!!registerFormErrors.confirmpassword}
           />
 
           {registerFormErrors.confirmpassword && (
-            <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password!'}</InputWarningText>
+            <InputWarningText>{registerFormErrors.confirmpassword.message?.toString() || 'Please enter your password.'}</InputWarningText>
           )}
         </div>
       </div>
-      <div className="w-10/12 flex flex-col gap-4">
+      <div className="w-full flex flex-col gap-4">
         <Button disabled={isPending} variant="primary">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>

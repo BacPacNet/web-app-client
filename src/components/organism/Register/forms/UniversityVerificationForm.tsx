@@ -12,6 +12,7 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import Spinner from '@/components/atoms/spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import useCookie from '@/hooks/useCookie'
 interface props {
   setStep: (value: number) => void
 
@@ -23,6 +24,7 @@ interface props {
 const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess, isPending }: props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
+  const [_, setCookieValue] = useCookie('register_data')
   const {
     register,
     formState: { errors: UniversityVerificationFormErrors },
@@ -56,7 +58,8 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   const handleNext = () => {
     setStep(3)
     setSubStep(0)
-    localStorage.setItem('registerData', JSON.stringify({ ...all, step: 3, subStep: 0 }))
+    const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
+    setCookieValue(JSON.stringify({ ...all, step: 3, subStep: 0 }), expirationDate)
   }
 
   const handleLoginEmailSendCodeCount = () => {
@@ -75,12 +78,12 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   }, [countdown, isCounting])
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-6 items-center ">
-      <div className="text-center px-3">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-center flex flex-col gap-4">
         <h1 className={` text-md font-bold text-neutral-900 font-poppins`}>University Verification</h1>
         <SupportingText>Do you have a email provided by your university?</SupportingText>
       </div>
-      <div>
+      <div className="flex flex-col items-start justify-start w-full">
         <div className="flex gap-2">
           <Image src={blueTick} width={24} height={24} alt="tick" />
 
@@ -97,7 +100,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           <p className="text-xs text-neutral-500 text-center">Can create groups in university community </p>
         </div>
       </div>
-      <div className="flex gap-2 items-center justify-start w-[370px] sm:w-96 sm:ps-4  ps-2">
+      <div className="flex gap-2 items-center justify-start w-full ">
         <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg">
           <Image
             objectFit="cover"
@@ -111,7 +114,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
         </div>
         <p className="font-poppins font-semibold">{univeristyName}</p>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-5 ">
+      <div className="w-full flex flex-col gap-5 ">
         {all?.status == 'Applicant' && (
           <div className="w-full flex flex-col relative">
             <label htmlFor="Email Address" className="font-medium text-neutral-900">
@@ -205,7 +208,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           )}
         </div>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Button disabled={isPending} variant="shade" onClick={() => handleNext()} type="button" className="h-10">
           Skip University Verification
         </Button>

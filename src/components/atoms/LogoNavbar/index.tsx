@@ -187,14 +187,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
 
   if (shouldHeaderRemove)
     return (
-      <div>
-        {!isDesktop ? (
-          <div className="w-full h-[40px] sm:h-[68px] flex items-center px-8">
-            <Link className="flex gap-4 center-v" href="/">
-              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
-            </Link>
-          </div>
-        ) : null}
+      <div className="w-full h-[40px] sm:h-[68px] flex items-center px-8">
+        <Link className="flex gap-4 center-v" href="/">
+          <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+        </Link>
       </div>
     )
 

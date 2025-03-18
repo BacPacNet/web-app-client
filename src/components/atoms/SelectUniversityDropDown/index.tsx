@@ -49,7 +49,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
 
   return (
     <motion.div ref={dropdownRef} className="relative">
-      <label className="text-xs text-neutral-700 font-medium">{label}</label>
+      <p className="text-xs text-neutral-700 font-medium mb-2">{label}</p>
       <div
         onClick={() => setShow(!show)}
         className={`${

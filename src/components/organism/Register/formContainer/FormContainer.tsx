@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import ProfileStudentForm from '../forms/ProfileStudentForm'
 import ProfileFacultyForm from '../forms/ProfileFacultyForm'
 import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
+import useCookie from '@/hooks/useCookie'
 
 interface Props {
   step: number
@@ -29,6 +30,7 @@ interface Props {
 
 const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handlePrev }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
+  const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const { mutateAsync: handleUserCheck, isPending: handleUserCheckIsPending } = useHandleUserEmailAndUserNameAvailability()
   const {
     mutateAsync: handleUserLoginEmailVerification,
@@ -46,8 +48,10 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const storedData = localStorage.getItem('registerData')
+      const storedData = cookieValue
       if (storedData) {
+        console.log('stored', storedData)
+
         try {
           setRegisterData(JSON.parse(storedData))
         } catch (error) {
@@ -57,7 +61,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         setRegisterData({})
       }
     }
-  }, [])
+  }, [cookieValue])
 
   const methods = useForm<FormDataType>({
     defaultValues: {
@@ -183,7 +187,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
 
     const saveToLocalStorage = () => {
-      localStorage.setItem('registerData', JSON.stringify({ ...data, step: currStep, subStep: currSubStep }))
+      const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
+      setCookieValue(JSON.stringify({ ...data, step: currStep, subStep: currSubStep }), expirationDate)
     }
 
     if (step === 0) {
@@ -199,7 +204,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       const res = await HandleRegister(data)
       if (res?.isRegistered) {
         localStorage.setItem('registeredEmail', data?.email)
-        localStorage.removeItem('registerData')
+        deleteCookie()
         handleNext()
       }
 
@@ -219,8 +224,15 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (step === 2 && subStep === 1) {
       const isAvailable = await userUniversityEmailVerification(data)
       if (isAvailable?.isAvailable) {
-        handleNext()
-        saveToLocalStorage()
+        // handleNext()
+        // saveToLocalStorage()
+        const res = await HandleRegister(data)
+        if (res?.isRegistered) {
+          localStorage.setItem('registeredEmail', data?.email)
+
+          deleteCookie()
+          handleNext()
+        }
       }
       return
     }
@@ -292,7 +304,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
 
   return (
     <FormProvider {...methods}>
-      <form className="flex flex-col items-center justify-center w-2/3 max-lg:w-full" onSubmit={methods.handleSubmit(onSubmit)}>
+      <form className="flex flex-col items-center justify-center w-full" onSubmit={methods.handleSubmit(onSubmit)}>
         {renderStep()}
       </form>
     </FormProvider>

@@ -22,42 +22,53 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
   } = useFormContext()
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center px-3">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-center flex flex-col gap-4">
         <Title>Profile Setup</Title>
         <SupportingText>Enter your profile information for networking. You can add more profile information later!</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
+      <div className="w-full flex flex-col gap-4 ">
         <div className="w-full flex flex-col">
           <InputBox
             label="First Name"
             type="text"
+            placeholder="John"
             {...register('firstName', {
-              required: true,
+              required: 'Please enter your first name.',
+              pattern: {
+                value: /^[A-Za-z\s-]+$/,
+                message: 'First name can only contain letters, spaces, and hyphens.',
+              },
             })}
             err={!!ProfileFormErrors.firstName}
           />
-          {ProfileFormErrors.firstName && <InputWarningText>Please enter your first name!</InputWarningText>}
+          {ProfileFormErrors.firstName && <InputWarningText>{ProfileFormErrors.firstName.message?.toString()}</InputWarningText>}
         </div>
+
         <div className="w-full flex flex-col">
           <InputBox
             label="Last Name"
+            placeholder="Doe"
             type="text"
             {...register('lastName', {
-              required: true,
+              required: 'Please enter your last name.',
+              pattern: {
+                value: /^[A-Za-z\s-]+$/,
+                message: 'Last name can only contain letters, spaces, and hyphens.',
+              },
             })}
             err={!!ProfileFormErrors.lastName}
           />
-          {ProfileFormErrors.lastName && <InputWarningText>Please enter your last name!</InputWarningText>}
+          {ProfileFormErrors.lastName && <InputWarningText>{ProfileFormErrors.lastName.message?.toString()}</InputWarningText>}
         </div>
         <div className="w-full flex flex-col">
           <Controller
             name="birthDate"
             control={control}
             rules={{
-              required: 'Birth Date is required!',
+              required: 'Birth Date is required.',
               validate: (value) => {
-                if (!value) return 'Birth Date is required!'
+                if (!value) return 'Birth Date is required.'
                 const today = new Date()
                 const birthDate = new Date(value)
                 const age = today.getFullYear() - birthDate.getFullYear()
@@ -65,19 +76,27 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 const dayDiff = today.getDate() - birthDate.getDate()
                 const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
-                return adjustedAge >= 14 || 'You must be at least 14 years old'
+                return adjustedAge >= 14 || 'You must be at least 14 years old.'
               },
             }}
-            render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} label="Birthday" err={!!ProfileFormErrors.birthDate} />}
+            render={({ field }) => (
+              <DateSelect
+                placeholder="MM/DD/YYYY"
+                value={field.value}
+                onChange={field.onChange}
+                label="Birthday"
+                err={!!ProfileFormErrors.birthDate}
+              />
+            )}
           />
-          {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}!</InputWarningText>}
+          {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}</InputWarningText>}
         </div>
 
         <div className="w-full flex flex-col relative">
           <Controller
             name="userType"
             control={control}
-            rules={{ required: 'User type is required!' }}
+            rules={{ required: 'User type is required.' }}
             render={({ field }) => (
               <SelectDropdown
                 isStatus={true}
@@ -87,13 +106,14 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 label="Status"
                 icon={'single'}
                 err={!!ProfileFormErrors.userType}
+                placeholder="Select your current role."
               />
             )}
           />
           {ProfileFormErrors.userType && <InputWarningText>{ProfileFormErrors?.userType?.message?.toString()}</InputWarningText>}
         </div>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
         <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account

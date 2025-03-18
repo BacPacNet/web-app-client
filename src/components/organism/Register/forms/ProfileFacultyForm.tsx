@@ -34,12 +34,12 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
   }, [currOccupation, setValue])
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center px-3">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-center flex flex-col gap-4">
         <Title>Faculty Setup</Title>
         <SupportingText>Enter your faculty information for networking</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2 ">
+      <div className="w-full flex flex-col gap-4 ">
         <div className="w-full flex flex-col relative">
           <Controller
             name="universityName"
@@ -53,6 +53,7 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
                   setValue('universityId', selectedUniversity._id)
                 }}
                 placeholder="Select University Name"
+                label="University"
                 icon={'single'}
                 search={true}
                 err={!!ProfileFormErrors.universityName}
@@ -66,13 +67,14 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
           <Controller
             name="occupation"
             control={control}
-            rules={{ required: 'Occupation is required!' }}
+            rules={{ required: 'Occupation is required.' }}
             render={({ field }) => (
               <SelectDropdown
                 options={Object.keys(occupationAndDepartment)}
                 value={field.value}
                 onChange={field.onChange}
                 placeholder="Select a occupation"
+                label="Occupation"
                 icon={'dual'}
                 search={true}
                 err={!!ProfileFormErrors.occupation}
@@ -85,7 +87,7 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
           <Controller
             name="department"
             control={control}
-            rules={{ required: 'Department is required!' }}
+            rules={{ required: 'Department is required.' }}
             disabled={!currDepartment}
             render={({ field }) => (
               <SelectDropdown
@@ -94,6 +96,7 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 value={field.value}
                 search={true}
                 onChange={field.onChange}
+                label="Affiliation/Department"
                 placeholder="Select a department"
                 icon={'single'}
                 err={!!ProfileFormErrors.department}
@@ -101,9 +104,12 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
             )}
           />
           {ProfileFormErrors.department && <InputWarningText>{ProfileFormErrors?.department?.message?.toString()}</InputWarningText>}
+          <p className="text-neutral-500 text-xs mt-2">
+            If your affiliation/department is not listed, choose the one that is closest to your current major.
+          </p>
         </div>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
         <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account
