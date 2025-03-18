@@ -1,13 +1,8 @@
 'use client'
 import './Footer.css'
 
-import Image from 'next/image'
 import React from 'react'
-//import facebook from '@assets/facebook.svg'
-//import insta from '@assets/instagram.svg'
-//import linkedin from '@assets/linkedin.svg'
-//import x from '@assets/X.svg'
-import unibuzzLogo from '@assets/unibuzz_logo.svg'
+import Link from 'next/link'
 
 const Footer: React.FC = () => {
   const handleRedirect = (platform: number) => {
@@ -44,7 +39,7 @@ const Footer: React.FC = () => {
             <p className="text-neutral-500 text-xs font-normal">Copyright © 2024, Unibuzz Networks</p>
           </div>
           <div className="flex lg:flex-row flex-col items-center justify-center gap-4 text-neutral-500 text-xs font-normal">
-            <a href="#">Privacy Policy</a>
+            <Link href="/privacy-policy">Privacy Policy</Link>
             <a href="#">Terms and Conditions</a>
             <a href="#">Contact Us</a>
             {/*<a href="#">Business Service</a>*/}
