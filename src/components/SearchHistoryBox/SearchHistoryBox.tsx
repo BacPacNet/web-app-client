@@ -11,7 +11,7 @@ interface SearchHistoryProps {
 const SearchHistoryBox: React.FC<SearchHistoryProps> = (props) => {
   return (
     <div className="history-box">
-      <Link href={{ pathname: '/college', query: { id: props.info._id } }} className="history-link flex items-center">
+      <Link href={{ pathname: '/discover', query: { id: props.info.name } }} className="history-link flex items-center">
         <div className="history-icon">
           <MdAccessTime className="history-icon " />
         </div>
