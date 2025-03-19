@@ -93,7 +93,7 @@ export default function TermsAndCondition() {
           The Service may contain links to third-party websites, advertisers, services, special offers, or other events or activities that are not
           owned or controlled by Unibuzz Networks. Unibuzz Networks does not endorse or assume any responsibility for any such third-party sites,
           information, materials, products, or services. If you access a third-party website from the Service, you do so at your own risk, and you
-          understand that these Terms and Unibuzz Network's Privacy Policy do not apply to your use of such sites.
+          understand that these Terms and Unibuzz Network&apos;s Privacy Policy do not apply to your use of such sites.
         </p>
       </section>
 
@@ -110,9 +110,9 @@ export default function TermsAndCondition() {
         <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Indemnity</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You agree to defend, indemnify, and hold harmless Unibuzz Networks, its officers, directors, employees, and agents, from and against any
-          claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorneys' fees and costs, arising out of or in
-          any way connected with: (i) your access to or use of the Service; (ii) your violation of any term of these Terms; (iii) your violation of
-          any third-party right, including without limitation any copyright, property, or privacy right; or (iv) any claim that your User Content
+          claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorneys&apos; fees and costs, arising out of
+          or in any way connected with: (i) your access to or use of the Service; (ii) your violation of any term of these Terms; (iii) your violation
+          of any third-party right, including without limitation any copyright, property, or privacy right; or (iv) any claim that your User Content
           caused damage to a third party. This defense and indemnification obligation will survive these Terms and your use of the Service.
         </p>
       </section>
@@ -120,15 +120,16 @@ export default function TermsAndCondition() {
       <section className="mb-16">
         <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Disclaimer of Warranty</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          The Service is provided on an "as is" and "as available" basis. Use of the Service is at your own risk. To the maximum extent permitted by
-          applicable law, the Service is provided without warranties of any kind, whether express or implied, including, but not limited to, implied
-          warranties of merchantability, fitness for a particular purpose, or non-infringement. No advice or information, whether oral or written,
-          obtained by you from Unibuzz Networks or through the Service will create any warranty not expressly stated herein. Without limiting the
-          foregoing, Unibuzz Networks, its subsidiaries, its affiliates, and its licensors do not warrant that the content is accurate, reliable or
-          correct; that the Service will meet your requirements; that the Service will be available at any particular time or location, uninterrupted
-          or secure; that any defects or errors will be corrected; or that the Service is free of viruses or other harmful components. Any content
-          downloaded or otherwise obtained through the use of the Service is downloaded at your own risk and you will be solely responsible for any
-          damage to your computer system or mobile device or loss of data that results from such download or your use of the Service.
+          The Service is provided on an &quot;as is&quot; and &quot;as available&quot; basis. Use of the Service is at your own risk. To the maximum
+          extent permitted by applicable law, the Service is provided without warranties of any kind, whether express or implied, including, but not
+          limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement. No advice or information, whether
+          oral or written, obtained by you from Unibuzz Networks or through the Service will create any warranty not expressly stated herein. Without
+          limiting the foregoing, Unibuzz Networks, its subsidiaries, its affiliates, and its licensors do not warrant that the content is accurate,
+          reliable or correct; that the Service will meet your requirements; that the Service will be available at any particular time or location,
+          uninterrupted or secure; that any defects or errors will be corrected; or that the Service is free of viruses or other harmful components.
+          Any content downloaded or otherwise obtained through the use of the Service is downloaded at your own risk and you will be solely
+          responsible for any damage to your computer system or mobile device or loss of data that results from such download or your use of the
+          Service.
         </p>
       </section>
 
