@@ -31,7 +31,7 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy']
+const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {

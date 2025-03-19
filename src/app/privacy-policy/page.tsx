@@ -2,7 +2,8 @@ import React from 'react'
 
 function PrivacyPolicyPage() {
   return (
-    <main className="flex-grow max-width-allowed mx-auto sm:px-0 px-4 pt-8 pb-4 text-justify">
+    <main className="max-width-allowed mx-auto sm:px-0 px-4 pt-8 pb-4 text-justify">
+      {/*<div className="mx-auto max-w-4xl">*/}
       <h1 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Privacy Policy</h1>
 
       <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Effective Date: August 1, 2024</p>
@@ -113,6 +114,7 @@ function PrivacyPolicyPage() {
           If you have any questions about these Terms, please contact us through our contact form.
         </p>
       </section>
+      {/*</div>*/}
     </main>
   )
 }

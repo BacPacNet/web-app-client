@@ -40,8 +40,9 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex lg:flex-row flex-col items-center justify-center gap-4 text-neutral-500 text-xs font-normal">
             <Link href="/privacy-policy">Privacy Policy</Link>
-            <a href="#">Terms and Conditions</a>
-            <a href="#">Contact Us</a>
+            <Link href="/terms-and-condition">Terms and Conditions</Link>
+            <Link href="/user-guidelines"> Usability Guidelines</Link>
+            <Link href="#">Contact Us</Link>
             {/*<a href="#">Business Service</a>*/}
             {/*<div className="icons instagram center" onClick={() => handleRedirect(1)}>
               <Image src={facebook} className="icon" alt="facebook" />
