@@ -3,7 +3,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import { OTPInput } from 'input-otp'
 import SupportingText from '@/components/atoms/SupportingText'
-import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
+import { useHandleRegister_v2, useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import blueTick from '@/assets/blueBGTick.svg'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -24,7 +24,7 @@ interface props {
 const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess, isPending }: props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
-  const [_, setCookieValue] = useCookie('register_data')
+  const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const {
     register,
     formState: { errors: UniversityVerificationFormErrors },
@@ -34,6 +34,8 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     clearErrors,
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP } = useHandleUniversityEmailVerificationGenerate()
+  const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
+  const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
   const all = getValues()
   const univeristyName = getValues('universityName')
 
@@ -55,11 +57,18 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     generateUniversityEmailOTP(data)
   }
 
-  const handleNext = () => {
-    setStep(3)
-    setSubStep(0)
-    const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
-    setCookieValue(JSON.stringify({ ...all, step: 3, subStep: 0 }), expirationDate)
+  const handleNext = async () => {
+    const data = JSON.parse(cookieValue)
+    const res = await HandleRegister(data)
+    if (res?.isRegistered) {
+      const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+
+      setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+      deleteCookie()
+
+      setStep(4)
+      setSubStep(0)
+    }
   }
 
   const handleLoginEmailSendCodeCount = () => {
@@ -209,7 +218,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Button disabled={isPending} variant="shade" onClick={() => handleNext()} type="button" className="h-10">
+        <Button disabled={isPending} onClick={() => handleNext()} variant="shade" type="button" className="h-10">
           Skip University Verification
         </Button>
 

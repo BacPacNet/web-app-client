@@ -23,7 +23,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
 
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">
-      <div className="text-center flex flex-col gap-4">
+      <div className="text-start flex flex-col gap-2 w-full">
         <Title>Profile Setup</Title>
         <SupportingText>Enter your profile information for networking. You can add more profile information later!</SupportingText>
       </div>

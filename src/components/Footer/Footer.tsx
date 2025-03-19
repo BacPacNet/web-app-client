@@ -8,8 +8,10 @@ import React from 'react'
 //import linkedin from '@assets/linkedin.svg'
 //import x from '@assets/X.svg'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
+import { usePathname } from 'next/navigation'
 
 const Footer: React.FC = () => {
+  const pathname = usePathname()
   const handleRedirect = (platform: number) => {
     let url
     const SocialNetwork = {
@@ -36,9 +38,17 @@ const Footer: React.FC = () => {
     }
     window.open(url, '_blank')
   }
+
+  if (pathname.includes('/login') || pathname.includes('/forget-password') || pathname.includes('/register')) {
+    return null
+  }
+
   return (
-    <div className="w-full mx-auto relative flex flex-col center-v py-2 lg:py-3 mt-20 bg-surface-primary-50">
-      <div className="w-custom-width text-gray-dark text-sm lg:text-lg">
+    <div
+      className={` mt-20
+       w-full mx-auto relative flex flex-col center-v py-2 lg:py-3  bg-surface-primary-50`}
+    >
+      <div className="max-width-allowed w-full text-gray-dark text-sm lg:text-lg">
         <div className="w-full flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between my-4 gap-4 text-sm">
           <div className="flex gap-4 items-start">
             <p className="text-neutral-500 text-xs font-normal">Copyright © 2024, Unibuzz Networks</p>

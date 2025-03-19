@@ -32,9 +32,12 @@ const LoginBox = () => {
   const onSubmit = (data: LoginForm) => login(data)
 
   return (
-    <div className="flex flex-col sm:w-[475px] mx-auto">
-      <div className="flex flex-col gap-8 p-8 rounded-lg bg-white shadow-lg">
-        <img className="w-[119px] h-[27px]" src={logo.src} alt="logo" />
+    <div className="flex flex-col sm:w-[448px] mx-auto">
+      <div className="flex flex-col gap-8 p-12 rounded-lg bg-white shadow-lg">
+        <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer  underline">
+          Back to Home
+        </p>
+        {/* <img className="w-[119px] h-[27px]" src={logo.src} alt="logo" />  */}
         <Title>Login to your account</Title>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-2">

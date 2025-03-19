@@ -31,6 +31,7 @@ interface Props {
 const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handlePrev }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
   const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
+  const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
   const { mutateAsync: handleUserCheck, isPending: handleUserCheckIsPending } = useHandleUserEmailAndUserNameAvailability()
   const {
     mutateAsync: handleUserLoginEmailVerification,
@@ -181,6 +182,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       currSubStep += 1
     } else if (step === 2 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
       currStep = 3
+    } else if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      currSubStep = 1
     } else {
       currStep += 1
       currSubStep = 0
@@ -200,18 +203,51 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       return
     }
 
-    if (step === 3) {
-      const res = await HandleRegister(data)
-      if (res?.isRegistered) {
-        localStorage.setItem('registeredEmail', data?.email)
-        deleteCookie()
+    if (step === 3 && methods.getValues('userType') == userTypeEnum.Applicant) {
+      const isAvailable = await userLoginEmailVerification(data)
+
+      if (isAvailable?.isAvailable) {
+        const res = await HandleRegister(data)
+        if (res?.isRegistered) {
+          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+          deleteCookie()
+
+          setStep(4)
+          setSubStep(0)
+        }
+      }
+
+      return
+    }
+    if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      const isAvailable = await userLoginEmailVerification(data)
+
+      if (isAvailable?.isAvailable) {
         handleNext()
+        saveToLocalStorage()
+      }
+
+      return
+    }
+    if (step === 3 && subStep === 1) {
+      const isAvailable = await userUniversityEmailVerification(data)
+      if (isAvailable?.isAvailable) {
+        const res = await HandleRegister(data)
+        if (res?.isRegistered) {
+          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+          deleteCookie()
+          setStep(4)
+          setSubStep(0)
+        }
       }
 
       return
     }
 
     if (step === 2 && subStep === 0) {
+      return
       const isAvailable = await userLoginEmailVerification(data)
 
       if (isAvailable?.isAvailable) {
@@ -222,6 +258,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
 
     if (step === 2 && subStep === 1) {
+      return
+
       const isAvailable = await userUniversityEmailVerification(data)
       if (isAvailable?.isAvailable) {
         // handleNext()
@@ -249,16 +287,18 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
 
   const handleNext = () => {
     if (step === 1 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      const newStep = step + 1
+      const newStep = step + 2
       setStep(newStep)
       return setSubStep(0)
     } else if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       return setSubStep(1)
     } else if (step === 1 && subStep === 1) {
-      const newStep = step + 1
+      const newStep = step + 2
       setStep(newStep)
       return setSubStep(0)
     } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
+      return setSubStep(1)
+    } else if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       return setSubStep(1)
     } else {
       const newStep = step + 1
@@ -297,8 +337,28 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     //else if (step === 3) {
     //  return <ClaimBenefitForm isPending={registerIsPending} />
     //}
-    else if (step === 3) {
-      return <FinalLoginForm email={registerData?.email || ''} />
+    else if (step === 3 && subStep === 0) {
+      //   return <FinalLoginForm email={registerData?.email || ''} />
+      return (
+        <VerificationForm
+          handlePrev={() => handlePrev()}
+          isVerificationSuccess={userLoginEmailVerificationSuccess}
+          isPending={userLoginEmailVerificationIsPending}
+        />
+      )
+    } else if (step === 3 && subStep === 1) {
+      //   return <FinalLoginForm email={registerData?.email || ''} />
+      return (
+        <UniversityVerificationForm
+          setStep={setStep}
+          setSubStep={setSubStep}
+          isVerificationSuccess={userUniversityEmailVerificationSuccess}
+          isPending={UniversityEmailVerificationIsPending}
+        />
+      )
+    } else if (step === 4) {
+      //   return <FinalLoginForm email={registerData?.email || ''} />
+      return <div>44</div>
     }
   }
 

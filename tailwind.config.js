@@ -118,7 +118,9 @@ module.exports = {
                     },
                 },
                 '.max-width-allowed': {
+                    
                     maxWidth: "1058px"
+                   
                 },
             });
         },

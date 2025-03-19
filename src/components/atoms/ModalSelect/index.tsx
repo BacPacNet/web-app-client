@@ -29,7 +29,7 @@ const ModalDropdown = ({ options, onChange, value }: ModalDropdownProps) => {
   }
 
   return (
-    <motion.div className="relative flex flex-col gap-2 w-full  mt-4 min-w-[256px] overflow-y-hidden">
+    <motion.div className="relative flex flex-col gap-2  mt-4 w-full sm:min-w-[256px] overflow-y-hidden">
       <input
         type="text"
         className="py-2 px-3 text-xs border rounded-lg drop-shadow-sm border-neutral-200 text-neutral-700 outline-none w-full"

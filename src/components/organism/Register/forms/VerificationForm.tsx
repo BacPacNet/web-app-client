@@ -70,7 +70,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
 
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">
-      <div className="text-center flex flex-col gap-4">
+      <div className="text-start flex flex-col gap-2 w-full">
         <Title>Verification</Title>
         <SupportingText>Verify your login credentials.</SupportingText>
       </div>

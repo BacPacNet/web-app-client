@@ -26,11 +26,7 @@ const DiscoverContainer = () => {
 
   return (
     <div className="flex justify-center w-full ">
-      <div
-        className={`max-width-allowed  lg:h-with-navbar flex ${
-          isTablet || isMobile ? 'flex-col' : 'flex-row'
-        }   justify-between gap-[64px] lg:gap-8 pt-10`}
-      >
+      <div className={`max-width-allowed   flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'}   justify-between gap-[64px] lg:gap-8 pt-10`}>
         {isTablet || isMobile ? <DiscoverFilterMobileComponent setQuery={setQuery} /> : <DiscoverFilterComponent setQuery={setQuery} />}
 
         <div>

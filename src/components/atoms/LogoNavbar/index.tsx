@@ -181,16 +181,19 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowLeftNavbar(false)
   }
 
-  if (shouldHeaderRemove && (pathname.includes('/login') || pathname.includes('/forget-password'))) {
-    return null
-  }
+  //   if (shouldHeaderRemove && (pathname.includes('/login') || pathname.includes('/forget-password'))) {
+  //
+  //     return null
+  //   }
 
   if (shouldHeaderRemove)
     return (
-      <div className="w-full h-[40px] sm:h-[68px] flex items-center px-8">
-        <Link className="flex gap-4 center-v" href="/">
-          <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
-        </Link>
+      <div className="w-full flex items-center justify-center bg-neutral-100">
+        <div className="max-width-allowed w-[1058px] h-[40px] sm:h-[68px] flex items-center px-8">
+          <Link className="flex gap-4 center-v" href="/">
+            <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+          </Link>
+        </div>
       </div>
     )
 
