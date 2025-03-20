@@ -211,7 +211,7 @@ const DiscoverFilterMobileComponent = ({ setQuery }: Props) => {
       <div className="w-full flex flex-col relative mt-[19px]">
         <IoIosSearch size={20} className="absolute left-2 z-30 top-1/2 -translate-y-1/2" />
         <input
-          className=" py-2 ps-8 pe-3 border-2 border-neutral-200 focus:ring-2 rounded-full drop-shadow-sm  text-neutral-400  outline-none "
+          className=" py-2 ps-8 pe-3 border-2 border-neutral-200 focus:ring-2 rounded-full drop-shadow-sm  outline-none "
           placeholder="Search"
           type="text"
           {...register('Search', {
