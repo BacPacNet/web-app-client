@@ -69,12 +69,12 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
   }, [countdown, isCounting])
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center px-3">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-start flex flex-col gap-2 w-full">
         <Title>Verification</Title>
         <SupportingText>Verify your login credentials.</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-8 ">
+      <div className="w-full flex flex-col gap-8 ">
         <div className="relative w-full flex flex-col gap-4">
           <InputBox
             label="Login Email"
@@ -139,7 +139,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
           )}
         </div>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Button disabled={isPending} variant="primary">
           {' '}
           {isPending ? <Spinner /> : 'Confirm'}

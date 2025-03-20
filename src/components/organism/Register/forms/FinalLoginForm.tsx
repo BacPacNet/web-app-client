@@ -34,12 +34,12 @@ const FinalLoginForm = ({ email }: { email: string }) => {
     setValue('email', loginEmail)
   }, [])
   return (
-    <div className="w-1/2 flex flex-col gap-8 items-center ">
-      <div>
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-center flex flex-col gap-4">
         <Title>Congratulations</Title>
         <SupportingText className="text-center">Enter your details to access your account</SupportingText>
       </div>
-      <div className="w-10/12 xl:w-10/12 flex flex-col gap-5 ">
+      <div className="w-full flex flex-col gap-5 ">
         <div className="relative w-full flex flex-col gap-2">
           <InputBox
             label="Email Address"

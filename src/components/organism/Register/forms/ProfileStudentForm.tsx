@@ -34,12 +34,12 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   }, [currDegree, setValue])
 
   return (
-    <div className="w-full sm:w-96 lg:w-1/2 flex flex-col gap-8 items-center ">
-      <div className="text-center px-3">
+    <div className="w-full  flex flex-col gap-8 items-center ">
+      <div className="text-start flex flex-col gap-2 w-full">
         <Title>Student Setup</Title>
         <SupportingText>Enter your university information to finish your student profile setup. </SupportingText>
       </div>
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-3 ">
+      <div className="w-full flex flex-col gap-3 ">
         {/*<div
           className={`
           border-neutral-200
@@ -93,7 +93,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
           <Controller
             name="year"
             control={control}
-            rules={{ required: 'Degree is required!' }}
+            rules={{ required: 'Year is required.' }}
             render={({ field }) => (
               <SelectDropdown
                 options={Object.keys(degreeAndMajors)}
@@ -103,18 +103,18 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 icon={'single'}
                 label="Year"
                 search={true}
-                err={!!ProfileFormErrors.degree}
+                err={!!ProfileFormErrors.year}
               />
             )}
           />
-          {ProfileFormErrors.degree && <InputWarningText>{ProfileFormErrors?.degree?.message?.toString()}</InputWarningText>}
+          {ProfileFormErrors.year && <InputWarningText>{ProfileFormErrors?.year?.message?.toString()}</InputWarningText>}
         </div>
 
         <div className="w-full flex flex-col relative">
           <Controller
             name="major"
             control={control}
-            rules={{ required: 'Major is required!' }}
+            rules={{ required: 'Major is required.' }}
             disabled={!currDegree}
             render={({ field }) => (
               <SelectDropdown
@@ -137,7 +137,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
       {/*<div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
       </div>*/}
-      <div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
         <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account

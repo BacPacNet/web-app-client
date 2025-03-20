@@ -4,13 +4,15 @@ import RegisterSIdebar from '@/components/organism/Register/sidebar/RegisterSIde
 import React, { useEffect, useState } from 'react'
 import Loading from './loading'
 import { userTypeEnum } from '@/types/RegisterForm'
-import { IoIosArrowBack } from 'react-icons/io'
 import ProgressBar from 'react-customizable-progressbar'
-import useDeviceType from '@/hooks/useDeviceType'
+import useCookie from '@/hooks/useCookie'
+import { useRouter } from 'next/navigation'
+import RedirectFromRegister from '@/components/organism/Register/redirect-screen'
 
 const progressBarData = [
   { title: 'Account Creation', des: 'Login Information' },
   { title: 'Profile Setup', des: 'User Information' },
+  { title: 'Status Setup', des: 'User Information' },
   { title: 'User Verification', des: 'Sync personal and university email' },
   { title: 'Almost There', des: 'Do you have a referral code?' },
   { title: 'Finalize Account', des: 'Login to your newly made account' },
@@ -21,11 +23,11 @@ const Register = () => {
   const [subStep, setSubStep] = useState(0)
   const [loading, setLoading] = useState(true)
   const [userType, setUserType] = useState('')
-  const { isTablet, isMobile } = useDeviceType()
-
+  const router = useRouter()
+  const [cookieValue, setCookieValue] = useCookie('register_data')
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const registerData = localStorage.getItem('registerData') ? JSON.parse(localStorage.getItem('registerData') || '') : null
+      const registerData = cookieValue ? JSON.parse(cookieValue) : null
 
       if (registerData) {
         setStep(registerData.step || 0)
@@ -33,7 +35,7 @@ const Register = () => {
       }
       setLoading(false)
     }
-  }, [])
+  }, [cookieValue])
 
   const handlePrev = () => {
     if (step == 0) {
@@ -58,49 +60,62 @@ const Register = () => {
     }
   }
 
-  return (
-    <div className="flex h-screen bg-white flex-col lg:flex-row lg:py-0 py-8">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          {isTablet || isMobile ? (
-            <div className={`flex gap-2 justify-center items-center`}>
-              {/*<div onClick={() => handlePrev()} className={`text-[#6744FF] text-2xl text-start cursor-pointer  ${step == 0 && 'hidden'}`}>
-                <IoIosArrowBack />
-              </div>*/}
-              <ProgressBar
-                radius={25}
-                progress={step == 4 ? 4 : step + 1}
-                key={step}
-                strokeWidth={6}
-                strokeColor="#6744FF"
-                trackStrokeColor="#F3F2FF"
-                strokeLinecap="square"
-                trackStrokeWidth={6}
-                steps={4}
-              >
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{step == 4 ? 4 : step + 1}/4 </div>
-              </ProgressBar>
-              <div>
-                <p className="text-sm text-neutral-900">{progressBarData[step].title}</p>
-                <p className="text-neutral-500 text-xs">{progressBarData[step].des}</p>
-              </div>
-            </div>
-          ) : (
-            <RegisterSIdebar step={step} subStep={subStep} onPrev={handlePrev} />
-          )}
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [step, subStep])
 
-          <FormContainer
-            handlePrev={() => handlePrev()}
-            step={step}
-            setStep={setStep}
-            subStep={subStep}
-            setSubStep={setSubStep}
-            setUserType={setUserType}
-          />
-        </>
-      )}
+  if (step == 4) {
+    return <RedirectFromRegister />
+  }
+  return (
+    <div className="flex w-full  bg-neutral-100 flex-col items-center  pb-48">
+      <div className="flex  flex-col items-center  max-width-allowed w-full">
+        <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-11/12 sm:w-[448px] p-12 mt-16">
+          {!loading && (
+            <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer mb-6 underline">
+              Back to Home
+            </p>
+          )}
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div className={`relative flex gap-6 justify-start items-center mb-6 w-full sm:w-[300px] h-[72px]`}>
+                <div className="w-16 h-16"></div>
+                <div className="absolute -left-5">
+                  <ProgressBar
+                    radius={32}
+                    progress={step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1}
+                    key={step}
+                    strokeWidth={8}
+                    strokeColor="#6744FF"
+                    trackStrokeColor="#F3F2FF"
+                    strokeLinecap="square"
+                    trackStrokeWidth={8}
+                    steps={4}
+                  >
+                    <div className="text-neutral-700 font-semibold text-2xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      {step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1} of 4{' '}
+                    </div>
+                  </ProgressBar>
+                </div>
+                <div>
+                  <p className="text-sm text-neutral-700 font-medium">{progressBarData[step == 1 && subStep == 1 ? 2 : step].title}</p>
+                  <p className="text-neutral-500 text-xs">{progressBarData[step].des}</p>
+                </div>
+              </div>
+              <FormContainer
+                handlePrev={() => handlePrev()}
+                step={step}
+                setStep={setStep}
+                subStep={subStep}
+                setSubStep={setSubStep}
+                setUserType={setUserType}
+              />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

@@ -6,7 +6,7 @@ interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
 
 export default function SupportingText({ children, className = '', ...rest }: TitleProps) {
   return (
-    <p className={`md:text-sm text-xs font-normal text-neutral-500 font-inter ${className}`} {...rest}>
+    <p className={` text-sm font-normal text-neutral-500 font-inter ${className}`} {...rest}>
       {children}
     </p>
   )
