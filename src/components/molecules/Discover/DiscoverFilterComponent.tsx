@@ -45,13 +45,13 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
 
   return (
     <div className="max-lg:w-60 lg:block hidden">
-      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-2xl">
+      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-2xl w-[307px]">
         <h3 className="border-b border-neutral-300 text-neutral-700 text-[24px] font-poppins p-4">Search Filter</h3>
         <div className="p-4 flex flex-col gap-4">
           <div className="w-full flex flex-col relative">
             <IoIosSearch size={20} className="absolute left-2 z-30 top-1/2 -translate-y-1/2" />
             <input
-              className=" py-2 ps-8 pe-3 border-2 border-neutral-200 focus:ring-2 rounded-full drop-shadow-sm  text-neutral-400  outline-none "
+              className=" py-2 ps-8 pe-3 border-2 border-neutral-200 focus:ring-2 rounded-full drop-shadow-sm outline-none "
               placeholder="Search"
               type="text"
               //   {...register('Search', {})}
