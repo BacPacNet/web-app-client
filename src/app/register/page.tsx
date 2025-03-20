@@ -68,9 +68,9 @@ const Register = () => {
     return <RedirectFromRegister />
   }
   return (
-    <div className="flex   bg-neutral-100 flex-col items-center  pb-48">
-      <div className="flex  flex-col items-center  max-width-allowed ">
-        <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-full sm:w-[448px]   p-12 mt-16">
+    <div className="flex w-full  bg-neutral-100 flex-col items-center  pb-48">
+      <div className="flex  flex-col items-center  max-width-allowed w-full">
+        <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-11/12 sm:w-[448px] p-12 mt-16">
           {!loading && (
             <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer mb-6 underline">
               Back to Home
@@ -80,22 +80,25 @@ const Register = () => {
             <Loading />
           ) : (
             <>
-              <div className={`flex gap-6 justify-start items-center mb-6 w-[300px] h-[72px]`}>
-                <ProgressBar
-                  radius={32}
-                  progress={step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1}
-                  key={step}
-                  strokeWidth={8}
-                  strokeColor="#6744FF"
-                  trackStrokeColor="#F3F2FF"
-                  strokeLinecap="square"
-                  trackStrokeWidth={8}
-                  steps={4}
-                >
-                  <div className="text-neutral-700 font-semibold text-2xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    {step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1} of 4{' '}
-                  </div>
-                </ProgressBar>
+              <div className={`relative flex gap-6 justify-start items-center mb-6 w-full sm:w-[300px] h-[72px]`}>
+                <div className="w-16 h-16"></div>
+                <div className="absolute -left-5">
+                  <ProgressBar
+                    radius={32}
+                    progress={step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1}
+                    key={step}
+                    strokeWidth={8}
+                    strokeColor="#6744FF"
+                    trackStrokeColor="#F3F2FF"
+                    strokeLinecap="square"
+                    trackStrokeWidth={8}
+                    steps={4}
+                  >
+                    <div className="text-neutral-700 font-semibold text-2xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      {step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1} of 4{' '}
+                    </div>
+                  </ProgressBar>
+                </div>
                 <div>
                   <p className="text-sm text-neutral-700 font-medium">{progressBarData[step == 1 && subStep == 1 ? 2 : step].title}</p>
                   <p className="text-neutral-500 text-xs">{progressBarData[step].des}</p>

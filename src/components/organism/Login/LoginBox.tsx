@@ -32,7 +32,7 @@ const LoginBox = () => {
   const onSubmit = (data: LoginForm) => login(data)
 
   return (
-    <div className="flex flex-col sm:w-[448px] mx-auto">
+    <div className="flex flex-col w-11/12 sm:w-[448px] mx-auto">
       <div className="flex flex-col gap-8 p-12 rounded-lg bg-white shadow-lg">
         <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer  underline">
           Back to Home
