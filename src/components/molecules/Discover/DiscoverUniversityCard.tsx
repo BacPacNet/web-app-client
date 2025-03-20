@@ -30,6 +30,9 @@ const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
         alt={'university'}
         className="h-60 w-full object-cover object-top rounded-t-lg"
         onError={() => setImageSrc(universityPlaceholder)}
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk8P9fDwADdAHPwkoHWAAAAABJRU5ErkJggg==
+"
       />
       <div className="w-full p-3 bg-neutral-200 rounded-b-lg relative  flex items-center gap-4 h-14">
         <Image

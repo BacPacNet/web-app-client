@@ -33,12 +33,12 @@ const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: st
 export default function UniversityProfile() {
   const params = useParams()
   const { id: universityName } = params
-  const { data: university, isLoading: isUniversityLoading } = useUniversitySearchByName(universityName as string)
+  const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
   const { userData, userProfileData } = useUniStore()
 
   const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
   const router = useRouter()
-  if (isUniversityLoading) return <Loading />
+  if (isUniversityLoading || isFetching) return <Loading />
 
   const contactData = [
     {
@@ -99,24 +99,19 @@ export default function UniversityProfile() {
     <div className="flex justify-center">
       <div className="py-16 flex flex-col gap-16 lg:gap-24 px-4 lg:px-0 overflow-x-hidden max-width-allowed">
         <div className="flex justify-between flex-col-reverse lg:flex-row gap-8 md:gap-16 lg:gap-[67px]">
-          <div className="flex flex-col  gap-4 md:gap-8 flex-1 max-h-[290px]">
+          <div className="flex flex-col  gap-4 md:gap-8 flex-1 ">
             <div className="flex items-center lg:items-start gap-8 pb-4">
               <div className="flex justify-start items-start  drop-shadow-lg rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
-                <Image fill src={university?.logo || universityLogoPlaceholder} alt="logo" className="object-contain" />
+                <Image fill src={university?.logo || universityLogoPlaceholder} alt="logo" className="object-contain p-2" />
               </div>
 
               <p className="text-neutral-900 md:text-lg-small text-md font-extrabold font-poppins">{university?.name}</p>
             </div>
-            <SupportingText className={`${university?.name?.length > 36 ? 'line-clamp-2' : ''} `}>
-              {university?.short_overview || 'Not Available'}
-            </SupportingText>
-            {university?.isCommunityCreated ? (
-              <Buttons className="w-max" onClick={() => handleClick(university?.name)}>
-                Join Community
-              </Buttons>
-            ) : (
-              <Buttons className="w-max">Endorse</Buttons>
-            )}
+            <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
+
+            <Buttons className="w-max" onClick={() => handleClick(university?.name)}>
+              Join Community
+            </Buttons>
           </div>
           <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px]">
             <Image fill className="rounded-lg  object-cover   " src={university?.campus || universityPlaceholder} alt="university_image" />

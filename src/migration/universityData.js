@@ -1,4 +1,7 @@
+//const {readFileSync} = require('fs')
+
 import { readFileSync } from 'fs'
+//const {mongoose} = require('mongoose')
 import { mongoose } from 'mongoose'
 
 // MongoDB Connection URI (Replace with your MongoDB URI)
@@ -16,7 +19,7 @@ mongoose
 const University = mongoose.model('university', new mongoose.Schema({}, { strict: false }))
 
 // Read JSON file
-const jsonData = JSON.parse(readFileSync('merged_universities_2.json', 'utf8'))
+const jsonData = JSON.parse(readFileSync('standardized_2.json', 'utf8'))
 
 const universities = Object.entries(jsonData).map(([name, data]) => ({
   name,
