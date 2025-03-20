@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
             <Link href="/privacy-policy">Privacy Policy</Link>
             <Link href="/terms-and-condition">Terms and Conditions</Link>
             <Link href="/user-guidelines"> Usability Guidelines</Link>
-            <Link href="#">Contact Us</Link>
+            <Link href="/contact">Contact Us</Link>
             {/*<a href="#">Business Service</a>*/}
             {/*<div className="icons instagram center" onClick={() => handleRedirect(1)}>
               <Image src={facebook} className="icon" alt="facebook" />

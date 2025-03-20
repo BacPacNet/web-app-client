@@ -121,8 +121,12 @@ const AccountCreationForm = ({ isPending }: Props) => {
             ))}
           </div>
 
-          {registerFormErrors?.password?.message ? (
+          {registerFormErrors?.password && !registerFormErrors?.password?.message ? (
+            <InputWarningText>{'Please enter your password.'}</InputWarningText>
+          ) : registerFormErrors?.password?.message ? (
             <InputWarningText>{registerFormErrors.password.message?.toString()}</InputWarningText>
+          ) : password.length > 0 ? (
+            <p></p>
           ) : (
             <label className="text-neutral-500 text-xs py-1">Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special (!@#$%^&*).</label>
           )}
