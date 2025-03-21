@@ -9,25 +9,6 @@ type Props = {
 
 const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
   const { isMobile } = useDeviceType()
-  //   const getPageNumbers = () => {
-  //     const pages = []
-  //     if (totalPages <= 5) {
-  //       for (let i = 1; i <= totalPages; i++) {
-  //         pages.push(i)
-  //       }
-  //     } else {
-  //       if (currentPage <= 3 && !isMobile) {
-  //         pages.push(1, 2, 3, 4, 5, '...', totalPages)
-  //       } else if (currentPage <= 3 && isMobile) {
-  //         pages.push(1, 2, 3, '...', totalPages)
-  //       } else if (currentPage >= totalPages - 2) {
-  //         pages.push(totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
-  //       } else {
-  //         pages.push(currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
-  //       }
-  //     }
-  //     return pages
-  //   }
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
@@ -67,17 +48,6 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
           <p className=" hidden sm:block">Previous</p>
         </button>
       )}
-      {/* {currentPage > 1 && (
-        <button
-          onClick={() => onPageChange(currentPage - 1)}
-          className={` flex items-center gap-1 ${isMobile ? 'w-9 h-9 p-2' : ' px-4 py-2'}    text-[#6B7280] text-xs   rounded me-8`}
-        >
-          <span className="w-5 h-5 flex items-center">
-            <MdOutlineArrowBackIos color="#6B7280" />
-          </span>
-          {!isMobile && 'Previous'}
-        </button>
-      )} */}
 
       <div className="flex items-center gap-1 sm:gap-3">
         {getPageNumbers().map((page, index) => (
@@ -101,7 +71,6 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
              w-6 h-9 px-2 py-2 ms-1 sm:w-[76px] sm:px-4 sm:py-2 sm:ms-8 sm:bg-neutral-50 sm:border-neutral-200 sm:border-2
               text-[#6B7280] text-xs   rounded `}
         >
-          {/* {!isMobile && 'Next'} */}
           <p className=" hidden sm:block">Next</p>
 
           <span className={` ${isMobile ? ' w-5' : 'w-5'} h-5 flex items-center`}>
