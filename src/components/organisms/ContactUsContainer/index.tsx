@@ -2,22 +2,27 @@
 
 import Buttons from '@/components/atoms/Buttons'
 import { useForm } from 'react-hook-form'
-
+import { Spinner } from '@/components/spinner/Spinner'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { useSendContactMessage } from '@/services/contact'
+import { useEffect } from 'react'
 
 interface FormValues {
   firstName: string
   lastName: string
   university?: string
   message: string
+  email: string
 }
 
 export function ContactForm() {
+  const { mutate, isPending, isSuccess } = useSendContactMessage()
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors: registerFormErrors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -25,6 +30,7 @@ export function ContactForm() {
       lastName: '',
       university: '',
       message: '',
+      email: '',
     },
   })
 
@@ -32,9 +38,14 @@ export function ContactForm() {
   const messageLength = message.length
 
   const onSubmit = (data: FormValues) => {
-    console.log(data)
-    // Handle form submission here
+    mutate(data)
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset()
+    }
+  }, [isSuccess])
 
   return (
     <div className="w-full px-4">
@@ -79,14 +90,36 @@ export function ContactForm() {
           {registerFormErrors.university && <InputWarningText>{registerFormErrors.university.message}</InputWarningText>}
         </div>
 
+        <div className="w-full flex flex-col">
+          <InputBox
+            label="Email Address"
+            placeholder="john@example.com"
+            type="email"
+            {...register('email', {
+              required: true,
+              pattern: {
+                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                message: 'Enter a valid email address.',
+              },
+            })}
+            err={!!registerFormErrors.email}
+          />
+          {registerFormErrors.email && (
+            <InputWarningText>
+              {registerFormErrors.email?.message ? registerFormErrors.email.message.toString() : 'Please enter your email!'}
+            </InputWarningText>
+          )}
+        </div>
+
         <div className="w-full flex flex-col relative">
           <label className="text-[#3a3b3c] mb-2">Additional Message</label>
           <textarea
-            className={` border-neutral-200 min-h-[160px] resize-non
+            className={`${registerFormErrors.message ? 'border-red-400' : 'border-neutral-200'}  min-h-[160px] resize-non
            w-full pt-2 pb-4 px-3 border  rounded-lg drop-shadow-sm text-neutral-900 placeholder:text-neutral-400  outline-none p-3`}
             placeholder="Type a message here..."
             maxLength={240}
             {...register('message', {
+              required: 'Message is required',
               maxLength: {
                 value: 240,
                 message: 'Message cannot exceed 240 characters',
@@ -98,8 +131,8 @@ export function ContactForm() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6 items-start">
-          <Buttons variant="primary" type="submit" className="  min-w-[120px]">
-            Send Form
+          <Buttons disabled={isPending} variant="primary" type="submit" className="  min-w-[120px]">
+            {isPending ? <Spinner /> : ' Send Form'}
           </Buttons>
           <p className="text-2xs text-neutral-500 ">
             By pressing the submit button, I agree to Unibuzz contacting me by email and/or phone to share opportunities exclusively available to

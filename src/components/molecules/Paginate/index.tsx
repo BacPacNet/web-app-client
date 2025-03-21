@@ -9,23 +9,44 @@ type Props = {
 
 const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
   const { isMobile } = useDeviceType()
+  //   const getPageNumbers = () => {
+  //     const pages = []
+  //     if (totalPages <= 5) {
+  //       for (let i = 1; i <= totalPages; i++) {
+  //         pages.push(i)
+  //       }
+  //     } else {
+  //       if (currentPage <= 3 && !isMobile) {
+  //         pages.push(1, 2, 3, 4, 5, '...', totalPages)
+  //       } else if (currentPage <= 3 && isMobile) {
+  //         pages.push(1, 2, 3, '...', totalPages)
+  //       } else if (currentPage >= totalPages - 2) {
+  //         pages.push(totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+  //       } else {
+  //         pages.push(currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
+  //       }
+  //     }
+  //     return pages
+  //   }
+
   const getPageNumbers = () => {
-    const pages = []
+    const pages: (number | string)[] = []
+
     if (totalPages <= 5) {
+      // If total pages are 5 or less, show all pages
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i)
       }
     } else {
-      if (currentPage <= 3 && !isMobile) {
-        pages.push(1, 2, 3, 4, 5, '...', totalPages)
-      } else if (currentPage <= 3 && isMobile) {
-        pages.push(1, 2, 3, '...', totalPages)
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages)
       } else if (currentPage >= totalPages - 2) {
-        pages.push(totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+        pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
       } else {
-        pages.push(currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
+        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
       }
     }
+
     return pages
   }
 
@@ -37,6 +58,18 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
       {currentPage > 1 && (
         <button
           onClick={() => onPageChange(currentPage - 1)}
+          className={` flex items-center gap-1 max-sm:w-9 max-sm:h-9 p-2 me-1 sm:px-4 sm:py-2 sm:me-8    text-[#6B7280] text-xs   rounded `}
+        >
+          <span className="w-5 h-5 flex items-center">
+            <MdOutlineArrowBackIos color="#6B7280" />
+          </span>
+
+          <p className=" hidden sm:block">Previous</p>
+        </button>
+      )}
+      {/* {currentPage > 1 && (
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
           className={` flex items-center gap-1 ${isMobile ? 'w-9 h-9 p-2' : ' px-4 py-2'}    text-[#6B7280] text-xs   rounded me-8`}
         >
           <span className="w-5 h-5 flex items-center">
@@ -44,14 +77,14 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
           </span>
           {!isMobile && 'Previous'}
         </button>
-      )}
+      )} */}
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1 sm:gap-3">
         {getPageNumbers().map((page, index) => (
           <button
             key={index}
             onClick={() => typeof page === 'number' && onPageChange(page)}
-            className={`w-auto h-9 py-2 px-3 text-xs rounded ${
+            className={`w-auto h-9 py-2  text-xs rounded px-2 sm:px-3 ${
               currentPage === page ? 'bg-surface-primary-50 text-primary-500 border-primary-500' : 'bg-neutral-50 border-neutral-200 text-neutral-700'
             } border-2`}
             disabled={page === '...'}
@@ -64,13 +97,14 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
       {currentPage < totalPages && (
         <button
           onClick={() => onPageChange(currentPage + 1)}
-          className={` ms-8 flex items-center gap-1 ${
-            isMobile ? 'w-9 h-9 p-2' : 'w-[76px] px-4 py-2'
-          }    text-[#6B7280] text-xs bg-neutral-50 border-neutral-200 border-2 rounded `}
+          className={`  flex items-center gap-1 
+             w-6 h-9 px-2 py-2 ms-1 sm:w-[76px] sm:px-4 sm:py-2 sm:ms-8 sm:bg-neutral-50 sm:border-neutral-200 sm:border-2
+              text-[#6B7280] text-xs   rounded `}
         >
-          {!isMobile && 'Next'}
+          {/* {!isMobile && 'Next'} */}
+          <p className=" hidden sm:block">Next</p>
 
-          <span className="w-5 h-5 flex items-center">
+          <span className={` ${isMobile ? ' w-5' : 'w-5'} h-5 flex items-center`}>
             <MdOutlineArrowForwardIos color="#6B7280" />
           </span>
         </button>

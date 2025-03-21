@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
 
   return (
     <div
-      className={` mt-20
+      className={`${pathname.includes('/contact') ? 'pt-20' : 'mt-20'} 
        w-full mx-auto relative flex flex-col center-v py-2 lg:py-3  bg-surface-primary-50`}
     >
       <div className="max-width-allowed w-full text-gray-dark text-sm lg:text-lg">
