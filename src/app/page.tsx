@@ -9,8 +9,8 @@ import SectionSix from '@/components/molecules/LandingPage/SectionSix'
 
 export default function LandingPage() {
   return (
-    <div className="bg-white">
-      <div className="max-width-allowed mx-auto">
+    <div className="bg-white  mt-8 sm:mt-16">
+      <div className="px-2  sm:max-width-tablet md:px-4 lg:max-width-allowed mx-auto  ">
         <SectionFirst />
         <SectionTwo />
         <SectionThree />

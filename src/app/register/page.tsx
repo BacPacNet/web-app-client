@@ -70,7 +70,7 @@ const Register = () => {
   return (
     <div className="flex w-full  bg-neutral-100 flex-col items-center  pb-48">
       <div className="flex  flex-col items-center  max-width-allowed w-full">
-        <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-11/12 sm:w-[448px] p-12 mt-16">
+        <div className="flex   flex-col items-start bg-white   rounded-lg w-11/12 sm:w-[448px] p-12 mt-16 shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08),0px_6px_15px_-2px_rgba(16,24,40,0.08)]">
           {!loading && (
             <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer mb-6 underline">
               Back to Home
