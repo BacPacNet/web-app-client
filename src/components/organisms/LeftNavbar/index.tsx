@@ -98,27 +98,29 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }, [isLogin, userData, userProfileData, handleProfileClick])
 
   return (
-    <Card className="h-with-navbar overflow-y-auto">
-      {renderProfile}
-      <div className="px-4 pt-9">
-        <p className="text-2xs text-neutral-500 font-bold">EXPLORE</p>
+    <div className="h-with-navbar p-6 overflow-y-auto">
+      {/*{renderProfile}*/}
+      <div className="border-b-2 border-neutral-200 pb-4">
+        <p className="text-xs text-neutral-500 font-bold py-2">COMMUNITY</p>
         {MENU_ITEMS.map(({ name, icon, path }) => (
           <div
             key={path}
-            className={`flex gap-2 cursor-pointer text-sm pt-[10px] ${activeMenu === path ? 'text-primary-700 font-semibold' : 'text-neutral-500'}`}
+            className={`flex gap-2 cursor-pointer text-sm p-2 my-1 hover:bg-neutral-100 rounded-md  ${
+              activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
+            }`}
             onClick={() => handleMenuClick(path)}
           >
             <span className="text-[20px]">{icon}</span>
-            <span>{name}</span>
+            <span className="">{name}</span>
           </div>
         ))}
       </div>
       {userData?.email && (
         <>
-          <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITIES</p>
+          <p className="text-xs text-neutral-500 font-bold mt-4 py-2 ">UNIVERSITIES</p>
           <NavbarUniversityItem setActiveMenu={setActiveMenu} toggleLeftNavbar={toggleLeftNavbar!} />
         </>
       )}
-    </Card>
+    </div>
   )
 }

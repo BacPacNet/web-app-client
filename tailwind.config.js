@@ -91,6 +91,7 @@ module.exports = {
             },
             dropShadow: {
                 'card': '0px 2px 6px 0px rgba(16, 24, 40, 0.06)',
+                'logo': '0px 8px 40px rgba(0, 0, 0, 0.10)'
             },
             boxShadow: {
                 'small': '0px 2px 6px 0px rgba(16, 24, 40, 0.06)',
@@ -119,12 +120,10 @@ module.exports = {
                     },
                 },
                 '.max-width-allowed': {
-                    
-                    maxWidth: "1058px"
-                   
+                    maxWidth: "1280px"
                 },
                 '.max-width-tablet': {
-                    maxWidth: "518px"    
+                    maxWidth: "518px"
                 },
             });
         },

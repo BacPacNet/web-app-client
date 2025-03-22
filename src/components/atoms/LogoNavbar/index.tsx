@@ -31,7 +31,7 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
+const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact', '/timeline']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
@@ -103,7 +103,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                     width={40}
                     height={40}
                     objectFit="cover"
-                    className="w-[40px] h-[40px] rounded-full"
+                    className="w-[40px] object-cover h-[40px] rounded-full"
                     src={userProfileData?.profile_dp?.imageUrl || avatar}
                     alt="profile.png"
                   />
@@ -202,9 +202,9 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       <div className="w-full h-[40px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200">
           <div
-            className={`${
-              shouldPadding ? 'px-4 lg:px-0 max-width-allowed ' : 'px-4'
-            } relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
+            className={`
+               
+            px-4 lg:px-0 max-width-allowed relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
               <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
