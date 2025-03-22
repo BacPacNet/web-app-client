@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ImageManager />
             <LogoNavbar />
             {children}
-            <Footer />
+            {/*<Footer />*/}
           </ZustandSocketProvider>
         </ReactQueryClientProvider>
       </body>

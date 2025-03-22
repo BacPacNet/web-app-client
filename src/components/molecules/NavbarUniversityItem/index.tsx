@@ -21,6 +21,7 @@ import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 
 const CommunitySelectPop = ({ community, index, handleUniversityClick }: any) => {
   const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
@@ -232,70 +233,66 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   return (
     <>
-      <NavbarSubscribedUniversity
-        userData={userData || {}}
-        communityId={communityId}
-        subscribedCommunities={subscribedCommunities as Community[]}
-        handleCommunityClick={handleCommunityClick}
-        isGroup={!!communityGroupId}
-      />
+      <div className="border-b-2 border-neutral-200 pb-4">
+        <NavbarSubscribedUniversity
+          userData={userData || {}}
+          communityId={communityId}
+          subscribedCommunities={subscribedCommunities as Community[]}
+          handleCommunityClick={handleCommunityClick}
+          isGroup={!!communityGroupId}
+        />
+      </div>
 
       <>
-        <p className="px-4 pb-4 pt-9 text-neutral-500 text-2xs font-bold">UNIVERSITY GROUPS</p>
-        <div className="flex justify-normal md:justify-between gap-4 px-4 w-full pb-4">
-          <Buttons onClick={() => handleCommunityGroupFilter()} className="w-32" size="extra_small" variant="border_primary">
-            Filter
-          </Buttons>
-          <Popover>
-            <PopoverTrigger>
-              <div className="w-32 border border-primary text-primary text-2xs py-1 px-2 rounded-md active:scale-95 transition-transform duration-150">
-                Sort
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-32 px-2 py-0 border-none bg-white shadow-lg shadow-gray-light">
-              <div className="flex flex-col justify-between">
-                {sortBy.map((item) => (
-                  <p onClick={() => setSort(item)} key={item} className="capitalize cursor-pointer">
-                    {item}
-                  </p>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="flex items-center px-4 py-2 w-full">
-          <div className="flex items-center justify-start bg-white rounded-full gap-3 w-full">
-            <div
-              style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
-              className="flex items-center justify-center bg-white rounded-full w-[40px] h-[40px] cursor-pointer"
-            >
-              <Popover open={communityOpen} onOpenChange={() => setCommunityOpen(!communityOpen)}>
-                <PopoverTrigger asChild>
-                  <Image
-                    width={40}
-                    height={40}
-                    className="w-[40px] h-[40px] object-cover rounded-full"
-                    src={logoSrc || universityLogoPlaceholder}
-                    alt="communtiy image"
-                    onError={() => setLogoSrc(universityLogoPlaceholder)}
-                  />
-                </PopoverTrigger>
-                <PopoverContent className="bg-white border-none shadow-lg w-fit px-0 rounded-full flex flex-col gap-2 cursor-pointer">
-                  {subscribedCommunities?.map((community, index) => {
-                    return (
-                      <CommunitySelectPop key={community._id} community={community} index={index} handleUniversityClick={handleUniversityClick} />
-                    )
-                  })}
-                </PopoverContent>
-              </Popover>
-            </div>
-            <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
+        <p className="text-xs text-neutral-500 font-bold mt-4 py-2 ">GROUPS</p>
+        <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
+
+        <div className="flex gap-2 my-4">
+          <div className="flex-1">
+            <Buttons variant="border" className="h-10 w-full gap-1 text-xs">
+              Filter
+              <LuFilter className="h-3.5 w-3.5 text-primary-500" />
+            </Buttons>
+          </div>
+
+          <div className="flex-1">
+            <Popover>
+              <PopoverTrigger className="w-full">
+                <Buttons variant="border" className="h-10 w-full gap-1 text-xs">
+                  Sort
+                  <LuArrowUpDown className="h-3.5 w-3.5 text-primary-500" />
+                </Buttons>
+              </PopoverTrigger>
+              <PopoverContent className="w-32 px-2 py-0 border-none bg-white shadow-lg shadow-gray-light">
+                <div className="flex flex-col justify-between">
+                  {sortBy.map((item) => (
+                    <p onClick={() => setSort(item)} key={item} className="capitalize text-neutral-800 cursor-pointer p-1 hover:bg-neutral-200">
+                      {item}
+                    </p>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </>
       <div className="h-fit">
         {subscribedCommunities?.length !== 0 ? (
-          <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
+          //  <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
+          <CommunityGroupAll
+            key={subscribedCommunities}
+            communityGroups={subscribedCommunitiesAllGroups}
+            showGroupTill={showGroupTill}
+            setShowGroupTill={setShowGroupTill}
+            currSelectedGroup={currSelectedGroup as Community}
+            setCurrSelectedGroup={setCurrSelectedGroup}
+            userData={userData}
+            handleAssignUsersModal={handleAssignUsersModal}
+            SetcurrClickedID={SetcurrClickedID}
+            selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+            selectCommunityId={selectCommunityId}
+            toggleLeftNavbar={toggleLeftNavbar}
+          />
         ) : (
           <div className="px-4 w-full text-center font-poppins text-neutral-400">
             <p>Add your university to join or create groups</p>

@@ -14,7 +14,7 @@ const GroupSearchBox = forwardRef<HTMLInputElement, Props>(({ placeholder, class
     <div className="relative w-full">
       <IoSearch className="text-neutral-500 absolute top-[50%] right-6 translate-y-[-50%] z-10" width={20} height={20} />
       <input
-        className={`${className} group-search-input py-2 px-3 border rounded-[20px] drop-shadow-sm border-neutral-200 text-neutral-400 h-10 outline-none w-full`}
+        className={`${className} group-search-input py-2 px-3 border rounded-md drop-shadow-sm border-neutral-200 text-neutral-400 h-10 outline-none w-full`}
         type={type}
         placeholder={placeholder}
         ref={ref}

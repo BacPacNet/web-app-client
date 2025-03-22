@@ -7,7 +7,7 @@ import { Community } from '@/types/Community'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
 import { openModal } from '../../Modal/ModalManager'
 import { FaCircleCheck } from 'react-icons/fa6'
-import { truncateString } from '@/lib/utils'
+import { truncateString, truncateStringTo } from '@/lib/utils'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 
 interface Props {
@@ -62,27 +62,27 @@ interface CommunityHolderProps {
 
 const CommunityHolder = ({ community, index, handleCommunityClick, communityId, isGroup }: CommunityHolderProps) => {
   const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
+
+  const isSelected = communityId === community._id && !isGroup
   return (
     <div
       onClick={() => handleCommunityClick(index)}
       key={index}
-      className={`flex items-center justify-between overflow-x-hidden hover:bg-secondary ${
-        communityId === community._id && !isGroup && 'bg-secondary'
-      }`}
+      className={`flex items-center justify-between overflow-x-hidden hover:bg-neutral-100 rounded-md pl-2 my-1 ${isSelected && 'bg-secondary'}`}
     >
-      <div className={` flex items-center gap-2 py-2 px-4 cursor-pointer`}>
+      <div className={` flex items-center gap-3 py-2 cursor-pointer`}>
         <Image
           width={40}
           height={40}
-          className="w-[40px] h-[40px] object-cover rounded-full"
+          className="w-[40px] h-[40px] object-cover rounded-full shadow-logo"
           src={logoSrc}
           alt={community.name}
           onError={() => setLogoSrc(universityLogoPlaceholder)}
         />
 
         <div className="flex items-center gap-1">
-          <p className="text-xs  xl:w-max ">{truncateString(community.name)} </p>
-          <FaCircleCheck color="#6647ff" size={16} />
+          <p className={`text-xs line-clamp-2 ${isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium '}`}>{community.name} </p>
+          {/*<FaCircleCheck color="#6647ff" size={16} />*/}
         </div>
       </div>
     </div>
