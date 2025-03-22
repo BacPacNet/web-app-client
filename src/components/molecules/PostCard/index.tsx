@@ -25,7 +25,7 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { Spinner } from '@/components/spinner/Spinner'
 
 dayjs.extend(relativeTime)
@@ -160,17 +160,17 @@ const PostCard = ({
     router.push(`/profile/${adminId}`)
   }
   return (
-    <div className={`bg-white rounded-2xl px-4`}>
+    <div className={`bg-white rounded-lg px-4`}>
       <div className="flex items-start py-4 gap-4 justify-between">
-        <div onClick={handleProfileClicked} className="flex gap-4 cursor-pointer">
-          <div className="rounded-full w-[45px] h-[45px]">
-            <Image src={avatarLink || avatar} width={45} height={45} className="object-cover rounded-full h-[inherit]" alt="avatar.png" />
+        <div onClick={handleProfileClicked} className="flex gap-4 cursor-pointer items-center">
+          <div className="rounded-full w-[48px] h-[48px]">
+            <Image src={avatarLink || avatar} width={48} height={48} className="object-cover rounded-full h-[inherit]" alt="avatar.png" />
           </div>
           <div>
-            <h3 className="font-medium text-sm text-neutral-600">{user}</h3>
-            <div className="flex items-center gap-1">
-              <p className="hidden md:block text-[12px] text-neutral-500">{year},</p>
-              <p className="text-[12px] text-neutral-500">{university}</p>
+            <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
+            <div className="flex flex-col">
+              <p className="hidden md:block text-[10px] text-neutral-500">{year}</p>
+              <p className="text-[10px] text-neutral-500">{university}</p>
             </div>
           </div>
         </div>
@@ -184,23 +184,24 @@ const PostCard = ({
         <pre className="text-xs lg:text-sm text-neutral-700 py-4 font-poppins whitespace-pre-wrap break-words">{text}</pre>
       </div>*/}
 
-      <div className="mb-4 text-gray-700 font-poppins break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
+      <div className="mb-4 text-xs font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
 
       {/* //post Image  */}
       <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
       {/* Post Content */}
 
       {/* Timestamp */}
-      <p className="py-2 text-xs text-neutral-400 flex items-center">
-        <span className="text-neutral-500 break-words"> {formatDistanceToNow(date as unknown as Date, { addSuffix: true })}</span>
+      <p className="py-2 text-2xs  flex items-center">
+        <span className="text-neutral-500 font-normal break-words">
+          {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · Posted from {university}
+          {/*{formatDistanceToNow(date as unknown as Date, { addSuffix: true })}*/}
+        </span>
       </p>
 
       {/* Post Meta */}
-      <div
-        className={`flex items-center justify-between py-2 border-t ${showCommentSection && 'border-b'} border-neutral-200 text-sm text-neutral-500 `}
-      >
-        <div className="flex items-center gap-10">
-          <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-2 items-center cursor-pointer">
+      <div className={`flex items-center justify-end py-3 border-t ${showCommentSection && 'border-b'} border-neutral-200 text-sm text-neutral-500 `}>
+        <div className="flex items-center gap-4">
+          <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-1 items-center cursor-pointer">
             {likes?.length}
             {isLikeUnlikePending || isLikeUnlikeGroupPending ? (
               <Spinner />
@@ -214,8 +215,8 @@ const PostCard = ({
 
           <Popover>
             <PopoverTrigger>
-              <span className="flex items-center gap-2">
-                <FiShare2 className="mr-1 text-neutral-600" /> Share
+              <span className="flex items-center gap-1 text-xs">
+                Share <FiShare2 className="mr-1 text-neutral-600 " />
               </span>
             </PopoverTrigger>
             <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">

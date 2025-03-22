@@ -172,25 +172,25 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         />
       ),
     },
-    {
-      label: 'Joined',
-      content: (
-        <CommunityGroupAll
-          key={joinedSubscribedCommunitiesGroup}
-          communityGroups={joinedSubscribedCommunitiesGroup}
-          showGroupTill={showGroupTill}
-          setShowGroupTill={setShowGroupTill}
-          currSelectedGroup={currSelectedGroup as Community}
-          setCurrSelectedGroup={setCurrSelectedGroup}
-          userData={userData}
-          handleAssignUsersModal={handleAssignUsersModal}
-          SetcurrClickedID={SetcurrClickedID}
-          selectedCommuntyGroupdId={selectedCommuntyGroupdId}
-          selectCommunityId={selectCommunityId}
-          toggleLeftNavbar={toggleLeftNavbar}
-        />
-      ),
-    },
+    //{
+    //  label: 'Joined',
+    //  content: (
+    //    <CommunityGroupAll
+    //      key={joinedSubscribedCommunitiesGroup}
+    //      communityGroups={joinedSubscribedCommunitiesGroup}
+    //      showGroupTill={showGroupTill}
+    //      setShowGroupTill={setShowGroupTill}
+    //      currSelectedGroup={currSelectedGroup as Community}
+    //      setCurrSelectedGroup={setCurrSelectedGroup}
+    //      userData={userData}
+    //      handleAssignUsersModal={handleAssignUsersModal}
+    //      SetcurrClickedID={SetcurrClickedID}
+    //      selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+    //      selectCommunityId={selectCommunityId}
+    //      toggleLeftNavbar={toggleLeftNavbar}
+    //    />
+    //  ),
+    //},
     {
       label: 'Your Group',
       content: (
@@ -278,22 +278,22 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
       <div className="h-fit">
         {subscribedCommunities?.length !== 0 ? (
-          //  <Tabs tabs={tabData} tabAlign="left" className="my-4 px-4" labelSize="small" />
-          <CommunityGroupAll
-            key={subscribedCommunities}
-            communityGroups={subscribedCommunitiesAllGroups}
-            showGroupTill={showGroupTill}
-            setShowGroupTill={setShowGroupTill}
-            currSelectedGroup={currSelectedGroup as Community}
-            setCurrSelectedGroup={setCurrSelectedGroup}
-            userData={userData}
-            handleAssignUsersModal={handleAssignUsersModal}
-            SetcurrClickedID={SetcurrClickedID}
-            selectedCommuntyGroupdId={selectedCommuntyGroupdId}
-            selectCommunityId={selectCommunityId}
-            toggleLeftNavbar={toggleLeftNavbar}
-          />
+          <Tabs tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
         ) : (
+          //  <CommunityGroupAll
+          //    key={subscribedCommunities}
+          //    communityGroups={subscribedCommunitiesAllGroups}
+          //    showGroupTill={showGroupTill}
+          //    setShowGroupTill={setShowGroupTill}
+          //    currSelectedGroup={currSelectedGroup as Community}
+          //    setCurrSelectedGroup={setCurrSelectedGroup}
+          //    userData={userData}
+          //    handleAssignUsersModal={handleAssignUsersModal}
+          //    SetcurrClickedID={SetcurrClickedID}
+          //    selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+          //    selectCommunityId={selectCommunityId}
+          //    toggleLeftNavbar={toggleLeftNavbar}
+          //  />
           <div className="px-4 w-full text-center font-poppins text-neutral-400">
             <p>Add your university to join or create groups</p>
           </div>

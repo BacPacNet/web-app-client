@@ -31,13 +31,12 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact', '/timeline']
+const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
-  const { isDesktop } = useDeviceType()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
 
@@ -47,8 +46,8 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { data: notificationData } = useGetNotification(3, true)
   const { data: messageNotificationData } = useGetMessageNotification(3, true)
-  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
-  const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
+  //  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
+  //  const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
 
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData?.users_id)
@@ -73,7 +72,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case true:
         return (
           <div className="flex gap-4 items-center pl-4">
-            <Popover>
+            {/*<Popover>
               <PopoverTrigger>
                 <div className="relative">
                   <FaBell className="text-primary-700 w-[20px] h-[20px]" />
@@ -83,9 +82,9 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
               <PopoverContent className="p-0 relative right-32 top-6 w-96 bg-white shadow-card border-none">
                 <NotificationBox notifications={notifications} />
               </PopoverContent>
-            </Popover>
+            </Popover>*/}
             {/* // message notification  */}
-            <Popover>
+            {/*<Popover>
               <PopoverTrigger>
                 <div className="relative">
                   <PiChatsBold className="text-primary-700 w-[20px] h-[20px]" />
@@ -95,7 +94,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
               <PopoverContent className="p-0 relative right-28 top-6 w-96 bg-white shadow-card border-none">
                 <MessageNotification message={messageNotifications} />
               </PopoverContent>
-            </Popover>
+            </Popover>*/}
             <Popover>
               <PopoverTrigger>
                 <div className="flex gap-2 items-center">
@@ -107,7 +106,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                     src={userProfileData?.profile_dp?.imageUrl || avatar}
                     alt="profile.png"
                   />
-                  <FaAngleDown />
+                  <FaAngleDown className="text-neutral-600" size={16} />
                 </div>
               </PopoverTrigger>
               <PopoverContent className="p-0 relative right-4 top-6 w-[168px] bg-white shadow-card border-none">
@@ -202,9 +201,9 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       <div className="w-full h-[40px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200">
           <div
-            className={`
+            className={`${shouldPadding ? 'max-width-allowed ' : 'max-w-[1280px] px-6'}
                
-            px-4 lg:px-0 max-width-allowed relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
+             relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
               <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
@@ -221,9 +220,13 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                <div className="flex gap-16 px-8">
+                <div className="flex gap-6 px-4">
                   {MENU_LIST.map((menu, index) => (
-                    <p onClick={() => router.push(menu.path)} key={index} className="text-neutral-800 text-xs cursor-pointer">
+                    <p
+                      onClick={() => router.push(menu.path)}
+                      key={index}
+                      className={`text-neutral-800 text-xs cursor-pointer ${pathname === menu.path ? 'font-extrabold' : ''}`}
+                    >
                       {menu.name}
                     </p>
                   ))}

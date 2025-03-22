@@ -83,11 +83,30 @@ export enum PostType {
   Timeline = 'Timeline',
   Profile = 'Profile',
 }
+
+export enum CommunityPostTypeOption {
+  PUBLIC = 'Public',
+  FOLLOWER_ONLY = 'Followers Only',
+}
+
 export enum CommunityPostType {
   PUBLIC = 'PUBLIC',
   FOLLOWER_ONLY = 'FOLLOWER_ONLY',
 }
 
+export enum PostTypeOption {
+  'Public' = 'PUBLIC',
+  'Followers only' = 'FOLLOWER_ONLY',
+  'Mutual' = 'MUTUAL',
+  'Only me' = 'ONLY_ME',
+}
+
+export enum UserPostTypeOption {
+  PUBLIC = 'Public',
+  FOLLOWER_ONLY = 'Followers only',
+  MUTUAL = 'Mutual',
+  ONLY_ME = 'Only me',
+}
 export enum UserPostType {
   PUBLIC = 'PUBLIC',
   FOLLOWER_ONLY = 'FOLLOWER_ONLY',

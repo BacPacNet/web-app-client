@@ -27,13 +27,13 @@ const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left', la
   return (
     <div className={`w-full ${className} `}>
       {/* Tabs List */}
-      <div className={`border-gray-200 text-${tabAlign} flex gap-6`}>
+      <div className={`border-gray-200 text-${tabAlign} flex`}>
         {tabs.map((tab, index) => (
           <button
             key={index}
             onClick={() => handleTabClick(index)}
-            className={`py-2 ${fontSize[labelSize]} font-medium focus:outline-none ${
-              activeTab === index ? 'border-b-2 border-primary-500 text-primary-500' : 'text-neutral-500 hover:text-primary-500'
+            className={`py-2 flex-1 ${fontSize[labelSize]} font-extrabold focus:outline-none ${
+              activeTab === index ? 'border-b-2 border-primary-500 text-primary-700 ' : 'text-neutral-400 hover:text-primary-500'
             }`}
           >
             {tab.label}
