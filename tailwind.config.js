@@ -120,7 +120,7 @@ module.exports = {
                     },
                 },
                 '.max-width-allowed': {
-                    maxWidth: "1280px"
+                    maxWidth: "1058px"
                 },
                 '.max-width-tablet': {
                     maxWidth: "518px"

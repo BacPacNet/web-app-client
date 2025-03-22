@@ -52,7 +52,7 @@ const recommendations = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="bg-surface-primary-50">
-      <div className="max-width-allowed mx-auto flex h-with-navbar">
+      <div className="max-w-[1280px] mx-auto flex h-with-navbar">
         {/* Left Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
           <LeftNavbar />

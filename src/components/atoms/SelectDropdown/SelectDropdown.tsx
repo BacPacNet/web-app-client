@@ -83,7 +83,7 @@ const SelectDropdown = ({
   }
 
   return (
-    <motion.div ref={dropdownRef} className="relative flex flex-col gap-2">
+    <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[90px]">
       <div className="flex gap-1">
         {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
         {isStatus && <StatusTooltip />}
@@ -93,9 +93,9 @@ const SelectDropdown = ({
         onClick={toggleDropdown}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        }  h-10 flex justify-between items-center px-2 py-2 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
+        }  h-10 flex justify-between items-center px-2 py-2  bg-surface-primary-50 focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-xs`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-primary-500 text-xs px-1`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
@@ -105,7 +105,7 @@ const SelectDropdown = ({
               }}
             />
           ) : icon === 'single' ? (
-            <IoIosArrowDown />
+            <IoIosArrowDown className="text-primary-500" />
           ) : (
             <div className="flex flex-col text-xs">
               <IoIosArrowUp />
@@ -136,11 +136,11 @@ const SelectDropdown = ({
                 const IconComponent = icons[key % icons.length]
                 return (
                   <div
-                    className={`border-b flex gap-2 items-center border-neutral-300 text-2xs text-neutral-900 pb-2 px-1 cursor-pointer hover:bg-gray-200`}
+                    className={` flex gap-2 items-center  text-xs text-neutral-900 p-1 px-2 cursor-pointer `}
                     onClick={() => handleSelect(item)}
                     key={key}
                   >
-                    {showIcon && <IconComponent size={16} className="text-neutral-900" />}
+                    {showIcon && <IconComponent size={16} className="text-neutral-600" />}
                     <p>{item}</p>
                   </div>
                 )

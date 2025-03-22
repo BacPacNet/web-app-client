@@ -12,13 +12,23 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { MdOutlineGifBox } from 'react-icons/md'
 import { GoFileMedia } from 'react-icons/go'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
-import { CommunityPostData, CommunityPostType, PostInputData, PostInputType, UserPostType } from '@/types/constants'
+import {
+  CommunityPostData,
+  CommunityPostType,
+  CommunityPostTypeOption,
+  PostInputData,
+  PostInputType,
+  PostTypeOption,
+  UserPostType,
+  UserPostTypeOption,
+} from '@/types/constants'
 import { RxCrossCircled } from 'react-icons/rx'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import Buttons from '@/components/atoms/Buttons'
 
 type Props = {
   communityID?: string
@@ -33,10 +43,10 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const { mutate: CreateTimelinePost, isPending } = useCreateUserPost()
   const [isPostCreating, setIsPostCreating] = useState(false)
 
-  const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostType>(UserPostType.PUBLIC)
+  const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
 
-  const userPostTypeKey = Object.values(UserPostType)
-  const communityPostTypeKey = Object.values(CommunityPostType)
+  const userPostTypeKey = Object.values(UserPostTypeOption)
+  const communityPostTypeKey = Object.values(CommunityPostTypeOption)
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
     const emoji = emojiData.emoji
@@ -78,7 +88,9 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
       const data: PostInputData = {
         content: inputValue,
         imageUrl: imagedata,
-        ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
+        ...(type == PostInputType.Timeline
+          ? { PostType: PostTypeOption[postAccessType as never] }
+          : { communityPostsType: PostTypeOption[postAccessType as never] }),
       }
 
       //if type is community , add communityId field to data
@@ -95,7 +107,9 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
     } else {
       const data: PostInputData = {
         content: inputValue,
-        ...(type == PostInputType.Timeline ? { PostType: postAccessType } : { communityPostsType: postAccessType }),
+        ...(type == PostInputType.Timeline
+          ? { PostType: PostTypeOption[postAccessType as never] }
+          : { communityPostsType: PostTypeOption[postAccessType as never] }),
       }
 
       if (type === PostInputType.Community) {
@@ -179,38 +193,39 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
               <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-            <div className="w-28 max-sm:w-20">
-              {type == PostInputType.Community ? (
-                <SelectDropdown
-                  options={communityPostTypeKey}
-                  value={postAccessType}
-                  onChange={(e: any) => setPostAccessType(e)}
-                  placeholder=""
-                  icon={'single'}
-                  // search={true}
-                  err={false}
-                  showIcon={true}
-                  isAllowedToRemove={false}
-                />
-              ) : (
-                <SelectDropdown
-                  options={userPostTypeKey}
-                  value={postAccessType}
-                  onChange={(e: any) => setPostAccessType(e)}
-                  placeholder=""
-                  icon={'single'}
-                  // search={true}
-                  err={false}
-                  showIcon={true}
-                  isAllowedToRemove={false}
-                />
-              )}
-            </div>
           </div>
-          <div>
-            <button disabled={isPending} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
+          <div className="flex gap-2 h-10">
+            {type == PostInputType.Community ? (
+              <SelectDropdown
+                options={communityPostTypeKey}
+                value={postAccessType}
+                onChange={(e: any) => setPostAccessType(e)}
+                placeholder="Visibility"
+                icon={'single'}
+                // search={true}
+                err={false}
+                showIcon={true}
+                isAllowedToRemove={false}
+              />
+            ) : (
+              <SelectDropdown
+                options={userPostTypeKey}
+                value={postAccessType}
+                onChange={(e: any) => setPostAccessType(e)}
+                placeholder="Visibility"
+                icon={'single'}
+                // search={true}
+                err={false}
+                showIcon={true}
+                isAllowedToRemove={false}
+              />
+            )}
+            <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
-            </button>
+            </Buttons>
+            {/*<button disabled={isPending} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
+              {isPending || isPostCreating ? <Spinner /> : 'Post'}
+            </button>*/}
           </div>
         </div>
         {/* Display selected images */}
