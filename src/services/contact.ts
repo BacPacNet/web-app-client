@@ -20,7 +20,7 @@ export const useSendContactMessage = () => {
   return useMutation({
     mutationFn: (data: data) => contact(data),
     onSuccess: () => {
-      showCustomSuccessToast('Message sent successfully.')
+      showCustomSuccessToast('Your form has been submitted. We will get back to you as soon as we can!')
     },
     onError: (error: any) => {
       showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)

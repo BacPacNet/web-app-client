@@ -5,13 +5,13 @@ import { useUniversitySearchByName } from '@/services/universitySearch'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { MdEmail } from 'react-icons/md'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaPhoneAlt, FaUsers } from 'react-icons/fa'
 import { IoIosLink } from 'react-icons/io'
 import { PiBuildingsFill } from 'react-icons/pi'
 import { BsClockFill } from 'react-icons/bs'
-import universityPlaceholder from '@assets/university_placeholder.jpg'
-import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import universityPlaceholder from '@assets/universityBackgroudImage.svg'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { IconType } from 'react-icons/lib'
 import { useUniStore } from '@/store/store'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
@@ -35,9 +35,22 @@ export default function UniversityProfile() {
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
   const { userData, userProfileData } = useUniStore()
+  const [imageSrc, setImageSrc] = useState(university?.campus || universityPlaceholder)
+  const [logoSrc, setLogoSrc] = useState(university?.logo || universityLogoPlaceholder)
 
   const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
   const router = useRouter()
+
+  useEffect(() => {
+    if (university?.campus) {
+      setImageSrc(university?.campus)
+    }
+
+    if (university?.logo) {
+      setLogoSrc(university?.logo)
+    }
+  }, [university])
+
   if (isUniversityLoading || isFetching) return <Loading />
 
   const contactData = [
@@ -102,7 +115,7 @@ export default function UniversityProfile() {
           <div className="flex flex-col  gap-4 md:gap-8 flex-1 ">
             <div className="flex items-center lg:items-start gap-8 pb-4">
               <div className="flex justify-start items-start  drop-shadow-lg rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
-                <Image fill src={university?.logo || universityLogoPlaceholder} alt="logo" className="object-contain p-2" />
+                <Image onError={() => setLogoSrc(universityLogoPlaceholder)} fill src={logoSrc} alt="logo" className="object-contain p-2" />
               </div>
 
               <p className="text-neutral-900 md:text-lg-small text-md font-extrabold font-poppins">{university?.name}</p>
@@ -113,8 +126,16 @@ export default function UniversityProfile() {
               Join Community
             </Buttons>
           </div>
-          <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px]">
-            <Image fill className="rounded-lg  object-cover   " src={university?.campus || universityPlaceholder} alt="university_image" />
+          <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px] bg-neutral-300 rounded-lg">
+            <Image
+              onError={() => setImageSrc(universityPlaceholder)}
+              fill
+              className="rounded-lg  object-cover   "
+              src={imageSrc}
+              alt="university_image"
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO8/B8AAtsA5tSY3jYAAAAASUVORK5CYII="
+            />
           </div>
         </div>
         {/* //overview  */}

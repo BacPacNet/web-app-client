@@ -8,17 +8,15 @@ import { IoIosSearch } from 'react-icons/io'
 
 type Props = {
   setQuery: (value: any) => void
+  query: string
+  resetSearchInput: () => void
 }
 
-const DiscoverFilterComponent = ({ setQuery }: Props) => {
+const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) => {
   const { register, control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
   const [cityOptions, setCityOptions] = useState<string[]>([])
-  const [isCityAvailable, setIsCityAvailable] = useState(true)
-  const currCountry = watch('country') || ''
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
-    console.log('sele', selectedCountry)
-
     const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
     if (getCountyCode) {
       setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
@@ -38,17 +36,25 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
     setQuery(JSON.stringify(data))
   }
 
+  useEffect(() => {
+    const parsedQuery = query ? JSON.parse(query) : {}
+    if (parsedQuery.Search !== undefined) {
+      setValue('Search', parsedQuery.Search)
+    }
+  }, [query, setValue])
+
   const resetForm = () => {
     setQuery('')
     reset()
+    resetSearchInput()
   }
 
   return (
-    <div className="max-lg:w-60 lg:block hidden">
-      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-2xl w-[307px]">
-        <h3 className="border-b border-neutral-300 text-neutral-700 text-[24px] font-poppins p-4">Search Filter</h3>
-        <div className="p-4 flex flex-col gap-4">
-          <div className="w-full flex flex-col relative">
+    <div className=" lg:block hidden">
+      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-2xl ">
+        <h3 className="border-b border-neutral-300 text-neutral-700 text-[20px] font-bold font-poppins p-6 w-[297px]">Search Filter</h3>
+        <div className="p-6 flex flex-col gap-4">
+          {/* <div className="w-full flex flex-col relative">
             <IoIosSearch size={20} className="absolute left-2 z-30 top-1/2 -translate-y-1/2" />
             <input
               className=" py-2 ps-8 pe-3 border-2 border-neutral-200 focus:ring-2 rounded-full drop-shadow-sm outline-none "
@@ -61,7 +67,7 @@ const DiscoverFilterComponent = ({ setQuery }: Props) => {
                 },
               })}
             />
-          </div>
+          </div> */}
           <div className="w-full flex flex-col">
             <Controller
               name="region"

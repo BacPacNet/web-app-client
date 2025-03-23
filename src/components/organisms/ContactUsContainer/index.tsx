@@ -48,9 +48,9 @@ export function ContactForm() {
   }, [isSuccess])
 
   return (
-    <div className="w-full px-4">
-      <div className="text-center mb-8 md:mb-12 lg:mb-16">
-        <h2 className="text-lg-small sm:text-4xl font-poppins font-extrabold text-neutral-700 mb-2">Send us a message</h2>
+    <div className="w-full ">
+      <div className="text-start mb-8">
+        <h2 className="text-lg-small sm:md-big font-poppins font-extrabold text-neutral-700 mb-3">Send us a message</h2>
         <p className="text-neutral-700 text-sm ">Contact us regarding any concerns or inquiries.</p>
       </div>
 
@@ -114,7 +114,7 @@ export function ContactForm() {
         <div className="w-full flex flex-col relative">
           <label className="text-[#3a3b3c] mb-2">Additional Message</label>
           <textarea
-            className={`${registerFormErrors.message ? 'border-red-400' : 'border-neutral-200'}  min-h-[160px] resize-non
+            className={`${registerFormErrors.message ? 'border-red-400' : 'border-neutral-200'}  h-[155px] resize-non
            w-full pt-2 pb-4 px-3 border  rounded-lg drop-shadow-sm text-neutral-900 placeholder:text-neutral-400  outline-none p-3`}
             placeholder="Type a message here..."
             maxLength={240}
@@ -130,14 +130,14 @@ export function ContactForm() {
           {registerFormErrors.message && <InputWarningText>{registerFormErrors.message.message}</InputWarningText>}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-6 items-start">
-          <Buttons disabled={isPending} variant="primary" type="submit" className="  min-w-[120px]">
-            {isPending ? <Spinner /> : ' Send Form'}
-          </Buttons>
+        <div className="flex flex-col  gap-6 items-start">
           <p className="text-2xs text-neutral-500 ">
             By pressing the submit button, I agree to Unibuzz contacting me by email and/or phone to share opportunities exclusively available to
             Select or Enterprise customers. I also understand that any information Ive shared in this form is subject to Unibuzz Privacy Policy.
           </p>
+          <Buttons disabled={isPending} variant="primary" type="submit" className=" w-full">
+            {isPending ? <Spinner /> : 'Submit Form'}
+          </Buttons>
         </div>
       </form>
     </div>
