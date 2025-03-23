@@ -1,23 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
-import dayjs from 'dayjs'
 import { useUniStore } from '@/store/store'
 import { useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useGetCommunityPostComments, useLikeUnlikeGroupPostComment } from '@/services/community-university'
-import { PostCommentData, PostType } from '@/types/constants'
+import { PostType } from '@/types/constants'
 import Spinner from '@/components/atoms/spinner'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
 import { FaPlusCircle } from 'react-icons/fa'
 import NewPostComment from '../NewPostComment'
 import { FiMessageCircle, FiRepeat, FiShare2, FiThumbsUp } from 'react-icons/fi'
-import { FaUser, FaUsers } from 'react-icons/fa'
-import { BsThreeDots } from 'react-icons/bs'
-import { CiBellOff, CiFlag1 } from 'react-icons/ci'
-import { MdBlock } from 'react-icons/md'
-import { GoBookmark } from 'react-icons/go'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -31,15 +24,14 @@ import {
 import { IoMdCode } from 'react-icons/io'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
-import { formatRelativeTime } from '@/lib/utils'
-//dayjs.extend(relativeTime)
+import UserCard from '@/components/atoms/UserCard'
+import { format } from 'date-fns'
 
 type Props = {
   showCommentSec: string
-
+  handleProfileClicked: (adminId: string) => void
   postID: string
   type: PostType.Community | PostType.Timeline
-  adminId: string
   data: {
     user: string
     avatarLink: string
@@ -60,6 +52,7 @@ type comments = {
   commenterId: {
     firstName: string
     lastName: string
+    _id: string
   }
   commenterProfileId: {
     profile_dp: {
@@ -75,7 +68,7 @@ type comments = {
   totalCount: string
 }[]
 
-const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
+const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClicked }: Props) => {
   const { userData, userProfileData } = useUniStore()
   const [newPost, setNewPost] = useState(false)
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
@@ -85,7 +78,6 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
   const { isMobile } = useDeviceType()
-  const { isDesktop } = useDeviceType()
 
   const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false)
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false)
@@ -169,7 +161,6 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   }
 
   const setActiveComments = (clickedComment: any) => {
-    // console.log('ismm', isMobile, clickedComment)
     if (isMobile && clickedComment.level == 1) {
       return setReplyModal({ enabled: true, commentID: clickedComment._id })
     }
@@ -224,59 +215,13 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
     )
   }
 
-  const RepostPopUp = () => {
-    return (
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-1">
-          <FaUser />
-          <p>Repost on Group</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <FaUsers />
-          <p>Repost on Timeline</p>
-        </div>
-      </div>
-    )
-  }
-
-  const CommentOption = () => {
-    return (
-      <div className="flex flex-col gap-2">
-        {/* <div className="flex items-center gap-1">
-          <FiRepeat className="mr-1 text-neutral-600" />
-          <p>Repost </p>
-        </div> */}
-        <div className="flex items-center gap-1">
-          <FiShare2 className="mr-1 text-neutral-600" />
-          <p>Share </p>
-        </div>
-        <div className="flex items-center gap-1">
-          <GoBookmark className="mr-1 text-neutral-600" />
-          <p>Save Comment</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <CiBellOff className="mr-1 text-neutral-600" />
-          <p>Mute Notification </p>
-        </div>
-        <div className="flex items-center gap-1">
-          <MdBlock className="mr-1 text-neutral-600" />
-          <p>Block</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <CiFlag1 className="mr-1 text-neutral-600" />
-          <p>Report</p>
-        </div>
-      </div>
-    )
-  }
-
   const renderComments = (comments: comments) => {
     if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
       return <Spinner />
     }
 
     return comments?.map((comment, index: number) => (
-      <div key={comment._id} className={`mb-4 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-[60px]' : 'w-full'} `}>
+      <div key={comment._id} className={`mb-6 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-[60px]' : 'w-full'} `}>
         {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
           <div className="absolute w-[1px] h-24 bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
@@ -284,102 +229,43 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
         )}*/}
 
         <div>
-          <div className="flex py-2 max-sm:px-0 gap-4 justify-start">
-            {/*<div className="relative ">
-              {childCommentsId.includes(comment._id) ? (
-                <>
-                  <div className="absolute w-1 h-36 bg-neutral-300 -top-28 -left-14"></div>
-                  {index == comments.length - 1 ? <div className="absolute w-2 h-96  bg-white  top-5  -left-6 max-sm:-left-4"></div> : ''}
-
-                  <div
-                    className={`absolute 
-                     top-5 max-sm:top-4
-                     -left-6 max-sm:-left-4 h-3 w-[43px] max-sm:w-8 border-l border-b border-neutral-300 rounded-bl-xl`}
-                  ></div>
-                </>
-              ) : (
-                ''
-              )}
-            </div>*/}
-            <div className="w-[45px] h-[45px] flex-none">
-              <Image
-                src={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-                width={45}
-                height={45}
-                className="rounded-full h-[inherit] object-cover"
-                alt="avatar.png"
+          <UserCard
+            user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
+            university={comment?.commenterProfileId?.university_name}
+            year={comment?.commenterProfileId?.study_year}
+            avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
+            adminId={comment?.commenterId?._id}
+            postID={postID}
+            type={type}
+            handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
+          />
+        </div>
+        <div className="flex flex-col gap-4 py-6 border-b border-neutral-200">
+          <p className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+          <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
+          <div className="flex justify-start gap-4 text-sm text-neutral-500">
+            <div className="flex items-center cursor-pointer">
+              <AiOutlineLike
+                onClick={() => likePostCommentHandler(comment._id)}
+                className={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? 'text-primary' : ''}
               />
+              <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
             </div>
-
-            <div>
-              <div className="flex gap-2 items-center">
-                <h3 className="font-medium text-sm max-sm:text-xs text-neutral-600 ">{comment?.commenterId?.firstName}</h3>
-                <p className="text-2xs md:text-xs text-gray">{comment.createdAt && formatRelativeTime(new Date(comment?.createdAt))}</p>
-              </div>
-              {/*<p className="text-2xs max-sm:text-[10px] text-neutral-500">{comment?.commenterProfileId?.university_name}</p>*/}
-              <p className="text-2xs  text-neutral-500">{`${comment?.commenterProfileId?.study_year} year, ${comment?.commenterProfileId?.degree}`}</p>
+            <span
+              onClick={() => {
+                toggleCommentSection(comment._id), handleChildComments(comment?.replies), setActiveComments(comment)
+              }}
+              className="flex items-center  cursor-pointer"
+            >
+              <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount}
+            </span>
+            <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
+              <HiReply className="text-gray-dark" />
+              <span className="ml-1 font-poppins text-xs">reply</span>
             </div>
           </div>
         </div>
-        <div className="flex gap-4 ml-[62px]">
-          <p className="font-poppins text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
-        </div>
-        <div className="flex justify-start ml-[62px] my-2 gap-4 text-sm text-neutral-500">
-          <div className="flex items-center cursor-pointer">
-            <AiOutlineLike
-              onClick={() => likePostCommentHandler(comment._id)}
-              className={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? 'text-primary' : ''}
-            />
-            <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
-          </div>
-          <span
-            onClick={() => {
-              toggleCommentSection(comment._id), handleChildComments(comment?.replies), setActiveComments(comment)
-            }}
-            className="flex items-center  cursor-pointer"
-          >
-            <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount}
-          </span>
-          <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
-            <HiReply className="text-gray-dark" />
-            <span className="ml-1 font-poppins text-xs">reply</span>
-          </div>
-          {/* <span className="flex items-center">
-            <Popover>
-              <PopoverTrigger>
-                <div className="flex gap-1 items-center">
-                  <FiRepeat className="mr-1 text-neutral-600" />
-                  <span>2</span>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-                <RepostPopUp />
-              </PopoverContent>
-            </Popover>
-          </span> */}
 
-          {/*<Popover>
-            <PopoverTrigger>
-              <span className="flex items-center">
-                <FiShare2 className="mr-1 text-neutral-600" /> Share
-              </span>
-            </PopoverTrigger>
-            <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-              <SharePopup commentId={comment._id} />
-            </PopoverContent>
-          </Popover>*/}
-
-          {/*<Popover>
-            <PopoverTrigger>
-              <div className="flex gap-1 items-center">
-                <BsThreeDots className="mr-1 text-neutral-600" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-              <CommentOption />
-            </PopoverContent>
-          </Popover>*/}
-        </div>
         {/* Render nested replies if they exist */}
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3 && (
           <div className="w-full">{renderComments(comment.replies)}</div>
@@ -389,42 +275,33 @@ const PostCommentBox = ({ showCommentSec, postID, type, data }: Props) => {
   }
 
   return (
-    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-4'}  flex flex-col gap-2 w-full `}>
-      <div className="rounded-full pb-2 flex gap-2 items-center">
-        <Image
-          src={userProfileData?.profile_dp?.imageUrl || avatar}
-          alt={`${userData?.firstName}'s avatar`}
-          width={45}
-          height={45}
-          className="rounded-full h-[45px] object-cover"
-        />
-        <button
-          onClick={() => {
-            setNewPost(true), setIsReply(false)
-          }}
-          className="border-2 border-primary py-1 px-3 text-2xs md:text-xs rounded-lg flex items-center gap-3 ms-2"
-        >
-          <span>
-            <FaPlusCircle color="#6647ff" />
-          </span>{' '}
-          <span className="text-primary"> Add a comment</span>
-        </button>
-      </div>
+    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-6'} flex flex-col gap-2 w-full border-t border-neutral-200`}>
+      <div className="px-6">
+        <div className="rounded-full pb-6 flex gap-4 items-center">
+          <Image
+            src={userProfileData?.profile_dp?.imageUrl || avatar}
+            alt={`${userData?.firstName}'s avatar`}
+            width={45}
+            height={45}
+            className="rounded-full h-[45px] object-cover"
+          />
+          <button
+            onClick={() => {
+              setNewPost(true), setIsReply(false)
+            }}
+            className="border-2 border-primary py-2 px-3 text-2xs md:text-xs rounded-lg flex items-center gap-1"
+          >
+            <span className="text-primary font-medium"> Add a comment</span>
+            <FaPlusCircle className="p-1" size={20} color="#6647ff" />
+          </button>
+        </div>
 
-      {communitCommentsDatas.length || commentsDatas.length ? (
-        <p className="text-xs text-neutral-400">
-          <span className="text-neutral-900">Top Comment</span> / <span>Most Recent</span>
-        </p>
-      ) : (
-        ''
-      )}
-
-      <div ref={containerRef} className="">
-        {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
-        {/*{(isFetchingNextPage || communityCommentsIsFetching) && <Spinner />}*/}
+        <div ref={containerRef} className="">
+          {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
+        </div>
+        {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
+        {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
       </div>
-      {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
-      {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
     </div>
   )
 }
