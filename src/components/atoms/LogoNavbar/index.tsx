@@ -31,12 +31,11 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/', '/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
+const nonPaddingUrls = ['/university', '/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
-  console.log('pathname', pathname)
   const router = useRouter()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
