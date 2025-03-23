@@ -7,12 +7,14 @@ import Paginate from '@/components/molecules/Paginate'
 import useDeviceType from '@/hooks/useDeviceType'
 import { useGetFilteredUniversity } from '@/services/universitySearch'
 import React, { useEffect, useRef, useState } from 'react'
+import { IoSearch } from 'react-icons/io5'
 
 const DiscoverContainer = () => {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading } = useGetFilteredUniversity(page, 10, query)
-  const { isTablet, isMobile } = useDeviceType()
+  const { isTablet, isMobile, isDesktop } = useDeviceType()
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -24,12 +26,37 @@ const DiscoverContainer = () => {
     setPage(1)
   }, [query])
 
-  return (
-    <div className="flex justify-between max-width-allowed mx-auto">
-      <div className={`w-full flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'}   justify-between gap-[64px] lg:gap-8 pt-10`}>
-        {isTablet || isMobile ? <DiscoverFilterMobileComponent setQuery={setQuery} /> : <DiscoverFilterComponent setQuery={setQuery} />}
+  const handleSearchChange = () => {
+    const searchText = searchInputRef.current?.value || ''
 
-        <div>
+    const newData = query ? JSON.parse(query) : {}
+    const finalData = JSON.stringify({ ...newData, Search: searchText })
+
+    setQuery(finalData)
+  }
+
+  const resetSearchInput = () => {
+    if (searchInputRef.current) {
+      searchInputRef.current.value = ''
+    }
+  }
+
+  return (
+    <div className="flex justify-between max-width-allowed mx-auto min-h-screen">
+      <div className={`w-full flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'}   justify-between gap-[64px] lg:gap-[31px] pt-16`}>
+        {isTablet || isMobile ? (
+          <DiscoverFilterMobileComponent setQuery={setQuery} />
+        ) : (
+          <DiscoverFilterComponent query={query} setQuery={setQuery} resetSearchInput={resetSearchInput} />
+        )}
+
+        <div className="">
+          {isDesktop && (
+            <div className="w-full flex items-center relative mb-8 gap-2 border-[3px] border-neutral-300 px-6 py-2 rounded-full ">
+              <IoSearch size={20} className=" text-neutral-500" />
+              <input ref={searchInputRef} className="   w-full  outline-none " placeholder="Search" type="text" onChange={handleSearchChange} />
+            </div>
+          )}
           {!isLoading && !data?.Universities?.length && (
             <div className="lg:w-[600px] flex items-center justify-center text-center font-bold text-4xl  font-poppins h-32">No Result Found</div>
           )}
