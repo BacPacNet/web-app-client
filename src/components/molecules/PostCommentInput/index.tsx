@@ -178,8 +178,13 @@ function PostCommentInput({
             onInput={handleInput}
           ></textarea>
         </div>
-        <div className="flex items-center justify-between p-2">
-          <div className="flex gap-6 items-center ">
+        <div className="flex items-center justify-between px-2 py-5 relative">
+          <div className="absolute right-2 bottom-3">
+            <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg px-3 py-2 w-[69px] ">
+              Post
+            </button>
+          </div>
+          <div className="flex gap-4 items-center ">
             <Popover>
               <PopoverTrigger>
                 <HiOutlineEmojiHappy size={24} className="text-neutral-400" />
@@ -201,11 +206,7 @@ function PostCommentInput({
           </div>
         </div>
       </div>
-      <div className="flex justify-end">
-        <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg px-3 py-2 w-[69px] mt-5 ">
-          Post
-        </button>
-      </div>
+
       {/* Display selected images */}
       <div className="flex flex-wrap gap-2">
         {images.map((image, index) => (

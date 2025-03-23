@@ -2,11 +2,12 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
 import Button from '../atoms/Buttons'
+import Image from 'next/image'
 
 interface User {
   name: string
   university: string
-  affilation: string
+  study_year: string
   avatar: string
 }
 interface Props {
@@ -23,8 +24,8 @@ const UserCard = ({ user }: { user: User }) => {
         <img src={user.avatar} alt={`${user.name}'s avatar`} width={14} height={14} className="rounded-full w-10 h-10" />
         <div>
           <p className="font-medium text-xs text-gray-dark">{user.name}</p>
+          <p className="text-[10px] text-gray-1">{user.study_year}</p>
           <p className="text-[10px] text-gray-1 ">{user.university}</p>
-          <p className="text-[10px] text-gray-1">{user.affilation}</p>
         </div>
       </div>
       <div>
@@ -42,14 +43,28 @@ const UserCard = ({ user }: { user: User }) => {
 const Recommendations: React.FC<Props> = ({ people, userItemButtonStyle, containerStyle, itemStyle }) => {
   return (
     <div>
-      <p className="text-neutral-700 text-xs font-semibold pb-4">Recommendations</p>
-      <div className="flex flex-col gap-6">
-        {people.map((user) => (
-          <UserCard user={user} key={`${user?.avatar}${user?.name}`} />
+      <p className="text-xs text-neutral-500 font-bold py-2 pb-4">GROW YOUR NETWORK</p>
+      <div className="flex flex-col gap-4">
+        {people.map((user, index) => (
+          <div key={index} className="border-b border-neutral-200 pb-4">
+            <UserCard user={user} key={`${user?.avatar}${user?.name}`} />
+          </div>
         ))}
       </div>
+      <p className="text-xs text-neutral-500 font-bold mt-4">JOIN GROUPS</p>
+      {people.map((user, index) => (
+        <div key={index} className="border-b border-neutral-200">
+          <div className="flex py-4 justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <Image src={user.avatar} alt={`${user.name}'s avatar`} width={14} height={14} className="rounded-full w-10 h-10" />
+              <div>
+                <p className="font-medium text-xs text-gray-dark">{user.name}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
-// <userCard user={user} key={`${user?.avatar}${user?.name}`} buttonStyle={userItemButtonStyle} />
 export default Recommendations
