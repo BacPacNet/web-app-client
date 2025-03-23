@@ -23,6 +23,7 @@ interface SelectDropdownProps {
   isAllowedToRemove?: boolean
   label?: string
   isStatus?: boolean
+  variant?: 'primary' | 'default'
 }
 
 const motionStyle = {
@@ -30,6 +31,15 @@ const motionStyle = {
   animate: { opacity: 1, y: '5%' },
   exit: { opacity: 0, y: '-10%', transition: { duration: '0.35' } },
   transition: { type: 'spring', stiffness: '100', duration: '0.75' },
+}
+
+const variantText: any = {
+  primary: 'text-primary-500',
+  default: 'text-neutral-800',
+}
+const variantBg: any = {
+  primary: 'bg-surface-primary-50',
+  default: 'bg-white',
 }
 
 const SelectDropdown = ({
@@ -44,6 +54,7 @@ const SelectDropdown = ({
   showIcon = false,
   label,
   isStatus = false,
+  variant = 'default',
 }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -91,11 +102,11 @@ const SelectDropdown = ({
 
       <div
         onClick={toggleDropdown}
-        className={`${
-          err ? 'border-red-400' : 'border-neutral-200'
-        }  h-10 flex justify-between items-center px-2 py-2  bg-surface-primary-50 focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
+        className={`${err ? 'border-red-400' : 'border-neutral-200'} border  h-10 flex justify-between items-center px-2 py-2  ${
+          variantBg[variant]
+        } focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-primary-500 text-xs px-1`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${variantText[variant]} text-xs px-1`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
@@ -105,7 +116,7 @@ const SelectDropdown = ({
               }}
             />
           ) : icon === 'single' ? (
-            <IoIosArrowDown className="text-primary-500" />
+            <IoIosArrowDown className={`${variantText[variant]}`} />
           ) : (
             <div className="flex flex-col text-xs">
               <IoIosArrowUp />

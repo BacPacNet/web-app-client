@@ -206,6 +206,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
                 err={false}
                 showIcon={true}
                 isAllowedToRemove={false}
+                variant="primary"
               />
             ) : (
               <SelectDropdown
@@ -218,6 +219,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
                 err={false}
                 showIcon={true}
                 isAllowedToRemove={false}
+                variant="primary"
               />
             )}
             <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
