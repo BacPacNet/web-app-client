@@ -10,7 +10,7 @@ import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
 import { FaPlusCircle } from 'react-icons/fa'
 import NewPostComment from '../NewPostComment'
-import { FiMessageCircle, FiRepeat, FiShare2, FiThumbsUp } from 'react-icons/fi'
+import { FiMessageCircle } from 'react-icons/fi'
 import {
   FacebookIcon,
   FacebookShareButton,
@@ -232,7 +232,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
     console.log('cccc', comments)
 
     return comments?.map((comment, index: number) => (
-      <div key={comment._id} className={`mb-6 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-[60px]' : 'w-full'} `}>
+      <div key={comment._id} className={`mb-6 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} `}>
         {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
           <div className="absolute w-[1px] h-24 bg-neutral-300 top-20 max-sm:top-16 left-10 max-sm:left-8"></div>
         ) : (
@@ -280,7 +280,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
 
         {/* Render nested replies if they exist */}
         {comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3 && (
-          <div className="w-full">{renderComments(comment.replies)}</div>
+          <div className="w-full mt-6">{renderComments(comment.replies)}</div>
         )}
       </div>
     ))
