@@ -8,44 +8,32 @@ const recommendations = [
   {
     name: 'Roberta Green',
     university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
+    study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
   },
   {
     name: 'Roberta Green',
     university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
+    study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar2.png',
   },
   {
     name: 'Roberta Green',
     university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
+    study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
   },
   {
     name: 'Roberta Green',
     university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
+    study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar2.png',
   },
   {
     name: 'Roberta Green',
     university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
+    study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
-  },
-  {
-    name: 'Roberta Green',
-    university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
-    avatar: '/timeline/avatar2.png',
-  },
-  {
-    name: 'Roberta Green',
-    university: 'Nagoya University',
-    affilation: '2nd Yr. Undergraduate, Psychology',
-    avatar: '/timeline/avatar2.png',
   },
 ]
 
@@ -59,7 +47,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main Content - Scrollable */}
-        <main className="px-12 py-4 overflow-y-auto h-with-navbar flex-1">{children}</main>
+        <main className="md:px-12 px-4 py-4 overflow-y-auto h-with-navbar flex-1">{children}</main>
 
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
