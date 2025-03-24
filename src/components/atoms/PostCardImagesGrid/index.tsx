@@ -17,9 +17,10 @@ type props = {
   >
   idx: number
   type?: PostType.Community | PostType.Timeline
+  isComment?: boolean
 }
 
-const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
+const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: props) => {
   const imageList = images?.map((imageItem) => imageItem.imageUrl)
   const [photoIndex, setPhotoIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -72,15 +73,15 @@ const DynamicImageContainer = ({ images, setImageCarasol }: props) => {
           onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % imageList.length)}
         />
       )}
-      <div className={`grid gap-2 ${getGridTemplate()} w-full h-80 mx-auto mt-4`}>
+      <div className={`grid gap-2 ${getGridTemplate()} ${isComment ? 'w-6/12 h-36' : 'w-full h-80 mx-auto'}   mt-4`}>
         {images?.slice(0, 4).map((src, index) => (
           <div
             key={index}
-            className={`relative overflow-hidden flex ${imageCount == 1 && 'h-80'} ${imageCount == 2 && 'h-80'} ${
-              imageCount === 3 && index === 2 && 'col-span-2 '
-            } ${imageCount === 4 && index === 2 ? 'row-span-2 ' : ''}  ${imageCount >= 4 && index === 2 && 'row-span-2  '} ${
-              imageCount >= 4 && index === 3 && 'col-span-2  '
-            }  `}
+            className={`relative overflow-hidden flex ${imageCount == 1 && isComment == false ? 'h-80' : 'h-40'} ${
+              imageCount == 2 && isComment == false ? 'h-80' : 'h-40'
+            } ${imageCount === 3 && index === 2 && 'col-span-2 '} ${imageCount === 4 && index === 2 ? 'row-span-2 ' : ''}  ${
+              imageCount >= 4 && index === 2 && 'row-span-2  '
+            } ${imageCount >= 4 && index === 3 && 'col-span-2  '}  `}
           >
             <Image
               layout="fill"

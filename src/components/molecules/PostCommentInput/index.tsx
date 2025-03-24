@@ -9,6 +9,7 @@ import { PostCommentData, PostType } from '@/types/constants'
 import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
 import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
+import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type props = {
   postID?: string
@@ -94,18 +95,41 @@ function PostCommentInput({
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
-  const handlePostComment = async (comment: string) => {
-    if (comment.length <= 1) {
-      return console.log('Please type something to comment!')
-    }
-    if (ImageValue) {
-      const imagedata: any = await replaceImage(ImageValue, '')
+  const processImages = async (imagesData: File[]) => {
+    const promises = imagesData.map((image) => replaceImage(image, ''))
+    const results = await Promise.all(promises)
+    return results.map((result) => ({
+      imageUrl: result?.imageUrl || null,
+      publicId: result?.publicId || null,
+    }))
+  }
 
+  const handlePostComment = async (comment: string) => {
+    // if (comment.length <= 1) {
+    //   return console.log('Please type something to comment!')
+    // }
+
+    if (comment.length <= 1 && !images.length) {
+      return showToast('Enter in Input box to post', { variant: 'warning' })
+    }
+
+    // if (ImageValue) {
+    //   const imagedata: any = await replaceImage(ImageValue, '')
+
+    //   const data: PostCommentData = {
+    //     postID: postID,
+    //     content: comment,
+    //     imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+    //     commenterProfileId,
+    //   }
+
+    if (images.length) {
+      const imagedata = await processImages(images)
       const data: PostCommentData = {
-        postID: postID,
         content: comment,
-        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        imageUrl: imagedata,
         commenterProfileId,
+        postID: postID,
       }
 
       if (type === PostType.Timeline) {
@@ -194,8 +218,8 @@ function PostCommentInput({
             <label htmlFor="postGof">
               <MdOutlineGifBox size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="postImage" className="cursor-pointer inline-block">
-              <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+            <label htmlFor="commentImage" className="cursor-pointer inline-block">
+              <input id="commentImage" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
           </div>
