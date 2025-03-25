@@ -39,7 +39,7 @@ export const ModalManager = () => {
   ) : null
 }
 
-export const openModal = (content: React.ReactNode, style: string = ' h-[700px] w-[550px]') => {
+export const openModal = (content: React.ReactNode, style: string = ' h-[500px] w-[550px]') => {
   if (setModalState) {
     setModalState(true)
     setContentState(content)

@@ -9,6 +9,10 @@ interface users {
   degree: string
   major: string
 }
+export enum CommunityGroupTypeEnum {
+  CASUAL = 'Casual',
+  OFFICIAL = 'Official',
+}
 
 export interface CreateCommunityGroupType {
   title: string
