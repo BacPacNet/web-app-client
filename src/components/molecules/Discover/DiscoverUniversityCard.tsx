@@ -40,7 +40,7 @@ const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
           width={32}
           height={32}
           alt={'logo'}
-          className="w-8 h-8 bg-white p-1  rounded-full"
+          className="w-8 h-8 bg-white p-1 object-contain rounded-full"
           onError={() => setLogoSrc(universityLogoPlaceholder)}
         />
         <p className="h-10 flex items-center font-poppins text-sm font-bold "> {truncateStringTo(data?.name, 28)}</p>

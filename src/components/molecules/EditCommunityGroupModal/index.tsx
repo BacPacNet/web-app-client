@@ -204,7 +204,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     <>
       <div className="flex justify-start items-center gap-4 w-full ">
         <div className="flex flex-col gap-4 justify-start items-start w-full">
-          <h3 className="text-neutral-700 text-base font-semibold">Update Group</h3>
+          <h3 className="text-neutral-700 text-base font-semibold">Edit Group</h3>
 
           {/* log0 */}
 
@@ -266,7 +266,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
             <div className="relative flex flex-col gap-2">
               <label htmlFor="description" className="font-medium text-xs">
-                Description
+                Group Description
               </label>
 
               <textarea

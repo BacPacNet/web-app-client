@@ -54,58 +54,14 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
     toggleLeftNavbar?.()
   }
 
-  const renderProfile = useMemo(() => {
-    if (isLogin === undefined) {
-      return (
-        <div className="px-4 flex gap-4 cursor-pointer items-center">
-          <div className="w-[60px] h-[60px] rounded-full bg-neutral-300 animate-pulse" />
-          <div className="flex flex-col gap-2">
-            <p className="bg-neutral-300 animate-pulse h-3 w-40" />
-            <p className="bg-neutral-300 animate-pulse h-3 w-20" />
-            <p className="bg-neutral-300 animate-pulse h-3 w-20" />
-          </div>
-        </div>
-      )
-    }
-
-    return (
-      <div onClick={handleProfileClick} className="px-4 flex gap-4 cursor-pointer">
-        {isLogin ? (
-          <>
-            <ProfilePicture userProfileData={userProfileData} />
-            <div className="flex flex-col gap-0">
-              <p className="text-sm text-neutral-700 font-poppins">
-                {userData?.firstName} {userData?.lastName}
-              </p>
-              <Tooltip text={userProfileData?.university_name || ''}>
-                <SubText>{truncateString(userProfileData?.university_name || '')}</SubText>
-              </Tooltip>
-              <p className="text-3xs font-normal text-neutral-500 font-inter line-clamp-1">{userProfileData?.major}</p>
-            </div>
-          </>
-        ) : (
-          <>
-            <Image width={60} height={60} className="w-[60px] h-[60px] rounded-full flex-none" src={avatar} alt="profile.png" />
-            <div>
-              <p className="text-sm text-neutral-700">Anonymous</p>
-              <SubText>University Details</SubText>
-              <SubText>Degree Details</SubText>
-            </div>
-          </>
-        )}
-      </div>
-    )
-  }, [isLogin, userData, userProfileData, handleProfileClick])
-
   return (
     <div className="h-with-navbar p-6 overflow-y-auto">
-      {/*{renderProfile}*/}
       <div className="border-b-2 border-neutral-200 pb-4">
         <p className="text-xs text-neutral-500 font-bold py-2">COMMUNITY</p>
         {MENU_ITEMS.map(({ name, icon, path }) => (
           <div
             key={path}
-            className={`flex gap-2 cursor-pointer text-sm p-2 my-1 hover:bg-neutral-100 rounded-md  ${
+            className={`flex gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
               activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
             }`}
             onClick={() => handleMenuClick(path)}
