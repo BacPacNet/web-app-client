@@ -68,6 +68,7 @@ const SinglePost = () => {
           idx={1}
           showCommentSection={showCommentSection}
           setShowCommentSection={setShowCommentSection}
+          major={profile?.major}
         />
       </div>
     </div>
