@@ -30,7 +30,7 @@ const NewPostComment = ({ setNewPost, data, postId, isReply, isNested }: Props) 
   return (
     <>
       <div onClick={() => setNewPost(false)} className="fixed w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
-      <div className="absolute min-w-[343px] w-10/12 md:w-[616px] max-h-[75%] top-[50%] -translate-y-[50%] left-[50%] -translate-x-[50%] z-50 bg-white px-4 py-4 rounded-lg ">
+      <div className="absolute w-[90%] lg:w-[40%] top-[50%] -translate-y-[50%] left-[50%] -translate-x-[50%] z-50 bg-white px-4 py-4 rounded-lg ">
         <div className="flex items-center gap-3">
           <Image src={data?.avatarLink || avatar} width={24} height={24} objectFit="cover" className="rounded-full w-6 h-6" alt="avatar.png" />
           <p className=" text-sm text-neutral-400">{'Replying to ' + data?.user}</p>

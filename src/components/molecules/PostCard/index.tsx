@@ -227,7 +227,6 @@ const PostCard = ({
         postID={postID}
         type={type}
         data={PostData}
-        setImageCarasol={setImageCarasol}
       />
     </div>
   )

@@ -9,13 +9,6 @@ import { PostCommentData, PostType } from '@/types/constants'
 import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
 import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
-import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import { EditorState, Modifier, convertToRaw } from 'draft-js'
-import './index.css'
-import draftToHtml from 'draftjs-to-html'
-const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false })
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-import dynamic from 'next/dynamic'
 
 type props = {
   postID?: string
@@ -42,7 +35,6 @@ function PostCommentInput({
   isNested = false,
   setNewPost,
 }: props) {
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
@@ -61,6 +53,35 @@ function PostCommentInput({
 
   const [ImageValue, setImageValue] = useState<File | null>(null)
 
+  const handleInput = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      valueRef.current = textareaRef.current.value
+      textarea.style.height = 'auto'
+      textarea.style.height = `${textarea.scrollHeight}px`
+    }
+  }
+  // Handle emoji click
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    const emoji = emojiData.emoji
+    if (textareaRef.current) {
+      const cursorPosition = textareaRef.current.selectionStart
+      const text = textareaRef.current.value
+      const newText = text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition)
+
+      // Update the textarea value
+      textareaRef.current.value = newText
+      valueRef.current = newText // Update ref value
+      handleInput() // Call input handler to update the ref value
+
+      // Move the cursor to the right of the inserted emoji
+      textareaRef.current.selectionStart = textareaRef.current.selectionEnd = cursorPosition + emoji.length
+
+      // Refocus the textarea after emoji insertion
+      textareaRef.current.focus()
+    }
+  }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
@@ -73,61 +94,25 @@ function PostCommentInput({
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
-  }
-
-  const onEditorStateChange = (state: React.SetStateAction<EditorState>) => {
-    setEditorState(state)
-  }
-
   const handlePostComment = async (comment: string) => {
-    // if (comment.length <= 1) {
-    //   return console.log('Please type something to comment!')
-    // }
-
-    const contentState = editorState.getCurrentContent()
-    const rawContent = convertToRaw(contentState)
-
-    if (!rawContent.blocks[0].text && !images.length) {
-      return showToast('Enter in Input box to post', { variant: 'warning' })
+    if (comment.length <= 1) {
+      return console.log('Please type something to comment!')
     }
+    if (ImageValue) {
+      const imagedata: any = await replaceImage(ImageValue, '')
 
-    const draftHtml = draftToHtml(rawContent)
-
-    if (!rawContent.blocks[0].text && !images.length) {
-      return showToast('Enter in Input box to post', { variant: 'warning' })
-    }
-
-    // if (ImageValue) {
-    //   const imagedata: any = await replaceImage(ImageValue, '')
-
-    //   const data: PostCommentData = {
-    //     postID: postID,
-    //     content: comment,
-    //     imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
-    //     commenterProfileId,
-    //   }
-
-    if (images.length) {
-      const imagedata = await processImages(images)
       const data: PostCommentData = {
-        content: draftHtml,
-        imageUrl: imagedata,
-        commenterProfileId,
         postID: postID,
+        content: comment,
+        imageUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId },
+        commenterProfileId,
       }
 
       if (type === PostType.Timeline) {
         if (isReply) {
           const replyData = {
             commentId: commentId,
-            content: draftHtml,
+            content: comment,
             commenterProfileId,
             level,
           }
@@ -141,7 +126,7 @@ function PostCommentInput({
     } else {
       const data: PostCommentData = {
         postID: postID,
-        content: draftHtml,
+        content: comment,
         commenterProfileId,
       }
 
@@ -149,7 +134,7 @@ function PostCommentInput({
         if (isReply) {
           const replyData = {
             commentId: commentId,
-            content: draftHtml,
+            content: comment,
             commenterProfileId,
             level,
           }
@@ -162,7 +147,7 @@ function PostCommentInput({
         if (isReply) {
           const replyData = {
             commentId: commentId,
-            content: draftHtml,
+            content: comment,
             commenterProfileId,
             level,
           }
@@ -181,52 +166,24 @@ function PostCommentInput({
     handlePostComment(valueRef.current)
     setNewPost(false)
   }
-
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    const emoji = emojiData.emoji
-
-    const contentState = editorState.getCurrentContent()
-    const selectionState = editorState.getSelection()
-    const emojiText = `${emoji} `
-
-    const newContentState = Modifier.insertText(contentState, selectionState, emojiText)
-
-    const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters')
-    setEditorState(newEditorState)
-  }
   return (
-    <div className="rounded-2xl bg-white w-full ">
-      <div className=" flex flex-col  w-full rounded-lg ">
-        <div className="flex gap-3  w-full mb-10">
-          <Editor
-            editorState={editorState}
-            onEditorStateChange={onEditorStateChange}
-            wrapperClassName="wrapper-class w-full  p-0 m-0"
-            editorClassName="editor-class font-poppins "
-            toolbarClassName="toolbar-class -ml-3"
-            placeholder="What’s on your mind?"
-            toolbar={{
-              options: ['inline', 'list', 'textAlign'],
-              inline: {
-                options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace'],
-              },
-              list: {
-                options: ['unordered', 'ordered'],
-              },
-              textAlign: {
-                options: ['left', 'center', 'right'],
-              },
-            }}
-          />
-          {/* <textarea
+    <div className="rounded-2xl bg-white w-full">
+      <div className="border-2 border-neutral-300 w-full rounded-lg px-1">
+        <div className="flex gap-3 h-24">
+          <textarea
             ref={textareaRef}
             className="w-full p-2 border-none resize-none focus:outline-none max-h-32 overflow-y-auto"
             placeholder="What’s on your mind?"
             rows={1}
             onInput={handleInput}
-          ></textarea> */}
+          ></textarea>
         </div>
-        <div className="flex items-center justify-between ">
+        <div className="flex items-center justify-between px-2 py-5 relative">
+          <div className="absolute right-2 bottom-3">
+            <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg px-3 py-2 w-[69px] ">
+              Post
+            </button>
+          </div>
           <div className="flex gap-4 items-center ">
             <Popover>
               <PopoverTrigger>
@@ -242,15 +199,10 @@ function PostCommentInput({
             <label htmlFor="postGof">
               <MdOutlineGifBox size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="commentImage" className="cursor-pointer inline-block">
-              <input id="commentImage" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+            <label htmlFor="postImage" className="cursor-pointer inline-block">
+              <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-          </div>
-          <div className=" ">
-            <button onClick={handleSubmit} className="bg-primary-500 text-white rounded-lg  w-[69px] h-10">
-              Post
-            </button>
           </div>
         </div>
       </div>

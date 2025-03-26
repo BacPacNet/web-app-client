@@ -58,7 +58,7 @@ const DiscoverContainer = () => {
             </div>
           )}
           {!isLoading && !data?.Universities?.length && (
-            <div className="lg:w-[700px] flex items-center justify-center text-center font-bold text-4xl  font-poppins h-32">No Result Found</div>
+            <div className="lg:w-[600px] flex items-center justify-center text-center font-bold text-4xl  font-poppins h-32">No Result Found</div>
           )}
           <div ref={containerRef} className={`grid ${isTablet || isMobile ? 'grid-cols-1 place-items-center' : 'lg:grid-cols-2'}  gap-8 `}>
             {isLoading ? (

@@ -21,9 +21,6 @@
 .hideScrollbar::-webkit-scrollbar {
   display: none;
 }
-.noi::-webkit-scrollbar {
-  display: none;
-}
 
 @media only screen and (max-width: 769px) {
   .hideScrollbar::-webkit-scrollbar {
