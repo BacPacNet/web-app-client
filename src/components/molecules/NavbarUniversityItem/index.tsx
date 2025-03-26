@@ -23,22 +23,6 @@ import useDebounce from '@/hooks/useDebounce'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 
-const CommunitySelectPop = ({ community, index, handleUniversityClick }: any) => {
-  const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
-  return (
-    <Image
-      key={community?._id}
-      onClick={() => handleUniversityClick(index)}
-      width={40}
-      height={40}
-      className="w-[40px] h-[40px] object-cover rounded-full"
-      src={logoSrc}
-      alt="communtiy image"
-      onError={() => setLogoSrc(universityLogoPlaceholder)}
-    />
-  )
-}
-
 interface Props {
   setActiveMenu: (activeMenu: string) => void
   toggleLeftNavbar: () => void | null
@@ -62,7 +46,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
-  const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl.imageUrl)
+  const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
   const [communityOpen, setCommunityOpen] = useState(false)
@@ -108,7 +92,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   useEffect(() => {
-    setLogoSrc(community?.communityLogoUrl.imageUrl)
+    setSelectedCommunityImage(community?.communityLogoUrl.imageUrl)
   }, [community])
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
@@ -169,6 +153,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
+          selectedCommunityImage={selectedCommunityImage}
         />
       ),
     },
@@ -244,7 +229,19 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </div>
 
       <>
-        <p className="text-xs text-neutral-500 font-bold mt-4 py-2 ">GROUPS</p>
+        <div className="flex gap-2 mt-4 py-2 items-center">
+          <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
+          <div className="w-5 h-5 border-2 border-primary-500 rounded-full flex justify-center">
+            <Image
+              className="object-contain roundedfull overflow-hidden"
+              src={(selectedCommunityImage as string) || avatar}
+              width={12}
+              height={12}
+              alt=""
+            />
+          </div>
+        </div>
+
         <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
 
         <div className="flex gap-2 my-4">

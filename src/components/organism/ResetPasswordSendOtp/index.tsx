@@ -121,8 +121,6 @@ const ResetPasswordSendOtp = () => {
   }
 
   const handleCheckEmail = (data: any) => {
-    console.log('Data', data)
-
     if (isVerifyResetPasswordSuccess) {
       setIsVerified(true)
     }

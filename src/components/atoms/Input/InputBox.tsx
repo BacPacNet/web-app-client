@@ -43,7 +43,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
               )}
             </div>
           )}
-          {isCancel && <RxCross2 onClick={onCancel} className="absolute right-10 top-1/2 -translate-y-1/2 cursor-pointer" size={20} />}
+          {isCancel && <RxCross2 onClick={onCancel} className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" size={20} />}
         </div>
       </div>
     )
