@@ -7,31 +7,31 @@ import React, { useState } from 'react'
 const recommendations = [
   {
     name: 'Roberta Green',
-    university: 'Nagoya University',
+    university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
   },
   {
     name: 'Roberta Green',
-    university: 'Nagoya University',
+    university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar2.png',
   },
   {
     name: 'Roberta Green',
-    university: 'Nagoya University',
+    university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
   },
   {
     name: 'Roberta Green',
-    university: 'Nagoya University',
+    university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar2.png',
   },
   {
     name: 'Roberta Green',
-    university: 'Nagoya University',
+    university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
     avatar: '/timeline/avatar.png',
   },

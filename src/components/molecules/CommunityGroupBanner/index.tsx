@@ -14,6 +14,7 @@ import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
+import settingIcon from '@assets/settingIcon.svg'
 
 interface Props {
   communityID: string
@@ -134,7 +135,10 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                 communityGroups?.adminUserId != userData?.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
               } flex  items-center`}
             >
-              {isGroupAdmin ? (
+              <button>
+                <Image src={settingIcon} width={32} height={32} alt="" />
+              </button>
+              {/*{isGroupAdmin ? (
                 <div
                   onClick={() => handleEditCommunityGroupModal()}
                   className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 whitespace-nowrap cursor-pointer"
@@ -146,7 +150,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                 <Button onClick={() => handleToggleJoinCommunityGroup(communityGroupID)} size="extra_small" variant="primary">
                   {!isUserJoinedCommunityGroup ? 'Join Group' : 'Leave Group'}
                 </Button>
-              )}
+              )}*/}
             </div>
           </div>
           <div>

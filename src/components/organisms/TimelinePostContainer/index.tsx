@@ -70,6 +70,8 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
       </div>
     )
 
+  console.log(timlineDatas, 'timlineDatas')
+
   const renderPostWithRespectToPathName = () => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
@@ -78,6 +80,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         adminId={post.user?._id}
         university={post?.userProfile?.university_name}
         year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
+        major={post?.userProfile?.major}
         text={post?.content}
         date={post?.createdAt}
         avatarLink={post?.userProfile?.profile_dp?.imageUrl}

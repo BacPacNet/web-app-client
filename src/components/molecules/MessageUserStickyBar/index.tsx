@@ -9,9 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { MdAddCircle } from 'react-icons/md'
 import { MdBlockFlipped } from 'react-icons/md'
 import { FaRegFlag } from 'react-icons/fa6'
-import { FaStar } from 'react-icons/fa6'
 import { useRouter } from 'next/navigation'
-import { truncateStringTo } from '@/lib/utils'
 import useDeviceType from '@/hooks/useDeviceType'
 type Props = {
   setSelectedChat: (value: any) => void
