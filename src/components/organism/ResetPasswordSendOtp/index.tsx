@@ -43,7 +43,8 @@ const ResetPasswordSendOtp = () => {
   const { mutate: generateResetPasswordOtp } = useResetPasswordCodeGenerate()
   const { mutate: verifyResetPasswordOtp, isSuccess: isVerifyResetPasswordSuccess } = useVerifyResetPasswordOtp()
   const { mutate: ResetPassword, isSuccess: isResetPasswordSuccess, isPending: isResetPasswordLoading } = useResetPassword()
-  const [resetToken, setResetPasswordCookieValue] = useCookie('uni_userPassword_reset_token')
+  const cookie = document.cookie.split('; ').find((row) => row.startsWith(`uni_userPassword_reset_token`))
+
   const email = watch('email')
   const verificationOtp = watch('verificationOtp')
   const confirmpassword = watch('confirmpassword')
@@ -71,6 +72,12 @@ const ResetPasswordSendOtp = () => {
     setIsCounting(true)
     setCountdown(30)
   }
+
+  useEffect(() => {
+    if (cookie && cookie.split('=')[1].length > 1) {
+      setIsVerified(true)
+    }
+  }, [])
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -114,11 +121,20 @@ const ResetPasswordSendOtp = () => {
   const handleResetPassword = () => {
     const data = {
       email,
-      resetToken,
+      resetToken: cookie ? cookie.split('=')[1] : '',
       newPassword: confirmpassword,
     }
+
     ResetPassword(data)
   }
+
+  useEffect(() => {
+    if (isVerifyResetPasswordSuccess) {
+      setTimeout(() => {
+        setIsVerified(true)
+      }, 2000)
+    }
+  }, [isVerifyResetPasswordSuccess])
 
   const handleCheckEmail = (data: any) => {
     if (isVerifyResetPasswordSuccess) {
@@ -254,7 +270,7 @@ const ResetPasswordSendOtp = () => {
                         maxLength={6}
                         containerClassName="group flex items-center has-[:disabled]:opacity-30  "
                         value={field.value}
-                        onComplete={() => handleResetOtpCheck()}
+                        // onComplete={() => handleResetOtpCheck()}
                         placeholder="000000"
                         inputMode="numeric"
                         render={({ slots }) => (
@@ -270,9 +286,10 @@ const ResetPasswordSendOtp = () => {
                   {errors.verificationOtp && (
                     <InputWarningText>{errors.verificationOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>
                   )}
+                  {isVerifyResetPasswordSuccess && <p className="text-xs font-medium text-success-500">Login credentials verified.</p>}
                 </div>
               </div>
-              <div onClick={handleSubmit(handleCheckEmail)} className="w-full flex flex-col gap-2">
+              <div onClick={handleSubmit(handleResetOtpCheck)} className="w-full flex flex-col gap-2">
                 <Button disabled={false} variant="primary">
                   Reset Password
                 </Button>

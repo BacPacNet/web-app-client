@@ -51,7 +51,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
-          <Card className="h-with-navbar overflow-y-auto px-4">
+          <Card className="h-with-navbar custom-scrollbar overflow-y-auto px-4">
             <Recommendations people={recommendations} />
           </Card>
         </aside>

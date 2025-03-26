@@ -199,7 +199,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   return (
     <>
       <div className="w-full h-[40px] sm:h-[68px] ">
-        <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200">
+        <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200 ">
           <div
             className={`${shouldPadding ? 'max-width-allowed ' : 'max-w-[1280px] px-6'}
                
