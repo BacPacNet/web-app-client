@@ -3,10 +3,8 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { cities } from '@/content/city'
 import { REGION } from '@/content/constant'
 import { COUNTRY } from '@/content/country'
-import { Country } from 'country-state-city'
 import React, { useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { IoIosSearch } from 'react-icons/io'
 import COUNTRY_TO_CITY from '@/content/country_to_city.json'
 import REGION_TO_COUNTRY from '@/content/region_to_country.json'
 import REGION_TO_CITY from '@/content/region_to_city.json'
@@ -21,7 +19,6 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
   const { register, control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
   const [cityOptions, setCityOptions] = useState<string[]>(cities)
   const [countryOptions, setCountryOptions] = useState<string[]>(COUNTRY)
-  const [regionOption, setRegionOption] = useState<string[]>(REGION)
 
   const handleRegionChange = (selectedRegion: string, field: any) => {
     if (selectedRegion) {
@@ -86,7 +83,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
               control={control}
               render={({ field }) => (
                 <SelectDropdown
-                  options={regionOption}
+                  options={REGION}
                   value={field.value}
                   onChange={(selectedRegion: string) => handleRegionChange(selectedRegion, field)}
                   placeholder="Region"
