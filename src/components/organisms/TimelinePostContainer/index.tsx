@@ -70,8 +70,6 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
       </div>
     )
 
-  console.log(timlineDatas, 'timlineDatas')
-
   const renderPostWithRespectToPathName = () => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard

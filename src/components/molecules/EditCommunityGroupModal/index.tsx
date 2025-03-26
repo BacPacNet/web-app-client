@@ -145,9 +145,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   }, [selectedFilter, allCommunityUsers, userProfileData, userData])
 
   const handleCategoryChange = (category: Category) => {
-    console.log(category, 'category')
     setValue('selectedGroupCategory', category)
-    console.log(SelectedGroupCategory, 'afer')
     if (SelectedGroupCategory !== category) {
       setValue('groupSubCategory', [])
     }

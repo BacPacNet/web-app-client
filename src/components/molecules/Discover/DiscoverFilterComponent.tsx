@@ -128,7 +128,6 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
                   value={field.value || ''}
                   onChange={(selectedCity: string) => {
                     field.onChange(selectedCity)
-                    console.log(JSON.stringify(watch()))
                     setQuery(JSON.stringify(watch()))
                   }}
                   placeholder="City"
