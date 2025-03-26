@@ -1,0 +1,35 @@
+.rdw-editor-toolbar {
+  border: none;
+  padding: 0px 0px 0px 0px;
+}
+.rdw-option-wrapper {
+  border: none;
+}
+
+.public-DraftStyleDefault-block {
+  margin: 0 !important;
+}
+
+.DraftEditor-root {
+  max-height: 350px !important;
+}
+.rdw-option-active {
+  border: none;
+  background: #f3f2ff;
+  box-shadow: none;
+}
+
+.rdw-option-wrapper:hover {
+  box-shadow: none;
+  background: #f3f2ff;
+}
+
+.rdw-text-align-wrapper {
+  display: flex;
+}
+
+@media only screen and (max-width: 480px) {
+  .rdw-text-align-wrapper {
+    display: none;
+  }
+}

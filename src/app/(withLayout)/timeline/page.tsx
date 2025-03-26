@@ -8,7 +8,7 @@ export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar hideScrollbar">
+    <div ref={containerRef} className="h-with-navbar noi">
       <UserPostForm type={PostInputType.Timeline} />
       {/*<UserPostContainer type={PostInputType.Timeline} />*/}
       <TimelinePostContainer containerRef={containerRef} />

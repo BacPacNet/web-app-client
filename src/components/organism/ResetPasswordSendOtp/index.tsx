@@ -5,7 +5,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
-import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
+import { useHandleLoginEmailVerificationGenerate, useResetPassword, useResetPasswordCodeGenerate, useVerifyResetPasswordOtp } from '@/services/auth'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -13,6 +13,7 @@ import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useRouter } from 'next/navigation'
+import useCookie from '@/hooks/useCookie'
 
 const ResetPasswordSendOtp = () => {
   const [countdown, setCountdown] = useState(30)
@@ -30,15 +31,29 @@ const ResetPasswordSendOtp = () => {
     setError,
     clearErrors,
     watch,
-  } = useForm()
-  const { mutate: generateLoginEmailOTP } = useHandleLoginEmailVerificationGenerate()
+  } = useForm({
+    defaultValues: {
+      password: '',
+      verificationOtp: '',
+      email: '',
+      newPassword: '',
+      confirmpassword: '',
+    },
+  })
+  const { mutate: generateResetPasswordOtp } = useResetPasswordCodeGenerate()
+  const { mutate: verifyResetPasswordOtp, isSuccess: isVerifyResetPasswordSuccess } = useVerifyResetPasswordOtp()
+  const { mutate: ResetPassword, isSuccess: isResetPasswordSuccess, isPending: isResetPasswordLoading } = useResetPassword()
+  const [resetToken, setResetPasswordCookieValue] = useCookie('uni_userPassword_reset_token')
+  const email = watch('email')
+  const verificationOtp = watch('verificationOtp')
+  const confirmpassword = watch('confirmpassword')
 
-  const email = getValues('email')
-  const handleLoginEmailSendCode = () => {
+  const resetPasswordCodeGenerate = () => {
     if (!email) {
       setError('email', { type: 'manual', message: 'Please enter your email!' })
       return
     }
+
     const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i
     if (!emailRegex.test(email)) {
       setError('email', { type: 'manual', message: 'Invalid email format' })
@@ -48,9 +63,7 @@ const ResetPasswordSendOtp = () => {
     clearErrors('email')
     const data = { email }
 
-    showCustomSuccessToast('OTP sent successfully')
-
-    generateLoginEmailOTP(data)
+    generateResetPasswordOtp(data)
     handleLoginEmailSendCodeCount()
   }
 
@@ -89,23 +102,39 @@ const ResetPasswordSendOtp = () => {
     setPasswordStrength(password ? calculateStrength(password) : 0)
   }, [password, calculateStrength])
 
-  const handleNewPassword = (data: any) => {
-    console.log('Data', data)
+  const handleResetOtpCheck = () => {
+    const data = {
+      otp: verificationOtp,
+      email,
+    }
+
+    verifyResetPasswordOtp(data)
+  }
+
+  const handleResetPassword = () => {
+    const data = {
+      email,
+      resetToken,
+      newPassword: confirmpassword,
+    }
+    ResetPassword(data)
   }
 
   const handleCheckEmail = (data: any) => {
-    console.log('Data', data)
+    if (isVerifyResetPasswordSuccess) {
+      setIsVerified(true)
+    }
   }
 
   return (
     <div className="flex   bg-neutral-100 flex-col items-center  pb-48">
       <div className="flex  flex-col items-center  max-width-allowed ">
         <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-11/12 sm:w-[448px]   p-12 mt-16">
-          <p onClick={() => router.push('/')} className="text-2xs text-primary cursor-pointer mb-6 underline">
-            Back to Home
+          <p onClick={() => router.push('/login')} className="text-2xs text-primary cursor-pointer mb-6 underline">
+            Back to Login
           </p>
           {isVerified ? (
-            <form onClick={handleSubmit(handleNewPassword)} className="w-full  flex flex-col gap-8 items-center ">
+            <form className="w-full  flex flex-col gap-8 items-center ">
               <div className="text-start flex flex-col gap-2 w-full">
                 <Title>Reset Password</Title>
               </div>
@@ -167,12 +196,12 @@ const ResetPasswordSendOtp = () => {
                   )}
                 </div>
               </div>
-              <div className="w-full flex flex-col gap-4">
+              <div onClick={handleSubmit(handleResetPassword)} className="w-full flex flex-col gap-4">
                 <Button variant="primary">Set Password</Button>
               </div>
             </form>
           ) : (
-            <form onClick={handleSubmit(handleCheckEmail)} className="w-full  flex flex-col gap-8 items-center ">
+            <form className="w-full  flex flex-col gap-8 items-center ">
               <div className="text-start flex flex-col gap-2 w-full">
                 <Title>Reset Password</Title>
               </div>
@@ -182,7 +211,7 @@ const ResetPasswordSendOtp = () => {
                     label="Login Email"
                     placeholder="Email Address"
                     type="email"
-                    value={email}
+                    // value={email}
                     {...register('email', {
                       required: true,
                       pattern: {
@@ -197,7 +226,7 @@ const ResetPasswordSendOtp = () => {
                   )}
                   <Button
                     disabled={isCounting}
-                    onClick={() => handleLoginEmailSendCode()}
+                    onClick={() => resetPasswordCodeGenerate()}
                     type="button"
                     variant="border_primary"
                     className="h-10 mt-4"
@@ -225,6 +254,7 @@ const ResetPasswordSendOtp = () => {
                         maxLength={6}
                         containerClassName="group flex items-center has-[:disabled]:opacity-30  "
                         value={field.value}
+                        onComplete={() => handleResetOtpCheck()}
                         placeholder="000000"
                         inputMode="numeric"
                         render={({ slots }) => (
@@ -242,11 +272,9 @@ const ResetPasswordSendOtp = () => {
                   )}
                 </div>
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div onClick={handleSubmit(handleCheckEmail)} className="w-full flex flex-col gap-2">
                 <Button disabled={false} variant="primary">
-                  {' '}
                   Reset Password
-                  {/* {false ? <Spinner /> : 'Confirm'} */}
                 </Button>
 
                 {/* {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>} */}

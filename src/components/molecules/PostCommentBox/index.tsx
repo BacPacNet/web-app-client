@@ -26,12 +26,20 @@ import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
 import UserCard from '@/components/atoms/UserCard'
 import { format } from 'date-fns'
+import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 
 type Props = {
   showCommentSec: string
   handleProfileClicked: (adminId: string) => void
   postID: string
   type: PostType.Community | PostType.Timeline
+  setImageCarasol: React.Dispatch<
+    React.SetStateAction<{
+      isShow: boolean
+      images: any
+      currImageIndex: number | null
+    }>
+  >
   data: {
     user: string
     avatarLink: string
@@ -66,9 +74,10 @@ type comments = {
   content: string
   createdAt: string
   totalCount: string
+  imageUrl: []
 }[]
 
-const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClicked }: Props) => {
+const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClicked, setImageCarasol }: Props) => {
   const { userData, userProfileData } = useUniStore()
   const [newPost, setNewPost] = useState(false)
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
@@ -241,7 +250,12 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           />
         </div>
         <div className="flex flex-col gap-4 py-6 border-b border-neutral-200">
-          <p className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+          {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
+          <p
+            className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"
+            dangerouslySetInnerHTML={{ __html: comment?.content }}
+          />
+          <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
           <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
           <div className="flex justify-start gap-4 text-sm text-neutral-500">
             <div className="flex items-center cursor-pointer">

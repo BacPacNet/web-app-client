@@ -47,6 +47,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
     setQuery('')
     reset()
     resetSearchInput()
+    setCityOptions([])
   }
 
   return (
@@ -73,7 +74,15 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
               name="region"
               control={control}
               render={({ field }) => (
-                <SelectDropdown options={['a', 'b']} value={field.value} onChange={field.onChange} placeholder="Region" icon={'single'} err={false} />
+                <SelectDropdown
+                  options={['a', 'b']}
+                  value={field.value}
+                  onChange={field.onChange}
+                  setCityOptions={setCityOptions}
+                  placeholder="Region"
+                  icon={'single'}
+                  err={false}
+                />
               )}
             />
           </div>
@@ -90,6 +99,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
                   icon={'single'}
                   search={true}
                   err={false}
+                  setCityOptions={setCityOptions}
                 />
               )}
             />
@@ -111,6 +121,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
                   icon={'single'}
                   search={true}
                   err={false}
+                  setCityOptions={setCityOptions}
                 />
               )}
             />
@@ -130,16 +141,17 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
                   placeholder="Type"
                   icon={'single'}
                   err={false}
+                  setCityOptions={setCityOptions}
                 />
               )}
             />
           </div>
         </div>
-        <div className="p-4 flex items-center gap-4 w-full">
+        {/* <div className="p-4 flex items-center gap-4 w-full">
           <Buttons type="button" onClick={() => resetForm()} size="small" className="w-full">
             Reset
           </Buttons>
-        </div>
+        </div> */}
       </form>
     </div>
   )

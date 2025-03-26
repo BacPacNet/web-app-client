@@ -133,10 +133,14 @@ export interface CommunityPostData extends PostInputData {
 export interface PostCommentData {
   postID?: string | undefined
   content: string
-  imageUrl?: {
-    imageUrl: string
-    publicId: string
-  }
+  //   imageUrl?: {
+  //     imageUrl: string
+  //     publicId: string
+  //   }
+  imageUrl?: Array<{
+    imageUrl: string | null
+    publicId: string | null
+  }>
   adminId?: string | number
   commentId?: string | undefined
   commenterProfileId: string
