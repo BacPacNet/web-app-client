@@ -15,7 +15,7 @@ const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
   return (
     <div
       onClick={() => router.push(`/discover/${encodeURIComponent(data.name)}`)}
-      className="w-[330px]    relative rounded-lg cursor-pointer bg-neutral-200 "
+      className="w-[330px] relative rounded-lg cursor-pointer bg-neutral-200 transform transition duration-300 hover:scale-105"
     >
       <Image
         src={imageSrc}
