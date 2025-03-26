@@ -24,6 +24,7 @@ interface SelectDropdownProps {
   label?: string
   isStatus?: boolean
   variant?: 'primary' | 'default'
+  setCityOptions?: any
 }
 
 const motionStyle = {
@@ -55,6 +56,7 @@ const SelectDropdown = ({
   label,
   isStatus = false,
   variant = 'default',
+  setCityOptions,
 }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -113,6 +115,7 @@ const SelectDropdown = ({
               onClick={(e) => {
                 e.stopPropagation()
                 onChange('')
+                setCityOptions([])
               }}
             />
           ) : icon === 'single' ? (

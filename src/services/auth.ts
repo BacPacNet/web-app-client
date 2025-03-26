@@ -4,7 +4,7 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
 import { useRouter } from 'next/navigation'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { MESSAGES } from '@/content/constant'
 
 interface data {
@@ -47,6 +47,18 @@ async function userNameAndEmailAvailability(data: { email: string; userName: str
 
 async function loginEmailVerificationCodeGenerate(data: { email: string }) {
   const response: any = await client(`/useremailverification`, { method: 'POST', data })
+  return response
+}
+async function resetPasswordCodeGenerate(data: { email: string }) {
+  const response: any = await client(`/auth/send-reset-password-otp?email=${data.email}`, { method: 'POST', data })
+  return response
+}
+async function verifyResetPasswordOtp(data: { email: string }) {
+  const response: any = await client(`/auth/verify-reset-password-otp`, { method: 'POST', data })
+  return response
+}
+async function resetPassword(data: any) {
+  const response: any = await client(`/auth/reset-password`, { method: 'POST', data })
   return response
 }
 async function loginEmailVerification(data: { email: string; verificationOtp: string }) {
@@ -118,6 +130,43 @@ export const useHandleUserEmailAndUserNameAvailability = () => {
 export const useHandleLoginEmailVerificationGenerate = () => {
   return useMutation({
     mutationFn: (data: { email: string }) => loginEmailVerificationCodeGenerate(data),
+  })
+}
+
+export const useResetPasswordCodeGenerate = () => {
+  return useMutation({
+    mutationFn: (data: { email: string }) => resetPasswordCodeGenerate(data),
+    onSuccess: () => {
+      showCustomSuccessToast('OTP sent successfully')
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
+  })
+}
+export const useResetPassword = () => {
+  return useMutation({
+    mutationFn: (data: any) => resetPassword(data),
+    onSuccess: () => {
+      showCustomSuccessToast('Password has been reset')
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
+  })
+}
+export const useVerifyResetPasswordOtp = () => {
+  const [__, setResetPasswordCookieValue] = useCookie('uni_userPassword_reset_token')
+  return useMutation({
+    mutationFn: (data: { email: string }) => verifyResetPasswordOtp(data),
+    onSuccess: (res: any) => {
+      const expirationDate = new Date(Date.now() + 300 * 1000).toUTCString()
+      setResetPasswordCookieValue(res.resetToken, expirationDate)
+      showCustomSuccessToast('OTP Verified successfully')
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 

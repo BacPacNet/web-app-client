@@ -31,10 +31,10 @@ const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
       <div className="w-full p-3 bg-neutral-200 rounded-b-lg relative  flex items-center gap-4 h-14">
         <Image
           src={logoSrc}
-          width={32}
-          height={32}
+          width={62}
+          height={62}
           alt={'logo'}
-          className="w-8 h-8 bg-white p-1  rounded-full"
+          className="w-8 h-8 bg-white p-1  rounded-full object-contain "
           onError={() => setLogoSrc(universityLogoPlaceholder)}
         />
         <p className="h-10 flex items-center font-poppins text-sm font-bold "> {truncateStringTo(data?.name, 25)}</p>

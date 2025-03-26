@@ -229,8 +229,6 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
       return <Spinner />
     }
 
-    console.log('cccc', comments)
-
     return comments?.map((comment, index: number) => (
       <div key={comment._id} className={`mb-6 w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} `}>
         {/*{comment?.replies?.length > 0 && visibleComments[comment._id] && comment?.level !== 3 ? (
@@ -252,7 +250,11 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           />
         </div>
         <div className="flex flex-col gap-4 py-6 border-b border-neutral-200">
-          <p className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]">{comment?.content}</p>
+          {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
+          <p
+            className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"
+            dangerouslySetInnerHTML={{ __html: comment?.content }}
+          />
           <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
           <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
           <div className="flex justify-start gap-4 text-sm text-neutral-500">
