@@ -25,7 +25,6 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
 
   const handleRegionChange = (selectedRegion: string, field: any) => {
     if (selectedRegion) {
-      console.log('selectedRegion', selectedRegion)
       field.onChange(selectedRegion)
       setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion])
       setCityOptions((REGION_TO_CITY as any)[selectedRegion])
@@ -34,22 +33,20 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
       setCountryOptions(COUNTRY)
       setCityOptions(cities)
     }
+
+    setQuery(JSON.stringify(watch()))
   }
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
-    const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
-    if (getCountyCode) {
+    if (selectedCountry) {
       setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry])
       field.onChange(selectedCountry)
       setValue('city', '')
-
-      setQuery(JSON.stringify(watch()))
     } else {
       setValue('country', '')
-      setQuery(JSON.stringify(watch()))
       setCityOptions(cities)
     }
-
+    setQuery(JSON.stringify(watch()))
     //setIsCityAvailable(cities.length > 0)
   }
 
