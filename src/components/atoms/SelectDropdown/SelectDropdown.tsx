@@ -56,7 +56,6 @@ const SelectDropdown = ({
   label,
   isStatus = false,
   variant = 'default',
-  setCityOptions,
 }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -115,7 +114,6 @@ const SelectDropdown = ({
               onClick={(e) => {
                 e.stopPropagation()
                 onChange('')
-                setCityOptions([])
               }}
             />
           ) : icon === 'single' ? (
@@ -150,7 +148,7 @@ const SelectDropdown = ({
                 const IconComponent = icons[key % icons.length]
                 return (
                   <div
-                    className={` flex gap-2 items-center  text-xs text-neutral-900 p-1 px-2 cursor-pointer `}
+                    className={` flex gap-2 items-center  text-xs text-neutral-900 p-1 px-2 cursor-pointer hover:bg-neutral-100 rounded-md`}
                     onClick={() => handleSelect(item)}
                     key={key}
                   >

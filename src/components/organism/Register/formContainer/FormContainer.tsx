@@ -51,8 +51,6 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (typeof window !== 'undefined') {
       const storedData = cookieValue
       if (storedData) {
-        console.log('stored', storedData)
-
         try {
           setRegisterData(JSON.parse(storedData))
         } catch (error) {

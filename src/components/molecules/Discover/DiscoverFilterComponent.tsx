@@ -1,10 +1,13 @@
 'use client'
-import Buttons from '@/components/atoms/Buttons'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
-import { Country, City } from 'country-state-city'
-import React, { useEffect, useState } from 'react'
+import { cities } from '@/content/city'
+import { REGION } from '@/content/constant'
+import { COUNTRY } from '@/content/country'
+import React, { useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { IoIosSearch } from 'react-icons/io'
+import COUNTRY_TO_CITY from '@/content/country_to_city.json'
+import REGION_TO_COUNTRY from '@/content/region_to_country.json'
+import REGION_TO_CITY from '@/content/region_to_city.json'
 
 type Props = {
   setQuery: (value: any) => void
@@ -14,21 +17,33 @@ type Props = {
 
 const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) => {
   const { register, control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
-  const [cityOptions, setCityOptions] = useState<string[]>([])
+  const [cityOptions, setCityOptions] = useState<string[]>(cities)
+  const [countryOptions, setCountryOptions] = useState<string[]>(COUNTRY)
 
-  const handleCountryChange = (selectedCountry: string, field: any) => {
-    const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
-    if (getCountyCode) {
-      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
-      field.onChange(selectedCountry)
-      setValue('city', '')
-
-      setQuery(JSON.stringify(watch()))
+  const handleRegionChange = (selectedRegion: string, field: any) => {
+    if (selectedRegion) {
+      field.onChange(selectedRegion)
+      setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion])
+      setCityOptions((REGION_TO_CITY as any)[selectedRegion])
     } else {
-      setValue('country', '')
-      setQuery(JSON.stringify(watch()))
+      setValue('region', '')
+      setCountryOptions(COUNTRY)
+      setCityOptions(cities)
     }
 
+    setQuery(JSON.stringify(watch()))
+  }
+
+  const handleCountryChange = (selectedCountry: string, field: any) => {
+    if (selectedCountry) {
+      setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry])
+      field.onChange(selectedCountry)
+      setValue('city', '')
+    } else {
+      setValue('country', '')
+      setCityOptions(cities)
+    }
+    setQuery(JSON.stringify(watch()))
     //setIsCityAvailable(cities.length > 0)
   }
 
@@ -42,13 +57,6 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
       setValue('Search', parsedQuery.Search)
     }
   }, [query, setValue])
-
-  const resetForm = () => {
-    setQuery('')
-    reset()
-    resetSearchInput()
-    setCityOptions([])
-  }
 
   return (
     <div className=" lg:block hidden">
@@ -75,10 +83,9 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
               control={control}
               render={({ field }) => (
                 <SelectDropdown
-                  options={['a', 'b']}
+                  options={REGION}
                   value={field.value}
-                  onChange={field.onChange}
-                  setCityOptions={setCityOptions}
+                  onChange={(selectedRegion: string) => handleRegionChange(selectedRegion, field)}
                   placeholder="Region"
                   icon={'single'}
                   err={false}
@@ -92,7 +99,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
               control={control}
               render={({ field }) => (
                 <SelectDropdown
-                  options={Country.getAllCountries().map((country) => country.name)}
+                  options={countryOptions}
                   value={field.value || ''}
                   onChange={(selectedCountry: string) => handleCountryChange(selectedCountry, field)}
                   placeholder="Country"

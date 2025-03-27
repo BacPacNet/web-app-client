@@ -75,6 +75,7 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
         idx={idx}
         showCommentSection={showCommentSection}
         setShowCommentSection={setShowCommentSection}
+        major={post?.userProfile?.major}
       />
     ))
   }

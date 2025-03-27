@@ -2,12 +2,14 @@
 import CollegeResult from '@/components/CollegeResult'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useUniversitySearch } from '@/services/universitySearch'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { PiMagnifyingGlassBold } from 'react-icons/pi'
 
 export default function UniversitySearchBox() {
   const [searchTerm, setSearchTerm] = useState('')
   const { data: universities, isLoading, error } = useUniversitySearch(searchTerm)
+  const router = useRouter()
 
   return (
     <div className="relative mt-8">
@@ -33,11 +35,15 @@ export default function UniversitySearchBox() {
         </div>
       ) : (
         searchTerm && (
-          <div className="absolute px-4 py-2 mt-2 w-full bg-white border-2 border-neutral-500 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
+          <div className="absolute px-4 py-2 mt-2 w-full bg-white border-2 border-neutral-300 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
             {universities && universities.result.length > 0 ? (
               <>
-                {universities.result.map((university: any, index: number) => (
-                  <div key={university?.id} className=" bg-white hover:bg-surface-primary-50 py-1">
+                {universities.result.map((university: any) => (
+                  <div
+                    onClick={() => router.push(`/discover/${university.name}`)}
+                    key={university?.id}
+                    className=" bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
+                  >
                     <CollegeResult university={university} />
                   </div>
                 ))}

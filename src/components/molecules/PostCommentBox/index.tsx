@@ -66,7 +66,7 @@ type comments = {
     profile_dp: {
       imageUrl: string
     }
-
+    major: string
     university_name: string
     study_year: string
     degree: string
@@ -241,6 +241,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           <UserCard
             user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
             university={comment?.commenterProfileId?.university_name}
+            major={comment?.commenterProfileId?.major}
             year={comment?.commenterProfileId?.study_year}
             avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
             adminId={comment?.commenterId?._id}

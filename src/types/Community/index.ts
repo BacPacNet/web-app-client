@@ -63,6 +63,7 @@ export interface communityPostType {
     university_name: string
     study_year: string
     degree: string
+    major: string
     profile_dp: {
       imageUrl: string
     }

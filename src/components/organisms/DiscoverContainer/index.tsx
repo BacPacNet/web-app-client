@@ -43,7 +43,7 @@ const DiscoverContainer = () => {
 
   return (
     <div className="flex justify-between max-width-allowed mx-auto min-h-screen">
-      <div className={`w-full flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'}   justify-between gap-[64px] lg:gap-[31px] pt-16`}>
+      <div className={`w-full flex ${isTablet || isMobile ? 'flex-col' : 'flex-row'} justify-center gap-8 lg:gap-[31px] pt-8`}>
         {isTablet || isMobile ? (
           <DiscoverFilterMobileComponent setQuery={setQuery} />
         ) : (
@@ -52,9 +52,15 @@ const DiscoverContainer = () => {
 
         <div className="">
           {isDesktop && (
-            <div className="w-full flex items-center relative mb-8 gap-2 border-[3px] border-neutral-300 px-6 py-2 rounded-full ">
+            <div className="w-full flex items-center relative mb-8 gap-2 border-[1px] border-neutral-300 px-4 py-2 rounded-full ">
               <IoSearch size={20} className=" text-neutral-500" />
-              <input ref={searchInputRef} className="   w-full  outline-none " placeholder="Search" type="text" onChange={handleSearchChange} />
+              <input
+                ref={searchInputRef}
+                className="w-full  outline-none "
+                placeholder="Search University"
+                type="text"
+                onChange={handleSearchChange}
+              />
             </div>
           )}
           {!isLoading && !data?.Universities?.length && (

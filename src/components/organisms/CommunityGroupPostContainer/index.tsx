@@ -101,6 +101,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           setShowCommentSection={setShowCommentSection}
           communityId={communityId}
           communityGroupId={communityGroupId}
+          major={post?.userProfile?.major}
         />
       ))}
     </div>

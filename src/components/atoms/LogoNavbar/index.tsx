@@ -206,8 +206,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       <div className="w-full h-[40px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200 ">
           <div
-            className={`${shouldPadding ? 'max-width-allowed ' : 'max-w-[1280px] px-6'}
-               
+            className={`${shouldPadding ? 'max-width-allowed px-4' : 'max-w-[1280px] px-6'}
              relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">

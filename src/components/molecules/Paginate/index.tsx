@@ -54,7 +54,7 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
           <button
             key={index}
             onClick={() => typeof page === 'number' && onPageChange(page)}
-            className={`w-auto h-9 py-2  text-xs rounded px-2 sm:px-3 ${
+            className={`w-auto py-1  text-xs rounded px-2 sm:px-3 font-normal ${
               currentPage === page ? 'bg-surface-primary-50 text-primary-500 border-primary-500' : 'bg-neutral-50 border-neutral-200 text-neutral-700'
             } border-2`}
             disabled={page === '...'}

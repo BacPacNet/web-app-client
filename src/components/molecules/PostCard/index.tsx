@@ -83,6 +83,7 @@ interface Like {
 interface PostProps {
   user: string
   university: string
+  major: string
   adminId: string
   year: string
   text: string
@@ -117,7 +118,6 @@ const PostCard = ({
   adminId,
   year,
   text,
-  link,
   date,
   avatarLink,
   likes,
@@ -132,6 +132,7 @@ const PostCard = ({
   communityGroupId,
   communityId,
   isTimeline = false,
+  major,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
@@ -169,6 +170,7 @@ const PostCard = ({
             user={user}
             university={university}
             year={year}
+            major={major}
             avatar={avatarLink || avatar}
             adminId={adminId}
             postID={postID}
