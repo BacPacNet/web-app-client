@@ -10,6 +10,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/spinner/Spinner'
+import { useUniStore } from '@/store/store'
 
 const LoginBox = () => {
   const router = useRouter()
@@ -21,6 +22,7 @@ const LoginBox = () => {
   } = useForm<LoginForm>({ defaultValues: { email: '' } })
 
   const { mutate: login, error, isPending } = useHandleLogin()
+  const { userData } = useUniStore()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -30,6 +32,12 @@ const LoginBox = () => {
   }, [setValue])
 
   const onSubmit = (data: LoginForm) => login(data)
+
+  useEffect(() => {
+    if (userData) {
+      router.push('/timeline')
+    }
+  }, [router, userData])
 
   return (
     <div className="flex flex-col w-11/12 sm:w-[448px] mx-auto">

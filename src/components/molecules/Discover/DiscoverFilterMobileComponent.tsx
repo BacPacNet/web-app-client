@@ -24,8 +24,8 @@ const DiscoverFilterMobileComponent = ({ setQuery }: Props) => {
   const handleRegionChange = (selectedRegion: string, field: any) => {
     if (selectedRegion) {
       field.onChange(selectedRegion)
-      setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion])
-      setCityOptions((REGION_TO_CITY as any)[selectedRegion])
+      setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion].sort())
+      setCityOptions((REGION_TO_CITY as any)[selectedRegion].sort())
     } else {
       setValue('region', '')
       setCountryOptions(COUNTRY)
@@ -37,7 +37,7 @@ const DiscoverFilterMobileComponent = ({ setQuery }: Props) => {
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
     if (selectedCountry) {
-      setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry])
+      setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry].sort())
       field.onChange(selectedCountry)
       setValue('city', '')
     } else {

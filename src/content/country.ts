@@ -199,4 +199,4 @@ export const COUNTRY: string[] = [
   'New Caledonia',
   'Samoa',
   'Australia',
-]
+].sort()
