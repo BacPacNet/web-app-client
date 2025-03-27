@@ -1,7 +1,7 @@
 import ResetPasswordSendOtp from '@/components/organism/ResetPasswordSendOtp'
 import React from 'react'
 
-const Login = () => {
+const ForgotPassword = () => {
   return (
     <div className="flex justify-center items-center h-screen overflow-y-hidden bg-surface-neutral-100">
       <ResetPasswordSendOtp />
@@ -9,4 +9,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ForgotPassword

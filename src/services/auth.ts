@@ -145,28 +145,29 @@ export const useResetPasswordCodeGenerate = () => {
   })
 }
 export const useResetPassword = () => {
-  const [__, _, deleteResetPasswordCookie] = useCookie('uni_userPassword_reset_token')
   const router = useRouter()
+  const { resetPasswordResetData } = useUniStore()
   return useMutation({
     mutationFn: (data: any) => resetPassword(data),
     onSuccess: () => {
       showCustomSuccessToast('Password has been reset')
+      resetPasswordResetData()
       router.push('/login')
-      deleteResetPasswordCookie()
     },
     onError: (error: any) => {
+      if (error.response.data.message == 'Password reset failed') {
+        resetPasswordResetData()
+      }
       showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
     },
   })
 }
 export const useVerifyResetPasswordOtp = () => {
-  const [__, setResetPasswordCookieValue] = useCookie('uni_userPassword_reset_token')
+  const { setResetPasswordToken } = useUniStore()
   return useMutation({
     mutationFn: (data: { email: string }) => verifyResetPasswordOtp(data),
     onSuccess: (res: any) => {
-      const expirationDate = new Date(Date.now() + 300 * 1000).toUTCString()
-      setResetPasswordCookieValue(res.resetToken, expirationDate)
-      //   showCustomSuccessToast('OTP Verified successfully')
+      setResetPasswordToken(res.resetToken)
     },
     onError: (error: any) => {
       showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
