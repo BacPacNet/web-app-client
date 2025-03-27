@@ -22,7 +22,7 @@
   display: none;
 }
 .noi::-webkit-scrollbar {
-  display: none;
+  display: none !important;
 }
 
 @media only screen and (max-width: 769px) {
@@ -57,6 +57,11 @@ body {
   }
   .animation-delay-400 {
     animation-delay: 0.4s;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #e9e8ff white;
   }
 }
 
@@ -135,31 +140,6 @@ body {
 } */
 
 @layer utilities {
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: #888 #fcfcfc;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #fcfcfc;
-    border-radius: 10px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #d30c0c;
-    border-radius: 10px;
-    border: 3px solid #fcfcfc;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-button {
-    display: none !important;
-  }
-
   [data-testid='toast'] {
     margin: 0 !important;
     padding: 0 !important;

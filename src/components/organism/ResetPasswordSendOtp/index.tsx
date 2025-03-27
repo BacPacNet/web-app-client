@@ -3,34 +3,37 @@ import { OTPInput } from 'input-otp'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
-import SupportingText from '@/components/atoms/SupportingText'
+
 import Title from '@/components/atoms/Title'
-import { useHandleLoginEmailVerificationGenerate, useResetPassword, useResetPasswordCodeGenerate, useVerifyResetPasswordOtp } from '@/services/auth'
+import { useResetPassword, useResetPasswordCodeGenerate, useVerifyResetPasswordOtp } from '@/services/auth'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Spinner } from '@/components/spinner/Spinner'
+
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
-import { MdOutlineArrowBack } from 'react-icons/md'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useRouter } from 'next/navigation'
-import useCookie from '@/hooks/useCookie'
+import { useUniStore } from '@/store/store'
+import Spinner from '@/components/atoms/spinner'
 
 const ResetPasswordSendOtp = () => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isVerified, setIsVerified] = useState(false)
+  const [isVerified, setIsVerified] = useState<null | boolean>(null)
+  const { resetEmail, resetToken, setResetPasswordEmail, userData } = useUniStore((state) => state)
+  const [hasSubmittedPasswordForm, setHasSubmittedPasswordForm] = useState(false)
+
   const router = useRouter()
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields, isSubmitted },
     control,
     getValues,
     setError,
     clearErrors,
     watch,
+    reset,
   } = useForm({
     defaultValues: {
       password: '',
@@ -42,8 +45,13 @@ const ResetPasswordSendOtp = () => {
   })
   const { mutate: generateResetPasswordOtp } = useResetPasswordCodeGenerate()
   const { mutate: verifyResetPasswordOtp, isSuccess: isVerifyResetPasswordSuccess } = useVerifyResetPasswordOtp()
-  const { mutate: ResetPassword, isSuccess: isResetPasswordSuccess, isPending: isResetPasswordLoading } = useResetPassword()
-  const [resetToken, setResetPasswordCookieValue] = useCookie('uni_userPassword_reset_token')
+  const {
+    mutate: ResetPassword,
+    isSuccess: isResetPasswordSuccess,
+    isPending: isResetPasswordLoading,
+    isError: isResetPasswordError,
+  } = useResetPassword()
+
   const email = watch('email')
   const verificationOtp = watch('verificationOtp')
   const confirmpassword = watch('confirmpassword')
@@ -71,6 +79,21 @@ const ResetPasswordSendOtp = () => {
     setIsCounting(true)
     setCountdown(30)
   }
+
+  useEffect(() => {
+    if (resetToken.length > 1 && !isVerifyResetPasswordSuccess) {
+      setIsVerified(true)
+    } else {
+      setIsVerified(false)
+    }
+  }, [resetToken])
+
+  useEffect(() => {
+    if (isResetPasswordError) {
+      setIsVerified(false)
+      reset()
+    }
+  }, [isResetPasswordError])
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -107,24 +130,43 @@ const ResetPasswordSendOtp = () => {
       otp: verificationOtp,
       email,
     }
-
+    setResetPasswordEmail(email)
     verifyResetPasswordOtp(data)
   }
 
   const handleResetPassword = () => {
     const data = {
-      email,
-      resetToken,
+      email: resetEmail,
+      resetToken: resetToken,
       newPassword: confirmpassword,
     }
+
     ResetPassword(data)
   }
+
+  useEffect(() => {
+    if (isVerifyResetPasswordSuccess) {
+      setTimeout(() => {
+        setIsVerified(true)
+      }, 2000)
+    }
+  }, [isVerifyResetPasswordSuccess])
 
   const handleCheckEmail = (data: any) => {
     if (isVerifyResetPasswordSuccess) {
       setIsVerified(true)
     }
   }
+
+  const onSubmitPassword = () => {
+    setHasSubmittedPasswordForm(true)
+  }
+
+  if (isVerified == null) {
+    return <Spinner />
+  }
+
+  console.log('iss', hasSubmittedPasswordForm)
 
   return (
     <div className="flex   bg-neutral-100 flex-col items-center  pb-48">
@@ -157,7 +199,7 @@ const ResetPasswordSendOtp = () => {
                           'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
                       },
                     })}
-                    err={!!errors.password}
+                    err={!!errors.password && hasSubmittedPasswordForm}
                   />
                   <div className={`absolute  right-0 pr-3 flex items-center text-sm ${errors.password ? 'top-[15%]' : 'top-[20%]'} `}>
                     {/* <PasswordToggleIcon showPassword={showPassword} onClick={(value: any) => setShowPassword(value)} /> */}
@@ -174,12 +216,22 @@ const ResetPasswordSendOtp = () => {
                     ))}
                   </div>
 
-                  {errors?.password?.message ? (
+                  {/* {errors?.password?.message ? (
                     <InputWarningText>{errors.password.message?.toString()}</InputWarningText>
                   ) : (
                     <label className="text-neutral-500 text-xs py-1">
                       Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special (!@#$%^&*).
                     </label>
+                  )} */}
+
+                  {hasSubmittedPasswordForm && errors?.password?.message ? (
+                    <InputWarningText>{errors.password.message?.toString()}</InputWarningText>
+                  ) : password.length < 1 ? (
+                    <label className="text-neutral-500 text-xs py-1">
+                      Minimum 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special (!@#$%^&*).
+                    </label>
+                  ) : (
+                    ''
                   )}
                 </div>
                 <div className="relative w-full flex flex-col">
@@ -188,15 +240,22 @@ const ResetPasswordSendOtp = () => {
                     placeholder="***********"
                     type={showConfirmPassword ? 'text' : 'password'}
                     {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match.' })}
-                    err={!!errors.confirmpassword}
+                    err={!!errors.confirmpassword && hasSubmittedPasswordForm}
                   />
 
-                  {errors.confirmpassword && (
+                  {hasSubmittedPasswordForm && errors.confirmpassword && (
                     <InputWarningText>{errors.confirmpassword.message?.toString() || 'Please enter your password.'}</InputWarningText>
                   )}
                 </div>
               </div>
-              <div onClick={handleSubmit(handleResetPassword)} className="w-full flex flex-col gap-4">
+              <div
+                onClick={(e) => {
+                  e.preventDefault()
+                  setHasSubmittedPasswordForm(true)
+                  handleSubmit(handleResetPassword)()
+                }}
+                className="w-full flex flex-col gap-4"
+              >
                 <Button variant="primary">Set Password</Button>
               </div>
             </form>
@@ -254,7 +313,7 @@ const ResetPasswordSendOtp = () => {
                         maxLength={6}
                         containerClassName="group flex items-center has-[:disabled]:opacity-30  "
                         value={field.value}
-                        onComplete={() => handleResetOtpCheck()}
+                        // onComplete={() => handleResetOtpCheck()}
                         placeholder="000000"
                         inputMode="numeric"
                         render={({ slots }) => (
@@ -270,9 +329,14 @@ const ResetPasswordSendOtp = () => {
                   {errors.verificationOtp && (
                     <InputWarningText>{errors.verificationOtp.message?.toString() || 'Please enter your otp!'}</InputWarningText>
                   )}
+                  {isVerifyResetPasswordSuccess && !isResetPasswordError ? (
+                    <p className="text-xs font-medium text-success-500">Login credentials verified.</p>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
-              <div onClick={handleSubmit(handleCheckEmail)} className="w-full flex flex-col gap-2">
+              <div onClick={handleSubmit(handleResetOtpCheck)} className="w-full flex flex-col gap-2">
                 <Button disabled={false} variant="primary">
                   Reset Password
                 </Button>

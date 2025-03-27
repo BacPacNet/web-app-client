@@ -63,13 +63,13 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
       {showRightMenu && <div onClick={toggleMenu} className=" lg:hidden w-screen h-screen bg-black opacity-70 absolute right-0 -z-10 "></div>}
 
       <div
-        className={`fixed flex flex-col justify-between top-[40px] sm:top-[68px] right-0 py-6 px-4 h-full w-3/4 md:w-[284px] bg-white transition-transform duration-300 transform border-l-[1px] border-neutral-200 ${
+        className={`fixed flex flex-col justify-between top-[40px] sm:top-[68px] right-0  p-6 h-full w-[284px] bg-white transition-transform duration-300 transform border-l-[1px] border-neutral-200 ${
           showRightMenu ? 'translate-x-0' : 'translate-x-full'
         } lg:hidden`}
       >
-        <button onClick={toggleMenu} className="p-4 text-black focus:outline-none absolute right-0 -top-2">
+        {/* <button onClick={toggleMenu} className="p-4 text-black focus:outline-none absolute right-0 -top-2">
           <RxCross2 size={24} className="text-primary" />
-        </button>
+        </button> */}
         <div>
           <div onClick={handleProfileClicked} className=" flex gap-4 cursor-pointer">
             <ProfilePicture userProfileData={userProfileData} />

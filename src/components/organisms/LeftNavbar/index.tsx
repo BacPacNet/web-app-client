@@ -29,6 +29,11 @@ const MENU_ITEMS = [
   { name: 'Notification', icon: <FaBell />, path: '/notifications' },
   { name: 'AI Assistant', icon: <PiFinnTheHumanFill />, path: '/ai-assistant' },
 ]
+const PAGE_ITEMS = [
+  { name: 'Discover', path: '/discover' },
+  { name: 'Community', path: '/timeline' },
+  { name: 'About', path: '/about' },
+]
 
 export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const pathname = usePathname()
@@ -55,7 +60,22 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }
 
   return (
-    <div className="h-with-navbar p-6 overflow-y-auto">
+    <div className="h-with-navbar custom-scrollbar  lg:p-6 overflow-y-auto">
+      <div className=" block lg:hidden border-b-2 border-neutral-200 pb-4">
+        <p className="text-xs text-neutral-500 font-bold py-2">Pages</p>
+        {PAGE_ITEMS.map(({ name, path }) => (
+          <div
+            key={path}
+            className={`flex gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
+              activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
+            }`}
+            onClick={() => handleMenuClick(path)}
+          >
+            <span className="">{name}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="border-b-2 border-neutral-200 pb-4">
         <p className="text-xs text-neutral-500 font-bold py-2">COMMUNITY</p>
         {MENU_ITEMS.map(({ name, icon, path }) => (
