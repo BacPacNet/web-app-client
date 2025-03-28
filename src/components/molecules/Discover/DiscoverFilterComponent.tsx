@@ -15,16 +15,16 @@ type Props = {
   resetSearchInput: () => void
 }
 
-const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) => {
-  const { register, control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
+const DiscoverFilterComponent = ({ setQuery, query }: Props) => {
+  const { control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
   const [cityOptions, setCityOptions] = useState<string[]>(cities)
   const [countryOptions, setCountryOptions] = useState<string[]>(COUNTRY)
 
   const handleRegionChange = (selectedRegion: string, field: any) => {
     if (selectedRegion) {
       field.onChange(selectedRegion)
-      setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion])
-      setCityOptions((REGION_TO_CITY as any)[selectedRegion])
+      setCountryOptions((REGION_TO_COUNTRY as any)[selectedRegion].sort())
+      setCityOptions((REGION_TO_CITY as any)[selectedRegion].sort())
     } else {
       setValue('region', '')
       setCountryOptions(COUNTRY)
@@ -36,7 +36,7 @@ const DiscoverFilterComponent = ({ setQuery, query, resetSearchInput }: Props) =
 
   const handleCountryChange = (selectedCountry: string, field: any) => {
     if (selectedCountry) {
-      setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry])
+      setCityOptions((COUNTRY_TO_CITY as any)[selectedCountry].sort())
       field.onChange(selectedCountry)
       setValue('city', '')
     } else {

@@ -4627,4 +4627,4 @@ export const cities: string[] = [
   'Townsville',
   'Brisbane, Queensland',
   'Joondalup, Western Australia',
-]
+].sort()
