@@ -100,6 +100,7 @@ const EditProfileModal = () => {
 
   type DegreeKeys = keyof typeof degreeAndMajors
   const currDegree = watch('degree') as DegreeKeys
+  const currYear = watch('study_year') as DegreeKeys
   const [currMajor, setCurrMajor] = useState<any>([])
 
   type occupationKeys = keyof typeof occupationAndDepartment
@@ -131,8 +132,9 @@ const EditProfileModal = () => {
 
     const wordCount = value.trim().split(/\s+/).filter(Boolean).length
 
-    return wordCount <= 10 || 'Bio must not exceed 10 words'
+    return wordCount <= 30 || 'Bio must not exceed 10 words'
   }
+  //   200 char
 
   const handleImageUpload = async () => {
     const files = profilePicture
@@ -154,12 +156,14 @@ const EditProfileModal = () => {
   }
 
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
+    console.log('data', data)
+
     setIsProfileLoading(true)
     let profileImageData = user?.profile_dp
     if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
-    mutateEditProfile({ ...data, profile_dp: profileImageData })
+    mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
     setIsProfileLoading(false)
     closeModal()
   }
@@ -248,7 +252,7 @@ const EditProfileModal = () => {
           <Controller
             name="gender"
             control={control}
-            rules={{ required: 'Gender is required!' }}
+            // rules={{ required: 'Gender is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={GenderOptions}
@@ -388,7 +392,8 @@ const EditProfileModal = () => {
                     rules={{ required: 'Year is required!' }}
                     render={({ field }) => (
                       <SelectDropdown
-                        options={currYear}
+                        // options={currYear}
+                        options={Object.keys(degreeAndMajors)}
                         value={field.value || ''}
                         onChange={field.onChange}
                         placeholder="year"
@@ -400,7 +405,7 @@ const EditProfileModal = () => {
                   {errors.study_year && <InputWarningText>{errors?.study_year?.message?.toString()}</InputWarningText>}
                 </div>
               </div>
-              <div className="flex flex-col py-2">
+              {/* <div className="flex flex-col py-2">
                 <label htmlFor="degree" className="py-1">
                   Degree <span className="text-destructive-600">*</span>
                 </label>
@@ -423,7 +428,7 @@ const EditProfileModal = () => {
                   />
                   {errors.degree && <InputWarningText>{errors?.degree?.message?.toString()}</InputWarningText>}
                 </div>
-              </div>
+              </div> */}
               <div className="flex flex-col py-2">
                 <label htmlFor="major" className="py-1">
                   Field of Study <span className="text-destructive-600">*</span>
@@ -433,11 +438,12 @@ const EditProfileModal = () => {
                     name="major"
                     control={control}
                     rules={{ required: 'Major is required!' }}
-                    disabled={!currDegree}
+                    disabled={!currYear}
                     render={({ field }) => (
                       <SelectDropdown
-                        key={currMajor}
-                        options={currMajor}
+                        // key={currMajor}
+                        // options={currMajor}
+                        options={degreeAndMajors[currYear]}
                         value={field.value || ''}
                         onChange={field.onChange}
                         placeholder="Select a major"
@@ -534,6 +540,7 @@ const EditProfileModal = () => {
         </div>
 
         <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)} disabled={!isDirty}>
+          {/* <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)}> */}
           {isProfileLoading ? <Spinner /> : 'Update Profile'}
         </Button>
         <Button variant="shade" onClick={() => reset()}>

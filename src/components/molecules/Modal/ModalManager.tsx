@@ -39,7 +39,7 @@ export const ModalManager = () => {
   ) : null
 }
 
-export const openModal = (content: React.ReactNode, style: string = ' h-[500px] w-[550px]') => {
+export const openModal = (content: React.ReactNode, style: string = ' h-[500px] w-[300px] sm:w-[550px] custom-scrollbar') => {
   if (setModalState) {
     setModalState(true)
     setContentState(content)

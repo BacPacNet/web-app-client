@@ -10,7 +10,7 @@ export function useUniversitySearch(searchTerm: string) {
   return useQuery<any, Error>({
     queryKey: ['universitySearch', debouncedSearchTerm],
     queryFn: () => getUniversitySearch(debouncedSearchTerm),
-    enabled: Boolean(debouncedSearchTerm), // Only run if there's a search term
+    // enabled: Boolean(debouncedSearchTerm),
     staleTime: 1000 * 60 * 5, // Optional: Cache data for 5 minutes
     retry: false, // Optional: Prevent retries on failure
   })
