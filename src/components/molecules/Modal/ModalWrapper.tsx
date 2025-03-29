@@ -20,7 +20,7 @@ const ModalWrapper = ({
 
   return (
     <div>
-      <div onClick={() => setModal(false)} className="bg-black opacity-70 w-screen h-screen fixed z-10 top-0"></div>
+      <div onClick={() => setModal(false)} className="bg-black opacity-70 w-screen h-screen fixed z-20 top-0"></div>
 
       <div className={`fixed left-1/2 -translate-x-1/2  top-1/2 -translate-y-1/2 flex justify-center items-center z-50`}>
         <div className={`relative bg-white  ${style} mt-[68px]  max-h-[85%] overflow-y-auto rounded-2xl shadow-lg p-4 lg:p-4 `}>

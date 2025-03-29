@@ -93,10 +93,10 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                   key={key}
                 >
                   <img
-                    className="rounded-full"
+                    className="rounded-full object-contain"
                     style={{ width: '40px', height: '40px' }}
                     alt="logo"
-                    src={item?.logos?.[0] || (ImagePlaceholder as unknown as string)}
+                    src={item?.logo || (ImagePlaceholder as unknown as string)}
                   />
                   <p className="text-2xs"> {item?.name}</p>
                 </div>

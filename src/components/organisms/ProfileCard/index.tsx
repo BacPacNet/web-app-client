@@ -20,12 +20,13 @@ import { FaCamera } from 'react-icons/fa'
 import Buttons from '@/components/atoms/Buttons'
 import { useEditProfile } from '@/services/edit-profile'
 import { replaceImage } from '@/services/uploadImage'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 
 interface UserProfileCardProps {
   name: string
@@ -79,7 +80,7 @@ export function UserProfileCard({
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
-
+  const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
@@ -110,166 +111,165 @@ export function UserProfileCard({
     }
   }
   return (
-    <Card className="rounded-2xl px-8">
-      <div className="flex flex-wrap lg:flex-nowrap gap-4 lg:gap-8 items-start">
-        <div className="flex-none lg:w-[126px] lg:h-[126px] w-[90px] h-[90px] group relative">
+    <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
+      <div className="flex flex-nowrap gap-4  items-start ">
+        <div className="flex-none  w-[80px] h-[80px] group relative">
           <Image
             src={avatarUrl ? avatarUrl : avatar}
             alt={name}
-            width={isDesktop ? 126 : 90}
-            height={isDesktop ? 126 : 90}
-            className="rounded-full object-cover lg:w-[126px] lg:h-[126px] w-[90px] h-[90px]"
+            width={isDesktop ? 80 : 80}
+            height={isDesktop ? 80 : 80}
+            className="rounded-full object-cover  w-[80px] h-[80px]"
           />
-          {isSelfProfile && (
-            <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
-              <input style={{ display: 'none' }} type="file" id="changeProfileImage" onChange={(e) => handleImageUpload(e)} />
-              <label htmlFor="changeProfileImage" className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800">
-                <FaCamera color="white" />
-              </label>
+        </div>
+        <div className={`w-full flex justify-between`}>
+          <div className="flex w-full flex-col gap-1">
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <p className="font-poppins text-neutral-700 text-[20px] font-bold">{name}</p>
+
+              <div className="flex gap-2">
+                {userProfileData?.email &&
+                  userProfileData?.email.map((item) => (
+                    <div
+                      key={item?.UniversityName}
+                      className="w-6 h-6 border-2 border-primary-500 overflow-hidden rounded-full flex justify-center items-center"
+                    >
+                      <Image
+                        className="w-[16px] h-[16px] object-contain roundedfull overflow-hidden m-auto"
+                        src={item?.logo ? item?.logo : universityLogoPlaceholder}
+                        width={16}
+                        height={16}
+                        alt=""
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div className="text-xs text-neutral-500 font-medium flex flex-col gap-1 font-inter">
+              <p>{year}</p>
+
+              <p>{major}</p>
+            </div>
+          </div>
+
+          {isSelfProfile ? (
+            <div
+              onClick={() => {
+                openModal(<EditProfileModal />, 'w-[300px] h-[500px] sm:w-[550px] custom-scrollbar')
+              }}
+              className="hidden  h-10 sm:flex gap-1  items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-primary-500 bg-secondary border border-shade-button-border  drop-shadow-sm whitespace-nowrap cursor-pointer"
+            >
+              <HiPencilAlt size={16} />
+              <p>Edit Profile</p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
+                <Popover>
+                  <PopoverTrigger>
+                    <HiDotsHorizontal className="text-primary" />
+                  </PopoverTrigger>
+                  <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
+                    <ul>
+                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                        <IoIosShareAlt />
+                        <p>Share Profile</p>
+                      </li>
+                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                        <MdBlockFlipped />
+                        <p>Block User</p>
+                      </li>
+                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                        <IoFlagOutline />
+                        <p>Report User</p>
+                      </li>
+                    </ul>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <Buttons className="flex items-center gap-2" variant="shade" size="extra_small">
+                Message <RiMessage2Fill />
+              </Buttons>
+              <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
+                {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+              </Buttons>
             </div>
           )}
         </div>
-        <div className="w-full">
-          <div className="flex w-full items-center justify-between flex-wrap gap-4">
-            <div className="flex gap-4 items-center">
-              <p className="font-poppins text-neutral-700 text:md lg:text-[20px] font-bold">{name}</p>
-              {/*{isPremium && <p className="bg-primary-800 text-white  rounded-xl px-2 text-3xs">Premium</p>}*/}
-            </div>
-            {isSelfProfile ? (
-              <div
-                onClick={() => {
-                  openModal(<EditProfileModal />)
-                }}
-                className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 whitespace-nowrap cursor-pointer"
-              >
-                <p>Edit Profile</p>
-                <HiPencilAlt size={16} />
-              </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
-                  <Popover>
-                    <PopoverTrigger>
-                      <HiDotsHorizontal className="text-primary" />
-                    </PopoverTrigger>
-                    <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
-                      <ul>
-                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
-                          <IoIosShareAlt />
-                          <p>Share Profile</p>
-                        </li>
-                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
-                          <MdBlockFlipped />
-                          <p>Block User</p>
-                        </li>
-                        <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
-                          <IoFlagOutline />
-                          <p>Report User</p>
-                        </li>
-                      </ul>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <Buttons className="flex items-center gap-2" variant="shade" size="extra_small">
-                  Message <RiMessage2Fill />
-                </Buttons>
-                <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
-                  {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
-                </Buttons>
-              </div>
-            )}
+      </div>
+      {isSelfProfile && (
+        <div
+          onClick={() => {
+            openModal(<EditProfileModal />)
+          }}
+          className="flex w-max  h-10 sm:hidden gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-primary-500 bg-secondary border border-shade-button-border  drop-shadow-sm whitespace-nowrap cursor-pointer"
+        >
+          <HiPencilAlt size={16} />
+          <p>Edit Profile</p>
+        </div>
+      )}
+      <div className="flex gap-4 lg:gap-8 items-center font-poppins  flex-wrap">
+        <div className="flex items-center gap-2 ml-2">
+          <div className="w-[37px] h-[37px]">
+            <Image
+              objectFit="contain"
+              src={logoSrc}
+              onError={() => setLogoSrc(universityLogoPlaceholder)}
+              alt=""
+              width={36}
+              height={36}
+              className="rounded-full shadow-logo h-[36px] object-contain"
+            />
           </div>
-          <p className="lg:text-2xs text-[10px] text-neutral-500 py-2">{description}</p>
-          <div className="flex gap-4 lg:gap-8 items-center font-poppins py-2 flex-wrap">
-            <div className="flex items-center ">
-              <Image objectFit="contain" src={universityLogo} alt="" width={30} height={30} className="rounded-full shadow-logo h-[30px]" />
-              <p className="text-neutral-500 ml-3 font-semibold text-xs lg:text-sm">{university}</p>
-              {isVerifiedUniversity && <Image src={badge} alt={name} width={12} height={12} className="ml-1 " />}
-            </div>
-            <div className="flex gap-4 text-neutral-700 font-semibold">
-              <span onClick={() => openModal(<ConnectionsModal userId={userId} />)} className=" text-xs lg:text-sm cursor-pointer">
-                {following || '0'} Following
-              </span>
-              <span onClick={() => openModal(<ConnectionsModal userId={userId} />)} className=" text-xs lg:text-sm cursor-pointer">
-                {followers || '0'} Followers
-              </span>
-            </div>
+          <p className="text-neutral-500  font-medium text-2xs ">{university}</p>
+        </div>
+        <div className="flex gap-4 ">
+          <div
+            onClick={() => openModal(<ConnectionsModal userId={userId} />)}
+            className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
+          >
+            {following || '0'} Following
+          </div>
+
+          <div
+            onClick={() => openModal(<ConnectionsModal userId={userId} />)}
+            className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
+          >
+            {followers || '0'} Followers
           </div>
         </div>
       </div>
-      <div className="grid grid-flow-row-dense grid-cols-1 lg:grid-cols-3 gap-4 pt-3 lg:pt-8 text-neutral-500">
-        {affiliation && occupation && (
-          <>
-            {occupation && (
-              <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-sm w-8" size={20} />
-                <span className="text-xs">{`${occupation}`}</span>
-              </div>
-            )}
-            {affiliation && (
-              <div className="flex items-center space-x-2">
-                <MdSubject className="text-sm w-8" size={20} />
-                <span className="text-xs">{`${affiliation}`}</span>
-              </div>
-            )}
-          </>
-        )}
 
-        {!affiliation && !occupation && (
-          <>
-            {degree && (
-              <div className="flex items-center space-x-2">
-                <FaGraduationCap className="text-sm w-8" size={20} />
-                <span className="text-xs">{degree}</span>
-              </div>
-            )}
-            {major && (
-              <div className="flex items-center space-x-2">
-                <MdSubject className="text-sm w-8" size={20} />
-                <span className="text-xs">{major}</span>
-              </div>
-            )}
-            {year && (
-              <div className="flex items-center space-x-2">
-                <FaCalendarCheck className="text-sm w-8" size={20} />
-                <span className="text-xs">{`${year} Year`}</span>
-              </div>
-            )}
-          </>
-        )}
-        {email && (
+      <p className="text-xs font-medium text-neutral-500 ">{description}</p>
+
+      <div className="flex sm:flex-row flex-col text-neutral-500 text-2xs font-inter">
+        <div className="flex flex-col gap-4 pe-4 sm:border-r border-neutral-300">
           <div className="flex items-center space-x-2">
-            <FaEnvelope className="text-sm w-8" />
+            <FaEnvelope size={16} />
             {/*<Tooltip text={email}>*/}
-            <span className="text-xs truncate-text">{email}</span>
+            <span>{email?.length ? email : '--'}</span>
             {/*</Tooltip>*/}
           </div>
-        )}
-        {phone && (
+
           <div className="flex items-center space-x-2">
-            <FaPhone className="text-sm w-8" />
-            <span className="text-xs">{phone}</span>
+            <FaPhone size={16} />
+            <span>{phone?.length ? phone : '--'}</span>
           </div>
-        )}
-        {location && (
+        </div>
+        <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
-            <FaMapMarkerAlt className="text-sm w-8" />
-            <span className="text-xs">{location}</span>
+            <FaBirthdayCake size={16} />
+            <span> {format(new Date(birthday), 'dd MMM yyyy')}</span>
           </div>
-        )}
-        {birthday && (
+
           <div className="flex items-center space-x-2">
-            <FaBirthdayCake className="text-sm w-8" />
-            <span className="text-xs">{format(new Date(birthday), 'dd MMM yyyy')}</span>
+            <ImEarth size={16} />
+            <span>
+              {location.length ? location + ',' : ''} {country.length ? country : '--'}
+            </span>
           </div>
-        )}
-        {country && (
-          <div className="flex items-center space-x-2">
-            <ImEarth className="text-sm w-8" />
-            <span className="text-xs">{country}</span>
-          </div>
-        )}
+        </div>
       </div>
-    </Card>
+    </div>
   )
 }

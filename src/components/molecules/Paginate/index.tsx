@@ -68,7 +68,7 @@ const Paginate = ({ currentPage, totalPages, onPageChange }: Props) => {
         <button
           onClick={() => onPageChange(currentPage + 1)}
           className={`  flex items-center gap-1 
-             w-6 h-9 px-2 py-2 ms-1 sm:w-[76px] sm:px-4 sm:py-2 sm:ms-8 sm:bg-neutral-50 sm:border-neutral-200 sm:border-2
+             w-6 h-9 px-2 py-2 ms-1 sm:w-[76px] sm:px-4 sm:py-2 sm:ms-8 
               text-[#6B7280] text-xs   rounded `}
         >
           <p className=" hidden sm:block">Next</p>

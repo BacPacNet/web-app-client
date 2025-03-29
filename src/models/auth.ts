@@ -46,6 +46,7 @@ export interface EmailType {
   UniversityName: string
   UniversityEmail?: string
   communityId?: string
+  logo?: string
   _id: string
 }
 
