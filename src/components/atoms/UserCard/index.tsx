@@ -12,11 +12,14 @@ interface UserCardProps {
   userData?: { id: string }
   postID: string
   type: PostType.Community | PostType.Timeline
-  major: string
+  major?: string
+  affiliation?: string
+  occupation?: string
+  //  role: string
   handleProfileClicked: (adminId: string) => void
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, year, major, avatarLink, avatar, adminId, userData, postID, type, handleProfileClicked }) => {
+const UserCard: React.FC<UserCardProps> = ({ user, year, major, avatarLink, avatar, adminId, handleProfileClicked }) => {
   return (
     <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-4 cursor-pointer items-center">
       <div className="rounded-full w-[48px] h-[48px]">

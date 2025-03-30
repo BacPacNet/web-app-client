@@ -36,7 +36,7 @@ export default function UniversitySearchBox() {
       ) : (
         searchTerm && (
           <div className="absolute px-4 py-2 mt-2 w-full bg-white border-2 border-neutral-300 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
-            {universities && universities.result.length > 0 ? (
+            {universities && universities?.result?.length > 0 ? (
               <>
                 {universities.result.map((university: any) => (
                   <div

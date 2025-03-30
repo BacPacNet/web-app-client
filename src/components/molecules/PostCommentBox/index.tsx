@@ -248,6 +248,8 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
             postID={postID}
             type={type}
             handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
+            affiliation={''}
+            occupation={''}
           />
         </div>
         <div className="flex flex-col gap-4 py-6 border-b border-neutral-200">

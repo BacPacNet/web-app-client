@@ -86,7 +86,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           user={post?.user?.firstName + ' ' + post?.user?.lastName}
           adminId={post?.user?._id}
           university={post?.userProfile?.university_name}
-          year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
+          year={post?.userProfile?.study_year}
           text={post?.content}
           date={post?.createdAt}
           avatarLink={post?.userProfile?.profile_dp?.imageUrl}

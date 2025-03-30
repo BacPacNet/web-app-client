@@ -55,7 +55,7 @@ const SinglePost = () => {
           user={user?.firstName + ' ' + user?.lastName}
           adminId={user_id}
           university={profile?.university_name}
-          year={profile?.study_year + ' Yr. ' + ' ' + profile?.degree}
+          year={profile?.study_year}
           text={content}
           date={createdAt}
           avatarLink={profile?.profile_dp?.imageUrl}

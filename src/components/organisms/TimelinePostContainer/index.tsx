@@ -77,7 +77,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         user={post?.user?.firstName + ' ' + post?.user?.lastName}
         adminId={post.user?._id}
         university={post?.userProfile?.university_name}
-        year={post?.userProfile?.study_year + ' Yr. ' + ' ' + post?.userProfile?.degree}
+        year={post?.userProfile?.study_year}
         major={post?.userProfile?.major}
         text={post?.content}
         date={post?.createdAt}

@@ -176,6 +176,8 @@ const PostCard = ({
             postID={postID}
             type={type}
             handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
+            affiliation={''}
+            occupation={''}
           />
 
           <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">

@@ -7,7 +7,7 @@ import { ImEarth } from 'react-icons/im'
 import { HiDotsHorizontal, HiPencilAlt } from 'react-icons/hi'
 import badge from '@assets/badge.svg'
 import useDeviceType from '@/hooks/useDeviceType'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { useUniStore } from '@/store/store'
 import { useToggleFollow } from '@/services/connection'
 import { IoIosShareAlt } from 'react-icons/io'
@@ -55,10 +55,8 @@ interface UserProfileCardProps {
 
 export function UserProfileCard({
   name,
-  isPremium,
   description,
   university,
-  isVerified,
   following,
   followers,
   year,
@@ -71,7 +69,6 @@ export function UserProfileCard({
   avatarUrl,
   isVerifiedUniversity,
   country,
-
   isSelfProfile,
   userId,
   universityLogo,
