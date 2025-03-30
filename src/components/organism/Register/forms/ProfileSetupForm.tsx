@@ -76,7 +76,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 const dayDiff = today.getDate() - birthDate.getDate()
                 const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
-                return adjustedAge >= 14 || 'You must be at least 14 years old.'
+                return adjustedAge >= 14
               },
             }}
             render={({ field }) => (
