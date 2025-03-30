@@ -16,6 +16,7 @@ export interface FormDataType {
   occupation: string
   universityId: string
   verificationEmail: string
+  universityLogo: string
   verificationOtp: string
   universityEmail: string
   universityName: string
@@ -393,12 +394,12 @@ export const occupationAndDepartment = {
 
 export const GenderOptions = ['Male', 'Female']
 
-export const userType = ['Student', 'Faculty', 'Applicant']
+export const userType = ['student', 'faculty', 'applicant']
 export const currYear = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']
 export enum userTypeEnum {
-  Student = 'Student',
-  Faculty = 'Faculty',
-  Applicant = 'Applicant',
+  Student = 'student',
+  Faculty = 'faculty',
+  Applicant = 'applicant',
 }
 
 export enum userCheckError {

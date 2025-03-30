@@ -45,6 +45,7 @@ export interface Profile {
   following?: FollowersEntityOrFollowingEntity[] | null
   university?: string | null
   university_name?: string | null
+  role?: string | null
   cover_dp?: ProfileDpOrCoverDp1 | null
 }
 export interface FollowersEntity {

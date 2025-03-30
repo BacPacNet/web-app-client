@@ -215,6 +215,9 @@ export type Message = {
     firstName: string
     id: string
     lastName: string
+    role: string
+    affiliation: string
+    occupation: string
   }
   senderProfile: {
     profile_dp: media

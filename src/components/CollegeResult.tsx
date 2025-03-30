@@ -12,7 +12,7 @@ const CollegeResult = ({ university }: { university: UniversityInfo }) => {
     <div className="">
       <div className="py-2 px-4 flex gap-5 items-center w-full justify-start">
         <div className="w-8 h-8 rounded-full flex justify-center align-middle shadow-lg">
-          <Image
+          <img
             className="object-contain rounded-full w-auto h-auto"
             width={32}
             height={32}

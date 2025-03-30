@@ -4,23 +4,22 @@ import { client } from './api-Client'
 import { ServerResponse } from '@/models/common/api-client'
 import axios from 'axios'
 
-export function useUniversitySearch(searchTerm: string) {
+export function useUniversitySearch(searchTerm: string, page: number, limit: number) {
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   return useQuery<any, Error>({
     queryKey: ['universitySearch', debouncedSearchTerm],
-    queryFn: () => getUniversitySearch(debouncedSearchTerm),
-    // enabled: Boolean(debouncedSearchTerm),
-    staleTime: 1000 * 60 * 5, // Optional: Cache data for 5 minutes
+    queryFn: () => getUniversitySearch(debouncedSearchTerm, page, limit),
+    enabled: true,
     retry: false, // Optional: Prevent retries on failure
   })
 }
 
-export async function getUniversitySearch(searchTerm: string): Promise<any[]> {
+export async function getUniversitySearch(searchTerm: string, page: number, limit: number): Promise<any[]> {
   if (!searchTerm) return []
 
   // Fetch university data based on the search term
-  const response = await client(`/university/searched?searchTerm=${encodeURIComponent(searchTerm)}`)
+  const response = await client(`/university/searched?page=${page}&limit=${limit}&searchTerm=${encodeURIComponent(searchTerm)}`)
 
   // TypeScript assumes `response` is of type `University[]`
   return response
@@ -63,7 +62,7 @@ export function useGetFilteredUniversity(page: number, limit: number, query: str
   const state = useQuery({
     queryKey: ['university', { debouncedSearchTerm, limit, page }],
     queryFn: () => getFilteredUniversity(page, limit, debouncedSearchTerm),
-    //enabled: Boolean(debouncedSearchTerm),
+    enabled: Boolean(debouncedSearchTerm),
   })
 
   let errorMessage = null

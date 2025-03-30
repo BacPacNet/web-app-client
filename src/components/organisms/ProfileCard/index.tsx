@@ -27,6 +27,7 @@ import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface UserProfileCardProps {
   name: string
@@ -51,6 +52,7 @@ interface UserProfileCardProps {
   universityLogo: string
   occupation: string
   affiliation: string
+  role: string
 }
 
 export function UserProfileCard({
@@ -72,6 +74,7 @@ export function UserProfileCard({
   isSelfProfile,
   userId,
   universityLogo,
+  role,
   occupation,
   affiliation,
 }: UserProfileCardProps) {
@@ -81,6 +84,7 @@ export function UserProfileCard({
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
+  const isStudent = role === userTypeEnum.Student
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -143,9 +147,9 @@ export function UserProfileCard({
               </div>
             </div>
             <div className="text-xs text-neutral-500 font-medium flex flex-col gap-1 font-inter">
-              <p>{year}</p>
+              <p>{isStudent ? year : occupation}</p>
 
-              <p>{major}</p>
+              <p>{isStudent ? major : affiliation}</p>
             </div>
           </div>
 
@@ -256,7 +260,7 @@ export function UserProfileCard({
         <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
             <FaBirthdayCake size={16} />
-            <span> {format(new Date(birthday), 'dd MMM yyyy')}</span>
+            <span>{format(new Date(parse(birthday, 'dd/MM/yyyy', new Date())), 'dd MMM yyyy')}</span>
           </div>
 
           <div className="flex items-center space-x-2">

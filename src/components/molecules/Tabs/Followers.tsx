@@ -70,6 +70,8 @@ export default function Followers() {
             imageUrl={userProfile.profile?.profile_dp?.imageUrl || ''}
             type={'FOLLOWER'}
             isFollowing={userProfile?.isFollowing}
+            role={userProfile.profile?.role || ''}
+            affiliation={userProfile.profile?.affiliation || ''}
           />
         ))}
       </>

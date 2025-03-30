@@ -110,6 +110,9 @@ interface PostProps {
   showCommentSection: string
   setShowCommentSection: (value: string) => void
   isTimeline?: boolean
+  role?: string
+  occupation?: string
+  affiliation?: string
 }
 
 const PostCard = ({
@@ -133,6 +136,9 @@ const PostCard = ({
   communityId,
   isTimeline = false,
   major,
+  role,
+  occupation,
+  affiliation,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
@@ -176,8 +182,9 @@ const PostCard = ({
             postID={postID}
             type={type}
             handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
-            affiliation={''}
-            occupation={''}
+            affiliation={affiliation}
+            occupation={occupation}
+            role={role}
           />
 
           <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">

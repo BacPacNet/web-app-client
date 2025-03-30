@@ -80,6 +80,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       verificationEmail: '',
       verificationOtp: '',
       universityName: '',
+      universityLogo: '',
       department: '',
       occupation: '',
       universityId: '',
@@ -89,6 +90,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     },
   })
   const currUserType = methods.watch('userType')
+
   useEffect(() => {
     if (registerData) {
       methods.reset({
@@ -98,7 +100,6 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         confirmpassword: registerData?.confirmpassword || '',
         birthDate: registerData?.birthDate || '',
         gender: registerData?.gender || '',
-
         userType: registerData?.userType || '',
         country: registerData?.country || '',
         firstName: registerData?.firstName || '',
@@ -112,6 +113,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         universityId: registerData?.universityId || '',
         verificationOtp: registerData?.verificationOtp || '',
         universityName: registerData?.universityName || '',
+        universityLogo: registerData?.universityLogo || '',
         UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: registerData?.referralCode || '',
       })

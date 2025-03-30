@@ -93,6 +93,9 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         setShowCommentSection={setShowCommentSection}
         communityId={post?.communityId}
         isTimeline={true}
+        affiliation={post?.userProfile?.affiliation}
+        occupation={post?.userProfile?.occupation}
+        role={post?.userProfile?.role}
       />
     ))
   }

@@ -69,14 +69,19 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
               required: 'Birth Date is required.',
               validate: (value) => {
                 if (!value) return 'Birth Date is required.'
-                const today = new Date()
                 const birthDate = new Date(value)
-                const age = today.getFullYear() - birthDate.getFullYear()
+                if (isNaN(birthDate.getTime())) return 'Invalid date.'
+
+                const today = new Date()
+                let age = today.getFullYear() - birthDate.getFullYear()
                 const monthDiff = today.getMonth() - birthDate.getMonth()
                 const dayDiff = today.getDate() - birthDate.getDate()
-                const adjustedAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age
 
-                return adjustedAge >= 14
+                if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                  age--
+                }
+
+                return age >= 14 || 'You must be at least 14 years old.'
               },
             }}
             render={({ field }) => (

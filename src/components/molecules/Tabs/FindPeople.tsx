@@ -65,6 +65,8 @@ export default function FindPeople() {
             university={item?.profile?.university || ''}
             study_year={item?.profile?.study_year || ''}
             degree={item?.profile?.degree || ''}
+            role={item?.profile?.role || ''}
+            affiliation={item?.profile?.affiliation || ''}
             major={item?.profile?.major || ''}
             occupation={item?.profile?.occupation || ''}
             imageUrl={item?.profile?.profile_dp?.imageUrl || ''}

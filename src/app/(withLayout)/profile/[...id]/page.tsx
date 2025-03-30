@@ -17,7 +17,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
 
   const { profile, firstName, lastName, email, university_id, university } = userProfileData || {}
-  const { bio, university_name, followers, following, study_year, major, degree, phone_number, country, dob, city, affiliation, occupation } =
+  const { bio, university_name, followers, following, study_year, major, degree, phone_number, country, dob, city, affiliation, occupation, role } =
     profile || {}
   const { logos } = university || {}
 
@@ -37,6 +37,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           year={study_year || ''}
           degree={degree || ''}
           major={major || ''}
+          role={role || ''}
           affiliation={affiliation || ''}
           occupation={occupation || ''}
           email={email || ''}

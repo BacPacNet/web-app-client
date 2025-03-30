@@ -26,8 +26,9 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-  const { data: universities, isFetching } = useUniversitySearch(searchTerm || ' ')
+  const [searchTerm, setSearchTerm] = useState(' ')
+  const { data: universitiesData, isLoading } = useUniversitySearch(searchTerm, 1, 10)
+  const universities = universitiesData?.result?.universities
   const handleSelect = (optionValue: any) => {
     onChange(optionValue)
     setShow(false)
@@ -83,8 +84,8 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             )}
-            {universities?.result?.length > 0 ? (
-              universities?.result?.map((item: any, key: number) => (
+            {universities?.length > 0 ? (
+              universities?.map((item: any, key: number) => (
                 <div
                   className={`${
                     key === 0 ? '' : 'border-t'
@@ -101,7 +102,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                   <p className="text-2xs"> {item?.name}</p>
                 </div>
               ))
-            ) : isFetching ? (
+            ) : isLoading ? (
               <div className="w-full flex justify-center">
                 <Spinner />
               </div>
