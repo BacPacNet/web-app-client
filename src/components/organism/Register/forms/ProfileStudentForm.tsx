@@ -17,13 +17,11 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
     control,
     watch,
     setValue,
-    getValues,
   } = useFormContext()
 
   type DegreeKeys = keyof typeof degreeAndMajors
   const currDegree: DegreeKeys = watch('year')
   const currMa: DegreeKeys = watch('major')
-  const userType = getValues('userType')
   const [currMajor, setCurrMajor] = useState<any>([])
 
   useEffect(() => {
@@ -58,6 +56,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 onChange={(selectedUniversity: any) => {
                   field.onChange(selectedUniversity.name)
                   setValue('universityId', selectedUniversity._id)
+                  setValue('universityLogo', selectedUniversity.logo)
                 }}
                 label="University"
                 placeholder="Select University Name"

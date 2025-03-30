@@ -102,6 +102,9 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         communityId={communityID}
         communityGroupId={communityGroupID}
         major={post?.userProfile?.major}
+        affiliation={post?.userProfile?.affiliation}
+        occupation={post?.userProfile?.occupation}
+        role={post?.userProfile?.role}
       />
     ))
   }

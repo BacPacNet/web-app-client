@@ -118,6 +118,10 @@ export const useHandleRegister = () => {
 export const useHandleRegister_v2 = () => {
   return useMutation({
     mutationFn: (data: data) => register_v2(data),
+    onError: (error: any) => {
+      console.log(error)
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 

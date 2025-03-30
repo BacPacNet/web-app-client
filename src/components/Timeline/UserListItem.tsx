@@ -5,6 +5,7 @@ import avatar from '@assets/avatar.svg'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '../spinner/Spinner'
 import Image from 'next/image'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface FollowingItemProps {
   firstName: string
@@ -19,6 +20,8 @@ interface FollowingItemProps {
   type: string
   isChat?: boolean
   isFollowing: boolean
+  role: string
+  affiliation: string
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -31,6 +34,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   degree,
   major,
   occupation,
+  role,
+  affiliation,
   imageUrl,
   isFollowing,
 }) => {
@@ -45,6 +50,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
     router.push(`/profile/${id}`)
   }
 
+  const isStudent = role === userTypeEnum.Student
+
   return (
     <div className="flex items-center px-2 py-4 md:p-4 border-b border-border justify-between ">
       <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
@@ -55,9 +62,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           </h3>
           {university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}
 
-          <p className="text-3xs sm:text-2xs text-gray-1 line-clamp-1">
-            {study_year} {degree} {major}
-          </p>
+          <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
+          <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>
       </div>
 

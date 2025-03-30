@@ -66,11 +66,14 @@ type Props = {
     }>
   >
   idx: number
+  role: string
+  affiliation: string
+  occupation: string
 }
 
 const emojis = ['👍', '🧡', '😆', '😂', '😇']
 
-const UserCard = ({ profilePic, name, content, date, myMessage, id, reactions, chatId, media, isOnline, setImageCarasol, idx }: Props) => {
+const UserCard = ({ role, affiliation, occupation, profilePic, name, content, date, chatId, media, isOnline, setImageCarasol, idx }: Props) => {
   const [isReact, setIsReact] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
   const { mutate: reactToMessage } = useReactMessageEmoji(chatId)
@@ -234,6 +237,9 @@ const UserMessages = ({
                 isOnline={userName?.some((item) => item?.isOnline)}
                 setImageCarasol={setImageCarasol}
                 idx={idx}
+                role={item?.sender?.role}
+                affiliation={item?.sender?.affiliation}
+                occupation={item?.sender?.occupation}
               />
             </Fragment>
           )

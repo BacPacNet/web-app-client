@@ -97,7 +97,7 @@ const SelectDropdown = ({
   return (
     <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[90px]">
       <div className="flex gap-1">
-        {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
+        {label && <label className="text-xs mb-2 text-neutral-700 font-medium">{label}</label>}
         {isStatus && <StatusTooltip />}
       </div>
 

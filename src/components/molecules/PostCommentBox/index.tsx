@@ -70,6 +70,9 @@ type comments = {
     university_name: string
     study_year: string
     degree: string
+    role: string
+    affiliation: string
+    occupation: string
   }
   content: string
   createdAt: string
@@ -248,11 +251,12 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
             postID={postID}
             type={type}
             handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
-            affiliation={''}
-            occupation={''}
+            role={comment?.commenterProfileId?.role}
+            affiliation={comment?.commenterProfileId?.affiliation}
+            occupation={comment?.commenterProfileId?.occupation}
           />
         </div>
-        <div className="flex flex-col gap-4 py-6 border-b border-neutral-200">
+        <div className={`flex flex-col gap-4 py-6 ${comments.length - 1 === index ? 'border-none' : 'border-b border-neutral-200'} `}>
           {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
           <p
             className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"

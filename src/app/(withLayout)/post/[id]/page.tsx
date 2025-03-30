@@ -69,6 +69,9 @@ const SinglePost = () => {
           showCommentSection={showCommentSection}
           setShowCommentSection={setShowCommentSection}
           major={profile?.major}
+          affiliation={profile.affiliation}
+          occupation={profile.occupation}
+          role={profile.role}
         />
       </div>
     </div>

@@ -8,8 +8,9 @@ import { PiMagnifyingGlassBold } from 'react-icons/pi'
 
 export default function UniversitySearchBox() {
   const [searchTerm, setSearchTerm] = useState('')
-  const { data: universities, isLoading, error } = useUniversitySearch(searchTerm)
   const router = useRouter()
+  const { data: universitiesData, isLoading } = useUniversitySearch(searchTerm, 1, 10)
+  const universities = universitiesData?.result?.universities
 
   return (
     <div className="relative mt-8">
@@ -27,7 +28,7 @@ export default function UniversitySearchBox() {
       />
 
       {isLoading ? (
-        <div className="absolute mt-2 w-full bg-white border-4 border-neutral-500 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute mt-2 w-full bg-white border-[1px] border-neutral-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           <div className="p-4">
             <Skeleton className="bg-slate-300 h-4 w-40 my-2" />
             <Skeleton className="bg-slate-300 h-4 w-50 my-2" />
@@ -36,9 +37,9 @@ export default function UniversitySearchBox() {
       ) : (
         searchTerm && (
           <div className="absolute px-4 py-2 mt-2 w-full bg-white border-2 border-neutral-300 rounded-xl shadow-2xl max-h-80 overflow-y-auto">
-            {universities && universities?.result?.length > 0 ? (
+            {universities && universities?.length > 0 ? (
               <>
-                {universities.result.map((university: any) => (
+                {universities?.map((university: any) => (
                   <div
                     onClick={() => router.push(`/discover/${university.name}`)}
                     key={university?.id}

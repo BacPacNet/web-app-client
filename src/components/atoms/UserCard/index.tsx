@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { PostType } from '@/types/constants'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface UserCardProps {
   user: string
@@ -15,11 +16,24 @@ interface UserCardProps {
   major?: string
   affiliation?: string
   occupation?: string
-  //  role: string
+  role?: string
   handleProfileClicked: (adminId: string) => void
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, year, major, avatarLink, avatar, adminId, handleProfileClicked }) => {
+const UserCard: React.FC<UserCardProps> = ({
+  user,
+  year,
+  major,
+  avatarLink,
+  avatar,
+  adminId,
+  affiliation,
+  occupation,
+  role,
+  handleProfileClicked,
+}) => {
+  console.log(role, occupation, affiliation)
+  const isStudent = role === userTypeEnum.Student
   return (
     <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-4 cursor-pointer items-center">
       <div className="rounded-full w-[48px] h-[48px]">
@@ -28,8 +42,8 @@ const UserCard: React.FC<UserCardProps> = ({ user, year, major, avatarLink, avat
       <div>
         <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
         <div className="flex flex-col">
-          {year && <p className="hidden md:block text-[10px] text-neutral-500">{year}</p>}
-          <p className="text-[10px] text-neutral-500">{major}</p>
+          <p className="hidden md:block text-[10px] text-neutral-500">{isStudent ? year : occupation} </p>
+          <p className="text-[10px] text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>
       </div>
     </div>

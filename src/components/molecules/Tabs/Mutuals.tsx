@@ -71,6 +71,8 @@ export default function Mutuals() {
             imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
             type={'FIND_PEOPLE'}
             isFollowing={item?.isFollowing}
+            role={item.profile?.role || ''}
+            affiliation={item.profile?.affiliation || ''}
           />
         ))}
       </>

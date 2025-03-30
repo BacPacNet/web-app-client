@@ -38,6 +38,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
   const all = getValues()
   const univeristyName = getValues('universityName')
+  const universityLogo = getValues('universityLogo')
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -88,11 +89,11 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">
-      <div className="text-center flex flex-col gap-4">
+      <div className="text-center flex flex-col gap-2">
         <h1 className={` text-md font-bold text-neutral-900 font-poppins`}>University Verification</h1>
-        <SupportingText>Do you have a email provided by your university?</SupportingText>
+        <SupportingText className="text-xs">Do you have a email provided by your university?</SupportingText>
       </div>
-      <div className="flex flex-col items-start justify-start w-full">
+      {/*<div className="flex flex-col items-start justify-start w-full">
         <div className="flex gap-2">
           <Image src={blueTick} width={24} height={24} alt="tick" />
 
@@ -108,17 +109,17 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
           <p className="text-xs text-neutral-500 text-center">Can create groups in university community </p>
         </div>
-      </div>
+      </div>*/}
       <div className="flex gap-2 items-center justify-start w-full ">
         <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg">
           <Image
             objectFit="cover"
             objectPosition="center"
             alt="logo"
-            width={22}
-            height={22}
-            src={universityLogoPlaceholder}
-            className="object-cover object-top"
+            width={40}
+            height={40}
+            src={universityLogo || universityLogoPlaceholder}
+            className="object-contain object-top"
           />
         </div>
         <p className="font-poppins font-semibold">{univeristyName}</p>
@@ -151,12 +152,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           </div>
         )}
 
-        <div className="relative w-full flex flex-col gap-2">
-          <label htmlFor="Email Address" className="font-medium text-neutral-900">
-            University Email
-          </label>
-
+        <div className="relative w-full flex flex-col gap-4">
           <InputBox
+            label=" University Email"
             placeholder="Email Address"
             type="email"
             {...register('universityEmail', {
@@ -217,7 +215,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           )}
         </div>
       </div>
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col gap-4">
         <Button disabled={isPending} onClick={() => handleNext()} variant="shade" type="button" className="h-10">
           Skip University Verification
         </Button>

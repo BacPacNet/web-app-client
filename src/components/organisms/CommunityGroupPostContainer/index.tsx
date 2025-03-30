@@ -102,6 +102,9 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           communityId={communityId}
           communityGroupId={communityGroupId}
           major={post?.userProfile?.major}
+          affiliation={post?.userProfile?.affiliation}
+          occupation={post?.userProfile?.occupation}
+          role={post?.userProfile?.role}
         />
       ))}
     </div>

@@ -73,6 +73,8 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, u
               type={content}
               isChat={isChat}
               isFollowing={item?.isFollowing}
+              role={item.profile?.role || ''}
+              affiliation={item.profile?.affiliation || ''}
             />
           ))
         )}
@@ -101,6 +103,8 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, u
               type={content}
               isChat={isChat}
               isFollowing={item.isFollowing}
+              role={item.profile?.role || ''}
+              affiliation={item.profile?.affiliation || ''}
             />
           ))
         )}
