@@ -166,8 +166,6 @@ const ResetPasswordSendOtp = () => {
     return <Spinner />
   }
 
-  console.log('iss', hasSubmittedPasswordForm)
-
   return (
     <div className="flex   bg-neutral-100 flex-col items-center  pb-48">
       <div className="flex  flex-col items-center  max-width-allowed ">

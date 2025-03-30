@@ -3,7 +3,7 @@ import React from 'react'
 
 const ForgotPassword = () => {
   return (
-    <div className="flex justify-center items-center h-screen overflow-y-hidden bg-surface-neutral-100">
+    <div className="flex justify-center items-center h-with-navbar overflow-y-hidden bg-surface-neutral-100">
       <ResetPasswordSendOtp />
     </div>
   )
