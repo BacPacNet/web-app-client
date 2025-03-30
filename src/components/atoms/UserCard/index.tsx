@@ -12,9 +12,9 @@ interface UserCardProps {
   userData?: { id: string }
   postID: string
   type: PostType.Community | PostType.Timeline
-  major: string
-  affiliation: string
-  occupation: string
+  major?: string
+  affiliation?: string
+  occupation?: string
   //  role: string
   handleProfileClicked: (adminId: string) => void
 }
