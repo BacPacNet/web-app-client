@@ -28,49 +28,45 @@ import { useRouter } from 'next/navigation'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Spinner } from '@/components/spinner/Spinner'
 import UserCard from '@/components/atoms/UserCard'
+import { truncateStringTo } from '@/lib/utils'
 
 dayjs.extend(relativeTime)
 
-const SharePopup = () => {
+const SharePopup = ({ postId }: { postId: string }) => {
   return (
     <div>
       <h1 className="font-semibold text-gray-dark mb-3">Share</h1>
-      <div className="flex gap-4">
-        <div>
-          <div className="bg-primary p-3 rounded-full">
-            <IoMdCode className="text-white self-center" size={40} />
-          </div>
-          <p className="text-center text-xs text-gray-dark mt-[6px] font-medium">Embed</p>
-        </div>
-        {/* <p className='text-sm text-gray-dark'>Embed</p> */}
+      {/*<div className="flex gap-4">
+       
         <div>
           <WhatsappShareButton url={window.location.href}>
-            <WhatsappIcon size={64} round />
+            <WhatsappIcon size={40} round />
           </WhatsappShareButton>
-          <p className="text-center text-xs text-gray-dark font-medium">Whatsapp</p>
         </div>
         <div>
           <FacebookShareButton url={window.location.href}>
-            <FacebookIcon size={64} round />
+            <FacebookIcon size={40} round />
           </FacebookShareButton>
-          <p className="text-center text-xs text-gray-dark font-medium">Facebook</p>
         </div>
         <div>
           <LinkedinShareButton url={window.location.href}>
-            <LinkedinIcon size={64} round />
+            <LinkedinIcon size={40} round />
           </LinkedinShareButton>
-          <p className="text-center text-xs text-gray-dark font-medium">Linkedin</p>
         </div>
         <div>
           <TwitterShareButton url={window.location.href}>
-            <TwitterIcon size={64} round />
+            <TwitterIcon size={40} round />
           </TwitterShareButton>
-          <p className="text-center text-xs text-gray-dark font-medium">Twitter</p>
         </div>
-      </div>
-      <div className="flex items-center gap-3 border-2 border-primary mt-6 rounded-full py-2 px-5">
-        <p className="text-[#A3A3A3] text-sm">{window.location.href}</p>
-        <button className="text-white bg-primary px-3 py-2 rounded-full text-xs font-medium">Copy</button>
+      </div>*/}
+      <div className="flex items-center justify-between gap-3 border-2 border-primary mt-4 rounded-full py-2 px-2">
+        <p className="text-neutral-500 text-sm">{truncateStringTo(`${window.location.host}/post/${postId}`, 30)}</p>
+        <button
+          onClick={() => navigator.clipboard.writeText(`${window.location.host}/post/${postId}`)}
+          className="text-white bg-primary px-3 py-2 rounded-full text-xs font-medium"
+        >
+          Copy
+        </button>
       </div>
     </div>
   )
@@ -226,8 +222,8 @@ const PostCard = ({
                 Share <FiShare2 className="mr-1 text-neutral-600 " />
               </span>
             </PopoverTrigger>
-            <PopoverContent className="relative left-16 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-              <SharePopup />
+            <PopoverContent className="relative -left-5 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
+              <SharePopup postId={postID} />
             </PopoverContent>
           </Popover>
         </div>
