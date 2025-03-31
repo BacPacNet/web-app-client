@@ -94,11 +94,8 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
         <SettingsText className="text-md text-center">University Verification</SettingsText>
         <SubText className="text-center">Do you have a email provided by your university?</SubText>
       </div>
-      <form className="w-full flex flex-col items-center gap-8" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-full flex flex-col items-center gap-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col  w-11/12 gap-4">
-          <label htmlFor="Email Address" className="font-medium text-neutral-900">
-            University Name
-          </label>
           {universityNameProp ? (
             <div
               className={` flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  border-neutral-100 h-10 outline-none`}
@@ -113,6 +110,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
                 rules={{ required: 'University name is required!' }}
                 render={({ field }) => (
                   <SelectUniversityDropdown
+                    label="University Name"
                     value={field.value}
                     onChange={(selectedUniversity: any) => {
                       field.onChange(selectedUniversity.name)
@@ -130,12 +128,9 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
         </div>
 
         <div className="flex flex-col  w-11/12 gap-4">
-          <div className="relative w-full flex flex-col gap-2">
-            <label htmlFor="Email Address" className="font-medium text-neutral-900">
-              University Email
-            </label>
-
+          <div className="relative w-full flex flex-col gap-4">
             <InputBox
+              label="University Email"
               placeholder="Email Address"
               type="email"
               {...register('universityEmail', {

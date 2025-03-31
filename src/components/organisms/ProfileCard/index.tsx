@@ -125,7 +125,7 @@ export function UserProfileCard({
         </div>
         <div className={`w-full flex justify-between`}>
           <div className="flex w-full flex-col gap-1">
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="flex flex-row gap-2 items-center">
               <p className="font-poppins text-neutral-700 text-[20px] font-bold">{name}</p>
 
               <div className="flex gap-2">
