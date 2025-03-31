@@ -32,7 +32,6 @@ const UserCard: React.FC<UserCardProps> = ({
   role,
   handleProfileClicked,
 }) => {
-  console.log(role, occupation, affiliation)
   const isStudent = role === userTypeEnum.Student
   return (
     <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-4 cursor-pointer items-center">
