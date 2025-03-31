@@ -57,12 +57,12 @@ export async function getFilteredUniversity(page: number, limit: number, searchQ
   return response
 }
 
-export function useGetFilteredUniversity(page: number, limit: number, query: string = '') {
+export function useGetFilteredUniversity(page: number, limit: number, query: string = '', isEnable: boolean = false) {
   const debouncedSearchTerm = useDebounce(query, 100)
   const state = useQuery({
     queryKey: ['university', { debouncedSearchTerm, limit, page }],
     queryFn: () => getFilteredUniversity(page, limit, debouncedSearchTerm),
-    enabled: Boolean(debouncedSearchTerm),
+    enabled: Boolean(debouncedSearchTerm) || isEnable,
   })
 
   let errorMessage = null

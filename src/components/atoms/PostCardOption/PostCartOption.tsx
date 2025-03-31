@@ -35,27 +35,20 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
       <PopoverContent className="relative right-16 bottom-16 w-auto border-none shadow-lg bg-white shadow-gray-light p-0">
         <div className="flex flex-col">
           <div className="flex gap-1 items-center hover:bg-slate-200 px-3 py-2">
-            <Link target="_blank" rel="noopener noreferrer" className="flex gap-1 items-center " href={`/post/${postID}?isType=${isType}`}>
-              <MdOutlineOpenInNew className="text-primary" size={20} />
-              <p className="font-medium text-sm">Open Post</p>
+            <Link target="_blank" rel="noopener noreferrer" className="flex gap-2 items-center " href={`/post/${postID}?isType=${isType}`}>
+              <MdOutlineOpenInNew className="text-primary" size={16} />
+              <p className="font-medium text-xs text-neutral-800">Open Post</p>
             </Link>
           </div>
-          {/*<div className="flex gap-2 items-center cursor-pointer">
-            <MdOutlineBookmarkBorder className="text-primary" size={20} />
-            <p className="font-medium text-sm">Save Post</p>
-          </div>*/}
-          {/*<div className="flex gap-2 items-center cursor-pointer">
-            <HiOutlineBell className="text-primary" size={20} />
-            <p className="font-medium text-sm">Mute Post from</p>
-          </div>*/}
+
           <div className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
-            <HiOutlineFlag className="text-primary" size={20} />
-            <p className="font-medium text-sm">Report this Post</p>
+            <HiOutlineFlag className="text-primary" size={16} />
+            <p className="font-medium text-xs text-neutral-800">Report this Post</p>
           </div>
           {isSelfPost && (
             <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
-              <MdDeleteForever className="text-primary" size={20} />
-              <p className="font-medium text-sm">Delete Post</p>
+              <MdDeleteForever className="text-primary" size={16} />
+              <p className="font-medium text-xs text-neutral-800">Delete Post</p>
             </div>
           )}
         </div>

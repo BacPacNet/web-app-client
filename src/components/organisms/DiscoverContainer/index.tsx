@@ -12,7 +12,7 @@ import { IoSearch } from 'react-icons/io5'
 const DiscoverContainer = () => {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
-  const { data, isLoading } = useGetFilteredUniversity(page, 10, query)
+  const { data, isLoading } = useGetFilteredUniversity(page, 10, query, true)
   const { isTablet, isMobile, isDesktop } = useDeviceType()
   const searchInputRef = useRef<HTMLInputElement>(null)
 
