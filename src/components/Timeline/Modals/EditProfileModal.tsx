@@ -40,6 +40,9 @@ export interface editProfileInputs {
   _id: string
 }
 
+const Badge = () => {
+  return <span className="bg-primary-500 h-5 py-[2px] px-[6px] text-2xs font-medium text-white rounded-3xl">Required</span>
+}
 const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userProfileData } = useUniStore()
@@ -89,6 +92,7 @@ const EditProfileModal = () => {
   const [cityOptions, setCityOptions] = useState<string[]>([])
   const [isCityAvailable, setIsCityAvailable] = useState(true)
   const currCountry = watch('country') || ''
+  const currBio = watch('bio') || ''
 
   const handleCountryChange = (selectedCountry: string, field?: any) => {
     const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
@@ -128,11 +132,14 @@ const EditProfileModal = () => {
   }, [currCountry, setValue])
 
   const validateBio = (value: string | undefined): string | boolean => {
-    if (!value || value.trim() === '') return true // Allow empty input
+    if (!value || value.trim() === '') return true
 
-    const wordCount = value.trim().split(/\s+/).filter(Boolean).length
+    const trimmedValue = value.trim()
+    const charCount = trimmedValue.length
 
-    return wordCount <= 30 || 'Bio must not exceed 10 words'
+    if (charCount > 160) return 'Bio must not exceed 150 characters'
+
+    return true
   }
   //   200 char
 
@@ -156,8 +163,6 @@ const EditProfileModal = () => {
   }
 
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
-    console.log('data', data)
-
     setIsProfileLoading(true)
     let profileImageData = user?.profile_dp
     if (profilePicture) {
@@ -212,7 +217,7 @@ const EditProfileModal = () => {
         <div className="flex flex-col">
           <p className="text-sm font-bold py-2">Basic Information</p>
           <label htmlFor="firstname" className="py-1 text-sm text-neutral-700">
-            First Name <span className="text-destructive-600">*</span>
+            First Name <Badge />
           </label>
           <input
             {...register('firstName', { required: true })}
@@ -223,7 +228,7 @@ const EditProfileModal = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="lastname" className="py-1 text-sm text-neutral-700">
-            Last Name <span className="text-destructive-600">*</span>
+            Last Name <Badge />
           </label>
           <input
             {...register('lastName', { required: true })}
@@ -234,7 +239,7 @@ const EditProfileModal = () => {
         </div>
         <div className="flex flex-col">
           <label htmlFor="dob" className="py-1 text-sm text-neutral-700">
-            Date of Birth <span className="text-destructive-600">*</span>
+            Date of Birth <Badge />
           </label>
           <Controller
             name="dob"
@@ -267,13 +272,21 @@ const EditProfileModal = () => {
           {errors.gender && <InputWarningText>{errors?.gender?.message?.toString()}</InputWarningText>}
         </div>
         <div className="flex flex-col">
-          <label htmlFor="bio" className="py-1">
-            Bio
-          </label>
-          <input
+          <div className="flex justify-between">
+            <label htmlFor="bio" className="py-1">
+              Bio
+            </label>
+            <p className="text-xs text-neutral-500">{currBio?.trim()?.length}/160</p>
+          </div>
+          {/* <input
             {...register('bio', { validate: validateBio })}
             placeholder="Write a short bio to introduce yourself"
             className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
+          /> */}
+          <textarea
+            {...register('bio', { validate: validateBio })}
+            placeholder="Write a short bio to introduce yourself"
+            className="text-base border pl-3 py-2 rounded-lg border-neutral-200 font-normal h-32 resize-none outline-none"
           />
           {errors.bio && <span className="text-red-500 font-normal">{errors.bio.message}</span>}
         </div>
@@ -284,7 +297,7 @@ const EditProfileModal = () => {
           <Controller
             name="country"
             control={control}
-            rules={{ required: 'country is required!' }}
+            // rules={{ required: 'country is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={Country.getAllCountries().map((country) => country.name)}
@@ -307,9 +320,9 @@ const EditProfileModal = () => {
           <Controller
             name="city"
             control={control}
-            rules={{
-              validate: (value?: string) => (isCityAvailable || value === 'Not available' || value ? true : 'City selection is required!'),
-            }}
+            // rules={{
+            //   validate: (value?: string) => (isCityAvailable || value === 'Not available' || value ? true : 'City selection is required!'),
+            // }}
             render={({ field }) => (
               <SelectDropdown
                 options={cityOptions}
@@ -383,7 +396,7 @@ const EditProfileModal = () => {
             <>
               <div className="flex flex-col py-2">
                 <label htmlFor="study_year" className="py-1">
-                  Year <span className="text-destructive-600">*</span>
+                  Year <Badge />
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller
@@ -431,7 +444,7 @@ const EditProfileModal = () => {
               </div> */}
               <div className="flex flex-col py-2">
                 <label htmlFor="major" className="py-1">
-                  Field of Study <span className="text-destructive-600">*</span>
+                  Major <Badge />
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller
@@ -488,7 +501,7 @@ const EditProfileModal = () => {
             <>
               <div className="flex flex-col">
                 <label htmlFor="occupation" className="py-1">
-                  Occupation <span className="text-destructive-600">*</span>
+                  Occupation <Badge />
                 </label>
                 <div className="w-full flex flex-col py-2 relative">
                   <Controller
@@ -512,7 +525,7 @@ const EditProfileModal = () => {
               </div>
               <div className="flex flex-col py-2">
                 <label htmlFor="affiliation" className="py-1">
-                  Affiliation <span className="text-destructive-600">*</span>
+                  Affiliation <Badge />
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller

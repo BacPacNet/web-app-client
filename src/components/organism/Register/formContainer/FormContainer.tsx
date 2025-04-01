@@ -87,6 +87,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       UniversityOtp: '',
       UniversityOtpOK: '',
       referralCode: '',
+      isJoinUniversity: true,
     },
   })
   const currUserType = methods.watch('userType')
@@ -116,6 +117,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         universityLogo: registerData?.universityLogo || '',
         UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: registerData?.referralCode || '',
+        isJoinUniversity: registerData?.isJoinUniversity,
       })
     }
   }, [registerData, methods])

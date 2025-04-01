@@ -10,6 +10,7 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { currYear, degreeAndMajors } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
+import Switch from '@/components/atoms/Switch'
 
 const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -67,6 +68,21 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
             )}
           />
           {ProfileFormErrors.universityName && <InputWarningText>{ProfileFormErrors?.universityName?.message?.toString()}</InputWarningText>}
+          <div className="flex w-full gap-2 mt-2">
+            <p className="text-[12px] text-neutral-500 text-start">Join the university community after signing up</p>
+            <div className=" flex flex-col relative">
+              <Controller
+                name={'isJoinUniversity'}
+                control={control}
+                // rules={{ required: 'This field is required.' }}
+                render={({ field }) => (
+                  <div className="flex items-center gap-2">
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </div>
+                )}
+              />
+            </div>
+          </div>
         </div>
         {/*<div className="w-full flex flex-col relative">
           <Controller
@@ -131,7 +147,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
           />
           {ProfileFormErrors.major && <InputWarningText>{ProfileFormErrors?.major?.message?.toString()}</InputWarningText>}
         </div>
-        <p className="text-neutral-500 text-xs">If your major is not listed, choose the one that is closest to your current major.</p>
+        <p className="text-neutral-500 text-2xs">If your major is not listed, choose the one that is closest to your current major.</p>
       </div>
       {/*<div className="w-10/12 xl:w-9/12 flex flex-col gap-2">
         <Button variant="primary">Next Step</Button>
@@ -143,7 +159,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
         </Button>
       </div>
 
-      <p className="text-[12px] text-neutral-600 text-center">You can add more profile information later in your profile settings!</p>
+      <p className="text-[12px] text-neutral-500 text-center">You can add more profile information later in your profile settings!</p>
     </div>
   )
 }
