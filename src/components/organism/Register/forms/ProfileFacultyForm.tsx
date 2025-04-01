@@ -10,6 +10,7 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { occupationAndDepartment } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
+import Switch from '@/components/atoms/Switch'
 
 const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -61,6 +62,21 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
             )}
           />
           {ProfileFormErrors.universityName && <InputWarningText>{ProfileFormErrors?.universityName?.message?.toString()}</InputWarningText>}
+          <div className="flex w-full gap-2 mt-2">
+            <p className="text-[12px] text-neutral-500 text-start">Join the university community after signing up</p>
+            <div className=" flex flex-col relative">
+              <Controller
+                name={'isJoinUniversity'}
+                control={control}
+                // rules={{ required: 'This field is required.' }}
+                render={({ field }) => (
+                  <div className="flex items-center gap-2">
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </div>
+                )}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="w-full flex flex-col relative">

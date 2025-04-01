@@ -23,6 +23,7 @@ export interface FormDataType {
   UniversityOtp: string
   UniversityOtpOK: string
   referralCode: string
+  isJoinUniversity: boolean
 }
 
 const value = [
