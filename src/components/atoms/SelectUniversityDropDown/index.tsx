@@ -12,7 +12,7 @@ interface SelectDropdownProps {
   placeholder?: string
   icon: string
   search?: boolean
-  err: boolean
+  err?: boolean
   label?: string
 }
 

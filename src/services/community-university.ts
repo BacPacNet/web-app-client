@@ -27,6 +27,14 @@ export async function UpdateCommunity(communityId: string, data: any) {
   return response
 }
 
+export async function joinCommunityFromUniversityAPI(universityId: string, token: string) {
+  const response = await client(`/community/join?universityId=${universityId}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
 export async function joinCommunity(communityId: string, token: string) {
   const response = await client(`/community/${communityId}/join`, {
     method: 'PUT',
@@ -186,6 +194,36 @@ export const useUpdateCommunity = () => {
   })
 }
 
+export const useJoinCommunityFromUniversity = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  return useMutation({
+    mutationFn: (universityId: string) => joinCommunityFromUniversityAPI(universityId, cookieValue),
+    onSuccess: () => {
+      //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      showCustomSuccessToast(`Joined Community `)
+    },
+    onError: (res: any) => {
+      showCustomDangerToast(res.response.data.message)
+      //showToast(res.response.data.message, {
+      //  variant: 'error',
+      //  isDarkMode: false,
+      //  duration: 5000,
+      //  position: 'bottom-center',
+      //  actions: [
+      //    {
+      //      label: 'View',
+      //      onClick: () => router.push(`/community/${variables}`),
+      //      isPrimary: true,
+      //    },
+      //  ],
+      //})
+    },
+  })
+}
+
 export const useJoinCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
@@ -300,6 +338,7 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
     },
     initialPageParam: 1,
     enabled: isCommunity && !!cookieValue,
+    retry: false,
   })
 }
 

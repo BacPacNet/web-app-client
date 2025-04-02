@@ -4,11 +4,8 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
-import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
-import { openModal } from '../../Modal/ModalManager'
-import { FaCircleCheck } from 'react-icons/fa6'
-import { truncateString, truncateStringTo } from '@/lib/utils'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   subscribedCommunities: Community[]
@@ -19,13 +16,15 @@ interface Props {
 }
 
 function NavbarSubscribedUniversity({ subscribedCommunities, communityId, handleCommunityClick, isGroup }: Props) {
+  const router = useRouter()
   const handleAddUniversityEmailUsersModal = () => {
-    openModal(<UniversityVerificationModal />)
+    router.push('/discover')
+    //openModal(<JoinUniversityModal />, 'w-[500px] h-[500px]')
   }
 
   if (subscribedCommunities?.length === 0)
     return (
-      <div className="px-4 w-full">
+      <div className="w-full">
         <Button onClick={() => handleAddUniversityEmailUsersModal()} variant="primary" className="w-full">
           Add Your University
         </Button>
