@@ -85,7 +85,7 @@ const Ai_AssistantContainer = () => {
       {isAssistantExist?.isAssistantAvailable ? (
         <AIChat chatbotData={chatbotData} setChatbotData={setChatbotData} communityId={selectedUniversity?._id || ''} />
       ) : (
-        <AINoUniversity communityId={subscribedCommunities ? subscribedCommunities![0].collegeID : ''} />
+        <AINoUniversity communityId={subscribedCommunities ? subscribedCommunities![0].university_id : ''} />
       )}
     </div>
   )

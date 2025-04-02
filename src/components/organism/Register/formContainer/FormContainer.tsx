@@ -88,6 +88,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       UniversityOtpOK: '',
       referralCode: '',
       isJoinUniversity: true,
+      isUniversityVerified: false,
     },
   })
   const currUserType = methods.watch('userType')
@@ -118,6 +119,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: registerData?.referralCode || '',
         isJoinUniversity: registerData?.isJoinUniversity,
+        isUniversityVerified: registerData?.isUniversityVerified,
       })
     }
   }, [registerData, methods])
@@ -235,6 +237,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (step === 3 && subStep === 1) {
       const isAvailable = await userUniversityEmailVerification(data)
       if (isAvailable?.isAvailable) {
+        methods.setValue('isUniversityVerified', true)
         const res = await HandleRegister(data)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
