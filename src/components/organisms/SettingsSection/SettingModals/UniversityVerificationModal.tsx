@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
@@ -95,7 +94,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
         <SubText className="text-center">Do you have a email provided by your university?</SubText>
       </div>
       <form className="w-full flex flex-col items-center gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col  w-11/12 gap-4">
+        <div className="flex flex-col w-11/12 gap-4">
           {universityNameProp ? (
             <div
               className={` flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  border-neutral-100 h-10 outline-none`}

@@ -17,8 +17,9 @@ import { useUniStore } from '@/store/store'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
-import { useJoinCommunity } from '@/services/community-university'
+import { useJoinCommunity, useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
+import Spinner from '@/components/atoms/spinner'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -38,7 +39,7 @@ export default function UniversityProfile() {
   const [imageSrc, setImageSrc] = useState(university?.campus || universityPlaceholder)
   const [logoSrc, setLogoSrc] = useState(university?.logo || universityLogoPlaceholder)
 
-  const { mutate: joinCommunity, isPending: isJoinLoading } = useJoinCommunity()
+  const { mutate: joinCommunityFromUniversity, isPending: isJoinLoading } = useJoinCommunityFromUniversity()
   const router = useRouter()
 
   useEffect(() => {
@@ -97,15 +98,16 @@ export default function UniversityProfile() {
         <NotLoggedInModal title={'Login to Join Community'} desc={'Login or create an account to become part of Lorem University’s community! '} />,
         'w-96 p-0 rounded-md'
       )
-    } else if (email && email.communityId) {
-      joinCommunity(email.communityId, {
-        onSuccess: () => {
-          router.push(`/community/${email.communityId}`)
+    } else {
+      joinCommunityFromUniversity(university._id, {
+        onSuccess: (response: any) => {
+          router.push(`/community/${response.data.communityId}`)
         },
       })
-    } else if (!email) {
-      openModal(<UniversityVerificationModal universityNameProp={universityName} />, 'h-max w-[450px]')
     }
+    //else if (!email) {
+    //  openModal(<UniversityVerificationModal universityNameProp={universityName} />, 'h-max w-[450px]')
+    //}
   }
 
   return (
@@ -122,7 +124,7 @@ export default function UniversityProfile() {
             </div>
             <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
 
-            <Buttons className="w-max" onClick={() => handleClick(university?.name)}>
+            <Buttons disabled={isJoinLoading} className="w-max" onClick={() => handleClick(university?.name)}>
               Join Community
             </Buttons>
           </div>
