@@ -143,7 +143,6 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           />
         </div>
         <div className={`flex flex-col gap-4 py-3 ${comments.length - 1 === index ? 'border-none' : 'border-b border-neutral-200'} `}>
-          {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
           <p
             className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"
             dangerouslySetInnerHTML={{ __html: comment?.content }}

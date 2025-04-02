@@ -16,10 +16,10 @@ import { IconType } from 'react-icons/lib'
 import { useUniStore } from '@/store/store'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
-import UniversityVerificationModal from '@/components/organisms/SettingsSection/SettingModals/UniversityVerificationModal'
-import { useJoinCommunity, useJoinCommunityFromUniversity } from '@/services/community-university'
+import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
 import Spinner from '@/components/atoms/spinner'
+import { Community } from '@/types/Community'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -91,8 +91,8 @@ export default function UniversityProfile() {
     },
   ]
 
-  const handleClick = (universityName: string) => {
-    const email = userProfileData?.email?.find((email) => email.UniversityName == universityName)
+  const handleClick = () => {
+    //const email = userProfileData?.email?.find((email) => email.UniversityName == universityName)
     if (!userData?.id) {
       openModal(
         <NotLoggedInModal title={'Login to Join Community'} desc={'Login or create an account to become part of Lorem University’s community! '} />,
@@ -101,7 +101,7 @@ export default function UniversityProfile() {
     } else {
       joinCommunityFromUniversity(university._id, {
         onSuccess: (response: any) => {
-          router.push(`/community/${response.data.communityId}`)
+          return router.push(`/community/${response.data.community._id}`)
         },
       })
     }
@@ -124,7 +124,7 @@ export default function UniversityProfile() {
             </div>
             <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
 
-            <Buttons disabled={isJoinLoading} className="w-max" onClick={() => handleClick(university?.name)}>
+            <Buttons disabled={isJoinLoading} className="w-max" onClick={handleClick}>
               Join Community
             </Buttons>
           </div>

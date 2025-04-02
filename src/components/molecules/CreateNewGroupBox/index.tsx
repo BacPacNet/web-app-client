@@ -70,7 +70,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
 
   const SelectedGroupCategory = watch('selectedGroupCategory') as string
   const GroupSubCategory = watch('groupSubCategory') as Array<string>
-  const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
+  const SelectedUsers = watch('selectedUsers') as any[]
 
   const handleSelectAll = useCallback(() => {
     if (selectedFilter === 'ALL') {

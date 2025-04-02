@@ -219,7 +219,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
           Skip University Verification
         </Button>
 
-        <Button variant="primary"> {isPending ? <Spinner /> : 'Confirm'}</Button>
+        <Button disabled={isPending} variant="primary">
+          {isPending ? <Spinner /> : 'Confirm'}
+        </Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}
       </div>
     </div>
