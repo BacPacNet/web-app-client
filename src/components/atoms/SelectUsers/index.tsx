@@ -37,12 +37,11 @@ const SelectUsers = ({ selectedUsers, user, setValue }: Props) => {
     >
       <input id={user._id} className="w-4" type="checkbox" checked={isSelected} />
       <div className="flex items-center gap-2">
-        <Image width={40} height={40} className="w-10 h-10 rounded-full object-cover" src={user?.profileImageUrl || avatar} alt="" />
+        <Image width={48} height={48} className="w-12 h-1w rounded-full object-cover" src={user?.profileImageUrl || avatar} alt="" />
         <div>
           <p className="text-sm font-semibold">{user?.firstName}</p>
-          <p className="text-2xs text-neutral-500">
-            {user.year} {user.degree} {user.major}
-          </p>
+          <p className="text-2xs text-neutral-500">{user.year}</p>
+          <p className="text-2xs text-neutral-500">{user.major}</p>
         </div>
       </div>
     </label>

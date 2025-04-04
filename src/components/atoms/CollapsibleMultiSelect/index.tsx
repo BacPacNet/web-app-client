@@ -25,12 +25,12 @@ const CollapsibleMultiSelect: React.FC<CollapsibleMultiSelectProps> = ({ title, 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center py-4 cursor-pointer " onClick={toggleSection}>
-        <div className="flex items-center space-x-2" onClick={handleSelectAllOptions}>
+        <div className="flex items-center space-x-2">
           <input
             type="checkbox"
             checked={selectedOptions.length > 0}
             onChange={handleSelectAllOptions}
-            className="w-[18px] h-[18px]  border-neutral-200 rounded "
+            className="w-[18px] h-[18px]  border-neutral-200 rounded cursor-pointer"
           />
           <span className="text-2xs font-medium text-neutral-900">{title}</span>
         </div>
@@ -45,7 +45,7 @@ const CollapsibleMultiSelect: React.FC<CollapsibleMultiSelectProps> = ({ title, 
                 type="checkbox"
                 checked={selectedOptions.includes(option)}
                 onChange={() => toggleOption(option)}
-                className="w-[18px] h-[18px]  border-neutral-200 rounded "
+                className="w-[18px] h-[18px]  border-neutral-200 rounded cursor-pointer"
               />
               <span className="text-3xs text-neutral-700">{option}</span>
             </div>

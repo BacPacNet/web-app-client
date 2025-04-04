@@ -260,7 +260,7 @@ export function UserProfileCard({
         <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
             <FaBirthdayCake size={16} />
-            <span>{format(new Date(parse(birthday, 'dd/MM/yyyy', new Date())), 'dd MMM yyyy')}</span>
+            <span>{format(new Date(parse(birthday, 'dd/mm/yyyy', new Date())), 'dd MMM yyyy')}</span>
           </div>
 
           <div className="flex items-center space-x-2">

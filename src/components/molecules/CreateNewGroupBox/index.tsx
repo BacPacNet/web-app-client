@@ -115,22 +115,6 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     }
   }, [selectedFilter, communityData, userProfileData, userData])
 
-  const handleCategoryChange = (category: Category) => {
-    setValue('selectedGroupCategory', category)
-    if (SelectedGroupCategory !== category) {
-      setValue('groupSubCategory', [])
-    }
-  }
-
-  const handleSubCategoryChange = (subCategory: string) => {
-    const getGroupSubCategory = getValues('groupSubCategory')
-    const filterSubCategory = getGroupSubCategory.includes(subCategory)
-      ? getGroupSubCategory.filter((item: string) => item !== subCategory)
-      : [...getGroupSubCategory, subCategory]
-    setValue('groupSubCategory', filterSubCategory)
-    //setGroupSubCategory((prev) => (prev.includes(subCategory) ? prev.filter((item) => item !== subCategory) : [...prev, subCategory]))
-  }
-
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
       const categoryFilters = prev[category] || []
@@ -193,11 +177,9 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     setIsLoading(true)
     let CoverImageData
     let logoImageData
-    // return console.log('GroupSubCategory', Object.keys(selectedFilters).length)
 
     if (Object.keys(selectedFilters).length < 1) {
       setIsLoading(false)
-      //   return setError('selectedGroupCategory', { type: 'manual', message: 'Sub category required!' })
       return setFIltersError('category required')
     }
     console.log(errors, 'errors')
@@ -470,7 +452,6 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 <MultiSelectDropdown
                   options={Object.keys(degreeAndMajors)}
                   value={field.value || []}
-                  //   onChange={(years: string[]) => console.log('yesa', years)}
                   onChange={field.onChange}
                   placeholder="Add By Year"
                   label="Year (Students)"
