@@ -34,12 +34,12 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const isStudent = role === userTypeEnum.Student
   return (
-    <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-4 cursor-pointer items-center">
+    <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-2 cursor-pointer items-center">
       <div className="rounded-full w-[48px] h-[48px]">
         <Image src={avatarLink || avatar} width={48} height={48} className="object-cover rounded-full h-[inherit]" alt="User Avatar" />
       </div>
       <div>
-        <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
+        <h3 className="font-semibold text-2xs text-neutral-700">{user}</h3>
         <div className="flex flex-col">
           <p className="hidden md:block text-[10px] text-neutral-500">{isStudent ? year : occupation} </p>
           <p className="text-[10px] text-neutral-500">{isStudent ? major : affiliation}</p>

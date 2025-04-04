@@ -48,8 +48,6 @@ export const openModal = (content: React.ReactNode, style: string = ' h-[70vh] w
 }
 
 export const closeModal = () => {
-  if (setModalState) {
-    setModalState(false)
-    setContentState(null)
-  }
+  setModalState(false)
+  setContentState(null)
 }

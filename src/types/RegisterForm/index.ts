@@ -26,7 +26,7 @@ export interface FormDataType {
   isJoinUniversity: boolean
 }
 
-const value = [
+export const value = [
   'Accounting',
   'Actuarial Science',
   'Advertising',

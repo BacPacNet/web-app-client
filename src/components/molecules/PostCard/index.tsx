@@ -166,8 +166,8 @@ const PostCard = ({
 
   return (
     <div className={`bg-white rounded-lg shadow-card`}>
-      <div className="px-6">
-        <div className="flex items-start py-4 gap-4 justify-between">
+      <div className="px-6 flex flex-col gap-2">
+        <div className="flex items-start pt-4 gap-2 justify-between">
           <UserCard
             user={user}
             university={university}
@@ -188,12 +188,12 @@ const PostCard = ({
           </div>
         </div>
 
-        <div className="mb-4 text-xs font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
+        <div className=" text-xs font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
 
         {/* //post Image  */}
         <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 
-        <p className="py-2 text-2xs flex items-center">
+        <p className=" text-2xs flex items-center">
           <span className="text-neutral-500 font-normal break-words">
             {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · Posted from {university}
           </span>
@@ -202,7 +202,7 @@ const PostCard = ({
 
       {/* Post Meta */}
 
-      <div className={`flex items-center justify-end py-3 border-t border-neutral-200 text-sm text-neutral-500 px-6`}>
+      <div className={`flex items-center justify-end py-2 border-t border-neutral-200 text-sm text-neutral-500 px-6`}>
         <div className="flex items-center gap-4">
           <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-1 items-center cursor-pointer">
             {likes?.length}

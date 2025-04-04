@@ -1,7 +1,7 @@
 'use client'
 import React, { useCallback, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
@@ -14,6 +14,10 @@ import { categories, Category, CreateCommunityGroupType, subCategories } from '@
 import Pill from '@/components/atoms/Pill'
 import { closeModal } from '../Modal/ModalManager'
 import { CommunityUsers } from '@/types/Community'
+import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
+import { FaTimes } from 'react-icons/fa'
+import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
+import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
 
 type Props = {
   communityId: string
@@ -44,11 +48,13 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const { data: communityData } = useGetCommunity(communityId)
 
   const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
-
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
+  const [filtersError, setFIltersError] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
   const {
     register: GroupRegister,
     watch,
+    control,
     handleSubmit: handleGroupCreate,
     formState: { errors },
     setError,
@@ -62,8 +68,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       description: '',
       communityGroupAccess: '',
       communityGroupType: '',
-      selectedGroupCategory: '',
-      groupSubCategory: [],
+      //   selectedGroupCategory: '',
+      //   groupSubCategory: [],
       selectedUsers: [],
     },
   })
@@ -71,7 +77,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const SelectedGroupCategory = watch('selectedGroupCategory') as string
   const GroupSubCategory = watch('groupSubCategory') as Array<string>
   const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
-
+  const description = watch('description') || ''
   const handleSelectAll = useCallback(() => {
     if (selectedFilter === 'ALL') {
       setValue('selectedUsers', [])
@@ -125,6 +131,44 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     //setGroupSubCategory((prev) => (prev.includes(subCategory) ? prev.filter((item) => item !== subCategory) : [...prev, subCategory]))
   }
 
+  const handleSelect = (category: string, option: string) => {
+    setSelectedFilters((prev: any) => {
+      const categoryFilters = prev[category] || []
+      if (categoryFilters.includes(option)) {
+        const updatedFilters = categoryFilters.filter((item: any) => item !== option)
+        if (updatedFilters.length === 0) {
+          const { [category]: _, ...rest } = prev
+          return rest
+        }
+        return {
+          ...prev,
+          [category]: updatedFilters,
+        }
+      } else {
+        return {
+          ...prev,
+          [category]: [...categoryFilters, option],
+        }
+      }
+    })
+  }
+
+  const handleSelectAllFilter = (category: string, allOptions: string[]) => {
+    setSelectedFilters((prev: any) => {
+      const currentFilters = prev[category] || []
+
+      if (currentFilters.length === allOptions.length) {
+        const { [category]: _, ...rest } = prev
+        return rest
+      } else {
+        return {
+          ...prev,
+          [category]: allOptions,
+        }
+      }
+    })
+  }
+
   const handleImageUpload = async (files: string) => {
     if (files) {
       const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
@@ -134,13 +178,27 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     }
   }
 
+  const validateDescription = (value: string | undefined): string | boolean => {
+    if (!value || value.trim() === '') return true
+
+    const trimmedValue = value.trim()
+    const charCount = trimmedValue.length
+
+    if (charCount > 160) return 'Bio must not exceed 150 characters'
+
+    return true
+  }
+
   const onGroupSubmit = async (data: any) => {
     setIsLoading(true)
     let CoverImageData
     let logoImageData
-    if (SelectedGroupCategory !== 'Others' && GroupSubCategory.length < 1) {
+    // return console.log('GroupSubCategory', Object.keys(selectedFilters).length)
+
+    if (Object.keys(selectedFilters).length < 1) {
       setIsLoading(false)
-      return setError('selectedGroupCategory', { type: 'manual', message: 'Sub category required!' })
+      //   return setError('selectedGroupCategory', { type: 'manual', message: 'Sub category required!' })
+      return setFIltersError('category required')
     }
     console.log(errors, 'errors')
     if (coverImage) {
@@ -152,13 +210,18 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       setValue('communityGroupLogoUrl', logoImageData as any)
     }
 
+    const communityGroupCategory = {
+      communityGroupCategory: selectedFilters,
+    }
     const payload = {
       ...data,
+      ...communityGroupCategory,
       communityGroupLogoUrl: logoImageData,
       communityGroupLogoCoverUrl: CoverImageData,
     }
 
     createGroup({ communityId: communityId, data: payload })
+    setSelectedFilters({})
     setIsLoading(false)
     setNewGroup(false)
     closeModal()
@@ -173,36 +236,47 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 justify-start items-start w-full">
-        <h3 className="text-neutral-700 text-base font-semibold">Create Group</h3>
-        <div
-          className={` ${
-            !coverImage ? 'border-2 border-neutral-200' : ''
-          } rounded-md relative  flex flex-col w-full items-center justify-center h-40 `}
-        >
-          {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
-          <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
-          <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10">
-            <FiCamera size={40} className="text-primary-500" />
-            <p className="text-neutral-900 font-medium ">
-              <span className="text-primary-500">Upload</span> Banner Image
-            </p>
+      <div className="flex flex-col gap-8 justify-start items-start w-full">
+        <h3 className="text-neutral-700 text-md font-poppins font-bold">Group Information</h3>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="name" className="font-medium text-sm text-neutral-900">
+            Group Profile
           </label>
+          <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
+            {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
+            <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
+            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
+              <FiCamera size={40} className="text-slate-400 z-30" />
+            </label>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 w-full">
+          <label htmlFor="name" className="font-medium text-sm text-neutral-900">
+            Group Banner
+          </label>
+          <div
+            className={` ${
+              !coverImage ? 'border-2 border-neutral-200' : ''
+            } rounded-md relative  flex flex-col w-full items-center justify-center h-[141px] `}
+          >
+            {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
+            <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
+            <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10">
+              <FiCamera size={40} className="text-primary-500" />
+              <p className="text-neutral-900 font-medium ">
+                <span className="text-primary-500">Upload</span> Banner Image
+              </p>
+            </label>
+          </div>
         </div>
         {/* log0 */}
 
         {/* Forms  */}
-        <form className="w-full flex flex-col gap-4">
+        <form className="w-full flex flex-col gap-8">
           <div className="flex gap-4 items-center justify-between">
-            <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-24 h-24 rounded-full`}>
-              {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
-              <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
-              <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                <FiCamera size={40} className="text-slate-400 z-30" />
-              </label>
-            </div>
-            <div className="relative w-9/12 flex flex-col gap-2">
-              <label htmlFor="name" className="font-medium text-xs">
+            <div className="relative w-full flex flex-col gap-2">
+              <label htmlFor="name" className="font-medium text-sm text-neutral-900">
                 Group Name
               </label>
               <InputBox
@@ -219,14 +293,17 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           </div>
 
           <div className="relative flex flex-col gap-2">
-            <label htmlFor="description" className="font-medium text-xs">
-              Description
-            </label>
-
+            <div className="flex justify-between items-center">
+              <label htmlFor="name" className="font-medium text-sm text-neutral-900">
+                Description
+              </label>
+              <p className="text-xs text-neutral-500">{description?.trim()?.length}/160</p>
+            </div>
             <textarea
-              className="w-full p-2 border border-neutral-200 rounded-lg resize-none focus:outline-none h-28 overflow-y-auto text-xs"
+              className="w-full p-2 border border-neutral-200 rounded-lg resize-none focus:outline-none h-[114px] overflow-y-auto text-xs"
               {...GroupRegister('description', {
                 required: true,
+                validate: validateDescription,
               })}
               placeholder="Enter description"
             ></textarea>
@@ -235,18 +312,18 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           </div>
 
           <div>
-            <h2 className="font-medium text-xs">Group Access</h2>
+            <h2 className="font-medium text-sm text-neutral-900">Group Access</h2>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Public" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
-              <div className="py-2">
+              <input type="radio" value="Public" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Public</span>
                 <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
               </div>
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-5 h-5" />
-              <div>
+              <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Private</span>
                 <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
               </div>
@@ -257,76 +334,91 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           {/* communty group type  */}
 
           <div>
-            <h2 className="font-medium text-xs">Group Type</h2>
+            <h2 className="font-medium text-sm text-neutral-900">Group Type</h2>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Casual" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
-              <div className="py-2">
+              <input type="radio" value="Casual" {...GroupRegister('communityGroupType', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Casual</span>
                 <p className="text-neutral-400 text-[12px] ">No approval required</p>
               </div>
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Official" {...GroupRegister('communityGroupType', { required: true })} className="w-5 h-5" />
-              <div>
+              <input type="radio" value="Official" {...GroupRegister('communityGroupType', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Official</span>
                 <p className="text-neutral-400 text-[12px] ">Require university approval</p>
               </div>
             </label>
             {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
+          <div>
+            <h2 className="font-medium text-sm text-neutral-900">Repost Setting</h2>
+            <div className="flex items-center gap-3 py-3 ">
+              <input type="radio" value="Casual" {...GroupRegister('repostOption', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="">
+                <span className="text-neutral-900 text-[12px] font-medium">Allow reposting on user’s timelines</span>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-3">
+              <input type="radio" value="Official" {...GroupRegister('repostOption', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <div className="py-3">
+                <span className="text-neutral-900 text-[12px] font-medium">Only allow reposting within group</span>
+              </div>
+            </label>
+            {errors.repostOption && <p className="text-red-500 text-2xs ">This field is required</p>}
+          </div>
 
           <div>
-            <h2 className="font-medium text-xs py-2">Group Category</h2>
-            <div className="flex flex-col gap-3">
-              {categories.map((category) => (
-                <>
-                  <label key={category} className="flex items-center gap-3">
-                    <input
-                      onClick={() => handleCategoryChange(category)}
-                      type="radio"
-                      value={category.toLowerCase().replace(/ /g, '-')}
-                      checked={getValues('selectedGroupCategory') === category}
-                      {...GroupRegister('selectedGroupCategory', { required: true })}
-                      className="w-5 h-5"
-                      name="group-cateogry"
-                    />
-                    <span className="text-neutral-900 text-[12px] font-medium">{category}</span>
-                  </label>
+            <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
+            <CollapsibleMultiSelect
+              title="Academic Focus"
+              options={subCategories['Academic Focus']}
+              selectedOptions={selectedFilters['Academic Focus'] || []}
+              onSelect={(value: string) => handleSelect('Academic Focus', value)}
+              handleSelectAll={() => handleSelectAllFilter('Academic Focus', subCategories['Academic Focus'])}
+            />
+            <CollapsibleMultiSelect
+              title="Recreation and Hobbies"
+              options={subCategories['Recreation and Hobbies']}
+              selectedOptions={selectedFilters['Recreation and Hobbies'] || []}
+              onSelect={(value: string) => handleSelect('Recreation and Hobbies', value)}
+              handleSelectAll={() => handleSelectAllFilter('Recreation and Hobbies', subCategories['Recreation and Hobbies'])}
+            />
+            <CollapsibleMultiSelect
+              title="Advocacy and Awareness"
+              options={subCategories['Advocacy and Awareness']}
+              selectedOptions={selectedFilters['Advocacy and Awareness'] || []}
+              onSelect={(value: string) => handleSelect('Advocacy and Awareness', value)}
+              handleSelectAll={() => handleSelectAllFilter('Advocacy and Awareness', subCategories['Advocacy and Awareness'])}
+            />
+            <CollapsibleMultiSelect
+              title="Personal Growth"
+              options={subCategories['Personal Growth']}
+              selectedOptions={selectedFilters['Personal Growth'] || []}
+              onSelect={(value: string) => handleSelect('Personal Growth', value)}
+              handleSelectAll={() => handleSelectAllFilter('Personal Growth', subCategories['Personal Growth'])}
+            />
+            <CollapsibleMultiSelect
+              title="Professional Development"
+              options={subCategories['Professional Development']}
+              selectedOptions={selectedFilters['Professional Development'] || []}
+              onSelect={(value: string) => handleSelect('Professional Development', value)}
+              handleSelectAll={() => handleSelectAllFilter('Professional Development', subCategories['Professional Development'])}
+            />
 
-                  {SelectedGroupCategory === category && (
-                    <div className="mt-2 grid grid-cols-2 gap-4 ps-4">
-                      {subCategories[category].map((subCategory) => (
-                        <label key={subCategory} className="flex items-center gap-2">
-                          <input
-                            name="groupSubCategory"
-                            type="checkbox"
-                            value={subCategory}
-                            checked={GroupSubCategory.includes(subCategory)}
-                            onChange={() => handleSubCategoryChange(subCategory)}
-                            className="w-4 h-4"
-                          />
-                          <span className="text-neutral-700 text-2xs">{subCategory}</span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ))}
-            </div>
-            {errors.selectedGroupCategory && (
-              <p className="text-red-500 text-2xs ">{errors.selectedGroupCategory.message?.toString() || 'This field is required'}</p>
-            )}
+            {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
           <div className="relative w-full flex flex-col">
-            <label htmlFor="inviteFriends" className="font-medium text-xs">
+            <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
               Add Members
             </label>
             <InputBox isCancel={true} onCancel={() => setShowSelectUsers(false)} onClick={() => setShowSelectUsers(true)} type="text" />
 
             {showSelectUsers && (
               <div className="w-full min-h-[200px] rounded-b-lg shadow-xl">
-                <div className="flex flex-wrap gap-2 p-4">
+                {/* <div className="flex flex-wrap gap-2 p-4">
                   <Pill onClick={handleSelectAll} size="extra_small" variant={selectedFilter === 'ALL' ? 'primary' : 'border_primary'}>
                     {selectedFilter === 'ALL' ? 'Clear All from Community' : 'Select All from Community'}
                   </Pill>
@@ -338,7 +430,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   <Pill onClick={handleSelectSameMajor} size="extra_small" variant={selectedFilter === 'SAME_MAJOR' ? 'primary' : 'border_primary'}>
                     {selectedFilter === 'SAME_MAJOR' ? 'Clear All Same Major' : 'Select All Same Major'}
                   </Pill>
-                </div>
+                </div> */}
                 <div className="flex flex-col overflow-y-scroll">
                   {!communityData?.users.length ? (
                     <p className="text-center">No Data!</p>
@@ -350,6 +442,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 </div>
               </div>
             )}
+
             <div className="flex flex-wrap mt-2">
               {SelectedUsers?.length < 9 ? (
                 <div className="flex gap-2 flex-wrap">
@@ -369,7 +462,69 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               )}
             </div>
           </div>
-          <button disabled={isPending} onClick={handleGroupCreate(onGroupSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-3/4 mx-auto">
+          <div className="flex flex-col gap-8">
+            <Controller
+              name="studentYear"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={Object.keys(degreeAndMajors)}
+                  value={field.value || []}
+                  //   onChange={(years: string[]) => console.log('yesa', years)}
+                  onChange={field.onChange}
+                  placeholder="Add By Year"
+                  label="Year (Students)"
+                  err={false}
+                />
+              )}
+            />
+            <Controller
+              name="major"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={value}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Add By Major"
+                  label="Major (Students)"
+                  err={false}
+                  search={true}
+                />
+              )}
+            />
+            <Controller
+              name="occupation"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={Object.keys(occupationAndDepartment)}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Add By Major"
+                  label="Occupation (Faculty)"
+                  err={false}
+                  search={true}
+                />
+              )}
+            />
+            <Controller
+              name="affiliation"
+              control={control}
+              render={({ field }) => (
+                <MultiSelectDropdown
+                  options={value}
+                  value={field.value || []}
+                  onChange={field.onChange}
+                  placeholder="Add By Major"
+                  label="Affiliation/Department (Faculty)"
+                  err={false}
+                  search={true}
+                />
+              )}
+            />
+          </div>
+          <button disabled={isPending} onClick={handleGroupCreate(onGroupSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-full mx-auto">
             {isLoading || isPending ? <Spinner /> : <p>Create Groups</p>}
           </button>
         </form>
