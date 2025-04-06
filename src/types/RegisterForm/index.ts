@@ -27,7 +27,7 @@ export interface FormDataType {
   isUniversityVerified: boolean
 }
 
-const value = [
+export const value = [
   'Accounting',
   'Actuarial Science',
   'Advertising',

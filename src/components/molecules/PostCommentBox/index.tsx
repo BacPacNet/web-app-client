@@ -79,7 +79,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
   }
   const handelCommentData = (comment: any) => {
     const commentData = {
-      avatarLink: comment?.commenterProfileId?.profile_dp.imageUrl,
+      avatarLink: comment?.commenterProfileId?.profile_dp?.imageUrl,
       data: comment?.createdAt,
       text: comment?.content,
       user: comment?.commenterId.firstName + ' ' + comment?.commenterId.lastName,
@@ -122,9 +122,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
     return comments?.map((comment, index: number) => (
       <div
         key={comment._id}
-        className={`${comments.length - 1 === index ? 'mb-0' : 'mb-6'}  w-auto h-full relative ${
+        className={`${comments.length - 1 === index ? 'mt-4' : 'mt-4'}  w-auto h-full relative ${
           childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'
-        } `}
+        } ${comment.level == 1 && index > 0 ? 'mt-4 ' : ''}  `}
       >
         <div>
           <UserCard
@@ -142,14 +142,15 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
             occupation={comment?.commenterProfileId?.occupation}
           />
         </div>
-        <div className={`flex flex-col gap-4 py-3 ${comments.length - 1 === index ? 'border-none' : 'border-b border-neutral-200'} `}>
+        <div className={`flex flex-col gap-2 pt-2   border-b border-neutral-200 `}>
+          {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
           <p
             className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"
             dangerouslySetInnerHTML={{ __html: comment?.content }}
           />
           <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
           <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
-          <div className="flex justify-start gap-4 text-sm text-neutral-500">
+          <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
             <div className="flex items-center cursor-pointer">
               <AiOutlineLike
                 onClick={() => likePostCommentHandler(comment._id)}
@@ -157,18 +158,26 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
               />
               <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
             </div>
-            <span
-              onClick={() => {
-                toggleCommentSection(comment._id), handleChildComments(comment?.replies), setActiveComments(comment)
-              }}
-              className="flex items-center  cursor-pointer"
-            >
-              <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount}
-            </span>
-            <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
-              <HiReply className="text-gray-dark" />
-              <span className="ml-1 font-poppins text-xs">reply</span>
-            </div>
+            {comment.level >= 1 ? (
+              ''
+            ) : (
+              <span
+                onClick={() => {
+                  toggleCommentSection(comment._id), handleChildComments(comment?.replies), setActiveComments(comment)
+                }}
+                className="flex items-center  cursor-pointer"
+              >
+                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount}
+              </span>
+            )}
+            {comment.level >= 1 ? (
+              ''
+            ) : (
+              <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
+                <HiReply className="text-gray-dark" />
+                <span className="ml-1 font-poppins text-xs">reply</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -183,7 +192,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
   return (
     <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-6'} flex flex-col gap-2 w-full border-t border-neutral-200`}>
       <div className="px-6">
-        <div className="rounded-full pb-6 flex gap-4 items-center">
+        <div className="rounded-full  flex gap-4 items-center">
           <Image
             src={userProfileData?.profile_dp?.imageUrl || avatar}
             alt={`${userData?.firstName}'s avatar`}
@@ -202,7 +211,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           </button>
         </div>
 
-        <div ref={containerRef}>{renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}</div>
+        <div ref={containerRef} className="flex flex-col gap-4">
+          {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
+        </div>
         {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
         {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
         {showMoreComponent()}

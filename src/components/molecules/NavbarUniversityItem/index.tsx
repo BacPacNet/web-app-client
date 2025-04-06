@@ -246,7 +246,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
         <div className="flex gap-2 my-4">
           <div className="flex-1">
-            <Buttons variant="border" className="h-10 w-full gap-1 text-xs">
+            <Buttons onClick={() => handleCommunityGroupFilter()} variant="border" className="h-10 w-full gap-1 text-xs">
               Filter
               <LuFilter className="h-3.5 w-3.5 text-primary-500" />
             </Buttons>

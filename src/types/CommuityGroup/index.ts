@@ -30,6 +30,11 @@ export interface CreateCommunityGroupType {
     publicId: string
   } | null
   selectedUsers: users[]
+  studentYear: []
+  major: []
+  occupation: []
+  affiliation: []
+  repostOption: string
 }
 
 export interface CommunityGroupType {
