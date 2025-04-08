@@ -1,13 +1,13 @@
 import useCookie from '@/hooks/useCookie'
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
-import axios from 'axios'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
+import { IUserProfileResponse } from '@/types/User'
 
 export async function getUserData(token: any, id: string) {
-  const response: any = await client(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+  const response: IUserProfileResponse = await client(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 

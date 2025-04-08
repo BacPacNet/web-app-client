@@ -165,7 +165,7 @@ const PostCard = ({
   }, [])
 
   return (
-    <div className={`bg-white rounded-lg shadow-card`}>
+    <div className={`bg-white rounded-lg shadow-card pb-4`}>
       <div className="px-6 flex flex-col gap-2">
         <div className="flex items-start pt-4 gap-2 justify-between">
           <UserCard

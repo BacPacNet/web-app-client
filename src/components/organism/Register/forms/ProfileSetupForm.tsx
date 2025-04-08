@@ -10,9 +10,9 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
-import { GenderOptions, userType } from '@/types/RegisterForm'
-import { Country } from 'country-state-city'
+import { userType } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
+import { isValid, parse } from 'date-fns'
 
 const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -69,8 +69,8 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
               required: 'Birth Date is required.',
               validate: (value) => {
                 if (!value) return 'Birth Date is required.'
-                const birthDate = new Date(value)
-                if (isNaN(birthDate.getTime())) return 'Invalid date.'
+                const birthDate = parse(value, 'dd/mm/yyyy', new Date())
+                if (!isValid(birthDate)) return 'Invalid date.'
 
                 const today = new Date()
                 let age = today.getFullYear() - birthDate.getFullYear()

@@ -51,8 +51,8 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
     if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {
       switch (type) {
         case notificationRoleAccess.ASSIGN:
-          setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
-          setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
+          //  setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
+          //  setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
           setIsRefetched('')
           break
         case notificationRoleAccess.FOLLOW:

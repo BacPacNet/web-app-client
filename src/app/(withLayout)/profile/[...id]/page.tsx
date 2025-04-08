@@ -16,10 +16,25 @@ export default function Profile({ params }: { params: { id: string } }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
 
-  const { profile, firstName, lastName, email, university_id, university } = userProfileData || {}
-  const { bio, university_name, followers, following, study_year, major, degree, phone_number, country, dob, city, affiliation, occupation, role } =
-    profile || {}
-  const { logos } = university || {}
+  const { profile, firstName, lastName, email } = userProfileData || {}
+  const {
+    bio,
+    university_name,
+    universityLogo,
+    followers,
+    following,
+    study_year,
+    major,
+    degree,
+    phone_number,
+    country,
+    dob,
+    city,
+    affiliation,
+    occupation,
+    role,
+  } = profile || {}
+  //  const { logos } = university || {}
 
   return (
     <div className="h-with-navbar py-4 hideScrollbar">
@@ -42,14 +57,14 @@ export default function Profile({ params }: { params: { id: string } }) {
           occupation={occupation || ''}
           email={email || ''}
           phone={phone_number || ''}
-          location={city}
+          location={city || ''}
           birthday={dob || ''}
           avatarUrl={profile?.profile_dp?.imageUrl || ''}
           isVerifiedUniversity={true}
           country={country || ''}
           isSelfProfile={isSelfProfile}
           userId={userId}
-          universityLogo={logos?.[0] || ''}
+          universityLogo={universityLogo || ''}
         />
       )}
       <ProfilePostContainer userId={userId} containerRef={containerRef} />

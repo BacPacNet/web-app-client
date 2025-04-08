@@ -41,7 +41,13 @@ export interface CreateCommunityGroupType {
 export interface CommunityGroupType {
   _id: string
   adminUserId: AdminUserId | string
-  communityId: string
+  communityId: {
+    _id: string
+    communityLogoUrl: {
+      imageUrl: string
+      publicId: string
+    }
+  }
   title: string
   description: string
   memberCount: number

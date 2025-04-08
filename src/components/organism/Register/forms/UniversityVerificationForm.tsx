@@ -6,11 +6,9 @@ import SupportingText from '@/components/atoms/SupportingText'
 import { useHandleRegister_v2, useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import Image from 'next/image'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import Spinner from '@/components/atoms/spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
-import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import useCookie from '@/hooks/useCookie'
 interface props {
   setStep: (value: number) => void
@@ -60,8 +58,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   const handleNext = async () => {
     const data = JSON.parse(cookieValue)
     const dob = new Date(data.birthDate)
-    const timestampSec = Math.floor(dob.getTime() / 1000)
-    data.birthDate = timestampSec.toString()
+    const timestampMs = dob.getTime()
+    data.birthDate = timestampMs.toString()
+
     const res = await HandleRegister(data)
     if (res?.isRegistered) {
       const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
@@ -113,16 +112,8 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
         </div>
       </div>*/}
       <div className="flex gap-2 items-center justify-start w-full ">
-        <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-lg">
-          <Image
-            objectFit="cover"
-            objectPosition="center"
-            alt="logo"
-            width={40}
-            height={40}
-            src={universityLogo || universityLogoPlaceholder}
-            className="object-contain object-top"
-          />
+        <div className="w-11 h-11 rounded-full flex items-center justify-center shadow-card">
+          <img alt="logo" width={36} height={36} src={universityLogo} className="object-contain rounded-full w-10 h-10 " />
         </div>
         <p className="font-poppins font-semibold">{univeristyName}</p>
       </div>

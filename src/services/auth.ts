@@ -134,6 +134,12 @@ export const useHandleUserEmailAndUserNameAvailability = () => {
 export const useHandleLoginEmailVerificationGenerate = () => {
   return useMutation({
     mutationFn: (data: { email: string }) => loginEmailVerificationCodeGenerate(data),
+    onSuccess: () => {
+      showCustomSuccessToast('OTP sent successfully')
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 
