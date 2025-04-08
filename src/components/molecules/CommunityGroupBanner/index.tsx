@@ -1,20 +1,23 @@
 'use client'
 import Image from 'next/image'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
+import logoPlaceholder from '@assets/Logo Circle.svg'
 import './index.css'
 import { useUniStore } from '@/store/store'
 import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
-import { MdAddAPhoto } from 'react-icons/md'
-import Button from '@/components/atoms/Buttons'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { HiPencilAlt } from 'react-icons/hi'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import settingIcon from '@assets/settingIcon.svg'
+import { CommunityGroupTypeEnum } from '@/types/CommuityGroup'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { FiEdit } from 'react-icons/fi'
+import { FaUniversity } from 'react-icons/fa'
+import { TbLogout2 } from 'react-icons/tb'
 
 interface Props {
   communityID: string
@@ -38,23 +41,20 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
     }
   }, [communityGroupID])
 
-  useEffect(() => {
-    if (communityGroups && userData) {
-      const { id } = userData
-      setIsGroupAdmin(communityGroups.adminUserId.toString() === id?.toString())
-      const usersId = communityGroups.users.map((item) => item.userId.toString())
-      const userIdSet = new Set(usersId)
-      if (userData.id && userIdSet.has(userData.id)) {
-        setIsMember(true)
-      }
-    }
-  }, [communityGroups, userData])
+  const isGroupOfficial = communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL
 
   useEffect(() => {
     if (communityGroups && userData) {
-      setIsUserJoinedCommunityGroup(communityGroups?.users?.some((user) => user.userId.toString() === userData?.id))
+      const isAdmin = communityGroups.adminUserId.toString() === userData.id?.toString()
+      if (isAdmin !== isGroupAdmin) setIsGroupAdmin(isAdmin)
+
+      const isMember = communityGroups.users.some((item) => item.userId.toString() === userData.id)
+      if (isMember !== isUserJoinedCommunityGroup) {
+        setIsUserJoinedCommunityGroup(isMember)
+        setIsMember(isMember)
+      }
     }
-  }, [communityGroups])
+  }, [communityGroups, userData, isGroupAdmin, isUserJoinedCommunityGroup, setIsGroupAdmin, setIsMember])
 
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
     if (!isUserJoinedCommunityGroup) {
@@ -100,7 +100,7 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
   return (
     <>
       <div className="rounded-2xl bg-white shadow-card">
-        <div className=" relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
+        <div className="relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
           <Image
             src={communityGroups?.communityGroupLogoCoverUrl?.imageUrl || universityPlaceholder}
             layout="fill"
@@ -112,10 +112,11 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
         </div>
         <div className="p-4">
           <div className="card-title flex justify-between items-center">
-            <div className="flex gap-2  flex-wrap items-center">
+            <div className="flex gap-2 flex-wrap items-center">
               <div
-                style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
-                className="relative flex items-center justify-center bg-white rounded-full w-11 h-11 lg:w-14 lg:h-14 overflow-hidden"
+                className={`relative z-1 flex items-center justify-center bg-white rounded-full w-11 h-11 lg:w-14 lg:h-14 overflow-visible ${
+                  isGroupOfficial && 'border-2 border-primary-500'
+                } `}
               >
                 <Image
                   width={40}
@@ -123,22 +124,55 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                   objectFit="cover"
                   objectPosition="center"
                   alt="logo"
-                  className="w-11 h-11 lg:w-14 lg:h-14"
-                  src={communityGroups?.communityGroupLogoUrl?.imageUrl || universityPlaceholder}
+                  className="w-10 h-10 lg:w-12 lg:h-12 rounded-full"
+                  src={communityGroups?.communityGroupLogoUrl?.imageUrl || logoPlaceholder}
                 />
+
+                {isGroupOfficial && (
+                  <div className="absolute bg-white -bottom-2 w-5 h-5 border-2 border-primary-500 rounded-full flex justify-center">
+                    <Image
+                      className="object-contain rounded-full"
+                      src={communityGroups?.communityId?.communityLogoUrl.imageUrl as string}
+                      width={12}
+                      height={12}
+                      alt=""
+                    />
+                  </div>
+                )}
               </div>
               <p className="text-sm font-bold">{communityGroups?.title}</p>
               {/*<p className="ai-power text-xs font-extrabold">AI POWERED </p>*/}
             </div>
-            <div
-              className={`${
-                communityGroups?.adminUserId != userData?.id ? 'flex-col justify-center items-center text-center gap-2' : 'gap-4'
-              } flex  items-center`}
-            >
-              <button>
-                <Image src={settingIcon} width={32} height={32} alt="" />
-              </button>
-              {/*{isGroupAdmin ? (
+            <div>
+              <Popover>
+                <PopoverTrigger>
+                  <Image src={settingIcon} width={32} height={32} alt="" />
+                </PopoverTrigger>
+                <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
+                  <div className="flex flex-col">
+                    {isGroupAdmin && (
+                      <div className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                        <FiEdit size={16} className="text-primary-500" />
+                        <p className="font-medium text-neutral-700 text-xs">Edit</p>
+                      </div>
+                    )}
+                    {!isUserJoinedCommunityGroup ? (
+                      <div onClick={() => {}} className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                        <FaUniversity strokeWidth={2} size={16} className="text-primary-500" />
+                        <p className="font-medium text-neutral-700 text-xs">Join</p>
+                      </div>
+                    ) : (
+                      <div onClick={() => {}} className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                        <TbLogout2 strokeWidth={2} size={16} className="text-red-500" />
+                        <p className="font-medium text-neutral-700 text-xs">Leave</p>
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/*{isGroupAdmin ? (
                 <div
                   onClick={() => handleEditCommunityGroupModal()}
                   className="flex gap-2 items-center text-2xs lg:text-xs text-primary-500 whitespace-nowrap cursor-pointer"
@@ -151,7 +185,6 @@ export default function CommunityGroupBanner({ communityID, communityGroupID, is
                   {!isUserJoinedCommunityGroup ? 'Join Group' : 'Leave Group'}
                 </Button>
               )}*/}
-            </div>
           </div>
           <div>
             <p className="text-xs text-neutral-500 pt-4">{communityGroups?.description}</p>

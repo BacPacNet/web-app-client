@@ -237,7 +237,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (step === 3 && subStep === 1) {
       const isAvailable = await userUniversityEmailVerification(data)
       if (isAvailable?.isAvailable) {
-        methods.setValue('isUniversityVerified', true)
+        data.isUniversityVerified = true
         const res = await HandleRegister(data)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
@@ -251,34 +251,6 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       return
     }
 
-    if (step === 2 && subStep === 0) {
-      return
-      const isAvailable = await userLoginEmailVerification(data)
-
-      if (isAvailable?.isAvailable) {
-        handleNext()
-        saveToLocalStorage()
-      }
-      return
-    }
-
-    if (step === 2 && subStep === 1) {
-      return
-
-      const isAvailable = await userUniversityEmailVerification(data)
-      if (isAvailable?.isAvailable) {
-        // handleNext()
-        // saveToLocalStorage()
-        const res = await HandleRegister(data)
-        if (res?.isRegistered) {
-          localStorage.setItem('registeredEmail', data?.email)
-
-          deleteCookie()
-          handleNext()
-        }
-      }
-      return
-    }
     if (step === 1 && subStep === 0) {
       handleNext()
       saveToLocalStorage()

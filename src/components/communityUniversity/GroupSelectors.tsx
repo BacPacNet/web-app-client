@@ -2,8 +2,6 @@ import { CommunityGroupTypeEnum } from '@/types/CommuityGroup'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import { FaStar, FaUniversity } from 'react-icons/fa'
-import { IoMdSettings } from 'react-icons/io'
 import { PiStudentFill } from 'react-icons/pi'
 
 const GroupSelectors = ({

@@ -45,7 +45,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
 
   const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
-  const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId)
+  const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId?._id)
   const {
     register: GroupRegister,
     handleSubmit,
@@ -194,7 +194,10 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
   const handleDeleteGroup = () => {
     if (communityGroups?._id) {
-      openModal(<DeleteCommunityGroupModal communityId={communityGroups?.communityId} communityGroupId={communityGroups?._id} />, 'h-auto w-[400px]')
+      openModal(
+        <DeleteCommunityGroupModal communityId={communityGroups?.communityId?._id} communityGroupId={communityGroups?._id} />,
+        'h-auto w-[400px]'
+      )
     }
   }
 

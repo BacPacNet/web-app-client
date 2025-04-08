@@ -1,20 +1,20 @@
 'use client'
 import Image from 'next/image'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import universityPlaceholder from '@assets/university_placeholder.jpg'
-import './index.css'
-import { useUniStore } from '@/store/store'
-import { useGetCommunity, useJoinCommunity, useLeaveCommunity } from '@/services/community-university'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
-import { Skeleton } from '@/components/ui/Skeleton'
-
-import { openModal } from '../Modal/ModalManager'
-import CommunityLeaveModal from '../CommunityLeaveModal'
 import settingIcon from '@assets/settingIcon.svg'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { TbLogout2 } from 'react-icons/tb'
 import { FaUniversity } from 'react-icons/fa'
 import { FiEdit } from 'react-icons/fi'
+
+import './index.css'
+import { useUniStore } from '@/store/store'
+import { useGetCommunity, useJoinCommunity } from '@/services/community-university'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { openModal } from '../Modal/ModalManager'
+import CommunityLeaveModal from '../CommunityLeaveModal'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 
 interface Props {
   communityID: string
@@ -25,37 +25,28 @@ interface Props {
 
 export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
+  const { userData } = useUniStore()
 
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
-  const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl)
-
-  const { mutate: joinCommunity } = useJoinCommunity()
-
-  const { userData, userProfileData } = useUniStore()
+  const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
 
   useEffect(() => {
     if (communityData && userData) {
       setIsUserJoinedCommunity(communityData.users.some((user) => user?.id?.toString() === userData?.id))
+      setIsGroupAdmin(communityData?.adminId?.toString() === userData?.id?.toString())
     }
-  }, [communityData, userData])
+  }, [communityData, userData, setIsGroupAdmin])
 
   useEffect(() => {
-    if (communityData && userData) {
-      const { id } = userData
-      setIsGroupAdmin(communityData?.adminId?.toString() === id?.toString())
-    }
-  }, [communityData, userData])
-
-  useEffect(() => {
-    setLogoSrc(communityData?.communityLogoUrl?.imageUrl)
+    setLogoSrc(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
   }, [communityData])
 
-  const handleToggleJoinCommunity = (communityGroupID: string) => {
+  const { mutate: joinCommunity } = useJoinCommunity()
+
+  const handleToggleJoinCommunity = () => {
     if (!isUserJoinedCommunity) {
       joinCommunity(communityID, {
-        onSuccess: () => {
-          setIsUserJoinedCommunity(true)
-        },
+        onSuccess: () => setIsUserJoinedCommunity(true),
       })
     } else {
       openModal(<CommunityLeaveModal communityID={communityID} setIsUserJoinedCommunity={setIsUserJoinedCommunity} />, 'h-max w-96')
@@ -71,64 +62,55 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
           src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src}
           layout="fill"
           objectFit="cover"
-          objectPosition="center"
-          alt={'university'}
+          alt="university"
           className="h-full w-full object-cover object-top"
         />
       </div>
       <div className="pt-4">
-        <div className="card-title flex flex-wrap justify-between items-center gap-2">
-          <div className="flex flex-wrap  gap-2 items-center">
-            <div
-              style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }}
-              className="relative flex items-center justify-center bg-white rounded-full w-[48px] h-[48px] overflow-hidden p-1"
-            >
+        <div className="flex justify-between items-center gap-2">
+          <div className="flex gap-2 items-center">
+            <div className="relative flex items-center justify-center bg-white rounded-full w-[48px] h-[48px] overflow-hidden p-1 shadow-md">
               <Image
                 layout="fill"
                 alt="logo"
-                src={logoSrc || universityLogoPlaceholder}
+                src={logoSrc}
                 onError={() => setLogoSrc(universityLogoPlaceholder)}
-                className="object-contain shadow-card rounded-full w-[48px] h-[48px]"
+                className="object-contain rounded-full w-[48px] h-[48px]"
               />
             </div>
             <p className="text-xs font-bold text-neutral-700">{communityData?.name}</p>
-            <p className="ai-power text-xs font-black">AI POWERED </p>
+            <p className="ai-power text-xs font-black">AI POWERED</p>
           </div>
-          <div>
-            <Popover>
-              <PopoverTrigger>
-                <Image src={settingIcon} width={32} height={32} alt="" />
-              </PopoverTrigger>
-              <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
-                <div className="flex flex-col">
-                  {isGroupAdmin && (
-                    <div className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100">
-                      <FiEdit size={16} className="text-primary-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Edit</p>
-                    </div>
-                  )}
-                  {!isUserJoinedCommunity ? (
-                    <div onClick={() => handleToggleJoinCommunity(communityID)} className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100">
-                      <FaUniversity strokeWidth={2} size={16} className="text-primary-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Join</p>
-                    </div>
-                  ) : (
-                    <div onClick={() => handleToggleJoinCommunity(communityID)} className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100">
-                      <TbLogout2 strokeWidth={2} size={16} className="text-red-500" />
+          <Popover>
+            <PopoverTrigger>
+              <Image src={settingIcon} width={32} height={32} alt="Settings" />
+            </PopoverTrigger>
+            <PopoverContent className="p-0 drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
+              <div className="flex flex-col">
+                {isGroupAdmin && (
+                  <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                    <FiEdit size={16} className="text-primary-500" />
+                    <p className="font-medium text-neutral-700 text-xs">Edit</p>
+                  </div>
+                )}
+                <div onClick={handleToggleJoinCommunity} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                  {isUserJoinedCommunity ? (
+                    <>
+                      <TbLogout2 size={16} className="text-red-500" />
                       <p className="font-medium text-neutral-700 text-xs">Leave</p>
-                    </div>
+                    </>
+                  ) : (
+                    <>
+                      <FaUniversity size={16} className="text-primary-500" />
+                      <p className="font-medium text-neutral-700 text-xs">Join</p>
+                    </>
                   )}
                 </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
-        <div>
-          <p className="text-2xs text-neutral-500 font-medium pt-4 ">{communityData?.about}</p>
-          {/*<p className="text-2xs text-neutral-500">
-            <span>{communityData?.users.length}</span> members
-          </p>*/}
-        </div>
+        <p className="text-2xs text-neutral-500 font-medium pt-4">{communityData?.about}</p>
       </div>
     </div>
   )
