@@ -211,6 +211,10 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       const isAvailable = await userLoginEmailVerification(data)
 
       if (isAvailable?.isAvailable) {
+        const dob = new Date(data.birthDate)
+        const timestampMs = dob.getTime()
+        data.birthDate = timestampMs.toString()
+
         const res = await HandleRegister(data)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
@@ -238,6 +242,9 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       const isAvailable = await userUniversityEmailVerification(data)
       if (isAvailable?.isAvailable) {
         data.isUniversityVerified = true
+        const dob = new Date(data.birthDate)
+        const timestampMs = dob.getTime()
+        data.birthDate = timestampMs.toString()
         const res = await HandleRegister(data)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()

@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -18,6 +18,18 @@ import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import { FaTimes } from 'react-icons/fa'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
+import CustomTooltip from '@/components/atoms/CustomTooltip'
+import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
+import {
+  filterData,
+  filterFacultyData,
+  getFilteredAffiliationCounts,
+  getFilteredMajorCounts,
+  getFilteredYearCounts,
+  getOccupationCounts,
+  getUniqueById,
+} from '@/lib/communityGroup'
 
 type Props = {
   communityId: string
@@ -46,10 +58,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const { data: communityData } = useGetCommunity(communityId)
-
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
+  const [filteredUsers, setFilterUsers] = useState<any>()
+  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>()
+  const [filteredYearCount, setFilteredYearsCount] = useState<Record<string, number>>()
+  const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
+  const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
+  const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
   const {
     register: GroupRegister,
@@ -68,52 +86,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       description: '',
       communityGroupAccess: '',
       communityGroupType: '',
-      //   selectedGroupCategory: '',
-      //   groupSubCategory: [],
       selectedUsers: [],
     },
   })
 
-  const SelectedGroupCategory = watch('selectedGroupCategory') as string
-  const GroupSubCategory = watch('groupSubCategory') as Array<string>
   const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
   const description = watch('description') || ''
-  const handleSelectAll = useCallback(() => {
-    if (selectedFilter === 'ALL') {
-      setValue('selectedUsers', [])
-      setSelectedFilter(null)
-    } else {
-      const getAllUsers = communityData?.users?.filter((user) => user?.id !== userData?.id)
-      setValue('selectedUsers', getAllUsers as any)
-      setSelectedFilter('ALL')
-    }
-  }, [selectedFilter, communityData, userData])
-
-  const handleSelectSameYear = useCallback(() => {
-    if (selectedFilter === 'SAME_YEAR') {
-      setValue('selectedUsers', [])
-      setSelectedFilter(null)
-    } else {
-      const getAllUsers = communityData?.users?.filter(
-        (user) => user.year === userProfileData?.study_year && user?.id !== userData?.id
-      ) as unknown as CommunityUsers[]
-      setValue('selectedUsers', getAllUsers as any)
-      setSelectedFilter('SAME_YEAR')
-    }
-  }, [selectedFilter, communityData, userProfileData, userData])
-
-  const handleSelectSameMajor = useCallback(() => {
-    if (selectedFilter === 'SAME_MAJOR') {
-      setValue('selectedUsers', [])
-      setSelectedFilter(null)
-    } else {
-      const getAllUsers = communityData?.users?.filter(
-        (user) => user.major === userProfileData?.major && user?.id !== userData?.id
-      ) as unknown as CommunityUsers[]
-      setValue('selectedUsers', getAllUsers as any)
-      setSelectedFilter('SAME_MAJOR')
-    }
-  }, [selectedFilter, communityData, userProfileData, userData])
+  const studentYear = watch('studentYear') || ''
+  const major = watch('major') || ''
+  const occupation = watch('occupation') || ''
+  const affiliation = watch('affiliation') || ''
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
@@ -195,9 +177,12 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     const communityGroupCategory = {
       communityGroupCategory: selectedFilters,
     }
+    const mergedUsers = [...SelectedUsers, ...filteredUsers, ...filteredFacultyUsers]
+    const uniqueUsers = getUniqueById(mergedUsers)
     const payload = {
       ...data,
       ...communityGroupCategory,
+      selectedUsers: uniqueUsers,
       communityGroupLogoUrl: logoImageData,
       communityGroupLogoCoverUrl: CoverImageData,
     }
@@ -216,9 +201,59 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSelectUsers(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  useEffect(() => {
+    const allUsers = communityData?.users || []
+    const allStudentUsers = allUsers.filter((user) => user.role == 'student')
+
+    const filters = { year: studentYear, major: major }
+
+    const filtered = filterData(allStudentUsers, filters)
+
+    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
+    const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
+
+    const majorCounts = getFilteredMajorCounts(filtered)
+
+    setFilterUsers(filtered)
+    setFilteredYearsCount(yearCounts)
+    setFilteredMajorsCount(majorCounts)
+  }, [studentYear, major, communityData])
+
+  useEffect(() => {
+    const allUsers = communityData?.users || []
+    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
+
+    const filters = { occupation: occupation, affiliation: affiliation }
+    const filtered = filterFacultyData(allFacultyUsers, filters)
+
+    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
+
+    const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
+
+    const affiliationCounts = getFilteredAffiliationCounts(filtered)
+
+    setFilterFacultyUsers(filtered)
+    setFilteredOccupationCount(occupationCounts)
+    setFilteredAffiliationCount(affiliationCounts)
+  }, [occupation, affiliation])
+
   return (
     <>
-      <div className="flex flex-col gap-8 justify-start items-start w-full">
+      <div className="flex flex-col gap-8 justify-start items-start w-full  ">
         <h3 className="text-neutral-700 text-md font-poppins font-bold">Group Information</h3>
 
         <div className="flex flex-col gap-2">
@@ -252,7 +287,6 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             </label>
           </div>
         </div>
-        {/* log0 */}
 
         {/* Forms  */}
         <form className="w-full flex flex-col gap-8">
@@ -296,7 +330,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           <div>
             <h2 className="font-medium text-sm text-neutral-900">Group Access</h2>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Public" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <input
+                type="radio"
+                value="Public"
+                {...GroupRegister('communityGroupAccess', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
               <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Public</span>
                 <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
@@ -304,7 +347,17 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              {/* <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" /> */}
+              <input
+                type="radio"
+                value="Private"
+                {...GroupRegister('communityGroupAccess', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
               <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Private</span>
                 <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
@@ -317,8 +370,20 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
 
           <div>
             <h2 className="font-medium text-sm text-neutral-900">Group Type</h2>
+            <p className="text-destructive-600 text-xs font-semibold py-2">
+              Once you select your group type and create the group, you will not be able to change your selection.
+            </p>
             <label className="flex items-center gap-3">
-              <input type="radio" value="Casual" {...GroupRegister('communityGroupType', { required: true })} className="w-[18px] h-[18px] mt-1" />
+              <input
+                type="radio"
+                value="Casual"
+                {...GroupRegister('communityGroupType', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
               <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Casual</span>
                 <p className="text-neutral-400 text-[12px] ">No approval required</p>
@@ -326,15 +391,40 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             </label>
 
             <label className="flex items-center gap-3">
-              <input type="radio" value="Official" {...GroupRegister('communityGroupType', { required: true })} className="w-[18px] h-[18px] mt-1" />
-              <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Official</span>
+              <input
+                type="radio"
+                value="Official"
+                {...GroupRegister('communityGroupType', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
+              <div className="py-3 ">
+                <div className="flex gap-4">
+                  <span className="text-neutral-900 text-[12px] font-medium">Official</span>
+                  <CustomTooltip
+                    icon={<AiOutlineInfoCircle size={20} />}
+                    content={
+                      <>
+                        <ul className="mt-2 space-y-2 text-sm text-gray-900 ">
+                          <li className="text-2xs  font-medium">Official groups have a badge</li>
+                          <li className="text-3xs text-neutral-700 max-w-[200px]">
+                            Official groups are recognized and affiliated with the university.
+                          </li>
+                        </ul>
+                      </>
+                    }
+                  />
+                </div>
+
                 <p className="text-neutral-400 text-[12px] ">Require university approval</p>
               </div>
             </label>
             {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
-          <div>
+          {/* <div>
             <h2 className="font-medium text-sm text-neutral-900">Repost Setting</h2>
             <div className="flex items-center gap-3 py-3 ">
               <input type="radio" value="Casual" {...GroupRegister('repostOption', { required: true })} className="w-[18px] h-[18px] mt-1" />
@@ -350,7 +440,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               </div>
             </label>
             {errors.repostOption && <p className="text-red-500 text-2xs ">This field is required</p>}
-          </div>
+          </div> */}
 
           <div>
             <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
@@ -392,14 +482,22 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
 
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
+
+          <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
           <div className="relative w-full flex flex-col">
             <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
-              Add Members
+              Add Individuals
             </label>
-            <InputBox isCancel={true} onCancel={() => setShowSelectUsers(false)} onClick={() => setShowSelectUsers(true)} type="text" />
+            <InputBox
+              isCancel={true}
+              onCancel={() => setShowSelectUsers(false)}
+              onClick={() => setShowSelectUsers(true)}
+              type="text"
+              placeholder="Search Users"
+            />
 
             {showSelectUsers && (
-              <div className="w-full min-h-[200px] rounded-b-lg shadow-xl">
+              <div ref={dropdownRef} className="w-full min-h-[200px] rounded-b-lg shadow-xl">
                 {/* <div className="flex flex-wrap gap-2 p-4">
                   <Pill onClick={handleSelectAll} size="extra_small" variant={selectedFilter === 'ALL' ? 'primary' : 'border_primary'}>
                     {selectedFilter === 'ALL' ? 'Clear All from Community' : 'Select All from Community'}
@@ -413,7 +511,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                     {selectedFilter === 'SAME_MAJOR' ? 'Clear All Same Major' : 'Select All Same Major'}
                   </Pill>
                 </div> */}
-                <div className="flex flex-col overflow-y-scroll">
+                <div className="flex flex-col overflow-y-scroll max-h-64">
                   {!communityData?.users.length ? (
                     <p className="text-center">No Data!</p>
                   ) : (
@@ -429,7 +527,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               {SelectedUsers?.length < 9 ? (
                 <div className="flex gap-2 flex-wrap">
                   {SelectedUsers?.map((item) => (
-                    <div key={item.id} className="bg-secondary px-2 py-1 text-xs text-primary-500 rounded-md flex items-center gap-2">
+                    // <div key={item.id} className="bg-secondary px-2 py-1 text-xs text-primary-500 rounded-md flex items-center gap-2">
+                    <div key={item.id} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
                       {item?.firstName}{' '}
                       <span onClick={() => handleClick(item.id as string)} className="cursor-pointer text-sm">
                         <IoClose />
@@ -456,6 +555,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   placeholder="Add By Year"
                   label="Year (Students)"
                   err={false}
+                  filteredCount={filteredYearCount}
+                  multiSelect={false}
                 />
               )}
             />
@@ -471,6 +572,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   label="Major (Students)"
                   err={false}
                   search={true}
+                  filteredCount={filteredMajorsCount}
+                  parentCategory={studentYear}
                 />
               )}
             />
@@ -486,6 +589,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   label="Occupation (Faculty)"
                   err={false}
                   search={true}
+                  multiSelect={false}
+                  filteredCount={filteredOccupationCount}
                 />
               )}
             />
@@ -501,12 +606,14 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   label="Affiliation/Department (Faculty)"
                   err={false}
                   search={true}
+                  filteredCount={filteredAffiliationCount}
+                  parentCategory={occupation}
                 />
               )}
             />
           </div>
           <button disabled={isPending} onClick={handleGroupCreate(onGroupSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-full mx-auto">
-            {isLoading || isPending ? <Spinner /> : <p>Create Groups</p>}
+            {isLoading || isPending ? <Spinner /> : <p>Create New Group</p>}
           </button>
         </form>
       </div>

@@ -16,6 +16,9 @@ interface MultiSelectDropdownProps {
   label?: string
   isStatus?: boolean
   variant?: 'primary' | 'default'
+  filteredCount?: any
+  multiSelect?: boolean
+  parentCategory?: string[]
 }
 
 const motionStyle = {
@@ -45,6 +48,9 @@ const MultiSelectDropdown = ({
   label,
   isStatus = false,
   variant = 'default',
+  filteredCount,
+  multiSelect = true,
+  parentCategory,
 }: MultiSelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -52,7 +58,10 @@ const MultiSelectDropdown = ({
   const searchRef = useRef<HTMLInputElement>(null)
 
   const handleSelect = (optionValue: string) => {
-    if (value.includes(optionValue)) {
+    if (multiSelect == false) {
+      setShow(false)
+      return onChange([optionValue])
+    } else if (value.includes(optionValue)) {
       onChange(value.filter((item) => item !== optionValue))
     } else {
       onChange([...value, optionValue])
@@ -121,10 +130,20 @@ const MultiSelectDropdown = ({
         <IoIosArrowDown className={`${variantText[variant]}`} />
       </div>
       <div className="flex flex-wrap gap-4 mt-2">
+        {parentCategory && parentCategory?.length > 0 ? (
+          <div className="flex items-center text-2xs  px-2 py-1 h-7 text-primary-500 bg-white rounded-md border border-primary">
+            <span className=" mr-1">{parentCategory}</span>
+          </div>
+        ) : (
+          ''
+        )}
         {value.length > 0
           ? value.map((selected, index) => (
               <div key={index} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
-                <span className=" mr-1">{selected}</span>
+                <span className=" mr-1 ">
+                  {selected}{' '}
+                  <span className=" p-[2px] bg-white text-primary max-h-4 rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>
+                </span>
                 <RxCross2
                   className="cursor-pointer "
                   onClick={(e) => {
@@ -161,7 +180,17 @@ const MultiSelectDropdown = ({
                   }`}
                   onClick={() => handleSelect(item)}
                 >
-                  <input type="checkbox" checked={value.includes(item)} onChange={() => handleSelect(item)} className="cursor-pointer" />
+                  {multiSelect && (
+                    <input
+                      type="checkbox"
+                      checked={value.includes(item)}
+                      onChange={() => handleSelect(item)}
+                      className="w-[16px] h-[16px] appearance-none rounded border-2 border-neutral-200 cursor-pointer
+                    checked:bg-primary checked:border-primary
+                    relative after:content-[''] after:absolute after:w-[4px] after:h-[8px] after:border-r-2 after:border-b-2 after:border-white
+                    after:rotate-45 after:top-[1.5px] after:left-[5px] checked:after:block after:hidden"
+                    />
+                  )}
                   <p>{item}</p>
                 </div>
               ))
