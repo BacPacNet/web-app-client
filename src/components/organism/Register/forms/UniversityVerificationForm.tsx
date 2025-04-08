@@ -59,6 +59,9 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
   const handleNext = async () => {
     const data = JSON.parse(cookieValue)
+    const dob = new Date(data.birthDate)
+    const timestampSec = Math.floor(dob.getTime() / 1000)
+    data.birthDate = timestampSec.toString()
     const res = await HandleRegister(data)
     if (res?.isRegistered) {
       const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()

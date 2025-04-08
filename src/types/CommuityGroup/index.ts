@@ -31,6 +31,7 @@ export interface CreateCommunityGroupType {
   } | null
   selectedUsers: users[]
   studentYear: []
+  //   studentYear:""
   major: []
   occupation: []
   affiliation: []
