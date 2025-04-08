@@ -2,7 +2,7 @@ import Card from '@/components/atoms/Card'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-import { FaGraduationCap, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa'
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa'
 import { ImEarth } from 'react-icons/im'
 import { HiDotsHorizontal, HiPencilAlt } from 'react-icons/hi'
 import badge from '@assets/badge.svg'
@@ -260,7 +260,7 @@ export function UserProfileCard({
         <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
             <FaBirthdayCake size={16} />
-            <span>{format(new Date(parse(birthday, 'dd/mm/yyyy', new Date())), 'dd MMM yyyy')}</span>
+            {birthday ? <span>{format(new Date(parse(birthday, 'dd/mm/yyyy', new Date())), 'dd MMM yyyy')}</span> : ''}
           </div>
 
           <div className="flex items-center space-x-2">

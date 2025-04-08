@@ -47,8 +47,6 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
     clearErrors('email')
     const data = { email }
 
-    showCustomSuccessToast('OTP sent successfully')
-
     generateLoginEmailOTP(data)
     handleLoginEmailSendCodeCount()
   }

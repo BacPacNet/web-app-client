@@ -1,7 +1,7 @@
 export interface UserLoginResponse {
   user: User
   tokens: Tokens
-  userProfile: UserProfile
+  userProfile: IUserProfileResponse
   Following: Following2
 }
 
@@ -34,25 +34,74 @@ export interface Refresh {
   expires: string
 }
 
-export interface UserProfile {
+export interface ProfileDp {
+  imageUrl: string
+  publicId: string
+}
+
+export interface CommunityCoverUrl {
+  imageUrl: string
+}
+
+export interface CommunityLogoUrl {
+  imageUrl: string
+}
+
+export interface Profile {
   _id: string
   users_id: string
-  email: Email[]
   dob: string
   country: string
   city: string
   university_name: string
-  university_id: UniversityId
+  university_id: string
   study_year: string
   degree: string
   major: string
   affiliation: string
   occupation: string
+  role: string
+  email: Email[]
   following: Following[]
   followers: Follower[]
   __v: number
-  phone_number: string
   bio: string
+  phone_number: string
+  profile_dp: ProfileDp
+  communities: string[]
+  universityLogo: string
+}
+
+export interface CommunityDetail {
+  _id: string
+  communityCoverUrl: CommunityCoverUrl
+  communityLogoUrl: CommunityLogoUrl
+  name: string
+  university_id: string
+  users: User[]
+  __v: number
+  about: string
+  communityGroups: any[]
+  adminId?: string
+}
+
+export interface IUserProfileResponse {
+  _id: string
+  firstName: string
+  lastName: string
+  userName: string
+  email: string
+  gender: string
+  role: string
+  isEmailVerified: boolean
+  isUserDeactive: boolean
+  userVerifiedCommunities: any[]
+  userUnVerifiedCommunities: any[]
+  createdAt: string
+  updatedAt: string
+  __v: number
+  profile: Profile
+  communityDetails: CommunityDetail[]
 }
 
 export interface Email {
