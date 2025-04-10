@@ -3,12 +3,13 @@ import Image from 'next/image'
 import { FaUserPlus, FaUsers } from 'react-icons/fa6'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useJoinCommunityGroup, useUpdateIsRead } from '@/services/notification'
+import { notificationStatus, useJoinCommunityGroup, useUpdateIsRead } from '@/services/notification'
 import { useRouter } from 'next/navigation'
 import { notificationRoleAccess } from '../organisms/NotificationTabs/NotificationTab'
 import { BsStars } from 'react-icons/bs'
 import { IoIosChatboxes } from 'react-icons/io'
 import Buttons from '../atoms/Buttons'
+import { useChangeCommunityGroupStatus } from '@/services/community-group'
 dayjs.extend(relativeTime)
 
 type Props = {
@@ -19,6 +20,7 @@ type Props = {
     message: string
     receiverId: string
     userPostId?: string
+    status: notificationStatus
     sender_id: {
       _id: string
       firstName: string
@@ -44,6 +46,7 @@ type Props = {
 const NotificationCard = ({ data }: Props) => {
   const { mutate: updateIsSeen } = useUpdateIsRead(data.type)
   const { mutate: joinGroup } = useJoinCommunityGroup()
+  const { mutate: changeGroupStatus } = useChangeCommunityGroupStatus(data?.communityGroupId?._id || '')
   const router = useRouter()
 
   const handleUpdateIsRead = (id: string) => {
@@ -64,6 +67,8 @@ const NotificationCard = ({ data }: Props) => {
           return router.push(`/post/${data.userPostId}?isType=Timeline`)
         case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
           return router.push(`/post/${data.communityPostId}?isType=Community`)
+        case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+          return
         default:
           break
       }
@@ -84,6 +89,17 @@ const NotificationCard = ({ data }: Props) => {
         }
         return joinGroup(dataToPush)
       }
+    }
+  }
+
+  const handleChangeGroupStatus = (status: string, notificationId: string) => {
+    return (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      const data = {
+        status: status,
+        notificationId: notificationId,
+      }
+      changeGroupStatus(data)
     }
   }
 
@@ -135,6 +151,8 @@ const NotificationCard = ({ data }: Props) => {
         return `${fullName} reacted to your post.`
       case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
         return `${fullName} reacted to a post in ${data?.communityDetails?.name || 'the community'}.`
+      case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+        return `${fullName} requested for official status for his group ${data?.communityGroupId?.title}.`
       default:
         return 'You have a new notification.'
     }
@@ -168,6 +186,25 @@ const NotificationCard = ({ data }: Props) => {
             Accept
           </Buttons>
         )}
+        {data.type == notificationRoleAccess.OFFICIAL_GROUP_REQUEST &&
+          (data?.status == notificationStatus.accepted ? (
+            <Buttons className="w-max" variant="shade" size="extra_small">
+              Accepted
+            </Buttons>
+          ) : data?.status == notificationStatus.rejected ? (
+            <Buttons className="w-max" variant="shade" size="extra_small">
+              Rejected
+            </Buttons>
+          ) : (
+            <div className="flex items-center gap-4">
+              <Buttons onClick={handleChangeGroupStatus('accepted', data?._id)} className="w-max" variant="border_primary" size="extra_small">
+                Accept
+              </Buttons>
+              <Buttons onClick={handleChangeGroupStatus('rejected', data?._id)} className="w-max" variant="border_primary" size="extra_small">
+                Reject
+              </Buttons>
+            </div>
+          ))}
       </div>
     </div>
   )

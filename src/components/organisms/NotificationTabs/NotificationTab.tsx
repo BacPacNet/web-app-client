@@ -11,12 +11,14 @@ export const notificationRoleAccess = {
   COMMUNITY_COMMENT: 'COMMUNITY_COMMENT',
   REACTED_TO_POST: 'REACTED_TO_POST',
   REACTED_TO_COMMUNITY_POST: 'REACTED_TO_COMMUNITY_POST',
+  OFFICIAL_GROUP_REQUEST: 'OFFICIAL_GROUP_REQUEST',
 }
 
 const NotificationTab = () => {
   const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(10, true)
 
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
+  console.log('notifications', notifications)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
