@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import Buttons from '@/components/atoms/Buttons'
 
 interface Props {
   communityID: string
@@ -81,34 +82,31 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
             <p className="text-xs font-bold text-neutral-700">{communityData?.name}</p>
             <p className="ai-power text-xs font-black">AI POWERED</p>
           </div>
-          <Popover>
-            <PopoverTrigger>
-              <Image src={settingIcon} width={32} height={32} alt="Settings" />
-            </PopoverTrigger>
-            <PopoverContent className="p-0 drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
-              <div className="flex flex-col">
-                {isGroupAdmin && (
-                  <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
-                    <FiEdit size={16} className="text-primary-500" />
-                    <p className="font-medium text-neutral-700 text-xs">Edit</p>
-                  </div>
-                )}
-                <div onClick={handleToggleJoinCommunity} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
-                  {isUserJoinedCommunity ? (
-                    <>
-                      <TbLogout2 size={16} className="text-red-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Leave</p>
-                    </>
-                  ) : (
-                    <>
-                      <FaUniversity size={16} className="text-primary-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Join</p>
-                    </>
+          {isUserJoinedCommunity ? (
+            <Popover>
+              <PopoverTrigger>
+                <Image src={settingIcon} width={32} height={32} alt="Settings" />
+              </PopoverTrigger>
+              <PopoverContent className="p-0 drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
+                <div className="flex flex-col">
+                  {isGroupAdmin && (
+                    <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                      <FiEdit size={16} className="text-primary-500" />
+                      <p className="font-medium text-neutral-700 text-xs">Edit</p>
+                    </div>
                   )}
+                  <div onClick={handleToggleJoinCommunity} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                    <TbLogout2 size={16} className="text-red-500" />
+                    <p className="font-medium text-neutral-700 text-xs">Leave</p>
+                  </div>
                 </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Buttons size="extra_small_paddind_2" onClick={handleToggleJoinCommunity}>
+              Join Community
+            </Buttons>
+          )}
         </div>
         <p className="text-2xs text-neutral-500 font-medium pt-4">{communityData?.about}</p>
       </div>

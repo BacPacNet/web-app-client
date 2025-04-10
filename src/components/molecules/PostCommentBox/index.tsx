@@ -190,7 +190,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
   }
 
   return (
-    <div className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-6'} flex flex-col gap-2 w-full border-t border-neutral-200`}>
+    <div
+      className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-6 pb-4'} flex flex-col gap-2 w-full border-t border-neutral-200`}
+    >
       <div className="px-6">
         <div className="rounded-full  flex gap-4 items-center">
           <Image

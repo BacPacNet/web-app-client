@@ -5,8 +5,6 @@ import ProfileSetupForm from '../forms/ProfileSetupForm'
 import { FormProvider, useForm } from 'react-hook-form'
 import VerificationForm from '../forms/VerificationForm'
 import UniversityVerificationForm from '../forms/UniversityVerificationForm'
-import ClaimBenefitForm from '../forms/ClaimBenefitForm'
-import FinalLoginForm from '../forms/FinalLoginForm'
 import {
   useHandleLoginEmailVerification,
   useHandleRegister_v2,

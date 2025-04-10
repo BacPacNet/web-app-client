@@ -111,6 +111,7 @@ export function UserProfileCard({
       console.error('No file selected.')
     }
   }
+
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
       <div className="flex flex-nowrap gap-4  items-start ">
@@ -260,7 +261,7 @@ export function UserProfileCard({
         <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
             <FaBirthdayCake size={16} />
-            {birthday ? <span>{format(new Date(parse(birthday, 'dd/mm/yyyy', new Date())), 'dd MMM yyyy')}</span> : ''}
+            {birthday ? <span>{format(new Date(Number(birthday)), 'dd MMM yyyy')}</span> : ''}
           </div>
 
           <div className="flex items-center space-x-2">

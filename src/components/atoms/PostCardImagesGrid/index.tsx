@@ -59,7 +59,7 @@ const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: p
         return 'grid-cols-3 grid-rows-2'
     }
   }
-
+  console.log(images)
   return (
     <>
       {isOpen && (
@@ -73,34 +73,36 @@ const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: p
           onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % imageList.length)}
         />
       )}
-      <div className={`grid gap-2 ${getGridTemplate()} ${isComment ? 'w-6/12 h-36' : 'w-full h-80 mx-auto'}   mt-4`}>
-        {images?.slice(0, 4).map((src, index) => (
-          <div
-            key={index}
-            className={`relative overflow-hidden flex ${imageCount == 1 && isComment == false ? 'h-80' : 'h-40'} ${
-              imageCount == 2 && isComment == false ? 'h-80' : 'h-40'
-            } ${imageCount === 3 && index === 2 && 'col-span-2 '} ${imageCount === 4 && index === 2 ? 'row-span-2 ' : ''}  ${
-              imageCount >= 4 && index === 2 && 'row-span-2  '
-            } ${imageCount >= 4 && index === 3 && 'col-span-2  '}  `}
-          >
-            <Image
-              layout="fill"
-              objectFit="cover"
-              objectPosition="center"
+      {images && (
+        <div className={`grid gap-2 ${getGridTemplate()} ${isComment ? 'w-6/12 h-36' : 'w-full h-80 mx-auto'}   mt-4`}>
+          {images?.slice(0, 4).map((src, index) => (
+            <div
               key={index}
-              src={src.imageUrl}
-              alt={`Image ${index + 1}`}
-              className="rounded-xl object-cover"
-              onClick={() => handleImageClick(index)}
-            />
-            {imageCount > 4 && index == 2 && (
-              <div className="absolute bg-slate-50 shadow-lg w-40 h-40 -right-10 -bottom-10 rounded-full text-neutral-700 flex items-center justify-center">
-                +{imageCount - 4}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              className={`relative overflow-hidden flex ${imageCount == 1 && isComment == false ? 'h-80' : 'h-40'} ${
+                imageCount == 2 && isComment == false ? 'h-80' : 'h-40'
+              } ${imageCount === 3 && index === 2 && 'col-span-2 '} ${imageCount === 4 && index === 2 ? 'row-span-2 ' : ''}  ${
+                imageCount >= 4 && index === 2 && 'row-span-2  '
+              } ${imageCount >= 4 && index === 3 && 'col-span-2  '}  `}
+            >
+              <Image
+                layout="fill"
+                objectFit="cover"
+                objectPosition="center"
+                key={index}
+                src={src.imageUrl}
+                alt={`Image ${index + 1}`}
+                className="rounded-xl object-cover"
+                onClick={() => handleImageClick(index)}
+              />
+              {imageCount > 4 && index == 2 && (
+                <div className="absolute bg-slate-50 shadow-lg w-40 h-40 -right-10 -bottom-10 rounded-full text-neutral-700 flex items-center justify-center">
+                  +{imageCount - 4}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </>
   )
 }
