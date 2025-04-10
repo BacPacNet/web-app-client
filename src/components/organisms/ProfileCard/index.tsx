@@ -112,7 +112,6 @@ export function UserProfileCard({
     }
   }
 
-  console.log(new Date(Number(birthday)))
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
       <div className="flex flex-nowrap gap-4  items-start ">

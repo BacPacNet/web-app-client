@@ -13,7 +13,6 @@ const JoinUniversityModal = () => {
           label="University Name"
           value={universitiy}
           onChange={(selectedUniversity: any) => {
-            console.log(selectedUniversity)
             setUniversity(selectedUniversity.name)
           }}
           placeholder="Select University Name"

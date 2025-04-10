@@ -116,7 +116,6 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     }
 
     if (communityPostError) {
-      console.log(communityPostError)
       return <Card className="px-4 rounded-lg text-center">{(communityPostError as any).response.data.message || 'Error loading posts'}</Card>
     }
 
