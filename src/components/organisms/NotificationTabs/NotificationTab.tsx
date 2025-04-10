@@ -18,7 +18,6 @@ const NotificationTab = () => {
   const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(10, true)
 
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
-  console.log('notifications', notifications)
 
   const containerRef = useRef<HTMLDivElement>(null)
 
