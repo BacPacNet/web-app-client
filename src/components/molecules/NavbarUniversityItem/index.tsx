@@ -193,6 +193,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
             toggleLeftNavbar={toggleLeftNavbar}
+            selectedCommunityImage={selectedCommunityImage}
           />
 
           {isUserJoinedSelectedCommunity && (

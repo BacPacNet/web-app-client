@@ -165,7 +165,7 @@ const PostCard = ({
   }, [])
 
   return (
-    <div className={`bg-white rounded-lg shadow-card pb-4`}>
+    <div className={`bg-white rounded-lg shadow-card`}>
       <div className="px-6 flex flex-col gap-2">
         <div className="flex items-start pt-4 gap-2 justify-between">
           <UserCard
@@ -193,7 +193,7 @@ const PostCard = ({
         {/* //post Image  */}
         <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 
-        <p className=" text-2xs flex items-center">
+        <p className=" text-2xs flex items-center mb-4">
           <span className="text-neutral-500 font-normal break-words">
             {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · Posted from {university}
           </span>

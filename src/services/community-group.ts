@@ -3,6 +3,7 @@ import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { MESSAGES } from '@/content/constant'
 
 /**
  * API call to join a community group
@@ -39,6 +40,7 @@ export const useJoinCommunityGroup = () => {
     onError: (error: any) => {
       const errorMessage = error?.response?.data?.message || 'Something went wrong'
       console.error('Error joining community group:', errorMessage)
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
     },
   })
 }

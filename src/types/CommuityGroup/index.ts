@@ -14,6 +14,11 @@ export enum CommunityGroupTypeEnum {
   OFFICIAL = 'Official',
 }
 
+export enum CommunityGroupVisibility {
+  PUBLIC = 'Public',
+  PRIVATE = 'Private',
+}
+
 export interface CreateCommunityGroupType {
   title: string
   description: string

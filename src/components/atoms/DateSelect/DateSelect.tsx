@@ -21,6 +21,7 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const handleDateChange = (data: Date) => {
+    console.log('string', new Date(data).toLocaleDateString())
     onChange(new Date(data).toLocaleDateString())
     setShow(false)
   }

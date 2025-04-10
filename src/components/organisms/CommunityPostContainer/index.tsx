@@ -10,6 +10,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostSkeleton from '@/components/atoms/PostSkeleton'
+import Card from '@/components/atoms/Card'
 
 type Props = {
   communityID?: string
@@ -115,7 +116,8 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     }
 
     if (communityPostError) {
-      return <div>{communityPostError.message || 'Error loading posts'}</div>
+      console.log(communityPostError)
+      return <Card className="px-4 rounded-lg text-center">{(communityPostError as any).response.data.message || 'Error loading posts'}</Card>
     }
 
     return renderPostWithRespectToPathName()

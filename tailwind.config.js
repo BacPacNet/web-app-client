@@ -60,6 +60,7 @@ module.exports = {
             },
             colors: {
                 'primary': '#6647FF',
+                'primary-300': '#B9B1FF',
                 'primary-500': '#6744FF',
                 'primary-700': '#3A169C',
                 'primary-800': '#6400E6',
