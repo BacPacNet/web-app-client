@@ -40,12 +40,20 @@ export type MessageNotificationsProps = {
   totalNotifications: number
 }
 
+export enum notificationStatus {
+  pending = 'pending',
+  rejected = 'rejected',
+  accepted = 'accepted',
+  default = 'default',
+}
+
 export interface UserMainNotification {
   _id: string
   createdAt: string
   isRead: boolean
   message: string
   receiverId: string
+  status: notificationStatus
   sender_id: {
     _id: string
     firstName: string

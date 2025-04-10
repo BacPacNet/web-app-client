@@ -75,9 +75,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     control,
     handleSubmit: handleGroupCreate,
     formState: { errors },
-    setError,
     setValue,
-    getValues,
   } = useForm<CreateCommunityGroupType>({
     defaultValues: {
       communityGroupLogoUrl: null,
@@ -89,7 +87,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       selectedUsers: [],
     },
   })
-
+  const categoryRef = useRef<HTMLDivElement>(null)
   const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
   const description = watch('description') || ''
   const studentYear = watch('studentYear') || ''
@@ -162,9 +160,15 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
 
     if (Object.keys(selectedFilters).length < 1) {
       setIsLoading(false)
-      return setFIltersError('category required')
+      setFIltersError('category required')
+      if (categoryRef.current) {
+        categoryRef.current.focus?.()
+        categoryRef.current.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
+      }
+
+      return
     }
-    console.log(errors, 'errors')
+
     if (coverImage) {
       CoverImageData = await handleImageUpload(coverImage)
       setValue('communityGroupLogoCoverUrl', CoverImageData as any)
@@ -185,6 +189,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       selectedUsers: uniqueUsers,
       communityGroupLogoUrl: logoImageData,
       communityGroupLogoCoverUrl: CoverImageData,
+      universityAdminId: communityData?.adminId,
     }
 
     createGroup({ communityId: communityId, data: payload })
@@ -263,9 +268,17 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
             {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
             <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
-            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-              <FiCamera size={40} className="text-slate-400 z-30" />
-            </label>
+
+            {logoImage ? (
+              <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
+                <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
+                <FiCamera size={32} className="text-white" />
+              </label>
+            ) : (
+              <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
+                <FiCamera size={40} className="text-slate-400 z-30" />
+              </label>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -279,12 +292,19 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           >
             {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
             <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
-            <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10">
-              <FiCamera size={40} className="text-primary-500" />
-              <p className="text-neutral-900 font-medium ">
-                <span className="text-primary-500">Upload</span> Banner Image
-              </p>
-            </label>
+            {coverImage ? (
+              <label htmlFor="CreateGroupImage" className="relative flex flex-col items-center gap-2 z-10  ">
+                <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
+                <FiCamera size={32} className="text-white" />
+              </label>
+            ) : (
+              <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10 ">
+                <FiCamera size={40} className="text-primary-500" />
+                <p className="text-neutral-900 font-medium ">
+                  <span className="text-primary-500">Upload</span> Banner Image
+                </p>
+              </label>
+            )}
           </div>
         </div>
 
@@ -442,7 +462,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             {errors.repostOption && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div> */}
 
-          <div>
+          <div ref={categoryRef}>
             <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
             <CollapsibleMultiSelect
               title="Academic Focus"

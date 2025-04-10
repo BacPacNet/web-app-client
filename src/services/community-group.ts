@@ -111,3 +111,31 @@ export const useDeleteCommunityGroup = () => {
     },
   })
 }
+
+async function ChangeCommunityGroupStatusAPI(data: { status: string }, communityGroupId: string, token: string) {
+  return await client(`/communitygroup/status/${communityGroupId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+}
+
+export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: { status: string }) => ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+
+      showCustomSuccessToast(`status of Community Group changed`)
+    },
+
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || 'Something went wrong'
+      console.error('Error changing status:', errorMessage)
+    },
+  })
+}
