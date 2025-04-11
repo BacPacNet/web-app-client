@@ -59,7 +59,6 @@ const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: p
         return 'grid-cols-3 grid-rows-2'
     }
   }
-  console.log(images)
   return (
     <>
       {isOpen && (

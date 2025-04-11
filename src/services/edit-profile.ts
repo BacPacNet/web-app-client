@@ -42,7 +42,7 @@ export const useAddUniversityEmail = (redirect: boolean = false) => {
   return useMutation({
     mutationFn: (data: any) => addUniversityEmail(data, cookieValue),
     onSuccess: (response: any, variables) => {
-      setUserProfileData(response.userProfile)
+      setUserProfileData(response)
       closeModal()
       if (redirect) {
         const community = response.userProfile.email.find((community: any) => community.UniversityName == variables.universityName)

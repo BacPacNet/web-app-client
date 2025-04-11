@@ -29,18 +29,14 @@ export const useJoinCommunityGroup = () => {
   return useMutation({
     mutationFn: (communityGroupId: string) => joinCommunityGroupAPI(communityGroupId, cookieValue),
 
-    onSuccess: () => {
-      // Invalidate relevant query caches
-
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      showCustomSuccessToast(`Joined Community Group`)
+      showCustomSuccessToast(response.message)
     },
 
     onError: (error: any) => {
-      const errorMessage = error?.response?.data?.message || 'Something went wrong'
-      console.error('Error joining community group:', errorMessage)
-      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+      showCustomDangerToast(error?.message || MESSAGES.SOMETHING_WENT_WRONG)
     },
   })
 }
