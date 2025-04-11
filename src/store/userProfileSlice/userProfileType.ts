@@ -14,6 +14,7 @@ export interface userProfileType {
   users_id: string | null
   profile_dp?: { imageUrl: string; publicId: string }
   email: EmailType[]
+  communities: { communityId: string; isVerified: string }[]
   cover_dp?: { imageUrl: string; publicId: string }
   bio?: string
   phone_number?: string

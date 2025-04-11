@@ -19,6 +19,9 @@ import { FiEdit } from 'react-icons/fi'
 import publicIcon from '@assets/public.svg'
 import { TbLogout2 } from 'react-icons/tb'
 import Buttons from '@/components/atoms/Buttons'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { FaLock } from 'react-icons/fa6'
+import CustomTooltip from '@/components/atoms/CustomTooltip'
 
 interface Props {
   communityID: string
@@ -52,10 +55,7 @@ export default function CommunityGroupBanner({
 
   const isGroupOfficial = communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL
   const isGroupPrivate = communityGroups?.communityGroupAccess === CommunityGroupVisibility.PRIVATE
-  const isUserVerifiedForCommunity = useMemo(
-    () => userProfileData?.email?.some((community) => community?.communityId?.toString() === communityGroups?.communityId?._id.toString()),
-    [userProfileData, communityGroups]
-  )
+  const isUserVerifiedForCommunity = userProfileData?.email?.some((community) => community.communityId === communityGroups?.communityId?._id)
 
   useEffect(() => {
     if (communityGroups && userData) {
@@ -66,11 +66,12 @@ export default function CommunityGroupBanner({
 
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
     if (!isUserJoinedCommunityGroup) {
-      joinCommunityGroup(communityGroupID, {
-        onSuccess: () => {
-          setIsUserJoinedCommunityGroup(true)
-        },
-      })
+      joinCommunityGroup(communityGroupID),
+        {
+          onSuccess: (response: any) => {
+            showCustomSuccessToast(response.data.message)
+          },
+        }
     } else {
       openModal(
         <CommunityLeaveModal
@@ -194,7 +195,7 @@ export default function CommunityGroupBanner({
                 {isGroupPrivate ? (
                   <>
                     {isUserVerifiedForCommunity ? (
-                      <Buttons size="extra_small_paddind_2" onClick={() => {}}>
+                      <Buttons size="extra_small_paddind_2" onClick={() => handleToggleJoinCommunityGroup(communityGroupID)}>
                         Request Access
                       </Buttons>
                     ) : (
@@ -231,7 +232,35 @@ export default function CommunityGroupBanner({
               <Buttons className="text-neutral-500" size="extra_small_paddind_2" variant="border">
                 {communityGroups?.users?.length} Members
               </Buttons>
-              {!isGroupPrivate && <Image src={publicIcon} width={32} height={32} alt="" />}
+              <CustomTooltip
+                icon={
+                  !isGroupPrivate ? (
+                    <Image src={publicIcon} width={32} height={32} alt="" />
+                  ) : (
+                    <FaLock size={32} className="text-primary-500 bg-secondary p-2 rounded-full overflow-visible" />
+                  )
+                }
+                content={
+                  <>
+                    <p className="font-medium text-neutral-900">Private and Public Groups</p>
+                    <ul className="mt-2 space-y-2 text-sm text-gray-700">
+                      <li className="text-xs text-neutral-700">
+                        <p className="font-bold">• Public:</p>
+                        <p>
+                          All users can join these groups without <br />
+                          requesting permission. Labeled with globe icon.
+                        </p>
+                      </li>
+                      <li className="text-xs text-neutral-700">
+                        <p className="font-bold">• Private:</p>
+                        <p>
+                          Must request access to join the group. Only <br /> verified users can request access. Labeled with <br /> lock icon.
+                        </p>
+                      </li>
+                    </ul>
+                  </>
+                }
+              />
             </div>
           </div>
         </div>
