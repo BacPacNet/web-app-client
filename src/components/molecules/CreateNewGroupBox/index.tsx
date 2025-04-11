@@ -276,7 +276,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               </label>
             ) : (
               <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                <FiCamera size={40} className="text-slate-400 z-30" />
+                <FiCamera size={32} className="text-slate-400 z-30" />
               </label>
             )}
           </div>
@@ -299,7 +299,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               </label>
             ) : (
               <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10 ">
-                <FiCamera size={40} className="text-primary-500" />
+                <FiCamera size={32} className="text-primary-500" />
                 <p className="text-neutral-900 font-medium ">
                   <span className="text-primary-500">Upload</span> Banner Image
                 </p>

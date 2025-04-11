@@ -27,6 +27,7 @@ import {
   getOccupationCounts,
   getUniqueById,
 } from '@/lib/communityGroup'
+import { BsExclamationCircleFill } from 'react-icons/bs'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -309,7 +310,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
             {logoImage && (
               <img
-                className="w-24 h-24 rounded-full absolute  object-cover"
+                className="w-[100px] h-[100px] rounded-full absolute  object-cover"
                 src={typeof logoImage === 'object' ? URL.createObjectURL(logoImage) : logoImage}
                 alt=""
               />
@@ -324,7 +325,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </label>
             ) : (
               <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                <FiCamera size={40} className="text-slate-400 z-30" />
+                <FiCamera size={32} className="text-primary-500 z-30" />
               </label>
             )}
           </div>
@@ -354,10 +355,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </label>
             ) : (
               <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2 z-10 ">
-                <FiCamera size={40} className="text-primary-500" />
-                <p className="text-neutral-900 font-medium ">
-                  <span className="text-primary-500">Upload</span> Banner Image
-                </p>
+                <FiCamera size={32} className="text-primary-500" />
+                <p className=" font-medium text-primary-500">Upload Banner Image</p>
               </label>
             )}
           </div>
@@ -444,7 +443,17 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           {/* communty group type  */}
 
           <div>
-            <h2 className="font-medium text-sm text-neutral-900">Group Type</h2>
+            <div className="flex gap-1 items-center">
+              <h2 className="font-medium text-sm text-neutral-900">Group Type</h2>
+              {communityGroups?.status == status.pending ? (
+                <span>
+                  <BsExclamationCircleFill size={14} className=" text-warning-500 " />{' '}
+                </span>
+              ) : (
+                ''
+              )}
+            </div>
+
             {communityGroups?.status == status.pending ? (
               <p className="text-warning-500 text-xs font-semibold py-2">
                 Your Official Group request is pending. Your Casual Group will convert after university admin accepts the request.
@@ -457,7 +466,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               {communityGroups?.communityGroupType == CommunityGroupTypeEnum.OFFICIAL ? (
                 <div className="py-3">
                   <span className="text-neutral-900 text-[12px] font-medium">Official</span>
-                  <p className="text-neutral-400 text-[12px] ">No approval required</p>
+                  <p className="text-neutral-400 text-[12px] ">Require university approval</p>
                 </div>
               ) : (
                 <div className="py-3">

@@ -13,7 +13,7 @@ import { useDeleteCommunityGroup, useJoinCommunityGroup } from '@/services/commu
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import settingIcon from '@assets/settingIcon.svg'
-import { CommunityGroupTypeEnum, CommunityGroupVisibility } from '@/types/CommuityGroup'
+import { CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { FiEdit } from 'react-icons/fi'
 import publicIcon from '@assets/public.svg'
@@ -22,7 +22,8 @@ import Buttons from '@/components/atoms/Buttons'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { FaLock } from 'react-icons/fa6'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
-
+import { BsExclamationCircleFill } from 'react-icons/bs'
+import { MdDeleteForever } from 'react-icons/md'
 interface Props {
   communityID: string
   communityGroupID: string
@@ -155,7 +156,14 @@ export default function CommunityGroupBanner({
             {isUserJoinedCommunityGroup ? (
               <Popover open={toggleDropdown}>
                 <PopoverTrigger>
-                  <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="" />
+                  <div className="relative">
+                    <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="" />
+                    {communityGroups?.status == status.pending ? (
+                      <BsExclamationCircleFill size={12} className="absolute text-warning-500 top-1 right-0 " />
+                    ) : (
+                      ''
+                    )}
+                  </div>
                 </PopoverTrigger>
                 <PopoverContent
                   onClick={() => setToggleDropdown(!toggleDropdown)}
@@ -166,6 +174,7 @@ export default function CommunityGroupBanner({
                       <div onClick={handleEditCommunityGroupModal} className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
                         <FiEdit size={16} className="text-primary-500" />
                         <p className="font-medium text-neutral-700 text-xs">Edit</p>
+                        {communityGroups?.status == status.pending ? <BsExclamationCircleFill size={16} className=" text-warning-500  " /> : ''}
                       </div>
                     )}
 
@@ -174,7 +183,7 @@ export default function CommunityGroupBanner({
                         onClick={() => deleteCommunityGroup(communityGroups?._id || '')}
                         className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer"
                       >
-                        <FiEdit size={16} className="text-primary-500" />
+                        <MdDeleteForever size={16} className="text-destructive-600" />
                         <p className="font-medium text-neutral-700 text-xs">Delete</p>
                       </div>
                     )}
