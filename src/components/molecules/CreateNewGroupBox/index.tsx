@@ -59,7 +59,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const { data: communityData } = useGetCommunity(communityId)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
+
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
   const [filteredUsers, setFilterUsers] = useState<any>()

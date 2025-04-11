@@ -10,8 +10,8 @@ interface users {
   major: string
 }
 export enum CommunityGroupTypeEnum {
-  CASUAL = 'Casual',
-  OFFICIAL = 'Official',
+  CASUAL = 'casual',
+  OFFICIAL = 'official',
 }
 
 export enum CommunityGroupVisibility {
@@ -43,9 +43,17 @@ export interface CreateCommunityGroupType {
   repostOption: string
 }
 
+export enum status {
+  pending = 'pending',
+  rejected = 'rejected',
+  accepted = 'accepted',
+  default = 'default',
+}
+
 export interface CommunityGroupType {
   _id: string
   adminUserId: AdminUserId | string
+  status: status
   communityId: {
     _id: string
     communityLogoUrl: {

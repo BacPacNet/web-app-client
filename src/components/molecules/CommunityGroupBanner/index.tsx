@@ -9,7 +9,7 @@ import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-u
 import { replaceImage } from '@/services/uploadImage'
 import { Skeleton } from '@/components/ui/Skeleton'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
-import { useJoinCommunityGroup } from '@/services/community-group'
+import { useDeleteCommunityGroup, useJoinCommunityGroup } from '@/services/community-group'
 import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import settingIcon from '@assets/settingIcon.svg'
@@ -43,7 +43,7 @@ export default function CommunityGroupBanner({
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityID, communityGroupID)
   const { mutate: joinCommunityGroup } = useJoinCommunityGroup()
   const { mutate: updateCommunity } = useUpdateCommunity()
-
+  const { mutate: deleteCommunityGroup } = useDeleteCommunityGroup()
   useEffect(() => {
     if (communityGroupID) {
       refetch()
@@ -53,7 +53,7 @@ export default function CommunityGroupBanner({
   const isGroupOfficial = communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL
   const isGroupPrivate = communityGroups?.communityGroupAccess === CommunityGroupVisibility.PRIVATE
   const isUserVerifiedForCommunity = useMemo(
-    () => userProfileData?.email?.some((community) => community.communityId === communityGroups?.communityId?._id),
+    () => userProfileData?.email?.some((community) => community?.communityId?.toString() === communityGroups?.communityId?._id.toString()),
     [userProfileData, communityGroups]
   )
 
@@ -167,13 +167,25 @@ export default function CommunityGroupBanner({
                         <p className="font-medium text-neutral-700 text-xs">Edit</p>
                       </div>
                     )}
-                    <div
-                      onClick={() => handleToggleJoinCommunityGroup(communityGroupID)}
-                      className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer"
-                    >
-                      <TbLogout2 strokeWidth={2} size={16} className="text-red-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Leave</p>
-                    </div>
+
+                    {isGroupAdmin && (
+                      <div
+                        onClick={() => deleteCommunityGroup(communityGroups?._id || '')}
+                        className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer"
+                      >
+                        <FiEdit size={16} className="text-primary-500" />
+                        <p className="font-medium text-neutral-700 text-xs">Delete</p>
+                      </div>
+                    )}
+                    {!isGroupAdmin && (
+                      <div
+                        onClick={() => handleToggleJoinCommunityGroup(communityGroupID)}
+                        className="flex  items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer"
+                      >
+                        <TbLogout2 strokeWidth={2} size={16} className="text-red-500" />
+                        <p className="font-medium text-neutral-700 text-xs">Leave</p>
+                      </div>
+                    )}
                   </div>
                 </PopoverContent>
               </Popover>
