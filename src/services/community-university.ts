@@ -314,7 +314,7 @@ export const useUpdateCommunityGroup = () => {
   return useMutation({
     mutationFn: ({ communityId, payload }: { communityId: string; payload: any }) => UpdateCommunityGroup(payload, communityId, cookieValue),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       queryClient.invalidateQueries({ queryKey: ['community'] })
       showCustomSuccessToast('Updated Sucessfully')
     },
