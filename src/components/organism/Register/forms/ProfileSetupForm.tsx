@@ -69,7 +69,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
               required: 'Birth Date is required.',
               validate: (value) => {
                 if (!value) return 'Birth Date is required.'
-                const birthDate = parse(value, 'dd/mm/yyyy', new Date())
+                const birthDate = parse(value, 'dd/MM/yyyy', new Date())
                 if (!isValid(birthDate)) return 'Invalid date.'
 
                 const today = new Date()

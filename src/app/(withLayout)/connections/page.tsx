@@ -1,5 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
+import PillTabs from '@/components/molecules/PillTabs'
 import Tabs from '@/components/molecules/Tabs'
 import FindPeople from '@/components/molecules/Tabs/FindPeople'
 import Followers from '@/components/molecules/Tabs/Followers'
@@ -10,7 +11,7 @@ import React from 'react'
 export default function ConnectionPage() {
   const tabs = [
     {
-      label: 'Find People',
+      label: 'All',
       content: <FindPeople />,
     },
     {
@@ -30,7 +31,9 @@ export default function ConnectionPage() {
   return (
     <div className="py-4 h-with-navbar">
       <Card className="rounded-2xl h-full overflow-hidden px-4">
-        <Tabs tabs={tabs} className={'h-full'} />
+        {/* <Tabs tabs={tabs} className={'h-full'} /> */}
+        <h6 className="font-poppins font-bold text-[20px]  mb-4">Connections</h6>
+        <PillTabs tabs={tabs} className={'h-full'} labelSize="medium" />
       </Card>
     </div>
   )

@@ -12,6 +12,10 @@ export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
   return response
 }
+export async function getCommunityFromUniversity(universityId: string) {
+  const response = await client(`/community/uni/${universityId}`)
+  return response
+}
 
 export async function getCommunityPostComments(postId: string, token: string, page: number, limit: number) {
   const response: any = await client(`/communitypostcomment/${postId}?page=${page}&limit=${limit}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -140,6 +144,13 @@ export function useGetCommunity(communityId: string) {
     queryKey: ['community', communityId],
     queryFn: () => getCommunity(communityId),
     enabled: !!communityId,
+  }) as UseQueryResult<Community>
+}
+export function useGetCommunityFromUniversityId(universityId: string) {
+  return useQuery({
+    queryKey: ['communityFromUniversity', universityId],
+    queryFn: () => getCommunityFromUniversity(universityId),
+    enabled: !!universityId,
   }) as UseQueryResult<Community>
 }
 

@@ -3,6 +3,7 @@ import UserListItem from '@/components/Timeline/UserListItem'
 import { useGetUserFollowing } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import React, { useEffect, useRef, useState } from 'react'
+import { FaFilter } from 'react-icons/fa6'
 import { GoSearch } from 'react-icons/go'
 
 export default function Following() {
@@ -82,15 +83,20 @@ export default function Following() {
 
   return (
     <>
-      <div className="px-5 py-2 border border-border rounded-2xl flex items-center gap-4 mb-2">
-        <GoSearch className="text-neutral-500" size={20} />
-        <input
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          value={name}
-          className="text-sm w-full outline-none"
-          placeholder="Search People"
-        />
+      <div className="flex gap-4 justify-between items-center mb-2">
+        <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4  h-10">
+          <input
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            value={name}
+            className="text-xs w-full outline-none text-neutral-400"
+            placeholder="Searching Following"
+          />
+          <GoSearch className="text-neutral-500" size={20} />
+        </div>
+        {/* <div className="bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg">
+          <FaFilter className="text-primary-500" />
+        </div> */}
       </div>
       <div ref={ref} className="overflow-y-auto h-[85%]">
         {renderUserFollowing()}
