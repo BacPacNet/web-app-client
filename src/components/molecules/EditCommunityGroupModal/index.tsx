@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 import SelectUsers from '@/components/atoms/SelectUsers'
@@ -8,10 +8,10 @@ import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
-import { categories, Category, CommunityGroupType, CommunityGroupTypeEnum, status, subCategories } from '@/types/CommuityGroup'
-import Pill from '@/components/atoms/Pill'
+import { CommunityGroupType, CommunityGroupTypeEnum, status, subCategories } from '@/types/CommuityGroup'
+
 import { useUniStore } from '@/store/store'
-import Buttons from '@/components/atoms/Buttons'
+
 import { closeModal, openModal } from '../Modal/ModalManager'
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
 import { CommunityUsers } from '@/types/Community'
@@ -50,7 +50,7 @@ type User = {
 type FilterType = 'ALL' | 'SAME_YEAR' | 'SAME_MAJOR' | null
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
-  const { userData, userProfileData } = useUniStore()
+  const { userData } = useUniStore()
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
 
@@ -79,7 +79,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     reset,
     control,
   } = useForm()
-  console.log('communityGroups', communityGroups)
+
   const dropdownRef = useRef<HTMLDivElement>(null)
   const categoryRef = useRef<HTMLDivElement>(null)
   const SelectedUsers = watch('selectedUsers') as CommunityUsers[]

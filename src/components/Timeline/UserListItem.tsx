@@ -53,7 +53,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const isStudent = role === userTypeEnum.Student
 
   return (
-    <div className="flex items-center px-2 py-4 md:p-4 border-b border-border justify-between ">
+    <div className="flex items-center px-2 py-4 md:p-4 border-b border-neutral-200 justify-between ">
       <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
         <Image src={imageUrl || avatar.src} alt={firstName} width={48} height={48} className="w-12 h-12 rounded-full flex-none object-cover" />
         <div className="">
