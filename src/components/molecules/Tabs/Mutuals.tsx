@@ -8,20 +8,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FaFilter } from 'react-icons/fa6'
 import { GoSearch } from 'react-icons/go'
 
-import ConnectionUserSelectModal from '../ConnectionModals/UniversitySearchConnectionModal'
-
 export default function Mutuals() {
   const [name, setName] = useState('')
   const ref = useRef<HTMLDivElement>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const openModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
 
   const { userProfileData } = useUniStore()
   const {
@@ -120,7 +109,6 @@ export default function Mutuals() {
           <Spinner />
         </div>
       )}
-      {isModalOpen && <ConnectionUserSelectModal closeModal={closeModal} />}
     </>
   )
 }
