@@ -1,16 +1,15 @@
 'use client'
+import TimelineCreatePost from '@/components/organisms/TimelineCreatePost'
 import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
-import UserPostForm from '@/components/organisms/userPostForm'
-import { PostInputType } from '@/types/constants'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar  noi">
-      <UserPostForm type={PostInputType.Timeline} />
-      {/*<UserPostContainer type={PostInputType.Timeline} />*/}
+    <div ref={containerRef} className="h-with-navbar noi">
+      {/*<UserPostForm type={PostInputType.Timeline} />*/}
+      <TimelineCreatePost />
       <TimelinePostContainer containerRef={containerRef} />
     </div>
   )

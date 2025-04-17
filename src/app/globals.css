@@ -50,6 +50,81 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.quill-container {
+  background: #fff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-toolbar {
+  border: none !important;
+}
+.ql-container {
+  min-height: 100px;
+  max-height: 300px;
+  overflow: auto;
+}
+.ql-editor {
+  min-height: 100px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.ql-editor p {
+  font-size: 1rem;
+}
+.ql-tooltip {
+  left: 0 !important;
+}
+.ql-editor.ql-blank::before {
+  font-size: 1rem;
+}
+
+.post-container a {
+  color: revert !important;
+}
+
+.post-container h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: revert;
+}
+.post-container .ql-align-left {
+  text-align: left;
+}
+
+.post-container .ql-align-center {
+  text-align: center;
+}
+.post-container .ql-align-right {
+  text-align: right;
+}
+
+.post-container .ql-align-justify {
+  text-align: justify;
+}
+
+.post-container li[data-list='ordered'] {
+  list-style-type: decimal;
+  margin-left: 16px;
+}
+
+.post-container li[data-list='bullet'] {
+  list-style-type: disc;
+  margin-left: 16px;
+}
+
+.ql-code-block-container {
+  background-color: #f0f0f0 !important;
+  padding: 10px !important;
+  border: 1px solid #ccc !important;
+  color: #000 !important;
+}
 
 @layer utilities {
   .animation-delay-200 {

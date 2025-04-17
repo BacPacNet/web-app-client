@@ -108,7 +108,7 @@ export default function CommunityGroupBanner({
 
   return (
     <>
-      <div className="rounded-2xl bg-white shadow-card">
+      <div className="rounded-2xl bg-white shadow-card mb-4">
         <div className="relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
           <Image
             src={communityGroups?.communityGroupLogoCoverUrl?.imageUrl || universityPlaceholder}
