@@ -48,3 +48,18 @@ export const truncateStringTo = (str: string, num: number): string => {
   if (str.length <= num) return str
   return str.slice(0, num) + '...'
 }
+
+export const cleanInnerHTML = (html: string): string => {
+  const container = document.createElement('div')
+  container.innerHTML = html
+
+  // Remove trailing empty tags (like <h1><br></h1> or just <br>)
+  while (
+    container.lastElementChild &&
+    (container.lastElementChild.innerHTML.trim() === '' || container.lastElementChild.innerHTML.trim() === '<br>')
+  ) {
+    container.removeChild(container.lastElementChild)
+  }
+
+  return container.innerHTML.trim()
+}

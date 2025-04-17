@@ -115,7 +115,7 @@ export enum UserPostType {
 }
 
 export interface PostInputData {
-  content: string
+  content: string | any
   imageUrl?: Array<{
     imageUrl: string | null
     publicId: string | null
@@ -127,7 +127,8 @@ export interface PostInputData {
 export interface UserPostData extends PostInputData {}
 
 export interface CommunityPostData extends PostInputData {
-  communityId?: string | number
+  communityId?: string
+  communityGroupId?: string | null
 }
 
 export interface PostCommentData {

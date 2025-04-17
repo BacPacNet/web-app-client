@@ -152,7 +152,7 @@ const SelectDropdown = ({
                     onClick={() => handleSelect(item)}
                     key={key}
                   >
-                    {showIcon && <IconComponent size={16} className="text-neutral-600" />}
+                    {showIcon && <IconComponent size={16} className=" text-primary-500" />}
                     <p>{item}</p>
                   </div>
                 )
