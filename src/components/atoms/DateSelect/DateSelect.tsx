@@ -7,7 +7,7 @@ import 'react-date-range/dist/styles.css' // main style file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { motion, AnimatePresence } from 'framer-motion'
 import { CiCalendar } from 'react-icons/ci'
-import { format } from 'date-fns'
+import { convertToDateObj } from '@/lib/utils'
 interface SelectDropdownProps {
   onChange: (value: string) => void
   value: any
@@ -23,7 +23,6 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
 
   const handleDateChange = (data: Date) => {
     onChange(new Date(data).toLocaleDateString())
-
     setShow(false)
   }
 
@@ -50,7 +49,7 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm   h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'}`}> {value ? format(value, 'dd/MM/yyyy') : placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'}`}> {value ? value : placeholder}</p>
         <CiCalendar size={22} />
       </div>
       <AnimatePresence>
@@ -64,7 +63,7 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
           >
             <div className="w-full flex items-center justify-center ">
               <Calendar
-                date={value}
+                date={value ? (convertToDateObj(value) as Date) : new Date()}
                 onChange={(item) => handleDateChange(item)}
                 locale={enGB}
                 minDate={addYears(new Date(), -100)}

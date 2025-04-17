@@ -1,6 +1,8 @@
 import { useUniStore } from '@/store/store'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { parse, isValid } from 'date-fns'
+
 import { formatDistanceToNow, differenceInHours, differenceInDays, differenceInMinutes } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
@@ -62,4 +64,11 @@ export const cleanInnerHTML = (html: string): string => {
   }
 
   return container.innerHTML.trim()
+}
+
+export const convertToDateObj = (dateStr: string) => {
+  const format = 'dd/MM/yyyy'
+  const parsed = parse(dateStr, format, new Date())
+
+  return isValid(parsed) ? parsed : null
 }

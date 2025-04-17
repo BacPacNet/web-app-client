@@ -76,7 +76,18 @@ function TimelineCreatePost() {
         placeholder="What`s on your mind?"
       />
       <div className="w-full px-4 bg-white rounded-b-lg ">
-        <div className="w-full flex items-end justify-between">
+        <div className={`${images ? 'flex flex-wrap gap-4 items-end' : 'm-0'}`}>
+          {images.map((image, index) => (
+            <div key={index} className="relative w-fit">
+              <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
+              {/* Remove image button */}
+              <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
+                <RxCrossCircled />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="w-full flex items-end justify-between py-4">
           <div className="flex gap-3 sm:gap-4 items-center ">
             <label htmlFor="postImage" className="cursor-pointer inline-block">
               <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
@@ -100,17 +111,6 @@ function TimelineCreatePost() {
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>
           </div>
-        </div>
-        <div className={`${images ? 'flex flex-wrap gap-4 mt-4' : 'm-0'}`}>
-          {images.map((image, index) => (
-            <div key={index} className="relative w-fit mb-4">
-              <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
-              {/* Remove image button */}
-              <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
-                <RxCrossCircled />
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </>

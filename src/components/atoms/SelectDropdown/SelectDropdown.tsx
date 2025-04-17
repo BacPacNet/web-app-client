@@ -93,6 +93,11 @@ const SelectDropdown = ({
     }
     setShow((prevShow) => !prevShow)
   }
+  useEffect(() => {
+    if (show && search && searchRef.current) {
+      searchRef.current.focus()
+    }
+  }, [show, search])
 
   return (
     <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[90px]">

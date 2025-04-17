@@ -19,6 +19,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
     register,
     formState: { errors: ProfileFormErrors },
     control,
+    setValue,
   } = useFormContext()
 
   return (
@@ -69,7 +70,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
               required: 'Birth Date is required.',
               validate: (value) => {
                 if (!value) return 'Birth Date is required.'
-                const birthDate = parse(value, 'dd/MM/yyyy', new Date())
+                const birthDate = parse(value, 'dd/mm/yyyy', new Date())
                 if (!isValid(birthDate)) return 'Invalid date.'
 
                 const today = new Date()
@@ -88,7 +89,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
               <DateSelect
                 placeholder="MM/DD/YYYY"
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(value) => setValue('birthDate', value)}
                 label="Birthday"
                 err={!!ProfileFormErrors.birthDate}
               />
