@@ -93,6 +93,11 @@ const SelectDropdown = ({
     }
     setShow((prevShow) => !prevShow)
   }
+  useEffect(() => {
+    if (show && search && searchRef.current) {
+      searchRef.current.focus()
+    }
+  }, [show, search])
 
   return (
     <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[90px]">
@@ -152,7 +157,7 @@ const SelectDropdown = ({
                     onClick={() => handleSelect(item)}
                     key={key}
                   >
-                    {showIcon && <IconComponent size={16} className="text-neutral-600" />}
+                    {showIcon && <IconComponent size={16} className=" text-primary-500" />}
                     <p>{item}</p>
                   </div>
                 )

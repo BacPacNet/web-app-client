@@ -98,7 +98,7 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
   }
 
   return (
-    <div className="py-8">
+    <div className="py-8 post-container">
       <div className="flex flex-col gap-6">
         <PostCardRender />
       </div>

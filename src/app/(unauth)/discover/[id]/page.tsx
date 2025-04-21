@@ -35,7 +35,7 @@ export default function UniversityProfile() {
   const params = useParams()
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
-  const { userData, userProfileData } = useUniStore()
+  const { userData } = useUniStore()
   const [imageSrc, setImageSrc] = useState(university?.campus || universityPlaceholder)
   const [logoSrc, setLogoSrc] = useState(university?.logo || universityLogoPlaceholder)
 

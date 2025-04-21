@@ -1,5 +1,6 @@
 'use client'
 import UniversityCard from '@/components/molecules/UniversityCard'
+import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
 import CommunityPostsContainer from '@/components/organisms/CommunityPostContainer'
 import UserPostContainer from '@/components/organisms/UserPostContainer'
 import { PostInputType, PostType } from '@/types/constants'
@@ -12,7 +13,9 @@ export default function Page({ params }: { params: { communityId: string; groupI
   return (
     <div ref={containerRef} className="hideScrollbar h-with-navbar">
       <UniversityCard communityID={communityId} communityGroupID={communityGroupID} isGroupAdmin={isGroupAdmin} setIsGroupAdmin={setIsGroupAdmin} />
-      {isGroupAdmin && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}
+      {/*{isGroupAdmin && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}*/}
+      {isGroupAdmin && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}
+
       <CommunityPostsContainer communityID={communityId} communityGroupID={communityGroupID} containerRef={containerRef} />
     </div>
   )

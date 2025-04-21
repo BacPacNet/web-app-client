@@ -108,7 +108,7 @@ export default function CommunityGroupBanner({
 
   return (
     <>
-      <div className="rounded-2xl bg-white shadow-card">
+      <div className="rounded-2xl bg-white shadow-card mb-4">
         <div className="relative h-[164px] w-full overflow-hidden rounded-t-2xl mt-4">
           <Image
             src={communityGroups?.communityGroupLogoCoverUrl?.imageUrl || universityPlaceholder}
@@ -158,7 +158,7 @@ export default function CommunityGroupBanner({
                 <PopoverTrigger>
                   <div className="relative">
                     <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="" />
-                    {communityGroups?.status == status.pending ? (
+                    {communityGroups?.status == status.pending && isGroupAdmin ? (
                       <BsExclamationCircleFill size={12} className="absolute text-warning-500 top-1 right-0 " />
                     ) : (
                       ''

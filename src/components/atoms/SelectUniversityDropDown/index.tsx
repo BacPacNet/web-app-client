@@ -48,6 +48,12 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
     }
   }, [])
 
+  useEffect(() => {
+    if (show && search && searchRef.current) {
+      searchRef.current.focus()
+    }
+  }, [show, search])
+
   return (
     <motion.div ref={dropdownRef} className="relative">
       <p className="text-xs text-neutral-700 font-medium mb-2">{label}</p>

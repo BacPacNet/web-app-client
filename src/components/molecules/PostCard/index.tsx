@@ -1,7 +1,6 @@
 'use client'
 import React, { useCallback } from 'react'
 import avatar from '@assets/avatar.svg'
-import Image from 'next/image'
 import PostCartOption from '@/components/atoms/PostCardOption/PostCartOption'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import { FiMessageCircle, FiShare2, FiThumbsUp } from 'react-icons/fi'
@@ -12,17 +11,7 @@ import { useUniStore } from '@/store/store'
 import { useLikeUnilikeGroupPost } from '@/services/community-university'
 import { useLikeUnlikeTimelinePost } from '@/services/community-timeline'
 import { PostType } from '@/types/constants'
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
-  TwitterIcon,
-  TwitterShareButton,
-  WhatsappIcon,
-  WhatsappShareButton,
-} from 'react-share'
-import { IoMdCode } from 'react-icons/io'
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -109,6 +98,7 @@ interface PostProps {
   role?: string
   occupation?: string
   affiliation?: string
+  isPostVerified?: boolean
 }
 
 const PostCard = ({
@@ -135,6 +125,7 @@ const PostCard = ({
   role,
   occupation,
   affiliation,
+  isPostVerified,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
@@ -181,6 +172,8 @@ const PostCard = ({
             affiliation={affiliation}
             occupation={occupation}
             role={role}
+            isPost={true}
+            isVerified={isPostVerified}
           />
 
           <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
@@ -188,10 +181,10 @@ const PostCard = ({
           </div>
         </div>
 
-        <div className=" text-xs font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
-
         {/* //post Image  */}
         <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
+
+        <div className="font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
 
         <p className=" text-2xs flex items-center mb-4">
           <span className="text-neutral-500 font-normal break-words">

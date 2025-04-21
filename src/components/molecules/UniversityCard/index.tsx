@@ -57,7 +57,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
   if (isCommunityLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
 
   return (
-    <div className="rounded-lg bg-white shadow-card p-6">
+    <div className="rounded-lg bg-white shadow-card p-6 mb-4">
       <div className="relative h-[100px] md:h-[164px] w-full overflow-hidden rounded-lg">
         <Image
           src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src}

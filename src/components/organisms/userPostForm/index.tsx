@@ -19,7 +19,6 @@ import {
   PostInputData,
   PostInputType,
   PostTypeOption,
-  UserPostType,
   UserPostTypeOption,
 } from '@/types/constants'
 import { RxCrossCircled } from 'react-icons/rx'
@@ -99,6 +98,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -117,6 +117,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -222,12 +223,12 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
                 variant="primary"
               />
             )}
-            <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
+            {/*<Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
-            </Buttons>
-            {/*<button disabled={isPending} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
+            </Buttons>*/}
+            <button disabled={isPending} onClick={handleSubmit} className="text-xs bg-primary-500 text-white rounded-lg px-4 py-1">
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
-            </button>*/}
+            </button>
           </div>
         </div>
         {/* Display selected images */}

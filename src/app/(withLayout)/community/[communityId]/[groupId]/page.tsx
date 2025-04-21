@@ -1,5 +1,6 @@
 'use client'
 import CommunityGroupBanner from '@/components/molecules/CommunityGroupBanner'
+import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
 import CommunityGroupPostContainer from '@/components/organisms/CommunityGroupPostContainer'
 import UserPostContainer from '@/components/organisms/UserPostContainer'
 import { PostInputType, PostType } from '@/types/constants'
@@ -22,9 +23,10 @@ export default function Page({ params }: { params: { communityId: string; groupI
         isUserJoinedCommunityGroup={isUserJoinedCommunityGroup}
       />
 
-      {isUserJoinedCommunityGroup && (
+      {/*{isUserJoinedCommunityGroup && (
         <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />
-      )}
+      )}*/}
+      {isUserJoinedCommunityGroup && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}
       <CommunityGroupPostContainer containerRef={containerRef} />
     </div>
   )

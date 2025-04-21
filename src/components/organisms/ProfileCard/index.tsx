@@ -1,4 +1,3 @@
-import Card from '@/components/atoms/Card'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -14,9 +13,6 @@ import { IoIosShareAlt } from 'react-icons/io'
 import { MdBlockFlipped } from 'react-icons/md'
 import { IoFlagOutline } from 'react-icons/io5'
 import { RiMessage2Fill } from 'react-icons/ri'
-import { FaCalendarCheck } from 'react-icons/fa6'
-import { MdSubject } from 'react-icons/md'
-import { FaCamera } from 'react-icons/fa'
 import Buttons from '@/components/atoms/Buttons'
 import { useEditProfile } from '@/services/edit-profile'
 import { replaceImage } from '@/services/uploadImage'
@@ -28,6 +24,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
+import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
 
 interface UserProfileCardProps {
   name: string
@@ -85,7 +82,7 @@ export function UserProfileCard({
   const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const isStudent = role === userTypeEnum.Student
-
+  //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || !files[0]) {
@@ -112,6 +109,9 @@ export function UserProfileCard({
     }
   }
 
+  const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday)
+  const dateOfBirth = dobFormat && format(new Date(dobFormat), 'dd MMM yyyy')
+
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
       <div className="flex flex-nowrap gap-4  items-start ">
@@ -129,7 +129,7 @@ export function UserProfileCard({
             <div className="flex flex-row gap-2 items-center">
               <p className="font-poppins text-neutral-700 text-[20px] font-bold">{name}</p>
 
-              <div className="flex gap-2">
+              {/*<div className="flex gap-2">
                 {userProfileData?.email &&
                   userProfileData?.email.map((item) => (
                     <div
@@ -145,7 +145,7 @@ export function UserProfileCard({
                       />
                     </div>
                   ))}
-              </div>
+              </div>*/}
             </div>
             <div className="text-xs text-neutral-500 font-medium flex flex-col gap-1 font-inter">
               <p>{isStudent ? year : occupation}</p>
@@ -224,6 +224,7 @@ export function UserProfileCard({
             />
           </div>
           <p className="text-neutral-500  font-medium text-2xs ">{university}</p>
+          {IsUniversityVerified() && <Image width={16} height={16} src={badge} alt={''} />}
         </div>
         <div className="flex gap-4 ">
           <div
@@ -261,7 +262,7 @@ export function UserProfileCard({
         <div className="flex flex-col gap-4 pt-4 sm:pt-0 sm:ps-4">
           <div className="flex items-center space-x-2">
             <FaBirthdayCake size={16} />
-            {birthday ? <span>{format(new Date(Number(birthday)), 'dd MMM yyyy')}</span> : ''}
+            {dateOfBirth ? <span>{dateOfBirth}</span> : ''}
           </div>
 
           <div className="flex items-center space-x-2">
