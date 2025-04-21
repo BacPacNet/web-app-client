@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import { PostType } from '@/types/constants'
 import { userTypeEnum } from '@/types/RegisterForm'
+import badge from '@assets/badge.svg'
 
 interface UserCardProps {
   user: string
@@ -18,6 +19,8 @@ interface UserCardProps {
   occupation?: string
   role?: string
   handleProfileClicked: (adminId: string) => void
+  isPost?: boolean
+  isVerified?: boolean
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -31,6 +34,8 @@ const UserCard: React.FC<UserCardProps> = ({
   occupation,
   role,
   handleProfileClicked,
+  isPost,
+  isVerified,
 }) => {
   const isStudent = role === userTypeEnum.Student
   return (
@@ -39,7 +44,11 @@ const UserCard: React.FC<UserCardProps> = ({
         <Image src={avatarLink || avatar} width={48} height={48} className="object-cover rounded-full h-[inherit]" alt="User Avatar" />
       </div>
       <div>
-        <h3 className="font-semibold text-2xs text-neutral-700">{user}</h3>
+        <div className="flex gap-1 items-start">
+          <h3 className="font-semibold text-2xs text-neutral-700">{user}</h3>
+          {isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />}
+        </div>
+
         <div className="flex flex-col">
           <p className="hidden md:block text-[10px] text-neutral-500">{isStudent ? year : occupation} </p>
           <p className="text-[10px] text-neutral-500">{isStudent ? major : affiliation}</p>

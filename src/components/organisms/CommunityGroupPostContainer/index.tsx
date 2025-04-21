@@ -1,13 +1,12 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
 import { Spinner } from '@/components/spinner/Spinner'
-import { Skeleton } from '@/components/ui/Skeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
@@ -79,7 +78,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   if (communityGroupPostDatas.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
-    <div className="py-8 flex flex-col gap-6">
+    <div className="py-8 flex flex-col gap-6 post-container">
       {communityGroupPostDatas?.map((post: communityPostType, idx: number) => (
         <PostCard
           key={post?._id}
@@ -105,6 +104,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           affiliation={post?.userProfile?.affiliation}
           occupation={post?.userProfile?.occupation}
           role={post?.userProfile?.role}
+          isPostVerified={post?.isPostVerified}
         />
       ))}
     </div>

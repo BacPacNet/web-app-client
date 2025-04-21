@@ -158,7 +158,7 @@ export default function CommunityGroupBanner({
                 <PopoverTrigger>
                   <div className="relative">
                     <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="" />
-                    {communityGroups?.status == status.pending ? (
+                    {communityGroups?.status == status.pending && isGroupAdmin ? (
                       <BsExclamationCircleFill size={12} className="absolute text-warning-500 top-1 right-0 " />
                     ) : (
                       ''

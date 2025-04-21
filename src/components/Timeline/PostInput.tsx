@@ -60,6 +60,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
         const communityData: CommunityPostData = {
           ...data,
           communityId: idToPost,
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -73,6 +74,7 @@ const PostInput: React.FC<PostInputProps> = ({ setIsModalOpen, setModalContentTy
         const communityData: CommunityPostData = {
           ...data,
           communityId: idToPost,
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {

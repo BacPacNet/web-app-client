@@ -4,6 +4,7 @@ import Spinner from '@/components/atoms/spinner'
 import { cleanInnerHTML } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
+import { useUniStore } from '@/store/store'
 import { CommunityPostData, CommunityPostType, CommunityPostTypeOption, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
 import dynamic from 'next/dynamic'
 import Quill from 'quill'
@@ -23,6 +24,7 @@ interface Props {
 function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   const quillRef = useRef<Quill | null>(null)
   const quillHTMLState = useRef(null)
+  const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
@@ -59,6 +61,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
       communityPostsType: PostTypeOption[postAccessType as never],
       communityId: communityId,
       communityGroupId: communityGroupId || null,
+      isPostVerified: userProfileData?.email?.some((community) => community.communityId === communityId) || false,
     }
     if (images.length) {
       const imagedata = await processImages(images)

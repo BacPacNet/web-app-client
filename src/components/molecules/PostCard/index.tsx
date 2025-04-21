@@ -98,6 +98,7 @@ interface PostProps {
   role?: string
   occupation?: string
   affiliation?: string
+  isPostVerified?: boolean
 }
 
 const PostCard = ({
@@ -124,6 +125,7 @@ const PostCard = ({
   role,
   occupation,
   affiliation,
+  isPostVerified,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
@@ -170,6 +172,8 @@ const PostCard = ({
             affiliation={affiliation}
             occupation={occupation}
             role={role}
+            isPost={true}
+            isVerified={isPostVerified}
           />
 
           <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">

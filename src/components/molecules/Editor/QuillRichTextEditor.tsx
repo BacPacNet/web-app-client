@@ -49,13 +49,12 @@ const Editor = forwardRef<Quill | null, EditorProps>(
         placeholder: placeholder || '',
         modules: {
           toolbar: [
-            [{ header: [1, 2, 3, false] }],
+            //[{ header: [1, 2, 3, false] }],
             ['bold', 'italic', 'underline', 'strike'],
             [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
             ['code-block'],
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['link'],
-            ['clean'],
           ],
         },
       })

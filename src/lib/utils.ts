@@ -72,3 +72,8 @@ export const convertToDateObj = (dateStr: string) => {
 
   return isValid(parsed) ? parsed : null
 }
+
+export const IsUniversityVerified = (): boolean => {
+  const { userProfileData } = useUniStore()
+  return userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name) || false
+}
