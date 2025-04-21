@@ -73,26 +73,26 @@ const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: p
         />
       )}
       {images && (
-        <div className={`grid gap-2 ${getGridTemplate()} ${isComment ? 'w-6/12 h-36' : 'w-full h-80 mx-auto'}   mt-4`}>
+        <div className={`grid gap-2 ${getGridTemplate()} ${isComment ? 'w-6/12 h-36' : 'w-full h-auto mx-auto'}   mt-4`}>
           {images?.slice(0, 4).map((src, index) => (
             <div
               key={index}
-              className={`relative overflow-hidden flex ${imageCount == 1 && isComment == false ? 'h-80' : 'h-40'} ${
-                imageCount == 2 && isComment == false ? 'h-80' : 'h-40'
-              } ${imageCount === 3 && index === 2 && 'col-span-2 '} ${imageCount === 4 && index === 2 ? 'row-span-2 ' : ''}  ${
-                imageCount >= 4 && index === 2 && 'row-span-2  '
-              } ${imageCount >= 4 && index === 3 && 'col-span-2  '}  `}
+              className={`relative overflow-hidden flex items-center justify-center rounded-xl bg-gray-100 max-h-80 ${
+                imageCount == 1 && isComment == false ? 'h-auto' : 'h-auto'
+              } ${imageCount == 2 && isComment == false ? 'h-auto' : 'h-auto'} ${imageCount === 3 && index === 2 && 'col-span-2 '} ${
+                imageCount === 4 && index === 2 ? 'row-span-2 ' : ''
+              }  ${imageCount >= 4 && index === 2 && 'row-span-2  '} ${imageCount >= 4 && index === 3 && 'col-span-2  '}  `}
             >
-              <Image
-                layout="fill"
-                objectFit="cover"
-                objectPosition="center"
-                key={index}
-                src={src.imageUrl}
-                alt={`Image ${index + 1}`}
-                className="rounded-xl object-cover"
-                onClick={() => handleImageClick(index)}
-              />
+              <div className="flex items-center justify-center overflow-hidden rounded-xl bg-gray-100 max-h-80">
+                <Image
+                  src={src.imageUrl}
+                  alt={`Image ${index + 1}`}
+                  width={500}
+                  height={500}
+                  className="object-contain w-full h-auto max-h-80 cursor-pointer"
+                  onClick={() => handleImageClick(index)}
+                />
+              </div>
               {imageCount > 4 && index == 2 && (
                 <div className="absolute bg-slate-50 shadow-lg w-40 h-40 -right-10 -bottom-10 rounded-full text-neutral-700 flex items-center justify-center">
                   +{imageCount - 4}

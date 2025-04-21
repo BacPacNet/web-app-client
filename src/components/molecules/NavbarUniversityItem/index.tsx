@@ -64,7 +64,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   const isUserVerifiedForCommunity = useMemo(() => {
-    return userProfileData?.communities?.some((community) => community?.communityId === selectCommunityId && community?.isVerified)
+    return userProfileData?.email?.some((community) => community?.communityId === selectCommunityId)
   }, [community])
 
   const handleNewGroupModal = () => {

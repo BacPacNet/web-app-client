@@ -76,4 +76,5 @@ export interface communityPostType {
   imageUrl: []
   commentCount: number
   communityId?: string
+  isPostVerified: boolean
 }

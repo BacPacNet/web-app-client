@@ -16,6 +16,7 @@ import ProfileStudentForm from '../forms/ProfileStudentForm'
 import ProfileFacultyForm from '../forms/ProfileFacultyForm'
 import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
 import useCookie from '@/hooks/useCookie'
+import { convertToDateObj } from '@/lib/utils'
 
 interface Props {
   step: number
@@ -209,9 +210,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       const isAvailable = await userLoginEmailVerification(data)
 
       if (isAvailable?.isAvailable) {
-        const dob = new Date(data.birthDate)
-        const timestampMs = dob.getTime()
-        data.birthDate = timestampMs.toString()
+        const dob = convertToDateObj(data.birthDate)?.getTime().toString()
+        data.birthDate = dob || ''
 
         const res = await HandleRegister(data)
         if (res?.isRegistered) {

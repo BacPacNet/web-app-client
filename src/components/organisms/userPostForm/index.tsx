@@ -98,6 +98,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -116,6 +117,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
+          isPostVerified: false,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
