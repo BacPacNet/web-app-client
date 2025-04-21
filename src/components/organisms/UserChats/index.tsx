@@ -30,7 +30,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
           (item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
             item.isRequestAccepted ||
             item.groupAdmin.toString() === userData?.id) &&
-          item.latestMessage
+          (item.latestMessage || item.isGroupChat)
       )
 
       if (isChatLoading) {
@@ -71,12 +71,14 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
           />
         </div>
       ))
-    } else if (currTabb === 'Message Requests') {
+    } else if (currTabb === 'Requests') {
       const filteredChats = chats?.filter((item: Chat) =>
         item.isGroupChat
           ? item.users.some((user) => user.userId._id.toString() === userData?.id && !user.isRequestAccepted)
           : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
       )
+
+      console.log('filteredChats', filteredChats)
 
       if (filteredChats.length === 0) {
         return <p className="text-neutral-500 text-center py-8">You have no message requests at the moment.</p>
@@ -123,7 +125,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
   }
 
   return (
-    <div className="flex flex-col h-[inherit] overflow-y-scroll">
+    <div className="flex flex-col h-[inherit] overflow-y-scroll custom-scrollbar">
       <RenderChats />
     </div>
   )

@@ -13,6 +13,8 @@ import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager
 import { useSearchParams } from 'next/navigation'
 import Loading from '@/components/atoms/Loading'
 import UserMessageInput from '@/components/molecules/userMessageInput'
+import { FaFilter } from 'react-icons/fa6'
+import { GoSearch } from 'react-icons/go'
 
 interface Message {
   _id: string
@@ -63,6 +65,24 @@ const MessageContainer = () => {
       return item.unreadMessagesCount > 0 && !item.isRequestAccepted
     }
   }).length
+
+  const totalUnreadMessages = chats?.reduce((sum, item) => {
+    if (item.isGroupChat) {
+      const isAccepted = item.users.some((user) => user.userId._id === userData?.id && user.isRequestAccepted)
+      return isAccepted ? sum + item.unreadMessagesCount : sum
+    } else {
+      return item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
+    }
+  }, 0)
+
+  const totalUnreadNotAcceptedMessages = chats?.reduce((sum, item) => {
+    if (item.isGroupChat) {
+      const hasUnaccepted = item.users.some((user) => !user.isRequestAccepted)
+      return hasUnaccepted ? sum + item.unreadMessagesCount : sum
+    } else {
+      return !item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
+    }
+  }, 0)
 
   const updateMessageSeen = () => {
     const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData?.id || '')
@@ -253,7 +273,7 @@ const MessageContainer = () => {
           />
         )
 
-      case 'Message Requests':
+      case 'Requests':
         return (
           <UserChats
             setSelectedChat={setSelectedChat}
@@ -292,7 +312,7 @@ const MessageContainer = () => {
             users={selectedChat?.users}
             yourID={userData?.id || ''}
             isGroupChat={selectedChat?.isGroupChat}
-            isRequestNotAccepted={currTab == 'Message Requests'}
+            isRequestNotAccepted={currTab == 'Requests'}
             chatId={selectedChat?._id}
             profileCover={selectedChat?.isGroupChat ? selectedChat?.groupLogo?.imageUrl : selectedChat?.groupLogoImage}
             description={selectedChat?.groupDescription}
@@ -308,7 +328,7 @@ const MessageContainer = () => {
             isGroupChat={selectedChat?.isGroupChat}
             yourID={userData?.id || ''}
             setImageCarasol={setImageCarasol}
-            isRequestNotAccepted={currTab == 'Message Requests'}
+            isRequestNotAccepted={currTab == 'Requests'}
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
           />
@@ -316,7 +336,7 @@ const MessageContainer = () => {
             <UserMessageInput
               chatId={selectedChat._id}
               userProfileId={userProfileData?._id || ''}
-              isRequestNotAccepted={currTab == 'Message Requests'}
+              isRequestNotAccepted={currTab == 'Requests'}
               setAcceptedId={setAcceptedId}
               setCurrTab={setCurrTab}
             />
@@ -334,8 +354,8 @@ const MessageContainer = () => {
           currTab={currTab}
           setCurrTab={setCurrTab}
           setSelectedChat={setSelectedChat}
-          unreadChatsCount={unreadChatsCount || 0}
-          unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount || 0}
+          unreadChatsCount={totalUnreadMessages || 0}
+          unreadNotAcceptedChatsCount={totalUnreadNotAcceptedMessages || 0}
         />
       ) : null}
 

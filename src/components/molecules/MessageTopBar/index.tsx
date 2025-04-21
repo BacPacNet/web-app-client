@@ -1,9 +1,9 @@
-import React from 'react'
-import OneToChat from '../OneToOneChat'
-
+import React, { useEffect, useRef, useState } from 'react'
 import Buttons from '@/components/atoms/Buttons'
-
 import { openModal } from '../Modal/ModalManager'
+import { GoSearch } from 'react-icons/go'
+import { BiChevronDown } from 'react-icons/bi'
+import CreateChatModal from '../CreateChatModal'
 
 type Props = {
   setCurrTab: (value: string) => void
@@ -14,52 +14,121 @@ type Props = {
 }
 
 const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSelectedChat, unreadChatsCount }: Props) => {
+  const [showDropdown, setShowDropdown] = useState(false)
+
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
+
   const handleShowModal = () => {
-    openModal(<OneToChat setSelectedChat={setSelectedChat} />)
+    openModal(
+      <CreateChatModal setSelectedChat={setSelectedChat} />,
+      'relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible  custom-scrollbar',
+      false
+    )
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+      //   if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+
+      //   }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <>
-      <div className=" px-6 pb-4 font-medium text-[20px] flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
-        <div className="flex gap-8 items-center text-2xs md:text-xs break-words">
-          <div
-            onClick={() => {
-              setCurrTab('Inbox'), setSelectedChat(undefined)
-            }}
-            className={`${currTab == 'Inbox' ? 'text-primary-500 font-semibold' : 'text-neutral-500'} flex items-center gap-2 cursor-pointer `}
+      <div className="flex justify-between items-center mb-4">
+        <h6 className="font-poppins font-bold text-[20px]  ">Messages</h6>
+        <Buttons className="hidden md:block" size="small" onClick={() => handleShowModal()}>
+          Start a Chat
+        </Buttons>
+      </div>
+      <div className="flex gap-4 justify-between items-center mb-2">
+        {/* // tabs  */}
+        <div className="relative " ref={dropdownRef}>
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className={` flex justify-between items-center border 
+                   border-neutral-200
+                        rounded-lg p-3  text-xs text-neutral-400 h-10 bg-white shadow-sm w-[106px]`}
           >
-            Inbox
-            {unreadChatsCount > 0 && (
-              <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
-                {unreadChatsCount}
-              </p>
-            )}
-          </div>
-          <div
-            onClick={() => {
-              setCurrTab('Message Requests'), setSelectedChat(undefined)
-            }}
-            className={`${currTab == 'Message Requests' ? 'text-primary-500' : 'text-neutral-500'} flex items-center gap-2 cursor-pointer`}
-          >
-            Message Requests{' '}
-            {unreadNotAcceptedChatsCount > 0 && (
-              <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
-                {unreadNotAcceptedChatsCount}
-              </p>
-            )}
-          </div>
-          <p
-            onClick={() => {
-              setCurrTab('Starred'), setSelectedChat(undefined)
-            }}
-            className={`${currTab == 'Starred' ? 'text-primary-500' : 'text-neutral-500'} cursor-pointer `}
-          >
-            Starred
-          </p>
+            {currTab}
 
-          <Buttons className="hidden md:block" size="extra_small" onClick={() => handleShowModal()}>
-            Start a Chat
-          </Buttons>
+            <BiChevronDown className="w-4 h-4 ml-2" />
+          </button>
+          {showDropdown && (
+            <div className="absolute left-0 top-full mt-2 w-[149px] max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
+              <div className="flex flex-col gap-4 py-3 bg-white rounded-lg hover:bg-gray-100 border-b border-neutral-200 last:border-b-0 text-black">
+                <p
+                  onClick={() => {
+                    setCurrTab('Inbox')
+                    setSelectedChat(undefined)
+                    setShowDropdown(false)
+                  }}
+                  className={`${
+                    currTab == 'Inbox' ? 'border-e-2 border-primary-500' : ''
+                  } ps-2 cursor-pointer text-neutral-700 text-2xs font-medium flex items-center gap-2`}
+                >
+                  Inbox
+                  {unreadChatsCount > 0 && (
+                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+                      {unreadChatsCount}
+                    </p>
+                  )}
+                </p>
+                <p
+                  onClick={() => {
+                    setCurrTab('Requests')
+                    setSelectedChat(undefined)
+                    setShowDropdown(false)
+                  }}
+                  className={`${
+                    currTab == 'Requests' ? 'border-e-2 border-primary-500' : ''
+                  } ps-2 cursor-pointer text-neutral-700 text-2xs font-medium flex items-center gap-2`}
+                >
+                  Requests
+                  {unreadNotAcceptedChatsCount > 0 && (
+                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+                      {unreadNotAcceptedChatsCount}
+                    </p>
+                  )}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4  h-10">
+          <input
+            //   onChange={(e) => {
+            //     const input = e.target.value
+            //     setName(input)
+
+            //     if (isFiltered) {
+            //       const trimmed = input.trim()
+
+            //       if (trimmed === '') {
+            //         setFilteredUsers(baseFilteredUsers)
+            //       } else {
+            //         const lowerInput = trimmed.toLowerCase()
+            //         const searched = baseFilteredUsers.filter((user) => {
+            //           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
+            //           const match = fullName.includes(lowerInput)
+            //           return match
+            //         })
+            //         setFilteredUsers(searched)
+            //       }
+            //     }
+            //   }}
+            type="text"
+            //   value={name}
+            className="text-xs w-full outline-none text-neutral-400"
+            placeholder="Search Messages"
+          />
+          <GoSearch className="text-neutral-500" size={20} />
         </div>
       </div>
     </>

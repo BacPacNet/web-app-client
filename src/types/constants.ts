@@ -1,5 +1,6 @@
 import { NavLink } from './global'
 import { AxiosError } from 'axios'
+import { userTypeEnum } from './RegisterForm'
 
 export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Timeline', href: '/timeline' },
@@ -185,6 +186,11 @@ type ChatUser = {
     profileDp: string
     studyYear: string
     universityName: string
+
+    role: userTypeEnum
+    occupation: string
+    affiliation: string
+    major: string
   }
   _id: string
   firstName: string

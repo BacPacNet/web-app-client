@@ -11,6 +11,7 @@ import { MdBlockFlipped } from 'react-icons/md'
 import { FaRegFlag } from 'react-icons/fa6'
 import { useRouter } from 'next/navigation'
 import useDeviceType from '@/hooks/useDeviceType'
+import { userTypeEnum } from '@/types/RegisterForm'
 type Props = {
   setSelectedChat: (value: any) => void
   yourID: string
@@ -33,6 +34,11 @@ type User = {
     _id: string
     firstName: string
     lastName: string
+    role: userTypeEnum
+    occupation: string
+    affiliation: string
+    major: string
+    studyYear: string
   }
   isOnline?: boolean
   isStarred: boolean
@@ -55,14 +61,15 @@ const MessageUserStickyBar = ({
   setCurrTab,
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
+  console.log('userName', userName)
 
-  const YourDetails = users?.flat().filter((item) => item.userId._id == yourID)
+  //   const YourDetails = users?.flat().filter((item) => item.userId._id == yourID)
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()
   const { mutate: toggleStarred } = useToggleStarred()
   const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id)
   const router = useRouter()
-  const { isMobile } = useDeviceType()
+  //   const { isMobile } = useDeviceType()
   const handleMoveToInbox = () => {
     if (isGroupChat) {
       acceptGroupRequest({ chatId })
@@ -104,13 +111,19 @@ const MessageUserStickyBar = ({
             <p className="text-2xs font-normal text-neutral-500">{description}</p>
           ) : (
             <>
-              <p className="text-3xs font-normal text-neutral-500 line-clamp-1">
-                {universitry}
-                {/*{isMobile ? truncateStringTo(universitry + universitry, 30) : universitry}*/}
-              </p>
+              {/* <p className="text-3xs font-normal text-neutral-500 line-clamp-1">
+                {universitry} */}
+              {/*{isMobile ? truncateStringTo(universitry + universitry, 30) : universitry}*/}
+              {/* </p> */}
               {/*<p className="text-2xs font-normal text-neutral-500">
                 {studyYear} Yr. {degree}
               </p>*/}
+              <p className="text-2xs font-normal text-neutral-500">
+                {userName[0].userId.role == userTypeEnum.Student ? userName[0].userId.studyYear : userName[0].userId.occupation}
+              </p>
+              <p className="text-2xs font-normal text-neutral-500">
+                {userName[0].userId.role == userTypeEnum.Student ? userName[0].userId.major : userName[0].userId.affiliation}
+              </p>
             </>
           )}
         </div>

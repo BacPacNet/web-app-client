@@ -284,9 +284,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
               </PopoverContent>
             </Popover>
 
-            <label htmlFor="postGof">
+            {/* <label htmlFor="postGof">
               <MdOutlineGifBox size={24} className="text-neutral-400" />
-            </label>
+            </label> */}
             <label htmlFor="postImage" className="cursor-pointer inline-block">
               <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
