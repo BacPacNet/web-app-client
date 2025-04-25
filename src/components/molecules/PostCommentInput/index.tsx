@@ -177,7 +177,6 @@ function PostCommentInput({
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // You can do something with the value here, like an API call
     handlePostComment(valueRef.current)
     setNewPost(false)
   }

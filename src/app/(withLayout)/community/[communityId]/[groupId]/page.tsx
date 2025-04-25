@@ -26,7 +26,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
       {/*{isUserJoinedCommunityGroup && (
         <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />
       )}*/}
-      {isUserJoinedCommunityGroup && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}
+      {(isUserJoinedCommunityGroup || isGroupAdmin) && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}
       <CommunityGroupPostContainer containerRef={containerRef} />
     </div>
   )
