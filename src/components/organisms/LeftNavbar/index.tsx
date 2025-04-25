@@ -91,7 +91,11 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
             <span className="text-[20px]">{icon}</span>
             <span className="">{name}</span>
             {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 ? (
-              <span className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+              <span
+                className={` bg-destructive-600 ${
+                  Number(userUnreadMessagesCount?.messageTotalCount) > 9 ? 'px-1  min-w-4' : ' w-4'
+                } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+              >
                 {userUnreadMessagesCount?.messageTotalCount}
               </span>
             ) : (

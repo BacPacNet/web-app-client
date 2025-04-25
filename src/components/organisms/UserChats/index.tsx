@@ -78,8 +78,6 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
           : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
       )
 
-      console.log('filteredChats', filteredChats)
-
       if (filteredChats.length === 0) {
         return <p className="text-neutral-500 text-center py-8">You have no message requests at the moment.</p>
       }

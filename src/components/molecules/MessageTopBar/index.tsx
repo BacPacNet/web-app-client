@@ -8,12 +8,22 @@ import CreateChatModal from '../CreateChatModal'
 type Props = {
   setCurrTab: (value: string) => void
   setSelectedChat: (value: undefined) => void
+  setSearchByNameText: (value: string) => void
   currTab: string
+  searchByNameText: string
   unreadChatsCount: number
   unreadNotAcceptedChatsCount: number
 }
 
-const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSelectedChat, unreadChatsCount }: Props) => {
+const MessageTopBar = ({
+  currTab,
+  setCurrTab,
+  unreadNotAcceptedChatsCount,
+  setSelectedChat,
+  unreadChatsCount,
+  setSearchByNameText,
+  searchByNameText,
+}: Props) => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -31,9 +41,6 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false)
       }
-      //   if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-
-      //   }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
@@ -74,11 +81,20 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
                   } ps-2 cursor-pointer text-neutral-700 text-2xs font-medium flex items-center gap-2`}
                 >
                   Inbox
-                  {unreadChatsCount > 0 && (
-                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+                  {unreadNotAcceptedChatsCount > 0 && (
+                    <p
+                      className={`bg-destructive-600  h-4 ${
+                        unreadChatsCount > 9 ? 'px-1 min-w-4' : 'w-4'
+                      }  rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+                    >
                       {unreadChatsCount}
                     </p>
                   )}
+                  {/* {unreadChatsCount > 0 && (
+                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+                      {unreadChatsCount}
+                    </p>
+                  )} */}
                 </p>
                 <p
                   onClick={() => {
@@ -92,7 +108,11 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
                 >
                   Requests
                   {unreadNotAcceptedChatsCount > 0 && (
-                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
+                    <p
+                      className={`bg-destructive-600  h-4 ${
+                        unreadNotAcceptedChatsCount > 9 ? 'px-1 min-w-4' : 'w-4'
+                      }  rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+                    >
                       {unreadNotAcceptedChatsCount}
                     </p>
                   )}
@@ -103,28 +123,9 @@ const MessageTopBar = ({ currTab, setCurrTab, unreadNotAcceptedChatsCount, setSe
         </div>
         <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4  h-10">
           <input
-            //   onChange={(e) => {
-            //     const input = e.target.value
-            //     setName(input)
-
-            //     if (isFiltered) {
-            //       const trimmed = input.trim()
-
-            //       if (trimmed === '') {
-            //         setFilteredUsers(baseFilteredUsers)
-            //       } else {
-            //         const lowerInput = trimmed.toLowerCase()
-            //         const searched = baseFilteredUsers.filter((user) => {
-            //           const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
-            //           const match = fullName.includes(lowerInput)
-            //           return match
-            //         })
-            //         setFilteredUsers(searched)
-            //       }
-            //     }
-            //   }}
             type="text"
-            //   value={name}
+            value={searchByNameText}
+            onChange={(e) => setSearchByNameText(e.target.value)}
             className="text-xs w-full outline-none text-neutral-400"
             placeholder="Search Messages"
           />

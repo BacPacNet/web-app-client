@@ -16,8 +16,6 @@ interface OneToOneProps {
 }
 
 const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showDropdown, setShowDropdown] = useState(false)
   const [universityError, setUniversityError] = useState(false)
   const [selectedUser, setSelectedUser] = useState<any>()
   const [selectedGroupUser, setSelectedGroupUser] = useState<any>()
@@ -25,7 +23,6 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>([])
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [groupName, setGroupName] = useState('')
-  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const { mutate: createGroupChat } = useCreateGroupChat()

@@ -1,7 +1,7 @@
 'use client'
 
 import { notificationRoleAccess } from '@/components/Navbar/constant'
-import { useGetMessageNotification, useGetNotification } from '@/services/notification'
+import { useGetMessageNotification, useGetNotification, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
 import { useGetUserData } from '@/services/user'
 import { useGetUserProfileData } from '@/services/userProfile'
 import { useUniStore } from '@/store/store'
@@ -18,8 +18,8 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
   const { refetch: refetchNotification } = useGetNotification(3, true)
   const param = usePathname()
-  const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
-
+  //   const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
+  const { refetch: refetchMessageNotification } = useGetUserUnreadMessagesTotalCount()
   const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData?.id as string)
   const {
     refetch: refetchUserProfileData,

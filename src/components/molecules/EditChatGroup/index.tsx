@@ -18,38 +18,15 @@ import { BiChevronDown } from 'react-icons/bi'
 import { FaXmark } from 'react-icons/fa6'
 import { FiCamera } from 'react-icons/fi'
 import InputBox from '@/components/atoms/Input/InputBox'
-import { useGetUserFollowingAndFollowers } from '@/services/Messages'
+import { useEditGroupChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
+import { replaceImage } from '@/services/uploadImage'
+import { closeModal } from '../Modal/ModalManager'
+import Buttons from '@/components/atoms/Buttons'
+import { Spinner } from '@/components/spinner/Spinner'
 
-type User = {
-  id: string
-  name: string
-  email: string
-
-  firstName: string
-  profile: any
-}
-
-type Props = {
-  selectedGroupUser: User | null
-  setSelectedGroupUser: (value: User | null) => void
-  setFilterUsers: (value: User[]) => void
-  setFilterFacultyUsers: (value: User[]) => void
-  setGroupName: (value: string) => void
-  setGroupLogoImage: (value: File | null) => void
-  groupLogoImage: File | null
-}
-
-const GroupChatModal = ({
-  selectedGroupUser,
-  setSelectedGroupUser,
-  setFilterFacultyUsers,
-  setFilterUsers,
-  setGroupName,
-  setGroupLogoImage,
-  groupLogoImage,
-}: Props) => {
+const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: string; groupLogo: string; groupCurrentName: string }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -62,6 +39,14 @@ const GroupChatModal = ({
   const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
+
+  const [selectedGroupUser, setSelectedGroupUser] = useState<any>(null)
+  const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
+  const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
+  const [filterUsers, setFilterUsers] = useState<any[]>([])
+  const [filterFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
+  const [groupName, setGroupName] = useState('')
+
   const { data: universitiesData } = useUniversitySearch(searchTerm || 'india', 1, 10)
   const universities = universitiesData?.result?.universities
 
@@ -70,12 +55,13 @@ const GroupChatModal = ({
   const [searchInput, setSearchInput] = useState('')
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const { data } = useGetUserFollowingAndFollowers(searchInput)
-
+  const { mutate: editGroup, isPending } = useEditGroupChat(chatId)
   const {
     register,
     watch,
     formState: { errors },
     control,
+    reset,
   } = useForm({
     defaultValues: {
       selectedRadio: '',
@@ -83,7 +69,7 @@ const GroupChatModal = ({
       major: [],
       occupation: [],
       affiliation: [],
-      title: '',
+      title: groupCurrentName || '',
     },
   })
 
@@ -114,16 +100,11 @@ const GroupChatModal = ({
   useEffect(() => {
     const allUsers = communityData?.users || []
     const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-
     const filters = { year: studentYear, major: major }
-
     const filtered = filterData(allStudentUsers, filters)
-
     const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
     const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
-
     const majorCounts = getFilteredMajorCounts(filtered)
-
     setFilterUsers(filtered)
     setFilteredYearsCount(yearCounts)
     setFilteredMajorsCount(majorCounts)
@@ -132,36 +113,55 @@ const GroupChatModal = ({
   useEffect(() => {
     const allUsers = communityData?.users || []
     const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
-
     const filters = { occupation: occupation, affiliation: affiliation }
     const filtered = filterFacultyData(allFacultyUsers, filters)
-
     const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
-
     const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
-
     const affiliationCounts = getFilteredAffiliationCounts(filtered)
-
     setFilterFacultyUsers(filtered)
     setFilteredOccupationCount(occupationCounts)
     setFilteredAffiliationCount(affiliationCounts)
   }, [occupation, affiliation])
 
+  const handleGroupChatClick = async () => {
+    let ImageData
+    if (groupLogoImage) {
+      setIsImageLoading(true)
+      const imagedata: any = await replaceImage(groupLogoImage, '')
+      ImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+    }
+
+    const mergedUsers = [selectedGroupUser, ...filterUsers, ...filterFacultyUsers]
+    const uniqueUsers = Array.from(new Map(mergedUsers.map((user) => [user.id, user])).values())
+    const dataToPush = {
+      ...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
+      groupName: groupName,
+
+      users: uniqueUsers,
+    }
+
+    editGroup(dataToPush)
+    setIsImageLoading(false)
+    closeModal()
+  }
+
   return (
-    <div className="relative w-full flex flex-col gap-4">
+    <div className="relative w-full h-[400px] flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-          Group Profile
+          Edit Profile
         </label>
         <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
-          {groupLogoImage && (
-            <Image
-              width={96}
-              height={96}
-              className="w-24 h-24 rounded-full absolute  object-cover"
-              src={URL.createObjectURL(groupLogoImage)}
-              alt=""
-            />
+          {groupLogoImage && !groupLogo?.length ? (
+            <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(groupLogoImage)} alt="" />
+          ) : (
+            ''
+          )}
+          {!groupLogoImage && groupLogo?.length ? <img className="w-24 h-24 rounded-full absolute  object-cover" src={groupLogo} alt="" /> : ''}
+          {groupLogoImage && groupLogo?.length ? (
+            <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(groupLogoImage)} alt="" />
+          ) : (
+            ''
           )}
           <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setGroupLogoImage(e.target.files[0])} />
 
@@ -222,7 +222,7 @@ const GroupChatModal = ({
                       e.preventDefault()
                       e.stopPropagation()
                       setShowSelectUsers(false)
-                      setSelectedGroupUser(user)
+                      setSelectedGroupUser({ ...user, id: user?._id })
                     }}
                     className="flex justify-between w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
                   >
@@ -263,6 +263,10 @@ const GroupChatModal = ({
               />
               <div>
                 <p className="text-sm font-semibold">{selectedGroupUser?.firstName}</p>
+                {/* <p className="text-2xs text-neutral-600">{selectedGroupUser?.profile?.university_name || ''}</p>
+              <p className="text-2xs text-neutral-600">
+                {selectedGroupUser?.profile?.study_year ? `${selectedGroupUser.profile.study_year} Year` : ''} {selectedGroupUser?.profile?.degree}
+              </p> */}
                 <p className="text-2xs text-neutral-600">
                   {selectedGroupUser?.profile?.role == 'student'
                     ? `${selectedGroupUser.profile.study_year} `
@@ -446,11 +450,12 @@ const GroupChatModal = ({
         />
       </div>
 
-      {/* <Buttons onClick={handleClick} className="w-full mt-8">
-        Apply Filters
-      </Buttons> */}
+      <Buttons disabled={isPending} onClick={handleGroupChatClick} className="w-full my-4">
+        {isPending || isImageLoading ? <Spinner /> : 'Edit Group'}
+      </Buttons>
+      <div className=" min-h-[10px] w-4"></div>
     </div>
   )
 }
 
-export default GroupChatModal
+export default EditGroupChatModal

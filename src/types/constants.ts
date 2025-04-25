@@ -248,7 +248,9 @@ export type LatestMessage = {
   createdAt: string
   media: media[]
   readByUsers: string[]
-  sender: string
+  sender: {
+    id: string
+  }
   senderProfile: string
   updatedAt: string
   _id: string
@@ -264,6 +266,7 @@ export type Chat = {
   groupLogoImage: string | undefined
   latestMessage: LatestMessage
   isBlock: boolean
+  blockedBy: string[]
   isGroupChat: boolean
   isRequestAccepted: boolean
   unreadMessagesCount: number
