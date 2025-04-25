@@ -1,7 +1,8 @@
 import Buttons from '@/components/atoms/Buttons'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { Spinner } from '@/components/spinner/Spinner'
-import { cleanInnerHTML } from '@/lib/utils'
+import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { replaceImage } from '@/services/uploadImage'
 import { CommunityPostType, PostInputData, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
@@ -9,6 +10,7 @@ import dynamic from 'next/dynamic'
 import Quill from 'quill'
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
+import { MdCancel } from 'react-icons/md'
 import { RxCrossCircled } from 'react-icons/rx'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
@@ -36,6 +38,11 @@ function TimelineCreatePost() {
     const files = e.target.files
     if (files) {
       const fileArray = Array.from(files)
+      const validation = validateImageFiles(fileArray)
+      if (!validation.isValid) {
+        showCustomDangerToast(validation.message)
+        return
+      }
       setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
     }
   }
@@ -81,16 +88,16 @@ function TimelineCreatePost() {
             <div key={index} className="relative w-fit">
               <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
               {/* Remove image button */}
-              <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
-                <RxCrossCircled />
+              <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
+                <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
               </div>
             </div>
           ))}
         </div>
         <div className="w-full flex items-end justify-between py-4">
           <div className="flex gap-3 sm:gap-4 items-center ">
-            <label htmlFor="postImage" className="cursor-pointer inline-block">
-              <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+            <label htmlFor="timelinePostImage" className="cursor-pointer inline-block">
+              <input id="timelinePostImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
           </div>

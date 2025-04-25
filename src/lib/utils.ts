@@ -77,3 +77,18 @@ export const IsUniversityVerified = (): boolean => {
   const { userProfileData } = useUniStore()
   return userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name) || false
 }
+
+export const validateImageFiles = (files: File[], maxFiles: number = 4, maxSize: number = 5 * 1024 * 1024): { isValid: boolean; message: string } => {
+  // Check if the number of files exceeds the limit
+  if (files.length > maxFiles) {
+    return { isValid: false, message: `You can only upload a maximum of ${maxFiles} images.` }
+  }
+
+  // Check if any file exceeds the size limit
+  const tooLargeFiles = files.filter((file) => file.size > maxSize)
+  if (tooLargeFiles.length > 0) {
+    return { isValid: false, message: 'Each image must be less than 5MB.' }
+  }
+
+  return { isValid: true, message: '' }
+}

@@ -9,7 +9,7 @@ import { notificationRoleAccess } from '../organisms/NotificationTabs/Notificati
 import { BsStars } from 'react-icons/bs'
 import { IoIosChatboxes } from 'react-icons/io'
 import Buttons from '../atoms/Buttons'
-import { useChangeCommunityGroupStatus } from '@/services/community-group'
+import { useChangeCommunityGroupStatus, useJoinRequestPrivateGroup } from '@/services/community-group'
 dayjs.extend(relativeTime)
 
 type Props = {
@@ -47,6 +47,8 @@ const NotificationCard = ({ data }: Props) => {
   const { mutate: updateIsSeen } = useUpdateIsRead(data.type)
   const { mutate: joinGroup } = useJoinCommunityGroup()
   const { mutate: changeGroupStatus } = useChangeCommunityGroupStatus(data?.communityGroupId?._id || '')
+  const { mutate: handleJoinCommunityRequest } = useJoinRequestPrivateGroup(data?.communityGroupId?._id || '')
+
   const router = useRouter()
 
   const handleUpdateIsRead = (id: string) => {
@@ -95,11 +97,23 @@ const NotificationCard = ({ data }: Props) => {
   const handleChangeGroupStatus = (status: string, notificationId: string) => {
     return (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
-      const data = {
-        status: status,
-        notificationId: notificationId,
+
+      switch (data.type) {
+        case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+          changeGroupStatus({ status, notificationId })
+          break
+
+        case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
+          handleJoinCommunityRequest({
+            status: status,
+            notificationId: notificationId,
+            userId: data?.sender_id?._id,
+          })
+          break
+
+        default:
+          break
       }
-      changeGroupStatus(data)
     }
   }
 
@@ -153,6 +167,8 @@ const NotificationCard = ({ data }: Props) => {
         return `${fullName} reacted to a post in ${data?.communityDetails?.name || 'the community'}.`
       case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
         return `${fullName} requested for official status for his group ${data?.communityGroupId?.title}.`
+      case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
+        return `${fullName} requested to join ${data?.communityGroupId?.title} group .`
       default:
         return 'You have a new notification.'
     }
@@ -186,25 +202,26 @@ const NotificationCard = ({ data }: Props) => {
             Accept
           </Buttons>
         )}
-        {data.type == notificationRoleAccess.OFFICIAL_GROUP_REQUEST &&
-          (data?.status == notificationStatus.accepted ? (
-            <Buttons className="w-max" variant="shade" size="extra_small">
-              Accepted
-            </Buttons>
-          ) : data?.status == notificationStatus.rejected ? (
-            <Buttons className="w-max" variant="shade" size="extra_small">
-              Rejected
-            </Buttons>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Buttons onClick={handleChangeGroupStatus('accepted', data?._id)} className="w-max" variant="border_primary" size="extra_small">
-                Accept
+        {data.type === notificationRoleAccess.OFFICIAL_GROUP_REQUEST ||
+          (data.type === notificationRoleAccess.PRIVATE_GROUP_REQUEST &&
+            (data?.status == notificationStatus.accepted ? (
+              <Buttons className="w-max" variant="shade" size="extra_small">
+                Accepted
               </Buttons>
-              <Buttons onClick={handleChangeGroupStatus('rejected', data?._id)} className="w-max" variant="border_primary" size="extra_small">
-                Reject
+            ) : data?.status == notificationStatus.rejected ? (
+              <Buttons className="w-max" variant="shade" size="extra_small">
+                Rejected
               </Buttons>
-            </div>
-          ))}
+            ) : (
+              <div className="flex items-center gap-4">
+                <Buttons onClick={handleChangeGroupStatus('accepted', data?._id)} className="w-max" variant="border_primary" size="extra_small">
+                  Accept
+                </Buttons>
+                <Buttons onClick={handleChangeGroupStatus('rejected', data?._id)} className="w-max" variant="border_primary" size="extra_small">
+                  Reject
+                </Buttons>
+              </div>
+            )))}
       </div>
     </div>
   )
