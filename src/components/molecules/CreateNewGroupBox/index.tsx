@@ -88,7 +88,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     },
   })
   const categoryRef = useRef<HTMLDivElement>(null)
-  const SelectedUsers = watch('selectedUsers') as CommunityUsers[]
+  const SelectedUsers = watch('selectedUsers') as unknown as CommunityUsers[]
   const description = watch('description') || ''
   const studentYear = watch('studentYear') || ''
   const major = watch('major') || ''

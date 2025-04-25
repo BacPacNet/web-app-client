@@ -9,7 +9,7 @@ import draftToHtml from 'draftjs-to-html'
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
-import { MdOutlineGifBox } from 'react-icons/md'
+import { MdCancel, MdOutlineGifBox } from 'react-icons/md'
 import { GoFileMedia } from 'react-icons/go'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import {
@@ -21,13 +21,12 @@ import {
   PostTypeOption,
   UserPostTypeOption,
 } from '@/types/constants'
-import { RxCrossCircled } from 'react-icons/rx'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '@/components/spinner/Spinner'
-import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import Buttons from '@/components/atoms/Buttons'
+import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { validateImageFiles } from '@/lib/utils'
 
 type Props = {
   communityID?: string
@@ -64,6 +63,11 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
     const files = e.target.files
     if (files) {
       const fileArray = Array.from(files)
+      const validation = validateImageFiles(fileArray)
+      if (!validation.isValid) {
+        showCustomDangerToast(validation.message)
+        return
+      }
       setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
     }
   }
@@ -237,8 +241,8 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
             <div key={index} className="relative w-fit">
               <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
               {/* Remove image button */}
-              <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
-                <RxCrossCircled />
+              <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
+                <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
               </div>
             </div>
           ))}

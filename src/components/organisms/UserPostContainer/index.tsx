@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
-import { MdOutlineGifBox } from 'react-icons/md'
+import { MdCancel, MdOutlineGifBox } from 'react-icons/md'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -14,9 +14,9 @@ import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
 import { Skeleton } from '@/components/ui/Skeleton'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
-import { RxCrossCircled } from 'react-icons/rx'
 import { Spinner } from '@/components/spinner/Spinner'
-import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { validateImageFiles } from '@/lib/utils'
 
 type props = {
   communityID?: string
@@ -68,6 +68,11 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
     const files = e.target.files
     if (files) {
       const fileArray = Array.from(files)
+      const validation = validateImageFiles(fileArray)
+      if (!validation.isValid) {
+        showCustomDangerToast(validation.message)
+        return
+      }
       setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
     }
   }
@@ -224,8 +229,8 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
           <div key={index} className="relative w-fit">
             <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
             {/* Remove image button */}
-            <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
-              <RxCrossCircled />
+            <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
+              <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
             </div>
           </div>
         ))}

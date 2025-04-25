@@ -1,4 +1,3 @@
-import Card from '@/components/atoms/Card'
 import NotificationContainer from '@/components/organisms/NotificationContainer'
 import React from 'react'
 

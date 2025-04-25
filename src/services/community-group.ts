@@ -1,4 +1,3 @@
-import { useUniStore } from '@/store/store'
 import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -32,6 +31,8 @@ export const useJoinCommunityGroup = () => {
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
+
       showCustomSuccessToast(response.message)
     },
 
@@ -123,12 +124,39 @@ export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { status: string }) => ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
+    mutationFn: (data: { status: string; notificationId: string }) => ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+      showCustomSuccessToast(`status of community group changed`)
+    },
 
-      showCustomSuccessToast(`status of Community Group changed`)
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || 'Something went wrong'
+      console.error('Error changing status:', errorMessage)
+    },
+  })
+}
+
+async function acceptRejectPrivateGroupAPI(data: { status: string }, communityGroupId: string, token: string) {
+  return await client(`/communitygroup/join-request/${communityGroupId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+}
+
+export const useJoinRequestPrivateGroup = (communityGroupId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: { status: string; notificationId: string; userId: string }) =>
+      acceptRejectPrivateGroupAPI(data, communityGroupId, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+      //showCustomSuccessToast(`status of Community Group changed`)
     },
 
     onError: (error: any) => {

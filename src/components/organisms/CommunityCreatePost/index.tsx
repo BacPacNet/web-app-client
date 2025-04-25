@@ -1,7 +1,8 @@
 import Buttons from '@/components/atoms/Buttons'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import Spinner from '@/components/atoms/spinner'
-import { cleanInnerHTML } from '@/lib/utils'
+import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
 import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
@@ -10,7 +11,7 @@ import dynamic from 'next/dynamic'
 import Quill from 'quill'
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
-import { RxCrossCircled } from 'react-icons/rx'
+import { MdCancel } from 'react-icons/md'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -42,8 +43,14 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
+
     if (files) {
       const fileArray = Array.from(files)
+      const validation = validateImageFiles(fileArray)
+      if (!validation.isValid) {
+        showCustomDangerToast(validation.message)
+        return
+      }
       setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
     }
   }
@@ -91,8 +98,8 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
             <div key={index} className="relative w-fit">
               <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
               {/* Remove image button */}
-              <div onClick={() => handleImageRemove(index)} className="absolute top-1 right-1 cursor-pointer text-sm">
-                <RxCrossCircled />
+              <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
+                <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
               </div>
             </div>
           ))}

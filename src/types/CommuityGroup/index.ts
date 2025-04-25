@@ -8,6 +8,7 @@ interface users {
   year: string
   degree: string
   major: string
+  status: status
 }
 export enum CommunityGroupTypeEnum {
   CASUAL = 'casual',
