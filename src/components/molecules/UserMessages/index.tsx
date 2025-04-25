@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
-import UserMessageInput from '../userMessageInput'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Message, messages, SocketEnums } from '@/types/constants'
@@ -8,12 +7,33 @@ import { useGetUserMessages, useReactMessageEmoji } from '@/services/Messages'
 import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
 import calendar from 'dayjs/plugin/calendar'
-import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import { format } from 'date-fns'
+import UserMessageImageGrid from '../UserMessageImageGrid'
 
 dayjs.extend(relativeTime)
 dayjs.extend(calendar)
+dayjs.extend(updateLocale)
+
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: 'in %s',
+    past: '%s ago',
+    s: 'a few sec',
+    m: '1m',
+    mm: '%dm',
+    h: '1h',
+    hh: '%dh',
+    d: '1d',
+    dd: '%dd',
+    M: '1mo',
+    MM: '%dmo',
+    y: '1y',
+    yy: '%dy',
+  },
+})
+
 type User = {
   userId: {
     _id: string
@@ -41,8 +61,6 @@ type props = {
   setAcceptedId: (value: string) => void
   setCurrTab: (value: string) => void
 }
-
-const formatDate = (date: any) => dayjs(date).calendar()
 
 type Props = {
   profilePic: string | undefined
@@ -80,10 +98,6 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [content])
-
   const handleMouseDown = () => {
     timeoutRef.current = setTimeout(() => {
       setIsReact(!isReact)
@@ -109,11 +123,9 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
         <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
-        {/* {media.length
-          ? media.map((item) => <Image key={item.publicId} src={item?.imageUrl} alt="media" width={140} height={140} className="w-40 " />)
-          : ''} */}
-        <div className={`${media.length > 1 ? 'w-9/12' : 'w-1/2'}`}>
-          <PostCardImageGrid images={media} setImageCarasol={setImageCarasol} idx={idx} />
+
+        <div className={`w-full`}>
+          <UserMessageImageGrid images={media} />
         </div>
       </div>
       {/* //reaction  */}
@@ -139,24 +151,12 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
   )
 }
 
-const UserMessages = ({
-  name,
-  profileCover,
-  chatId,
-  users,
-  isRequest,
-  isGroupChat,
-  yourID,
-  setImageCarasol,
-  isRequestNotAccepted,
-  setAcceptedId,
-  setCurrTab,
-}: props) => {
+const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID)
 
-  const { userData, userProfileData } = useUniStore()
+  const { userData } = useUniStore()
   const { data: chatMessages } = useGetUserMessages(chatId)
-
+  const bottomRef = useRef<HTMLDivElement | null>(null)
   let previousDate: any = ''
 
   const { socket } = useUniStore()
@@ -206,12 +206,15 @@ const UserMessages = ({
     }
   }, [socket])
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [chatMessages])
+
   return (
     <div>
-      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar px-4 pt-4  gap-6 ">
+      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar px-4 p-4  gap-6 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
-          // Check if the date has changed
           const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
           previousDate = dayjs(item.createdAt)
 
@@ -244,6 +247,7 @@ const UserMessages = ({
             </Fragment>
           )
         })}
+        <div ref={bottomRef} />
       </div>
     </div>
   )

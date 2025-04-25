@@ -12,6 +12,7 @@ interface RadioOptionProps {
   isDisabled?: boolean
   required?: boolean
   onAttemptSelect?: () => void
+  fontSize?: 'small' | 'large'
 }
 
 const RadioOption = ({
@@ -26,6 +27,7 @@ const RadioOption = ({
   isDisabled = false,
   required = false,
   onAttemptSelect,
+  fontSize = 'small',
 }: RadioOptionProps) => {
   const isChecked = checkedValue === value
 
@@ -33,6 +35,11 @@ const RadioOption = ({
     if (isDisabled && onAttemptSelect) {
       onAttemptSelect()
     }
+  }
+
+  const fontStyle = {
+    small: isDisabled ? 'text-neutral-400 text-sm font-medium' : 'text-neutral-700 text-sm font-medium',
+    large: isDisabled ? 'text-neutral-400 text-[20px] font-semibold font-poppins' : 'text-neutral-900   font-semibold font-poppins',
   }
 
   return (
@@ -44,7 +51,7 @@ const RadioOption = ({
             value={value}
             disabled={isDisabled}
             {...register(name, { required: required })}
-            className="w-[18px] h-[18px]  appearance-none rounded-full border-2 border-neutral-300
+            className="w-[18px] h-[18px]  appearance-none rounded-full border-2 border-neutral-300 
                      checked:border-primary relative bg-white
                      after:content-[''] after:absolute after:top-[3.5px] after:left-[3.5px]
                      after:w-[8px] after:h-[8px] after:rounded-full
@@ -52,7 +59,7 @@ const RadioOption = ({
           />
         </div>
         <div className="">
-          <span className={` ${isDisabled ? 'text-neutral-400' : 'text-neutral-700'} text-sm font-medium`}>{label}</span>
+          <span className={`${fontStyle[fontSize]} `}>{label}</span>
           <p className="text-neutral-400 text-[12px]">{description ? description : ''}</p>
         </div>
       </div>

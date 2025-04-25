@@ -18,7 +18,9 @@ interface MultiSelectDropdownProps {
   variant?: 'primary' | 'default'
   filteredCount?: any
   multiSelect?: boolean
+  disabled?: boolean
   parentCategory?: string[]
+  setUniversityErr?: (value: boolean) => void
 }
 
 const motionStyle = {
@@ -51,6 +53,8 @@ const MultiSelectDropdown = ({
   filteredCount,
   multiSelect = true,
   parentCategory,
+  disabled = false,
+  setUniversityErr,
 }: MultiSelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -58,6 +62,12 @@ const MultiSelectDropdown = ({
   const searchRef = useRef<HTMLInputElement>(null)
 
   const handleSelect = (optionValue: string) => {
+    if (disabled) {
+      if (setUniversityErr) {
+        return setUniversityErr(true)
+      }
+      return
+    }
     if (multiSelect == false) {
       setShow(false)
       return onChange([optionValue])
@@ -88,6 +98,12 @@ const MultiSelectDropdown = ({
   }, [])
 
   const toggleDropdown = () => {
+    if (disabled) {
+      if (setUniversityErr) {
+        return setUniversityErr(true)
+      }
+      return
+    }
     if (!show) {
       setFilteredOptions(options)
       if (searchRef.current) searchRef.current.value = ''
@@ -96,7 +112,7 @@ const MultiSelectDropdown = ({
   }
 
   return (
-    <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[150px]">
+    <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[150px] ">
       <div className="flex gap-1">
         {label && <label className="text-sm mb-2 text-neutral-900 font-medium">{label}</label>}
         {isStatus && <StatusTooltip />}
@@ -106,25 +122,9 @@ const MultiSelectDropdown = ({
         onClick={toggleDropdown}
         className={`${err ? 'border-red-400' : 'border-neutral-200'} border h-10 flex justify-between items-center px-2 py-2 ${
           variantBg[variant]
-        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-400 outline-none`}
+        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-400 outline-none ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
       >
         <div className="flex flex-wrap gap-1 text-xs px-1">
-          {/* {value.length > 0 ? (
-            value.map((selected, index) => (
-              <div key={index} className="flex items-center bg-gray-200 px-2 py-1 rounded-md">
-                <span className="text-neutral-900 mr-1">{selected}</span>
-                <RxCross2
-                  className="cursor-pointer text-neutral-600"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onChange(value.filter((item) => item !== selected))
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p className="text-neutral-400">{placeholder}</p>
-          )} */}
           <p className="text-neutral-400">{placeholder}</p>
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />

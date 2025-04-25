@@ -7,6 +7,7 @@ import { MessageNotification } from '@/components/molecules/MessageNotification'
 import { useRouter } from 'next/navigation'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import axios from 'axios'
 
 type Notification = {
   _id: string
@@ -96,6 +97,12 @@ export async function getUserMainNotification(token: string, page: number, limit
 }
 export async function getMessageNotification(token: string, page: number, limit: number) {
   const response: MessageNotificationsProps = await client(`/chat/notification?page=${page}&limit=${limit}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+export async function getMessageNotificationTotalCount(token: string) {
+  const response: { messageTotalCount: string } = await client(`/chat/notification-count`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   return response
@@ -259,4 +266,20 @@ export function useGetMessageNotification(limit: number, toCall: boolean) {
     initialPageParam: 1,
     enabled: !!finalCookie && toCall,
   })
+}
+
+export function useGetUserUnreadMessagesTotalCount() {
+  const [cookieValue] = useCookie('uni_user_token')
+  const state = useQuery({
+    queryKey: ['getMessageNotificationTotalCount'],
+    queryFn: () => getMessageNotificationTotalCount(cookieValue),
+    enabled: !!cookieValue,
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
+  }
+
+  return { ...state, error: errorMessage }
 }

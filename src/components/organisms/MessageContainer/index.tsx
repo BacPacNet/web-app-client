@@ -38,7 +38,7 @@ const MessageContainer = () => {
   const [onlineUsersSet, setOnlineUsersSet] = useState<Set<string>>(new Set())
   const [acceptedChatId, setAcceptedId] = useState('')
   const selectedUserId = searchQuery.get('id')
-
+  const [searchByNameText, setSearchByNameText] = useState('')
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -49,26 +49,54 @@ const MessageContainer = () => {
     currImageIndex: null,
   })
 
-  const unreadChatsCount = chats?.filter((item) => {
+  const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {
-      return item.unreadMessagesCount > 0 && item.users.some((user) => user.userId._id == userData?.id && user.isRequestAccepted)
+      const isUserInGroup = item.users.some((user) => user.userId._id === userData?.id)
+      return isUserInGroup ? sum + item.unreadMessagesCount : sum
     } else {
-      return item.unreadMessagesCount > 0 && item.isRequestAccepted
+      return item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
     }
-  }).length
-  const unreadNotAcceptedChatsCount = chats?.filter((item) => {
+  }, 0)
+
+  const totalUnreadNotAcceptedMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {
-      return item.unreadMessagesCount > 0 && item.users.some((user) => !user.isRequestAccepted)
+      const hasUnaccepted = item.users.some((user) => !user.isRequestAccepted)
+      return hasUnaccepted ? sum + item.unreadMessagesCount : sum
     } else {
-      return item.unreadMessagesCount > 0 && !item.isRequestAccepted
+      return !item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
     }
-  }).length
+  }, 0)
+
+  const filteredChats = useMemo(() => {
+    if (!chats) return null
+    if (searchByNameText.trim() === '') return chats
+
+    const searchLower = searchByNameText.toLowerCase()
+
+    return chats.filter((chat) => {
+      if (chat.isGroupChat) {
+        return chat.chatName.toLowerCase().includes(searchLower)
+      } else {
+        // Find the other user
+        const otherUser = chat.users.find((u) => u.userId._id !== userData?.id)
+        if (!otherUser) return false
+
+        const fullName = `${otherUser.userId.firstName} ${otherUser.userId.lastName}`.toLowerCase()
+        return (
+          otherUser.userId.firstName.toLowerCase().includes(searchLower) ||
+          otherUser.userId.lastName.toLowerCase().includes(searchLower) ||
+          fullName.includes(searchLower)
+        )
+      }
+    })
+  }, [chats, searchByNameText])
 
   const updateMessageSeen = () => {
     const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData?.id || '')
 
     if (!isRead && isRead !== undefined && selectedChat) {
       updateIsSeen({ chatId: selectedChat?._id, messageId: selectedChat?.latestMessage?._id, data: { readByUserId: userData?.id } })
+      //   refetchMessageNotification()
     }
   }
 
@@ -248,12 +276,12 @@ const MessageContainer = () => {
             selectedChat={selectedChat}
             currTabb={currTab}
             setIsRequest={setIsRequest}
-            chats={chats}
+            chats={filteredChats}
             isChatLoading={isChatLoading}
           />
         )
 
-      case 'Message Requests':
+      case 'Requests':
         return (
           <UserChats
             setSelectedChat={setSelectedChat}
@@ -286,18 +314,17 @@ const MessageContainer = () => {
           <MessageUserStickyBar
             setSelectedChat={setSelectedChat}
             name={selectedChat?.isGroupChat ? selectedChat?.chatName : userName?.userId.firstName ?? 'Unknown'}
-            studyYear={userName?.userId.studyYear ?? 'Unknown'}
-            degree={userName?.userId.degree ?? 'Unknown'}
-            universitry={userName?.userId.universityName ?? 'Unknown'}
             users={selectedChat?.users}
             yourID={userData?.id || ''}
             isGroupChat={selectedChat?.isGroupChat}
-            isRequestNotAccepted={currTab == 'Message Requests'}
+            isRequestNotAccepted={currTab == 'Requests'}
             chatId={selectedChat?._id}
             profileCover={selectedChat?.isGroupChat ? selectedChat?.groupLogo?.imageUrl : selectedChat?.groupLogoImage}
             description={selectedChat?.groupDescription}
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
+            isBlockedByYou={selectedChat.blockedBy.some((id) => id.toString() == userData?.id)}
+            groupAdminId={selectedChat?.groupAdmin}
           />
           <UserMessages
             chatId={selectedChat._id}
@@ -308,7 +335,7 @@ const MessageContainer = () => {
             isGroupChat={selectedChat?.isGroupChat}
             yourID={userData?.id || ''}
             setImageCarasol={setImageCarasol}
-            isRequestNotAccepted={currTab == 'Message Requests'}
+            isRequestNotAccepted={currTab == 'Requests'}
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
           />
@@ -316,9 +343,11 @@ const MessageContainer = () => {
             <UserMessageInput
               chatId={selectedChat._id}
               userProfileId={userProfileData?._id || ''}
-              isRequestNotAccepted={currTab == 'Message Requests'}
+              isRequestNotAccepted={currTab == 'Requests'}
+              isBlocked={selectedChat?.isBlock}
               setAcceptedId={setAcceptedId}
               setCurrTab={setCurrTab}
+              isGroupChat={selectedChat?.isGroupChat}
             />
           </div>
         </div>
@@ -334,8 +363,10 @@ const MessageContainer = () => {
           currTab={currTab}
           setCurrTab={setCurrTab}
           setSelectedChat={setSelectedChat}
-          unreadChatsCount={unreadChatsCount || 0}
-          unreadNotAcceptedChatsCount={unreadNotAcceptedChatsCount || 0}
+          unreadChatsCount={totalUnreadMessages || 0}
+          unreadNotAcceptedChatsCount={totalUnreadNotAcceptedMessages || 0}
+          setSearchByNameText={setSearchByNameText}
+          searchByNameText={searchByNameText}
         />
       ) : null}
 

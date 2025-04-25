@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import avatar from '@assets/avatar.svg'
 import { FaUsers } from 'react-icons/fa'
-import { formatRelativeTime, timeAgo } from '@/lib/utils'
+import { formatRelativeTime } from '@/lib/utils'
 type User = {
   userId: {
     _id: string
@@ -39,11 +39,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
                 <Image width={48} height={48} src={profilePic || avatar} alt="dp" objectFit="cover" className="w-12 h-12 rounded-full" />
               )}
 
-              {unRead && unRead > 0 ? (
-                <p className="bg-destructive-600  w-4 h-4  rounded-full absolute bottom-0 left-8 border-2 border-white text-white flex justify-center items-center text-[8px] font-semibold">
-                  {unRead > 9 ? '9+' : unRead}
-                </p>
-              ) : userName?.some((item) => item?.isOnline) ? (
+              {userName?.some((item) => item?.isOnline) ? (
                 <p className="bg-success-500 w-4 h-4 rounded-full absolute bottom-0 left-8 border-2 border-white text-white flex justify-center items-center text-[12px] font-semibold"></p>
               ) : (
                 <p className="bg-neutral-300 w-4 h-4 rounded-full absolute bottom-0 left-8 border-2 border-white text-white flex justify-center items-center text-[12px] font-semibold"></p>
@@ -55,8 +51,15 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
                 <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
                   {isGroupChat ? groupName : userName[0]?.userId?.firstName + ' ' + userName[0]?.userId?.lastName}
                 </p>
-                <div className="text-right min-w-fit">
-                  <p className="text-neutral-400 font-normal text-[12px] ">{formatRelativeTime(new Date(date))}</p>
+                <div className="text-right min-w-fit relative">
+                  <p className="text-neutral-400 font-normal text-[12px] ">{date?.length ? formatRelativeTime(new Date(date)) : ''}</p>
+                  {unRead && unRead > 0 ? (
+                    <p className="bg-destructive-600  w-4 h-4  rounded-full absolute top-6 right-1/2  border-2 border-white text-white flex justify-center items-center text-[8px] font-semibold">
+                      {unRead > 9 ? '9+' : unRead}
+                    </p>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
               <p

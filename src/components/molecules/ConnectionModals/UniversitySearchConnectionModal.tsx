@@ -135,6 +135,9 @@ export default function ConnectionUserSelectModal({
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
     const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user.id !== userData?.id)
 
+    if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
+      return setFilterUsers(allStudentUsers)
+    }
     const filters = { year: studentYear, major: major }
 
     const filtered = filterData(allStudentUsers, filters)
@@ -147,12 +150,15 @@ export default function ConnectionUserSelectModal({
     setFilterUsers(filtered)
     setFilteredYearsCount(yearCounts)
     setFilteredMajorsCount(majorCounts)
-  }, [studentYear, major, communityData])
+  }, [studentYear, major, communityData, selectedRadio])
 
   useEffect(() => {
     const allUsers = communityData?.users || []
     const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user.id !== userData?.id)
 
+    if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
+      return setFilterFacultyUsers(allFacultyUsers)
+    }
     const filters = { occupation: occupation, affiliation: affiliation }
     const filtered = filterFacultyData(allFacultyUsers, filters)
 
@@ -165,16 +171,17 @@ export default function ConnectionUserSelectModal({
     setFilterFacultyUsers(filtered)
     setFilteredOccupationCount(occupationCounts)
     setFilteredAffiliationCount(affiliationCounts)
-  }, [occupation, affiliation])
+  }, [occupation, affiliation, selectedRadio])
 
   const handleClick = () => {
     if (selectedUniversity?.name?.length < 1 || selectedUniversity?.name == undefined) {
       return setUniversityError(true)
     }
     setIsFiltered(true)
-    if (selectedRadio == 'Faculty' && (occupation.length > 0 || affiliation.length > 0)) {
+
+    if (selectedRadio == 'Faculty') {
       setFilteredUsers(filteredFacultyUsers)
-    } else if (selectedRadio == 'Student' && (studentYear.length > 0 || major.length > 0)) {
+    } else if (selectedRadio == 'Student') {
       setFilteredUsers(filteredUsers)
     } else {
       const allUsers = communityData?.users || []

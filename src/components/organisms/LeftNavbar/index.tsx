@@ -17,6 +17,7 @@ import ProfilePicture from '@/components/atoms/RenderProfileDP'
 import useCookie from '@/hooks/useCookie'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
+import { useGetUserUnreadMessagesTotalCount } from '@/services/notification'
 
 interface Props {
   toggleLeftNavbar?: () => void
@@ -42,6 +43,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const [cookie] = useCookie('uni_user_token')
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const [activeMenu, setActiveMenu] = useState(pathname)
+  const { data: userUnreadMessagesCount } = useGetUserUnreadMessagesTotalCount()
 
   useEffect(() => {
     setIsLogin(!!userProfileData?.users_id)
@@ -81,13 +83,24 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
         {MENU_ITEMS.map(({ name, icon, path }) => (
           <div
             key={path}
-            className={`flex gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
+            className={`flex items-center gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
               activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
             }`}
             onClick={() => handleMenuClick(path)}
           >
             <span className="text-[20px]">{icon}</span>
             <span className="">{name}</span>
+            {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 ? (
+              <span
+                className={` bg-destructive-600 ${
+                  Number(userUnreadMessagesCount?.messageTotalCount) > 9 ? 'px-1  min-w-4' : ' w-4'
+                } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+              >
+                {userUnreadMessagesCount?.messageTotalCount}
+              </span>
+            ) : (
+              ''
+            )}
           </div>
         ))}
       </div>

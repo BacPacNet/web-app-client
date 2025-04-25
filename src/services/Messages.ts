@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { ChatsArray, messages, SocketEnums } from '@/types/constants'
 import { useUniStore } from '@/store/store'
+import { useGetUserUnreadMessagesTotalCount } from './notification'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserChats(token: string) {
   const response: ChatsArray = await client(`/chat`, { headers: { Authorization: `Bearer ${token}` } })
@@ -18,12 +20,24 @@ export async function createGroupChat(token: string, data: any) {
   const response = await client(`/chat/group`, { headers: { Authorization: `Bearer ${token}` }, method: 'POST', data })
   return response
 }
+export async function removeGroupMember(token: string, chatId: string, data: any) {
+  const response = await client(`/chat/group/${chatId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
+  return response
+}
+export async function editGroupMember(token: string, chatId: string, data: any) {
+  const response = await client(`/chat/edit-group/${chatId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
+  return response
+}
 export async function acceptRequest(token: string, data: any) {
   const response = await client(`/chat/acceptRequest`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
   return response
 }
 export async function acceptGroupRequest(token: string, data: any) {
   const response = await client(`/chat/acceptGroupRequest`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
+  return response
+}
+export async function leaveGroup(token: string, chatId: any) {
+  const response = await client(`/chat/leave-group/${chatId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT' })
   return response
 }
 export async function toggleStarred(token: string, data: any) {
@@ -110,9 +124,40 @@ export const useCreateGroupChat = () => {
     mutationFn: (data: any) => createGroupChat(cookieValue, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      showCustomSuccessToast('Group has been created')
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+    },
+  })
+}
+export const useEditGroupChat = (chatId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => editGroupMember(cookieValue, chatId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      showCustomSuccessToast('Group has been updated')
+    },
+    onError: (res: any) => {
+      //   console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+export const useRemoveGroupChatMember = (chatId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: any) => removeGroupMember(cookieValue, chatId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      //   console.log('data', res)
+    },
+    onError: (res: any) => {
+      //   console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -144,6 +189,21 @@ export const useAcceptGroupRequest = () => {
     },
   })
 }
+export const useLeaveGroup = (chatId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => leaveGroup(cookieValue, chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      showCustomDangerToast('left the group')
+    },
+    onError: (res: any) => {
+      //   console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
 
 export const useToggleStarred = () => {
   const [cookieValue] = useCookie('uni_user_token')
@@ -158,13 +218,18 @@ export const useToggleStarred = () => {
     },
   })
 }
-export const useToggleBlockMessages = (userToBlockID: string) => {
+export const useToggleBlockMessages = (userToBlockID: string, isBlockedByYou: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => toggleMessageBlock(cookieValue, data, userToBlockID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      if (isBlockedByYou) {
+        showCustomSuccessToast('you have un-blocked the user')
+      } else {
+        showCustomDangerToast('you have blocked the user')
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -202,6 +267,7 @@ export const useCreateChatMessage = () => {
 export const useUpdateMessageIsSeen = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const { refetch: refetchMessageNotification } = useGetUserUnreadMessagesTotalCount()
   const chatData: ChatsArray = queryClient.getQueryData(['userChats']) || []
 
   return useMutation({
@@ -209,7 +275,6 @@ export const useUpdateMessageIsSeen = () => {
       return updateIsSeen(cookieValue, messageId, data).then((response) => ({ chatId, response }))
     },
     onSuccess: ({ chatId, response }: { chatId: string; response: any }) => {
-      console.log(response)
       if (chatData) {
         const updatedChatData = chatData.map((chat) =>
           chat._id === chatId
@@ -223,6 +288,7 @@ export const useUpdateMessageIsSeen = () => {
         queryClient.setQueryData(['userChats'], updatedChatData)
       }
       queryClient.invalidateQueries({ queryKey: ['message_notification'] })
+      refetchMessageNotification()
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

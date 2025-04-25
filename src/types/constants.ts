@@ -1,5 +1,6 @@
 import { NavLink } from './global'
 import { AxiosError } from 'axios'
+import { userTypeEnum } from './RegisterForm'
 
 export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Timeline', href: '/timeline' },
@@ -187,6 +188,11 @@ type ChatUser = {
     profileDp: string
     studyYear: string
     universityName: string
+
+    role: userTypeEnum
+    occupation: string
+    affiliation: string
+    major: string
   }
   _id: string
   firstName: string
@@ -242,7 +248,9 @@ export type LatestMessage = {
   createdAt: string
   media: media[]
   readByUsers: string[]
-  sender: string
+  sender: {
+    id: string
+  }
   senderProfile: string
   updatedAt: string
   _id: string
@@ -258,6 +266,7 @@ export type Chat = {
   groupLogoImage: string | undefined
   latestMessage: LatestMessage
   isBlock: boolean
+  blockedBy: string[]
   isGroupChat: boolean
   isRequestAccepted: boolean
   unreadMessagesCount: number
