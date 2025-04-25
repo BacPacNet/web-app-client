@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import avatar from '@assets/avatar.svg'
 import { FaUsers } from 'react-icons/fa'
-import { formatRelativeTime, timeAgo } from '@/lib/utils'
+import { formatRelativeTime } from '@/lib/utils'
 type User = {
   userId: {
     _id: string

@@ -2,8 +2,8 @@
 import Buttons from '@/components/atoms/Buttons'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import RadioOption from '@/components/atoms/RadioSelect'
-import React, { useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import IndividualUsers from './IndividualUsers'
 import GroupChatModal from './GroupChatModal'
 import { useCreateGroupChat, useCreateUserChat } from '@/services/Messages'
@@ -32,7 +32,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
     register,
     watch,
     formState: { errors },
-    control,
+
     reset,
   } = useForm({
     defaultValues: {

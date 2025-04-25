@@ -98,10 +98,6 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  //   useEffect(() => {
-  //     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  //   }, [content])
-
   const handleMouseDown = () => {
     timeoutRef.current = setTimeout(() => {
       setIsReact(!isReact)
@@ -161,7 +157,7 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
 const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID)
 
-  const { userData, userProfileData } = useUniStore()
+  const { userData } = useUniStore()
   const { data: chatMessages } = useGetUserMessages(chatId)
   const bottomRef = useRef<HTMLDivElement | null>(null)
   let previousDate: any = ''

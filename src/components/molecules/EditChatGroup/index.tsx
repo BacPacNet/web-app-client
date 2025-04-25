@@ -153,13 +153,29 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
         </label>
         <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
           {groupLogoImage && !groupLogo?.length ? (
-            <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(groupLogoImage)} alt="" />
+            <Image
+              width={96}
+              height={96}
+              className="w-24 h-24 rounded-full absolute  object-cover"
+              src={URL.createObjectURL(groupLogoImage)}
+              alt=""
+            />
           ) : (
             ''
           )}
-          {!groupLogoImage && groupLogo?.length ? <img className="w-24 h-24 rounded-full absolute  object-cover" src={groupLogo} alt="" /> : ''}
+          {!groupLogoImage && groupLogo?.length ? (
+            <Image width={96} height={96} className="w-24 h-24 rounded-full absolute  object-cover" src={groupLogo} alt="" />
+          ) : (
+            ''
+          )}
           {groupLogoImage && groupLogo?.length ? (
-            <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(groupLogoImage)} alt="" />
+            <Image
+              width={96}
+              height={96}
+              className="w-24 h-24 rounded-full absolute  object-cover"
+              src={URL.createObjectURL(groupLogoImage)}
+              alt=""
+            />
           ) : (
             ''
           )}
@@ -217,7 +233,6 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
                 data.user.map((user: any) => (
                   <div
                     key={user._id}
-                    // onClick={() => handleUserClick(user._id)}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -263,10 +278,7 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
               />
               <div>
                 <p className="text-sm font-semibold">{selectedGroupUser?.firstName}</p>
-                {/* <p className="text-2xs text-neutral-600">{selectedGroupUser?.profile?.university_name || ''}</p>
-              <p className="text-2xs text-neutral-600">
-                {selectedGroupUser?.profile?.study_year ? `${selectedGroupUser.profile.study_year} Year` : ''} {selectedGroupUser?.profile?.degree}
-              </p> */}
+
                 <p className="text-2xs text-neutral-600">
                   {selectedGroupUser?.profile?.role == 'student'
                     ? `${selectedGroupUser.profile.study_year} `

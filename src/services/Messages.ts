@@ -218,14 +218,18 @@ export const useToggleStarred = () => {
     },
   })
 }
-export const useToggleBlockMessages = (userToBlockID: string) => {
+export const useToggleBlockMessages = (userToBlockID: string, isBlockedByYou: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => toggleMessageBlock(cookieValue, data, userToBlockID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
-      showCustomDangerToast('you have blocked the user')
+      if (isBlockedByYou) {
+        showCustomSuccessToast('you have un-blocked the user')
+      } else {
+        showCustomDangerToast('you have blocked the user')
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

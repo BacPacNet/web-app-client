@@ -18,7 +18,7 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
   const { refetch: refetchNotification } = useGetNotification(3, true)
   const param = usePathname()
-  //   const { refetch: refetchMessageNotification } = useGetMessageNotification(3, true)
+
   const { refetch: refetchMessageNotification } = useGetUserUnreadMessagesTotalCount()
   const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData?.id as string)
   const {
@@ -51,8 +51,6 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
     if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {
       switch (type) {
         case notificationRoleAccess.ASSIGN:
-          //  setUserUnVerifiedCommunities(RefetcheduserData?.user?.userUnVerifiedCommunities)
-          //  setUserVerifiedCommunities(RefetcheduserData?.user?.userVerifiedCommunities)
           setIsRefetched('')
           break
         case notificationRoleAccess.FOLLOW:

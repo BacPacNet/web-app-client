@@ -217,7 +217,6 @@ const GroupChatModal = ({
                 data.user.map((user: any) => (
                   <div
                     key={user._id}
-                    // onClick={() => handleUserClick(user._id)}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -445,10 +444,6 @@ const GroupChatModal = ({
           )}
         />
       </div>
-
-      {/* <Buttons onClick={handleClick} className="w-full mt-8">
-        Apply Filters
-      </Buttons> */}
     </div>
   )
 }

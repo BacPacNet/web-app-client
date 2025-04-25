@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { IoIosArrowBack } from 'react-icons/io'
-import { CiStar } from 'react-icons/ci'
+
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 import { useAcceptGroupRequest, useAcceptRequest, useLeaveGroup, useToggleBlockMessages, useToggleStarred } from '@/services/Messages'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-import { MdAddCircle } from 'react-icons/md'
-import { MdBlockFlipped } from 'react-icons/md'
-import { FaRegFlag } from 'react-icons/fa6'
+
+import { HiOutlineLogin } from 'react-icons/hi'
+import { FaCircleUser } from 'react-icons/fa6'
 import { useRouter } from 'next/navigation'
-import useDeviceType from '@/hooks/useDeviceType'
+import { MdOutlineBlock } from 'react-icons/md'
+import { FaEdit } from 'react-icons/fa'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { openModal } from '../Modal/ModalManager'
 import ChatGroupMembers from '../ChatGroupMembers'
@@ -25,9 +26,7 @@ type Props = {
   chatId: string
   profileCover: string | undefined
   description: string
-  studyYear: string
-  universitry: string
-  degree: string
+
   setAcceptedId: (value: string) => void
   setCurrTab: (value: string) => void
   isBlockedByYou: boolean
@@ -59,9 +58,7 @@ const MessageUserStickyBar = ({
   chatId,
   profileCover,
   description,
-  studyYear,
-  degree,
-  universitry,
+
   setAcceptedId,
   setCurrTab,
   isBlockedByYou,
@@ -69,14 +66,14 @@ const MessageUserStickyBar = ({
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
   const [open, setOpen] = useState(false)
-  //   const YourDetails = users?.flat().filter((item) => item.userId._id == yourID)
+
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()
   const { mutate: toggleStarred } = useToggleStarred()
-  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id)
+  const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id, isBlockedByYou)
   const { mutate: leaveGroup } = useLeaveGroup(chatId)
   const router = useRouter()
-  //   const { isMobile } = useDeviceType()
+
   const handleMoveToInbox = () => {
     if (isGroupChat) {
       acceptGroupRequest({ chatId })
@@ -133,13 +130,6 @@ const MessageUserStickyBar = ({
             <p className="text-2xs font-normal text-neutral-500">{description}</p>
           ) : (
             <>
-              {/* <p className="text-3xs font-normal text-neutral-500 line-clamp-1">
-                {universitry} */}
-              {/*{isMobile ? truncateStringTo(universitry + universitry, 30) : universitry}*/}
-              {/* </p> */}
-              {/*<p className="text-2xs font-normal text-neutral-500">
-                {studyYear} Yr. {degree}
-              </p>*/}
               <p className="text-2xs font-normal text-neutral-500">
                 {userName[0].userId.role == userTypeEnum.Student ? userName[0].userId.studyYear : userName[0].userId.occupation}
               </p>
@@ -159,18 +149,14 @@ const MessageUserStickyBar = ({
             Move to inbox
           </button>
         )}
-        {/*{YourDetails[0]?.isStarred ? (
-          <FaStar onClick={() => handleStarred()} className={`w-6 h-6 text-yellow-300`} />
-        ) : (
-          <CiStar onClick={() => handleStarred()} className={`w-6 h-6`} />
-        )}*/}
+
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger onClick={() => setOpen(!open)}>
             <BiDotsHorizontalRounded className="w-8 h-8" />
           </PopoverTrigger>
-          <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-4 w-44 h-32 bg-white shadow-card border-none">
+          <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-4 w-44 min-h-10 h-max bg-white shadow-card border-none">
             {isGroupChat ? (
-              <div className="text-2xs  text-neutral-700 font-medium flex flex-col justify-evenly items-center h-full w-full ps-10">
+              <div className="text-2xs h-32  text-neutral-700 font-medium flex flex-col justify-evenly items-center  w-full ps-10">
                 <div
                   onClick={() => {
                     setOpen(false)
@@ -178,8 +164,8 @@ const MessageUserStickyBar = ({
                   }}
                   className="flex gap-1 items-center   w-40 cursor-pointer"
                 >
-                  <MdAddCircle />
-                  <p>Edit Chat </p>
+                  <FaEdit size={16} className="text-primary-500" />
+                  <p>Edit Group Chat</p>
                 </div>
                 <div
                   onClick={() => {
@@ -188,31 +174,20 @@ const MessageUserStickyBar = ({
                   }}
                   className="flex gap-1 items-center   w-40 cursor-pointer"
                 >
-                  <MdAddCircle />
-                  <p>Members </p>
+                  <FaCircleUser size={16} className="text-primary-500" />
+                  <p>Show Members</p>
                 </div>
-                {/* <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-1 items-center   w-40 cursor-pointer">
-                  <MdBlockFlipped />
-                  <p>Block Messages </p>
-                </div> */}
+
                 <div onClick={() => leaveGroup()} className="flex gap-1 items-center   w-40 cursor-pointer">
-                  <MdAddCircle />
-                  <p>Leave Chat </p>
-                </div>
-                <div className="flex gap-1 items-center  w-40 cursor-pointer">
-                  <FaRegFlag />
-                  <p>Report User Profile</p>
+                  <HiOutlineLogin size={16} className="text-destructive-600" />
+                  <p>Leave </p>
                 </div>
               </div>
             ) : (
-              <div className="text-2xs  text-neutral-700 font-medium flex flex-col justify-evenly items-center h-full w-full ps-10">
+              <div className="text-2xs h-12  text-neutral-700 font-medium flex flex-col justify-evenly items-center  w-full ps-10">
                 <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-1 items-center   w-40 cursor-pointer">
-                  <MdBlockFlipped />
+                  <MdOutlineBlock size={16} className="text-destructive-600" />
                   {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
-                </div>
-                <div className="flex gap-1 items-center  w-40 cursor-pointer">
-                  <FaRegFlag />
-                  <p>Report User Profile</p>
                 </div>
               </div>
             )}

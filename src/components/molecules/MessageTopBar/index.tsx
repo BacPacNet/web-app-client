@@ -90,11 +90,6 @@ const MessageTopBar = ({
                       {unreadChatsCount}
                     </p>
                   )}
-                  {/* {unreadChatsCount > 0 && (
-                    <p className="bg-destructive-600 w-4 h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold ">
-                      {unreadChatsCount}
-                    </p>
-                  )} */}
                 </p>
                 <p
                   onClick={() => {
