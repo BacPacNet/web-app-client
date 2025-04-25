@@ -118,12 +118,6 @@ const MultiSelectDropdown = ({
         {isStatus && <StatusTooltip />}
       </div>
 
-      {/* <div
-        onClick={toggleDropdown}
-        className={`${err ? 'border-red-400' : 'border-neutral-200'} border h-10 flex justify-between items-center px-2 py-2 ${
-          variantBg[variant]
-        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-400 outline-none`}
-      > */}
       <div
         onClick={toggleDropdown}
         className={`${err ? 'border-red-400' : 'border-neutral-200'} border h-10 flex justify-between items-center px-2 py-2 ${
@@ -131,22 +125,6 @@ const MultiSelectDropdown = ({
         } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-400 outline-none ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
       >
         <div className="flex flex-wrap gap-1 text-xs px-1">
-          {/* {value.length > 0 ? (
-            value.map((selected, index) => (
-              <div key={index} className="flex items-center bg-gray-200 px-2 py-1 rounded-md">
-                <span className="text-neutral-900 mr-1">{selected}</span>
-                <RxCross2
-                  className="cursor-pointer text-neutral-600"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onChange(value.filter((item) => item !== selected))
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p className="text-neutral-400">{placeholder}</p>
-          )} */}
           <p className="text-neutral-400">{placeholder}</p>
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />

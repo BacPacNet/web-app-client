@@ -14,6 +14,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Image from 'next/image'
 import { validateImageFiles } from '@/lib/utils'
+import { MdCancel } from 'react-icons/md'
 
 type Props = {
   userProfileId: string
@@ -371,13 +372,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
               <div key={index} className="relative">
                 <Image width={64} height={64} src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-16 h-16 object-cover rounded" />
                 {/* Remove image button */}
-                <button
-                  type="button"
-                  className="absolute top-0 right-0 bg-red-500 opacity-75 px-1 rounded-sm text-white text-2xs"
-                  onClick={() => handleImageRemove(index)}
-                >
-                  X
-                </button>
+                <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
+                  <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
+                </div>
               </div>
             ))}
           </div>

@@ -178,10 +178,9 @@ export default function ConnectionUserSelectModal({
       return setUniversityError(true)
     }
     setIsFiltered(true)
-    // if (selectedRadio == 'Faculty' && (occupation.length > 0 || affiliation.length > 0)) {
+
     if (selectedRadio == 'Faculty') {
       setFilteredUsers(filteredFacultyUsers)
-      // } else if (selectedRadio == 'Student' && (studentYear.length > 0 || major.length > 0)) {
     } else if (selectedRadio == 'Student') {
       setFilteredUsers(filteredUsers)
     } else {

@@ -40,10 +40,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
 
   const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
-  //   const { data: notificationData } = useGetNotification(3, true)
-  //   const { data: messageNotificationData } = useGetMessageNotification(3, true)
-  //  const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
-  //  const messageNotifications = messageNotificationData?.pages.flatMap((page) => page.message) || []
+
   const { reinitResetPasswordTimeout } = useUniStore((state) => state)
 
   const isUserLoggedIn = useCallback(() => {

@@ -123,11 +123,8 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
         <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
-        {/* {media.length
-          ? media.map((item) => <Image key={item.publicId} src={item?.imageUrl} alt="media" width={140} height={140} className="w-40 " />)
-          : ''} */}
+
         <div className={`w-full`}>
-          {/* <PostCardImageGrid images={media} setImageCarasol={setImageCarasol} idx={idx} /> */}
           <UserMessageImageGrid images={media} />
         </div>
       </div>
