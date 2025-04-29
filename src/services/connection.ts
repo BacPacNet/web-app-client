@@ -6,6 +6,7 @@ import useDebounce from '@/hooks/useDebounce'
 import { useUniStore } from '@/store/store'
 import { FindUsers, FollowingItemProps } from '@/types/constants'
 import { ProfileConnection } from '@/types/Connections'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 interface userItemsProps {
   user: FindUsers[]
@@ -66,7 +67,6 @@ export const useToggleFollow = (type: string) => {
 
     onSuccess: (response: any) => {
       setUserfollowing(response.following)
-
       if (type == 'FIND_PEOPLE') {
         queryClient.invalidateQueries({ queryKey: ['usersProfileForConnections'] })
       }
@@ -77,7 +77,8 @@ export const useToggleFollow = (type: string) => {
       }
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      console.error(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }

@@ -96,6 +96,8 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         affiliation={post?.userProfile?.affiliation}
         occupation={post?.userProfile?.occupation}
         role={post?.userProfile?.role}
+        communityName={post.communityName}
+        communityGroupName={post.communityGroupName}
       />
     ))
   }

@@ -37,13 +37,13 @@ export const formatRelativeTime = (date: Date | string): string => {
   const givenDate = typeof date === 'string' ? new Date(date) : date
 
   const minutesDiff = differenceInMinutes(new Date(), givenDate)
-  if (minutesDiff < 60) return `${minutesDiff}m ago`
+  if (minutesDiff < 60) return `${minutesDiff}m`
 
   const hoursDiff = differenceInHours(new Date(), givenDate)
-  if (hoursDiff < 24) return `${hoursDiff}h ago`
+  if (hoursDiff < 24) return `${hoursDiff}h`
 
   const daysDiff = differenceInDays(new Date(), givenDate)
-  return `${daysDiff}d ago`
+  return `${daysDiff}d`
 }
 
 export const truncateStringTo = (str: string, num: number): string => {

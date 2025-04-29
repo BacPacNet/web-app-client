@@ -16,10 +16,11 @@ import { userTypeEnum } from '@/types/RegisterForm'
 import { openModal } from '../Modal/ModalManager'
 import ChatGroupMembers from '../ChatGroupMembers'
 import EditGroupChatModal from '../EditChatGroup'
+import { ChatUser } from '@/types/constants'
 type Props = {
   setSelectedChat: (value: any) => void
   yourID: string
-  users: User[]
+  users: ChatUser[]
   name: string
   isRequestNotAccepted: boolean
   isGroupChat: boolean
@@ -57,8 +58,7 @@ const MessageUserStickyBar = ({
   isGroupChat,
   chatId,
   profileCover,
-  description,
-
+  //  description,
   setAcceptedId,
   setCurrTab,
   isBlockedByYou,
@@ -73,6 +73,8 @@ const MessageUserStickyBar = ({
   const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id, isBlockedByYou)
   const { mutate: leaveGroup } = useLeaveGroup(chatId)
   const router = useRouter()
+
+  const isGroupAdmin = yourID === groupAdminId
 
   const handleMoveToInbox = () => {
     if (isGroupChat) {
@@ -94,11 +96,7 @@ const MessageUserStickyBar = ({
   }
 
   const handleShowModal = () => {
-    openModal(
-      <ChatGroupMembers users={users} chatId={chatId} adminId={groupAdminId} />,
-      'relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible  custom-scrollbar',
-      false
-    )
+    openModal(<ChatGroupMembers users={users} chatId={chatId} adminId={groupAdminId} />)
   }
 
   const handleEditGroupModal = () => {
@@ -109,7 +107,7 @@ const MessageUserStickyBar = ({
     )
   }
   return (
-    <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4 px-4">
+    <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
       <div className="flex items-center gap-4">
         <p onClick={() => handleBack()}>
           <IoIosArrowBack className="w-6 h-6 text-[#6744FF] cursor-pointer" />
@@ -126,18 +124,6 @@ const MessageUserStickyBar = ({
         </div>
         <div>
           <h3 className="text-xs font-semibold text-neutral-700">{name}</h3>
-          {isGroupChat ? (
-            <p className="text-2xs font-normal text-neutral-500">{description}</p>
-          ) : (
-            <>
-              <p className="text-2xs font-normal text-neutral-500">
-                {userName[0].userId.role == userTypeEnum.Student ? userName[0].userId.studyYear : userName[0].userId.occupation}
-              </p>
-              <p className="text-2xs font-normal text-neutral-500">
-                {userName[0].userId.role == userTypeEnum.Student ? userName[0].userId.major : userName[0].userId.affiliation}
-              </p>
-            </>
-          )}
         </div>
       </div>
       <div className="flex gap-4 items-center ">
@@ -154,39 +140,42 @@ const MessageUserStickyBar = ({
           <PopoverTrigger onClick={() => setOpen(!open)}>
             <BiDotsHorizontalRounded className="w-8 h-8" />
           </PopoverTrigger>
-          <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-4 w-44 min-h-10 h-max bg-white shadow-card border-none">
+          <PopoverContent className="relative px-0 py-2 drop-shadow-lg right-16 top-4 w-fit bg-white shadow-card border-none">
             {isGroupChat ? (
-              <div className="text-2xs h-32  text-neutral-700 font-medium flex flex-col justify-evenly items-center  w-full ps-10">
-                <div
-                  onClick={() => {
-                    setOpen(false)
-                    handleEditGroupModal()
-                  }}
-                  className="flex gap-1 items-center   w-40 cursor-pointer"
-                >
-                  <FaEdit size={16} className="text-primary-500" />
-                  <p>Edit Group Chat</p>
-                </div>
+              <div className="text-sm text-neutral-700 font-medium ">
+                {isGroupAdmin && (
+                  <div
+                    onClick={() => {
+                      setOpen(false)
+                      handleEditGroupModal()
+                    }}
+                    className="flex px-4 gap-2 py-2 items-center cursor-pointer hover:bg-neutral-200"
+                  >
+                    <FaEdit size={20} className="text-primary-500" />
+                    <p>Edit Group Chat</p>
+                  </div>
+                )}
+
                 <div
                   onClick={() => {
                     setOpen(false)
                     handleShowModal()
                   }}
-                  className="flex gap-1 items-center   w-40 cursor-pointer"
+                  className="flex gap-2 px-4 py-2 items-center  cursor-pointer hover:bg-neutral-200"
                 >
-                  <FaCircleUser size={16} className="text-primary-500" />
+                  <FaCircleUser size={20} className="text-primary-500" />
                   <p>Show Members</p>
                 </div>
 
-                <div onClick={() => leaveGroup()} className="flex gap-1 items-center   w-40 cursor-pointer">
-                  <HiOutlineLogin size={16} className="text-destructive-600" />
+                <div onClick={() => leaveGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                  <HiOutlineLogin size={20} className="text-destructive-600" />
                   <p>Leave </p>
                 </div>
               </div>
             ) : (
-              <div className="text-2xs h-12  text-neutral-700 font-medium flex flex-col justify-evenly items-center  w-full ps-10">
-                <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-1 items-center   w-40 cursor-pointer">
-                  <MdOutlineBlock size={16} className="text-destructive-600" />
+              <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">
+                <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-2 items-center cursor-pointer">
+                  <MdOutlineBlock size={20} className="text-destructive-600" />
                   {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
                 </div>
               </div>

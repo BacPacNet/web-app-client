@@ -1,0 +1,59 @@
+import Title from '@/components/atoms/Title'
+import UserListItem from '@/components/Timeline/UserListItem'
+import { useRemoveUserFromCommunityGroup } from '@/services/community-group'
+import { useUniStore } from '@/store/store'
+import { CommunityGroupUsers } from '@/types/CommuityGroup'
+import React, { useState } from 'react'
+
+interface Props {
+  users: CommunityGroupUsers[]
+  isGroupAdmin: boolean
+  communityGroupId: string
+}
+
+export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: Props) => {
+  const { userProfileData } = useUniStore()
+  const [members, setMembers] = useState<CommunityGroupUsers[]>(users)
+  const { mutate: mutateRemoveUserFromCommunityGroup, isPending: isPending } = useRemoveUserFromCommunityGroup()
+
+  const handleRemoveUser = (id: string) => {
+    mutateRemoveUserFromCommunityGroup(
+      { communityGroupId, userId: id },
+      {
+        onSuccess: (response: any) => {
+          setMembers(response.data.users)
+        },
+      }
+    )
+  }
+  return (
+    <div>
+      <Title>Members</Title>
+      {members.map((user) => {
+        return (
+          <UserListItem
+            key={user.userId as string}
+            firstName={user.firstName}
+            lastName={user.lastName}
+            id={user.userId as string}
+            university={''}
+            study_year={user.year}
+            degree={''}
+            major={user.major}
+            occupation={user.occupation}
+            imageUrl={user.profileImageUrl}
+            type={''}
+            isSelfProfile={userProfileData?.users_id === user.userId}
+            isFollowing={userProfileData?.following?.some((userItem) => userItem.userId === user.userId) as boolean}
+            role={user.role || 'student'}
+            affiliation={user.affiliation}
+            showCommunityGroupMember={true}
+            isGroupAdmin={isGroupAdmin}
+            handleRemoveClick={(id) => handleRemoveUser(id)}
+            isRemovePending={isPending}
+          />
+        )
+      })}
+    </div>
+  )
+}

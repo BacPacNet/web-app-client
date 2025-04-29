@@ -179,7 +179,7 @@ export enum SocketConnectionEnums {
 }
 
 //chats types
-type ChatUser = {
+export type ChatUser = {
   userId: {
     _id: string
     firstName: string
@@ -188,7 +188,6 @@ type ChatUser = {
     profileDp: string
     studyYear: string
     universityName: string
-
     role: userTypeEnum
     occupation: string
     affiliation: string

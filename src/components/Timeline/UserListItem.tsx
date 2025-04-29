@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { Spinner } from '../spinner/Spinner'
 import Image from 'next/image'
 import { userTypeEnum } from '@/types/RegisterForm'
+import { closeModal } from '../molecules/Modal/ModalManager'
+import Buttons from '../atoms/Buttons'
 
 interface FollowingItemProps {
   firstName: string
@@ -22,6 +24,11 @@ interface FollowingItemProps {
   isFollowing: boolean
   role: string
   affiliation: string
+  isSelfProfile?: boolean
+  showCommunityGroupMember?: boolean
+  isGroupAdmin?: boolean
+  handleRemoveClick?: (id: string) => void
+  isRemovePending?: boolean
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -31,13 +38,17 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   lastName,
   university,
   study_year,
-  degree,
   major,
   occupation,
   role,
   affiliation,
   imageUrl,
   isFollowing,
+  isSelfProfile,
+  showCommunityGroupMember,
+  isGroupAdmin,
+  handleRemoveClick,
+  isRemovePending,
 }) => {
   const { mutate: toggleFollow, isPending } = useToggleFollow(type)
   const router = useRouter()
@@ -47,6 +58,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   }
 
   const handleProfileClicked = (id: string) => {
+    closeModal()
     router.push(`/profile/${id}`)
   }
 
@@ -66,20 +78,29 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>
       </div>
-
-      <div className="p-2 bg-primary-50 rounded-md">
+      {!isSelfProfile && isGroupAdmin && showCommunityGroupMember ? (
+        <Buttons disabled={isRemovePending} onClick={() => handleRemoveClick && handleRemoveClick(id)} variant="danger_secondary" size="extra_small">
+          Remove
+        </Buttons>
+      ) : (
         <>
-          {!isFollowing ? (
-            <Button onClick={handleFollowClick} variant="primary" size="extra_small">
-              {isPending ? <Spinner /> : 'Follow'}
-            </Button>
-          ) : (
-            <Button onClick={() => handleProfileClicked(id)} className="whitespace-nowrap" variant="shade" size="extra_small">
-              View Profile
-            </Button>
+          {!isSelfProfile && (
+            <div className="p-2 bg-primary-50 rounded-md">
+              <>
+                {!isFollowing ? (
+                  <Button onClick={handleFollowClick} variant="primary" size="extra_small">
+                    {isPending ? <Spinner /> : 'Follow'}
+                  </Button>
+                ) : (
+                  <Button onClick={() => handleProfileClicked(id)} className="whitespace-nowrap" variant="shade" size="extra_small">
+                    View Profile
+                  </Button>
+                )}
+              </>
+            </div>
           )}
         </>
-      </div>
+      )}
     </div>
   )
 }

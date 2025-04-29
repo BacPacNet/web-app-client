@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
+import { userTypeEnum } from '../RegisterForm'
 
-interface users {
+export interface CommunityGroupUsers {
   userId: mongoose.Types.ObjectId | string
   isRequestAccepted: boolean
   firstName: string
@@ -9,6 +10,10 @@ interface users {
   degree: string
   major: string
   status: status
+  occupation: string
+  affiliation: string
+  role: userTypeEnum
+  profileImageUrl: string
 }
 export enum CommunityGroupTypeEnum {
   CASUAL = 'casual',
@@ -35,7 +40,7 @@ export interface CreateCommunityGroupType {
     imageUrl: string
     publicId: string
   } | null
-  selectedUsers: users[]
+  selectedUsers: CommunityGroupUsers[]
   studentYear: []
   //   studentYear:""
   major: []
@@ -64,6 +69,8 @@ export interface CommunityGroupType {
   }
   title: string
   description: string
+  communityName?: string
+  communityGroupName?: string
   memberCount: number
   communityGroupType: string
   communityGroupAccess: string
@@ -78,7 +85,7 @@ export interface CommunityGroupType {
     imageUrl: string
     publicId: string
   }
-  users: users[]
+  users: CommunityGroupUsers[]
 }
 export interface AdminUserId {
   _id: string

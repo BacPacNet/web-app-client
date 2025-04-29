@@ -1,12 +1,12 @@
 export const menuContent = [
   {
-    name: 'Discover',
-    path: '/discover',
+    name: 'Community',
+    path: '/community',
     display: 'lap',
   },
   {
-    name: 'Community',
-    path: '/community',
+    name: 'Discover',
+    path: '/discover',
     display: 'lap',
   },
   {

@@ -22,6 +22,7 @@ import CoverImageUploader from '@/components/atoms/CoverImage'
 import CommunitySettingMenu from '@/components/atoms/CommunitySettingMenu'
 import { useRouter } from 'next/navigation'
 import JoinGroupButton from '@/components/atoms/JoinGroupButton'
+import { CommunityGroupModal } from '../Modal/CommunityGroupModal'
 interface Props {
   communityID: string
   communityGroupID: string
@@ -47,6 +48,10 @@ export default function CommunityGroupBanner({
   const { mutate: deleteCommunityGroup } = useDeleteCommunityGroup()
   const router = useRouter()
 
+  const handleShowMembers = () => {
+    openModal(<CommunityGroupModal communityGroupId={communityGroupID} isGroupAdmin={isGroupAdmin} users={communityGroups?.users || []} />)
+  }
+
   useEffect(() => {
     if (communityGroupID) {
       refetch()
@@ -66,7 +71,6 @@ export default function CommunityGroupBanner({
     if (communityGroups && userData) {
       setIsGroupAdmin(communityGroups.adminUserId.toString() === userData.id?.toString())
 
-      console.log(communityGroups.adminUserId.toString(), userData.id?.toString())
       setIsUserJoinedCommunityGroup(communityGroups.users.some((item) => item.userId.toString() === userData.id && item.isRequestAccepted))
     }
   }, [communityGroups, userData, setIsGroupAdmin])
@@ -148,7 +152,7 @@ export default function CommunityGroupBanner({
           <div>
             <p className="text-xs text-neutral-500 py-4">{communityGroups?.description}</p>
             <div className="flex items-center gap-2">
-              <Buttons className="text-neutral-500" size="extra_small_paddind_2" variant="border">
+              <Buttons onClick={handleShowMembers} className="text-neutral-500" size="extra_small_paddind_2" variant="border">
                 {totalCommunityGroupMember} Members
               </Buttons>
               <CustomTooltip

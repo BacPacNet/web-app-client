@@ -30,7 +30,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
   return (
     <>
       <div className=" hover:bg-secondary">
-        <div className="flex justify-between p-4 overflow-hidden">
+        <div className="flex justify-between py-4 px-2 overflow-hidden">
           <div className="flex gap-4 items-center relative w-full">
             <div className="w-12 h-12 flex-none flex flex-col gap-2 cursor-pointer">
               {isGroupChat && !profilePic ? (
@@ -47,23 +47,24 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
             </div>
 
             <div className="w-[90%]">
-              <div className="flex justify-between">
-                <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
-                  {isGroupChat ? groupName : userName[0]?.userId?.firstName + ' ' + userName[0]?.userId?.lastName}
-                </p>
-                <div className="text-right min-w-fit relative">
-                  <p className="text-neutral-400 font-normal text-[12px] ">{date?.length ? formatRelativeTime(new Date(date)) : ''}</p>
-                  {unRead && unRead > 0 ? (
-                    <p className="bg-destructive-600  w-4 h-4  rounded-full absolute top-6 right-1/2  border-2 border-white text-white flex justify-center items-center text-[8px] font-semibold">
-                      {unRead > 9 ? '9+' : unRead}
-                    </p>
-                  ) : (
-                    ''
-                  )}
+              <div className="flex justify-between w-full">
+                <div className="flex gap-2 items-center w-full">
+                  <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
+                    {isGroupChat ? groupName : userName[0]?.userId?.firstName + ' ' + userName[0]?.userId?.lastName}
+                  </p>
+                  <div className="text-right min-w-fit relative">
+                    <p className="text-neutral-400 font-normal text-[12px] ">{date?.length ? formatRelativeTime(new Date(date)) : ''}</p>
+                  </div>
                 </div>
+                {unRead && unRead > 0 ? (
+                  <p className="bg-destructive-600 text-3xs w-5 h-5  rounded-full border-2 border-white text-white flex justify-center items-center font-semibold">
+                    {unRead > 9 ? '9+' : unRead}
+                  </p>
+                ) : null}
               </div>
+
               <p
-                className={`text-neutral-500  text-[12px] line-clamp-2 whitespace-pre-wrap break-words overflow-hidden text-ellipsis w-[90%] ${
+                className={`text-neutral-500  text-[12px] line-clamp-1 whitespace-pre-wrap break-words overflow-hidden text-ellipsis w-[90%] ${
                   unRead > 0 ? 'font-semibold' : 'font-medium'
                 }`}
               >

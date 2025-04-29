@@ -77,4 +77,6 @@ export interface communityPostType {
   commentCount: number
   communityId?: string
   isPostVerified: boolean
+  communityName?: string
+  communityGroupName?: string
 }

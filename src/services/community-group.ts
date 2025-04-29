@@ -55,6 +55,20 @@ async function leaveCommunityGroupAPI(communityGroupId: string, token: string) {
   })
 }
 
+/**
+ * API call to remove user from community group
+ * @param communityGroupId - ID of the community group
+ * @param userId - ID of the user
+ * @param token - Authentication token
+ * @returns API response
+ */
+async function removeUserFromCommunityGroupAPI(communityGroupId: string, userId: string, token: string) {
+  return await client(`/communitygroup/${communityGroupId}/user/${userId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 async function deleteCommunityGroupAPI(communityGroupId: string, token: string) {
   return await client(`/communitygroup/${communityGroupId}`, {
     method: 'DELETE',
@@ -81,6 +95,31 @@ export const useLeaveCommunityGroup = () => {
     },
 
     onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || 'Something went wrong'
+      console.error('Error leaving community group:', errorMessage)
+    },
+  })
+}
+
+/**
+ * Custom hook to handle remove user from community group
+ * @returns Mutation object from react-query
+ */
+export const useRemoveUserFromCommunityGroup = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ communityGroupId, userId }: { communityGroupId: string; userId: string }) =>
+      removeUserFromCommunityGroupAPI(communityGroupId, userId, cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
+      showCustomSuccessToast('User removed successfully')
+    },
+
+    onError: (error: any) => {
+      showCustomSuccessToast(error?.response?.data?.message)
       const errorMessage = error?.response?.data?.message || 'Something went wrong'
       console.error('Error leaving community group:', errorMessage)
     },

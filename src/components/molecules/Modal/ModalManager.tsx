@@ -36,7 +36,7 @@ export const ModalManager = () => {
   }
 
   return isShown ? (
-    <ModalWrapper setModal={hideModal} isShown={isShown} style={style} showCloseIcon={showCloseIcon}>
+    <ModalWrapper setModal={closeModal} isShown={isShown} style={style} showCloseIcon={showCloseIcon}>
       {modalContent}
     </ModalWrapper>
   ) : null

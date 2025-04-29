@@ -14,7 +14,7 @@ import { PostType } from '@/types/constants'
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
 import { Spinner } from '@/components/spinner/Spinner'
 import UserCard from '@/components/atoms/UserCard'
 import { truncateStringTo } from '@/lib/utils'
@@ -68,6 +68,8 @@ interface Like {
 interface PostProps {
   user: string
   university: string
+  communityName?: string
+  communityGroupName?: string
   major: string
   adminId: string
   year: string
@@ -126,6 +128,8 @@ const PostCard = ({
   occupation,
   affiliation,
   isPostVerified,
+  communityName,
+  communityGroupName,
 }: PostProps) => {
   const { userData } = useUniStore()
   const router = useRouter()
@@ -184,13 +188,16 @@ const PostCard = ({
         {/* //post Image  */}
         <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 
-        <div className="font-medium text-neutral-700 break-words whitespace-normal" dangerouslySetInnerHTML={{ __html: text }} />
+        <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
 
-        <p className=" text-2xs flex items-center mb-4">
-          <span className="text-neutral-500 font-normal break-words">
-            {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · Posted from {university}
-          </span>
-        </p>
+        {type === PostType.Community ? (
+          <p className=" text-2xs flex items-center mb-2">
+            <span className="text-neutral-500 font-normal break-words">
+              {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} ·{' '}
+              {communityGroupId ? `Posted in ${communityGroupName} group at ${communityName}` : `Posted from ${communityName || ''}`}
+            </span>
+          </p>
+        ) : null}
       </div>
 
       {/* Post Meta */}
