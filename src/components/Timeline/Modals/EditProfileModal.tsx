@@ -556,7 +556,7 @@ const EditProfileModal = () => {
           {/* <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)}> */}
           {isProfileLoading ? <Spinner /> : 'Update Profile'}
         </Button>
-        <Button variant="shade" onClick={() => reset()}>
+        <Button type="button" variant="shade" onClick={() => reset()}>
           Redo Changes
         </Button>
       </form>

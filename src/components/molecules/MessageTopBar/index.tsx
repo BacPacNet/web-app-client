@@ -29,11 +29,7 @@ const MessageTopBar = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowModal = () => {
-    openModal(
-      <CreateChatModal setSelectedChat={setSelectedChat} />,
-      'relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible  custom-scrollbar',
-      false
-    )
+    openModal(<CreateChatModal setSelectedChat={setSelectedChat} />, ' bg-white rounded-xl  custom-scrollbar', false)
   }
 
   useEffect(() => {
@@ -50,7 +46,7 @@ const MessageTopBar = ({
     <>
       <div className="flex justify-between items-center mb-4">
         <h6 className="font-poppins font-bold text-[20px]  ">Messages</h6>
-        <Buttons className="hidden md:block" size="small" onClick={() => handleShowModal()}>
+        <Buttons className="block" size="extra_small_paddind_2" onClick={() => handleShowModal()}>
           Start a Chat
         </Buttons>
       </div>
@@ -61,7 +57,7 @@ const MessageTopBar = ({
             onClick={() => setShowDropdown(!showDropdown)}
             className={` flex justify-between items-center border 
                    border-neutral-200
-                        rounded-lg p-3  text-xs text-neutral-400 h-10 bg-white shadow-sm w-[106px]`}
+                        rounded-lg py-3 px-4  text-xs font-semibold text-neutral-700 h-10 bg-white shadow-sm w-[106px]`}
           >
             {currTab}
 
@@ -121,10 +117,10 @@ const MessageTopBar = ({
             type="text"
             value={searchByNameText}
             onChange={(e) => setSearchByNameText(e.target.value)}
-            className="text-xs w-full outline-none text-neutral-400"
+            className="text-xs w-full outline-none text-neutral-700"
             placeholder="Search Messages"
           />
-          <GoSearch className="text-neutral-500" size={20} />
+          <GoSearch className="text-neutral-700" size={20} />
         </div>
       </div>
     </>

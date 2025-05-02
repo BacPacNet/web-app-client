@@ -20,7 +20,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
-import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 
 interface Props {
@@ -75,6 +74,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
   }
   const handleCommunityGroupFilter = () => {
+    toggleLeftNavbar()
     openModal(
       <CommunityGroupFilterComponent
         communityId={community?._id || ''}
@@ -102,16 +102,16 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
   }, [subscribedCommunities, communityId, debouncedSearchQuery])
 
-  const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
-      ?.communityGroups
-    return selectedCommunityGroup
-      ?.filter(
-        (userCommunityGroup) =>
-          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
-      )
-      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
+  //  const joinedSubscribedCommunitiesGroup = useMemo(() => {
+  //    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
+  //      ?.communityGroups
+  //    return selectedCommunityGroup
+  //      ?.filter(
+  //        (userCommunityGroup) =>
+  //          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
+  //      )
+  //      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  //  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
 
   const subscribedCommunitiesMyGroup = useMemo(() => {
     const groups = subscribedCommunities

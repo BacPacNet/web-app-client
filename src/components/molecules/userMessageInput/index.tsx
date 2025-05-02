@@ -353,7 +353,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
   }, [])
 
   return (
-    <div className="rounded-2xl bg-white w-full px-4 pt-2">
+    <div className="rounded-2xl bg-white w-full pt-2">
       {isBlocked ? (
         <div className="flex items-center justify-center font-poppins text-lg font-semibold">This chat is Blocked</div>
       ) : (

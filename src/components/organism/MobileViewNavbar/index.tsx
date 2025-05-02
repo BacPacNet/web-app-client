@@ -2,17 +2,14 @@ import { useUniStore } from '@/store/store'
 import Image from 'next/image'
 import { FaAngleDown, FaRegUser } from 'react-icons/fa'
 import avatar from '@assets/avatar.svg'
-import { RxCross2 } from 'react-icons/rx'
-import Tooltip from '@/components/atoms/Tooltip'
-import SubText from '@/components/atoms/SubText'
-import { truncateString } from '@/lib/utils'
-import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
-import { PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
+import { MdOutlineSettings } from 'react-icons/md'
+import { PiChatTextBold } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import { usePathname, useRouter } from 'next/navigation'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfilePicture from '@/components/atoms/RenderProfileDP'
 import Link from 'next/link'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface Props {
   closeLeftNavbar: () => void
@@ -52,7 +49,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
           width={40}
           height={40}
           objectFit="cover"
-          className="w-[24px] h-[24px] sm:w-[40px] sm:h-[40px] rounded-full object-cover"
+          className="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] rounded-full object-cover"
           src={userProfileData?.profile_dp?.imageUrl || avatar}
           alt="profile.png"
         />
@@ -78,10 +75,12 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
                 {userData?.firstName} {userData?.lastName}
               </p>
 
-              <Tooltip text={userProfileData?.university_name || ''}>
-                <p className="text-3xs font-normal text-neutral-500 font-inter line-clamp-1">{userProfileData?.university_name}</p>
-              </Tooltip>
-              <p className="text-3xs font-normal text-neutral-500 font-inter line-clamp-1">{userProfileData?.major}</p>
+              <p className="text-2xs text-neutral-600">
+                {userProfileData?.role === userTypeEnum.Student ? userProfileData.study_year : userProfileData?.occupation}
+              </p>
+              <p className="text-2xs text-neutral-600">
+                {userProfileData?.role === userTypeEnum.Student ? userProfileData?.major : userProfileData?.affiliation}
+              </p>
             </div>
           </div>
 

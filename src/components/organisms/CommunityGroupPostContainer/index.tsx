@@ -105,6 +105,8 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           occupation={post?.userProfile?.occupation}
           role={post?.userProfile?.role}
           isPostVerified={post?.isPostVerified}
+          communityName={post.communityName}
+          communityGroupName={post.communityGroupName}
         />
       ))}
     </div>

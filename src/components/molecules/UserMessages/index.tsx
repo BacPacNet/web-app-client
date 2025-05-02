@@ -122,7 +122,7 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
           <p className="text-sm font-semibold text-neutral-700">{name}</p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
-        <p className="text-2xs lg:text-xs text-neutral-900 font-poppins whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
+        <p className="text-2xs lg:text-xs text-neutral-900 font-inter whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
 
         <div className={`w-full`}>
           <UserMessageImageGrid images={media} />
@@ -212,7 +212,7 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
 
   return (
     <div>
-      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar px-4 p-4  gap-6 ">
+      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar py-4  gap-6 ">
         {chatMessages?.map((item: Message, idx: number) => {
           const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
           const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')

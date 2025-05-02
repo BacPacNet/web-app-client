@@ -37,13 +37,13 @@ export const formatRelativeTime = (date: Date | string): string => {
   const givenDate = typeof date === 'string' ? new Date(date) : date
 
   const minutesDiff = differenceInMinutes(new Date(), givenDate)
-  if (minutesDiff < 60) return `${minutesDiff}m ago`
+  if (minutesDiff < 60) return `${minutesDiff}m`
 
   const hoursDiff = differenceInHours(new Date(), givenDate)
-  if (hoursDiff < 24) return `${hoursDiff}h ago`
+  if (hoursDiff < 24) return `${hoursDiff}h`
 
   const daysDiff = differenceInDays(new Date(), givenDate)
-  return `${daysDiff}d ago`
+  return `${daysDiff}d`
 }
 
 export const truncateStringTo = (str: string, num: number): string => {
@@ -71,6 +71,11 @@ export const convertToDateObj = (dateStr: string) => {
   const parsed = parse(dateStr, format, new Date())
 
   return isValid(parsed) ? parsed : null
+}
+
+export function convertToISOFormat(dateStr: string) {
+  const [dd, mm, yyyy] = dateStr.split('/')
+  return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
 }
 
 export const IsUniversityVerified = (): boolean => {

@@ -10,12 +10,13 @@ interface InputBoxProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string
   disabled?: boolean
   isCancel?: boolean
-  onCancel?: () => void
+  onCancel?: (e: React.MouseEvent) => void
   label?: string
+  onFocus?: () => void
 }
 
 const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
-  ({ placeholder, className, type, err, value, disabled, isCancel, onCancel, label, ...rest }, ref) => {
+  ({ placeholder, className, type, err, value, disabled, isCancel, onCancel, label, onFocus, ...rest }, ref) => {
     const [showPassword, setShowPassword] = useState(false)
     const isPassword = type === 'password'
 
@@ -32,6 +33,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
             ref={ref}
             value={value}
             disabled={disabled}
+            onFocus={onFocus}
             {...rest}
           />
           {isPassword && (

@@ -1,6 +1,5 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
-import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import RadioOption from '@/components/atoms/RadioSelect'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -19,13 +18,14 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const [universityError, setUniversityError] = useState(false)
   const [selectedUser, setSelectedUser] = useState<any>()
   const [selectedGroupUser, setSelectedGroupUser] = useState<any>()
+  const [selectedIndividualsUsers, setSelectedIndividualsUsers] = useState<any[]>([])
   const [filteredUsers, setFilterUsers] = useState<any>([])
   const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>([])
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [groupName, setGroupName] = useState('')
 
-  const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
-  const { mutate: createGroupChat } = useCreateGroupChat()
+  const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
+  const { mutate: createGroupChat, isPending: groupChatPending } = useCreateGroupChat()
   const router = useRouter()
 
   const {
@@ -57,11 +57,10 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
       ImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
     }
 
-    const mergedUsers = [selectedGroupUser, ...filteredUsers, ...filteredFacultyUsers]
+    const mergedUsers = [...selectedIndividualsUsers, ...filteredUsers, ...filteredFacultyUsers]
     const dataTopush = {
       groupLogo: ImageData?.groupLogo,
       groupName: groupName,
-
       users: mergedUsers,
     }
 
@@ -69,31 +68,34 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
     closeModal()
   }
 
-  const handleCreateChat = () => {
+  const handleCreateChat = (e: React.MouseEvent) => {
+    e.stopPropagation()
     if (selectedRadio == 'Individual') {
+      if (!selectedUser?._id) return
       handleIndividualUserClick(selectedUser?._id)
     }
     if (selectedRadio == 'Group') {
+      if (!groupName) return
       handleGroupChatClick()
     }
   }
 
-  const handleClear = () => {
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent click from bubbling up
     reset()
     setGroupName('')
     setSelectedGroupUser({})
     setFilterUsers([])
     setFilterFacultyUsers([])
-
     setUniversityError(false)
   }
 
   return (
-    <div className="max-h-[460px]">
-      <div className="w-[400px] ">
+    <form className="max-h-[460px]">
+      <div className="w-[300px] sm:w-[400px]">
         <div className="flex justify-between items-center mb-8">
           <h2 className=" font-bold font-poppins text-md ">Select Chat Type</h2>
-          <Buttons onClick={handleClear} variant="shade" size="extra_small" className="w-max">
+          <Buttons type="button" onClick={handleClear} variant="shade" size="extra_small" className="w-max">
             Clear
           </Buttons>
         </div>
@@ -133,8 +135,8 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
             <div className="flex flex-col gap-8 mb-4">
               <GroupChatModal
                 setGroupName={setGroupName}
-                selectedGroupUser={selectedGroupUser}
-                setSelectedGroupUser={setSelectedGroupUser}
+                individualsUsers={selectedIndividualsUsers}
+                setIndividualsUsers={setSelectedIndividualsUsers}
                 setFilterUsers={setFilterUsers}
                 setFilterFacultyUsers={setFilterFacultyUsers}
                 // hadleClear={handleClear}
@@ -146,12 +148,18 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
         />
       </div>
 
-      <Buttons onClick={() => handleCreateChat()} variant="primary" className="w-full mt-4 ">
+      <Buttons
+        type="button"
+        disabled={groupChatPending || userChatPending || !selectedRadio}
+        onClick={handleCreateChat}
+        variant="primary"
+        className="w-full mt-4 "
+      >
         Start Chat
       </Buttons>
 
       {selectedRadio == 'Group' ? <div className="mt-4 h-4"></div> : ' '}
-    </div>
+    </form>
   )
 }
 

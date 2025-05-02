@@ -123,6 +123,12 @@ const NewPostComment = ({ setNewPost, data, postId }: Props) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
+  React.useEffect(() => {
+    if (quillInstance) {
+      quillInstance.focus()
+    }
+  }, [quillInstance])
+
   return (
     <>
       <div onClick={() => setNewPost(false)} className="fixed w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>

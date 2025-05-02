@@ -122,10 +122,10 @@ const MultiSelectDropdown = ({
         onClick={toggleDropdown}
         className={`${err ? 'border-red-400' : 'border-neutral-200'} border h-10 flex justify-between items-center px-2 py-2 ${
           variantBg[variant]
-        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-400 outline-none ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
+        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-700 outline-none ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
       >
         <div className="flex flex-wrap gap-1 text-xs px-1">
-          <p className="text-neutral-400">{placeholder}</p>
+          <p className="text-neutral-700">{placeholder}</p>
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />
       </div>
@@ -139,13 +139,13 @@ const MultiSelectDropdown = ({
         )}
         {value.length > 0
           ? value.map((selected, index) => (
-              <div key={index} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
-                <span className=" mr-1 ">
-                  {selected}{' '}
-                  <span className=" p-[2px] bg-white text-primary max-h-4 rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>
+              <div key={index} className="flex gap-2 items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
+                <span className="flex gap-2">
+                  {selected}
+                  <span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>
                 </span>
                 <RxCross2
-                  className="cursor-pointer "
+                  className="cursor-pointer text-sm"
                   onClick={(e) => {
                     e.stopPropagation()
                     onChange(value.filter((item) => item !== selected))
@@ -159,7 +159,7 @@ const MultiSelectDropdown = ({
       <AnimatePresence>
         {show && (
           <motion.div
-            className={`flex flex-col custom-scrollbar gap-2 w-full p-2 absolute left-0 top-14 mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-52 max-h-52 overflow-y-auto`}
+            className={`flex flex-col custom-scrollbar gap-2 p-2 absolute left-0 top-14 mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-full max-h-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (

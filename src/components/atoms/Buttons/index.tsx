@@ -2,7 +2,7 @@ import React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable'
+  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'danger_secondary'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
   leftIcon?: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -24,6 +24,7 @@ const Buttons: React.FC<ButtonProps> = ({
     border: 'border border-neutral-200 text-neutral-800 shadow-button ',
     border_primary: 'border border-primary text-primary ',
     danger: 'bg-red-500 text-white',
+    danger_secondary: 'text-destructive-600 bg-[#FEF2F2] border border-[#FECACA] ',
     shade: 'bg-secondary border border-shade-button-border text-primary-500 drop-shadow-sm',
     disable: 'bg-primary-300 text-white',
   }
