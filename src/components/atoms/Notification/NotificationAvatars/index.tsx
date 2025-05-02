@@ -90,10 +90,6 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
           alt="dp"
           className="w-10 sm:w-12 h-10 sm:h-12  rounded-full object-cover"
         />
-
-        // <div className="relative w-10 sm:w-12 h-10 sm:h-12 rounded-full overflow-hidden border-2 border-white">
-        //   <Image src={data?.sender_id?.profileDp || dummy.src} alt="dp" fill className="object-cover" />
-        // </div>
       )
     }
   }
