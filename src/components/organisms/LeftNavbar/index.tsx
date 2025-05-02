@@ -17,7 +17,7 @@ import ProfilePicture from '@/components/atoms/RenderProfileDP'
 import useCookie from '@/hooks/useCookie'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { useGetUserUnreadMessagesTotalCount } from '@/services/notification'
+import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
 
 interface Props {
   toggleLeftNavbar?: () => void
@@ -44,6 +44,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const [activeMenu, setActiveMenu] = useState(pathname)
   const { data: userUnreadMessagesCount } = useGetUserUnreadMessagesTotalCount()
+  const { data: unreadNotificationCount } = useGetUserNotificationTotalCount()
 
   useEffect(() => {
     setIsLogin(!!userProfileData?.users_id)
@@ -97,6 +98,17 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
                 } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
               >
                 {userUnreadMessagesCount?.messageTotalCount}
+              </span>
+            ) : (
+              ''
+            )}
+            {name == 'Notification' && Number(unreadNotificationCount) > 0 ? (
+              <span
+                className={` bg-destructive-600 ${
+                  Number(unreadNotificationCount) > 9 ? 'px-1  min-w-4' : ' w-4'
+                } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+              >
+                {Number(unreadNotificationCount)}
               </span>
             ) : (
               ''

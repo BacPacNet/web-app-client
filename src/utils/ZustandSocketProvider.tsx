@@ -1,7 +1,12 @@
 'use client'
 
 import { notificationRoleAccess } from '@/components/Navbar/constant'
-import { useGetMessageNotification, useGetNotification, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
+import {
+  useGetMessageNotification,
+  useGetNotification,
+  useGetUserNotificationTotalCount,
+  useGetUserUnreadMessagesTotalCount,
+} from '@/services/notification'
 import { useGetUserData } from '@/services/user'
 import { useGetUserProfileData } from '@/services/userProfile'
 import { useUniStore } from '@/store/store'
@@ -16,10 +21,11 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
   const initializeSocket = useUniStore((state) => state.initializeSocket)
   const disconnectSocket = useUniStore((state) => state.disconnectSocket)
   const { userData, type, setUserUnVerifiedCommunities, setUserVerifiedCommunities, setUserFollowers, setIsRefetched } = useUniStore()
-  const { refetch: refetchNotification } = useGetNotification(3, true)
+  //   const { refetch: refetchNotification } = useGetNotification(3, true)
   const param = usePathname()
 
   const { refetch: refetchMessageNotification } = useGetUserUnreadMessagesTotalCount()
+  const { refetch: unreadNotificationCount } = useGetUserNotificationTotalCount()
   const { refetch: refetchUserData, data: RefetcheduserData, isSuccess: refectUserDataIsSuccess, isFetching } = useGetUserData(userData?.id as string)
   const {
     refetch: refetchUserProfileData,
@@ -32,7 +38,7 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
     if (userData?.id) {
       const routeSegment = param.split('/')[1]
       const isRouteMessage = routeSegment !== 'messages'
-      initializeSocket(userData?.id, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage)
+      initializeSocket(userData?.id, refetchUserData, unreadNotificationCount, refetchUserProfileData, refetchMessageNotification, isRouteMessage)
     }
 
     // return () => {
@@ -45,7 +51,7 @@ const ZustandSocketProvider: React.FC<ZustandSocketProviderProps> = ({ children 
         console.warn('disconnectSocket is not defined or not a function')
       }
     }
-  }, [userData?.id, initializeSocket, disconnectSocket, refetchNotification, param])
+  }, [userData?.id, initializeSocket, disconnectSocket, unreadNotificationCount, param])
 
   useEffect(() => {
     if ((refectUserDataIsSuccess && !isFetching) || (refectUserProfileDataIsSuccess && !userProfileRefething)) {

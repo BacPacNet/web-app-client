@@ -163,7 +163,8 @@ export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { status: string; notificationId: string }) => ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
+    mutationFn: (data: { status: string; notificationId: string; communityGroupId: string; adminId: string; userId: string }) =>
+      ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
@@ -190,7 +191,7 @@ export const useJoinRequestPrivateGroup = (communityGroupId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { status: string; notificationId: string; userId: string }) =>
+    mutationFn: (data: { status: string; notificationId: string; userId: string; adminId: string; communityGroupId: string }) =>
       acceptRejectPrivateGroupAPI(data, communityGroupId, cookieValue),
 
     onSuccess: () => {

@@ -83,8 +83,11 @@ module.exports = {
                 'success-500': "#22C55E",
                 'success-100': '#DCFCE7',
                 'success-800': '#166534',
+                'destructive-50': '#FEF2F2',
                 'destructive-100': '#FEE2E2',
+                'destructive-200': '#FECACA',
                 'destructive-600': '#16A34A',
+                'destructive-500': '#EF4444',
                 'destructive-700': '#15803D',
 
                 'destructive-600': "#DC2626",

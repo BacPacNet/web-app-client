@@ -181,7 +181,13 @@ const GroupChatModal = ({
   }
 
   return (
-    <div className="relative w-full flex flex-col gap-4">
+    <div
+      className="relative w-full flex flex-col gap-4"
+      onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+      }}
+    >
       <div className="flex flex-col gap-2">
         <label htmlFor="name" className="font-medium text-sm text-neutral-900">
           Group Profile
@@ -334,7 +340,13 @@ const GroupChatModal = ({
         )}
       </div>
 
-      <div className="flex flex-col gap-8 mb-4">
+      <div
+        className="flex flex-col gap-8 mb-4"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+      >
         <Controller
           name="studentYear"
           control={control}

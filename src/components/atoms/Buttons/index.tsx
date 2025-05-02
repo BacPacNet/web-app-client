@@ -2,8 +2,8 @@ import React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'danger_secondary'
-  size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
+  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'danger_secondary' | 'notificationDanger'
+  size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2' | 'height40'
   leftIcon?: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
@@ -25,6 +25,7 @@ const Buttons: React.FC<ButtonProps> = ({
     border_primary: 'border border-primary text-primary ',
     danger: 'bg-red-500 text-white',
     danger_secondary: 'text-destructive-600 bg-[#FEF2F2] border border-[#FECACA] ',
+    notificationDanger: 'bg-destructive-50 text-destructive-500 border border-destructive-200',
     shade: 'bg-secondary border border-shade-button-border text-primary-500 drop-shadow-sm',
     disable: 'bg-primary-300 text-white',
   }
@@ -34,6 +35,7 @@ const Buttons: React.FC<ButtonProps> = ({
     large: 'text-lg py-2 px-4 ',
     extra_small: 'text-3xs sm:text-2xs py-1 px-2',
     extra_small_paddind_2: 'text-2xs py-2 px-3',
+    height40: 'text-2xs sm:text-xs p-2 sm:p-3 sm:h-10 ',
   }
 
   const variantClass = variantClasses[variant]
