@@ -1,41 +1,73 @@
 'use client'
 
-import { useCreateUserChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
+import { useCreateUserChat } from '@/services/Messages'
 import Image from 'next/image'
-
 import React, { useEffect, useRef, useState } from 'react'
 import avatar from '@assets/avatar.svg'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { useRouter } from 'next/navigation'
+import { useUsersProfileForConnections } from '@/services/user'
+import { useUniStore } from '@/store/store'
 
 type Props = {
   selectedUser: any
   setSelectedUser: (value: any) => void
 }
+
 const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
   const [searchInput, setSearchInput] = useState('')
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
-  //   const [selectedUser, setSelectedUser] = useState<any>()
-  const { data } = useGetUserFollowingAndFollowers(searchInput)
+  const { userProfileData } = useUniStore()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const {
+    data: userProfilesData,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isLoading: isUserProfilesLoading,
+  } = useUsersProfileForConnections(searchInput, 10, !!searchInput)
+
+  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSearchInput('')
+    setShowSelectUsers(false)
+    setSelectedUser(null)
+  }
+
+  const handleInputFocus = () => {
+    if (searchInput.trim()) {
+      setShowSelectUsers(true)
+    }
+  }
+
+  useEffect(() => {
+    // Only show dropdown when there's search input and input is focused
+    if (searchInput.trim() && document.activeElement === inputRef.current) {
+      setShowSelectUsers(true)
+    } else {
+      setShowSelectUsers(false)
+    }
+  }, [searchInput, userProfiles])
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && event.target !== inputRef.current) {
         setShowSelectUsers(false)
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
-
-  console.log('seele', selectedUser)
 
   return (
     <div className="relative w-full flex flex-col">
@@ -44,9 +76,10 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
       </label>
       <div>
         <InputBox
-          isCancel={true}
-          onCancel={() => setShowSelectUsers(false)}
-          onClick={() => setShowSelectUsers(true)}
+          ref={inputRef}
+          isCancel={searchInput ? true : false}
+          onCancel={handleClear}
+          onFocus={handleInputFocus}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
           type="text"
@@ -55,14 +88,14 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
 
         {showSelectUsers && (
           <div ref={dropdownRef} className="w-full mt-2 rounded-b-lg shadow-xl bg-white max-h-64 overflow-y-auto">
-            {data?.user?.length > 0 ? (
-              data.user.map((user: any) => (
+            {userProfiles?.length > 0 ? (
+              userProfiles.map((user: any) => (
                 <div
                   key={user._id}
-                  // onClick={() => handleUserClick(user._id)}
                   onClick={() => {
                     setShowSelectUsers(false)
                     setSelectedUser(user)
+                    setSearchInput('')
                   }}
                   className="flex justify-between w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
                 >
@@ -90,7 +123,7 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
           </div>
         )}
 
-        {selectedUser?.firstName ? (
+        {selectedUser?.firstName && (
           <div className="flex items-center gap-4 mt-4">
             <Image
               src={selectedUser?.profile?.profile_dp?.imageUrl || avatar}
@@ -107,8 +140,6 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
               </p>
             </div>
           </div>
-        ) : (
-          ''
         )}
       </div>
     </div>

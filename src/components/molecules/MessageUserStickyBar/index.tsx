@@ -4,7 +4,14 @@ import Image from 'next/image'
 import { IoIosArrowBack } from 'react-icons/io'
 
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
-import { useAcceptGroupRequest, useAcceptRequest, useLeaveGroup, useToggleBlockMessages, useToggleStarred } from '@/services/Messages'
+import {
+  useAcceptGroupRequest,
+  useAcceptRequest,
+  useDeleteChatGroup,
+  useLeaveGroup,
+  useToggleBlockMessages,
+  useToggleStarred,
+} from '@/services/Messages'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 
 import { HiOutlineLogin } from 'react-icons/hi'
@@ -72,6 +79,7 @@ const MessageUserStickyBar = ({
   const { mutate: toggleStarred } = useToggleStarred()
   const { mutate: toggleBlockMessage } = useToggleBlockMessages(userName[0]?.userId?._id, isBlockedByYou)
   const { mutate: leaveGroup } = useLeaveGroup(chatId)
+  const { mutate: mutateDeleteChatGroup } = useDeleteChatGroup(chatId)
   const router = useRouter()
 
   const isGroupAdmin = yourID === groupAdminId
@@ -100,11 +108,7 @@ const MessageUserStickyBar = ({
   }
 
   const handleEditGroupModal = () => {
-    openModal(
-      <EditGroupChatModal chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />,
-      'relative w-[400px] max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible  custom-scrollbar ',
-      false
-    )
+    openModal(<EditGroupChatModal chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />)
   }
   return (
     <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
@@ -142,7 +146,7 @@ const MessageUserStickyBar = ({
           </PopoverTrigger>
           <PopoverContent className="relative px-0 py-2 drop-shadow-lg right-16 top-4 w-fit bg-white shadow-card border-none">
             {isGroupChat ? (
-              <div className="text-sm text-neutral-700 font-medium ">
+              <div className="text-sm text-neutral-700 font-medium">
                 {isGroupAdmin && (
                   <div
                     onClick={() => {
@@ -167,10 +171,17 @@ const MessageUserStickyBar = ({
                   <p>Show Members</p>
                 </div>
 
-                <div onClick={() => leaveGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
-                  <HiOutlineLogin size={20} className="text-destructive-600" />
-                  <p>Leave </p>
-                </div>
+                {isGroupAdmin ? (
+                  <div onClick={() => mutateDeleteChatGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                    <HiOutlineLogin size={20} className="text-destructive-600" />
+                    <p>Delete Group </p>
+                  </div>
+                ) : (
+                  <div onClick={() => leaveGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                    <HiOutlineLogin size={20} className="text-destructive-600" />
+                    <p>Leave </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">

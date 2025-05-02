@@ -196,11 +196,11 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
 
   return (
     <>
-      <div className="w-full h-[40px] sm:h-[68px] ">
+      <div className="w-full h-[50px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200 ">
           <div
             className={`${shouldPadding ? 'max-width-allowed px-4' : 'max-w-[1280px] px-6'}
-             relative h-[40px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
+             relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
               <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
@@ -211,7 +211,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                 )}
               </div>
               <Link className="flex gap-4 center-v" href="/">
-                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[60px]" />
+                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
               </Link>
             </div>
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}

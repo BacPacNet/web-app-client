@@ -157,7 +157,7 @@ export function UserProfileCard({
           {isSelfProfile ? (
             <div
               onClick={() => {
-                openModal(<EditProfileModal />, 'w-[300px] h-[500px] sm:w-[550px] custom-scrollbar')
+                openModal(<EditProfileModal />)
               }}
               className="hidden  h-10 sm:flex gap-1  items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-primary-500 bg-secondary border border-shade-button-border  drop-shadow-sm whitespace-nowrap cursor-pointer"
             >
@@ -228,14 +228,14 @@ export function UserProfileCard({
         </div>
         <div className="flex gap-4 ">
           <div
-            onClick={() => openModal(<ConnectionsModal userId={userId} />)}
+            onClick={() => openModal(<ConnectionsModal userId={userId} defaultTab="Following" />)}
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
             {following || '0'} Following
           </div>
 
           <div
-            onClick={() => openModal(<ConnectionsModal userId={userId} />)}
+            onClick={() => openModal(<ConnectionsModal userId={userId} defaultTab="Followers" />)}
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
             {followers || '0'} Followers

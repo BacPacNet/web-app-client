@@ -1,6 +1,7 @@
 export type UniversityInfo = {
   _id: string
   name: string
+  UniversityName?: string
   address: string
   city: string
   email: string

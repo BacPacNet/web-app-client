@@ -111,7 +111,7 @@ module.exports = {
                 '.h-with-navbar': {
                     height: 'calc(100vh - 68px)',
                     '@media (max-width: 480px)': {
-                        height: 'calc(100vh - 40px)', // Apply 40px when screen is mobile (max-width: 640px)
+                        height: 'calc(100vh - 50px)', // Apply 40px when screen is mobile (max-width: 640px)
                     },
                 },
                 '.h-with-navbar-space': {

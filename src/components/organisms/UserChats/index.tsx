@@ -83,7 +83,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
       }
 
       return filteredChats.map((item: Chat) => (
-        <div onClick={() => setSelectedChat(item)} key={item?._id} className="flex flex-col gap-2 border-t py-5 border-neutral-300">
+        <div onClick={() => setSelectedChat(item)} key={item?._id} className="flex flex-col gap-2 border-t border-neutral-300">
           <UserChatCard
             profilePic={item?.isGroupChat ? item?.groupLogo?.imageUrl : item?.groupLogoImage}
             groupName={item?.chatName}

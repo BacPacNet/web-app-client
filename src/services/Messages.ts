@@ -40,6 +40,12 @@ export async function leaveGroup(token: string, chatId: any) {
   const response = await client(`/chat/leave-group/${chatId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT' })
   return response
 }
+
+export async function deleteChatGroupByAdmin(token: string, chatId: any) {
+  const response = await client(`/chat/group/${chatId}`, { headers: { Authorization: `Bearer ${token}` }, method: 'DELETE' })
+  return response
+}
+
 export async function toggleStarred(token: string, data: any) {
   const response = await client(`/chat/starred`, { headers: { Authorization: `Bearer ${token}` }, method: 'PUT', data })
   return response
@@ -109,7 +115,7 @@ export const useCreateUserChat = () => {
   return useMutation({
     mutationFn: (data: any) => createUserChat(cookieValue, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      //  queryClient.invalidateQueries({ queryKey: ['userChats'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -138,10 +144,9 @@ export const useEditGroupChat = (chatId: string) => {
     mutationFn: (data: any) => editGroupMember(cookieValue, chatId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
-      showCustomSuccessToast('Group has been updated')
+      showCustomSuccessToast('Changes Applied Successfully')
     },
     onError: (res: any) => {
-      //   console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
     },
   })
@@ -196,10 +201,25 @@ export const useLeaveGroup = (chatId: string) => {
     mutationFn: () => leaveGroup(cookieValue, chatId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
-      showCustomDangerToast('left the group')
+      showCustomSuccessToast('You left the group')
     },
     onError: (res: any) => {
       //   console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+
+export const useDeleteChatGroup = (chatId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: () => deleteChatGroupByAdmin(cookieValue, chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      showCustomSuccessToast('Group Deleted Successfully')
+    },
+    onError: (res: any) => {
       showCustomDangerToast(res.response.data.message)
     },
   })

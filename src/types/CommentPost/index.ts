@@ -18,7 +18,7 @@ export type PostCommentProps = {
     date: string
     university: string
     year: string
-    text: string
+    content: string
     type: PostType.Community | PostType.Timeline
     adminId: string
   }

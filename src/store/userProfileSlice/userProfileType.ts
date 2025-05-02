@@ -1,10 +1,5 @@
 import { EmailType } from '@/models/auth'
-
-interface emailType {
-  UniversityName: string
-  UniversityEmail: string
-  communityId: string
-}
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface following {
   userId: string
@@ -23,6 +18,7 @@ export interface userProfileType {
   city?: string
   university_name?: string
   university_id: string
+  role: userTypeEnum
   study_year?: string
   degree?: string
   major?: string

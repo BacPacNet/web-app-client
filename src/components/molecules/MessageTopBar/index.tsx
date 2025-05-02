@@ -29,11 +29,7 @@ const MessageTopBar = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowModal = () => {
-    openModal(
-      <CreateChatModal setSelectedChat={setSelectedChat} />,
-      'relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible  custom-scrollbar',
-      false
-    )
+    openModal(<CreateChatModal setSelectedChat={setSelectedChat} />, ' bg-white rounded-xl  custom-scrollbar', false)
   }
 
   useEffect(() => {
@@ -50,7 +46,7 @@ const MessageTopBar = ({
     <>
       <div className="flex justify-between items-center mb-4">
         <h6 className="font-poppins font-bold text-[20px]  ">Messages</h6>
-        <Buttons className="hidden md:block" size="extra_small_paddind_2" onClick={() => handleShowModal()}>
+        <Buttons className="block" size="extra_small_paddind_2" onClick={() => handleShowModal()}>
           Start a Chat
         </Buttons>
       </div>

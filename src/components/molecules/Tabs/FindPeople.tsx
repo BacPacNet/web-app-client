@@ -186,7 +186,6 @@ export default function FindPeople() {
       </div>
       {isFetchingNextPage && (
         <div className="text-center pt-2">
-          {' '}
           <Spinner />
         </div>
       )}

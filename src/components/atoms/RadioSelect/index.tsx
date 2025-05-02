@@ -43,7 +43,7 @@ const RadioOption = ({
   }
 
   return (
-    <label className="flex flex-col gap-1 relative mt-4" onClick={handleClick}>
+    <label className="flex flex-col gap-1 relative mt-4 " onClick={handleClick}>
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center">
           <input
@@ -59,7 +59,7 @@ const RadioOption = ({
           />
         </div>
         <div className="">
-          <span className={`${fontStyle[fontSize]} `}>{label}</span>
+          <span className={`${fontStyle[fontSize]} cursor-pointer`}>{label}</span>
           <p className="text-neutral-400 text-[12px]">{description ? description : ''}</p>
         </div>
       </div>

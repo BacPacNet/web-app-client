@@ -73,6 +73,11 @@ export const convertToDateObj = (dateStr: string) => {
   return isValid(parsed) ? parsed : null
 }
 
+export function convertToISOFormat(dateStr: string) {
+  const [dd, mm, yyyy] = dateStr.split('/')
+  return `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`
+}
+
 export const IsUniversityVerified = (): boolean => {
   const { userProfileData } = useUniStore()
   return userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name) || false

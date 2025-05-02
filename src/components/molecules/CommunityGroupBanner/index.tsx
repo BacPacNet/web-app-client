@@ -100,6 +100,10 @@ export default function CommunityGroupBanner({
     return communityGroups?.users?.some((user) => user.userId === userProfileData?.users_id && user.status === status.pending) || false
   }, [communityGroups, userProfileData])
 
+  const userStatus = useMemo(() => {
+    return communityGroups?.users?.find((user) => user.userId === userProfileData?.users_id)?.status as status
+  }, [communityGroups, userProfileData])
+
   const handleEditCommunityGroupModal = () => {
     if (!communityGroups) return
     openModal(<EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />)
@@ -144,7 +148,7 @@ export default function CommunityGroupBanner({
                 isPrivate={isGroupPrivate}
                 isVerified={isUserVerifiedForCommunity}
                 isPending={isPending}
-                isJoined={isUserRequestPending}
+                userStatus={userStatus}
                 onClick={() => handleToggleJoinCommunityGroup(communityGroupID)}
               />
             )}

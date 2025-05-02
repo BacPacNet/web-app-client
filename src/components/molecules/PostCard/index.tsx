@@ -150,7 +150,7 @@ const PostCard = ({
     date,
     university,
     year,
-    text,
+    content: text,
     type,
     adminId,
   }
