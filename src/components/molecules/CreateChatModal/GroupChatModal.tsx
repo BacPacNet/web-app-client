@@ -184,8 +184,11 @@ const GroupChatModal = ({
     <div
       className="relative w-full flex flex-col gap-4"
       onClick={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
+        const target = e.target as HTMLElement
+        if (!target.closest('label[for="CreateGroupLogoImage"]') && !target.closest('#CreateGroupLogoImage')) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
       }}
     >
       <div className="flex flex-col gap-2">
