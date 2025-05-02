@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useGetUserNotification } from '@/services/notification'
 
-import NotificationCard from '@/components/Notifiaction/NotificationCard'
+import NotificationCard from '@/components/Notification/NotificationCard'
 
 export const notificationRoleAccess = {
   GROUP_INVITE: 'GROUP_INVITE',
@@ -11,8 +11,13 @@ export const notificationRoleAccess = {
   COMMUNITY_COMMENT: 'COMMUNITY_COMMENT',
   REACTED_TO_POST: 'REACTED_TO_POST',
   REACTED_TO_COMMUNITY_POST: 'REACTED_TO_COMMUNITY_POST',
+
   OFFICIAL_GROUP_REQUEST: 'OFFICIAL_GROUP_REQUEST',
   PRIVATE_GROUP_REQUEST: 'PRIVATE_GROUP_REQUEST',
+  REJECTED_OFFICIAL_GROUP_REQUEST: 'REJECTED_OFFICIAL_GROUP_REQUEST',
+  ACCEPTED_OFFICIAL_GROUP_REQUEST: 'ACCEPTED_OFFICIAL_GROUP_REQUEST',
+  ACCEPTED_PRIVATE_GROUP_REQUEST: 'ACCEPTED_PRIVATE_GROUP_REQUEST',
+  REJECTED_PRIVATE_GROUP_REQUEST: 'REJECTED_PRIVATE_GROUP_REQUEST',
 }
 
 const NotificationTab = () => {
@@ -42,7 +47,8 @@ const NotificationTab = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
-    <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit]">
+    <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit] p-2 sm:p-6">
+      <h6 className="font-poppins text-[20px] text-neutral-700 font-bold mb-8">Notifications</h6>
       {notifications?.map((item) => {
         return <NotificationCard key={item?._id} data={item} />
       })}
