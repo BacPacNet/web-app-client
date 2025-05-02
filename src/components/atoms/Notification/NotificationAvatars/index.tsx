@@ -56,7 +56,8 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
         height={48}
         src={user?.profileDp || dummy.src}
         alt="dp"
-        className="w-12 h-12 rounded-full object-cover"
+        className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover border-2 border-white -ml-2 ${index === 0 ? 'ml-0' : ''}`}
+        style={{ zIndex: index + 1 }}
       />
     ))
 
@@ -77,18 +78,32 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
           height={48}
           src={data?.communityGroupId?.communityGroupLogoUrl || dummy.src}
           alt="dp"
-          className="w-12 h-12 rounded-full object-cover"
+          className="w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover"
         />
       )
     } else {
-      return <Image width={48} height={48} src={data?.sender_id?.profileDp || dummy.src} alt="dp" className="w-12 h-12 rounded-full object-cover" />
+      return (
+        <Image
+          width={48}
+          height={48}
+          src={data?.sender_id?.profileDp || dummy.src}
+          alt="dp"
+          className="w-10 sm:w-12 h-10 sm:h-12  rounded-full object-cover"
+        />
+
+        // <div className="relative w-10 sm:w-12 h-10 sm:h-12 rounded-full overflow-hidden border-2 border-white">
+        //   <Image src={data?.sender_id?.profileDp || dummy.src} alt="dp" fill className="object-cover" />
+        // </div>
+      )
     }
   }
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex gap-4 items-center">
-        <NotificationIcon type={data?.type} />
+      <div className="flex items-center ">
+        <div className="mr-2">
+          <NotificationIcon type={data?.type} />
+        </div>
         {renderContent()}
       </div>
     </div>

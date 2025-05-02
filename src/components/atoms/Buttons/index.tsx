@@ -35,7 +35,7 @@ const Buttons: React.FC<ButtonProps> = ({
     large: 'text-lg py-2 px-4 ',
     extra_small: 'text-3xs sm:text-2xs py-1 px-2',
     extra_small_paddind_2: 'text-2xs py-2 px-3',
-    height40: 'text-xs p-3 h-10',
+    height40: 'text-2xs sm:text-xs p-2 sm:p-3 sm:h-10 ',
   }
 
   const variantClass = variantClasses[variant]
