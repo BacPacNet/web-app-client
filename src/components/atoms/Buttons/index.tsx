@@ -2,7 +2,7 @@ import React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'notificationDanger'
+  variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'danger_secondary' | 'notificationDanger'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2' | 'height40'
   leftIcon?: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
