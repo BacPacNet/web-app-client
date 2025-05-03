@@ -74,7 +74,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
   }
   const handleCommunityGroupFilter = () => {
-    toggleLeftNavbar()
+    toggleLeftNavbar && toggleLeftNavbar()
     openModal(
       <CommunityGroupFilterComponent
         communityId={community?._id || ''}

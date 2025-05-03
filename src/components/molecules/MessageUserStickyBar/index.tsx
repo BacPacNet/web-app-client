@@ -108,7 +108,7 @@ const MessageUserStickyBar = ({
   }
 
   const handleEditGroupModal = () => {
-    openModal(<EditGroupChatModal chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />)
+    openModal(<EditGroupChatModal users={users} chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />)
   }
   return (
     <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">

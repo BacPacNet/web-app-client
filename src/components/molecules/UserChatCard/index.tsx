@@ -36,7 +36,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               {isGroupChat && !profilePic ? (
                 <FaUsers className="w-12 h-12 rounded-full bg-neutral-200 p-2 text-primary-700" />
               ) : (
-                <Image width={48} height={48} src={profilePic || avatar} alt="dp" objectFit="cover" className="w-12 h-12 rounded-full" />
+                <Image width={48} height={48} src={profilePic || avatar} alt="dp" objectFit="cover" className="w-12 h-12 rounded-full object-cover" />
               )}
 
               {userName?.some((item) => item?.isOnline) ? (

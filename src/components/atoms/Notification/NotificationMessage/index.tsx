@@ -16,7 +16,7 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.GROUP_INVITE:
       return (
         <>
-          <p>
+          <p className="text-xs">
             You have been invited to join{' '}
             <span
               onClick={(e) => {

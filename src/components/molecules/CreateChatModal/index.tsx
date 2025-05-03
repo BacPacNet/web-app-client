@@ -17,12 +17,12 @@ interface OneToOneProps {
 const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const [universityError, setUniversityError] = useState(false)
   const [selectedUser, setSelectedUser] = useState<any>()
-  const [selectedGroupUser, setSelectedGroupUser] = useState<any>()
   const [selectedIndividualsUsers, setSelectedIndividualsUsers] = useState<any[]>([])
-  const [filteredUsers, setFilterUsers] = useState<any>([])
-  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>([])
+  const [filteredUsers, setFilterUsers] = useState<any[]>([])
+  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [groupName, setGroupName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
   const { mutate: createGroupChat, isPending: groupChatPending } = useCreateGroupChat()
@@ -44,9 +44,9 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
   const handleIndividualUserClick = async (userId: string) => {
     const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
-
     setSelectedChat(createChatResponse)
     router.replace(`/messages?id=${createChatResponse._id}`)
+    setIsLoading(false)
     closeModal()
   }
 
@@ -57,7 +57,11 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
       ImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
     }
 
-    const mergedUsers = [...selectedIndividualsUsers, ...filteredUsers, ...filteredFacultyUsers]
+    const mergedUsers = [
+      ...selectedIndividualsUsers.map((user) => user._id),
+      ...filteredUsers.map((user) => user.id),
+      ...filteredFacultyUsers.map((user) => user.id),
+    ]
     const dataTopush = {
       groupLogo: ImageData?.groupLogo,
       groupName: groupName,
@@ -65,10 +69,12 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
     }
 
     createGroupChat(dataTopush)
+    setIsLoading(false)
     closeModal()
   }
 
   const handleCreateChat = (e: React.MouseEvent) => {
+    setIsLoading(true)
     e.stopPropagation()
     if (selectedRadio == 'Individual') {
       if (!selectedUser?._id) return
@@ -84,15 +90,14 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
     e.stopPropagation() // Prevent click from bubbling up
     reset()
     setGroupName('')
-    setSelectedGroupUser({})
     setFilterUsers([])
     setFilterFacultyUsers([])
     setUniversityError(false)
   }
 
   return (
-    <form className="max-h-[460px]">
-      <div className="w-[300px] sm:w-[400px]">
+    <form className="max-h-[70vh]">
+      <div className="w-[300px] sm:w-[500px]">
         <div className="flex justify-between items-center mb-8">
           <h2 className=" font-bold font-poppins text-md ">Select Chat Type</h2>
           <Buttons type="button" onClick={handleClear} variant="shade" size="extra_small" className="w-max">
@@ -150,7 +155,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
       <Buttons
         type="button"
-        disabled={groupChatPending || userChatPending || !selectedRadio}
+        disabled={groupChatPending || userChatPending || !selectedRadio || isLoading}
         onClick={handleCreateChat}
         variant="primary"
         className="w-full mt-4 "

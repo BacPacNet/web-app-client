@@ -78,7 +78,7 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
           height={48}
           src={data?.communityGroupId?.communityGroupLogoUrl || dummy.src}
           alt="dp"
-          className="w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover"
+          className="w-10 sm:w-10 h-10 sm:h-10 rounded-full object-cover"
         />
       )
     } else {
@@ -88,7 +88,7 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
           height={48}
           src={data?.sender_id?.profileDp || dummy.src}
           alt="dp"
-          className="w-10 sm:w-12 h-10 sm:h-12  rounded-full object-cover"
+          className="w-10 sm:w-10 h-10 sm:h-10  rounded-full object-cover"
         />
       )
     }
@@ -96,10 +96,8 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex items-center ">
-        <div className="mr-2">
-          <NotificationIcon type={data?.type} />
-        </div>
+      <div className="flex items-center gap-4">
+        <NotificationIcon type={data?.type} />
         {renderContent()}
       </div>
     </div>
