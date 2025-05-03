@@ -24,19 +24,11 @@ import { useUniStore } from '@/store/store'
 import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 
-type User = {
-  _id: string
-  name: string
-  email: string
-  firstName: string
-  profile: any
-}
-
 type Props = {
   individualsUsers: any[]
   setIndividualsUsers: (value: Users[] | ((prev: Users[]) => Users[])) => void
-  setFilterUsers: (value: User[]) => void
-  setFilterFacultyUsers: (value: User[]) => void
+  setFilterUsers: (value: string[]) => void
+  setFilterFacultyUsers: (value: string[]) => void
   setGroupName: (value: string) => void
   setGroupLogoImage: (value: File | null) => void
   groupLogoImage: File | null
@@ -157,8 +149,6 @@ const GroupChatModal = ({
   }, [occupation, affiliation])
 
   const removeUser = (userId: string) => {
-    //const currentSelected = watch('selectedIndividualsUsers') as unknown as User[]
-    //setValue('selectedIndividualsUsers', individualsUsers.filter((u) => u._id !== userId) as any)
     setIndividualsUsers((prev: any[]) => prev.filter((u) => u._id !== userId))
   }
 
@@ -166,7 +156,6 @@ const GroupChatModal = ({
     e.preventDefault()
     e.stopPropagation()
     setShowSelectUsers(false)
-    //const currentSelected = watch('selectedIndividualsUsers') as unknown as Users[]
 
     const isAlreadySelected = individualsUsers.some((u) => u._id === user._id)
 
@@ -176,7 +165,9 @@ const GroupChatModal = ({
   }
 
   const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault()
     e.stopPropagation()
+    setShowSelectUsers(false)
     setSearchInput('')
   }
 
@@ -244,7 +235,7 @@ const GroupChatModal = ({
         </label>
         <div>
           <InputBox
-            isCancel={searchInput ? true : false}
+            isCancel
             onCancel={handleClear}
             onClick={() => setShowSelectUsers(true)}
             value={searchInput}
@@ -254,7 +245,7 @@ const GroupChatModal = ({
           />
 
           {showSelectUsers && (
-            <div ref={dropdownRef} className="w-full mt-2 rounded-b-lg shadow-xl bg-white max-h-64 overflow-y-auto">
+            <div ref={dropdownRef} className="w-full mt-2 rounded-lg border-[1px] border-neutral-200 bg-white max-h-64 overflow-y-auto">
               {userProfiles.length > 0 ? (
                 userProfiles.map((user) => (
                   <div

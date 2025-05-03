@@ -124,29 +124,12 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
         </div>
         <p className="text-2xs lg:text-xs text-neutral-900 font-inter whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
 
-        <div className={`w-full`}>
-          <UserMessageImageGrid images={media} />
-        </div>
+        {media.length > 0 && (
+          <div className="w-full">
+            <UserMessageImageGrid images={media} />
+          </div>
+        )}
       </div>
-      {/* //reaction  */}
-      {/*{isReact && (
-        <div className="absolute -bottom-8 bg-slate-200 rounded-full w-44 h-8 z-20 flex justify-between text-2xl ">
-          {emojis.map((emoji) => (
-            <p key={emoji} className="cursor-pointer" onClick={() => reactToMessage({ data: { messageId: id, emoji } })}>
-              {emoji}
-            </p>
-          ))}
-        </div>
-      )}*/}
-      {/*{reactions && (
-        <div className="absolute -bottom-8  rounded-full w-8 h-8  flex justify-between text-2xl ">
-          {reactions.map((emoji) => (
-            <p key={emoji.userId} className="cursor-pointer">
-              {emoji.emoji}
-            </p>
-          ))}
-        </div>
-      )}*/}
     </div>
   )
 }
@@ -193,7 +176,7 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
 
   useEffect(() => {
     if (!socket) {
-      console.log('Socket is not initialized')
+      console.warn('Socket is not initialized')
       return
     }
 
@@ -211,44 +194,42 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
   }, [chatMessages])
 
   return (
-    <div>
-      <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar py-4  gap-6 ">
-        {chatMessages?.map((item: Message, idx: number) => {
-          const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
-          const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
-          previousDate = dayjs(item.createdAt)
+    <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar py-4  gap-6 ">
+      {chatMessages?.map((item: Message, idx: number) => {
+        const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
+        const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
+        previousDate = dayjs(item.createdAt)
 
-          return (
-            <Fragment key={idx}>
-              {shouldShowDateDivider && (
-                <div className="border-b border-neutral-300 relative">
-                  <div className="absolute -top-3 flex justify-center items-center w-full">
-                    <span className="px-4 bg-white text-neutral-500 text-2xs"> {currentDate}</span>
-                  </div>
+        return (
+          <Fragment key={idx}>
+            {shouldShowDateDivider && (
+              <div className="border-b border-neutral-300 relative">
+                <div className="absolute -top-3 flex justify-center items-center w-full">
+                  <span className="px-4 bg-white text-neutral-500 text-2xs"> {currentDate}</span>
                 </div>
-              )}
-              <UserCard
-                profilePic={item?.senderProfile?.profile_dp?.imageUrl}
-                name={item?.sender?.firstName}
-                content={item?.content}
-                myMessage={item?.sender.id === userData?.id}
-                date={item.createdAt}
-                id={item?._id}
-                reactions={item?.reactions}
-                chatId={chatId}
-                media={item?.media}
-                isOnline={userName?.some((item) => item?.isOnline)}
-                setImageCarasol={setImageCarasol}
-                idx={idx}
-                role={item?.sender?.role}
-                affiliation={item?.sender?.affiliation}
-                occupation={item?.sender?.occupation}
-              />
-            </Fragment>
-          )
-        })}
-        <div ref={bottomRef} />
-      </div>
+              </div>
+            )}
+            <UserCard
+              profilePic={item?.senderProfile?.profile_dp?.imageUrl}
+              name={item?.sender?.firstName}
+              content={item?.content}
+              myMessage={item?.sender.id === userData?.id}
+              date={item.createdAt}
+              id={item?._id}
+              reactions={item?.reactions}
+              chatId={chatId}
+              media={item?.media}
+              isOnline={userName?.some((item) => item?.isOnline)}
+              setImageCarasol={setImageCarasol}
+              idx={idx}
+              role={item?.sender?.role}
+              affiliation={item?.sender?.affiliation}
+              occupation={item?.sender?.occupation}
+            />
+          </Fragment>
+        )
+      })}
+      <div ref={bottomRef} />
     </div>
   )
 }

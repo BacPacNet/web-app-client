@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { useEditGroupChat } from '@/services/Messages'
@@ -15,12 +15,25 @@ import { useUniStore } from '@/store/store'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import { Users } from '@/types/Connections'
 import UserList from '@/components/atoms/UserList'
+import { ChatUser } from '@/types/constants'
 
-const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: string; groupLogo: string; groupCurrentName: string }) => {
+const EditGroupChatModal = ({
+  users,
+  chatId,
+  groupLogo,
+  groupCurrentName,
+}: {
+  users: ChatUser[]
+  chatId: string
+  groupLogo: string
+  groupCurrentName: string
+}) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
   const [searchInput, setSearchInput] = useState('')
   const { userProfileData } = useUniStore()
+
+  console.log(users, 'users')
 
   const {
     data,
@@ -30,9 +43,18 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
     //isLoading: isUserProfilesLoading,
   } = useUsersProfileForConnections(searchInput, 10, true)
 
-  const userProfiles = data?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  // Inside your component
+  const filteredUserProfiles = useMemo(() => {
+    // 1. Flatten and filter user profiles (exclude current user)
+    const userProfiles = data?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
 
-  console.log(userProfiles, 'userProfiles')
+    // 2. Create Set of userIds for O(1) lookups
+    const userIdsSet = new Set(users.map((user) => user.userId._id))
+
+    // 3. Filter profiles that exist in the Set
+    return userProfiles.filter((profile) => !userIdsSet.has(profile._id))
+  }, [data?.pages, userProfileData?.users_id, users])
+
   const [showDropdown, setShowDropdown] = useState(false)
 
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
@@ -85,7 +107,7 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
     const paylod = {
       ...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
       groupName: formData.title,
-      users: formData.selectedIndividualsUsers, // Uncomment if needed
+      users: formData.selectedIndividualsUsers.map((user: any) => user._id),
     }
 
     editGroup(paylod)
@@ -217,8 +239,8 @@ const EditGroupChatModal = ({ chatId, groupLogo, groupCurrentName }: { chatId: s
           />
 
           {showSelectUsers && (
-            <div ref={dropdownRef} className="w-full mt-2 rounded-b-lg shadow-xl bg-white max-h-64 overflow-y-auto">
-              <UserList users={userProfiles} onUserClick={handleSelectIndividuals} fallbackImage={avatar} />
+            <div ref={dropdownRef} className="w-full mt-2 rounded-lg border-[1px] border-neutral-200 bg-white max-h-72 overflow-y-auto">
+              <UserList users={filteredUserProfiles} onUserClick={handleSelectIndividuals} fallbackImage={avatar} />
             </div>
           )}
 

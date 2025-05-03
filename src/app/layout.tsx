@@ -10,7 +10,6 @@ import { Toaster } from 'react-hot-toast'
 import LogoNavbar from '@/components/atoms/LogoNavbar'
 import { ModalManager } from '@/components/molecules/Modal/ModalManager'
 import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
-import Footer from '@/components/Footer/Footer'
 type FontClassName = string
 
 const inter = Inter({

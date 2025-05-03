@@ -101,8 +101,8 @@ const NotificationCard = ({ data }: Props) => {
   return (
     <div
       onClick={() => handleUpdateIsRead(data?._id)}
-      className={`flex flex-col gap-2  border-b-2 border-neutral-200 p-4 hover:bg-surface-primary-50  transition-all duration-200 cursor-pointer ${
-        data?.isRead ? 'bg-surface-primary-50' : ''
+      className={`flex flex-col gap-2  border-b-2 border-neutral-200 px-6 py-4 hover:bg-surface-primary-50  transition-all duration-200 cursor-pointer ${
+        data?.isRead ? 'bg-neutral-50' : ''
       }`}
     >
       <div className="flex justify-between items-center">
