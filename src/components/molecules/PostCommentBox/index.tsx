@@ -144,10 +144,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
         </div>
         <div className={`flex flex-col gap-2 pt-2   border-b border-neutral-200 `}>
           {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
-          <p
-            className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]"
-            dangerouslySetInnerHTML={{ __html: comment?.content }}
-          />
+          <p className="text-2xs sm:text-xs break-words lg:min-w-[450px] " dangerouslySetInnerHTML={{ __html: comment?.content }} />
           <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
           <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
           <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
@@ -217,7 +214,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
         </div>
         {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
-        {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
+        {newPost && <NewPostComment setNewPost={setNewPost} postType={type} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
         {showMoreComponent()}
       </div>
     </div>

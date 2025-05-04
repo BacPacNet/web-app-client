@@ -1,16 +1,13 @@
 'use client'
-import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import { useGetCommunityGroupPost } from '@/services/community-university'
-import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostSkeleton from '@/components/atoms/PostSkeleton'
 import Card from '@/components/atoms/Card'
+import { useGetCommunityPost } from '@/services/community-university'
 
 type Props = {
   communityID?: string
@@ -18,7 +15,6 @@ type Props = {
   containerRef?: React.RefObject<HTMLDivElement> | any
 }
 const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef }: Props) => {
-  const queryClient = useQueryClient()
   const [showCommentSection, setShowCommentSection] = useState('')
 
   const {
@@ -28,9 +24,8 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     hasNextPage: communityPostHasNextPage,
     error: communityPostError,
     dataUpdatedAt,
-    isFetching,
     isLoading,
-  } = useGetCommunityGroupPost(communityID, communityGroupID, true, 10)
+  } = useGetCommunityPost(communityID, true, 10)
   const [communityDatas, setCommunityDatas] = useState([])
 
   const [imageCarasol, setImageCarasol] = useState<{
@@ -62,12 +57,6 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
       container?.removeEventListener('scroll', handleScroll)
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
-
-  useEffect(() => {
-    if (isFetching) {
-      setCommunityDatas([])
-    }
-  }, [isFetching, queryClient])
 
   useEffect(() => {
     const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)

@@ -1,18 +1,17 @@
 'use client'
-import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
-import PostSkeleton from '@/components/atoms/PostSkeleton'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 type Props = {
   containerRef?: React.RefObject<HTMLDivElement> | any
 }
+
 const TimelinePostContainer = ({ containerRef }: Props) => {
   const {
     isLoading,
@@ -21,13 +20,9 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     fetchNextPage: timelinePostsNextpage,
     isFetchingNextPage: timelinePostIsFetchingNextPage,
     hasNextPage: timelinePostHasNextPage,
-    isFetching,
   } = useGetTimelinePosts(10)
 
-  const timlineDatas = TimelinePosts?.pages.flatMap((page) => page?.allPosts) || []
-
   const [showCommentSection, setShowCommentSection] = useState('')
-
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -38,24 +33,25 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     currImageIndex: null,
   })
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        const bottom = scrollTop + clientHeight >= scrollHeight - 10
-        if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage) {
-          timelinePostsNextpage()
-        }
+  // Memoize flattened posts data
+  const timlineDatas = useMemo(() => TimelinePosts?.pages.flatMap((page) => page?.allPosts) || [], [TimelinePosts?.pages])
+
+  // Handle scroll for infinite loading
+  const handleScroll = useCallback(() => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+      const bottom = scrollTop + clientHeight >= scrollHeight - 10
+      if (bottom && timelinePostHasNextPage && !timelinePostIsFetchingNextPage) {
+        timelinePostsNextpage()
       }
     }
+  }, [timelinePostHasNextPage, timelinePostIsFetchingNextPage, timelinePostsNextpage])
 
+  useEffect(() => {
     const container = containerRef.current
     container?.addEventListener('scroll', handleScroll)
-
-    return () => {
-      container?.removeEventListener('scroll', handleScroll)
-    }
-  }, [timelinePostHasNextPage, timelinePostIsFetchingNextPage, timelinePostsNextpage])
+    return () => container?.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
 
   useEffect(() => {
     if (imageCarasol.isShow) {
@@ -63,18 +59,12 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     }
   }, [imageCarasol])
 
-  if (isLoading || isFetching)
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Spinner />
-      </div>
-    )
-
-  const renderPostWithRespectToPathName = () => {
+  // Memoize post rendering
+  const renderPostWithRespectToPathName = useCallback(() => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post._id}
-        user={post?.user?.firstName + ' ' + post?.user?.lastName}
+        user={`${post?.user?.firstName} ${post?.user?.lastName}`}
         adminId={post.user?._id}
         university={post?.userProfile?.university_name}
         year={post?.userProfile?.study_year}
@@ -100,24 +90,29 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         communityGroupName={post.communityGroupName}
       />
     ))
+  }, [timlineDatas, showCommentSection])
+
+  if (isLoading && !timelinePostIsFetchingNextPage) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Spinner />
+      </div>
+    )
   }
 
-  const PostCardRender = () => {
-    if (isLoading) {
-      return <PostSkeleton />
-    }
-
-    if (error) {
-      return <div>{error.message || 'Error loading posts'}</div>
-    }
-
-    return renderPostWithRespectToPathName()
+  if (error) {
+    return <div className="p-4 text-red-500">{error.message || 'Error loading posts'}</div>
   }
 
   return (
     <div className="py-8 post-container">
       <div className="flex flex-col gap-6">
-        <PostCardRender />
+        {renderPostWithRespectToPathName()}
+        {timelinePostIsFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <Spinner />
+          </div>
+        )}
       </div>
     </div>
   )

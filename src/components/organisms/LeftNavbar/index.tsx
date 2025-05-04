@@ -1,8 +1,6 @@
 'use client'
 
-import Card from '@/components/atoms/Card'
-import React, { useEffect, useState, useMemo } from 'react'
-import SubText from '@/components/atoms/SubText'
+import React, { useEffect, useState } from 'react'
 import { HiHome } from 'react-icons/hi'
 import { IoMdPeople } from 'react-icons/io'
 import { BiSolidMessageDots } from 'react-icons/bi'
@@ -11,12 +9,7 @@ import { PiFinnTheHumanFill } from 'react-icons/pi'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import { truncateString } from '@/lib/utils'
-import Tooltip from '@/components/atoms/Tooltip'
-import ProfilePicture from '@/components/atoms/RenderProfileDP'
 import useCookie from '@/hooks/useCookie'
-import Image from 'next/image'
-import avatar from '@assets/avatar.svg'
 import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
 
 interface Props {
@@ -31,24 +24,22 @@ const MENU_ITEMS = [
   { name: 'AI Assistant', icon: <PiFinnTheHumanFill />, path: '/ai-assistant' },
 ]
 const PAGE_ITEMS = [
-  { name: 'Discover', path: '/discover' },
   { name: 'Community', path: '/timeline' },
+  { name: 'Discover', path: '/discover' },
   { name: 'About', path: '/about' },
 ]
 
 export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const pathname = usePathname()
   const router = useRouter()
-  const { userData, userProfileData } = useUniStore()
-  const [cookie] = useCookie('uni_user_token')
-  const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
+  const { userData } = useUniStore()
   const [activeMenu, setActiveMenu] = useState(pathname)
   const { data: userUnreadMessagesCount } = useGetUserUnreadMessagesTotalCount()
   const { data: unreadNotificationCount } = useGetUserNotificationTotalCount()
 
-  useEffect(() => {
-    setIsLogin(!!userProfileData?.users_id)
-  }, [userProfileData])
+  //  useEffect(() => {
+  //    setIsLogin(!!userProfileData?.users_id)
+  //  }, [userProfileData])
 
   const handleMenuClick = (path: string) => {
     router.push(path)
@@ -56,16 +47,10 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
     toggleLeftNavbar?.()
   }
 
-  const handleProfileClick = () => {
-    router.push(`/profile/${userData?.id}`)
-    setActiveMenu('')
-    toggleLeftNavbar?.()
-  }
-
   return (
     <div className="h-with-navbar custom-scrollbar  lg:p-6 overflow-y-auto">
       <div className=" block lg:hidden border-b-2 border-neutral-200 pb-4">
-        <p className="text-xs text-neutral-500 font-bold py-2">Pages</p>
+        <p className="text-xs text-neutral-500 font-bold py-2">PAGES</p>
         {PAGE_ITEMS.map(({ name, path }) => (
           <div
             key={path}

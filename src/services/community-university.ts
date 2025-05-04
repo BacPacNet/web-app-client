@@ -101,10 +101,19 @@ export async function LikeUnilikeGroupPost(communityGroupPostId: string, token: 
   return response
 }
 
-export async function getAllCommunityGroupPost(communityId: string, communityGroupID: string, token: any, page: number, limit: number) {
+export async function getAllCommunityPost(communityId: string, token: any, page: number, limit: number) {
   const response: any = await client(`/communitypost/timelinePost?communityId=${communityId}&page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
+  return response
+}
+export async function getAllCommunityGroupPost(communityId: string, communityGroupId: string, token: any, page: number, limit: number) {
+  const response: any = await client(
+    `/communitypost/group?communityId=${communityId}&communityGroupId=${communityGroupId}&page=${page}&limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
   return response
 }
 
@@ -336,6 +345,23 @@ export const useUpdateCommunityGroup = () => {
   })
 }
 
+export function useGetCommunityPost(communityId: string, isCommunity: boolean, limit: number) {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useInfiniteQuery({
+    queryKey: ['communityGroupsPost', communityId],
+    queryFn: ({ pageParam = 1 }) => getAllCommunityPost(communityId, cookieValue, pageParam, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: isCommunity && !!cookieValue,
+    retry: false,
+  })
+}
+
 export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isCommunity: boolean, limit: number) {
   const [cookieValue] = useCookie('uni_user_token')
   return useInfiniteQuery({
@@ -439,6 +465,7 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
       }
     },
     onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message as string)
       console.log(res.response.data.message, 'res')
     },
   })

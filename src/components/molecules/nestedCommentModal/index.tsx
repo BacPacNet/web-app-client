@@ -323,7 +323,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
         {(type == PostType.Community ? communityComment?.finalComments : data?.finalComments)?.map((comment: any) => (
           <Comment key={comment._id} comment={comment} />
         ))}
-        {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={true} isNested={true} />}
+        {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={true} postType={type} />}
       </div>
     </>
   )
