@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo, memo, useState, useRef, useEffect } from 'react'
 import avatar from '@assets/avatar.svg'
 import PostCartOption from '@/components/atoms/PostCardOption/PostCartOption'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
@@ -11,55 +11,33 @@ import { useUniStore } from '@/store/store'
 import { useLikeUnilikeGroupPost } from '@/services/community-university'
 import { useLikeUnlikeTimelinePost } from '@/services/community-timeline'
 import { PostType } from '@/types/constants'
-
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { Spinner } from '@/components/spinner/Spinner'
-import UserCard from '@/components/atoms/UserCard'
 import { truncateStringTo } from '@/lib/utils'
+import UserCard from '@/components/atoms/UserCard'
 
 dayjs.extend(relativeTime)
 
-const SharePopup = ({ postId }: { postId: string }) => {
+const SharePopup = React.memo(({ postId }: { postId: string }) => {
+  const postUrl = useMemo(() => `${window.location.host}/post/${postId}`, [postId])
+
   return (
     <div>
       <h1 className="font-semibold text-gray-dark mb-3">Share</h1>
-      {/*<div className="flex gap-4">
-       
-        <div>
-          <WhatsappShareButton url={window.location.href}>
-            <WhatsappIcon size={40} round />
-          </WhatsappShareButton>
-        </div>
-        <div>
-          <FacebookShareButton url={window.location.href}>
-            <FacebookIcon size={40} round />
-          </FacebookShareButton>
-        </div>
-        <div>
-          <LinkedinShareButton url={window.location.href}>
-            <LinkedinIcon size={40} round />
-          </LinkedinShareButton>
-        </div>
-        <div>
-          <TwitterShareButton url={window.location.href}>
-            <TwitterIcon size={40} round />
-          </TwitterShareButton>
-        </div>
-      </div>*/}
       <div className="flex items-center justify-between gap-3 border-2 border-primary mt-4 rounded-full py-2 px-2">
-        <p className="text-neutral-500 text-sm">{truncateStringTo(`${window.location.host}/post/${postId}`, 30)}</p>
-        <button
-          onClick={() => navigator.clipboard.writeText(`${window.location.host}/post/${postId}`)}
-          className="text-white bg-primary px-3 py-2 rounded-full text-xs font-medium"
-        >
+        <p className="text-neutral-500 text-sm">{truncateStringTo(postUrl, 30)}</p>
+        <button onClick={() => navigator.clipboard.writeText(postUrl)} className="text-white bg-primary px-3 py-2 rounded-full text-xs font-medium">
           Copy
         </button>
       </div>
     </div>
   )
-}
+})
+
+SharePopup.displayName = 'SharePopup'
+
+const MemoizedSharePopup = memo(SharePopup)
 
 interface Like {
   userId: string
@@ -103,153 +81,212 @@ interface PostProps {
   isPostVerified?: boolean
 }
 
-const PostCard = ({
-  user,
-  university,
-  adminId,
-  year,
-  text,
-  date,
-  avatarLink,
-  likes,
-  type,
-  postID,
-  images,
-  setImageCarasol,
-  idx,
-  commentCount,
-  showCommentSection,
-  setShowCommentSection,
-  communityGroupId,
-  communityId,
-  isTimeline = false,
-  major,
-  role,
-  occupation,
-  affiliation,
-  isPostVerified,
-  communityName,
-  communityGroupName,
-}: PostProps) => {
-  const { userData } = useUniStore()
-  const router = useRouter()
-  const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(communityId, communityGroupId, isTimeline)
-  const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(communityId)
-
-  const LikeUnlikeHandler = (postId: string) => {
-    if (type === PostType.Timeline) {
-      LikeUnlikeTimelinePost(postId)
-    } else if (type === PostType.Community) {
-      LikeUnlikeGroupPost(postId)
-    }
-  }
-
-  const PostData = {
+const PostCard = React.memo(
+  ({
     user,
-    avatarLink: avatarLink,
-    date,
     university,
-    year,
-    content: text,
-    type,
     adminId,
-  }
+    year,
+    text,
+    date,
+    avatarLink,
+    likes,
+    type,
+    postID,
+    images,
+    setImageCarasol,
+    idx,
+    commentCount,
+    showCommentSection,
+    setShowCommentSection,
+    communityGroupId,
+    communityId,
+    isTimeline = false,
+    major,
+    role,
+    occupation,
+    affiliation,
+    isPostVerified,
+    communityName,
+    communityGroupName,
+  }: PostProps) => {
+    const { userData } = useUniStore()
 
-  const getPostSourceText = () => {
-    if (type === PostType.Community && communityGroupId) {
-      return `Posted in ${communityGroupName} group at ${communityName}`
-    }
-    if (type === PostType.Community) {
-      return `Posted from ${communityName || ''}`
-    }
-    return null
-  }
+    const router = useRouter()
 
-  // Usage in your component
-  {
-    getPostSourceText()
-  }
+    // Local state for immediate UI feedback
+    const [localLikes, setLocalLikes] = useState<any>(likes)
+    const [localIsLiked, setLocalIsLiked] = useState(false)
+    const [localLikeCount, setLocalLikeCount] = useState(likes?.length || 0)
+    const debounceTimeoutRef = useRef<NodeJS.Timeout>()
 
-  const handleProfileClicked = useCallback((adminId: string) => {
-    router.push(`/profile/${adminId}`)
-  }, [])
+    const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(communityId, communityGroupId, isTimeline)
+    const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(communityId)
 
-  return (
-    <div className={`bg-white rounded-lg shadow-card`}>
-      <div className="px-6 flex flex-col gap-2">
-        <div className="flex items-start pt-4 gap-2 justify-between">
-          <UserCard
-            user={user}
-            university={university}
-            year={year}
-            major={major}
-            avatar={avatarLink || avatar}
-            adminId={adminId}
-            postID={postID}
-            type={type}
-            handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
-            affiliation={affiliation}
-            occupation={occupation}
-            role={role}
-            isPost={true}
-            isVerified={isPostVerified}
-          />
+    const handleProfileClicked = useCallback(
+      (adminId: string) => {
+        router.push(`/profile/${adminId}`)
+      },
+      [router]
+    )
 
-          <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
-            <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
+    // Initialize local state
+    useEffect(() => {
+      setLocalLikes(likes)
+      setLocalLikeCount(likes?.length || 0)
+      setLocalIsLiked(likes?.some((like) => like.userId === userData?.id) || false)
+    }, [likes, userData?.id])
+
+    // Cleanup timeout on unmount
+    useEffect(() => {
+      return () => {
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current)
+        }
+      }
+    }, [])
+
+    const debouncedLikeUnlike = useCallback(
+      (postId: string) => {
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current)
+        }
+
+        debounceTimeoutRef.current = setTimeout(() => {
+          if (type === PostType.Timeline) {
+            LikeUnlikeTimelinePost(postId)
+          } else if (type === PostType.Community) {
+            LikeUnlikeGroupPost(postId)
+          }
+        }, 500) // 500ms debounce delay
+      },
+      [type, LikeUnlikeTimelinePost, LikeUnlikeGroupPost]
+    )
+
+    const handleLikeClick = useCallback(
+      (postId: string) => {
+        // Immediate local state update
+        const newIsLiked = !localIsLiked
+        setLocalIsLiked(newIsLiked)
+        setLocalLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1))
+        setLocalLikes((prev: any) => (newIsLiked ? [...prev, { userId: userData?.id }] : prev.filter((like: any) => like.userId !== userData?.id)))
+
+        // Debounced API call
+        debouncedLikeUnlike(postId)
+      },
+      [localIsLiked, userData?.id, debouncedLikeUnlike]
+    )
+
+    const postSourceText = useMemo(() => {
+      if (type === PostType.Community && communityGroupId) {
+        return `Posted in ${communityGroupName} group at ${communityName}`
+      }
+      if (type === PostType.Community) {
+        return `Posted from ${communityName || ''}`
+      }
+      return null
+    }, [type, communityGroupId, communityGroupName, communityName])
+
+    const formattedDate = useMemo(() => format(date as unknown as Date, 'h:mm a · MMM d, yyyy'), [date])
+
+    //const isLiked = useMemo(() => likes?.some((like: any) => like.userId == userData?.id), [likes, userData?.id])
+
+    const PostData = useMemo(
+      () => ({
+        user,
+        avatarLink: avatarLink,
+        date,
+        university,
+        year,
+        content: text,
+        type,
+        adminId,
+      }),
+      [user, avatarLink, date, university, year, text, type, adminId]
+    )
+
+    const toggleCommentSection = useCallback(() => {
+      setShowCommentSection(showCommentSection === postID ? '' : postID)
+    }, [showCommentSection, postID, setShowCommentSection])
+
+    return (
+      <div className="bg-white rounded-lg shadow-card">
+        <div className="px-6 flex flex-col gap-2">
+          <div className="flex items-start pt-4 gap-2 justify-between">
+            <UserCard
+              user={user}
+              university={university}
+              year={year}
+              major={major}
+              avatar={avatarLink || avatar}
+              adminId={adminId}
+              postID={postID}
+              type={type}
+              handleProfileClicked={handleProfileClicked}
+              affiliation={affiliation}
+              occupation={occupation}
+              role={role}
+              isPost={true}
+              isVerified={isPostVerified}
+            />
+
+            <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
+              <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
+            </div>
+          </div>
+
+          <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
+
+          <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
+
+          <p className="text-2xs flex items-center mb-2">
+            <span className="text-neutral-500 font-normal break-words">
+              {formattedDate} · {postSourceText}
+            </span>
+          </p>
+        </div>
+
+        <div className="flex items-center justify-end py-2 border-t border-neutral-200 text-sm text-neutral-500 px-6">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => handleLikeClick(postID)}
+              className="flex gap-1 items-center cursor-pointer"
+              disabled={isLikeUnlikePending || isLikeUnlikeGroupPending}
+            >
+              {localLikeCount}
+
+              <FiThumbsUp className="mr-1 text-neutral-600 transition-all duration-300" color={localIsLiked ? '#6647FF' : ''} />
+            </button>
+            <button onClick={toggleCommentSection} className="flex gap-2 items-center cursor-pointer">
+              {commentCount} <FiMessageCircle className="mr-1 text-neutral-600" />
+            </button>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-1 text-xs">
+                  Share <FiShare2 className="mr-1 text-neutral-600" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="relative -left-5 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
+                <MemoizedSharePopup postId={postID} />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
-        {/* //post Image  */}
-        <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
-
-        <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
-
-        <p className=" text-2xs flex items-center mb-2">
-          <span className="text-neutral-500 font-normal break-words">
-            {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · {getPostSourceText()}
-          </span>
-        </p>
+        <PostCommentBox
+          handleProfileClicked={handleProfileClicked}
+          showCommentSec={showCommentSection}
+          postID={postID}
+          type={type}
+          data={PostData}
+          setImageCarasol={setImageCarasol}
+        />
       </div>
+    )
+  }
+)
 
-      {/* Post Meta */}
+PostCard.displayName = 'PostCard'
 
-      <div className={`flex items-center justify-end py-2 border-t border-neutral-200 text-sm text-neutral-500 px-6`}>
-        <div className="flex items-center gap-4">
-          <span onClick={() => LikeUnlikeHandler(postID)} className="flex gap-1 items-center cursor-pointer">
-            {likes?.length}
-            {isLikeUnlikePending || isLikeUnlikeGroupPending ? (
-              <Spinner />
-            ) : (
-              <FiThumbsUp className="mr-1 text-neutral-600" color={likes?.some((like: any) => like.userId == userData?.id) ? '#6647FF' : ''} />
-            )}
-          </span>
-          <span onClick={() => setShowCommentSection(showCommentSection == postID ? ' ' : postID)} className="flex gap-2 items-center cursor-pointer">
-            {commentCount} <FiMessageCircle className="mr-1 text-neutral-600" />
-          </span>
-
-          <Popover>
-            <PopoverTrigger>
-              <span className="flex items-center gap-1 text-xs">
-                Share <FiShare2 className="mr-1 text-neutral-600 " />
-              </span>
-            </PopoverTrigger>
-            <PopoverContent className="relative -left-5 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-              <SharePopup postId={postID} />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-      <PostCommentBox
-        handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
-        showCommentSec={showCommentSection}
-        postID={postID}
-        type={type}
-        data={PostData}
-        setImageCarasol={setImageCarasol}
-      />
-    </div>
-  )
-}
-
-export default PostCard
+export default memo(PostCard)

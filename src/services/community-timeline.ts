@@ -16,7 +16,7 @@ export async function UpdateUserPost(data: UserPostData, postId: string, token: 
 }
 
 export async function LikeUnilikeUserPost(postId: string, token: string) {
-  const response: any = await client(`/userpost/likeunlike/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  const response: any = await client(`/userpost/likes/${postId}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -272,10 +272,7 @@ export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
       })
     },
     onError: (res: any) => {
-      return showToast(res.response.data.message, {
-        variant: 'error',
-        isDarkMode: false,
-      })
+      return showCustomDangerToast(res.response.data.message)
     },
   })
 }

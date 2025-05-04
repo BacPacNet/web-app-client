@@ -465,6 +465,7 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
       }
     },
     onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message as string)
       console.log(res.response.data.message, 'res')
     },
   })

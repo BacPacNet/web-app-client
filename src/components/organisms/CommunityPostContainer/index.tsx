@@ -1,12 +1,9 @@
 'use client'
-import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostSkeleton from '@/components/atoms/PostSkeleton'
 import Card from '@/components/atoms/Card'
@@ -18,7 +15,6 @@ type Props = {
   containerRef?: React.RefObject<HTMLDivElement> | any
 }
 const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef }: Props) => {
-  const queryClient = useQueryClient()
   const [showCommentSection, setShowCommentSection] = useState('')
 
   const {
@@ -28,7 +24,6 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     hasNextPage: communityPostHasNextPage,
     error: communityPostError,
     dataUpdatedAt,
-    isFetching,
     isLoading,
   } = useGetCommunityPost(communityID, true, 10)
   const [communityDatas, setCommunityDatas] = useState([])
@@ -62,12 +57,6 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
       container?.removeEventListener('scroll', handleScroll)
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
-
-  //  useEffect(() => {
-  //    if (isFetching) {
-  //      setCommunityDatas([])
-  //    }
-  //  }, [isFetching, queryClient])
 
   useEffect(() => {
     const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)

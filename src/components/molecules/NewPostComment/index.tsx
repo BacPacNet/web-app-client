@@ -21,6 +21,7 @@ const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextE
 
 type Props = {
   setNewPost: (value: boolean) => void
+  postType: PostType.Community | PostType.Timeline
   data: {
     user: string
     avatarLink: string
@@ -28,7 +29,6 @@ type Props = {
     university: string
     year: string
     text: string
-    type: PostType.Community | PostType.Timeline
     adminId: string
     commentId?: string
     level?: string
@@ -38,7 +38,7 @@ type Props = {
   isNested?: boolean
 }
 
-const NewPostComment = ({ setNewPost, data, postId }: Props) => {
+const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
@@ -92,14 +92,15 @@ const NewPostComment = ({ setNewPost, data, postId }: Props) => {
     }
 
     // Handle different post types (Timeline or Community)
-    if (data.type === PostType.Timeline) {
+    if (postType === PostType.Timeline) {
       mutateUserPostComment(payload)
-    } else if (data.type === PostType.Community) {
-      // Handle comments on Community posts (with adminId if necessary)
-      if (data.adminId) {
-        payload.adminId = data.adminId
-      }
-      mutateGroupPostComment(data)
+    } else if (postType === PostType.Community) {
+      mutateGroupPostComment(payload)
+
+      //  if (data.adminId) {
+      //    payload.adminId = data.adminId
+      //  }
+      //  mutateGroupPostComment(data)
     }
     resetPostContent()
     setNewPost(false)
@@ -143,7 +144,7 @@ const NewPostComment = ({ setNewPost, data, postId }: Props) => {
           <Editor
             onTextChange={(innerHTML) => (quillHTMLState.current = innerHTML)}
             ref={quillRef}
-            type={data.type as any}
+            type={postType as any}
             getQuillInstance={setQuillInstance}
             placeholder="What`s on your mind?"
           />
