@@ -1,6 +1,6 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
+//import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import Spinner from '@/components/atoms/spinner'
 import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
@@ -112,7 +112,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
             </label>
           </div>
           <div className="flex gap-2 h-10">
-            <SelectDropdown
+            {/*<SelectDropdown
               options={Object.values(CommunityPostTypeOption)}
               value={postAccessType}
               onChange={(e: any) => setPostAccessType(e)}
@@ -122,7 +122,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
               err={false}
               showIcon={true}
               isAllowedToRemove={false}
-            />
+            />*/}
             <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>

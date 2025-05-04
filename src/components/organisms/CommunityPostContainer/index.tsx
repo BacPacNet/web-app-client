@@ -2,7 +2,6 @@
 import Loading from '@/app/register/loading'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
-import { useGetCommunityGroupPost } from '@/services/community-university'
 import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
@@ -11,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostSkeleton from '@/components/atoms/PostSkeleton'
 import Card from '@/components/atoms/Card'
+import { useGetCommunityPost } from '@/services/community-university'
 
 type Props = {
   communityID?: string
@@ -30,7 +30,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     dataUpdatedAt,
     isFetching,
     isLoading,
-  } = useGetCommunityGroupPost(communityID, communityGroupID, true, 10)
+  } = useGetCommunityPost(communityID, true, 10)
   const [communityDatas, setCommunityDatas] = useState([])
 
   const [imageCarasol, setImageCarasol] = useState<{
@@ -63,11 +63,11 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
-  useEffect(() => {
-    if (isFetching) {
-      setCommunityDatas([])
-    }
-  }, [isFetching, queryClient])
+  //  useEffect(() => {
+  //    if (isFetching) {
+  //      setCommunityDatas([])
+  //    }
+  //  }, [isFetching, queryClient])
 
   useEffect(() => {
     const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)

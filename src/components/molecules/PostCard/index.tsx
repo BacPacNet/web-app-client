@@ -155,6 +155,21 @@ const PostCard = ({
     adminId,
   }
 
+  const getPostSourceText = () => {
+    if (type === PostType.Community && communityGroupId) {
+      return `Posted in ${communityGroupName} group at ${communityName}`
+    }
+    if (type === PostType.Community) {
+      return `Posted from ${communityName || ''}`
+    }
+    return null
+  }
+
+  // Usage in your component
+  {
+    getPostSourceText()
+  }
+
   const handleProfileClicked = useCallback((adminId: string) => {
     router.push(`/profile/${adminId}`)
   }, [])
@@ -190,14 +205,11 @@ const PostCard = ({
 
         <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
 
-        {type === PostType.Community ? (
-          <p className=" text-2xs flex items-center mb-2">
-            <span className="text-neutral-500 font-normal break-words">
-              {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} ·{' '}
-              {communityGroupId ? `Posted in ${communityGroupName} group at ${communityName}` : `Posted from ${communityName || ''}`}
-            </span>
-          </p>
-        ) : null}
+        <p className=" text-2xs flex items-center mb-2">
+          <span className="text-neutral-500 font-normal break-words">
+            {format(date as unknown as Date, 'h:mm a · MMM d, yyyy')} · {getPostSourceText()}
+          </span>
+        </p>
       </div>
 
       {/* Post Meta */}
