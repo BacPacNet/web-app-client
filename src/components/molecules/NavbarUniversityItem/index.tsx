@@ -21,6 +21,7 @@ import { sortBy } from '@/types/CommuityGroup'
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
 import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
+import { isEmpty } from '@/lib/utils'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -65,6 +66,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const isUserVerifiedForCommunity = useMemo(() => {
     return userProfileData?.email?.some((community) => community?.communityId === selectCommunityId)
   }, [community])
+
+  const isFilterApplied = useMemo(() => !isEmpty(selectedFiltersMain) || !isEmpty(selectedTypeMain), [selectedFiltersMain, selectedTypeMain])
 
   const handleNewGroupModal = () => {
     openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
@@ -247,9 +250,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
         <div className="flex gap-2 my-4">
           <div className="flex-1">
-            <Buttons onClick={() => handleCommunityGroupFilter()} variant="border" className="h-10 w-full gap-1 text-xs">
+            <Buttons
+              onClick={() => handleCommunityGroupFilter()}
+              variant={isFilterApplied ? 'primary' : 'border'}
+              className="h-10 w-full gap-1 text-xs"
+            >
               Filter
-              <LuFilter className="h-3.5 w-3.5 text-primary-500" />
+              <LuFilter className={`h-3.5 w-3.5 ${isFilterApplied ? 'text-white' : 'text-primary-500'}`} />
             </Buttons>
           </div>
 

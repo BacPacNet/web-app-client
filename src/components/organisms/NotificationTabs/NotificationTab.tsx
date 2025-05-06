@@ -48,7 +48,7 @@ const NotificationTab = () => {
 
   return (
     <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit] ">
-      <h6 className="text-[20px] text-neutral-700 font-bold font-inter p-4 sm:p-6">Notifications</h6>
+      <h6 className="text-[20px] text-neutral-700 font-bold font-poppins p-4">Notifications</h6>
       {notifications?.map((item) => {
         return <NotificationCard key={item?._id} data={item} />
       })}

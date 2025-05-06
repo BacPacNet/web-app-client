@@ -29,7 +29,7 @@ export default function ConnectionPage() {
   ]
 
   return (
-    <div className="py-4 h-with-navbar">
+    <div className="py-0 h-[-webkit-fill-available]">
       <Card className="rounded-2xl h-full overflow-hidden px-4">
         {/* <Tabs tabs={tabs} className={'h-full'} /> */}
         <h6 className="font-poppins font-bold text-[20px]  mb-4">Connections</h6>

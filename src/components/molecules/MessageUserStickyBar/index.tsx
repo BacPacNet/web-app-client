@@ -111,7 +111,7 @@ const MessageUserStickyBar = ({
     openModal(<EditGroupChatModal users={users} chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />)
   }
   return (
-    <div className="w-full top-0 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
+    <div className="w-full top-0 p-4 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
       <div className="flex items-center gap-4">
         <p onClick={() => handleBack()}>
           <IoIosArrowBack className="w-6 h-6 text-[#6744FF] cursor-pointer" />

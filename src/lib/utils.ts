@@ -97,3 +97,59 @@ export const validateImageFiles = (files: File[], maxFiles: number = 4, maxSize:
 
   return { isValid: true, message: '' }
 }
+
+export const validateUploadedFiles = (
+  files: File[],
+  options: {
+    maxFiles?: number
+    maxSize?: number
+  } = {}
+): { isValid: boolean; message: string } => {
+  const {
+    maxFiles = 4,
+    maxSize = 5 * 1024 * 1024, // 5MB
+  } = options
+
+  // Supported formats
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+    'image/heic',
+    'image/heif',
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/msword',
+  ]
+
+  if (files.length > maxFiles) {
+    return { isValid: false, message: `Maximum ${maxFiles} files allowed` }
+  }
+
+  if (files.some((file) => file.size > maxSize)) {
+    return { isValid: false, message: 'File too large' }
+  }
+
+  if (files.some((file) => !allowedTypes.includes(file.type))) {
+    return { isValid: false, message: 'Invalid format' }
+  }
+
+  return { isValid: true, message: '' }
+}
+
+export const isEmpty = (obj: any) => {
+  return Object.keys(obj).length === 0
+}
+
+export const formatFileSize = (bytes: number): string => {
+  if (bytes < 1024) {
+    return `${bytes} Bytes`
+  } else if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`
+  } else if (bytes < 1024 * 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  } else {
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+  }
+}
