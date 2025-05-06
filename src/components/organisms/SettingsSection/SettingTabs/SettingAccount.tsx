@@ -4,11 +4,11 @@ import SubText from '@/components/atoms/SubText'
 import SupportingText from '@/components/atoms/SupportingText'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import blueTick from '@/assets/blueBGTick.svg'
 import { FaCirclePlus } from 'react-icons/fa6'
 import uniLogo from '@/assets/unibuzz-orange.png'
 import Button from '@/components/atoms/Buttons'
 import InputBox from '@/components/atoms/Input/InputBox'
+import badge from '@/assets/badge.svg'
 
 import { useUniStore } from '@/store/store'
 import { EmailType } from '@/models/auth'
@@ -18,6 +18,7 @@ import ChangePasswordModal from '../SettingModals/ChangePasswordModal'
 import UniversityVerificationModal from '../SettingModals/UniversityVerificationModal'
 import ChangeEmailModal from '../SettingModals/ChangeEmailModal'
 import DeActivateModal from '../SettingModals/DeActivateModal'
+import UniversityVerificationPerks from '@/components/atoms/UniversityVerificationPerks'
 
 const SettingAccount = () => {
   const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
@@ -29,50 +30,35 @@ const SettingAccount = () => {
   const userEmail = userData.email || ''
 
   return (
-    <div className="flex flex-col  py-4 px-0  max-md:px-4 gap-10">
+    <div className="flex flex-col py-4 px-2  max-md:px-4 gap-10">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <SettingsText className="text-md">University Verification</SettingsText>
-          {email?.length ? (
-            <SupportingText className="text-neutral-800">You are currently verified for the following universities:</SupportingText>
-          ) : (
-            <SupportingText className="text-neutral-800">Verify your account through your university email to unlock full features:</SupportingText>
+          <SettingsText className="text-[20px] font-bold font-poppins text-neutral-700">University Verification</SettingsText>
+          <UniversityVerificationPerks />
+          {email?.length > 0 && (
+            <SupportingText className="text-neutral-800 text-xs">You are currently verified for the following universities:</SupportingText>
           )}
         </div>
-        {email?.length ? (
-          email?.map((item: EmailType, idx) => (
-            <div key={idx}>
-              <div className="flex flex-col gap-6">
-                <div className="relative w-full flex flex-col gap-2">
-                  <label htmlFor="Current Username" className="font-medium text-neutral-900">
-                    University Email
-                  </label>
+        {email?.map((item: EmailType, idx) => (
+          <div key={idx}>
+            <div className="flex flex-col gap-6">
+              <div className="relative w-full flex flex-col gap-2">
+                <label htmlFor="Current Username" className="font-medium text-neutral-700 text-xs">
+                  University Email
+                </label>
 
-                  <InputBox className="w-80" placeholder="Email Address" type="email" value={item.UniversityEmail} disabled={true} />
-                  <div className=" flex  items-center ">
-                    <Image className="w-12 h-12" src={uniLogo} width={30} height={10} alt="logo" />
-                    <p className="h-10">{item?.UniversityName}</p>
+                <InputBox className="w-80" placeholder="Email Address" type="email" value={item.UniversityEmail} disabled={true} />
+                <div className=" flex items-center gap-2">
+                  <div className="rounded-full w-7 h-7 flex justify-center items-center border border-neutral-200 shadow-card">
+                    <Image className="w-6 h-6 object-contain rounded-full" src={item.logo || uniLogo} width={10} height={10} alt="logo" />
                   </div>
+                  <p className="text-neutral-700 font-semibold">{item?.UniversityName}</p>
+                  <Image src={badge} width={18} height={18} alt="badge" />
                 </div>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="">
-            <div className="flex gap-2 items-center">
-              <Image src={blueTick} width={24} height={24} alt="tick" />
-              <SubText>Can join more than 1 university community</SubText>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Image src={blueTick} width={24} height={24} alt="tick" />
-              <SubText>Can join private groups in university community</SubText>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Image src={blueTick} width={24} height={24} alt="tick" />
-              <SubText>Can create groups within university community </SubText>
-            </div>
           </div>
-        )}
+        ))}
         <Button onClick={() => openModal(<UniversityVerificationModal />)} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
           Verify Account {email?.length ? <FaCirclePlus /> : ''}
         </Button>

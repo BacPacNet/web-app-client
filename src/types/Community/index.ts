@@ -11,6 +11,7 @@ export interface Community {
   numberOfFaculty: number
   about: string
   users: CommunityUsers[]
+  isVerified?: boolean
   assistantId: string
   communityGroups: CommunityGroup[]
 }
@@ -79,4 +80,5 @@ export interface communityPostType {
   isPostVerified: boolean
   communityName?: string
   communityGroupName?: string
+  communityGroupId?: string
 }

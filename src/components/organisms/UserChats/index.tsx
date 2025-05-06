@@ -44,7 +44,10 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
       }
       if (!filteredChats) {
         return (
-          <div className="p-2">
+          <div className="p-4">
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
+            <UserListItemSkeleton />
             <UserListItemSkeleton />
             <UserListItemSkeleton />
             <UserListItemSkeleton />

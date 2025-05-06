@@ -339,7 +339,7 @@ const MessageContainer = () => {
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
           />
-          <div className="sticky w-full bottom-0">
+          <div className="sticky w-full bottom-0 px-4">
             <UserMessageInput
               chatId={selectedChat._id}
               userProfileId={userProfileData?._id || ''}

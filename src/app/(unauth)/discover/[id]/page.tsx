@@ -5,7 +5,7 @@ import { useUniversitySearchByName } from '@/services/universitySearch'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { MdEmail } from 'react-icons/md'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FaPhoneAlt, FaUsers } from 'react-icons/fa'
 import { IoIosLink } from 'react-icons/io'
 import { PiBuildingsFill } from 'react-icons/pi'
@@ -35,12 +35,16 @@ export default function UniversityProfile() {
   const params = useParams()
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [imageSrc, setImageSrc] = useState(university?.campus || universityPlaceholder)
   const [logoSrc, setLogoSrc] = useState(university?.logo || universityLogoPlaceholder)
 
   const { mutate: joinCommunityFromUniversity, isPending: isJoinLoading } = useJoinCommunityFromUniversity()
   const router = useRouter()
+
+  const isCommunityAlreadyJoined = useMemo(() => {
+    return userProfileData?.communities?.some((c) => c.communityId === university?.communityId)
+  }, [university, userProfileData])
 
   useEffect(() => {
     if (university?.campus) {
@@ -91,6 +95,9 @@ export default function UniversityProfile() {
     },
   ]
 
+  const handleViewCommunity = () => {
+    router.push(`/community/${university?.communityId}`)
+  }
   const handleClick = () => {
     //const email = userProfileData?.email?.find((email) => email.UniversityName == universityName)
     if (!userData?.id) {
@@ -124,9 +131,15 @@ export default function UniversityProfile() {
             </div>
             <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
 
-            <Buttons disabled={isJoinLoading} className="w-max" onClick={handleClick}>
-              Join Community
-            </Buttons>
+            {isCommunityAlreadyJoined ? (
+              <Buttons variant="shade" className="w-max" onClick={handleViewCommunity}>
+                View Community
+              </Buttons>
+            ) : (
+              <Buttons disabled={isJoinLoading} className="w-max" onClick={handleClick}>
+                Join Community
+              </Buttons>
+            )}
           </div>
           <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px] bg-neutral-300 rounded-lg">
             <Image

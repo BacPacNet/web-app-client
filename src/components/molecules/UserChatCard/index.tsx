@@ -30,7 +30,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
   return (
     <>
       <div className=" hover:bg-secondary">
-        <div className="flex justify-between py-4 px-2 overflow-hidden">
+        <div className="flex justify-between py-4 px-4 sm:px-6 overflow-hidden">
           <div className="flex gap-4 items-center relative w-full">
             <div className="w-12 h-12 flex-none flex flex-col gap-2 cursor-pointer">
               {isGroupChat && !profilePic ? (

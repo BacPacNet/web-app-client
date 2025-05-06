@@ -47,7 +47,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main Content - Scrollable */}
-        <main className="md:px-12 px-4 py-4 overflow-y-auto h-with-navbar flex-1 hideScrollbar">{children}</main>
+        <main className="md:px-12 px-4 py-4 overflow-y-auto h-with-navbar flex-1 hideScrollbar outline-none">{children}</main>
 
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
