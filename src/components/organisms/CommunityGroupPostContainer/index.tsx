@@ -65,8 +65,6 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     setCommunityGroupPostDatas(communityDatas)
   }, [communityGroupPost, dataUpdatedAt])
 
-  console.log('communityGroupPost', communityGroupPost)
-
   //   if (isLoading || isFetching)
   //     return (
   //       <div className="flex justify-center items-center py-10">
