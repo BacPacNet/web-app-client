@@ -8,8 +8,8 @@ import { GoFileMedia } from 'react-icons/go'
 import Buttons from '@/components/atoms/Buttons'
 import { replaceImage } from '@/services/uploadImage'
 import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
-import { useCreateUserPostComment } from '@/services/community-timeline'
-import { useCreateGroupPostComment } from '@/services/community-university'
+import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
+import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
 import { Spinner } from '@/components/spinner/Spinner'
 import dynamic from 'next/dynamic'
 import { MdCancel } from 'react-icons/md'
@@ -45,7 +45,18 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false)
   const { mutate: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false)
-
+  const { mutate: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
+    false,
+    // isNested,
+    true,
+    postType
+  )
+  const { mutate: CreateGroupPostCommentReply, isPending: useCreateGroupPostCommentReplyLoading } = useCreateGroupPostCommentReply(
+    false,
+    //   isNested,
+    true,
+    postType
+  )
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
 
@@ -57,6 +68,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
       publicId: result?.publicId || null,
     }))
   }
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
@@ -93,9 +105,25 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
 
     // Handle different post types (Timeline or Community)
     if (postType === PostType.Timeline) {
-      mutateUserPostComment(payload)
+      if (Number(data?.level) == 0) {
+        payload.level = 0
+        payload.commentId = data?.commentId
+
+        CreateUserPostCommentReply(payload)
+      } else {
+        mutateUserPostComment(payload)
+      }
     } else if (postType === PostType.Community) {
-      mutateGroupPostComment(payload)
+      if (Number(data?.level) == 0) {
+        payload.level = 0
+        payload.commentId = data?.commentId
+
+        CreateGroupPostCommentReply(payload)
+      } else {
+        payload.adminId = data.adminId
+
+        mutateGroupPostComment(payload)
+      }
 
       //  if (data.adminId) {
       //    payload.adminId = data.adminId

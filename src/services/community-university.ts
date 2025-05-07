@@ -7,6 +7,7 @@ import { Community } from '@/types/Community'
 import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
+import { useUniStore } from '@/store/store'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -351,8 +352,8 @@ export function useGetCommunityPost(communityId: string, isCommunity: boolean, l
     queryKey: ['communityGroupsPost', communityId],
     queryFn: ({ pageParam = 1 }) => getAllCommunityPost(communityId, cookieValue, pageParam, limit),
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1
       }
       return undefined
     },
@@ -368,8 +369,8 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
     queryKey: ['communityGroupsPost', communityId, communityGroupID],
     queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1
       }
       return undefined
     },
@@ -457,11 +458,23 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
 
-    onSuccess: () => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['getPost'] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+    onSuccess: (res: any) => {
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (currUserComments) {
+        queryClient.setQueryData(['communityPostComments'], {
+          ...currUserComments,
+          pages: currUserComments.pages.map((page, index) => {
+            if (index === 0) {
+              return {
+                ...page,
+                finalComments: [res.comment, ...page.finalComments],
+                totalComments: page.totalComments + 1,
+              }
+            }
+            return page
+          }),
+        })
       }
     },
     onError: (res: any) => {
@@ -476,16 +489,33 @@ export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: 
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostCommentReply(data, cookieValue),
 
-    onSuccess: () => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['getPost'] })
-      }
-      if (isNested) {
-        if (type == PostType.Community) {
-          queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
-        }
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+    onSuccess: (data: any) => {
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (currUserComments) {
+        const updatedPages = currUserComments.pages.map((page) => {
+          return {
+            ...page,
+            finalComments: page.finalComments.map((comment: any) => {
+              if (comment._id === data.commentReply._id) {
+                const updatedComment = {
+                  ...comment,
+                  ...data.commentReply,
+                  totalCount: comment.replies.length + 1,
+                }
+
+                return updatedComment
+              }
+
+              return comment
+            }),
+          }
+        })
+
+        queryClient.setQueryData(['communityPostComments'], {
+          ...currUserComments,
+          pages: updatedPages,
+        })
       }
     },
     onError: (res: any) => {
@@ -496,15 +526,58 @@ export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: 
 
 export const useLikeUnlikeGroupPostComment = (isReply: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
+  const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (communityGroupPostCommentId: any) => LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
+    mutationFn: ({ communityGroupPostCommentId, level }: { communityGroupPostCommentId: string; level: string }) =>
+      LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
-    onSuccess: () => {
-      if (isReply) {
-        queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    onSuccess: (_, variables) => {
+      const { communityGroupPostCommentId, level } = variables
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (currUserComments) {
+        queryClient.setQueryData(['communityPostComments'], {
+          ...currUserComments,
+          pages: currUserComments.pages.map((page) => {
+            return {
+              ...page,
+              finalComments: page.finalComments.map((comment: any) => {
+                if (level === '0' && comment._id === communityGroupPostCommentId) {
+                  const hasLiked = comment.likeCount.some((like: any) => like.userId === userData?.id)
+
+                  return {
+                    ...comment,
+                    likeCount: hasLiked
+                      ? comment.likeCount.filter((like: any) => like.userId !== userData?.id)
+                      : [...comment.likeCount, { userId: userData?.id }],
+                  }
+                }
+
+                if (level === '1') {
+                  return {
+                    ...comment,
+                    replies: comment.replies.map((reply: any) => {
+                      if (reply._id === communityGroupPostCommentId) {
+                        const hasLiked = reply.likeCount.some((like: any) => like.userId === userData?.id)
+
+                        return {
+                          ...reply,
+                          likeCount: hasLiked
+                            ? reply.likeCount.filter((like: any) => like.userId !== userData?.id)
+                            : [...reply.likeCount, { userId: userData?.id }],
+                        }
+                      }
+                      return reply
+                    }),
+                  }
+                }
+
+                return comment
+              }),
+            }
+          }),
+        })
       }
     },
     onError: (res: any) => {

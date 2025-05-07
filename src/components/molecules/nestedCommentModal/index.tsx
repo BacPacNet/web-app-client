@@ -164,11 +164,11 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
     setChildCommentsId((prevIds) => [...prevIds, ...childCommentsIds])
   }
 
-  const likePostCommentHandler = (commentId: string) => {
+  const likePostCommentHandler = (commentId: string, level: string) => {
     if (type === PostType.Timeline) {
-      likeUserPostComment(commentId)
+      likeUserPostComment({ userPostCommentId: commentId, level })
     } else if (type === PostType.Community) {
-      likeGroupPostComment(commentId)
+      likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
     }
   }
 
@@ -246,7 +246,7 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
           <div className="flex justify-start   max-sm:ps-0 mt-3 gap-5 max-sm:gap-2 text-xs max-sm:text-2xs">
             <div className="flex items-center cursor-pointer">
               <AiOutlineLike
-                onClick={() => likePostCommentHandler(comment._id)}
+                onClick={() => likePostCommentHandler(comment._id, comment.level.toString())}
                 color={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? '#6647FF' : ''}
               />
               <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>

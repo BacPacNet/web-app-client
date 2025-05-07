@@ -130,6 +130,10 @@ export async function UpdateCommunityGroup(data: { id: string }, token: string) 
   const response = await client(`/notification`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
+export async function markAllNotificationAsRead(token: string) {
+  const response = await client(`/notification/user/read-all`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
 export async function UpdateIsRead(data: { id: string }, token: string) {
   const response = await client(`/notification`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return response
@@ -314,4 +318,21 @@ export function useGetUserUnreadMessagesTotalCount() {
   }
 
   return { ...state, error: errorMessage }
+}
+
+export const useMarkAllNotificationAsRead = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => markAllNotificationAsRead(cookieValue),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+      queryClient.invalidateQueries({ queryKey: ['user_notification_total_count'] })
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+    },
+  })
 }

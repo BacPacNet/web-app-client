@@ -56,11 +56,11 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
     }
   }
 
-  const likePostCommentHandler = (commentId: string) => {
+  const likePostCommentHandler = (commentId: string, level: string) => {
     if (type === PostType.Timeline) {
-      likeUserPostComment(commentId)
+      likeUserPostComment({ userPostCommentId: commentId, level })
     } else if (type === PostType.Community) {
-      likeGroupPostComment(commentId)
+      likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
     }
   }
 
@@ -124,7 +124,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
         key={comment._id}
         className={`${comments.length - 1 === index ? 'mt-4' : 'mt-4'}  w-auto h-full relative ${
           childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'
-        } ${comment.level == 1 && index > 0 ? 'mt-4 ' : ''}  `}
+        } ${comment.level == 1 ? 'mt-4 ml-6' : ''}  `}
       >
         <div>
           <UserCard
@@ -150,7 +150,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
           <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
             <div className="flex items-center cursor-pointer">
               <AiOutlineLike
-                onClick={() => likePostCommentHandler(comment._id)}
+                onClick={() => likePostCommentHandler(comment._id, comment.level.toString())}
                 className={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? 'text-primary' : ''}
               />
               <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
@@ -164,7 +164,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
                 }}
                 className="flex items-center  cursor-pointer"
               >
-                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount}
+                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount || 0}
               </span>
             )}
             {comment.level >= 1 ? (

@@ -66,43 +66,48 @@ type Props = {
 }
 
 const NotificationCard = ({ data }: Props) => {
-  const { mutate: updateIsSeen } = useUpdateIsRead(data.type)
+  const { mutateAsync: updateIsSeen } = useUpdateIsRead(data.type)
 
   const router = useRouter()
 
-  const handleUpdateIsRead = (id: string) => {
-    const dataToPush = {
-      id: id,
-    }
-    if (data?.isRead) {
-      switch (data.type) {
-        case notificationRoleAccess.FOLLOW:
-          return router.push(`/profile/${data.sender_id?._id}`)
-        case notificationRoleAccess.COMMENT:
-          return router.push(`/post/${data.userPostId}?isType=Timeline`)
-        case notificationRoleAccess.COMMUNITY_COMMENT:
-          return router.push(`/post/${data.communityPostId}?isType=Community`)
-        // case notificationRoleAccess.GROUP_INVITE:
-        //   return router.push(`/groups/${data.communityGroupId?._id}`)
-        case notificationRoleAccess.REACTED_TO_POST:
-          return router.push(`/post/${data.userPostId}?isType=Timeline`)
-        case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
-          return router.push(`/post/${data.communityPostId}?isType=Community`)
-        case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
-          return
-        default:
-          break
-      }
+  const handleUpdateIsRead = async (e: any, id: string) => {
+    e.stopPropagation()
+
+    const dataToPush = { id }
+
+    if (!data?.isRead) {
+      await updateIsSeen(dataToPush)
     }
 
-    return updateIsSeen(dataToPush)
+    switch (data?.type) {
+      case notificationRoleAccess.FOLLOW:
+        return router.push(`/profile/${data.sender_id?._id}`)
+      case notificationRoleAccess.COMMENT:
+        return router.push(`/post/${data.userPostId}?isType=Timeline`)
+      case notificationRoleAccess.COMMUNITY_COMMENT:
+        return router.push(`/post/${data.communityPostId}?isType=Community`)
+      case notificationRoleAccess.REACTED_TO_POST:
+        return router.push(`/post/${data.userPostId}?isType=Timeline`)
+      case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
+        return router.push(`/post/${data.communityPostId}?isType=Community`)
+      case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
+      case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
+      case notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST:
+      case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+      case notificationRoleAccess.GROUP_INVITE:
+      case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
+      case notificationRoleAccess.REJECTED_PRIVATE_GROUP_REQUEST:
+        return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}`)
+      default:
+        break
+    }
   }
 
   return (
     <div
-      onClick={() => handleUpdateIsRead(data?._id)}
-      className={`flex flex-col gap-2  border-b-2 border-neutral-200 px-6 py-4 hover:bg-surface-primary-50  transition-all duration-200 cursor-pointer ${
-        data?.isRead ? 'bg-neutral-50' : ''
+      onClick={(e) => handleUpdateIsRead(e, data?._id)}
+      className={`flex flex-col gap-2  border-b-2 border-neutral-200 px-6 py-4 hover:bg-surface-primary-50 bg-neutral-100  transition-all duration-200 cursor-pointer ${
+        data?.isRead ? 'bg-white' : ''
       }`}
     >
       <div className="flex justify-between items-center">

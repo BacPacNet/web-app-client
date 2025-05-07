@@ -27,6 +27,7 @@ interface Props {
 export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
   const { userData } = useUniStore()
+  const [toggleDropdown, setToggleDropdown] = useState(false)
 
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
   const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
@@ -45,6 +46,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
   const { mutate: joinCommunity } = useJoinCommunity()
 
   const handleToggleJoinCommunity = () => {
+    setToggleDropdown(false)
     if (!isUserJoinedCommunity) {
       joinCommunity(communityID, {
         onSuccess: () => setIsUserJoinedCommunity(true),
@@ -83,15 +85,15 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
             <p className="ai-power text-xs font-black">AI POWERED</p>
           </div>
           {isUserJoinedCommunity ? (
-            <Popover>
+            <Popover open={toggleDropdown}>
               <PopoverTrigger>
-                <Image src={settingIcon} width={32} height={32} alt="Settings" />
+                <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="Settings" />
               </PopoverTrigger>
               <PopoverContent className="p-0 drop-shadow-lg  top-2 w-40 bg-white shadow-card border-none absolute -right-[20px]">
                 <div className="flex flex-col">
                   {isGroupAdmin && (
                     <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
-                      <FiEdit size={16} className="text-primary-500" />
+                      <FiEdit onClick={() => setToggleDropdown(false)} size={16} className="text-primary-500" />
                       <p className="font-medium text-neutral-700 text-xs">Edit</p>
                     </div>
                   )}

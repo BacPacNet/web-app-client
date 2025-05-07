@@ -45,11 +45,11 @@ const CommunityLeaveModal = ({ communityID, setIsUserJoinedCommunity, communityG
         Are you sure you want to leave {communityID ? 'community?' : 'community group?'}
       </h3>
       <div className="flex items-center gap-6 w-full px-5">
-        <Buttons onClick={() => closeModal()} className="w-11/12" size="small">
-          No
-        </Buttons>
         <Buttons onClick={() => handleLeaveCommunity()} className="w-11/12" size="small" variant="danger">
           {isLeaveLoading || isLeaveCommunityPending ? <Spinner /> : 'Yes'}
+        </Buttons>
+        <Buttons onClick={() => closeModal()} className="w-11/12" size="small">
+          No
         </Buttons>
       </div>
     </div>

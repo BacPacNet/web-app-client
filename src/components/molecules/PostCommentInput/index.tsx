@@ -26,7 +26,7 @@ type props = {
   isNested?: boolean
   commentId?: string
   commenterProfileId: string
-  level: string
+  level: number
   setNewPost: (value: boolean) => void
 }
 
