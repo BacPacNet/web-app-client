@@ -4,6 +4,7 @@ import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { AxiosErrorType, PostCommentData, PostType, UserPostData } from '@/types/constants'
 import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useUniStore } from '@/store/store'
 
 export async function DeleteUserPost(postId: string, token: string) {
   const response = await client(`/userpost/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -86,17 +87,6 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
           }),
         })
       }
-
-      //   if (isSinglePost) {
-      //     console.log('data', data)
-
-      // const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['getPost', postId])
-      // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-      //   }
-      //   else {
-      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
-      //   }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -139,21 +129,6 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
           pages: updatedPages,
         })
       }
-
-      //   if (isSinglePost) {
-      //     queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
-      //     // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-      //     // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-      //   }
-      //   if (isNested) {
-      //     if (type == PostType.Timeline) {
-      //       //   queryClient.invalidateQueries({ queryKey: ['commentById'] })
-      //       queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
-      //     }
-      //   } else {
-      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
-      //   }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -163,16 +138,57 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
 
 export const useLikeUnlikeUserPostComment = (isReply: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
+  const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (userPostCommentId: string) => LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
+    mutationFn: ({ userPostCommentId, level }: { userPostCommentId: string; level: string }) =>
+      LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
+    onSuccess: (_, variables) => {
+      const { userPostCommentId, level } = variables
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
 
-    onSuccess: () => {
-      if (isReply) {
-        queryClient.invalidateQueries({ queryKey: ['commentById'] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      if (currUserComments) {
+        queryClient.setQueryData(['userPostComments'], {
+          ...currUserComments,
+          pages: currUserComments.pages.map((page) => {
+            return {
+              ...page,
+              finalComments: page.finalComments.map((comment: any) => {
+                if (level === '0' && comment._id === userPostCommentId) {
+                  const hasLiked = comment.likeCount.some((like: any) => like.userId === userData?.id)
+
+                  return {
+                    ...comment,
+                    likeCount: hasLiked
+                      ? comment.likeCount.filter((like: any) => like.userId !== userData?.id)
+                      : [...comment.likeCount, { userId: userData?.id }],
+                  }
+                }
+
+                if (level === '1') {
+                  return {
+                    ...comment,
+                    replies: comment.replies.map((reply: any) => {
+                      if (reply._id === userPostCommentId) {
+                        const hasLiked = reply.likeCount.some((like: any) => like.userId === userData?.id)
+
+                        return {
+                          ...reply,
+                          likeCount: hasLiked
+                            ? reply.likeCount.filter((like: any) => like.userId !== userData?.id)
+                            : [...reply.likeCount, { userId: userData?.id }],
+                        }
+                      }
+                      return reply
+                    }),
+                  }
+                }
+
+                return comment
+              }),
+            }
+          }),
+        })
       }
     },
     onError: (res: any) => {

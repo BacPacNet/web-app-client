@@ -192,7 +192,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     setIsLoading(true)
     if (communityGroupLogoUrl) {
       const imagedata: any = await replaceImage(communityGroupLogoUrl, communityGroups?.communityGroupLogoUrl?.publicId || '')
-      console.log('imagedata', imagedata)
 
       CoverImageData = { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId }
     }
@@ -217,9 +216,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       communityGroupLogoCoverUrl: CoverImageData,
       // universityAdminId: communityData?.adminId,
     }
-
-    // return console.log('un', uniqueUsers, 'ff', finalUsers, 'existingUserIds', existingUserIds)
-    // return console.log('payload', payload)
 
     mutateEditGroup({ communityId: communityGroups?._id, payload: payload })
     setIsLoading(false)

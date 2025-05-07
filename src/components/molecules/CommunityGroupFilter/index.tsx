@@ -77,58 +77,63 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     }
   }, [])
   return (
-    <div className="max-w-md mx-auto flex flex-col justify-center  ">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Filter</h2>
-        <button onClick={clearFilters} className=" text-2xs flex items-center gap-1 border border-neutral-200 shadow-sm px-3 py-2 rounded-lg">
-          <span className="flex items-center gap-2">
-            Clear <RiDeleteBin6Line />
-          </span>
-        </button>
-      </div>
+    <div className="max-h-[530px] overflow-y-scroll">
+      <div className="max-w-md mx-auto flex flex-col justify-center relative">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold font-poppins">Filter</h2>
+          <button onClick={clearFilters} className=" text-2xs flex items-center gap-1 border border-neutral-200 shadow-sm px-3 py-2 rounded-lg">
+            <span className="flex items-center gap-2">
+              Clear <RiDeleteBin6Line />
+            </span>
+          </button>
+        </div>
 
-      <div className="mb-6">
-        <h3 className="font-medium text-sm mb-2">Group Access & Type</h3>
-        <div className="flex flex-wrap gap-2">
-          {GroupCategories.map((option) => (
-            <button
-              key={option}
-              onClick={() => handleSelectTypes(option)}
-              className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
-                selectedType?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
-              }`}
-            >
-              {option}
-            </button>
-          ))}
+        <div className="mb-6">
+          <h3 className="font-medium text-sm mb-2">Group Access & Type</h3>
+          <div className="flex flex-wrap gap-2">
+            {GroupCategories.map((option) => (
+              <button
+                key={option}
+                onClick={() => handleSelectTypes(option)}
+                className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
+                  selectedType?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {Object.entries(subCategories).map(([category, options]) => {
+          if (category == 'Others') return
+          return (
+            <div key={category} className="mb-6">
+              <h3 className="font-medium text-sm mb-2">{category}</h3>
+              <div className="flex flex-wrap gap-2">
+                {options.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleSelect(category, option)}
+                    className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
+                      selectedFilters[category]?.includes(option)
+                        ? 'bg-primary text-white border-primary-500'
+                        : ' text-neutral-700 border-neutral-300'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+        <div className="fixed w-full bottom-0 left-0 bg-white rounded-2xl  border-t-[1px] border-neutral-200">
+          <Buttons onClick={() => handleClick()} className="mx-auto my-4 w-[300px]" size="small" variant="primary">
+            Apply Filters
+          </Buttons>
         </div>
       </div>
-
-      {Object.entries(subCategories).map(([category, options]) => {
-        if (category == 'Others') return
-        return (
-          <div key={category} className="mb-6">
-            <h3 className="font-medium text-sm mb-2">{category}</h3>
-            <div className="flex flex-wrap gap-2">
-              {options.map((option) => (
-                <button
-                  key={option}
-                  onClick={() => handleSelect(category, option)}
-                  className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
-                    selectedFilters[category]?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        )
-      })}
-
-      <Buttons onClick={() => handleClick()} className="w-max self-center" size="extra_small" variant="primary">
-        Apply Filters
-      </Buttons>
     </div>
   )
 }

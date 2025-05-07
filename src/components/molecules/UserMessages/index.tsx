@@ -194,7 +194,7 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
   }, [chatMessages])
 
   return (
-    <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar py-4  gap-6 ">
+    <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar p-4 gap-6 ">
       {chatMessages?.map((item: Message, idx: number) => {
         const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
         const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')

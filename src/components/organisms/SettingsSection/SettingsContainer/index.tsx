@@ -13,18 +13,18 @@ const SettingContainer = () => {
       label: `Privacy`,
       content: <div className="flex items-center justify-center h-full text-6xl font-bold text-neutral-400">Privacy</div>,
     },
-    {
-      label: `Security`,
-      content: <div className="flex items-center justify-center h-full text-6xl font-bold text-neutral-400">Security</div>,
-    },
-    {
-      label: `Preferences`,
-      content: <div className="flex items-center justify-center h-full text-6xl font-bold text-neutral-400">Preferences</div>,
-    },
+    //{
+    //  label: `Security`,
+    //  content: <div className="flex items-center justify-center h-full text-6xl font-bold text-neutral-400">Security</div>,
+    //},
+    //{
+    //  label: `Preferences`,
+    //  content: <div className="flex items-center justify-center h-full text-6xl font-bold text-neutral-400">Preferences</div>,
+    //},
   ]
   return (
-    <div className="bg-white mt-4 rounded-2xl drop-shadow-lg h-with-navbar-space">
-      <Tabs tabs={tabs} className={'h-full overflow-y-scroll custom-scrollbar py-2 px-4'} />
+    <div className="bg-white rounded-2xl drop-shadow-lg h-with-navbar-space">
+      <Tabs tabs={tabs} className={'h-full overflow-y-scroll custom-scrollbar py-2 px-4 sticky top-0'} />
     </div>
   )
 }

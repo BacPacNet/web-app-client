@@ -75,7 +75,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         commentCount={post?.commentCount}
         likes={post.likeCount}
         postID={post?._id}
-        type={'communityId' in post ? PostType.Community : PostType.Timeline}
+        type={'community' in post ? PostType.Community : PostType.Timeline}
         images={post?.imageUrl || []}
         setImageCarasol={setImageCarasol}
         idx={idx}

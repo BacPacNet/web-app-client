@@ -178,7 +178,7 @@ const PostCard = React.memo(
     )
 
     const postSourceText = useMemo(() => {
-      if (type === PostType.Community && communityGroupId) {
+      if (type === PostType.Community && communityGroupName) {
         return `Posted in ${communityGroupName} group at ${communityName}`
       }
       if (type === PostType.Community) {

@@ -33,8 +33,6 @@ const EditGroupChatModal = ({
   const [searchInput, setSearchInput] = useState('')
   const { userProfileData } = useUniStore()
 
-  console.log(users, 'users')
-
   const {
     data,
     //fetchNextPage,
