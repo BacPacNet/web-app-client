@@ -68,13 +68,35 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
   return useMutation({
     mutationFn: (data: PostCommentData) => CreateUserPostComment(data, cookieValue),
 
-    onSuccess: () => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+    onSuccess: (res: any) => {
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+
+      if (currUserComments) {
+        queryClient.setQueryData(['userPostComments'], {
+          ...currUserComments,
+          pages: currUserComments.pages.map((page, index) => {
+            if (index === 0) {
+              return {
+                ...page,
+                finalComments: [res.comment, ...page.finalComments],
+                totalComments: page.totalComments + 1,
+              }
+            }
+            return page
+          }),
+        })
       }
+
+      //   if (isSinglePost) {
+      //     console.log('data', data)
+
+      // const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['getPost', postId])
+      // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      //   }
+      //   else {
+      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+      //   }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -85,21 +107,53 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
 export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: boolean, type: PostType.Community | PostType.Timeline) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: PostCommentData) => CreateUserPostCommentReply(data, cookieValue),
 
     onSuccess: (data: any) => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
-        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+
+      if (currUserComments) {
+        const updatedPages = currUserComments.pages.map((page) => {
+          return {
+            ...page,
+            finalComments: page.finalComments.map((comment: any) => {
+              if (comment._id === data.commentReply._id) {
+                const updatedComment = {
+                  ...comment,
+                  ...data.commentReply,
+                  totalCount: comment.replies.length + 1,
+                }
+
+                return updatedComment
+              }
+
+              return comment
+            }),
+          }
+        })
+
+        queryClient.setQueryData(['userPostComments'], {
+          ...currUserComments,
+          pages: updatedPages,
+        })
       }
-      if (isNested) {
-        if (type == PostType.Timeline) {
-          queryClient.invalidateQueries({ queryKey: ['commentById'] })
-        }
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
-      }
+
+      //   if (isSinglePost) {
+      //     queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+      //     // queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      //     // queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      //   }
+      //   if (isNested) {
+      //     if (type == PostType.Timeline) {
+      //       //   queryClient.invalidateQueries({ queryKey: ['commentById'] })
+      //       queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+      //     }
+      //   } else {
+      //     queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+      //   }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -165,6 +219,7 @@ export function useGetUserPosts(userId: string, limit: number) {
     queryKey: ['userPosts', userId],
     queryFn: ({ pageParam = 1 }) => getAllUserPosts(cookieValue, userId, pageParam, limit),
     getNextPageParam: (lastPage) => {
+      console.log('lastPage', lastPage.currentPage < lastPage.totalPages)
       if (lastPage.currentPage < lastPage.totalPages) {
         return lastPage.currentPage + 1
       }

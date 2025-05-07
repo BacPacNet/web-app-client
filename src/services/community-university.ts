@@ -351,8 +351,8 @@ export function useGetCommunityPost(communityId: string, isCommunity: boolean, l
     queryKey: ['communityGroupsPost', communityId],
     queryFn: ({ pageParam = 1 }) => getAllCommunityPost(communityId, cookieValue, pageParam, limit),
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1
       }
       return undefined
     },
@@ -368,8 +368,8 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
     queryKey: ['communityGroupsPost', communityId, communityGroupID],
     queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1
       }
       return undefined
     },
@@ -457,12 +457,29 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
 
-    onSuccess: () => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['getPost'] })
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+    onSuccess: (res: any) => {
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (currUserComments) {
+        queryClient.setQueryData(['communityPostComments'], {
+          ...currUserComments,
+          pages: currUserComments.pages.map((page, index) => {
+            if (index === 0) {
+              return {
+                ...page,
+                finalComments: [res.comment, ...page.finalComments],
+                totalComments: page.totalComments + 1,
+              }
+            }
+            return page
+          }),
+        })
       }
+      //   if (isSinglePost) {
+      //     queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      //   } else {
+      //     queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+      //   }
     },
     onError: (res: any) => {
       showCustomDangerToast(res.response?.data?.message as string)
@@ -476,16 +493,45 @@ export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: 
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostCommentReply(data, cookieValue),
 
-    onSuccess: () => {
-      if (isSinglePost) {
-        queryClient.invalidateQueries({ queryKey: ['getPost'] })
-      }
-      if (isNested) {
-        if (type == PostType.Community) {
-          queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
-        }
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+    onSuccess: (data: any) => {
+      //   if (isSinglePost) {
+      //     queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      //   }
+      //   if (isNested) {
+      //     if (type == PostType.Community) {
+      //       //   queryClient.invalidateQueries({ queryKey: ['communityCommentById'] })
+      //       queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+      //     }
+      //   } else {
+      //     queryClient.invalidateQueries({ queryKey: ['communityPostComments'] })
+      //   }
+
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (currUserComments) {
+        const updatedPages = currUserComments.pages.map((page) => {
+          return {
+            ...page,
+            finalComments: page.finalComments.map((comment: any) => {
+              if (comment._id === data.commentReply._id) {
+                const updatedComment = {
+                  ...comment,
+                  ...data.commentReply,
+                  totalCount: comment.replies.length + 1,
+                }
+
+                return updatedComment
+              }
+
+              return comment
+            }),
+          }
+        })
+
+        queryClient.setQueryData(['communityPostComments'], {
+          ...currUserComments,
+          pages: updatedPages,
+        })
       }
     },
     onError: (res: any) => {

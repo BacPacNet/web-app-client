@@ -147,6 +147,7 @@ export interface PostCommentData {
   adminId?: string | number
   commentId?: string | undefined
   commenterProfileId: string
+  level?: number
 }
 
 interface ErrorResponse {

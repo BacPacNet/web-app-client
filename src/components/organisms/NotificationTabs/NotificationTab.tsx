@@ -1,8 +1,9 @@
 'use client'
 import React, { useEffect, useRef } from 'react'
-import { useGetUserNotification } from '@/services/notification'
+import { useGetUserNotification, useMarkAllNotificationAsRead } from '@/services/notification'
 
 import NotificationCard from '@/components/Notification/NotificationCard'
+import Buttons from '@/components/atoms/Buttons'
 
 export const notificationRoleAccess = {
   GROUP_INVITE: 'GROUP_INVITE',
@@ -22,7 +23,7 @@ export const notificationRoleAccess = {
 
 const NotificationTab = () => {
   const { data: notificationData, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetUserNotification(10, true)
-
+  const { mutate } = useMarkAllNotificationAsRead()
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -48,7 +49,12 @@ const NotificationTab = () => {
 
   return (
     <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit] ">
-      <h6 className="text-[20px] text-neutral-700 font-bold font-inter p-4 sm:p-6">Notifications</h6>
+      <div className="flex justify-between items-center">
+        <h6 className="text-[20px] text-neutral-700 font-bold font-inter p-4 sm:p-6">Notifications</h6>
+        <Buttons size="extra_small_paddind_2" onClick={() => mutate()}>
+          Read All
+        </Buttons>
+      </div>
       {notifications?.map((item) => {
         return <NotificationCard key={item?._id} data={item} />
       })}

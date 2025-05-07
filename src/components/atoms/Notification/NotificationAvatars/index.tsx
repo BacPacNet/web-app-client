@@ -62,9 +62,9 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
     ))
 
   const renderContent = () => {
-    if (notificationType == notificationRoleAccess.REACTED_TO_POST) {
+    if (notificationType == notificationRoleAccess.REACTED_TO_POST || notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
       return renderUsers(data?.likedBy?.newFiveUsers)
-    } else if (notificationType == notificationRoleAccess.COMMENT) {
+    } else if (notificationType == notificationRoleAccess.COMMENT || notificationType == notificationRoleAccess.COMMUNITY_COMMENT) {
       return renderUsers(data?.commentedBy?.newFiveUsers)
     } else if (
       notificationType == notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST ||
@@ -96,8 +96,10 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex items-center gap-4">
-        <NotificationIcon type={data?.type} />
+      <div className="flex items-center ">
+        <div className="mr-4">
+          <NotificationIcon type={data?.type} />
+        </div>
         {renderContent()}
       </div>
     </div>

@@ -54,28 +54,30 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
-  useEffect(() => {
-    if (isFetching) {
-      setCommunityGroupPostDatas([])
-    }
-  }, [isFetching, queryClient])
+  //   useEffect(() => {
+  //     if (isFetching) {
+  //       setCommunityGroupPostDatas([])
+  //     }
+  //   }, [isFetching, queryClient])
 
   useEffect(() => {
     const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
     setCommunityGroupPostDatas(communityDatas)
   }, [communityGroupPost, dataUpdatedAt])
 
-  if (isLoading || isFetching)
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Spinner />
-      </div>
-    )
+  console.log('communityGroupPost', communityGroupPost)
+
+  //   if (isLoading || isFetching)
+  //     return (
+  //       <div className="flex justify-center items-center py-10">
+  //         <Spinner />
+  //       </div>
+  //     )
 
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
-  if (communityGroupPostDatas.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+  if (communityGroupPostDatas?.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6 post-container">
@@ -89,7 +91,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           text={post?.content}
           date={post?.createdAt}
           avatarLink={post?.userProfile?.profile_dp?.imageUrl}
-          commentCount={post?.commentCount}
+          commentCount={post?.commentCount || 0}
           likes={post?.likeCount}
           postID={post?._id}
           type={PostType.Community}
