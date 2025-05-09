@@ -227,7 +227,7 @@ export const useJoinCommunityFromUniversity = () => {
       showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
-      showCustomDangerToast(res.response.data.message)
+      //   showCustomDangerToast(res.response.data.message)
       //showToast(res.response.data.message, {
       //  variant: 'error',
       //  isDarkMode: false,

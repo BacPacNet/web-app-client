@@ -25,7 +25,7 @@ import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToa
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
-
+import { HiMail } from 'react-icons/hi'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -124,7 +124,7 @@ export function UserProfileCard({
             className="rounded-full object-cover  w-[80px] h-[80px]"
           />
         </div>
-        <div className={`w-full flex justify-between`}>
+        <div className={`w-full flex justify-between sm:flex-nowrap flex-wrap `}>
           <div className="flex w-full flex-col gap-1">
             <div className="flex flex-row gap-2 items-center">
               <p className="font-poppins text-neutral-700 text-[20px] font-bold">{name}</p>
@@ -165,11 +165,11 @@ export function UserProfileCard({
               <p>Edit Profile</p>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className=" items-start gap-4 mt-4 sm:mt-0 hidden sm:flex ">
               <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
                 <Popover>
                   <PopoverTrigger>
-                    <HiDotsHorizontal className="text-primary" />
+                    <HiDotsHorizontal className="text-primary w-8 h-8" />
                   </PopoverTrigger>
                   <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
                     <ul>
@@ -189,10 +189,10 @@ export function UserProfileCard({
                   </PopoverContent>
                 </Popover>
               </div>
-              <Buttons className="flex items-center gap-2" variant="shade" size="extra_small">
-                Message <RiMessage2Fill />
+              <Buttons className="flex items-center gap-2 h-10 " variant="shade" size="small_profile">
+                <HiMail className="w-4 h-4" /> Message
               </Buttons>
-              <Buttons onClick={() => toggleFollow(userId as string)} variant="primary" size="extra_small">
+              <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small_profile">
                 {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
               </Buttons>
             </div>
@@ -210,6 +210,40 @@ export function UserProfileCard({
           <p>Edit Profile</p>
         </div>
       )}
+      {!isSelfProfile && (
+        // max-sm:hidden
+        <div className="flex items-center gap-4 mt-2 sm:mt-0 sm:hidden ml-2">
+          <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
+            <Popover>
+              <PopoverTrigger>
+                <HiDotsHorizontal className="text-primary w-8 h-8" />
+              </PopoverTrigger>
+              <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
+                <ul>
+                  <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <IoIosShareAlt />
+                    <p>Share Profile</p>
+                  </li>
+                  <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <MdBlockFlipped />
+                    <p>Block User</p>
+                  </li>
+                  <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <IoFlagOutline />
+                    <p>Report User</p>
+                  </li>
+                </ul>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <Buttons className="flex items-center gap-2 h-10 " variant="shade" size="small_profile">
+            <HiMail className="w-4 h-4" /> Message
+          </Buttons>
+          <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small_profile">
+            {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+          </Buttons>
+        </div>
+      )}
       <div className="flex gap-4 lg:gap-8 items-center font-poppins  flex-wrap">
         <div className="flex items-center gap-2 ml-2">
           <div className="w-[37px] h-[37px]">
@@ -220,7 +254,7 @@ export function UserProfileCard({
               alt=""
               width={36}
               height={36}
-              className="rounded-full shadow-logo h-[36px] object-contain"
+              className="rounded-full shadow-logo h-[36px] object-contain "
             />
           </div>
           <p className="text-neutral-500  font-medium text-2xs ">{university}</p>
@@ -228,14 +262,28 @@ export function UserProfileCard({
         </div>
         <div className="flex gap-4 ">
           <div
-            onClick={() => openModal(<ConnectionsModal userId={userId} defaultTab="Following" />)}
+            onClick={() =>
+              openModal(
+                <ConnectionsModal userId={userId} defaultTab="Following" />,
+                ' h-[70vh] w-[350px] sm:w-[550px]   custom-scrollbar',
+                true,
+                false
+              )
+            }
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
             {following || '0'} Following
           </div>
 
           <div
-            onClick={() => openModal(<ConnectionsModal userId={userId} defaultTab="Followers" />)}
+            onClick={() =>
+              openModal(
+                <ConnectionsModal userId={userId} defaultTab="Followers" />,
+                ' h-[70vh] w-[350px] sm:w-[550px]   custom-scrollbar',
+                true,
+                false
+              )
+            }
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
             {followers || '0'} Followers

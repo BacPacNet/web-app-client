@@ -6,6 +6,7 @@ import { useGetUserFollowing, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { Spinner } from '@/components/spinner/Spinner'
+import { usePathname } from 'next/navigation'
 
 type Props = {
   isChat?: boolean
@@ -18,6 +19,8 @@ type Props = {
 const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, defaultTab = 'Following', userId = '' }: Props) => {
   const [content, setContent] = useState<'Following' | 'Followers'>(defaultTab)
   const { userProfileData } = useUniStore()
+  const pathName = usePathname()
+  const currIdInPathName = pathName.split('/')[2]
 
   const {
     data: userFollowData,
@@ -35,9 +38,16 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, d
     hasNextPage: hasFollowersNextPage,
   } = useGetUserFollowers('', userId, 10, content === 'Followers')
 
-  const userFollow = userFollowData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  //   const userFollow = userFollowData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  const userFollow =
+    userFollowData?.pages
+      .flatMap((page) => page.users)
+      .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true)) || []
 
-  const userFollowers = userFollowersData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  //   const userFollowers = userFollowersData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  const userFollowers = (userFollowersData?.pages.flatMap((page) => page.users) || []).filter((user) =>
+    userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true
+  )
 
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -110,7 +120,8 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, d
               <UserListItemSkeleton />
             </>
           ) : userList.length === 0 ? (
-            <p className="text-center p-4">{content === 'Following' ? 'You are not Following anyone.' : 'You have 0 Followers'}</p>
+            // <p className="text-center p-4">{content === 'Following' ? 'You are not Following anyone.' : 'You have 0 Followers'}</p>
+            <p className="text-center text-neutral-500 font-bold p-4">{content === 'Following' ? 'No User Found' : 'No User Found'}</p>
           ) : (
             <>
               {userList.map((item, index) => (

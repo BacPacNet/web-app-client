@@ -18,8 +18,8 @@ import { openModal } from '@/components/molecules/Modal/ModalManager'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
-import Spinner from '@/components/atoms/spinner'
-import { Community } from '@/types/Community'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import VerifyUniversityToJoinModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -27,7 +27,17 @@ const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: st
       <Icon size={20} />
       {title}
     </p>
-    <p className={`text-neutral-700 text-[18px] line-clamp-6 `}>{info || 'Not available'}</p>
+    {title === 'Link' && info?.length ? (
+      <a className="underline text-primary-500" href={info} target="_blank" rel="noopener noreferrer">
+        {info}
+      </a>
+    ) : title === 'Email' && info?.length ? (
+      <a href={`mailto:${info}`}>{info}</a>
+    ) : title === 'Phone' && info?.length ? (
+      <a href={`tel:${info}`}>{info}</a>
+    ) : (
+      <p className="text-neutral-700 text-[18px] line-clamp-6">{info || 'Not available'}</p>
+    )}
   </div>
 )
 
@@ -109,6 +119,13 @@ export default function UniversityProfile() {
       joinCommunityFromUniversity(university._id, {
         onSuccess: (response: any) => {
           return router.push(`/community/${response.data.community._id}`)
+        },
+        onError(error) {
+          if (error.response.data.message == 'You can only join 1 community that is not verified') {
+            openModal(<VerifyUniversityToJoinModal />, 'h-[240px] w-[350px] sm:w-[490px]')
+          } else {
+            showCustomDangerToast(error.response.data.message)
+          }
         },
       })
     }

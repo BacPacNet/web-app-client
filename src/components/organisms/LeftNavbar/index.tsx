@@ -47,6 +47,10 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
     toggleLeftNavbar?.()
   }
 
+  useEffect(() => {
+    setActiveMenu(pathname)
+  }, [pathname])
+
   return (
     <div className="h-with-navbar custom-scrollbar  lg:p-6 overflow-y-auto">
       <div className=" block lg:hidden border-b-2 border-neutral-200 pb-4">
@@ -55,7 +59,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
           <div
             key={path}
             className={`flex gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
-              activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
+              activeMenu === path ? 'font-bold' : 'text-neutral-500 font-semibold'
             }`}
             onClick={() => handleMenuClick(path)}
           >
