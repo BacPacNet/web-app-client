@@ -5,6 +5,7 @@ import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
 import { IUserProfileResponse } from '@/types/User'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserData(token: any, id: string) {
   const response: IUserProfileResponse = await client(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -69,6 +70,7 @@ export const useChangeUserName = () => {
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -82,6 +84,7 @@ export const useChangeUserEmail = () => {
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -92,6 +95,7 @@ export const useDeActivateUserAccount = () => {
 
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
@@ -101,6 +105,7 @@ export const useChangeUserPassword = () => {
     mutationFn: (data: any) => changeUserPassword(data, cookieValue),
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }

@@ -8,6 +8,7 @@ import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/comp
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
+import { openModal } from '@/components/molecules/Modal/ModalManager'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -221,13 +222,11 @@ export const useJoinCommunityFromUniversity = () => {
   const router = useRouter()
   return useMutation({
     mutationFn: (universityId: string) => joinCommunityFromUniversityAPI(universityId, cookieValue),
-    onSuccess: () => {
-      //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
-      showCustomDangerToast(res.response.data.message)
+      //   showCustomDangerToast(res.response.data.message)
       //showToast(res.response.data.message, {
       //  variant: 'error',
       //  isDarkMode: false,

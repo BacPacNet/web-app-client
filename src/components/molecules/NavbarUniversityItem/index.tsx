@@ -105,16 +105,16 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
   }, [subscribedCommunities, communityId, debouncedSearchQuery])
 
-  //  const joinedSubscribedCommunitiesGroup = useMemo(() => {
-  //    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
-  //      ?.communityGroups
-  //    return selectedCommunityGroup
-  //      ?.filter(
-  //        (userCommunityGroup) =>
-  //          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
-  //      )
-  //      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  //  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
+  const joinedSubscribedCommunitiesGroup = useMemo(() => {
+    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
+      ?.communityGroups
+    return selectedCommunityGroup
+      ?.filter(
+        (userCommunityGroup) =>
+          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
+      )
+      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
 
   const subscribedCommunitiesMyGroup = useMemo(() => {
     const groups = subscribedCommunities
@@ -141,7 +141,26 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const tabData = [
     {
-      label: 'All Group',
+      label: 'Joined',
+      content: (
+        <CommunityGroupAll
+          key={joinedSubscribedCommunitiesGroup}
+          communityGroups={joinedSubscribedCommunitiesGroup}
+          showGroupTill={showGroupTill}
+          setShowGroupTill={setShowGroupTill}
+          currSelectedGroup={currSelectedGroup as Community}
+          setCurrSelectedGroup={setCurrSelectedGroup}
+          userData={userData}
+          handleAssignUsersModal={handleAssignUsersModal}
+          SetcurrClickedID={SetcurrClickedID}
+          selectedCommuntyGroupdId={selectedCommuntyGroupdId}
+          selectCommunityId={selectCommunityId}
+          toggleLeftNavbar={toggleLeftNavbar}
+        />
+      ),
+    },
+    {
+      label: 'All',
       content: (
         <CommunityGroupAll
           key={subscribedCommunities}
@@ -160,27 +179,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         />
       ),
     },
-    //{
-    //  label: 'Joined',
-    //  content: (
-    //    <CommunityGroupAll
-    //      key={joinedSubscribedCommunitiesGroup}
-    //      communityGroups={joinedSubscribedCommunitiesGroup}
-    //      showGroupTill={showGroupTill}
-    //      setShowGroupTill={setShowGroupTill}
-    //      currSelectedGroup={currSelectedGroup as Community}
-    //      setCurrSelectedGroup={setCurrSelectedGroup}
-    //      userData={userData}
-    //      handleAssignUsersModal={handleAssignUsersModal}
-    //      SetcurrClickedID={SetcurrClickedID}
-    //      selectedCommuntyGroupdId={selectedCommuntyGroupdId}
-    //      selectCommunityId={selectCommunityId}
-    //      toggleLeftNavbar={toggleLeftNavbar}
-    //    />
-    //  ),
-    //},
+
     {
-      label: 'Your Group',
+      label: 'Create',
       content: (
         <div>
           <CommunityGroupAll

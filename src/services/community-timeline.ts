@@ -235,7 +235,6 @@ export function useGetUserPosts(userId: string, limit: number) {
     queryKey: ['userPosts', userId],
     queryFn: ({ pageParam = 1 }) => getAllUserPosts(cookieValue, userId, pageParam, limit),
     getNextPageParam: (lastPage) => {
-      console.log('lastPage', lastPage.currentPage < lastPage.totalPages)
       if (lastPage.currentPage < lastPage.totalPages) {
         return lastPage.currentPage + 1
       }
