@@ -18,7 +18,7 @@ import { openModal } from '@/components/molecules/Modal/ModalManager'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import VerifyUniversityToJoinModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
@@ -118,20 +118,14 @@ export default function UniversityProfile() {
     } else {
       joinCommunityFromUniversity(university._id, {
         onSuccess: (response: any) => {
-          return router.push(`/community/${response.data.community._id}`)
-        },
-        onError(error) {
-          if (error.response.data.message == 'You can only join 1 community that is not verified') {
-            openModal(<VerifyUniversityToJoinModal />, 'h-[240px] w-[350px] sm:w-[490px]')
-          } else {
-            showCustomDangerToast(error.response.data.message)
+          if (response.statusCode === 406) {
+            return openModal(<VerifyUniversityToJoinModal />, 'h-[240px] w-[350px] sm:w-[490px]')
           }
+          showCustomSuccessToast('Joined Community')
+          return router.push(`/community/${response.data.community._id}`)
         },
       })
     }
-    //else if (!email) {
-    //  openModal(<UniversityVerificationModal universityNameProp={universityName} />, 'h-max w-[450px]')
-    //}
   }
 
   return (

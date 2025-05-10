@@ -120,8 +120,7 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, d
               <UserListItemSkeleton />
             </>
           ) : userList.length === 0 ? (
-            // <p className="text-center p-4">{content === 'Following' ? 'You are not Following anyone.' : 'You have 0 Followers'}</p>
-            <p className="text-center text-neutral-500 font-bold p-4">{content === 'Following' ? 'No User Found' : 'No User Found'}</p>
+            <p className="text-center text-neutral-500 font-bold p-4">No User Found</p>
           ) : (
             <>
               {userList.map((item, index) => (
