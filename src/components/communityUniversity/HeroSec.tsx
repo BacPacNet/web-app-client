@@ -60,6 +60,14 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
     }
   }
 
+  const handleJoinCommunity = () => {
+    JoinCommunity(data?.community?._id)
+  }
+
+  const handleLeaveCommunity = () => {
+    LeaveCommunity(data?.community?._id)
+  }
+
   return (
     <div className=" w-10/12 max-xl:w-11/12 max-md:w-9/12 max-sm:w-11/12 overflow-hidden border-2 border-neutral-300 rounded-lg pb-10">
       {/* top section  */}
@@ -142,7 +150,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
           </div>
           {!isJoined && data?.community?.adminId != userData?.id ? (
             <button
-              onClick={() => JoinCommunity(data?.community?._id)}
+              onClick={handleJoinCommunity}
               className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0"
             >
               Join Community
@@ -153,7 +161,7 @@ const HeroSec = ({ data, setIsJoined, isJoined }: any) => {
             </button>
           ) : (
             <button
-              onClick={() => LeaveCommunity(data?.community?._id)}
+              onClick={handleLeaveCommunity}
               className="text-[#6647FF]  font-medium bg-[#F3F2FF] px-2 py-1 max-md:py-3 rounded-xl mr-10 max-xl:mr-5 max-lg:text-sm max-md:mr-0"
             >
               leave Community

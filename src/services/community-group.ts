@@ -3,6 +3,7 @@ import useCookie from '@/hooks/useCookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { MESSAGES } from '@/content/constant'
+import { useUniStore } from '@/store/store'
 
 /**
  * API call to join a community group
@@ -24,6 +25,7 @@ async function joinCommunityGroupAPI(communityGroupId: string, token: string) {
 export const useJoinCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const { setUserProfileCommunities } = useUniStore()
 
   return useMutation({
     mutationFn: (communityGroupId: string) => joinCommunityGroupAPI(communityGroupId, cookieValue),
@@ -32,7 +34,7 @@ export const useJoinCommunityGroup = () => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
-
+      setUserProfileCommunities(response.data.communities)
       showCustomSuccessToast(response.message)
     },
 
@@ -83,15 +85,15 @@ async function deleteCommunityGroupAPI(communityGroupId: string, token: string) 
 export const useLeaveCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-
+  const { setUserProfileCommunities } = useUniStore()
   return useMutation({
     mutationFn: (communityGroupId: string) => leaveCommunityGroupAPI(communityGroupId, cookieValue),
 
-    onSuccess: () => {
-      // Invalidate relevant query caches
+    onSuccess: (response: any) => {
+      setUserProfileCommunities(response.data.communities)
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      showCustomDangerToast(`Left Community Group!`)
+      showCustomSuccessToast('Community left successfully')
     },
 
     onError: (error: any) => {

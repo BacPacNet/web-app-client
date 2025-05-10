@@ -223,7 +223,7 @@ export default function ConnectionUserSelectModal({
               onClick={() => setShowDropdown(!showDropdown)}
               className={`w-full flex justify-between items-center border ${
                 universityError ? 'border-destructive-600' : 'border-neutral-200'
-              }  rounded-lg p-3  text-xs text-neutral-400 h-10 bg-white shadow-sm`}
+              }  rounded-lg p-3  text-xs text-neutral-700 h-10 bg-white shadow-sm`}
             >
               {selectedUniversity?.name || 'Select University'}
               {selectedUniversity?.name ? (

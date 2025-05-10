@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand'
 import { userProfileType } from './userProfileType'
 import { UserProfile } from '@/models/auth'
+import { UserCommunities } from '@/types/User'
 
 type userProfileState = {
   userProfileData: Partial<userProfileType> | null
@@ -10,6 +11,7 @@ type userProfileAction = {
   setUserProfileData: (userProfileData: UserProfile) => void
   setUserFollowers: (communities: userProfileType['followers']) => void
   setUserfollowing: (communities: userProfileType['following']) => void
+  setUserProfileCommunities: (communities: UserCommunities[]) => void
 }
 
 const initialState: userProfileState = {
@@ -34,6 +36,13 @@ export const createUserProfileSlice: StateCreator<userProfileSlice> = (set) => (
       userProfileData: {
         ...state.userProfileData,
         following: followings,
+      },
+    })),
+  setUserProfileCommunities: (communities: UserCommunities[]) =>
+    set((state) => ({
+      userProfileData: {
+        ...state.userProfileData,
+        communities: communities,
       },
     })),
 })

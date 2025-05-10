@@ -1,8 +1,9 @@
+'use client'
 import Card from '@/components/atoms/Card'
-import UpcomingEvent from '@/components/molecules/UpcomingEvent'
 import LeftNavbar from '@/components/organisms/LeftNavbar'
 import Recommendations from '@/components/Timeline/Recommendations'
-import React, { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 const recommendations = [
   {
@@ -38,8 +39,20 @@ const recommendations = [
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [isLoading, setIsLoading] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    setIsLoading(true)
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 400) // adjust duration if needed
+
+    return () => clearTimeout(timer)
+  }, [pathname])
   return (
     <div className="bg-surface-primary-50">
+      {isLoading && <div className="fixed top-0 left-0 w-full h-1 bg-primary-500 animate-pulse z-50"></div>}
       <div className="max-w-[1280px] mx-auto flex h-with-navbar">
         {/* Left Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
@@ -57,22 +70,5 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </aside>
       </div>
     </div>
-
-    //<div className="flex gap-8 bg-surface-primary-50 h-with-navbar max-width-allowed mx-auto overflow-auto px-4">
-    //  <div className="w-1/5 hidden lg:block ">
-    //    <div className="fixed min:w-[290px] w-1/5 left-0 z-10 ">
-    //      <LeftNavbar />
-    //    </div>
-    //  </div>
-    //  <div className="lg:w-3/5 w-full">{children}</div>
-    //  <div className="w-1/5 hidden lg:block ">
-    //    <div className="fixed w-1/5 right-0 z-10 overflow-y-auto ">
-    //      <Card className="h-with-navbar overflow-y-auto px-4">
-    //        {/*<UpcomingEvent />*/}
-    //        <Recommendations people={recommendations} />
-    //      </Card>
-    //    </div>
-    //  </div>
-    //</div>
   )
 }

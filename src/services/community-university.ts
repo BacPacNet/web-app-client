@@ -219,11 +219,14 @@ export const useUpdateCommunity = () => {
 export const useJoinCommunityFromUniversity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-  const router = useRouter()
+  const { setUserProfileCommunities } = useUniStore()
   return useMutation({
     mutationFn: (universityId: string) => joinCommunityFromUniversityAPI(universityId, cookieValue),
     onSuccess: (response: any) => {
+      //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      setUserProfileCommunities(response.data.profile.communities)
+      showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
       //   showCustomDangerToast(res.response.data.message)
@@ -247,13 +250,15 @@ export const useJoinCommunityFromUniversity = () => {
 export const useJoinCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const { setUserProfileCommunities } = useUniStore()
   const router = useRouter()
   return useMutation({
     mutationFn: (communityId: string) => joinCommunity(communityId, cookieValue),
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomSuccessToast(`Joined Community `)
+      showCustomSuccessToast(`Joined Community`)
+      setUserProfileCommunities(response.user.communities)
     },
     onError: (res: any, variables) => {
       showToast(res.response.data.message, {
@@ -276,12 +281,14 @@ export const useJoinCommunity = () => {
 export const useLeaveCommunity = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+  const { setUserProfileCommunities } = useUniStore()
   return useMutation({
     mutationFn: (communityId: string) => leaveCommunity(communityId, cookieValue),
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomDangerToast(`Left Community`)
+      showCustomSuccessToast('community left')
+      setUserProfileCommunities(response.data.community)
     },
     onError: (res: any) => {
       console.error(res.response.data.message)
