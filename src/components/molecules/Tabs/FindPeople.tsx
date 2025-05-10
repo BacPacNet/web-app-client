@@ -169,7 +169,7 @@ export default function FindPeople() {
             }}
             type="text"
             value={name}
-            className="text-xs w-full outline-none text-neutral-400"
+            className="text-xs w-full outline-none text-neutral-700"
             placeholder="Searching All Users"
           />
           <GoSearch className="text-neutral-500" size={20} />

@@ -1,8 +1,10 @@
 'use client'
+import OnboardingPlaceholder from '@/components/atoms/OnboardingPlaceholder'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
 import { Spinner } from '@/components/spinner/Spinner'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
@@ -34,7 +36,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
   })
 
   // Memoize flattened posts data
-  const timlineDatas = useMemo(() => TimelinePosts?.pages.flatMap((page) => page?.allPosts) || [], [TimelinePosts?.pages])
+  const timlineDatas = useMemo(() => TimelinePosts?.pages.flatMap((page) => page?.allPosts) || null, [TimelinePosts?.pages])
 
   // Handle scroll for infinite loading
   const handleScroll = useCallback(() => {
@@ -92,16 +94,16 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     ))
   }, [timlineDatas, showCommentSection])
 
-  if (isLoading && !timelinePostIsFetchingNextPage) {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Spinner />
-      </div>
-    )
+  if ((isLoading && !timelinePostIsFetchingNextPage) || timlineDatas === null) {
+    return <PostSkeleton count={3} />
   }
 
   if (error) {
     return <div className="p-4 text-red-500">{error.message || 'Error loading posts'}</div>
+  }
+
+  if (timlineDatas.length === 0) {
+    return <OnboardingPlaceholder />
   }
 
   return (

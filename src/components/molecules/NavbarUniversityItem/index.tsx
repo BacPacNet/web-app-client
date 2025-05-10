@@ -219,7 +219,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
   }
 
-  if (isFetching || isLoading) return <UserListItemSkeleton />
+  if (isLoading) return <UserListItemSkeleton />
 
   return (
     <>

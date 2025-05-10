@@ -1,3 +1,5 @@
+import { status } from '../CommuityGroup'
+
 export interface UserLoginResponse {
   user: User
   tokens: Tokens
@@ -47,6 +49,17 @@ export interface CommunityLogoUrl {
   imageUrl: string
 }
 
+export interface UserCommunityGroup {
+  id: string
+  status: status
+}
+
+export interface UserCommunities {
+  communityId: string
+  isVerified: boolean
+  communityGroups: UserCommunityGroup[]
+}
+
 export interface Profile {
   _id: string
   users_id: string
@@ -68,7 +81,7 @@ export interface Profile {
   bio: string
   phone_number: string
   profile_dp: ProfileDp
-  communities: string[]
+  communities: UserCommunities
   universityLogo: string
 }
 

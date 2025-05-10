@@ -71,7 +71,7 @@ const Ai_AssistantContainer = () => {
   }
 
   return (
-    <div className="bg-white mt-4 rounded-2xl drop-shadow-lg h-with-navbar-space flex flex-col pb-4 ">
+    <div className="bg-white rounded-2xl drop-shadow-lg h-with-navbar-space flex flex-col pb-4 ">
       <div className=" px-4 py-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
         <div className="flex justify-between">
           <div className="relative">

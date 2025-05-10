@@ -1,5 +1,6 @@
 import { EmailType } from '@/models/auth'
 import { userTypeEnum } from '@/types/RegisterForm'
+import { UserCommunities } from '@/types/User'
 
 interface following {
   userId: string
@@ -9,7 +10,7 @@ export interface userProfileType {
   users_id: string | null
   profile_dp?: { imageUrl: string; publicId: string }
   email: EmailType[]
-  communities: { communityId: string; isVerified: string }[]
+  communities: UserCommunities[]
   cover_dp?: { imageUrl: string; publicId: string }
   bio?: string
   phone_number?: string
