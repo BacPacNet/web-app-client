@@ -373,10 +373,9 @@ export default function UnibuzzPage() {
               <div className="space-y-2">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="flex items-center gap-3 rounded-md p-2 hover:bg-[#f3f4f6]">
-                    <RxAvatar className="h-10 w-10">
-                      {/*<AvatarImage src="/placeholder.svg?height=40&width=40" alt="Robin Park" />
+                    <RxAvatar className="h-10 w-10" />
+                    {/*<AvatarImage src="/placeholder.svg?height=40&width=40" alt="Robin Park" />
                       <AvatarFallback>RP</AvatarFallback>*/}
-                    </RxAvatar>
                     <div>
                       <p className="text-sm font-medium">Robin Park</p>
                       <p className="text-xs text-[#6b7280]">3rd Yr. Undergraduate</p>

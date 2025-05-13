@@ -142,7 +142,7 @@ const MultiSelectDropdown = ({
               <div key={index} className="flex gap-2 items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
                 <span className="flex gap-2">
                   {selected}
-                  <span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>
+                  {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
                 </span>
                 <RxCross2
                   className="cursor-pointer text-sm"

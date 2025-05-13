@@ -1,26 +1,22 @@
 'use client'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 
 import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-university'
-import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
-import { categories, Category, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
-import Pill from '@/components/atoms/Pill'
+import { CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
 import { closeModal } from '../Modal/ModalManager'
 import { CommunityUsers } from '@/types/Community'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
-import { FaTimes } from 'react-icons/fa'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
-import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import {
   filterData,
   filterFacultyData,
@@ -30,6 +26,7 @@ import {
   getOccupationCounts,
   getUniqueById,
 } from '@/lib/communityGroup'
+import { useUploadToS3 } from '@/services/upload'
 
 type Props = {
   communityId: string
@@ -40,21 +37,10 @@ type media = {
   publicId: string
 }
 
-type User = {
-  id: string
-  firstName: string
-  isOnline?: boolean
-  profile: {
-    profile_dp: media
-    _id: string
-  }
-}
-type FilterType = 'ALL' | 'SAME_YEAR' | 'SAME_MAJOR' | null
-
 const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const { userData, userProfileData } = useUniStore()
-  const [logoImage, setLogoImage] = useState()
-  const [coverImage, setCoverImage] = useState()
+  const [logoImage, setLogoImage] = useState<File>()
+  const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const { data: communityData } = useGetCommunity(communityId)
@@ -69,6 +55,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
   const {
     register: GroupRegister,
     watch,
@@ -133,15 +120,6 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     })
   }
 
-  const handleImageUpload = async (files: string) => {
-    if (files) {
-      const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
-      return { imageUrl: data?.imageUrl, publicId: data?.publicId }
-    } else {
-      console.error('No file selected.')
-    }
-  }
-
   const validateDescription = (value: string | undefined): string | boolean => {
     if (!value || value.trim() === '') return true
 
@@ -170,11 +148,11 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     }
 
     if (coverImage) {
-      CoverImageData = await handleImageUpload(coverImage)
-      setValue('communityGroupLogoCoverUrl', CoverImageData as any)
+      CoverImageData = await uploadToS3([coverImage])
+      setValue('communityGroupLogoCoverUrl', CoverImageData.data[0])
     }
     if (logoImage) {
-      logoImageData = await handleImageUpload(logoImage)
+      logoImageData = await uploadToS3([logoImage])
       setValue('communityGroupLogoUrl', logoImageData as any)
     }
 
@@ -187,8 +165,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       ...data,
       ...communityGroupCategory,
       selectedUsers: uniqueUsers,
-      communityGroupLogoUrl: logoImageData,
-      communityGroupLogoCoverUrl: CoverImageData,
+      communityGroupLogoUrl: logoImageData?.data[0],
+      communityGroupLogoCoverUrl: CoverImageData?.data[0],
       universityAdminId: communityData?.adminId,
     }
 

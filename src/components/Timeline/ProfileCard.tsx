@@ -11,8 +11,8 @@ import { ModalContentType } from '@/types/global'
 import { userType } from '@/store/userSlice/userType'
 import { cn } from '@/lib/utils'
 import { userProfileType } from '@/store/userProfileSlice/userProfileType'
-import { replaceImage } from '@/services/uploadImage'
 import { useEditProfile } from '@/services/edit-profile'
+import { useUploadToS3 } from '@/services/upload'
 interface ProfileProps {
   following: number
   followers: number
@@ -33,13 +33,14 @@ const ProfileCard: React.FC<ProfileProps> = ({
   isUserProfile,
 }) => {
   const { mutate: mutateEditProfile } = useEditProfile()
+  const { mutateAsync: mutateUpload } = useUploadToS3()
 
   const handleImageUpload = async (e: any) => {
-    const files = e.target.files
+    const files = e.target.files as File[]
     if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData?.profile_dp?.publicId)
+      const imageResponse = await mutateUpload(files)
 
-      const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
+      const dataToPush = { profile_dp: imageResponse.data }
 
       mutateEditProfile(dataToPush)
     } else {
@@ -50,9 +51,8 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleCoverImageUpload = async (e: any) => {
     const files = e.target.files
     if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData?.cover_dp?.publicId)
-
-      const dataToPush = { cover_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
+      const imageResponse = await mutateUpload(files)
+      const dataToPush = { profile_dp: imageResponse.data }
 
       mutateEditProfile(dataToPush)
     } else {

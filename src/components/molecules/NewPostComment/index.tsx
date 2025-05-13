@@ -6,7 +6,6 @@ import { PostCommentData, PostType } from '@/types/constants'
 import Quill from 'quill'
 import { GoFileMedia } from 'react-icons/go'
 import Buttons from '@/components/atoms/Buttons'
-import { replaceImage } from '@/services/uploadImage'
 import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
 import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
 import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
@@ -14,6 +13,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import dynamic from 'next/dynamic'
 import { MdCancel } from 'react-icons/md'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useUploadToS3 } from '@/services/upload'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -64,15 +64,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
   )
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
-
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
-  }
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -104,8 +96,8 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
 
     // If images exist, process them
     if (images.length) {
-      const imageData = await processImages(images)
-      payload.imageUrl = imageData // Add image URL to the data
+      const imageData = await uploadToS3(images)
+      payload.imageUrl = imageData.data // Add image URL to the data
     }
 
     // Handle different post types (Timeline or Community)

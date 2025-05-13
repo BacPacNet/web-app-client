@@ -1,7 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
 import PillTabs from '@/components/molecules/PillTabs'
-import Tabs from '@/components/molecules/Tabs'
 import FindPeople from '@/components/molecules/Tabs/FindPeople'
 import Followers from '@/components/molecules/Tabs/Followers'
 import Following from '@/components/molecules/Tabs/Following'

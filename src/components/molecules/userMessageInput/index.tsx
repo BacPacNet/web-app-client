@@ -5,16 +5,16 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import { GoFileMedia } from 'react-icons/go'
-import { replaceImage } from '@/services/uploadImage'
 import { ChatsArray, LatestMessage, SocketEnums } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAcceptGroupRequest, useAcceptRequest, useCreateChatMessage } from '@/services/Messages'
 import { Spinner } from '@/components/spinner/Spinner'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Image from 'next/image'
 import { validateImageFiles } from '@/lib/utils'
 import { MdCancel } from 'react-icons/md'
+import { useUploadToS3 } from '@/services/upload'
 
 type Props = {
   userProfileId: string
@@ -36,6 +36,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
   const { mutateAsync: acceptGroupRequest, isError: groupErr } = useAcceptGroupRequest()
   const queryClient = useQueryClient()
   const { socket } = useUniStore()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const handleInput = () => {
     const textarea = textareaRef.current
@@ -83,82 +84,70 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl,
-      publicId: result?.publicId,
-    }))
-  }
-
   const handleNewMessage = async (message: string) => {
-    let fileLink
-    let data
-    if (images) {
-      setIsImageUploading(true)
-      fileLink = await processImages(images)
+    if (!message.trim() && !images?.length) return
 
-      data = {
+    setIsImageUploading(true)
+
+    try {
+      let mediaData = null
+
+      if (images?.length) {
+        const uploaded = await uploadToS3(images)
+        mediaData = uploaded.data
+      }
+
+      const messagePayload = {
         content: message,
         chatId,
         UserProfileId: userProfileId,
-
-        media: fileLink ? [fileLink] : '',
+        ...(mediaData && { media: mediaData }),
       }
-    } else {
-      data = {
-        content: message,
-        chatId,
-        UserProfileId: userProfileId,
-      }
-    }
 
-    createNewMessage(data, {
-      onSuccess: (newMessage) => {
-        queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[] = []) => {
-          if (!oldMessages.length) return [newMessage]
+      createNewMessage(messagePayload, {
+        onSuccess: (newMessage) => {
+          queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[] = []) => {
+            if (!oldMessages.length) return [newMessage]
 
-          const lastMsg = oldMessages[oldMessages.length - 1]
+            const lastMsg = oldMessages[oldMessages.length - 1]
 
-          const duplicateIndex = oldMessages.findIndex((msg) => {
-            return msg._id === newMessage._id || (msg.content === newMessage.content && msg.sender.id === newMessage.sender.id)
-          })
+            const isDuplicate = oldMessages.findIndex(
+              (msg) => msg._id === newMessage._id || (msg.content === newMessage.content && msg.sender.id === newMessage.sender.id)
+            )
 
-          if (duplicateIndex !== -1) {
-            const updatedMessages = [...oldMessages]
-            updatedMessages[duplicateIndex] = newMessage
-
-            return updatedMessages
-          }
-
-          const isSameSender = lastMsg.sender.id === newMessage.sender.id
-          const isWithinOneMinute = new Date(newMessage.createdAt).getTime() - new Date(lastMsg.createdAt).getTime() < 60 * 1000
-          const noMedia = !lastMsg.media?.length && !newMessage.media?.length
-
-          if (isSameSender && isWithinOneMinute && noMedia) {
-            const mergedMessage: LatestMessage = {
-              ...lastMsg,
-              content: `${lastMsg.content}\n${newMessage.content}`,
-              createdAt: newMessage.createdAt,
+            if (isDuplicate !== -1) {
+              const updated = [...oldMessages]
+              updated[isDuplicate] = newMessage
+              return updated
             }
 
-            return [...oldMessages.slice(0, -1), mergedMessage]
-          }
+            const isSameSender = lastMsg.sender.id === newMessage.sender.id
+            const isRecent = new Date(newMessage.createdAt).getTime() - new Date(lastMsg.createdAt).getTime() < 60000
+            const noMedia = !lastMsg.media?.length && !newMessage.media?.length
 
-          return [...oldMessages, newMessage]
-        })
+            if (isSameSender && isRecent && noMedia) {
+              const merged = {
+                ...lastMsg,
+                content: `${lastMsg.content}\n${newMessage.content}`,
+                createdAt: newMessage.createdAt,
+              }
+              return [...oldMessages.slice(0, -1), merged]
+            }
 
-        message = ''
-        if (!socket) return
-        socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
-      },
-    })
-    if (textareaRef.current) {
-      textareaRef.current.value = ''
+            return [...oldMessages, newMessage]
+          })
+
+          socket?.emit(SocketEnums.SEND_MESSAGE, newMessage)
+        },
+      })
+
+      textareaRef.current && (textareaRef.current.value = '')
+    } catch (err) {
+      console.error('Message send failed:', err)
+    } finally {
+      setIsImageUploading(false)
+      setImages([])
     }
-    setIsImageUploading(false)
-    setImages([])
   }
 
   const handleSubmit = (e: React.FormEvent | KeyboardEvent) => {
@@ -208,14 +197,14 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     let fileLink
     let data
     if (images) {
-      fileLink = await processImages(images)
+      fileLink = await uploadToS3(images)
 
       data = {
         content: message,
         chatId,
         UserProfileId: userProfileId,
 
-        media: fileLink ? [fileLink] : '',
+        media: fileLink ? fileLink.data : '',
       }
     } else {
       data = {
@@ -263,68 +252,58 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     }
   }
   const acceptGroupRequestAndSendNewMessage = async (message: string) => {
-    const response: any = await acceptGroupRequest({ chatId })
+    try {
+      // Accept group request
+      const response: any = await acceptGroupRequest({ chatId })
+      if (groupErr) {
+        showCustomDangerToast('Request not accepted. Unable to proceed.')
+        return
+      }
 
-    if (groupErr) {
-      console.error('Request not accepted. Unable to proceed.')
-      return
-    }
+      // Upload image if present
+      const fileLink = images ? await uploadToS3(images) : null
 
-    let fileLink
-    let data
-    if (images) {
-      fileLink = await processImages(images)
-
-      data = {
+      // Build message payload
+      const newMessagePayload = {
         content: message,
         chatId,
         UserProfileId: userProfileId,
-
-        media: fileLink ? [fileLink] : '',
+        ...(fileLink?.data && { media: fileLink.data }),
       }
-    } else {
-      data = {
-        content: message,
-        chatId,
-        UserProfileId: userProfileId,
-      }
-    }
 
-    createNewMessage(data, {
-      onSuccess: (newMessage) => {
-        queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[]) => {
-          return [...(oldMessages || []), newMessage]
-        })
+      // Create and send new message
+      createNewMessage(newMessagePayload, {
+        onSuccess: (newMessage) => {
+          // Update message list in cache
+          queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[] = []) => [...oldMessages, newMessage])
 
-        const chatData: ChatsArray | undefined = queryClient.getQueryData(['userChats'])
-        if (chatData) {
-          const updatedChatData = chatData.map((chat) =>
-            chat._id === chatId
-              ? {
-                  ...chat,
-                  latestMessage: newMessage,
-                }
-              : chat
-          )
+          // Update latest message in user chats
+          const chatData: ChatsArray | undefined = queryClient.getQueryData(['userChats'])
+          if (chatData) {
+            const updatedChatData = chatData
+              .map((chat) => (chat._id === chatId ? { ...chat, latestMessage: newMessage } : chat))
+              .sort((a, b) => {
+                const dateA = new Date(a.latestMessage?.createdAt || 0).getTime()
+                const dateB = new Date(b.latestMessage?.createdAt || 0).getTime()
+                return dateB - dateA
+              })
 
-          updatedChatData.sort((a, b) => {
-            const dateA = a.latestMessage?.createdAt ? new Date(a.latestMessage.createdAt).getTime() : 0
-            const dateB = b.latestMessage?.createdAt ? new Date(b.latestMessage.createdAt).getTime() : 0
-            return dateB - dateA
-          })
+            queryClient.setQueryData(['userChats'], updatedChatData)
+          }
 
-          queryClient.setQueryData(['userChats'], updatedChatData)
-        }
+          // Emit message to socket
+          if (socket) {
+            socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
+          }
 
-        message = ''
-        if (!socket) return
-        socket.emit(SocketEnums.SEND_MESSAGE, newMessage)
-        setCurrTab('Inbox')
-        setAcceptedId(chatId)
-      },
-    })
-    if (textareaRef.current) {
-      textareaRef.current.value = ''
+          // Reset UI state
+          if (textareaRef.current) textareaRef.current.value = ''
+          setCurrTab('Inbox')
+          setAcceptedId(chatId)
+        },
+      })
+    } catch (error) {
+      showCustomSuccessToast('Failed to send message after accepting group request')
     }
   }
 

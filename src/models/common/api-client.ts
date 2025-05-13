@@ -18,6 +18,7 @@ export interface RequestData<T> {
   size?: number
   userCode?: string
   email?: string
+  isFormData?: boolean
 }
 
 export interface ServerData<T> {

@@ -1,5 +1,5 @@
 import { useCreateChatMessage } from '@/services/Messages'
-import { replaceImage } from '@/services/uploadImage'
+import { useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
 import { ChatsArray, LatestMessage, SocketEnums } from '@/types/constants'
 import { useQueryClient } from '@tanstack/react-query'
@@ -16,12 +16,13 @@ const MessageInputBox = ({ chatId, userProfileId }: props) => {
   const [image, setImage] = useState<File | null>()
   const queryClient = useQueryClient()
   const { socket } = useUniStore()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const handleImageUpload = async (files: File) => {
     if (files) {
-      const data: any = await replaceImage(files, '')
+      const response = await uploadToS3([files])
 
-      const dataToPush = { imageUrl: data?.imageUrl, publicId: data?.publicId }
+      const dataToPush = { imageUrl: response?.data[0].imageUrl, publicId: response?.data[0]?.publicId }
 
       return dataToPush
     } else {

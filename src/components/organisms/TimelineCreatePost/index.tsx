@@ -4,7 +4,7 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { Spinner } from '@/components/spinner/Spinner'
 import { cleanInnerHTML, formatFileSize, validateUploadedFiles } from '@/lib/utils'
 import { useCreateUserPost } from '@/services/community-timeline'
-import { replaceImage } from '@/services/uploadImage'
+import { S3UploadResponse, useUploadToS3 } from '@/services/upload'
 import { CommunityPostType, PostInputData, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
 import dynamic from 'next/dynamic'
 import Quill from 'quill'
@@ -23,8 +23,9 @@ function TimelineCreatePost() {
   const quillHTMLState = useRef(null)
   const [images, setImages] = useState<File[]>([])
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
-  const { mutate: CreateTimelinePost, isPending } = useCreateUserPost()
+  const { mutateAsync: CreateTimelinePost, isPending } = useCreateUserPost()
   const [isPostCreating, setIsPostCreating] = useState(false)
+  const { mutateAsync: uploadtoS3 } = useUploadToS3()
 
   // Add this utility function to your utils file
   const getFileIcon = (fileType: string) => {
@@ -42,14 +43,6 @@ function TimelineCreatePost() {
     }
   }
 
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
-  }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
@@ -68,7 +61,7 @@ function TimelineCreatePost() {
   }
 
   const handleSubmit = async () => {
-    if (quillInstance && quillInstance?.getText().toString().length - 1 === 0) return
+    if (quillInstance && quillInstance.getText().trim().length === 0) return
 
     setIsPostCreating(true)
 
@@ -76,14 +69,20 @@ function TimelineCreatePost() {
       content: cleanInnerHTML(quillHTMLState.current!),
       PostType: PostTypeOption[postAccessType as never],
     }
-    if (images.length) {
-      const imagedata = await processImages(images)
-      payload.imageUrl = imagedata
-    }
 
-    CreateTimelinePost(payload)
-    resetPostContent()
-    setIsPostCreating(false)
+    try {
+      if (images.length) {
+        const response = await uploadtoS3(images) // ✅ await image upload
+        payload.imageUrl = response.data
+      }
+
+      await CreateTimelinePost(payload) // ✅ wait for post creation
+      resetPostContent()
+    } catch (err) {
+      console.error('Error creating post:', err)
+    } finally {
+      setIsPostCreating(false)
+    }
   }
 
   const handleImageRemove = (index: number) => {

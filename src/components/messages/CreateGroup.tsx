@@ -3,8 +3,8 @@ import { FiCamera } from 'react-icons/fi'
 import { useForm } from 'react-hook-form'
 import Modal from '../Timeline/Modal'
 import SelectGroupUsers from './SelectUsers'
-import { replaceImage } from '@/services/uploadImage'
 import { useCreateGroupChat } from '@/services/Messages'
+import { useUploadToS3 } from '@/services/upload'
 
 type media = {
   imageUrl: string
@@ -31,11 +31,13 @@ const CreateGroup = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { mutate: createGroupChat } = useCreateGroupChat()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
+
   const onGroupChatSubmit = async (data: any) => {
     let CoverImageData
     if (coverImage) {
-      const imagedata: any = await replaceImage(coverImage, '')
-      CoverImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadToS3(coverImage)
+      CoverImageData = { groupLogo: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
     const dataTopush = {
       groupLogo: CoverImageData?.groupLogo,

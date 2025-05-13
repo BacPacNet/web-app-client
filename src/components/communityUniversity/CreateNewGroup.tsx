@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form'
 import SelectUsers from './SelectUsers'
 import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/community-university'
 import { useParams } from 'next/navigation'
-import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../spinner/Spinner'
 import InputBox from '../atoms/Input/InputBox'
+import { useUploadToS3 } from '@/services/upload'
 type Props = {
   setNewGroup: (value: boolean) => void
 }
@@ -36,6 +36,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
@@ -48,12 +49,12 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
     let logoImageData
     setIsLoading(true)
     if (coverImage) {
-      const imagedata: any = await replaceImage(coverImage, '')
-      CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadtoS3(coverImage)
+      CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
     if (logoImage) {
-      const imagedata: any = await replaceImage(logoImage, '')
-      logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadtoS3(logoImage)
+      logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
 
     const dataToPush = {

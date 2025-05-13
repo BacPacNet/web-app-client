@@ -2,7 +2,6 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 
 import { useCreateGroupChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
-import { replaceImage } from '@/services/uploadImage'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -16,6 +15,7 @@ import Buttons from '@/components/atoms/Buttons'
 import { IoClose } from 'react-icons/io5'
 import { openModal } from '../Modal/ModalManager'
 import OneToChat from '../OneToOneChat'
+import { useUploadToS3 } from '@/services/upload'
 
 type user = {
   _id: string
@@ -51,6 +51,7 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
   const { data } = useGetUserFollowingAndFollowers(searchInput)
 
   const { mutate: createGroupChat } = useCreateGroupChat()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const handleShowModal = () => {
     openModal(<OneToChat setSelectedChat={setSelectedChat} />)
@@ -71,8 +72,8 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
   const onGroupChatSubmit = async (data: any) => {
     let CoverImageData
     if (groupLogoImage) {
-      const imagedata: any = await replaceImage(groupLogoImage, '')
-      CoverImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadToS3([groupLogoImage])
+      CoverImageData = { groupLogo: { imageUrl: imagedata?.data[0].imageUrl, publicId: imagedata?.data[0]?.publicId } }
     }
     const selectedUsersIds = selectedUsers.map((item: { _id: string }) => item._id)
     const dataTopush = {
