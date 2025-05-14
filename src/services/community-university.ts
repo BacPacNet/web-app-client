@@ -507,8 +507,6 @@ export const useCreateGroupPostCommentReply = (
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
 
       if (showInitial) {
-        // const singlePostData = queryClient.getQueryData(['getPost', postId])
-        // console.log('query', singlePostData, 'res', data)
         queryClient.setQueryData(['getPost', postId], (oldData: any) => {
           if (!oldData) return oldData
 

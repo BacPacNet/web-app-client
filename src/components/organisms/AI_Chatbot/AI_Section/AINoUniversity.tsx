@@ -10,7 +10,6 @@ const AINoUniversity = ({ communityId }: { communityId: string }) => {
   return (
     <div className="w-full flex justify-center items-center h-full font-poppins overflow-y-scroll noi">
       <div className="flex flex-col h-full gap-8 mt-8 items-center w-full">
-        {/* <Image src={aibot} alt="bot" width={40} height={40} className=" md:w-60 p-4" /> */}
         <Image src={aibot} alt="bot" width={40} height={40} className=" w-32 md:w-[194px] h-[185px]  " />
         <div className="w-full flex flex-col gap-5 justify-center">
           <SettingsText className="text-sm md:text-md ">Sorry! It seems your university doesn’t support our AI Assistant!</SettingsText>
@@ -33,7 +32,6 @@ const EndorsementTracker = ({ communityId }: { communityId: string }) => {
   const { data: endorsement } = useGetEndorsementAI(communityId)
   const { data: endorsementUser } = useGetEndorsementAIOfUser(communityId)
   const { mutate: mutateEndorse } = useCreateEndorsementAI()
-  console.log('endorsementUser', endorsementUser, 'communityId', communityId)
 
   const progressPercentage = Math.floor((endorsedCount / targetGoal) * 100)
 

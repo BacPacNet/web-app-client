@@ -47,14 +47,6 @@ const Ai_AssistantContainer = () => {
     return (
       <div className="relative">
         <div className="flex items-center gap-2 text-2xs cursor-pointer" onClick={() => setShow(!show)}>
-          {/* <Image
-            width={48}
-            height={48}
-            className="w-12 h-12 rounded-full bg-white shadow-lg"
-            src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
-            alt="logo"
-          /> */}
-
           <div className=" flex  items-center gap-3 ">
             <Image
               width={48}
@@ -98,9 +90,6 @@ const Ai_AssistantContainer = () => {
             <span>Refresh</span>
             <SlReload />
           </Buttons>
-          {/* <p className="flex items-center gap-2 cursor-pointer" onClick={handleRefresh}>
-            <SlReload className="text-primary-500" /> <span className="text-neutral-700 text-xs max-sm:hidden">Refresh Assistant</span>
-          </p> */}
         </div>
       </div>
       {isAssistantExist?.isAssistantAvailable ? (

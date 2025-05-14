@@ -50,7 +50,6 @@ const CommunitySettingMenu: React.FC<Props> = ({ isOpen, toggleOpen, isAdmin, gr
         <div className="flex flex-col">
           {isAdmin && (
             <>
-              {/* <div onClick={onEdit} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer"> */}
               <div onClick={edit} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
                 <FiEdit size={16} className="text-primary-500" />
                 <p className="font-medium text-neutral-700 text-xs">Edit</p>
