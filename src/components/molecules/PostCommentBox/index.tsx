@@ -17,6 +17,7 @@ import UserCard from '@/components/atoms/UserCard'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import { CommentsType, PostCommentProps } from '@/types/CommentPost'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const PostCommentBox = ({
   showCommentSec,
@@ -32,6 +33,10 @@ const PostCommentBox = ({
 }: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
   const [newPost, setNewPost] = useState(false)
+  const [closeInitialComments, setCloseInitialComments] = useState(false)
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
@@ -41,8 +46,8 @@ const PostCommentBox = ({
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
   const { isMobile } = useDeviceType()
 
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false)
-  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false)
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false, showInitial, postID || '')
+  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false, showInitial, postID || '')
   const {
     data: commentsData,
     fetchNextPage,
@@ -78,7 +83,10 @@ const PostCommentBox = ({
 
   const showMoreComponent = () => {
     if (showInitial) return
-    if (hasNextPage || communityCommentsHasNextPage) {
+    if (
+      (hasNextPage && !isFetching && type == PostType.Timeline) ||
+      (communityCommentsHasNextPage && !communityCommentsIsFetching && type == PostType.Community)
+    ) {
       return (
         <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
           <p className="" onClick={handleShowMore}>
@@ -106,9 +114,20 @@ const PostCommentBox = ({
   }
 
   const ShowAllComponent = () => {
+    const handleClick = () => {
+      setShowCommentSection(postID)
+
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('commentId')
+
+      const newQuery = params.toString()
+      const newUrl = `/post/${postID}${newQuery ? `?${newQuery}` : ''}`
+
+      router.replace(newUrl)
+    }
     return (
       <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
-        <p className="" onClick={() => setShowCommentSection(postID)}>
+        <p className="" onClick={handleClick}>
           show all comments
         </p>
         <FaArrowDown />
@@ -122,11 +141,15 @@ const PostCommentBox = ({
   }, [!!initialComment])
 
   const toggleCommentSection = (commentId: string) => {
+    if (initialComment) {
+      setCloseInitialComments(true)
+    }
     setVisibleComments((prevState) => ({
       ...prevState,
       [commentId]: !prevState[commentId],
     }))
   }
+
   const handleChildComments = (comments: any) => {
     const childCommentsIds = comments?.map((item: { _id: string }) => item?._id)
 
@@ -208,8 +231,10 @@ const PostCommentBox = ({
         </div>
 
         {/* Render nested replies if they exist */}
-        {comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3 && (
+        {(comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3) || (showInitial && !closeInitialComments) ? (
           <div className="w-full mt-6">{renderComments(comment.replies)}</div>
+        ) : (
+          ''
         )}
       </div>
     ))

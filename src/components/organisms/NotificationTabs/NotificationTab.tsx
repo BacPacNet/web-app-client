@@ -47,7 +47,6 @@ const NotificationTab = () => {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  console.log('data', notifications)
   return (
     <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit] ">
       <div className="flex justify-between items-center">

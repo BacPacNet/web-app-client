@@ -47,9 +47,9 @@ export default function CommunityGroupBanner({
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
   const { mutate: deleteCommunityGroup } = useDeleteCommunityGroup()
   const router = useRouter()
-
+  const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
   const handleShowMembers = () => {
-    openModal(<CommunityGroupModal communityGroupId={communityGroupID} isGroupAdmin={isGroupAdmin} users={communityGroups?.users || []} />)
+    openModal(<CommunityGroupModal communityGroupId={communityGroupID} isGroupAdmin={isGroupAdmin} users={CommunityGroupMember || []} />)
   }
 
   useEffect(() => {

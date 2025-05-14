@@ -17,7 +17,6 @@ const SinglePost = () => {
   const { data, isFetching, isPending, isError } = useGetPost(id, Type, commentID || ' ')
   const item = data?.post
   const comment = data?.comment
-  console.log('comment', comment)
 
   const [showCommentSection, setShowCommentSection] = useState('')
 

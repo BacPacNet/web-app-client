@@ -149,8 +149,8 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
     refetch: communityCommentRefetch,
     isFetching: communityCommentIsFetching,
   } = useGetCommunityCommentById(commentId ? commentId : reply.commentID, reply.enabled, type == PostType.Community)
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(true)
-  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(true)
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(true, false, '')
+  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(true, false, '')
 
   const toggleCommentSection = (commentId: string) => {
     setVisibleComments((prevState) => ({
@@ -323,7 +323,17 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
         {(type == PostType.Community ? communityComment?.finalComments : data?.finalComments)?.map((comment: any) => (
           <Comment key={comment._id} comment={comment} />
         ))}
-        {newPost && <NewPostComment setNewPost={setNewPost} data={isReply ? commentData : data} isReply={true} postType={type} />}
+        {newPost && (
+          <NewPostComment
+            setShowCommentSection={() => console.log('not for nested')}
+            showInitial={false}
+            postId={''}
+            setNewPost={setNewPost}
+            data={isReply ? commentData : data}
+            isReply={true}
+            postType={type}
+          />
+        )}
       </div>
     </>
   )

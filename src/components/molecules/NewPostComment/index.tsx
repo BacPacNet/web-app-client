@@ -58,7 +58,9 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     false,
     //   isNested,
     true,
-    postType
+    postType,
+    showInitial,
+    postId || ''
   )
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)

@@ -51,12 +51,16 @@ function PostCommentInput({
   const { mutate: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
     isSinglePost ? isSinglePost : false,
     isNested,
-    type
+    type,
+    false,
+    ''
   )
   const { mutate: CreateGroupPostCommentReply, isPending: useCreateGroupPostCommentReplyLoading } = useCreateGroupPostCommentReply(
     isSinglePost ? isSinglePost : false,
     isNested,
-    type
+    type,
+    false,
+    ''
   )
 
   const [ImageValue, setImageValue] = useState<File | null>(null)

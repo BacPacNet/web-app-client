@@ -227,8 +227,8 @@ export const useJoinCommunityFromUniversity = () => {
     onSuccess: (response: any) => {
       //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      setUserProfileCommunities(response.data.profile.communities)
-      showCustomSuccessToast(`Joined Community `)
+      //   setUserProfileCommunities(response.data.profile.communities)
+      //   showCustomSuccessToast(`Joined Community `)
     },
     onError: (res: any) => {
       //   showCustomDangerToast(res.response.data.message)
@@ -491,7 +491,13 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
     },
   })
 }
-export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: boolean, type: PostType.Community | PostType.Timeline) => {
+export const useCreateGroupPostCommentReply = (
+  isSinglePost: boolean,
+  isNested: boolean,
+  type: PostType.Community | PostType.Timeline,
+  showInitial: boolean,
+  postId: string
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
@@ -499,6 +505,21 @@ export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: 
 
     onSuccess: (data: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+
+      if (showInitial) {
+        // const singlePostData = queryClient.getQueryData(['getPost', postId])
+        // console.log('query', singlePostData, 'res', data)
+        queryClient.setQueryData(['getPost', postId], (oldData: any) => {
+          if (!oldData) return oldData
+
+          return {
+            ...oldData,
+            comment: {
+              ...data.commentReply,
+            },
+          }
+        })
+      }
 
       if (currUserComments) {
         const updatedPages = currUserComments.pages.map((page) => {
@@ -532,7 +553,7 @@ export const useCreateGroupPostCommentReply = (isSinglePost: boolean, isNested: 
   })
 }
 
-export const useLikeUnlikeGroupPostComment = (isReply: boolean) => {
+export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boolean, postId: string) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
@@ -544,6 +565,54 @@ export const useLikeUnlikeGroupPostComment = (isReply: boolean) => {
       const { communityGroupPostCommentId, level } = variables
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
 
+      if (showInitial) {
+        const singlePostData: any = queryClient.getQueryData(['getPost', postId])
+        if (singlePostData?.comment) {
+          const comment = singlePostData.comment
+
+          if (level === '0' && comment._id === communityGroupPostCommentId) {
+            const hasLiked = comment.likeCount.some((like: any) => like.userId === userData?.id)
+
+            const updatedComment = {
+              ...comment,
+              likeCount: hasLiked
+                ? comment.likeCount.filter((like: any) => like.userId !== userData?.id)
+                : [...comment.likeCount, { userId: userData?.id }],
+            }
+
+            queryClient.setQueryData(['getPost', postId], {
+              ...singlePostData,
+              comment: updatedComment,
+            })
+          }
+
+          if (level === '1') {
+            const updatedReplies = comment.replies.map((reply: any) => {
+              if (reply._id === communityGroupPostCommentId) {
+                const hasLiked = reply.likeCount.some((like: any) => like.userId === userData?.id)
+
+                return {
+                  ...reply,
+                  likeCount: hasLiked
+                    ? reply.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...reply.likeCount, { userId: userData?.id }],
+                }
+              }
+              return reply
+            })
+
+            queryClient.setQueryData(['getPost', postId], {
+              ...singlePostData,
+              comment: {
+                ...comment,
+                replies: updatedReplies,
+              },
+            })
+          }
+        }
+      }
+
+      //   single end
       if (currUserComments) {
         queryClient.setQueryData(['communityPostComments'], {
           ...currUserComments,
