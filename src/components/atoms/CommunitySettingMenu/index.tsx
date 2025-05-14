@@ -10,7 +10,8 @@ import { status } from '@/types/CommuityGroup'
 
 interface Props {
   isOpen: boolean
-  toggleOpen: () => void
+
+  toggleOpen: (open: boolean) => void
   isAdmin: boolean
   groupStatus?: string
   onEdit?: () => void
@@ -19,26 +20,43 @@ interface Props {
 }
 
 const CommunitySettingMenu: React.FC<Props> = ({ isOpen, toggleOpen, isAdmin, groupStatus, onEdit, onDelete, onLeave }) => {
+  const edit = () => {
+    if (!onEdit) return
+    onEdit()
+    toggleOpen(false)
+  }
+
+  const del = () => {
+    if (!onDelete) return
+    onDelete()
+    toggleOpen(false)
+  }
+
+  const leave = () => {
+    if (!onLeave) return
+    onLeave()
+    toggleOpen(false)
+  }
   return (
-    <Popover open={isOpen}>
-      <PopoverTrigger>
-        <div className="relative">
-          <Image src={settingIcon} width={32} height={32} alt="Settings" onClick={toggleOpen} />
+    <Popover open={isOpen} onOpenChange={toggleOpen}>
+      <PopoverTrigger asChild>
+        <div className="relative cursor-pointer">
+          <Image src={settingIcon} width={32} height={32} alt="Settings" />
           {groupStatus === status.pending && isAdmin && <BsExclamationCircleFill size={12} className="absolute text-warning-500 top-1 right-0" />}
         </div>
       </PopoverTrigger>
 
-      <PopoverContent onClick={toggleOpen} className="p-0 relative drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
+      <PopoverContent className="p-0 relative drop-shadow-lg right-16 top-2 w-40 bg-white shadow-card border-none">
         <div className="flex flex-col">
           {isAdmin && (
             <>
-              <div onClick={onEdit} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+              <div onClick={edit} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
                 <FiEdit size={16} className="text-primary-500" />
                 <p className="font-medium text-neutral-700 text-xs">Edit</p>
                 {groupStatus === status.pending && <BsExclamationCircleFill size={16} className="text-warning-500" />}
               </div>
 
-              <div onClick={onDelete} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+              <div onClick={del} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
                 <MdDeleteForever size={16} className="text-destructive-600" />
                 <p className="font-medium text-neutral-700 text-xs">Delete</p>
               </div>
@@ -46,7 +64,7 @@ const CommunitySettingMenu: React.FC<Props> = ({ isOpen, toggleOpen, isAdmin, gr
           )}
 
           {!isAdmin && (
-            <div onClick={onLeave} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+            <div onClick={leave} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
               <TbLogout2 size={16} className="text-red-500" />
               <p className="font-medium text-neutral-700 text-xs">Leave</p>
             </div>

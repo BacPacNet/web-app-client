@@ -45,12 +45,12 @@ const UserCard: React.FC<UserCardProps> = ({
       </div>
       <div>
         <div className="flex gap-1 items-start">
-          <h3 className="font-semibold text-2xs text-neutral-700">{user}</h3>
+          <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
           {isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />}
         </div>
 
         <div className="flex flex-col">
-          <p className="hidden md:block text-[10px] text-neutral-500">{isStudent ? year : occupation} </p>
+          <p className="block text-[10px] text-neutral-500">{isStudent ? year : occupation} </p>
           <p className="text-[10px] text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>
       </div>

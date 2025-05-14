@@ -35,17 +35,23 @@ const SelectAIUniversityDropdown = ({ data, show, setShow, setSelectedUniversity
     <AnimatePresence>
       {show && (
         <motion.div
-          className={`flex flex-col  custom-scrollbar  absolute   bg-white  shadow-lg border border-neutral-200 rounded-lg z-10 max-h-52 w-52 overflow-y-auto`}
+          className={`flex flex-col  custom-scrollbar  absolute   bg-white  shadow-lg border border-neutral-200 rounded-lg z-10 max-h-72 w-52 md:w-72 overflow-y-auto`}
           {...motionStyle}
         >
           {data?.map((item: any) => (
             <div
               onClick={() => handleClick(item)}
               key={item?._id}
-              className="flex items-center gap-2 text-2xs p-2 cursor-pointer hover:bg-neutral-200"
+              className="flex items-center  gap-2 text-2xs p-2 cursor-pointer hover:bg-neutral-200"
             >
               <div className="w-5 h-5">
-                <Image width={20} height={20} src={item?.communityLogoUrl?.imageUrl || ImagePlaceholder} alt="logo" />
+                <Image
+                  width={20}
+                  height={20}
+                  src={item?.communityLogoUrl?.imageUrl || ImagePlaceholder}
+                  alt="logo"
+                  className="h-5 w-5 object-contain"
+                />
               </div>
               <p>{item?.name}</p>
             </div>

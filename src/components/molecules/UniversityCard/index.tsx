@@ -85,7 +85,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
             <p className="ai-power text-xs font-black">AI POWERED</p>
           </div>
           {isUserJoinedCommunity ? (
-            <Popover open={toggleDropdown}>
+            <Popover open={toggleDropdown} onOpenChange={(open) => setToggleDropdown(open)}>
               <PopoverTrigger>
                 <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="Settings" />
               </PopoverTrigger>

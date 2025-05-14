@@ -62,9 +62,10 @@ interface CommunityHolderProps {
 }
 
 const CommunityHolder = ({ community, index, handleCommunityClick, communityId, isGroup }: CommunityHolderProps) => {
-  const [logoSrc, setLogoSrc] = useState(community.communityLogoUrl.imageUrl)
+  const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl?.imageUrl)
 
-  const isSelected = communityId === community._id && !isGroup
+  const isSelected = communityId === community?._id && !isGroup
+
   return (
     <div
       onClick={() => handleCommunityClick(index)}
@@ -76,15 +77,15 @@ const CommunityHolder = ({ community, index, handleCommunityClick, communityId, 
           width={40}
           height={40}
           className="w-[40px] h-[40px] object-contain rounded-full shadow-logo p-1"
-          src={logoSrc}
-          alt={community.name}
+          src={logoSrc || ''}
+          alt={community?.name}
           onError={() => setLogoSrc(universityLogoPlaceholder)}
         />
 
         <div className="flex items-center gap-1">
-          <p className={`text-xs line-clamp-2 ${isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium '}`}>{community.name} </p>
+          <p className={`text-xs  ${isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium '}`}>{community?.name} </p>
           {/*<FaCircleCheck color="#6647ff" size={16} />*/}
-          {community.isVerified && <Image src={badge} width={16} height={16} alt="badge" />}
+          {community?.isVerified && <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />}
         </div>
       </div>
     </div>

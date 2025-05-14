@@ -25,6 +25,7 @@ const MessageTopBar = ({
   searchByNameText,
 }: Props) => {
   const [showDropdown, setShowDropdown] = useState(false)
+  console.log('unreadChatsCount', unreadChatsCount)
 
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
@@ -77,7 +78,7 @@ const MessageTopBar = ({
                   } ps-2 cursor-pointer text-neutral-700 text-2xs font-medium flex items-center gap-2`}
                 >
                   Inbox
-                  {unreadNotAcceptedChatsCount > 0 && (
+                  {unreadChatsCount > 0 && (
                     <p
                       className={`bg-destructive-600  h-4 ${
                         unreadChatsCount > 9 ? 'px-1 min-w-4' : 'w-4'

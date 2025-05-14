@@ -130,7 +130,7 @@ const ChangeUserPasswordPage = () => {
       </div>
 
       <Buttons size="small_profile" className="h-[42px] mt-6 flex items-center gap-1" onClick={handleSubmit(onSubmit)} disabled={isPendingChangeApi}>
-        {isPendingChangeApi ? <Spinner /> : 'Change Username'}
+        {isPendingChangeApi ? <Spinner /> : 'Change Password'}
       </Buttons>
     </div>
   )

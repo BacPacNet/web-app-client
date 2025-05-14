@@ -94,7 +94,13 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
   })
 }
 
-export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: boolean, type: PostType.Community | PostType.Timeline) => {
+export const useCreateUserPostCommentReply = (
+  isSinglePost: boolean,
+  isNested: boolean,
+  type: PostType.Community | PostType.Timeline,
+  showInitial: boolean,
+  postId: string
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
 
@@ -103,7 +109,18 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
 
     onSuccess: (data: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+      if (showInitial) {
+        queryClient.setQueryData(['getPost', postId], (oldData: any) => {
+          if (!oldData) return oldData
 
+          return {
+            ...oldData,
+            comment: {
+              ...data.commentReply,
+            },
+          }
+        })
+      }
       if (currUserComments) {
         const updatedPages = currUserComments.pages.map((page) => {
           return {
@@ -136,7 +153,7 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
   })
 }
 
-export const useLikeUnlikeUserPostComment = (isReply: boolean) => {
+export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: boolean, postId: string) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
@@ -147,6 +164,54 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean) => {
       const { userPostCommentId, level } = variables
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
 
+      if (showInitial) {
+        const singlePostData: any = queryClient.getQueryData(['getPost', postId])
+        if (singlePostData?.comment) {
+          const comment = singlePostData.comment
+
+          if (level === '0' && comment._id === userPostCommentId) {
+            const hasLiked = comment.likeCount.some((like: any) => like.userId === userData?.id)
+
+            const updatedComment = {
+              ...comment,
+              likeCount: hasLiked
+                ? comment.likeCount.filter((like: any) => like.userId !== userData?.id)
+                : [...comment.likeCount, { userId: userData?.id }],
+            }
+
+            queryClient.setQueryData(['getPost', postId], {
+              ...singlePostData,
+              comment: updatedComment,
+            })
+          }
+
+          if (level === '1') {
+            const updatedReplies = comment.replies.map((reply: any) => {
+              if (reply._id === userPostCommentId) {
+                const hasLiked = reply.likeCount.some((like: any) => like.userId === userData?.id)
+
+                return {
+                  ...reply,
+                  likeCount: hasLiked
+                    ? reply.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...reply.likeCount, { userId: userData?.id }],
+                }
+              }
+              return reply
+            })
+
+            queryClient.setQueryData(['getPost', postId], {
+              ...singlePostData,
+              comment: {
+                ...comment,
+                replies: updatedReplies,
+              },
+            })
+          }
+        }
+      }
+
+      //   single end
       if (currUserComments) {
         queryClient.setQueryData(['userPostComments'], {
           ...currUserComments,

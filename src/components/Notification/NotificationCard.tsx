@@ -32,6 +32,17 @@ interface likedBy {
   newFiveUsers: any[]
 }
 
+interface CommentedUser {
+  _id: string
+  communityPostCommentId?: string
+  postCommentId?: string
+}
+
+interface CommentedBy {
+  totalCount: number
+  newFiveUsers: CommentedUser[]
+}
+
 type Props = {
   data: {
     _id: string
@@ -61,7 +72,7 @@ type Props = {
     }
     type: string
     likedBy: likedBy
-    commentedBy: likedBy
+    commentedBy: CommentedBy
   }
 }
 
@@ -83,9 +94,9 @@ const NotificationCard = ({ data }: Props) => {
       case notificationRoleAccess.FOLLOW:
         return router.push(`/profile/${data.sender_id?._id}`)
       case notificationRoleAccess.COMMENT:
-        return router.push(`/post/${data.userPostId}?isType=Timeline`)
+        return router.push(`/post/${data.userPostId}?isType=Timeline&commentId=${data?.commentedBy.newFiveUsers[0].postCommentId}`)
       case notificationRoleAccess.COMMUNITY_COMMENT:
-        return router.push(`/post/${data.communityPostId}?isType=Community`)
+        return router.push(`/post/${data.communityPostId}?isType=Community&commentId=${data?.commentedBy.newFiveUsers[0].communityPostCommentId}`)
       case notificationRoleAccess.REACTED_TO_POST:
         return router.push(`/post/${data.userPostId}?isType=Timeline`)
       case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
@@ -103,6 +114,14 @@ const NotificationCard = ({ data }: Props) => {
     }
   }
 
+  const handleRedirectCommunityComment = (user: any) => {
+    return router.push(`/post/${data.communityPostId}?isType=Community&commentId=${user?.communityPostCommentId}`)
+  }
+
+  const handleRedirectPostComment = (user: any) => {
+    return router.push(`/post/${data.userPostId}?isType=Timeline&commentId=${user?.postCommentId}`)
+  }
+
   return (
     <div
       onClick={(e) => handleUpdateIsRead(e, data?._id)}
@@ -112,7 +131,12 @@ const NotificationCard = ({ data }: Props) => {
     >
       <div className="flex justify-between items-center">
         <div className="flex gap-4 items-center  ">
-          <NotificationAvatars data={data} notificationType={data?.type} />
+          <NotificationAvatars
+            handleRedirectCommunityComment={handleRedirectCommunityComment}
+            handleRedirectPostComment={handleRedirectPostComment}
+            data={data}
+            notificationType={data?.type}
+          />
         </div>
 
         <p className="text-2xs text-neutral-500  ">

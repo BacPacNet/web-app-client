@@ -17,20 +17,57 @@ import { openModal } from '../Modal/ModalManager'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 import Buttons from '@/components/atoms/Buttons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-import { sortBy } from '@/types/CommuityGroup'
+
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
 import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 import { isEmpty } from '@/lib/utils'
+import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
   toggleLeftNavbar: () => void | null
 }
 
+const sortOptions = [
+  {
+    label: 'Alphabet Ascending',
+    value: 'alphabetAsc',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
+  {
+    label: 'Alphabet Descending',
+    value: 'alphabetDesc',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
+  {
+    label: 'User Count Ascending',
+    value: 'userCountAsc',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
+  {
+    label: 'User Count Descending',
+    value: 'userCountDesc',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
+  // {
+  //   label: 'Latest',
+  //   value: 'latest',
+  // },
+  //   {
+  //     label: 'Users',
+  //     value: 'users',
+  //   },
+  //   {
+  //     label: 'Oldest',
+  //     value: 'oldest',
+  //   },
+]
+
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
+  const [isOpen, setIsOpen] = useState(false)
 
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
@@ -139,6 +176,11 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     }
   }, [sort, cookieValue, community?._id])
 
+  const handleSelect = (value: string) => {
+    setSort(value)
+    setIsOpen(false)
+  }
+
   const tabData = [
     {
       label: 'Joined',
@@ -184,6 +226,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Create',
       content: (
         <div>
+          {isUserVerifiedForCommunity && (
+            <div className="flex justify-center items-center p-2">
+              <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
+                Create Group
+              </button>
+            </div>
+          )}
           <CommunityGroupAll
             key={subscribedCommunitiesMyGroup}
             communityGroups={subscribedCommunitiesMyGroup}
@@ -199,14 +248,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             toggleLeftNavbar={toggleLeftNavbar}
             selectedCommunityImage={selectedCommunityImage}
           />
-
-          {isUserVerifiedForCommunity && (
-            <div className="flex justify-center items-center p-2">
-              <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
-                Create Group
-              </button>
-            </div>
-          )}
         </div>
       ),
     },
@@ -262,18 +303,25 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           </div>
 
           <div className="flex-1">
-            <Popover>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger className="w-full">
                 <Buttons variant="border" className="h-10 w-full gap-1 text-xs">
                   Sort
                   <LuArrowUpDown className="h-3.5 w-3.5 text-primary-500" />
                 </Buttons>
               </PopoverTrigger>
-              <PopoverContent className="w-32 px-2 py-0 border-none bg-white shadow-lg shadow-gray-light">
+              <PopoverContent className="p-0 w-max border-none bg-white shadow-lg shadow-gray-light">
                 <div className="flex flex-col justify-between">
-                  {sortBy.map((item) => (
-                    <p onClick={() => setSort(item)} key={item} className="capitalize text-neutral-800 cursor-pointer p-1 hover:bg-neutral-200">
-                      {item}
+                  {sortOptions.map(({ label, value, icon }) => (
+                    <p
+                      key={value}
+                      onClick={() => handleSelect(value)}
+                      className={`flex items-center gap-2 cursor-pointer p-2 text-neutral-800 hover:bg-neutral-200 transition ${
+                        sort === value ? 'bg-neutral-300 font-medium' : ''
+                      }`}
+                    >
+                      <span className="capitalize text-xs w-40">{label}</span>
+                      {icon && icon}
                     </p>
                   ))}
                 </div>

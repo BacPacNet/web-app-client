@@ -12,7 +12,7 @@ import { useLikeUnilikeGroupPost } from '@/services/community-university'
 import { useLikeUnlikeTimelinePost } from '@/services/community-timeline'
 import { PostType } from '@/types/constants'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
 import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
@@ -79,6 +79,7 @@ interface PostProps {
   occupation?: string
   affiliation?: string
   isPostVerified?: boolean
+  initialComment?: any
 }
 
 const PostCard = React.memo(
@@ -109,11 +110,14 @@ const PostCard = React.memo(
     isPostVerified,
     communityName,
     communityGroupName,
+    initialComment,
   }: PostProps) => {
     const { userData } = useUniStore()
 
     const router = useRouter()
+    const searchParams = useSearchParams()
 
+    const [showInitial, setShowInitial] = useState(!!initialComment)
     // Local state for immediate UI feedback
     const [localLikes, setLocalLikes] = useState<any>(likes)
     const [localIsLiked, setLocalIsLiked] = useState(false)
@@ -206,6 +210,23 @@ const PostCard = React.memo(
     )
 
     const toggleCommentSection = useCallback(() => {
+      if (initialComment && showCommentSection === postID) {
+        setShowInitial(false)
+      }
+
+      const handleClick = () => {
+        if (!initialComment) return
+        setShowInitial(false)
+
+        const params = new URLSearchParams(searchParams.toString())
+        params.delete('commentId')
+
+        const newQuery = params.toString()
+        const newUrl = `/post/${postID}${newQuery ? `?${newQuery}` : ''}`
+
+        router.replace(newUrl)
+      }
+      handleClick()
       setShowCommentSection(showCommentSection === postID ? '' : postID)
     }, [showCommentSection, postID, setShowCommentSection])
 
@@ -277,10 +298,14 @@ const PostCard = React.memo(
         <PostCommentBox
           handleProfileClicked={handleProfileClicked}
           showCommentSec={showCommentSection}
+          setShowCommentSection={setShowCommentSection}
           postID={postID}
           type={type}
           data={PostData}
           setImageCarasol={setImageCarasol}
+          initialComment={initialComment}
+          setShowInitial={setShowInitial}
+          showInitial={showInitial}
         />
       </div>
     )
