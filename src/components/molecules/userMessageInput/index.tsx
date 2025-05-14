@@ -261,7 +261,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       }
 
       // Upload image if present
-      const fileLink = images ? await uploadToS3(images) : null
+      const fileLink = images.length > 0 ? await uploadToS3(images) : null
 
       // Build message payload
       const newMessagePayload = {
