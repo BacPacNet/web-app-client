@@ -94,7 +94,13 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
   })
 }
 
-export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: boolean, type: PostType.Community | PostType.Timeline) => {
+export const useCreateUserPostCommentReply = (
+  isSinglePost: boolean,
+  isNested: boolean,
+  type: PostType.Community | PostType.Timeline,
+  showInitial: boolean,
+  postId: string
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
 
@@ -103,7 +109,20 @@ export const useCreateUserPostCommentReply = (isSinglePost: boolean, isNested: b
 
     onSuccess: (data: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+      if (showInitial) {
+        const singlePostData = queryClient.getQueryData(['getPost', postId])
+        console.log('query', singlePostData, 'res', data)
+        queryClient.setQueryData(['getPost', postId], (oldData: any) => {
+          if (!oldData) return oldData
 
+          return {
+            ...oldData,
+            comment: {
+              ...data.commentReply,
+            },
+          }
+        })
+      }
       if (currUserComments) {
         const updatedPages = currUserComments.pages.map((page) => {
           return {

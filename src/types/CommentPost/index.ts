@@ -2,6 +2,9 @@ import { PostType } from '../constants'
 
 export type PostCommentProps = {
   showCommentSec: string
+  setShowCommentSection: (value: string) => void
+  setShowInitial: (value: boolean) => void
+  showInitial: boolean
   handleProfileClicked: (adminId: string) => void
   postID: string
   type: PostType.Community | PostType.Timeline
@@ -22,6 +25,7 @@ export type PostCommentProps = {
     type: PostType.Community | PostType.Timeline
     adminId: string
   }
+  initialComment: any
 }
 
 export type CommentsType = {

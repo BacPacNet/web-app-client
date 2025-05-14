@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
 import { useUniStore } from '@/store/store'
@@ -18,9 +18,21 @@ import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import { CommentsType, PostCommentProps } from '@/types/CommentPost'
 
-const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClicked, setImageCarasol }: PostCommentProps) => {
+const PostCommentBox = ({
+  showCommentSec,
+  postID,
+  type,
+  data,
+  handleProfileClicked,
+  setImageCarasol,
+  initialComment,
+  setShowCommentSection,
+  setShowInitial,
+  showInitial,
+}: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
   const [newPost, setNewPost] = useState(false)
+
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
   const [commentData, setCommentData] = useState<any>()
@@ -65,6 +77,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
   }
 
   const showMoreComponent = () => {
+    if (showInitial) return
     if (hasNextPage || communityCommentsHasNextPage) {
       return (
         <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
@@ -91,6 +104,22 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
     setIsReply(true)
     setNewPost(true)
   }
+
+  const ShowAllComponent = () => {
+    return (
+      <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
+        <p className="" onClick={() => setShowCommentSection(postID)}>
+          show all comments
+        </p>
+        <FaArrowDown />
+      </div>
+    )
+  }
+  useEffect(() => {
+    if (initialComment?._id) {
+      setShowInitial(!!initialComment)
+    }
+  }, [!!initialComment])
 
   const toggleCommentSection = (commentId: string) => {
     setVisibleComments((prevState) => ({
@@ -164,7 +193,7 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
                 }}
                 className="flex items-center  cursor-pointer"
               >
-                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment.totalCount || 0}
+                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment?.totalCount || comment?.replies?.length || 0}
               </span>
             )}
             {comment.level >= 1 ? (
@@ -188,7 +217,9 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
 
   return (
     <div
-      className={`${showCommentSec !== postID ? 'h-0 overflow-y-hidden py-0' : 'pt-6 pb-4'} flex flex-col gap-2 w-full border-t border-neutral-200`}
+      className={`${
+        showCommentSec !== postID && !showInitial ? 'h-0 overflow-y-hidden py-0' : 'pt-6 pb-4'
+      } flex flex-col gap-2 w-full border-t border-neutral-200`}
     >
       <div className="px-6">
         <div className="rounded-full  flex gap-4 items-center">
@@ -211,10 +242,24 @@ const PostCommentBox = ({ showCommentSec, postID, type, data, handleProfileClick
         </div>
 
         <div ref={containerRef} className="flex flex-col gap-4">
-          {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
+          {showInitial && showCommentSec !== postID
+            ? renderComments([initialComment])
+            : renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
+          {/* {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)} */}
         </div>
         {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
-        {newPost && <NewPostComment setNewPost={setNewPost} postType={type} data={isReply ? commentData : data} isReply={isReply} postId={postID} />}
+        {newPost && (
+          <NewPostComment
+            setShowCommentSection={setShowCommentSection}
+            showInitial={showInitial}
+            setNewPost={setNewPost}
+            postType={type}
+            data={isReply ? commentData : data}
+            isReply={isReply}
+            postId={postID}
+          />
+        )}
+        {showInitial && showCommentSec !== postID ? <ShowAllComponent /> : ''}
         {showMoreComponent()}
       </div>
     </div>

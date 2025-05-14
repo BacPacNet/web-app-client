@@ -79,6 +79,7 @@ interface PostProps {
   occupation?: string
   affiliation?: string
   isPostVerified?: boolean
+  initialComment: any
 }
 
 const PostCard = React.memo(
@@ -109,11 +110,12 @@ const PostCard = React.memo(
     isPostVerified,
     communityName,
     communityGroupName,
+    initialComment,
   }: PostProps) => {
     const { userData } = useUniStore()
 
     const router = useRouter()
-
+    const [showInitial, setShowInitial] = useState(!!initialComment)
     // Local state for immediate UI feedback
     const [localLikes, setLocalLikes] = useState<any>(likes)
     const [localIsLiked, setLocalIsLiked] = useState(false)
@@ -206,6 +208,9 @@ const PostCard = React.memo(
     )
 
     const toggleCommentSection = useCallback(() => {
+      if (initialComment && showCommentSection === postID) {
+        setShowInitial(false)
+      }
       setShowCommentSection(showCommentSection === postID ? '' : postID)
     }, [showCommentSection, postID, setShowCommentSection])
 
@@ -277,10 +282,14 @@ const PostCard = React.memo(
         <PostCommentBox
           handleProfileClicked={handleProfileClicked}
           showCommentSec={showCommentSection}
+          setShowCommentSection={setShowCommentSection}
           postID={postID}
           type={type}
           data={PostData}
           setImageCarasol={setImageCarasol}
+          initialComment={initialComment}
+          setShowInitial={setShowInitial}
+          showInitial={showInitial}
         />
       </div>
     )

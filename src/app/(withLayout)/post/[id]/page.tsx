@@ -13,8 +13,11 @@ const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
   const searchParams = useSearchParams()
   const Type = searchParams.get('isType')
-  const { data, isFetching, isPending, isError } = useGetPost(id, Type)
+  const commentID = searchParams.get('commentId')
+  const { data, isFetching, isPending, isError } = useGetPost(id, Type, commentID || ' ')
   const item = data?.post
+  const comment = data?.comment
+  console.log('comment', comment)
 
   const [showCommentSection, setShowCommentSection] = useState('')
 
@@ -72,6 +75,7 @@ const SinglePost = () => {
           affiliation={profile.affiliation}
           occupation={profile.occupation}
           role={profile.role}
+          initialComment={comment}
         />
       </div>
     </div>

@@ -11,7 +11,11 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
 
   switch (data.type) {
     case notificationRoleAccess.FOLLOW:
-      return <span className="text-xs font-inter">{fullName} started following you.</span>
+      return (
+        <span className="text-xs font-inter">
+          <b>{fullName}</b> started following you.
+        </span>
+      )
 
     case notificationRoleAccess.GROUP_INVITE:
       return (
@@ -42,7 +46,11 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           </span>
         )
       } else {
-        return <span className="text-xs font-inter">{firstCommenterName} commented on your post.</span>
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> commented on your post.
+          </span>
+        )
       }
     }
 
@@ -55,7 +63,11 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           </span>
         )
       } else {
-        return <span className="text-xs font-inter">{firstCommenterName} commented on your Community post.</span>
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> commented on your Community post.
+          </span>
+        )
       }
     }
 
@@ -69,7 +81,11 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           </span>
         )
       } else {
-        return <span className="text-xs font-inter">{firstLikerName} liked your post.</span>
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstLikerName}</b> liked your post.
+          </span>
+        )
       }
     }
 
@@ -83,7 +99,11 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           </span>
         )
       } else {
-        return <span className="text-xs font-inter">{firstLikerName} liked your Community post.</span>
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstLikerName}</b> liked your Community post.
+          </span>
+        )
       }
     }
 

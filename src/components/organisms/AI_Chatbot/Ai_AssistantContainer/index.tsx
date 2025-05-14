@@ -11,6 +11,7 @@ import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import AIChat from '../AI_Section/AIChat'
 import { useUniStore } from '@/store/store'
 import { useCheckAssistantAvailable } from '@/services/chatbot'
+import Buttons from '@/components/atoms/Buttons'
 
 type dataType = {
   _id: string
@@ -46,15 +47,25 @@ const Ai_AssistantContainer = () => {
     return (
       <div className="relative">
         <div className="flex items-center gap-2 text-2xs cursor-pointer" onClick={() => setShow(!show)}>
-          <Image
-            width={20}
-            height={20}
-            className="w-6 h-6 rounded-full bg-white shadow-lg"
+          {/* <Image
+            width={48}
+            height={48}
+            className="w-12 h-12 rounded-full bg-white shadow-lg"
             src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
             alt="logo"
-          />
-          <p>{selectedUniversity?.name}</p>
-          <IoIosArrowDown className="cursor-pointer" />
+          /> */}
+
+          <div className=" flex  items-center gap-3 ">
+            <Image
+              width={48}
+              height={48}
+              className="w-12 h-12 object-contain rounded-full shadow-logo p-1"
+              src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
+              alt="logo"
+            />
+          </div>
+          <p className="text-xs text-neutral-500">{selectedUniversity?.name}</p>
+          <IoIosArrowDown className="cursor-pointer w-7 h-8 text-neutral-800" />
         </div>
 
         <SelectAIUniversityDropdown data={otherUniversity || []} show={show} setShow={setShow} setSelectedUniversity={setSelectedUniversity} />
@@ -71,15 +82,25 @@ const Ai_AssistantContainer = () => {
   }
 
   return (
-    <div className="bg-white rounded-2xl drop-shadow-lg h-with-navbar-space flex flex-col pb-4 ">
-      <div className=" px-4 py-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins">
+    <div className="bg-white rounded-2xl drop-shadow-lg h-with-navbar-space flex flex-col p-6 ">
+      <div className=" pb-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins ">
         <div className="flex justify-between">
           <div className="relative">
             <UniversityDropdown />
           </div>
-          <p className="flex items-center gap-2 cursor-pointer" onClick={handleRefresh}>
+          <Buttons
+            disabled={!isAssistantExist?.isAssistantAvailable}
+            size="medium"
+            variant="shade"
+            className="flex items-center gap-1"
+            onClick={handleRefresh}
+          >
+            <span>Refresh</span>
+            <SlReload />
+          </Buttons>
+          {/* <p className="flex items-center gap-2 cursor-pointer" onClick={handleRefresh}>
             <SlReload className="text-primary-500" /> <span className="text-neutral-700 text-xs max-sm:hidden">Refresh Assistant</span>
-          </p>
+          </p> */}
         </div>
       </div>
       {isAssistantExist?.isAssistantAvailable ? (

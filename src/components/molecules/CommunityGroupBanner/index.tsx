@@ -136,7 +136,7 @@ export default function CommunityGroupBanner({
             {isUserJoinedCommunityGroup || isGroupAdmin ? (
               <CommunitySettingMenu
                 isOpen={toggleDropdown}
-                toggleOpen={() => setToggleDropdown(!toggleDropdown)}
+                toggleOpen={setToggleDropdown}
                 isAdmin={isGroupAdmin}
                 groupStatus={communityGroups?.status}
                 onEdit={handleEditCommunityGroupModal}

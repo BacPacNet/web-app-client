@@ -21,6 +21,8 @@ const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextE
 
 type Props = {
   setNewPost: (value: boolean) => void
+  setShowCommentSection: (value: string) => void
+  showInitial: boolean
   postType: PostType.Community | PostType.Timeline
   data: {
     user: string
@@ -38,7 +40,7 @@ type Props = {
   isNested?: boolean
 }
 
-const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
+const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial }: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
@@ -47,9 +49,10 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
   const { mutate: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false)
   const { mutate: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
     false,
-    // isNested,
     true,
-    postType
+    postType,
+    showInitial,
+    postId || ''
   )
   const { mutate: CreateGroupPostCommentReply, isPending: useCreateGroupPostCommentReplyLoading } = useCreateGroupPostCommentReply(
     false,
@@ -112,6 +115,9 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
         CreateUserPostCommentReply(payload)
       } else {
         mutateUserPostComment(payload)
+        if (showInitial && postId) {
+          setShowCommentSection(postId)
+        }
       }
     } else if (postType === PostType.Community) {
       if (Number(data?.level) == 0) {
@@ -121,8 +127,10 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
         CreateGroupPostCommentReply(payload)
       } else {
         payload.adminId = data.adminId
-
         mutateGroupPostComment(payload)
+        if (showInitial && postId) {
+          setShowCommentSection(postId)
+        }
       }
 
       //  if (data.adminId) {
@@ -133,6 +141,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType }: Props) => {
     resetPostContent()
     setNewPost(false)
     setIsLoading(false)
+
     //const payload: CommunityPostData = {
     //  content: cleanInnerHTML(quillHTMLState.current!),
     //  communityPostsType: PostTypeOption[postAccessType as never],

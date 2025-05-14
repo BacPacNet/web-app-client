@@ -69,7 +69,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
         <Image src={imageUrl || avatar.src} alt={firstName} width={48} height={48} className="w-12 h-12 rounded-full flex-none object-cover" />
         <div className="">
-          <h3 className="font-medium text-base text-gray-dark">
+          {/* <h3 className="font-medium text-base text-gray-dark"> */}
+          <h3 className="font-semibold text-xs text-neutral-700">
             {firstName} {lastName}
           </h3>
           {university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}

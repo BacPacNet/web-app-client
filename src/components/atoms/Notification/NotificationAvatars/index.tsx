@@ -12,7 +12,16 @@ interface LikedBy {
   totalCount: number
   newFiveUsers: User[]
 }
+interface CommentedUser {
+  _id: string
+  communityPostCommentId?: string
+  postCommentId?: string
+}
 
+interface CommentedBy {
+  totalCount: number
+  newFiveUsers: CommentedUser[]
+}
 type Props = {
   data: {
     _id: string
@@ -41,14 +50,24 @@ type Props = {
     }
     type: string
     likedBy: LikedBy
-    commentedBy: LikedBy
+    commentedBy: CommentedBy
   }
 
   notificationType: string
+  handleRedirectPostComment: (value: any) => void
+  handleRedirectCommunityComment: (value: any) => void
 }
 
-const NotificationAvatars = ({ data, notificationType }: Props) => {
-  const renderUsers = (users: User[] = []) =>
+const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment, handleRedirectCommunityComment }: Props) => {
+  const handlePostRedirect = (e: React.MouseEvent, user: any) => {
+    e.stopPropagation()
+    handleRedirectPostComment(user)
+  }
+  const handleCommunityPostRedirect = (e: React.MouseEvent, user: any) => {
+    e.stopPropagation()
+    handleRedirectCommunityComment(user)
+  }
+  const renderUsers = (users: any[] = []) =>
     users?.map((user, index) => (
       <Image
         key={user?.id || user?.profileDp || index}
@@ -58,14 +77,30 @@ const NotificationAvatars = ({ data, notificationType }: Props) => {
         alt="dp"
         className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover border-2 border-white -ml-2 ${index === 0 ? 'ml-0' : ''}`}
         style={{ zIndex: index + 1 }}
+        onClick={(e) => handlePostRedirect(e, user)}
+      />
+    ))
+  const renderCommunityUsers = (users: any[] = []) =>
+    users?.map((user, index) => (
+      <Image
+        key={user?.id || user?.profileDp || index}
+        width={48}
+        height={48}
+        src={user?.profileDp || dummy.src}
+        alt="dp"
+        className={`w-10 sm:w-12 h-10 sm:h-12 rounded-full object-cover border-2 border-white -ml-2 ${index === 0 ? 'ml-0' : ''}`}
+        style={{ zIndex: index + 1 }}
+        onClick={(e) => handleCommunityPostRedirect(e, user)}
       />
     ))
 
   const renderContent = () => {
     if (notificationType == notificationRoleAccess.REACTED_TO_POST || notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
       return renderUsers(data?.likedBy?.newFiveUsers)
-    } else if (notificationType == notificationRoleAccess.COMMENT || notificationType == notificationRoleAccess.COMMUNITY_COMMENT) {
+    } else if (notificationType == notificationRoleAccess.COMMENT) {
       return renderUsers(data?.commentedBy?.newFiveUsers)
+    } else if (notificationType == notificationRoleAccess.COMMUNITY_COMMENT) {
+      return renderCommunityUsers(data?.commentedBy?.newFiveUsers)
     } else if (
       notificationType == notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST ||
       notificationType == notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST ||

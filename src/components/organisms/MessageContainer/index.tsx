@@ -51,7 +51,8 @@ const MessageContainer = () => {
 
   const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {
-      const isUserInGroup = item.users.some((user) => user.userId._id === userData?.id)
+      const isUserInGroup = item.users.some((user) => user.userId._id === userData?.id && user.isRequestAccepted)
+
       return isUserInGroup ? sum + item.unreadMessagesCount : sum
     } else {
       return item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
@@ -59,12 +60,11 @@ const MessageContainer = () => {
   }, 0)
 
   const totalUnreadNotAcceptedMessages = chats?.reduce((sum, item) => {
-    if (item.isGroupChat) {
-      const hasUnaccepted = item.users.some((user) => !user.isRequestAccepted)
-      return hasUnaccepted ? sum + item.unreadMessagesCount : sum
-    } else {
-      return !item.isRequestAccepted ? sum + item.unreadMessagesCount : sum
-    }
+    const shouldInclude = item.isGroupChat
+      ? item.users.some((user) => user.userId._id.toString() === userData?.id && !user.isRequestAccepted)
+      : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
+
+    return shouldInclude ? sum + item.unreadMessagesCount : sum
   }, 0)
 
   const filteredChats = useMemo(() => {

@@ -120,8 +120,10 @@ export async function getAllCommunityGroupPost(communityId: string, communityGro
 }
 
 //posts
-export async function getPost(postID: string, isType: string | null, token: string) {
-  const response: any = await client(`/communitypost/post/${postID}?isType=${isType}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getPost(postID: string, isType: string | null, commentId: string, token: string) {
+  const response: any = await client(`/communitypost/post/${postID}?isType=${isType}&commentId=${commentId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
@@ -658,12 +660,12 @@ export const useUserCommunityRole = () => {
   })
 }
 
-export function useGetPost(postId: string, isType: string | null = 'userPost') {
+export function useGetPost(postId: string, isType: string | null = 'userPost', commentId: string = ' ') {
   const [cookieValue] = useCookie('uni_user_token')
 
   return useQuery({
     queryKey: ['getPost', postId],
-    queryFn: () => getPost(postId, isType, cookieValue),
+    queryFn: () => getPost(postId, isType, commentId, cookieValue),
     enabled: !!postId,
   })
 }
