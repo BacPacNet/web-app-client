@@ -5,7 +5,6 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import { useEditGroupChat } from '@/services/Messages'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { replaceImage } from '@/services/uploadImage'
 import { closeModal } from '../Modal/ModalManager'
 import Buttons from '@/components/atoms/Buttons'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -16,6 +15,7 @@ import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import { Users } from '@/types/Connections'
 import UserList from '@/components/atoms/UserList'
 import { ChatUser } from '@/types/constants'
+import { useUploadToS3 } from '@/services/upload'
 
 const EditGroupChatModal = ({
   users,
@@ -59,7 +59,8 @@ const EditGroupChatModal = ({
   const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
 
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(true)
-  const { mutate: editGroup, isPending } = useEditGroupChat(chatId)
+  const { mutateAsync: editGroup, isPending } = useEditGroupChat(chatId)
+  const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const {
     register,
     watch,
@@ -90,50 +91,24 @@ const EditGroupChatModal = ({
   }, [showDropdown])
 
   const onSubmit = async (formData: any) => {
-    let ImageData
-    if (groupLogoImage) {
-      setIsImageLoading(true)
-      const imagedata: any = await replaceImage(groupLogoImage, '')
-      ImageData = {
-        groupLogo: {
-          imageUrl: imagedata?.imageUrl,
-          publicId: imagedata?.publicId,
-        },
-      }
-    }
-
-    const paylod = {
-      ...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
+    const paylod: any = {
+      //...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
       groupName: formData.title,
       users: formData.selectedIndividualsUsers.map((user: any) => user._id),
     }
 
-    editGroup(paylod)
+    if (groupLogoImage) {
+      setIsImageLoading(true)
+      const imagedata = await uploadtoS3([groupLogoImage])
+      if (imagedata.success) {
+        paylod.groupLogo = imagedata.data
+      }
+    }
+
+    await editGroup(paylod)
     setIsImageLoading(false)
     closeModal()
   }
-
-  //  const handleGroupChatClick = async () => {
-  //    let ImageData
-  //    if (groupLogoImage) {
-  //      setIsImageLoading(true)
-  //      const imagedata: any = await replaceImage(groupLogoImage, '')
-  //      ImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
-  //    }
-
-  //    //const mergedUsers = [selectedGroupUser, ...filterUsers, ...filterFacultyUsers]
-  //    //const uniqueUsers = Array.from(new Map(mergedUsers.map((user) => [user.id, user])).values())
-  //    const dataToPush = {
-  //      ...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
-  //      groupName: groupCurrentName,
-
-  //      //  users: uniqueUsers,
-  //    }
-
-  //    editGroup(dataToPush)
-  //    setIsImageLoading(false)
-  //    closeModal()
-  //  }
 
   const removeUser = (userId: string) => {
     const currentSelected = watch('selectedIndividualsUsers') as Users[]

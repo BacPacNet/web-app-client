@@ -21,7 +21,7 @@ type props = {
 }
 
 const DynamicImageContainer = ({ images, setImageCarasol, isComment = false }: props) => {
-  const imageList = images?.map((imageItem) => imageItem.imageUrl)
+  const imageList = images?.map((imageItem) => imageItem.imageUrl) || []
   const [photoIndex, setPhotoIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [key, setKey] = useState(0)

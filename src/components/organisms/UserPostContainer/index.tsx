@@ -10,13 +10,13 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { CommunityPostData, CommunityPostType, PostInputData, PostInputType, UserPostType } from '@/types/constants'
 import { useCreateGroupPost } from '@/services/community-university'
 import { useCreateUserPost } from '@/services/community-timeline'
-import { replaceImage } from '@/services/uploadImage'
 import { useUniStore } from '@/store/store'
 import { Skeleton } from '@/components/ui/Skeleton'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { validateImageFiles } from '@/lib/utils'
+import { useUploadToS3 } from '@/services/upload'
 
 type props = {
   communityID?: string
@@ -32,6 +32,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutate: CreateTimelinePost, isPending: userPostPending } = useCreateUserPost()
   const { userProfileData } = useUniStore()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const communityPostTypeKey = Object.values(CommunityPostType)
   const userPostTypeKey = Object.values(UserPostType)
@@ -82,12 +83,10 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
   }
 
   const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
+    const results = await uploadToS3(imagesData)
+    if (results.success) {
+      return results.data
+    }
   }
 
   const handleGroupPost = async (inputValue: string) => {

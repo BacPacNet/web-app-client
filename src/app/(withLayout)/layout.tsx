@@ -4,37 +4,38 @@ import LeftNavbar from '@/components/organisms/LeftNavbar'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import dummy from '@/assets/avatar.svg'
 
 const recommendations = [
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar2.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar2.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
 ]
 

@@ -86,17 +86,17 @@ const UniversityBenefits = () => {
       <div className="flex gap-2">
         <Image src={blueTick} width={24} height={24} alt="tick" />
 
-        <p className="text-xs text-neutral-500 text-center">Join multiple university communities.</p>
+        <p className="text-xs text-neutral-500 text-left">Join multiple university communities.</p>
       </div>
       <div className="flex gap-2">
         <Image src={blueTick} width={24} height={24} alt="tick" />
 
-        <p className="text-xs text-neutral-500 text-center">Create your own groups within your university network.</p>
+        <p className="text-xs text-neutral-500 text-left">Create your own groups within your university network.</p>
       </div>
       <div className="flex gap-2">
         <Image src={blueTick} width={24} height={24} alt="tick" />
 
-        <p className="text-xs text-neutral-500 text-center">Get full access to private groups and exclusive discussions.</p>
+        <p className="text-xs text-neutral-500 text-left">Get full access to private groups and exclusive discussions.</p>
       </div>
     </div>
   )

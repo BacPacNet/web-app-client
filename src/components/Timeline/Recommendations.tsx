@@ -8,7 +8,7 @@ interface User {
   name: string
   university: string
   study_year: string
-  avatar: string
+  avatar: any
 }
 interface Props {
   people: User[]
@@ -21,7 +21,7 @@ const UserCard = ({ user }: { user: User }) => {
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-2 items-center">
-        <img src={user.avatar} alt={`${user.name}'s avatar`} width={14} height={14} className="rounded-full w-10 h-10" />
+        <Image src={user.avatar} alt={`${user.name}'s avatar`} width={14} height={14} className="rounded-full w-10 h-10" />
         <div>
           <p className="font-medium text-xs text-gray-dark">{user.name}</p>
           <p className="text-[10px] text-gray-1">{user.study_year}</p>

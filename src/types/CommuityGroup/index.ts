@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { userTypeEnum } from '../RegisterForm'
+import { S3UploadItem } from '@/services/upload'
 
 export interface CommunityGroupUsers {
   userId: mongoose.Types.ObjectId | string
@@ -32,14 +33,8 @@ export interface CreateCommunityGroupType {
   communityGroupAccess: string
   selectedGroupCategory: string | null
   groupSubCategory: Array<string>
-  communityGroupLogoUrl: {
-    imageUrl: string
-    publicId: string
-  } | null
-  communityGroupLogoCoverUrl: {
-    imageUrl: string
-    publicId: string
-  } | null
+  communityGroupLogoUrl: S3UploadItem | null
+  communityGroupLogoCoverUrl: S3UploadItem | null
   selectedUsers: CommunityGroupUsers[]
   studentYear: []
   //   studentYear:""
@@ -77,14 +72,8 @@ export interface CommunityGroupType {
   communityGroupCategory: any
   __v: number
   adminUserProfile: AdminUserProfile
-  communityGroupLogoCoverUrl?: {
-    imageUrl: string
-    publicId: string
-  }
-  communityGroupLogoUrl?: {
-    imageUrl: string
-    publicId: string
-  }
+  communityGroupLogoCoverUrl?: S3UploadItem | null
+  communityGroupLogoUrl?: S3UploadItem | null
   users: CommunityGroupUsers[]
 }
 export interface AdminUserId {

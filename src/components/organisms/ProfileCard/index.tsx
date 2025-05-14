@@ -12,16 +12,12 @@ import { useToggleFollow } from '@/services/connection'
 import { IoIosShareAlt } from 'react-icons/io'
 import { MdBlockFlipped } from 'react-icons/md'
 import { IoFlagOutline } from 'react-icons/io5'
-import { RiMessage2Fill } from 'react-icons/ri'
 import Buttons from '@/components/atoms/Buttons'
-import { useEditProfile } from '@/services/edit-profile'
-import { replaceImage } from '@/services/uploadImage'
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { openModal } from '@/components/molecules/Modal/ModalManager'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
@@ -79,35 +75,9 @@ export function UserProfileCard({
   const { userProfileData } = useUniStore()
   const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
-  const { mutate: mutateEditProfile } = useEditProfile()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || !files[0]) {
-      console.error('No file selected.')
-      return
-    }
-
-    const file = files[0]
-    const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg']
-
-    if (!allowedTypes.includes(file.type)) {
-      showCustomDangerToast('Invalid file type. Only PNG, JPG, and JPEG are allowed.')
-      return
-    }
-
-    if (files && files[0]) {
-      const data: any = await replaceImage(files[0], userProfileData?.profile_dp?.publicId)
-
-      const dataToPush = { profile_dp: { imageUrl: data?.imageUrl, publicId: data?.publicId } }
-
-      mutateEditProfile(dataToPush)
-    } else {
-      console.error('No file selected.')
-    }
-  }
 
   const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday)
   const dateOfBirth = dobFormat && format(new Date(dobFormat), 'dd MMM yyyy')

@@ -3,7 +3,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import UserListItem from '@/components/Timeline/UserListItem'
 import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FaFilter } from 'react-icons/fa6'
 import { GoSearch } from 'react-icons/go'
 import ConnectionUserSelectModal from '../ConnectionModals/UniversitySearchConnectionModal'
@@ -27,6 +27,7 @@ type User = {
 type UserList = User[]
 
 export default function FindPeople() {
+  const { userProfileData } = useUniStore()
   const [name, setName] = useState('')
   const ref = useRef<HTMLDivElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -37,13 +38,14 @@ export default function FindPeople() {
   const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
+  const [isFilterLoading, setIsFilterLoading] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState({
     selectedRadio: '',
     studentYear: [],
     major: [],
     occupation: [],
     affiliation: [],
-    university: { name: '', id: '' },
+    university: { name: userProfileData?.university_name as string, id: userProfileData?.university_id as string },
   })
 
   const openModal = () => {
@@ -54,16 +56,45 @@ export default function FindPeople() {
     setIsModalOpen(false)
   }
 
-  const { userProfileData } = useUniStore()
   const {
     data: userProfilesData,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
     isLoading: isUserProfilesLoading,
-  } = useUsersProfileForConnections(name, 10, !isFiltered)
+    refetch,
+  } = useUsersProfileForConnections(
+    name,
+    10,
+    true,
 
-  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+    selectedFilters?.university?.name ?? userProfileData?.university_name,
+    selectedFilters.studentYear,
+    selectedFilters.major,
+    selectedFilters.occupation,
+    selectedFilters.affiliation
+  )
+
+  useEffect(() => {
+    if (
+      selectedFilters?.university?.name ||
+      selectedFilters?.studentYear?.length ||
+      selectedFilters?.major?.length ||
+      selectedFilters?.occupation?.length ||
+      selectedFilters?.affiliation?.length
+    ) {
+      setIsFilterLoading(true)
+      refetch().finally(() => setIsFilterLoading(false))
+    }
+  }, [
+    selectedFilters?.university?.name,
+    selectedFilters?.studentYear,
+    selectedFilters?.major,
+    selectedFilters?.occupation,
+    selectedFilters?.affiliation,
+  ])
+
+  const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || null
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,62 +115,43 @@ export default function FindPeople() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  const renderUserProfileList = () => {
-    if (isUserProfilesLoading) {
-      return (
-        <>
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-          <UserListItemSkeleton />
-        </>
-      )
-    }
-    return (
-      <>
-        {isFiltered
-          ? filteredUsers?.map((item, index: number) => (
-              <UserListItem
-                key={index}
-                id={item?.id}
-                firstName={item?.firstName}
-                lastName={item?.lastName}
-                // university={item?.universityName || ''}
-                university={''}
-                study_year={item?.year || ''}
-                degree={item?.degree || ''}
-                role={item?.role || ''}
-                affiliation={item?.affiliation || ''}
-                major={item?.major || ''}
-                occupation={item?.occupation || ''}
-                imageUrl={item?.profileImageUrl || ''}
-                type={'FIND_PEOPLE'}
-                isFollowing={userProfileData?.following?.some((f) => f.userId === item.id) || false}
-              />
-            ))
-          : userProfiles?.map((item, index: number) => (
-              <UserListItem
-                key={index}
-                id={item?._id}
-                firstName={item?.firstName}
-                lastName={item?.lastName}
-                university={item?.profile?.university || ''}
-                study_year={item?.profile?.study_year || ''}
-                degree={item?.profile?.degree || ''}
-                role={item?.profile?.role || ''}
-                affiliation={item?.profile?.affiliation || ''}
-                major={item?.profile?.major || ''}
-                occupation={item?.profile?.occupation || ''}
-                imageUrl={item?.profile?.profile_dp?.imageUrl || ''}
-                type={'FIND_PEOPLE'}
-                isFollowing={item?.isFollowing}
-              />
-            ))}
-      </>
-    )
+  const renderUserProfileList = useCallback(() => {
+    if (userProfiles === null) return <UserListItemSkeleton count={8} />
+    if (isUserProfilesLoading || isFilterLoading) return <UserListItemSkeleton count={8} />
+    if (userProfiles.length === 0) return <p className="text-center my-4 text-2sm text-neutral-600 font-semibold">No User Found</p>
+
+    return userProfiles.map((item, index) => (
+      <UserListItem
+        key={index}
+        id={item._id}
+        firstName={item.firstName}
+        lastName={item.lastName}
+        university={item.profile?.university || ''}
+        study_year={item.profile?.study_year || ''}
+        degree={item.profile?.degree || ''}
+        role={item.profile?.role || ''}
+        affiliation={item.profile?.affiliation || ''}
+        major={item.profile?.major || ''}
+        occupation={item.profile?.occupation || ''}
+        imageUrl={item.profile?.profile_dp?.imageUrl || ''}
+        type={'FIND_PEOPLE'}
+        isFollowing={item.isFollowing}
+      />
+    ))
+  }, [isUserProfilesLoading, isFilterLoading, userProfiles])
+
+  const handleClear = () => {
+    setSelectedFilters({
+      selectedRadio: '',
+      studentYear: [],
+      major: [],
+      occupation: [],
+      affiliation: [],
+      university: { name: userProfileData?.university_name as string, id: userProfileData?.university_id as string },
+    })
+    setIsFiltered(false)
+    closeModal()
+    refetch()
   }
 
   return (
@@ -186,7 +198,7 @@ export default function FindPeople() {
       </div>
       {isFetchingNextPage && (
         <div className="text-center pt-2">
-          <Spinner />
+          <UserListItemSkeleton />
         </div>
       )}
       {isModalOpen && (
@@ -207,6 +219,7 @@ export default function FindPeople() {
           setFilteredAffiliationCount={setFilteredAffiliationCount}
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
+          handleClear={handleClear}
         />
       )}
     </>

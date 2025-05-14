@@ -1,10 +1,9 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
-//import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import Spinner from '@/components/atoms/spinner'
 import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
-import { replaceImage } from '@/services/uploadImage'
+import { S3UploadItem, useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
 import { CommunityPostData, CommunityPostType, CommunityPostTypeOption, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
 import dynamic from 'next/dynamic'
@@ -30,20 +29,11 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   const [images, setImages] = useState<File[]>([])
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
-
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
   const [isPostCreating, setIsPostCreating] = useState(false)
 
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
-  }
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-
     if (files) {
       const fileArray = Array.from(files)
       const validation = validateImageFiles(fileArray)
@@ -61,22 +51,36 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   }
 
   const handleSubmit = async () => {
-    if (quillInstance && quillInstance?.getText().toString().length - 1 === 0) return
+    const isContentEmpty = quillInstance?.getText().trim().length === 0
+    if (isContentEmpty) return
+
     setIsPostCreating(true)
-    const payload: CommunityPostData = {
-      content: cleanInnerHTML(quillHTMLState.current!),
-      communityPostsType: PostTypeOption[postAccessType as never],
-      communityId: communityId,
-      communityGroupId: communityGroupId || null,
-      isPostVerified: userProfileData?.email?.some((community) => community.communityId === communityId) || false,
+
+    try {
+      const basePayload: CommunityPostData = {
+        content: cleanInnerHTML(quillHTMLState.current!),
+        communityPostsType: PostTypeOption[postAccessType as never],
+        communityId,
+        communityGroupId: communityGroupId || null,
+        isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) || false,
+      }
+
+      // Upload image if present
+      if (images.length > 0) {
+        const uploadResponse = await uploadToS3(images)
+        if (uploadResponse.success) {
+          basePayload.imageUrl = uploadResponse.data
+        }
+      }
+
+      // Create the post
+      CreateGroupPost(basePayload)
+    } catch (error) {
+      showCustomDangerToast('Failed to create post')
+    } finally {
+      resetPostContent()
+      setIsPostCreating(false)
     }
-    if (images.length) {
-      const imagedata = await processImages(images)
-      payload.imageUrl = imagedata
-    }
-    CreateGroupPost(payload)
-    resetPostContent()
-    setIsPostCreating(false)
   }
 
   const handleImageRemove = (index: number) => {

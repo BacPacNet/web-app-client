@@ -8,13 +8,13 @@ import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { TiCameraOutline } from 'react-icons/ti'
 import { useEffect, useState } from 'react'
-import { replaceImage } from '@/services/uploadImage'
-import { currYear, degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
+import { degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
 import { closeModal } from '@/components/molecules/Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Country, City } from 'country-state-city'
+import { useUploadToS3 } from '@/services/upload'
 
 export interface editProfileInputs {
   firstName: string
@@ -51,6 +51,8 @@ const EditProfileModal = () => {
   const [userType, setUserType] = useState('student')
   const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
   const [isProfileLoading, setIsProfileLoading] = useState(false)
+  const { mutateAsync: uploadtoS3 } = useUploadToS3()
+
   const {
     register,
     handleSubmit,
@@ -146,8 +148,8 @@ const EditProfileModal = () => {
   const handleImageUpload = async () => {
     const files = profilePicture
     if (files) {
-      const data = await replaceImage(files, userProfileData?.profile_dp?.publicId)
-      return { imageUrl: data?.imageUrl, publicId: data?.publicId }
+      const uploadResponse = await uploadtoS3([files] as unknown as File[])
+      return uploadResponse.data[0]
     } else {
       console.error('No file selected.')
     }
@@ -168,6 +170,7 @@ const EditProfileModal = () => {
     if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
+    console.log(profileImageData, 'profileImageData')
     mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
     setIsProfileLoading(false)
     closeModal()

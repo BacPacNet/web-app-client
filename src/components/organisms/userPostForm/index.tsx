@@ -23,10 +23,10 @@ import {
 } from '@/types/constants'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useCreateGroupPost } from '@/services/community-university'
-import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { validateImageFiles } from '@/lib/utils'
+import { useUploadToS3 } from '@/services/upload'
 
 type Props = {
   communityID?: string
@@ -40,6 +40,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const { mutate: CreateGroupPost } = useCreateGroupPost()
   const { mutate: CreateTimelinePost, isPending } = useCreateUserPost()
   const [isPostCreating, setIsPostCreating] = useState(false)
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
 
@@ -75,22 +76,14 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
   const handleImageRemove = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
-  }
 
   const handleGroupPost = async (inputValue: string) => {
     setIsPostCreating(true)
     if (images.length) {
-      const imagedata = await processImages(images)
+      const imagedata = await uploadToS3(images)
       const data: PostInputData = {
         content: inputValue,
-        imageUrl: imagedata,
+        imageUrl: imagedata.data,
         ...(type == PostInputType.Timeline
           ? { PostType: PostTypeOption[postAccessType as never] }
           : { communityPostsType: PostTypeOption[postAccessType as never] }),

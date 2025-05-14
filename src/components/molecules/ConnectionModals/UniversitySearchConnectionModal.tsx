@@ -45,6 +45,7 @@ interface ConnectionUserSelectModalProps {
     university: { name: string; id: string }
   }
   setSelectedFilters: React.Dispatch<React.SetStateAction<any>>
+  handleClear: () => void
 }
 export default function ConnectionUserSelectModal({
   closeModal,
@@ -60,6 +61,7 @@ export default function ConnectionUserSelectModal({
   filteredYearCount,
   selectedFilters,
   setSelectedFilters,
+  handleClear,
 }: ConnectionUserSelectModalProps) {
   const { userData } = useUniStore()
   const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '' })
@@ -200,11 +202,12 @@ export default function ConnectionUserSelectModal({
     closeModal()
   }
 
-  const handleClear = () => {
-    setSelectedFilters({})
-    setIsFiltered(false)
-    closeModal()
-  }
+  //  const handleClear = () => {
+  //    setSelectedFilters({})
+  //    setIsFiltered(false)
+  //    closeModal()
+  //    refetch()
+  //  }
 
   return (
     <>
@@ -212,7 +215,7 @@ export default function ConnectionUserSelectModal({
         <div ref={modalRef} className="relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible">
           <div className="flex justify-between items-center mb-8">
             <h2 className=" font-bold font-poppins text-md ">Search Filter</h2>
-            <Buttons variant="shade" size="extra_small" onClick={() => handleClear()} className="w-max">
+            <Buttons variant="shade" size="extra_small" onClick={handleClear} className="w-max">
               Clear
             </Buttons>
           </div>
