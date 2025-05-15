@@ -21,7 +21,7 @@ const Buttons: React.FC<ButtonProps> = ({
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
-    border: 'border border-neutral-200 text-neutral-800 shadow-button ',
+    border: 'border border-neutral-200 text-neutral-500 shadow-button ',
     border_primary: 'border border-primary text-primary ',
     danger: 'bg-red-500 text-white',
     danger_secondary: 'text-destructive-600 bg-[#FEF2F2] border border-[#FECACA] ',

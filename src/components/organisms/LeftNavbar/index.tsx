@@ -9,8 +9,9 @@ import { PiFinnTheHumanFill } from 'react-icons/pi'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import useCookie from '@/hooks/useCookie'
+import botIcon from '@/assets/botIcon.svg'
 import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
+import Image from 'next/image'
 
 interface Props {
   toggleLeftNavbar?: () => void
@@ -21,7 +22,7 @@ const MENU_ITEMS = [
   { name: 'Connections', icon: <IoMdPeople />, path: '/connections' },
   { name: 'Message', icon: <BiSolidMessageDots />, path: '/messages' },
   { name: 'Notification', icon: <FaBell />, path: '/notifications' },
-  { name: 'AI Assistant', icon: <PiFinnTheHumanFill />, path: '/ai-assistant' },
+  { name: 'AI Assistant', icon: <Image width={20} height={20} alt="" src={botIcon} />, path: '/ai-assistant' },
 ]
 const PAGE_ITEMS = [
   { name: 'Community', path: '/timeline' },
@@ -74,7 +75,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
           <div
             key={path}
             className={`flex items-center gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
-              activeMenu === path ? 'text-primary-700 font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-semibold'
+              activeMenu === path ? 'text-primary font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-medium'
             }`}
             onClick={() => handleMenuClick(path)}
           >
