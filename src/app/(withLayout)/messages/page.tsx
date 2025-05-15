@@ -4,7 +4,7 @@ import React from 'react'
 
 const Message = () => {
   return (
-    <div className="py-0 h-[-webkit-fill-available]">
+    <div className="h-[-webkit-fill-available] py-4">
       <Card defaultPadding={false} className="rounded-2xl h-full overflow-hidden w-full ">
         <MessageContainer />
       </Card>
