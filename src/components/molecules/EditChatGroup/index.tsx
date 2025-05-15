@@ -163,7 +163,13 @@ const EditGroupChatModal = ({
           ) : (
             ''
           )}
-          <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setGroupLogoImage(e.target.files[0])} />
+          <input
+            style={{ display: 'none' }}
+            accept="image/jpeg,image/png,image/jpg"
+            type="file"
+            id="CreateGroupLogoImage"
+            onChange={(e: any) => setGroupLogoImage(e.target.files[0])}
+          />
 
           {groupLogoImage ? (
             <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">

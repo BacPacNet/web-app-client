@@ -56,7 +56,13 @@ const CreateGroup = () => {
       <div className="w-[300px]">
         <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-44 rounded-lg`}>
           {coverImage && <img className="w-full h-full  absolute  object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
-          <input style={{ display: 'none' }} type="file" id="CreateChatGroupLogo" onChange={(e: any) => setCoverImage(e.target.files[0])} />
+          <input
+            style={{ display: 'none' }}
+            accept="image/jpeg,image/png,image/jpg"
+            type="file"
+            id="CreateChatGroupLogo"
+            onChange={(e: any) => setCoverImage(e.target.files[0])}
+          />
           <label htmlFor="CreateChatGroupLogo" className="flex flex-col items-center gap-2 z-20 ">
             <FiCamera size={40} className="text-slate-400" />
             <p>Add Group logo</p>

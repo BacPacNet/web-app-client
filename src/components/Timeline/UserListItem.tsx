@@ -53,7 +53,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const router = useRouter()
   const { mutateAsync: toggleFollow } = useToggleFollow(type)
 
-  const [imgSrc, setImgSrc] = useState(imageUrl)
+  const [imgSrc, setImgSrc] = useState(imageUrl || '')
   const [isFollowingState, setIsFollowingState] = useState(isFollowing)
   const [isProcessing, setIsProcessing] = useState(false)
 

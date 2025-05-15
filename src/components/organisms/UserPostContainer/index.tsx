@@ -185,7 +185,14 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
             <MdOutlineGifBox size={24} className="text-neutral-400" />
           </label>
           <label htmlFor="postImage" className="cursor-pointer inline-block">
-            <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+            <input
+              id="postImage"
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/jpg"
+              className="hidden"
+              onChange={(e) => handleImageChange(e)}
+            />
             <GoFileMedia size={24} className="text-neutral-400" />
           </label>
           <div className="w-28 max-sm:w-20">

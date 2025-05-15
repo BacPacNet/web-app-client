@@ -104,7 +104,13 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
                   alt="groupLogo"
                 />
               )}
-              <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setGroupLogoImage(e.target.files[0])} />
+              <input
+                style={{ display: 'none' }}
+                accept="image/jpeg,image/png,image/jpg"
+                type="file"
+                id="CreateGroupLogoImage"
+                onChange={(e: any) => setGroupLogoImage(e.target.files[0])}
+              />
               <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
                 <FiCamera size={40} className="text-slate-400 z-30" />
               </label>
