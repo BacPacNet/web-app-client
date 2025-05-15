@@ -113,11 +113,9 @@ export const validateUploadedFiles = (
   // Supported formats
   const allowedTypes = [
     'image/jpeg',
+    'image/jpg',
     'image/png',
-    'image/webp',
     'image/gif',
-    'image/heic',
-    'image/heif',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/msword',
@@ -152,4 +150,9 @@ export const formatFileSize = (bytes: number): string => {
   } else {
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
   }
+}
+
+export const isPDF = (fileUrl?: string): boolean => {
+  if (!fileUrl) return false
+  return fileUrl.toLowerCase().endsWith('.pdf')
 }

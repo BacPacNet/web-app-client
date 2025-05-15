@@ -235,7 +235,13 @@ function PostCommentInput({
               <MdOutlineGifBox size={24} className="text-neutral-400" />
             </label>
             <label htmlFor="commentImage" className="cursor-pointer inline-block">
-              <input id="commentImage" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+              <input
+                id="commentImage"
+                type="file"
+                accept="image/jpeg,image/png,image/jpg"
+                className="hidden"
+                onChange={(e) => handleImageChange(e)}
+              />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
           </div>

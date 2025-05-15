@@ -194,7 +194,13 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-3 sm:gap-4 items-center ">
                 <label htmlFor="postCommentImage" className="cursor-pointer inline-block">
-                  <input id="postCommentImage" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+                  <input
+                    id="postCommentImage"
+                    type="file"
+                    accept="image/jpeg,image/png,image/jpg"
+                    className="hidden"
+                    onChange={(e) => handleImageChange(e)}
+                  />
                   <GoFileMedia size={24} className="text-neutral-400" />
                 </label>
               </div>

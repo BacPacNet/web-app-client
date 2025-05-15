@@ -45,7 +45,7 @@ export default function FindPeople() {
     major: [],
     occupation: [],
     affiliation: [],
-    university: { name: userProfileData?.university_name as string, id: userProfileData?.university_id as string },
+    university: { name: '' as string, id: '' as string },
   })
 
   const openModal = () => {

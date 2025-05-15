@@ -184,7 +184,7 @@ const UserPostForm = ({ communityID, communityGroupID, type }: Props) => {
               </PopoverContent>
             </Popover>
 
-            <label htmlFor="postGof">
+            <label htmlFor="postGif">
               <MdOutlineGifBox size={24} className="text-neutral-400" />
             </label>
             <label htmlFor="postImage" className="cursor-pointer inline-block">

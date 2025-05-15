@@ -1,16 +1,6 @@
 import GroupSelectors from '@/components/communityUniversity/GroupSelectors'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { userType } from '@/store/userSlice/userType'
-import { Community } from '@/types/Community'
 import React from 'react'
-
-type Props = {
-  communityGroups: { groups: any[] }
-  showGroupTill: number
-  currSelectedGroup: Community
-  userData: Partial<userType>
-  handleAssignUsersModal: () => void
-}
 
 function CommunityGroupAll({
   communityGroups,

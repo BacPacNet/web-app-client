@@ -197,6 +197,7 @@ const EditProfileModal = () => {
                   {...register('profilePicture')}
                   style={{ display: 'none' }}
                   type="file"
+                  accept="image/jpeg,image/png,image/jpg"
                   id="changeProfileImage"
                   onChange={handleImagePreview}
                 />
@@ -210,7 +211,14 @@ const EditProfileModal = () => {
             </div>
           ) : (
             <label htmlFor="changeProfileImage" className="w-20 h-20 rounded-full border border-neutral-200 flex items-center justify-center">
-              <input style={{ display: 'none' }} {...register('profilePicture')} type="file" id="changeProfileImage" onChange={handleImagePreview} />
+              <input
+                style={{ display: 'none' }}
+                {...register('profilePicture')}
+                accept="image/jpeg,image/png,image/jpg"
+                type="file"
+                id="changeProfileImage"
+                onChange={handleImagePreview}
+              />
               <TiCameraOutline className="text-primary text-lg" />
             </label>
           )}

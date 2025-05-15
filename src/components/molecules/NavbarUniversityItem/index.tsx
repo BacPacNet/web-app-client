@@ -85,8 +85,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
-  const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
-  const [communityOpen, setCommunityOpen] = useState(false)
+  const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
 
   const targetCommunityId = subscribedCommunities?.[0]?._id
   const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
@@ -254,7 +253,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   ]
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
-    setCommunityOpen(false)
     const indextoPush = Number(index)
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)

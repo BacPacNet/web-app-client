@@ -1,16 +1,24 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import Spinner from '@/components/atoms/spinner'
-import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
+import { cleanInnerHTML, validateUploadedFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
-import { S3UploadItem, useUploadToS3 } from '@/services/upload'
+import { useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
-import { CommunityPostData, CommunityPostType, CommunityPostTypeOption, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
+import { CommunityPostData, CommunityPostType, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Quill from 'quill'
+import gif from '@/assets/gif.svg'
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
-import { MdCancel } from 'react-icons/md'
+import { TbFileUpload } from 'react-icons/tb'
+import MediaPreview from '@/components/molecules/MediaPreview'
+import { Spinner } from '@/components/spinner/Spinner'
+
+type FileWithId = {
+  id: string
+  file: File
+}
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -26,28 +34,39 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   const quillHTMLState = useRef(null)
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
-  const [images, setImages] = useState<File[]>([])
+  const [files, setFiles] = useState<FileWithId[]>([])
   const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const [isPostCreating, setIsPostCreating] = useState(false)
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      const fileArray = Array.from(files)
-      const validation = validateImageFiles(fileArray)
-      if (!validation.isValid) {
-        showCustomDangerToast(validation.message)
-        return
-      }
-      setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
+  const generateFileId = (file: File) => `${file.name}-${file.size}-${file.lastModified}`
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files ? Array.from(e.target.files) : []
+    const validation = validateUploadedFiles(newFiles)
+    if (!validation.isValid) {
+      showCustomDangerToast(validation.message)
+      return
     }
+
+    const mappedFiles: FileWithId[] = newFiles.map((file) => ({
+      id: generateFileId(file),
+      file,
+    }))
+
+    const totalFiles = files.length + mappedFiles.length
+    if (totalFiles > 4) {
+      showCustomDangerToast('You can upload a maximum of 4 files.')
+      return
+    }
+
+    setFiles((prev) => [...prev, ...mappedFiles])
   }
 
   const resetPostContent = () => {
     quillInstance?.setText('')
-    setImages([])
+    setFiles([])
   }
 
   const handleSubmit = async () => {
@@ -66,8 +85,8 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
       }
 
       // Upload image if present
-      if (images.length > 0) {
-        const uploadResponse = await uploadToS3(images)
+      if (files.length > 0) {
+        const uploadResponse = await uploadToS3(files.map((f) => f.file))
         if (uploadResponse.success) {
           basePayload.imageUrl = uploadResponse.data
         }
@@ -83,8 +102,13 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
     }
   }
 
-  const handleImageRemove = (index: number) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
+  const handleFileRemove = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id))
+  }
+
+  const handleOpenPDF = (file: File) => {
+    const fileURL = URL.createObjectURL(file)
+    window.open(fileURL, '_blank')
   }
 
   return (
@@ -97,22 +121,38 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
         placeholder="What`s on your mind?"
       />
       <div className="w-full px-4 bg-white rounded-b-lg">
-        <div className={`${images ? 'flex flex-wrap gap-4' : 'hidden'}`}>
+        <MediaPreview files={files} onRemove={handleFileRemove} onOpenPDF={handleOpenPDF} />
+        {/*<div className={`${images ? 'flex flex-wrap gap-4' : 'hidden'}`}>
           {images.map((image, index) => (
             <div key={index} className="relative w-fit">
               <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
-              {/* Remove image button */}
+        
               <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
                 <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
               </div>
             </div>
           ))}
-        </div>
+        </div>*/}
         <div className="w-full flex items-center justify-between py-4">
           <div className="flex gap-3 sm:gap-4 items-center ">
             <label htmlFor="postImage" className="cursor-pointer inline-block">
-              <input id="postImage" type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+              <input id="postImage" type="file" multiple accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handleFileChange} />
               <GoFileMedia size={24} className="text-neutral-400" />
+            </label>
+            <label htmlFor="timelinePostGif" className="cursor-pointer inline-block">
+              <input id="timelinePostGif" type="file" accept="image/gif" className="hidden" onChange={handleFileChange} />
+              <Image src={gif} width={24} height={24} className="text-neutral-400" alt="GIF" />
+            </label>
+            <label htmlFor="timelinePostFile" className="cursor-pointer inline-block">
+              <input
+                id="timelinePostFile"
+                type="file"
+                multiple
+                accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <TbFileUpload size={24} className="text-neutral-400" />
             </label>
           </div>
           <div className="flex gap-2 h-10">

@@ -309,7 +309,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               />
             )}
             {/* <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} /> */}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={handlelogoImagePreview} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupLogoImage"
+              onChange={handlelogoImagePreview}
+            />
 
             {logoImage ? (
               <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
@@ -340,7 +346,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 alt=""
               />
             )}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={handleBannerImagePreview} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupImage"
+              onChange={handleBannerImagePreview}
+            />
             {coverImage ? (
               <label htmlFor="CreateGroupImage" className="relative flex flex-col items-center gap-2 z-10  ">
                 <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>

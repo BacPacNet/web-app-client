@@ -245,7 +245,13 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           </label>
           <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
             {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupLogoImage"
+              onChange={(e: any) => setLogoImage(e.target.files[0])}
+            />
 
             {logoImage ? (
               <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
@@ -269,7 +275,13 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             } rounded-md relative  flex flex-col w-full items-center justify-center h-[141px] `}
           >
             {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupImage"
+              onChange={(e: any) => setCoverImage(e.target.files[0])}
+            />
             {coverImage ? (
               <label htmlFor="CreateGroupImage" className="relative flex flex-col items-center gap-2 z-10  ">
                 <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
