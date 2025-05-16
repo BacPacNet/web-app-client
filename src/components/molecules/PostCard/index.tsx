@@ -271,9 +271,9 @@ const PostCard = React.memo(
             </div>
           </div>
 
-          <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
-
           <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
+
+          <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 
           <p className="text-2xs flex items-center mb-2">
             <span className="text-neutral-500 font-normal break-words">

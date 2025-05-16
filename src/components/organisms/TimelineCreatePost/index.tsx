@@ -14,6 +14,9 @@ import { GoFileMedia } from 'react-icons/go'
 import gif from '@/assets/gif.svg'
 import { TbFileUpload } from 'react-icons/tb'
 import MediaPreview from '@/components/molecules/MediaPreview'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { HiOutlineEmojiHappy } from 'react-icons/hi'
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 
 type FileWithId = {
   id: string
@@ -101,6 +104,21 @@ function TimelineCreatePost() {
     window.open(fileURL, '_blank')
   }
 
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    if (!quillInstance) return
+
+    const editor = quillInstance
+
+    editor.focus()
+
+    const range = editor.getSelection()
+
+    const position = range?.index ?? editor.getLength()
+
+    editor.insertText(position, emojiData.emoji, 'user')
+    editor.setSelection(position + emojiData.emoji.length, 0)
+  }
+
   return (
     <>
       <Editor
@@ -114,6 +132,14 @@ function TimelineCreatePost() {
 
         <div className="w-full flex items-end justify-between py-4">
           <div className="flex gap-3 sm:gap-4 items-center">
+            <Popover>
+              <PopoverTrigger>
+                <HiOutlineEmojiHappy size={24} className="text-neutral-400 cursor-pointer" />
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-none shadow-card ml-8">
+                <EmojiPicker lazyLoadEmojis className="!w-[325px] " onEmojiClick={handleEmojiClick} />
+              </PopoverContent>
+            </Popover>
             <label htmlFor="timelinePostImage" className="cursor-pointer inline-block">
               <input
                 id="timelinePostImage"
@@ -125,10 +151,7 @@ function TimelineCreatePost() {
               />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="timelinePostGif" className="cursor-pointer inline-block">
-              <input id="timelinePostGif" type="file" accept="image/gif" className="hidden" onChange={handleFileChange} />
-              <Image src={gif} width={24} height={24} className="text-neutral-400" alt="GIF" />
-            </label>
+
             <label htmlFor="timelinePostFile" className="cursor-pointer inline-block">
               <input
                 id="timelinePostFile"

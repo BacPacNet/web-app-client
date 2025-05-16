@@ -6,14 +6,15 @@ import { useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
 import { CommunityPostData, CommunityPostType, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import Quill from 'quill'
-import gif from '@/assets/gif.svg'
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
 import { TbFileUpload } from 'react-icons/tb'
 import MediaPreview from '@/components/molecules/MediaPreview'
 import { Spinner } from '@/components/spinner/Spinner'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { HiOutlineEmojiHappy } from 'react-icons/hi'
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 
 type FileWithId = {
   id: string
@@ -35,7 +36,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
   const [files, setFiles] = useState<FileWithId[]>([])
-  const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
+  const [postAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const [isPostCreating, setIsPostCreating] = useState(false)
@@ -111,6 +112,21 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
     window.open(fileURL, '_blank')
   }
 
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    if (!quillInstance) return
+
+    const editor = quillInstance
+
+    editor.focus()
+
+    const range = editor.getSelection()
+
+    const position = range?.index ?? editor.getLength()
+
+    editor.insertText(position, emojiData.emoji, 'user')
+    editor.setSelection(position + emojiData.emoji.length, 0)
+  }
+
   return (
     <>
       <Editor
@@ -135,15 +151,20 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
         </div>*/}
         <div className="w-full flex items-center justify-between py-4">
           <div className="flex gap-3 sm:gap-4 items-center ">
+            <Popover>
+              <PopoverTrigger>
+                <HiOutlineEmojiHappy size={24} className="text-neutral-400 cursor-pointer" />
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-none shadow-card ml-8">
+                <EmojiPicker lazyLoadEmojis className="!w-[325px] " onEmojiClick={handleEmojiClick} />
+              </PopoverContent>
+            </Popover>
             <label htmlFor="postImage" className="cursor-pointer inline-block">
               <input id="postImage" type="file" multiple accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handleFileChange} />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
-            <label htmlFor="timelinePostGif" className="cursor-pointer inline-block">
-              <input id="timelinePostGif" type="file" accept="image/gif" className="hidden" onChange={handleFileChange} />
-              <Image src={gif} width={24} height={24} className="text-neutral-400" alt="GIF" />
-            </label>
-            <label htmlFor="timelinePostFile" className="cursor-pointer inline-block">
+
+            <label htmlFor="communityPostFile" className="cursor-pointer inline-block">
               <input
                 id="timelinePostFile"
                 type="file"

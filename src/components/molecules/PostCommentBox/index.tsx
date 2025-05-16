@@ -174,9 +174,9 @@ const PostCommentBox = ({
     return comments?.map((comment, index: number) => (
       <div
         key={comment._id}
-        className={`${comments.length - 1 === index ? 'mt-4' : 'mt-4'}  w-auto h-full relative ${
-          childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'
-        } ${comment.level == 1 ? 'mt-4 ml-6' : ''}  `}
+        className={`  w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
+          comment.level == 1 ? 'mt-4 ml-6' : 'first:mt-8 '
+        }  `}
       >
         <div>
           <UserCard

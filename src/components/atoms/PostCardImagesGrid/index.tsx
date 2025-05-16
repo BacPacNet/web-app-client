@@ -89,18 +89,17 @@ const DynamicImageContainer: React.FC<Props> = ({ images, isComment = false }) =
       )}
 
       {fileItems.length > 0 && (
-        <div className="space-y-3 mt-4 max-w-2xl mx-auto">
+        <div className="space-y-3 mt-4 w-full">
           {fileItems.map((item, index) => (
-            <div
-              key={index}
-              className="border border-neutral-200 rounded-lg bg-white p-3 flex items-center gap-2 shadow-sm hover:shadow-card cursor-pointer transition duration-300"
-            >
-              <FiFile className="text-primary flex-none text-lg" />
-              <p className="text-xs font-normal text-primary line-clamp-1 flex-1">{decodeURI(item.imageUrl.split('/').pop() || 'Unknown File')}</p>
-              <a href={item.imageUrl} target="_blank" rel="noopener noreferrer">
+            <a key={index} href={item.imageUrl} target="_blank" rel="noopener noreferrer">
+              <div className="border border-neutral-200 rounded-lg bg-white px-3 py-6 flex items-center gap-2 shadow-sm hover:shadow-card cursor-pointer transition duration-300">
+                <FiFile className="text-primary flex-none text-md" />
+                <p className="text-xs font-normal text-primary line-clamp-1 flex-1">{decodeURI(item.imageUrl.split('/').pop() || 'Unknown File')}</p>
+                {/*<a href={item.imageUrl} target="_blank" rel="noopener noreferrer">
                 <FiDownload className="text-neutral-500 text-xl" />
-              </a>
-            </div>
+              </a>*/}
+              </div>
+            </a>
           ))}
         </div>
       )}

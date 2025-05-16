@@ -186,6 +186,7 @@ function PostCommentInput({
     const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters')
     setEditorState(newEditorState)
   }
+
   return (
     <div className="rounded-2xl bg-white w-full ">
       <div className=" flex flex-col  w-full rounded-lg ">
