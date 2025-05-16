@@ -45,7 +45,7 @@ const Buttons: React.FC<ButtonProps> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-normal flex items-center justify-center ${
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-medium flex items-center justify-center ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       } ${className}`}
       {...props}

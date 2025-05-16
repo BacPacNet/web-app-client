@@ -156,3 +156,24 @@ export const isPDF = (fileUrl?: string): boolean => {
   if (!fileUrl) return false
   return fileUrl.toLowerCase().endsWith('.pdf')
 }
+
+export const imageMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'image/jpg']
+
+export const getMimeTypeFromUrl = (url: string): string => {
+  const extension = url.split('.').pop()?.toLowerCase()
+  switch (extension) {
+    case 'jpeg':
+    case 'jpg':
+      return 'image/jpeg'
+    case 'png':
+      return 'image/png'
+    case 'webp':
+      return 'image/webp'
+    case 'heic':
+      return 'image/heic'
+    case 'heif':
+      return 'image/heif'
+    default:
+      return 'other'
+  }
+}
