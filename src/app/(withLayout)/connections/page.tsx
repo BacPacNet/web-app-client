@@ -1,7 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
 import PillTabs from '@/components/molecules/PillTabs'
-import Tabs from '@/components/molecules/Tabs'
 import FindPeople from '@/components/molecules/Tabs/FindPeople'
 import Followers from '@/components/molecules/Tabs/Followers'
 import Following from '@/components/molecules/Tabs/Following'
@@ -29,7 +28,7 @@ export default function ConnectionPage() {
   ]
 
   return (
-    <div className="py-0 h-[-webkit-fill-available]">
+    <div className="py-0 h-[-webkit-fill-available] py-4">
       <Card className="rounded-2xl h-full overflow-hidden px-4">
         {/* <Tabs tabs={tabs} className={'h-full'} /> */}
         <h6 className="font-poppins font-bold text-[20px]  mb-4">Connections</h6>

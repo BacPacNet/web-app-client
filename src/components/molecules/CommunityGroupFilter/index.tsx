@@ -77,7 +77,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     }
   }, [])
   return (
-    <div className="max-h-[530px] overflow-y-scroll">
+    <div className="h-[58vh] overflow-y-scroll">
       <div className="max-w-md mx-auto flex flex-col justify-center relative">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold font-poppins">Filter</h2>

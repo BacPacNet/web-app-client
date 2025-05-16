@@ -8,7 +8,6 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { PostCommentData, PostType } from '@/types/constants'
 import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
 import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
-import { replaceImage } from '@/services/uploadImage'
 import { showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { EditorState, Modifier, convertToRaw } from 'draft-js'
 import './index.css'
@@ -16,6 +15,7 @@ import draftToHtml from 'draftjs-to-html'
 const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Editor), { ssr: false })
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import dynamic from 'next/dynamic'
+import { useUploadToS3 } from '@/services/upload'
 
 type props = {
   postID?: string
@@ -43,7 +43,7 @@ function PostCommentInput({
   setNewPost,
 }: props) {
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty())
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
   const { mutate: CreateGroupPostComment, isPending: CreateGroupPostCommentLoading } = useCreateGroupPostComment(isSinglePost ? isSinglePost : false)
@@ -63,8 +63,6 @@ function PostCommentInput({
     ''
   )
 
-  const [ImageValue, setImageValue] = useState<File | null>(null)
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
@@ -75,15 +73,6 @@ function PostCommentInput({
 
   const handleImageRemove = (index: number) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
-  }
-
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl || null,
-      publicId: result?.publicId || null,
-    }))
   }
 
   const onEditorStateChange = (state: React.SetStateAction<EditorState>) => {
@@ -119,10 +108,10 @@ function PostCommentInput({
     //   }
 
     if (images.length) {
-      const imagedata = await processImages(images)
+      const imagedata = await uploadToS3(images)
       const data: PostCommentData = {
         content: draftHtml,
-        imageUrl: imagedata,
+        imageUrl: imagedata.data,
         commenterProfileId,
         postID: postID,
       }
@@ -246,7 +235,13 @@ function PostCommentInput({
               <MdOutlineGifBox size={24} className="text-neutral-400" />
             </label>
             <label htmlFor="commentImage" className="cursor-pointer inline-block">
-              <input id="commentImage" type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e)} />
+              <input
+                id="commentImage"
+                type="file"
+                accept="image/jpeg,image/png,image/jpg"
+                className="hidden"
+                onChange={(e) => handleImageChange(e)}
+              />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
           </div>

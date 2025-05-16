@@ -16,7 +16,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
 import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
-
 dayjs.extend(relativeTime)
 
 const SharePopup = React.memo(({ postId }: { postId: string }) => {
@@ -80,6 +79,22 @@ interface PostProps {
   affiliation?: string
   isPostVerified?: boolean
   initialComment?: any
+}
+
+const isImageUrl = (url: string) => ['.jpeg', '.jpg', '.png', '.webp', '.heic', '.heif'].some((ext) => url.toLowerCase().endsWith(ext))
+
+const FilePreviewCard = ({ url }: { url: string }) => {
+  const isPDF = url.endsWith('.pdf')
+  return (
+    <div className="border rounded-lg p-4 bg-gray-50 flex items-center justify-between">
+      <div>
+        <p className="text-sm font-semibold text-neutral-700">{isPDF ? 'PDF File' : 'Unsupported File'}</p>
+        <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary text-xs underline">
+          Open file
+        </a>
+      </div>
+    </div>
+  )
 }
 
 const PostCard = React.memo(

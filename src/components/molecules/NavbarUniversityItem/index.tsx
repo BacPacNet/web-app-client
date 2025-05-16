@@ -85,8 +85,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
-  const { data: subscribedCommunities, isFetching, isLoading } = useGetSubscribedCommunties()
-  const [communityOpen, setCommunityOpen] = useState(false)
+  const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
 
   const targetCommunityId = subscribedCommunities?.[0]?._id
   const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
@@ -254,7 +253,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   ]
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
-    setCommunityOpen(false)
     const indextoPush = Number(index)
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
@@ -295,7 +293,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             <Buttons
               onClick={() => handleCommunityGroupFilter()}
               variant={isFilterApplied ? 'primary' : 'border'}
-              className="h-10 w-full gap-1 text-xs"
+              size="extra_small_paddind_2"
+              className="h-9 w-full gap-1 "
             >
               Filter
               <LuFilter className={`h-3.5 w-3.5 ${isFilterApplied ? 'text-white' : 'text-primary-500'}`} />
@@ -305,7 +304,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           <div className="flex-1">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger className="w-full">
-                <Buttons variant="border" className="h-10 w-full gap-1 text-xs">
+                <Buttons variant="border" size="extra_small_paddind_2" className="h-9 w-full gap-1">
                   Sort
                   <LuArrowUpDown className="h-3.5 w-3.5 text-primary-500" />
                 </Buttons>

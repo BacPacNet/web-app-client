@@ -1,6 +1,7 @@
 import { NavLink } from './global'
 import { AxiosError } from 'axios'
 import { userTypeEnum } from './RegisterForm'
+import { S3UploadItem, S3UploadResponse } from '@/services/upload'
 
 export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Timeline', href: '/timeline' },
@@ -117,10 +118,7 @@ export enum UserPostType {
 
 export interface PostInputData {
   content: string | any
-  imageUrl?: Array<{
-    imageUrl: string | null
-    publicId: string | null
-  }>
+  imageUrl?: S3UploadItem[]
   PostType?: string
   communityPostsType?: string
 }

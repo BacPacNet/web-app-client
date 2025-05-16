@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form'
 import SelectUsers from './SelectUsers'
 import { useCreateCommunityGroup, useGetCommunityUsers } from '@/services/community-university'
 import { useParams } from 'next/navigation'
-import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../spinner/Spinner'
 import InputBox from '../atoms/Input/InputBox'
+import { useUploadToS3 } from '@/services/upload'
 type Props = {
   setNewGroup: (value: boolean) => void
 }
@@ -36,6 +36,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
   const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const {
     register: GroupRegister,
     handleSubmit: handleGroupCreate,
@@ -48,12 +49,12 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
     let logoImageData
     setIsLoading(true)
     if (coverImage) {
-      const imagedata: any = await replaceImage(coverImage, '')
-      CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadtoS3(coverImage)
+      CoverImageData = { communityGroupLogoCoverUrl: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
     if (logoImage) {
-      const imagedata: any = await replaceImage(logoImage, '')
-      logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadtoS3(logoImage)
+      logoImageData = { communityGroupLogoUrl: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
 
     const dataToPush = {
@@ -116,7 +117,13 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
           <h3>Create Group</h3>
           <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-40 `}>
             {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={(e: any) => setCoverImage(e.target.files[0])} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupImage"
+              onChange={(e: any) => setCoverImage(e.target.files[0])}
+            />
             <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
               <FiCamera size={40} className="text-slate-400" />
               <p>Add Banner Photo</p>
@@ -125,7 +132,13 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
           {/* log0 */}
           <div className={` absolute  shadow-lg bg-white flex  items-center justify-center w-20 h-20 rounded-full top-28`}>
             {logoImage && <img className="w-full h-full rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupLogoImage"
+              onChange={(e: any) => setLogoImage(e.target.files[0])}
+            />
             <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
               <FiCamera size={40} className="text-slate-400 z-30" />
             </label>

@@ -113,11 +113,9 @@ export const validateUploadedFiles = (
   // Supported formats
   const allowedTypes = [
     'image/jpeg',
+    'image/jpg',
     'image/png',
-    'image/webp',
     'image/gif',
-    'image/heic',
-    'image/heif',
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/msword',
@@ -151,5 +149,31 @@ export const formatFileSize = (bytes: number): string => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   } else {
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+  }
+}
+
+export const isPDF = (fileUrl?: string): boolean => {
+  if (!fileUrl) return false
+  return fileUrl.toLowerCase().endsWith('.pdf')
+}
+
+export const imageMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'image/jpg']
+
+export const getMimeTypeFromUrl = (url: string): string => {
+  const extension = url.split('.').pop()?.toLowerCase()
+  switch (extension) {
+    case 'jpeg':
+    case 'jpg':
+      return 'image/jpeg'
+    case 'png':
+      return 'image/png'
+    case 'webp':
+      return 'image/webp'
+    case 'heic':
+      return 'image/heic'
+    case 'heif':
+      return 'image/heif'
+    default:
+      return 'other'
   }
 }

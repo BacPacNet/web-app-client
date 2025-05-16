@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useToggleFollow } from '@/services/connection'
 import Button from '../atoms/Buttons'
-import avatar from '@assets/avatar.svg'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '../spinner/Spinner'
 import Image from 'next/image'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { closeModal } from '../molecules/Modal/ModalManager'
-import Buttons from '../atoms/Buttons'
+import avatar from '@assets/avatar.svg'
+import { showCustomDangerToast } from '../atoms/CustomToasts/CustomToasts'
 
 interface FollowingItemProps {
   firstName: string
@@ -50,56 +50,75 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   handleRemoveClick,
   isRemovePending,
 }) => {
-  const { mutate: toggleFollow, isPending } = useToggleFollow(type)
   const router = useRouter()
+  const { mutateAsync: toggleFollow } = useToggleFollow(type)
 
-  const handleFollowClick = () => {
-    toggleFollow(id)
+  const [imgSrc, setImgSrc] = useState(imageUrl || '')
+  const [isFollowingState, setIsFollowingState] = useState(isFollowing)
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  const isStudent = role === userTypeEnum.Student
+  const showRemoveButton = !isSelfProfile && isGroupAdmin && showCommunityGroupMember
+  const showFollowButton = !isSelfProfile && !showRemoveButton
+
+  const handleFollowClick = async () => {
+    setIsFollowingState(true)
+    setIsProcessing(true)
+
+    try {
+      await toggleFollow(id)
+    } catch (err) {
+      setIsFollowingState(false)
+      showCustomDangerToast('Failed to follow')
+    } finally {
+      setIsProcessing(false)
+    }
   }
 
-  const handleProfileClicked = (id: string) => {
+  const handleProfileClick = () => {
     closeModal()
     router.push(`/profile/${id}`)
   }
 
-  const isStudent = role === userTypeEnum.Student
-
   return (
-    <div className="flex items-center px-2 py-4 md:p-4 border-b border-neutral-200 justify-between ">
-      <div onClick={() => handleProfileClicked(id)} className="flex gap-4 items-center cursor-pointer">
-        <Image src={imageUrl || avatar.src} alt={firstName} width={48} height={48} className="w-12 h-12 rounded-full flex-none object-cover" />
-        <div className="">
-          <h3 className="font-semibold text-xs text-neutral-700">
+    <div className="flex items-center px-2 py-4 md:p-4 border-b border-neutral-200 justify-between">
+      <div onClick={handleProfileClick} className="flex gap-4 items-center cursor-pointer">
+        <Image
+          onError={() => setImgSrc(avatar)}
+          src={imgSrc}
+          alt={`${firstName} ${lastName}`}
+          width={48}
+          height={48}
+          className="w-12 h-12 rounded-full object-cover"
+        />
+        <div>
+          <h3 className="font-medium text-base text-gray-dark">
             {firstName} {lastName}
           </h3>
           {university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}
-
           <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
           <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>
       </div>
-      {!isSelfProfile && isGroupAdmin && showCommunityGroupMember ? (
-        <Buttons disabled={isRemovePending} onClick={() => handleRemoveClick && handleRemoveClick(id)} variant="danger_secondary" size="extra_small">
+
+      {showRemoveButton && (
+        <Button disabled={isRemovePending} onClick={() => handleRemoveClick?.(id)} variant="danger_secondary" size="extra_small">
           Remove
-        </Buttons>
-      ) : (
-        <>
-          {!isSelfProfile && (
-            <div className="p-2 bg-primary-50 rounded-md">
-              <>
-                {!isFollowing ? (
-                  <Button onClick={handleFollowClick} variant="primary" size="extra_small">
-                    {isPending ? <Spinner /> : 'Follow'}
-                  </Button>
-                ) : (
-                  <Button onClick={() => handleProfileClicked(id)} className="whitespace-nowrap" variant="shade" size="extra_small">
-                    View Profile
-                  </Button>
-                )}
-              </>
-            </div>
+        </Button>
+      )}
+
+      {showFollowButton && (
+        <div className="p-2 bg-primary-50 rounded-md">
+          {isFollowingState ? (
+            <Button onClick={handleProfileClick} className="whitespace-nowrap text-neutral-700" variant="border" size="extra_small_paddind_2">
+              View Profile
+            </Button>
+          ) : (
+            <Button onClick={handleFollowClick} variant="shade" size="extra_small_paddind_2" disabled={isProcessing}>
+              {isProcessing ? <Spinner /> : 'Follow'}
+            </Button>
           )}
-        </>
+        </div>
       )}
     </div>
   )

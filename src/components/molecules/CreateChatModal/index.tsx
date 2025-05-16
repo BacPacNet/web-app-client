@@ -8,7 +8,7 @@ import GroupChatModal from './GroupChatModal'
 import { useCreateGroupChat, useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
 import { closeModal } from '../Modal/ModalManager'
-import { replaceImage } from '@/services/uploadImage'
+import { useUploadToS3 } from '@/services/upload'
 
 interface OneToOneProps {
   setSelectedChat: (value: any) => void
@@ -26,6 +26,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
   const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
   const { mutate: createGroupChat, isPending: groupChatPending } = useCreateGroupChat()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
   const router = useRouter()
 
   const {
@@ -53,8 +54,8 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const handleGroupChatClick = async () => {
     let ImageData
     if (groupLogoImage) {
-      const imagedata: any = await replaceImage(groupLogoImage, '')
-      ImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadToS3([groupLogoImage])
+      ImageData = { groupLogo: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
 
     const mergedUsers = [

@@ -1,26 +1,82 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState, useMemo } from 'react'
 import UserListItem from '../UserListItem'
 import { useGetUserFollowing, useGetUserFollowers } from '@/services/connection'
 import { useUniStore } from '@/store/store'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { Spinner } from '@/components/spinner/Spinner'
 import { usePathname } from 'next/navigation'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 
 type Props = {
-  isChat?: boolean
-  setIsCreateGroupModalOpen?: (value: boolean) => void
-  setIsModalOpen?: (value: boolean) => void
   userId?: string
   defaultTab?: 'Following' | 'Followers'
 }
 
-const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, defaultTab = 'Following', userId = '' }: Props) => {
+type UserListRenderProps = {
+  isLoading: boolean
+  isFetchingNextPage: boolean
+  userList: any[]
+  isChat?: boolean
+  content: 'Following' | 'Followers'
+}
+
+type TabType = 'Following' | 'Followers'
+
+type TabsProps = {
+  content: TabType
+  setContent: (value: TabType) => void
+}
+
+const Tabs: React.FC<TabsProps> = ({ content, setContent }) => (
+  <div className="flex items-center justify-start cursor-pointer">
+    {(['Following', 'Followers'] as const).map((tab) => (
+      <p
+        key={tab}
+        className={`px-4 py-2 hover:text-primary text-sm ${content === tab ? 'font-semibold text-primary' : 'font-medium'}`}
+        onClickCapture={() => setContent(tab)}
+      >
+        {tab}
+      </p>
+    ))}
+  </div>
+)
+
+const UserListRenderer: React.FC<UserListRenderProps> = ({ isLoading, userList, isFetchingNextPage, content }) => {
+  if (isLoading) return <UserListItemSkeleton count={7} />
+  if (userList.length === 0) return <p className="text-center text-neutral-500 font-bold p-4">No User Found</p>
+
+  return (
+    <>
+      {userList.map((item) => (
+        <UserListItem
+          key={item._id}
+          id={item._id}
+          firstName={item.firstName}
+          lastName={item.lastName}
+          university={item.profile?.university_name || ''}
+          study_year={item.profile?.study_year || ''}
+          degree={item.profile?.degree || ''}
+          major={item.profile?.major || ''}
+          occupation={item.profile?.occupation || ''}
+          imageUrl={item.profile?.profile_dp?.imageUrl || ''}
+          type={content}
+          isFollowing={item.isFollowing}
+          role={item.profile?.role || ''}
+          affiliation={item.profile?.affiliation || ''}
+        />
+      ))}
+      {isFetchingNextPage && <Spinner />}
+    </>
+  )
+}
+
+const ConnectionsModal = ({ defaultTab = 'Following', userId = '' }: Props) => {
   const [content, setContent] = useState<'Following' | 'Followers'>(defaultTab)
   const { userProfileData } = useUniStore()
   const pathName = usePathname()
-  const currIdInPathName = pathName.split('/')[2]
+  const currIdInPathName = useMemo(() => pathName.split('/')[2], [pathName])
 
   const {
     data: userFollowData,
@@ -38,45 +94,46 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, d
     hasNextPage: hasFollowersNextPage,
   } = useGetUserFollowers('', userId, 10, content === 'Followers')
 
-  //   const userFollow = userFollowData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
-  const userFollow =
-    userFollowData?.pages
-      .flatMap((page) => page.users)
-      .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true)) || []
-
-  //   const userFollowers = userFollowersData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
-  const userFollowers = (userFollowersData?.pages.flatMap((page) => page.users) || []).filter((user) =>
-    userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true
-  )
-
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+  const userFollow = useMemo(() => {
+    const followingIds = new Set(userProfileData?.following?.map((f) => f.userId))
 
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
-        if (content === 'Following' && hasFollowingNextPage && !isFetchingFollowingNextPage) {
-          fetchNextFollowing()
-        } else if (content === 'Followers' && hasFollowersNextPage && !isFetchingFollowersNextPage) {
-          fetchNextFollowers()
-        }
-      }
-    }
+    return (
+      userFollowData?.pages.flatMap((page) =>
+        page.users
+          .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
+          .map((user) => ({
+            ...user,
+            isFollowing: followingIds.has(user._id),
+          }))
+      ) || []
+    )
+  }, [userFollowData, userProfileData, currIdInPathName])
 
-    const container = containerRef.current
-    container?.addEventListener('scroll', handleScroll)
-    return () => container?.removeEventListener('scroll', handleScroll)
-  }, [
-    content,
-    hasFollowingNextPage,
-    hasFollowersNextPage,
-    isFetchingFollowingNextPage,
-    isFetchingFollowersNextPage,
-    fetchNextFollowing,
-    fetchNextFollowers,
-  ])
+  const userFollowers = useMemo(() => {
+    const followingIds = new Set(userProfileData?.following?.map((f) => f.userId))
+
+    return (
+      userFollowersData?.pages.flatMap((page) =>
+        page.users
+          .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
+          .map((user) => ({
+            ...user,
+            isFollowing: followingIds.has(user._id),
+          }))
+      ) || []
+    )
+  }, [userFollowersData, userProfileData, currIdInPathName])
+
+  useInfiniteScroll({
+    containerRef,
+    onBottomReach: () => {
+      if (content === 'Following' && hasFollowingNextPage && !isFetchingFollowingNextPage) fetchNextFollowing()
+      else if (content === 'Followers' && hasFollowersNextPage && !isFetchingFollowersNextPage) fetchNextFollowers()
+    },
+    deps: [content, hasFollowingNextPage, hasFollowersNextPage, isFetchingFollowingNextPage, isFetchingFollowersNextPage],
+  })
 
   const isLoading = content === 'Following' ? isFollowingLoading : isFollowersLoading
   const userList = content === 'Following' ? userFollow : userFollowers
@@ -84,67 +141,13 @@ const ConnectionsModal = ({ isChat, setIsCreateGroupModalOpen, setIsModalOpen, d
 
   return (
     <div>
-      {/* Tab Selection */}
       <div className="flex items-center justify-start cursor-pointer">
-        <p
-          className={`px-4 py-2 hover:text-primary text-sm ${content === 'Following' ? 'font-semibold text-primary' : 'font-medium'}`}
-          onClickCapture={() => setContent('Following')}
-        >
-          Following
-        </p>
-        <p
-          className={`px-4 py-2 hover:text-primary text-sm ${content === 'Followers' ? 'font-semibold text-primary' : 'font-medium'}`}
-          onClickCapture={() => setContent('Followers')}
-        >
-          Followers
-        </p>
-        {isChat && setIsCreateGroupModalOpen && setIsModalOpen && (
-          <p
-            className="px-4 py-2 hover:text-primary text-sm font-medium"
-            onClick={() => {
-              setIsCreateGroupModalOpen(true)
-              setIsModalOpen(false)
-            }}
-          >
-            create group
-          </p>
-        )}
+        <Tabs content={content} setContent={setContent} />
       </div>
 
       <div className="mx-auto min-w-[300px] bg-white rounded-lg overflow-hidden">
         <div ref={containerRef} className="overflow-y-auto h-[60vh] custom-scrollbar">
-          {isLoading ? (
-            <>
-              <UserListItemSkeleton />
-              <UserListItemSkeleton />
-              <UserListItemSkeleton />
-            </>
-          ) : userList.length === 0 ? (
-            <p className="text-center text-neutral-500 font-bold p-4">No User Found</p>
-          ) : (
-            <>
-              {userList.map((item, index) => (
-                <UserListItem
-                  key={item._id || index}
-                  id={item._id}
-                  firstName={item.firstName}
-                  lastName={item.lastName}
-                  university={item.profile?.university_name || ''}
-                  study_year={item.profile?.study_year || ''}
-                  degree={item.profile?.degree || ''}
-                  major={item.profile?.major || ''}
-                  occupation={item.profile?.occupation || ''}
-                  imageUrl={item.profile?.profile_dp?.imageUrl || ''}
-                  type={content}
-                  isChat={isChat}
-                  isFollowing={item.isFollowing}
-                  role={item.profile?.role || ''}
-                  affiliation={item.profile?.affiliation || ''}
-                />
-              ))}
-              {isFetchingNextPage && <Spinner />}
-            </>
-          )}
+          <UserListRenderer isLoading={isLoading} userList={userList} isFetchingNextPage={isFetchingNextPage} content={content} />
         </div>
       </div>
     </div>

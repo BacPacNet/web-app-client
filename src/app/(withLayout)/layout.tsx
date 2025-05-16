@@ -4,37 +4,38 @@ import LeftNavbar from '@/components/organisms/LeftNavbar'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import dummy from '@/assets/avatar.svg'
 
 const recommendations = [
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar2.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar2.png',
+    avatar: dummy,
   },
   {
     name: 'Roberta Green',
     university: 'Computer Science and Engineering',
     study_year: '2nd Yr, Psychology',
-    avatar: '/timeline/avatar.png',
+    avatar: dummy,
   },
 ]
 
@@ -60,7 +61,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main Content - Scrollable */}
-        <main className="md:px-12 px-4 py-4 overflow-y-auto h-with-navbar flex-1 hideScrollbar outline-none">{children}</main>
+        <main className="md:px-12 px-4 overflow-y-auto h-with-navbar flex-1  outline-none ">{children}</main>
 
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">

@@ -2,7 +2,6 @@
 import InputBox from '@/components/atoms/Input/InputBox'
 
 import { useCreateGroupChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
-import { replaceImage } from '@/services/uploadImage'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -16,6 +15,7 @@ import Buttons from '@/components/atoms/Buttons'
 import { IoClose } from 'react-icons/io5'
 import { openModal } from '../Modal/ModalManager'
 import OneToChat from '../OneToOneChat'
+import { useUploadToS3 } from '@/services/upload'
 
 type user = {
   _id: string
@@ -51,6 +51,7 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
   const { data } = useGetUserFollowingAndFollowers(searchInput)
 
   const { mutate: createGroupChat } = useCreateGroupChat()
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const handleShowModal = () => {
     openModal(<OneToChat setSelectedChat={setSelectedChat} />)
@@ -71,8 +72,8 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
   const onGroupChatSubmit = async (data: any) => {
     let CoverImageData
     if (groupLogoImage) {
-      const imagedata: any = await replaceImage(groupLogoImage, '')
-      CoverImageData = { groupLogo: { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId } }
+      const imagedata = await uploadToS3([groupLogoImage])
+      CoverImageData = { groupLogo: { imageUrl: imagedata?.data[0].imageUrl, publicId: imagedata?.data[0]?.publicId } }
     }
     const selectedUsersIds = selectedUsers.map((item: { _id: string }) => item._id)
     const dataTopush = {
@@ -103,7 +104,13 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
                   alt="groupLogo"
                 />
               )}
-              <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setGroupLogoImage(e.target.files[0])} />
+              <input
+                style={{ display: 'none' }}
+                accept="image/jpeg,image/png,image/jpg"
+                type="file"
+                id="CreateGroupLogoImage"
+                onChange={(e: any) => setGroupLogoImage(e.target.files[0])}
+              />
               <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
                 <FiCamera size={40} className="text-slate-400 z-30" />
               </label>

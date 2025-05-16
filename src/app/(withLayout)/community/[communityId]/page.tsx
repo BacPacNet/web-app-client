@@ -11,7 +11,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const [isGroupAdmin, setIsGroupAdmin] = useState<boolean>(false)
   const containerRef = useRef<HTMLDivElement>(null)
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi pt-4">
       <UniversityCard communityID={communityId} communityGroupID={communityGroupID} isGroupAdmin={isGroupAdmin} setIsGroupAdmin={setIsGroupAdmin} />
       {/*{isGroupAdmin && <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />}*/}
       {isGroupAdmin && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}

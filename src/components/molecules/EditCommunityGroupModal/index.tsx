@@ -4,7 +4,6 @@ import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 import SelectUsers from '@/components/atoms/SelectUsers'
 import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
-import { replaceImage } from '@/services/uploadImage'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
@@ -28,6 +27,7 @@ import {
   getUniqueById,
 } from '@/lib/communityGroup'
 import { BsExclamationCircleFill } from 'react-icons/bs'
+import { useUploadToS3 } from '@/services/upload'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -47,7 +47,6 @@ type User = {
     _id: string
   }
 }
-type FilterType = 'ALL' | 'SAME_YEAR' | 'SAME_MAJOR' | null
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const { userData } = useUniStore()
@@ -56,7 +55,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
-  const [selectedFilter, setSelectedFilter] = useState<FilterType>(null)
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
   const [filteredUsers, setFilterUsers] = useState<any>()
@@ -69,6 +67,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const { mutate: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const { data: allCommunityUsers } = useGetCommunity(communityGroups?.communityId?._id)
   const { data: communityData } = useGetCommunity(communityGroups?.communityId?._id)
+  const { mutateAsync: uploadToS3 } = useUploadToS3()
   const {
     register: GroupRegister,
     handleSubmit,
@@ -123,7 +122,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
   // Handle image preview
   const handleBannerImagePreview = (e: any) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0] as File
     if (file) {
       setCoverImage(URL.createObjectURL(file))
       setValue('communityGroupLogoUrl', file)
@@ -188,18 +187,16 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const onSubmit = async (data: any) => {
     let CoverImageData = communityGroups?.communityGroupLogoCoverUrl
     let LogoImageData = communityGroups?.communityGroupLogoUrl
-    // let payload = data
     setIsLoading(true)
     if (communityGroupLogoUrl) {
-      const imagedata: any = await replaceImage(communityGroupLogoUrl, communityGroups?.communityGroupLogoUrl?.publicId || '')
+      const imagedata = await uploadToS3([communityGroupLogoUrl])
 
-      CoverImageData = { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId }
+      CoverImageData = imagedata.data[0]
     }
     if (CommunityGroupLogoCoverUrl) {
-      const imagedata: any = await replaceImage(CommunityGroupLogoCoverUrl, communityGroups?.communityGroupLogoCoverUrl?.imageUrl || '')
-      LogoImageData = { imageUrl: imagedata?.imageUrl, publicId: imagedata?.publicId }
+      const imagedata = await uploadToS3(CommunityGroupLogoCoverUrl)
+      LogoImageData = imagedata.data[0]
     }
-    // payload = { ...payload, communityGroupLogoUrl: LogoImageData, communityGroupLogoCoverUrl: CoverImageData }
 
     const communityGroupCategory = {
       communityGroupCategory: selectedFilters,
@@ -312,7 +309,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               />
             )}
             {/* <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} /> */}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={handlelogoImagePreview} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupLogoImage"
+              onChange={handlelogoImagePreview}
+            />
 
             {logoImage ? (
               <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
@@ -343,7 +346,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 alt=""
               />
             )}
-            <input style={{ display: 'none' }} type="file" id="CreateGroupImage" onChange={handleBannerImagePreview} />
+            <input
+              style={{ display: 'none' }}
+              accept="image/jpeg,image/png,image/jpg"
+              type="file"
+              id="CreateGroupImage"
+              onChange={handleBannerImagePreview}
+            />
             {coverImage ? (
               <label htmlFor="CreateGroupImage" className="relative flex flex-col items-center gap-2 z-10  ">
                 <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>

@@ -13,7 +13,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll  noi">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi">
       <CommunityGroupBanner
         communityID={communityId}
         communityGroupID={communityGroupID}

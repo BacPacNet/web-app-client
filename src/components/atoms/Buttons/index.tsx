@@ -21,7 +21,7 @@ const Buttons: React.FC<ButtonProps> = ({
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
-    border: 'border border-neutral-200 text-neutral-800 shadow-button ',
+    border: 'border border-neutral-200 text-neutral-500 shadow-button ',
     border_primary: 'border border-primary text-primary ',
     danger: 'bg-red-500 text-white',
     danger_secondary: 'text-destructive-600 bg-[#FEF2F2] border border-[#FECACA] ',
@@ -45,7 +45,7 @@ const Buttons: React.FC<ButtonProps> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-normal flex items-center justify-center ${
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-medium flex items-center justify-center ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       } ${className}`}
       {...props}
