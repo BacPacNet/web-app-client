@@ -25,8 +25,6 @@ const MessageTopBar = ({
   searchByNameText,
 }: Props) => {
   const [showDropdown, setShowDropdown] = useState(false)
-  console.log('unreadChatsCount', unreadChatsCount)
-
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   const handleShowModal = () => {

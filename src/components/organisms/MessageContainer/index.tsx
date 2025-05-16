@@ -48,6 +48,7 @@ const MessageContainer = () => {
     images: [],
     currImageIndex: null,
   })
+  console.log('chatsData', chatsData)
 
   const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {

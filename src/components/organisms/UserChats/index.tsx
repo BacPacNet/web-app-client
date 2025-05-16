@@ -27,11 +27,17 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
         (item: Chat) =>
-          (item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
-            item.isRequestAccepted ||
-            item.groupAdmin.toString() === userData?.id) &&
-          (item.latestMessage || item.isGroupChat)
+          item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
+          item.isRequestAccepted ||
+          item.groupAdmin.toString() === userData?.id
       )
+      //   const filteredChats = chats?.filter(
+      //     (item: Chat) =>
+      //       (item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
+      //         item.isRequestAccepted ||
+      //         item.groupAdmin.toString() === userData?.id) &&
+      //       (item.latestMessage || item.isGroupChat)
+      //   )
 
       if (isChatLoading) {
         return (
