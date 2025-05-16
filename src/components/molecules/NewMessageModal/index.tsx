@@ -7,7 +7,7 @@ import React, { useRef, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
-import { replaceImage } from '@/services/uploadImage'
+
 import { validateImageFiles } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Image from 'next/image'
@@ -40,7 +40,7 @@ const NewMessageModal = ({ userIdToStartChatWith, avatarUrl, name }: { userIdToS
     let data
     if (images) {
       setIsImageUploading(true)
-      fileLink = await processImages(images)
+      //   fileLink = await processImages(images)
 
       data = {
         content: message,
@@ -123,14 +123,6 @@ const NewMessageModal = ({ userIdToStartChatWith, avatarUrl, name }: { userIdToS
     setImages((prevImages) => prevImages.filter((_, i) => i !== index))
   }
 
-  const processImages = async (imagesData: File[]) => {
-    const promises = imagesData.map((image) => replaceImage(image, ''))
-    const results = await Promise.all(promises)
-    return results.map((result) => ({
-      imageUrl: result?.imageUrl,
-      publicId: result?.publicId,
-    }))
-  }
   return (
     <div className="rounded-2xl bg-white w-full pt-2">
       <div className="flex items-center gap-3 py-2">
