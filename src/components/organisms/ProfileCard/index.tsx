@@ -22,6 +22,9 @@ import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
 import { HiMail } from 'react-icons/hi'
+import NewMessageModal from '@/components/molecules/NewMessageModal'
+import { useCreateUserChat } from '@/services/Messages'
+import { useRouter } from 'next/navigation'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -73,14 +76,21 @@ export function UserProfileCard({
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
+  const router = useRouter()
   const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
+  const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
 
   const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday)
   const dateOfBirth = dobFormat && format(new Date(dobFormat), 'dd MMM yyyy')
+
+  const handleMessage = async () => {
+    const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
+    router.replace(`/messages?id=${createChatResponse._id}`)
+  }
 
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
@@ -159,7 +169,19 @@ export function UserProfileCard({
                   </PopoverContent>
                 </Popover>
               </div>
-              <Buttons className="flex items-center gap-2 h-10 " variant="shade" size="small_profile">
+              <Buttons
+                onClick={() => handleMessage()}
+                //   <Buttons
+                //     onClick={() =>
+                //       openModal(
+                //         <NewMessageModal userIdToStartChatWith={userId || ''} avatarUrl={avatarUrl} name={name} />,
+                //         ' min-h-[240px] max-h-[300px] w-[350px] sm:w-[550px]   custom-scrollbar'
+                //       )
+                //     }
+                className="flex items-center gap-2 h-10 "
+                variant="shade"
+                size="small_profile"
+              >
                 <HiMail className="w-4 h-4" /> Message
               </Buttons>
               <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small_profile">

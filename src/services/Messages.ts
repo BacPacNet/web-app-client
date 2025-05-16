@@ -115,7 +115,7 @@ export const useCreateUserChat = () => {
   return useMutation({
     mutationFn: (data: any) => createUserChat(cookieValue, data),
     onSuccess: () => {
-      //  queryClient.invalidateQueries({ queryKey: ['userChats'] })
+      queryClient.invalidateQueries({ queryKey: ['userChats'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

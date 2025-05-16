@@ -106,14 +106,38 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
 
       createNewMessage(messagePayload, {
         onSuccess: (newMessage) => {
-          queryClient.setQueryData(['chatMessages', chatId], (oldMessages: LatestMessage[] = []) => {
-            if (!oldMessages.length) return [newMessage]
+          const chatId = newMessage.chat
+          const chats = queryClient.getQueryData(['userChats'])
 
+          if (!Array.isArray(chats)) return
+
+          const updatedChats = chats.map((chat) => {
+            if (chat._id === chatId._id) {
+              return {
+                ...chat,
+                latestMessage: newMessage,
+                latestMessageTime: new Date(newMessage.createdAt).getTime(),
+              }
+            }
+            return chat
+          })
+
+          updatedChats.sort((a, b) => {
+            const aTime = a.latestMessageTime > 0 ? a.latestMessageTime : new Date(a.createdAt || 0).getTime()
+
+            const bTime = b.latestMessageTime > 0 ? b.latestMessageTime : new Date(b.createdAt || 0).getTime()
+
+            return bTime - aTime
+          })
+
+          queryClient.setQueryData(['userChats'], updatedChats)
+          //  chat end
+
+          queryClient.setQueryData(['chatMessages', chatId._id], (oldMessages: LatestMessage[] = []) => {
+            if (!oldMessages.length) return [newMessage]
             const lastMsg = oldMessages[oldMessages.length - 1]
 
-            const isDuplicate = oldMessages.findIndex(
-              (msg) => msg._id === newMessage._id || (msg.content === newMessage.content && msg.sender.id === newMessage.sender.id)
-            )
+            const isDuplicate = oldMessages.findIndex((msg) => msg._id === newMessage._id)
 
             if (isDuplicate !== -1) {
               const updated = [...oldMessages]
@@ -136,7 +160,6 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
 
             return [...oldMessages, newMessage]
           })
-
           socket?.emit(SocketEnums.SEND_MESSAGE, newMessage)
         },
       })
