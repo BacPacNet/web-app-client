@@ -1,17 +1,13 @@
 'use client'
-import SelectAIUniversityDropdown from '@/components/atoms/SelectAIUniversityDropdown.tsx'
 import { useGetSubscribedCommunties } from '@/services/university-community'
-import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { SlReload } from 'react-icons/sl'
-import { IoIosArrowDown } from 'react-icons/io'
-import AINoUniversity from '../AI_Section/AINoUniversity'
 import Spinner from '@/components/atoms/spinner'
-import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import AIChat from '../AI_Section/AIChat'
 import { useUniStore } from '@/store/store'
 import { useCheckAssistantAvailable } from '@/services/chatbot'
 import Buttons from '@/components/atoms/Buttons'
+import Title from '@/components/atoms/Title'
 
 type dataType = {
   _id: string
@@ -22,11 +18,9 @@ type dataType = {
 }
 const Ai_AssistantContainer = () => {
   const [selectedUniversity, setSelectedUniversity] = useState<dataType>()
-  const [show, setShow] = useState(false)
   const { data: isAssistantExist, isLoading: isAssistantLoading, refetch } = useCheckAssistantAvailable(selectedUniversity?._id || '')
 
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-  const otherUniversity = subscribedCommunities?.filter((item) => item._id !== selectedUniversity?._id)
   const { chatbotData, setChatbotData, resetChatbotData } = useUniStore()
 
   const handleRefresh = () => {
@@ -43,27 +37,27 @@ const Ai_AssistantContainer = () => {
     }
   }, [subscribedCommunities])
 
-  const UniversityDropdown = () => {
-    return (
-      <div className="relative">
-        <div className="flex items-center gap-2 text-2xs cursor-pointer" onClick={() => setShow(!show)}>
-          <div className=" flex  items-center gap-3 ">
-            <Image
-              width={48}
-              height={48}
-              className="w-12 h-12 object-contain rounded-full shadow-logo p-1"
-              src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
-              alt="logo"
-            />
-          </div>
-          <p className="text-xs text-neutral-500">{selectedUniversity?.name}</p>
-          <IoIosArrowDown className="cursor-pointer w-7 h-8 text-neutral-800" />
-        </div>
+  //  const UniversityDropdown = () => {
+  //    return (
+  //      <div className="relative">
+  //        <div className="flex items-center gap-2 text-2xs cursor-pointer" onClick={() => setShow(!show)}>
+  //          <div className=" flex  items-center gap-3 ">
+  //            <Image
+  //              width={48}
+  //              height={48}
+  //              className="w-12 h-12 object-contain rounded-full shadow-logo p-1"
+  //              src={selectedUniversity?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
+  //              alt="logo"
+  //            />
+  //          </div>
+  //          <p className="text-xs text-neutral-500">{selectedUniversity?.name}</p>
+  //          <IoIosArrowDown className="cursor-pointer w-7 h-8 text-neutral-800" />
+  //        </div>
 
-        <SelectAIUniversityDropdown data={otherUniversity || []} show={show} setShow={setShow} setSelectedUniversity={setSelectedUniversity} />
-      </div>
-    )
-  }
+  //        <SelectAIUniversityDropdown data={otherUniversity || []} show={show} setShow={setShow} setSelectedUniversity={setSelectedUniversity} />
+  //      </div>
+  //    )
+  //  }
 
   if (isLoading || isAssistantLoading) {
     return (
@@ -76,10 +70,11 @@ const Ai_AssistantContainer = () => {
   return (
     <div className="bg-white rounded-2xl drop-shadow-lg h-with-navbar-space flex flex-col p-6 mt-4">
       <div className=" pb-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins ">
-        <div className="flex justify-between">
-          <div className="relative">
+        <div className="flex justify-between items-center">
+          <Title>AI Assistant</Title>
+          {/*<div className="relative">
             <UniversityDropdown />
-          </div>
+          </div>*/}
           <Buttons
             disabled={!isAssistantExist?.isAssistantAvailable}
             size="medium"
@@ -92,11 +87,13 @@ const Ai_AssistantContainer = () => {
           </Buttons>
         </div>
       </div>
-      {isAssistantExist?.isAssistantAvailable ? (
+      <AIChat chatbotData={chatbotData} setChatbotData={setChatbotData} communityId={selectedUniversity?._id || ''} />
+
+      {/*{isAssistantExist?.isAssistantAvailable ? (
         <AIChat chatbotData={chatbotData} setChatbotData={setChatbotData} communityId={selectedUniversity?._id || ''} />
       ) : (
         <AINoUniversity communityId={subscribedCommunities ? subscribedCommunities![0].university_id : ''} />
-      )}
+      )}*/}
     </div>
   )
 }

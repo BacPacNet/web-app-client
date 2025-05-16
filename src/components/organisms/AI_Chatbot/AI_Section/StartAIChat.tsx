@@ -16,7 +16,7 @@ const StartAIChat = () => {
     <div className="w-full flex justify-center items-center h-full ">
       <div className="flex flex-col gap-4 items-center">
         <Image src={aiLogo} width={40} height={40} alt="logo" className="w-40 h-40" />
-        <div className="flex gap-2 flex-wrap justify-center">
+        <div className="flex gap-6 flex-wrap justify-center">
           {badgeData.map((item, idx) => (
             <Badge key={idx} Icon={item.icon} desc={item.desc} color={item.color} />
           ))}

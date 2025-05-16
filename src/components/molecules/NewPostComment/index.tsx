@@ -14,6 +14,9 @@ import dynamic from 'next/dynamic'
 import { MdCancel } from 'react-icons/md'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useUploadToS3 } from '@/services/upload'
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { HiOutlineEmojiHappy } from 'react-icons/hi'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -161,6 +164,24 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     }
   }, [quillInstance])
 
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    if (!quillInstance) return
+
+    const editor = quillInstance
+
+    // Focus the editor
+    editor.focus()
+
+    // Get the current selection (after focusing)
+    const range = editor.getSelection()
+
+    // Fallback: insert at end of text if no selection
+    const position = range?.index ?? editor.getLength()
+
+    editor.insertText(position, emojiData.emoji, 'user')
+    editor.setSelection(position + emojiData.emoji.length, 0)
+  }
+
   return (
     <>
       <div onClick={() => setNewPost(false)} className="fixed w-full h-[100%] top-0 left-0 bg-black opacity-50 z-50"></div>
@@ -193,6 +214,14 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
             </div>
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-3 sm:gap-4 items-center ">
+                <Popover>
+                  <PopoverTrigger>
+                    <HiOutlineEmojiHappy size={24} className="text-neutral-400 cursor-pointer" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 border-none shadow-card ml-8">
+                    <EmojiPicker lazyLoadEmojis className="!w-[325px] " onEmojiClick={handleEmojiClick} />
+                  </PopoverContent>
+                </Popover>
                 <label htmlFor="postCommentImage" className="cursor-pointer inline-block">
                   <input
                     id="postCommentImage"
