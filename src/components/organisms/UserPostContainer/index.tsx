@@ -17,6 +17,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { validateImageFiles } from '@/lib/utils'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type props = {
   communityID?: string
@@ -83,7 +84,11 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
   }
 
   const processImages = async (imagesData: File[]) => {
-    const results = await uploadToS3(imagesData)
+    const uploadPayload = {
+      files: imagesData,
+      context: UPLOAD_CONTEXT.TIMELINE,
+    }
+    const results = await uploadToS3(uploadPayload)
     if (results.success) {
       return results.data
     }

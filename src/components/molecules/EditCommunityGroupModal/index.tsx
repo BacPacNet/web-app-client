@@ -28,6 +28,7 @@ import {
 } from '@/lib/communityGroup'
 import { BsExclamationCircleFill } from 'react-icons/bs'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -189,12 +190,20 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     let LogoImageData = communityGroups?.communityGroupLogoUrl
     setIsLoading(true)
     if (communityGroupLogoUrl) {
-      const imagedata = await uploadToS3([communityGroupLogoUrl])
+      const uploadDPPayload = {
+        files: [communityGroupLogoUrl],
+        context: UPLOAD_CONTEXT.DP,
+      }
+      const imagedata = await uploadToS3(uploadDPPayload)
 
       CoverImageData = imagedata.data[0]
     }
     if (CommunityGroupLogoCoverUrl) {
-      const imagedata = await uploadToS3(CommunityGroupLogoCoverUrl)
+      const uploadCoverPayload = {
+        files: [CommunityGroupLogoCoverUrl],
+        context: UPLOAD_CONTEXT.COVER_DP,
+      }
+      const imagedata = await uploadToS3(uploadCoverPayload)
       LogoImageData = imagedata.data[0]
     }
 

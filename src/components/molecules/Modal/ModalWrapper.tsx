@@ -21,7 +21,7 @@ const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', 
         <div
           className={`relative bg-white  ${style} mt-[68px]  max-h-[85%] ${
             isAllowScroll ? 'overflow-y-auto' : 'overflow-y-hidden'
-          }  rounded-2xl shadow-lg py-8 px-6 `}
+          }  rounded-2xl shadow-lg py-4 px-6 `}
         >
           {showCloseIcon ? (
             <div className="absolute right-2 top-2">

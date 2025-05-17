@@ -3,6 +3,7 @@ import { client } from './api-Client'
 import { MESSAGES } from '@/content/constant'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import useCookie from '@/hooks/useCookie'
+import { UploadContextType } from '@/types/Uploads'
 
 export interface S3UploadItem {
   imageUrl: string | null
@@ -14,10 +15,16 @@ export interface S3UploadResponse {
   data: S3UploadItem[]
 }
 
-async function uploadtoS3(files: File[], cookieValue: string): Promise<S3UploadResponse> {
-  const formData = new FormData()
-  files.forEach((file) => formData.append('files', file))
+export interface S3UploadRequest {
+  files: File[]
+  context: UploadContextType
+}
 
+async function uploadtoS3(uploadPayload: S3UploadRequest, cookieValue: string): Promise<S3UploadResponse> {
+  const formData = new FormData()
+  const { files, context } = uploadPayload
+  files.forEach((file) => formData.append('files', file))
+  formData.append('context', context)
   const response: S3UploadResponse = await client(`/upload`, {
     method: 'POST',
     data: formData,
@@ -34,8 +41,8 @@ async function uploadtoS3(files: File[], cookieValue: string): Promise<S3UploadR
 export const useUploadToS3 = () => {
   const [cookieValue] = useCookie('uni_user_token')
 
-  return useMutation<S3UploadResponse, Error, File[]>({
-    mutationFn: async (files) => await uploadtoS3(files, cookieValue),
+  return useMutation<S3UploadResponse, Error, S3UploadRequest>({
+    mutationFn: async (uploadPayload) => await uploadtoS3(uploadPayload, cookieValue),
     onSuccess: () => {
       // Optionally show success toast
     },

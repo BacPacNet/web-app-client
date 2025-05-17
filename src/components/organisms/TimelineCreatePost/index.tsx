@@ -17,6 +17,7 @@ import MediaPreview from '@/components/molecules/MediaPreview'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type FileWithId = {
   id: string
@@ -59,6 +60,8 @@ function TimelineCreatePost() {
     }
 
     setFiles((prev) => [...prev, ...mappedFiles])
+
+    e.target.value = ''
   }
 
   const resetPostContent = () => {
@@ -83,7 +86,11 @@ function TimelineCreatePost() {
 
     try {
       if (files.length) {
-        const response = await uploadtoS3(files.map((f) => f.file))
+        const uploadPayload = {
+          files: files.map((f) => f.file),
+          context: UPLOAD_CONTEXT.TIMELINE,
+        }
+        const response = await uploadtoS3(uploadPayload)
         payload.imageUrl = response.data
       }
       await CreateTimelinePost(payload)

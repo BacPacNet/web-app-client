@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { userProfileType } from '@/store/userProfileSlice/userProfileType'
 import { useEditProfile } from '@/services/edit-profile'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 interface ProfileProps {
   following: number
   followers: number
@@ -38,7 +39,11 @@ const ProfileCard: React.FC<ProfileProps> = ({
   const handleImageUpload = async (e: any) => {
     const files = e.target.files as File[]
     if (files && files[0]) {
-      const imageResponse = await mutateUpload(files)
+      const uploadPayload = {
+        files: files,
+        context: UPLOAD_CONTEXT.DP,
+      }
+      const imageResponse = await mutateUpload(uploadPayload)
 
       const dataToPush = { profile_dp: imageResponse.data }
 
