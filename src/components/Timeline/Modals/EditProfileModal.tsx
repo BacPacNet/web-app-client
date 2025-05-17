@@ -15,6 +15,7 @@ import { closeModal } from '@/components/molecules/Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Country, City } from 'country-state-city'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 export interface editProfileInputs {
   firstName: string
@@ -148,7 +149,11 @@ const EditProfileModal = () => {
   const handleImageUpload = async () => {
     const files = profilePicture
     if (files) {
-      const uploadResponse = await uploadtoS3([files] as unknown as File[])
+      const uploadPayload = {
+        files: [files] as unknown as File[],
+        context: UPLOAD_CONTEXT.DP,
+      }
+      const uploadResponse = await uploadtoS3(uploadPayload)
       return uploadResponse.data[0]
     } else {
       console.error('No file selected.')

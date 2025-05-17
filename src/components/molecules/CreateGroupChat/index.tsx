@@ -16,6 +16,7 @@ import { IoClose } from 'react-icons/io5'
 import { openModal } from '../Modal/ModalManager'
 import OneToChat from '../OneToOneChat'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type user = {
   _id: string
@@ -72,7 +73,11 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
   const onGroupChatSubmit = async (data: any) => {
     let CoverImageData
     if (groupLogoImage) {
-      const imagedata = await uploadToS3([groupLogoImage])
+      const uploadPayload = {
+        files: [groupLogoImage],
+        context: UPLOAD_CONTEXT.MESSAGE,
+      }
+      const imagedata = await uploadToS3(uploadPayload)
       CoverImageData = { groupLogo: { imageUrl: imagedata?.data[0].imageUrl, publicId: imagedata?.data[0]?.publicId } }
     }
     const selectedUsersIds = selectedUsers.map((item: { _id: string }) => item._id)

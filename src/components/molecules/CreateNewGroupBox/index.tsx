@@ -6,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form'
 import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
-import SelectUsers from '@/components/atoms/SelectUsers'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
 import { CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
@@ -27,14 +26,15 @@ import {
   getUniqueById,
 } from '@/lib/communityGroup'
 import { useUploadToS3 } from '@/services/upload'
+import { Users } from '@/types/Connections'
+import SelectedUserTags from '@/components/atoms/SelectedUserTags'
+import UserSearchList from '../UserSearchList'
+import UserSelectDropdown from '../UserSearchList'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type Props = {
   communityId: string
   setNewGroup: (value: boolean) => void
-}
-type media = {
-  imageUrl: string
-  publicId: string
 }
 
 const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
@@ -46,6 +46,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const { data: communityData } = useGetCommunity(communityId)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  const [searchInput, setSearchInput] = useState('')
+  const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
   const [filteredUsers, setFilterUsers] = useState<any>()
@@ -148,11 +150,19 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     }
 
     if (coverImage) {
-      CoverImageData = await uploadToS3([coverImage])
+      const uploadPayload = {
+        files: [coverImage],
+        context: UPLOAD_CONTEXT.DP,
+      }
+      CoverImageData = await uploadToS3(uploadPayload)
       setValue('communityGroupLogoCoverUrl', CoverImageData.data[0])
     }
     if (logoImage) {
-      logoImageData = await uploadToS3([logoImage])
+      const uploadPayload = {
+        files: [logoImage],
+        context: UPLOAD_CONTEXT.COVER_DP,
+      }
+      logoImageData = await uploadToS3(uploadPayload)
       setValue('communityGroupLogoUrl', logoImageData as any)
     }
 
@@ -182,6 +192,17 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       const filterUsers = SelectedUsers.filter((selectedUser) => selectedUser.id !== userId)
       setValue('selectedUsers', filterUsers as any)
     }
+  }
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowSelectUsers(false)
+    setSearchInput('')
+  }
+
+  const removeUser = (userId: string) => {
+    setIndividualsUsers((prev: any[]) => prev.filter((u) => u._id !== userId))
   }
 
   useEffect(() => {
@@ -233,6 +254,18 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     setFilteredOccupationCount(occupationCounts)
     setFilteredAffiliationCount(affiliationCounts)
   }, [occupation, affiliation])
+
+  const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowSelectUsers(false)
+
+    const isAlreadySelected = individualsUsers.some((u) => u._id === user._id)
+
+    if (!isAlreadySelected) {
+      setIndividualsUsers((prev) => [...prev, user])
+    }
+  }
 
   return (
     <>
@@ -500,38 +533,21 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             </label>
             <InputBox
               isCancel={true}
-              onCancel={() => setShowSelectUsers(false)}
+              onCancel={handleClear}
               onClick={() => setShowSelectUsers(true)}
+              onChange={(e) => setSearchInput(e.target.value)}
               type="text"
               placeholder="Search Users"
             />
-
-            {showSelectUsers && (
-              <div ref={dropdownRef} className="w-full min-h-[200px] rounded-b-lg shadow-xl">
-                {/* <div className="flex flex-wrap gap-2 p-4">
-                  <Pill onClick={handleSelectAll} size="extra_small" variant={selectedFilter === 'ALL' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'ALL' ? 'Clear All from Community' : 'Select All from Community'}
-                  </Pill>
-
-                  <Pill onClick={handleSelectSameYear} size="extra_small" variant={selectedFilter === 'SAME_YEAR' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'SAME_YEAR' ? 'Clear All Same Year' : 'Select all Same Year'}
-                  </Pill>
-
-                  <Pill onClick={handleSelectSameMajor} size="extra_small" variant={selectedFilter === 'SAME_MAJOR' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'SAME_MAJOR' ? 'Clear All Same Major' : 'Select All Same Major'}
-                  </Pill>
-                </div> */}
-                <div className="flex flex-col overflow-y-scroll max-h-64">
-                  {!communityData?.users.length ? (
-                    <p className="text-center">No Data!</p>
-                  ) : (
-                    communityData?.users
-                      ?.filter((user) => user?.id !== userData?.id)
-                      .map((user: any) => <SelectUsers key={user.id} user={user} setValue={setValue} selectedUsers={SelectedUsers} />)
-                  )}
-                </div>
-              </div>
-            )}
+            <UserSelectDropdown
+              searchInput={searchInput}
+              show={showSelectUsers}
+              onSelect={handleSelectIndividuals}
+              currentUserId={userProfileData?.users_id as string}
+            />
+            <div className="flex flex-wrap mt-2">
+              <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />
+            </div>
 
             <div className="flex flex-wrap mt-2">
               {SelectedUsers?.length < 9 ? (

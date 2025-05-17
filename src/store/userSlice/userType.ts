@@ -21,12 +21,10 @@ export interface userType {
   lastName: string
   userName: string
   email: string
-  // password: string
   gender: string
   dob: string
   role: string
   isEmailVerified: boolean
-  // createdAt: Date | string
   userVerifiedCommunities: verifiedInterface[]
   userUnVerifiedCommunities: unverifiedInterface[]
 }

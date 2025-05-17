@@ -92,10 +92,10 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           className="w-12 h-12 rounded-full object-cover"
         />
         <div>
-          <h3 className="font-medium text-base text-gray-dark">
+          <h3 className="font-semibold text-neutral-700 text-xs">
             {firstName} {lastName}
           </h3>
-          {university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}
+          {/*{university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}*/}
           <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
           <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
         </div>

@@ -16,6 +16,7 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then((mod) => mod.Edi
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import dynamic from 'next/dynamic'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type props = {
   postID?: string
@@ -108,7 +109,11 @@ function PostCommentInput({
     //   }
 
     if (images.length) {
-      const imagedata = await uploadToS3(images)
+      const uploadPayload = {
+        files: images,
+        context: UPLOAD_CONTEXT.POST_COMMENT,
+      }
+      const imagedata = await uploadToS3(uploadPayload)
       const data: PostCommentData = {
         content: draftHtml,
         imageUrl: imagedata.data,

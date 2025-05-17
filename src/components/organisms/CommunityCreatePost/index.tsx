@@ -15,6 +15,7 @@ import { Spinner } from '@/components/spinner/Spinner'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type FileWithId = {
   id: string
@@ -87,7 +88,11 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
 
       // Upload image if present
       if (files.length > 0) {
-        const uploadResponse = await uploadToS3(files.map((f) => f.file))
+        const uploadPayload = {
+          files: files.map((f) => f.file),
+          context: UPLOAD_CONTEXT.COMMUNITY,
+        }
+        const uploadResponse = await uploadToS3(uploadPayload)
         if (uploadResponse.success) {
           basePayload.imageUrl = uploadResponse.data
         }

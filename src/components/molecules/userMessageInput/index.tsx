@@ -15,6 +15,7 @@ import Image from 'next/image'
 import { validateImageFiles } from '@/lib/utils'
 import { MdCancel } from 'react-icons/md'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 type Props = {
   userProfileId: string
@@ -93,7 +94,11 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       let mediaData = null
 
       if (images?.length) {
-        const uploaded = await uploadToS3(images)
+        const uploadPayload = {
+          files: images,
+          context: UPLOAD_CONTEXT.MESSAGE,
+        }
+        const uploaded = await uploadToS3(uploadPayload)
         mediaData = uploaded.data
       }
 
@@ -220,7 +225,11 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     let fileLink
     let data
     if (images) {
-      fileLink = await uploadToS3(images)
+      const uploadPayload = {
+        files: images,
+        context: UPLOAD_CONTEXT.MESSAGE,
+      }
+      fileLink = await uploadToS3(uploadPayload)
 
       data = {
         content: message,
@@ -283,8 +292,12 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
         return
       }
 
+      const uploadPayload = {
+        files: images,
+        context: UPLOAD_CONTEXT.MESSAGE,
+      }
       // Upload image if present
-      const fileLink = images.length > 0 ? await uploadToS3(images) : null
+      const fileLink = images.length > 0 ? await uploadToS3(uploadPayload) : null
 
       // Build message payload
       const newMessagePayload = {

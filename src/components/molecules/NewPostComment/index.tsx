@@ -17,6 +17,7 @@ import { useUploadToS3 } from '@/services/upload'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -99,7 +100,11 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
 
     // If images exist, process them
     if (images.length) {
-      const imageData = await uploadToS3(images)
+      const uploadPayload = {
+        files: images,
+        context: UPLOAD_CONTEXT.POST_COMMENT,
+      }
+      const imageData = await uploadToS3(uploadPayload)
       payload.imageUrl = imageData.data // Add image URL to the data
     }
 

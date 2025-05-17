@@ -9,6 +9,7 @@ import { useCreateGroupChat, useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
 import { closeModal } from '../Modal/ModalManager'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 interface OneToOneProps {
   setSelectedChat: (value: any) => void
@@ -54,7 +55,11 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const handleGroupChatClick = async () => {
     let ImageData
     if (groupLogoImage) {
-      const imagedata = await uploadToS3([groupLogoImage])
+      const uploadPayload = {
+        files: [groupLogoImage],
+        context: UPLOAD_CONTEXT.GROUP_DP,
+      }
+      const imagedata = await uploadToS3(uploadPayload)
       ImageData = { groupLogo: { imageUrl: imagedata.data[0]?.imageUrl, publicId: imagedata.data[0]?.publicId } }
     }
 

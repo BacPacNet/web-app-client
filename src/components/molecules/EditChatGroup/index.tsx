@@ -16,6 +16,7 @@ import { Users } from '@/types/Connections'
 import UserList from '@/components/atoms/UserList'
 import { ChatUser } from '@/types/constants'
 import { useUploadToS3 } from '@/services/upload'
+import { UPLOAD_CONTEXT } from '@/types/Uploads'
 
 const EditGroupChatModal = ({
   users,
@@ -99,7 +100,11 @@ const EditGroupChatModal = ({
 
     if (groupLogoImage) {
       setIsImageLoading(true)
-      const imagedata = await uploadtoS3([groupLogoImage])
+      const uploadPayload = {
+        files: [groupLogoImage],
+        context: UPLOAD_CONTEXT.DP,
+      }
+      const imagedata = await uploadtoS3(uploadPayload)
       if (imagedata.success) {
         paylod.groupLogo = imagedata.data
       }

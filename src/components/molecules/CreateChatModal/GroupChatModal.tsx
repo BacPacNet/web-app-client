@@ -23,6 +23,7 @@ import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
 import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
+import UserSelectDropdown from '../UserSearchList'
 
 type Props = {
   individualsUsers: any[]
@@ -250,40 +251,13 @@ const GroupChatModal = ({
             placeholder="Search Users"
           />
 
-          {showSelectUsers && (
-            <div ref={dropdownRef} className="w-full mt-2 rounded-lg border-[1px] border-neutral-200 bg-white max-h-64 overflow-y-auto">
-              {userProfiles.length > 0 ? (
-                userProfiles.map((user) => (
-                  <div
-                    key={user._id}
-                    onClick={(e) => handleSelectIndividuals(e, user)}
-                    className="flex justify-between w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Image
-                        src={user?.profile?.profile_dp?.imageUrl || avatar}
-                        alt="dp"
-                        width={44}
-                        height={44}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="text-sm font-semibold">{user?.firstName}</p>
-                        <p className="text-2xs text-neutral-600">
-                          {user?.profile?.role == 'student' ? `${user.profile.study_year} ` : user?.profile?.occupation}
-                        </p>
-                        <p className="text-2xs text-neutral-600">
-                          {user?.profile?.role == 'student' ? user?.profile?.major : user?.profile?.affiliation}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-sm text-neutral-500 py-4">No users found.</p>
-              )}
-            </div>
-          )}
+          <UserSelectDropdown
+            searchInput={searchInput}
+            show={showSelectUsers}
+            onSelect={handleSelectIndividuals}
+            currentUserId={userProfileData?.users_id as string}
+          />
+
           <div className="flex flex-wrap mt-2">
             <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />
           </div>
