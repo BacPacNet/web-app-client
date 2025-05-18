@@ -10,3 +10,8 @@ export enum UPLOAD_CONTEXT {
   DP = 'dp',
   COVER_DP = 'cover_dp',
 }
+
+export type FileWithId = {
+  id: string
+  file: File
+}

@@ -22,7 +22,7 @@ type Props = {
   isComment?: boolean
 }
 
-const DynamicImageContainer: React.FC<Props> = ({ images, isComment = false }) => {
+const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
   const imageItems = images?.filter((item) => imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))) || []
   const fileItems = images?.filter((item) => !imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))) || []
 
@@ -63,10 +63,10 @@ const DynamicImageContainer: React.FC<Props> = ({ images, isComment = false }) =
       )}
 
       {imageItems.length > 0 && (
-        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-6/12 max-h-[500px]' : 'w-full max-w-2xl mx-auto'} mt-4`}>
+        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-6/12 max-h-[500px]' : 'w-full max-w-2xl mx-auto max-h-[500px]'} mt-4`}>
           {imageItems.slice(0, 4).map((item, index) => {
             const isThreeImageLayout = imageItems.length === 3
-            let customClasses = ''
+            let customClasses = 'max-h-[300px]'
 
             if (isThreeImageLayout) {
               if (index === 0) customClasses = 'row-span-2 h-full' // Left large image
@@ -98,12 +98,9 @@ const DynamicImageContainer: React.FC<Props> = ({ images, isComment = false }) =
         <div className="space-y-3 w-full">
           {fileItems.map((item, index) => (
             <a key={index} href={item.imageUrl} target="_blank" rel="noopener noreferrer">
-              <div className="border border-neutral-200 rounded-lg bg-white px-3 py-6 flex items-center gap-2 shadow-sm hover:shadow-card cursor-pointer transition duration-300">
+              <div className="border border-neutral-200 rounded-lg bg-white px-3 py-6 flex items-center my-2  cursor-pointer transition duration-300">
                 <FiFile className="text-primary flex-none text-md" />
                 <p className="text-xs font-normal text-primary line-clamp-1 flex-1">{decodeURI(item.imageUrl.split('/').pop() || 'Unknown File')}</p>
-                {/*<a href={item.imageUrl} target="_blank" rel="noopener noreferrer">
-                <FiDownload className="text-neutral-500 text-xl" />
-              </a>*/}
               </div>
             </a>
           ))}
@@ -113,4 +110,4 @@ const DynamicImageContainer: React.FC<Props> = ({ images, isComment = false }) =
   )
 }
 
-export default DynamicImageContainer
+export default PostCardImageGrid

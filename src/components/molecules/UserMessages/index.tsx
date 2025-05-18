@@ -10,7 +10,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import calendar from 'dayjs/plugin/calendar'
 import { format } from 'date-fns'
-import UserMessageImageGrid from '../UserMessageImageGrid'
+import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 
 dayjs.extend(relativeTime)
 dayjs.extend(calendar)
@@ -89,9 +89,7 @@ type Props = {
   occupation: string
 }
 
-const emojis = ['👍', '🧡', '😆', '😂', '😇']
-
-const UserCard = ({ role, affiliation, occupation, profilePic, name, content, date, chatId, media, isOnline, setImageCarasol, idx }: Props) => {
+const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, idx }: Props) => {
   const [isReact, setIsReact] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
   const { mutate: reactToMessage } = useReactMessageEmoji(chatId)
@@ -126,7 +124,7 @@ const UserCard = ({ role, affiliation, occupation, profilePic, name, content, da
 
         {media.length > 0 && (
           <div className="w-full">
-            <UserMessageImageGrid images={media} />
+            <PostCardImageGrid images={media} />
           </div>
         )}
       </div>

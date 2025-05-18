@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { AiOutlineLike } from 'react-icons/ai'
-import { HiReply } from 'react-icons/hi'
 import { useUniStore } from '@/store/store'
 import { useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useGetCommunityPostComments, useLikeUnlikeGroupPostComment } from '@/services/community-university'
@@ -10,14 +8,13 @@ import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
 import { FaArrowDown, FaPlusCircle } from 'react-icons/fa'
 import NewPostComment from '../NewPostComment'
-import { FiMessageCircle } from 'react-icons/fi'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
-import UserCard from '@/components/atoms/UserCard'
-import { format } from 'date-fns'
-import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
-import { CommentsType, PostCommentProps } from '@/types/CommentPost'
+import { PostCommentProps } from '@/types/CommentPost'
 import { useRouter, useSearchParams } from 'next/navigation'
+import CommentItem from './CommentItem'
+import ShowAllComponent from './ShowAllComnet'
+import ShowMoreComponent from './showMoreComment'
 
 const PostCommentBox = ({
   showCommentSec,
@@ -32,8 +29,10 @@ const PostCommentBox = ({
   showInitial,
 }: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
+
   const [newPost, setNewPost] = useState(false)
   const [closeInitialComments, setCloseInitialComments] = useState(false)
+  const [showReplies, setShowReplies] = useState(false)
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -65,6 +64,9 @@ const PostCommentBox = ({
   const commentsDatas = commentsData?.pages.flatMap((page) => page.finalComments) || []
   const communitCommentsDatas = communityCommentsData?.pages.flatMap((page) => page.finalComments) || []
 
+  const isTimeline = type === PostType.Timeline
+  const comments = type == PostType.Community ? communitCommentsDatas : commentsDatas
+
   const handleShowMore = () => {
     if (type == PostType.Timeline) {
       fetchNextPage()
@@ -74,30 +76,13 @@ const PostCommentBox = ({
   }
 
   const likePostCommentHandler = (commentId: string, level: string) => {
-    if (type === PostType.Timeline) {
+    if (isTimeline) {
       likeUserPostComment({ userPostCommentId: commentId, level })
     } else if (type === PostType.Community) {
       likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
     }
   }
 
-  const showMoreComponent = () => {
-    if (showInitial) return
-    if (
-      (hasNextPage && !isFetching && type == PostType.Timeline) ||
-      (communityCommentsHasNextPage && !communityCommentsIsFetching && type == PostType.Community)
-    ) {
-      return (
-        <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
-          <p className="" onClick={handleShowMore}>
-            show more comments
-          </p>
-          <FaArrowDown />
-          {(isFetchingNextPage || communityCommentsIsFetchingNextPage) && <Spinner />}
-        </div>
-      )
-    } else null
-  }
   const handelCommentData = (comment: any) => {
     const commentData = {
       avatarLink: comment?.commenterProfileId?.profile_dp?.imageUrl,
@@ -113,32 +98,17 @@ const PostCommentBox = ({
     setNewPost(true)
   }
 
-  const ShowAllComponent = () => {
-    const handleClick = () => {
-      setShowCommentSection(postID)
-
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete('commentId')
-
-      const newQuery = params.toString()
-      const newUrl = `/post/${postID}${newQuery ? `?${newQuery}` : ''}`
-
-      router.replace(newUrl)
-    }
-    return (
-      <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
-        <p className="" onClick={handleClick}>
-          show all comments
-        </p>
-        <FaArrowDown />
-      </div>
-    )
-  }
   useEffect(() => {
     if (initialComment?._id) {
       setShowInitial(!!initialComment)
     }
   }, [!!initialComment])
+
+  const handleCommentClicked = (comment: any) => {
+    toggleCommentSection(comment._id)
+    handleChildComments(comment?.replies)
+    setActiveComments(comment)
+  }
 
   const toggleCommentSection = (commentId: string) => {
     if (initialComment) {
@@ -166,78 +136,12 @@ const PostCommentBox = ({
     }
   }
 
-  const renderComments = (comments: CommentsType) => {
-    if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
-      return <Spinner />
-    }
-
-    return comments?.map((comment, index: number) => (
-      <div
-        key={comment._id}
-        className={`  w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
-          comment.level == 1 ? 'mt-4 ml-6' : 'first:mt-8 '
-        }  `}
-      >
-        <div>
-          <UserCard
-            user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
-            university={comment?.commenterProfileId?.university_name}
-            major={comment?.commenterProfileId?.major}
-            year={comment?.commenterProfileId?.study_year}
-            avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-            adminId={comment?.commenterId?._id}
-            postID={postID}
-            type={type}
-            handleProfileClicked={(adminId) => handleProfileClicked(adminId)}
-            role={comment?.commenterProfileId?.role}
-            affiliation={comment?.commenterProfileId?.affiliation}
-            occupation={comment?.commenterProfileId?.occupation}
-          />
-        </div>
-        <div className={`flex flex-col gap-2 pt-2   border-b border-neutral-200 `}>
-          {/* <div className="text-2xs sm:text-xs break-words lg:min-w-[450px] max-lg:min-w-[200px]" dangerouslySetInnerHTML={{ __html: comment?.content }} /> */}
-          <p className="text-2xs sm:text-xs break-words lg:min-w-[450px] " dangerouslySetInnerHTML={{ __html: comment?.content }} />
-          <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
-          <p className="text-2xs text-neutral-500 font-normal">{format(comment?.createdAt as never as Date, 'h:mm a · MMM d, yyyy')}</p>
-          <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
-            <div className="flex items-center cursor-pointer">
-              <AiOutlineLike
-                onClick={() => likePostCommentHandler(comment._id, comment.level.toString())}
-                className={comment?.likeCount?.some((like: any) => like.userId === userData?.id) ? 'text-primary' : ''}
-              />
-              <span className="mx-1 ">{comment?.likeCount ? comment?.likeCount.length : 0}</span>
-            </div>
-            {comment.level >= 1 ? (
-              ''
-            ) : (
-              <span
-                onClick={() => {
-                  toggleCommentSection(comment._id), handleChildComments(comment?.replies), setActiveComments(comment)
-                }}
-                className="flex items-center  cursor-pointer"
-              >
-                <FiMessageCircle className="mr-1 text-neutral-600" /> {comment?.totalCount || comment?.replies?.length || 0}
-              </span>
-            )}
-            {comment.level >= 1 ? (
-              ''
-            ) : (
-              <div onClick={() => handelCommentData(comment)} className="flex items-center cursor-pointer">
-                <HiReply className="text-gray-dark" />
-                <span className="ml-1 font-poppins text-xs">reply</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Render nested replies if they exist */}
-        {(comment?.replies?.length > 0 && visibleComments[comment._id] && comment.level < 3) || (showInitial && !closeInitialComments) ? (
-          <div className="w-full mt-6">{renderComments(comment.replies)}</div>
-        ) : (
-          ''
-        )}
+  if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
+    return (
+      <div className="my-2">
+        <Spinner />
       </div>
-    ))
+    )
   }
 
   return (
@@ -267,9 +171,49 @@ const PostCommentBox = ({
         </div>
 
         <div ref={containerRef} className="flex flex-col gap-4">
-          {showInitial && showCommentSec !== postID
-            ? renderComments([initialComment])
-            : renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)}
+          {showInitial && showCommentSec !== postID ? (
+            <>
+              {[initialComment].map((comment, index) => {
+                return (
+                  <CommentItem
+                    key={index}
+                    comment={comment}
+                    currentUserId={userData?.id}
+                    childCommentsId={childCommentsId}
+                    postID={postID}
+                    type={type}
+                    setImageCarasol={setImageCarasol}
+                    handleProfileClicked={handleProfileClicked}
+                    likeHandler={likePostCommentHandler}
+                    toggleCommentSection={handleCommentClicked}
+                    handleReplyClick={handelCommentData}
+                    showReplies={visibleComments[comment._id]}
+                  />
+                )
+              })}
+            </>
+          ) : (
+            <>
+              {comments.map((comment, index) => {
+                return (
+                  <CommentItem
+                    key={index}
+                    comment={comment}
+                    currentUserId={userData?.id}
+                    childCommentsId={childCommentsId}
+                    postID={postID}
+                    type={type}
+                    setImageCarasol={setImageCarasol}
+                    handleProfileClicked={handleProfileClicked}
+                    likeHandler={likePostCommentHandler}
+                    toggleCommentSection={handleCommentClicked}
+                    handleReplyClick={handelCommentData}
+                    showReplies={visibleComments[comment._id]}
+                  />
+                )
+              })}
+            </>
+          )}
           {/* {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)} */}
         </div>
         {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
@@ -284,8 +228,15 @@ const PostCommentBox = ({
             postId={postID}
           />
         )}
-        {showInitial && showCommentSec !== postID ? <ShowAllComponent /> : ''}
-        {showMoreComponent()}
+        {showInitial && showCommentSec !== postID ? <ShowAllComponent postID={postID} setShowCommentSection={setShowCommentSection} /> : ''}
+        {!showInitial && (
+          <ShowMoreComponent
+            handleShowMore={handleShowMore}
+            isFetching={isTimeline ? isFetching : communityCommentsIsFetching}
+            isFetchingNextPage={isTimeline ? isFetchingNextPage : communityCommentsIsFetchingNextPage}
+            hasNextPage={hasNextPage}
+          />
+        )}
       </div>
     </div>
   )

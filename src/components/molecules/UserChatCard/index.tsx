@@ -3,6 +3,7 @@ import React from 'react'
 import avatar from '@assets/avatar.svg'
 import { FaUsers } from 'react-icons/fa'
 import { formatRelativeTime } from '@/lib/utils'
+import { IoAttachSharp } from 'react-icons/io5'
 type User = {
   userId: {
     _id: string
@@ -27,9 +28,11 @@ type Props = {
 
 const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, groupName, isGroupChat, unRead }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != YourID)
+
+  console.log(lastMessage, 'lastMessage')
   return (
     <>
-      <div className=" hover:bg-secondary">
+      <div className=" hover:bg-neutral-100">
         <div className="flex justify-between py-4 px-4 sm:px-6 overflow-hidden">
           <div className="flex gap-4 items-center relative w-full">
             <div className="w-12 h-12 flex-none flex flex-col gap-2 cursor-pointer">
@@ -49,7 +52,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
             <div className="w-[90%]">
               <div className="flex justify-between w-full">
                 <div className="flex gap-2 items-center w-full">
-                  <p className={`text-neutral-600  text-sm ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
+                  <p className={`text-neutral-600  text-xs ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}>
                     {isGroupChat ? groupName : userName[0]?.userId?.firstName + ' ' + userName[0]?.userId?.lastName}
                   </p>
                   <div className="text-right min-w-fit relative">
@@ -64,11 +67,28 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               </div>
 
               <p
-                className={`text-neutral-500  text-[12px] line-clamp-1 whitespace-pre-wrap break-words overflow-hidden text-ellipsis w-[90%] ${
+                className={`text-neutral-500 text-2xs whitespace-pre-wrap break-words w-[90%] ${
                   unRead > 0 ? 'font-semibold' : 'font-medium'
-                }`}
+                } flex items-center gap-1`}
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'pre-wrap',
+                }}
               >
-                {lastMessage}
+                {lastMessage === undefined ? (
+                  'Start a chat'
+                ) : lastMessage === '' ? (
+                  <>
+                    <IoAttachSharp className="text-neutral-500 text-sm" />
+                    sent an attachment
+                  </>
+                ) : (
+                  lastMessage
+                )}
               </p>
             </div>
           </div>
