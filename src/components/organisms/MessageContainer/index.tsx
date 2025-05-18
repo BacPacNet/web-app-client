@@ -13,6 +13,8 @@ import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager
 import { useSearchParams } from 'next/navigation'
 import Loading from '@/components/atoms/Loading'
 import UserMessageInput from '@/components/molecules/userMessageInput'
+import { useFilteredChats } from '@/hooks/useFilteredChats'
+import { useNewMessageHandler } from '@/hooks/useNewMessageHandler'
 
 interface Message {
   _id: string
@@ -48,6 +50,7 @@ const MessageContainer = () => {
     images: [],
     currImageIndex: null,
   })
+  useNewMessageHandler(selectedChat)
 
   const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {
@@ -67,29 +70,7 @@ const MessageContainer = () => {
     return shouldInclude ? sum + item.unreadMessagesCount : sum
   }, 0)
 
-  const filteredChats = useMemo(() => {
-    if (!chats) return null
-    if (searchByNameText.trim() === '') return chats
-
-    const searchLower = searchByNameText.toLowerCase()
-
-    return chats.filter((chat) => {
-      if (chat.isGroupChat) {
-        return chat.chatName.toLowerCase().includes(searchLower)
-      } else {
-        // Find the other user
-        const otherUser = chat.users.find((u) => u.userId._id !== userData?.id)
-        if (!otherUser) return false
-
-        const fullName = `${otherUser.userId.firstName} ${otherUser.userId.lastName}`.toLowerCase()
-        return (
-          otherUser.userId.firstName.toLowerCase().includes(searchLower) ||
-          otherUser.userId.lastName.toLowerCase().includes(searchLower) ||
-          fullName.includes(searchLower)
-        )
-      }
-    })
-  }, [chats, searchByNameText])
+  const filteredChats = useFilteredChats(chats, searchByNameText, userData?.id as string)
 
   const updateMessageSeen = () => {
     const isRead = selectedChat?.latestMessage?.readByUsers?.includes(userData?.id || '')
@@ -101,56 +82,9 @@ const MessageContainer = () => {
   }
 
   useEffect(() => {
+    if (!selectedChat?.latestMessage) return
     updateMessageSeen()
-  }, [selectedChat])
-
-  const handleNewMessage = (newMessage: Message) => {
-    const { _id: chatMessageId, chat } = newMessage
-    const messageChatId = chat?._id
-    const isActiveChat = selectedChat?._id === messageChatId
-
-    const chatData: ChatsArray = queryClient.getQueryData(['userChats']) || []
-
-    if (!isActiveChat && chatData.some((chat) => chat._id == messageChatId)) {
-      const updatedChats = chatData.map((chat) =>
-        chat._id === messageChatId
-          ? {
-              ...chat,
-              latestMessage: newMessage,
-              unreadMessagesCount: (chat.unreadMessagesCount || 0) + 1,
-            }
-          : chat
-      )
-
-      updatedChats.sort((a, b) => {
-        const dateA = a.latestMessage?.createdAt ? new Date(a.latestMessage.createdAt).getTime() : 0
-        const dateB = b.latestMessage?.createdAt ? new Date(b.latestMessage.createdAt).getTime() : 0
-        return dateB - dateA
-      })
-      queryClient.setQueryData(['userChats'], updatedChats)
-    } else if (isActiveChat) {
-      queryClient.setQueryData(['chatMessages', selectedChat?._id], (oldMessages: Message[]) => [...(oldMessages || []), newMessage])
-
-      const updatedChats = chatData.map((chat) =>
-        chat._id === selectedChat?._id
-          ? {
-              ...chat,
-              latestMessage: newMessage,
-            }
-          : chat
-      )
-      queryClient.setQueryData(['userChats'], updatedChats)
-
-      const isRead = newMessage?.readByUsers?.includes(userData?.id || '')
-
-      if (!isRead && selectedChat?._id) {
-        updateIsSeen({ chatId: selectedChat?._id, messageId: chatMessageId, data: { readByUserId: userData?.id } })
-      }
-    } else if (!chatData.some((chat) => chat._id == messageChatId)) {
-      queryClient.invalidateQueries({ queryKey: ['userChats'] })
-      return
-    }
-  }
+  }, [selectedChat?.latestMessage])
 
   const userChatsId = useMemo(() => {
     return chatsData?.flatMap((chat) =>
@@ -224,21 +158,6 @@ const MessageContainer = () => {
       socket.off(SocketConnectionEnums.USER_DISCONNECT, userDisconnected)
     }
   }, [socket])
-
-  useEffect(() => {
-    if (!socket) {
-      console.log('Socket is not initialized')
-      return
-    }
-
-    socket.on(SocketEnums.RECEIVED_MESSAGE, handleNewMessage)
-
-    return () => {
-      if (socket) {
-        socket.off(SocketEnums.RECEIVED_MESSAGE, handleNewMessage)
-      }
-    }
-  }, [socket, selectedChat])
 
   useEffect(() => {
     if (acceptedChatId.length > 0) {
@@ -339,7 +258,7 @@ const MessageContainer = () => {
             setAcceptedId={setAcceptedId}
             setCurrTab={setCurrTab}
           />
-          <div className="sticky w-full bottom-0 px-4">
+          <div className=" w-full px-4 absolute bottom-4">
             <UserMessageInput
               chatId={selectedChat._id}
               userProfileId={userProfileData?._id || ''}

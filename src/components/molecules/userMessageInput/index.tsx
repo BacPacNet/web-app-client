@@ -11,11 +11,12 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAcceptGroupRequest, useAcceptRequest, useCreateChatMessage } from '@/services/Messages'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import Image from 'next/image'
-import { validateImageFiles } from '@/lib/utils'
-import { MdCancel } from 'react-icons/md'
+import { generateFileId, validateImageFiles, validateUploadedFiles } from '@/lib/utils'
 import { useUploadToS3 } from '@/services/upload'
-import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { FileWithId, UPLOAD_CONTEXT } from '@/types/Uploads'
+import MediaPreview from '../MediaPreview'
+import { TbFileUpload } from 'react-icons/tb'
+import Buttons from '@/components/atoms/Buttons'
 
 type Props = {
   userProfileId: string
@@ -30,7 +31,7 @@ type Props = {
 const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcceptedId, setCurrTab, isGroupChat, isBlocked }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
-  const [images, setImages] = useState<File[]>([])
+  const [files, setFiles] = useState<FileWithId[]>([])
   const [isImageUploading, setIsImageUploading] = useState(false)
   const { mutate: createNewMessage, isPending } = useCreateChatMessage()
   const { mutateAsync: acceptRequest, data: chatStatus, isError } = useAcceptRequest()
@@ -68,34 +69,17 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     }
   }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      const fileArray = Array.from(files)
-      const validation = validateImageFiles(fileArray)
-      if (!validation.isValid) {
-        showCustomDangerToast(validation.message)
-        return
-      }
-      setImages((prevImages) => [...prevImages, ...fileArray])
-    }
-  }
-
-  const handleImageRemove = (index: number) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
-  }
-
   const handleNewMessage = async (message: string) => {
-    if (!message.trim() && !images?.length) return
+    if (!message.trim() && !files?.length) return
 
     setIsImageUploading(true)
 
     try {
       let mediaData = null
 
-      if (images?.length) {
+      if (files?.length) {
         const uploadPayload = {
-          files: images,
+          files: files.map((f) => f.file),
           context: UPLOAD_CONTEXT.MESSAGE,
         }
         const uploaded = await uploadToS3(uploadPayload)
@@ -174,7 +158,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       console.error('Message send failed:', err)
     } finally {
       setIsImageUploading(false)
-      setImages([])
+      setFiles([])
     }
   }
 
@@ -183,7 +167,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || files.length) {
       handleNewMessage(textareaRef.current?.value || '')
       if (textareaRef.current) {
         textareaRef.current.value = ''
@@ -199,7 +183,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
-    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || images.length) {
+    if ((textareaRef.current && textareaRef.current.value.trim() !== '') || files.length) {
       if (isGroupChat) {
         acceptGroupRequestAndSendNewMessage(textareaRef.current?.value || '')
       } else {
@@ -224,9 +208,9 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
 
     let fileLink
     let data
-    if (images) {
+    if (files) {
       const uploadPayload = {
-        files: images,
+        files: files.map((f) => f.file),
         context: UPLOAD_CONTEXT.MESSAGE,
       }
       fileLink = await uploadToS3(uploadPayload)
@@ -293,11 +277,11 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       }
 
       const uploadPayload = {
-        files: images,
+        files: files.map((f) => f.file),
         context: UPLOAD_CONTEXT.MESSAGE,
       }
       // Upload image if present
-      const fileLink = images.length > 0 ? await uploadToS3(uploadPayload) : null
+      const fileLink = files.length > 0 ? await uploadToS3(uploadPayload) : null
 
       // Build message payload
       const newMessagePayload = {
@@ -367,79 +351,112 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     }
   }, [])
 
+  const handleFileRemove = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id))
+  }
+
+  const handleOpenPDF = (file: File) => {
+    const fileURL = URL.createObjectURL(file)
+    window.open(fileURL, '_blank')
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files ? Array.from(e.target.files) : []
+    const validation = validateUploadedFiles(newFiles)
+    if (!validation.isValid) {
+      showCustomDangerToast(validation.message)
+      return
+    }
+
+    const mappedFiles: FileWithId[] = newFiles.map((file) => ({
+      id: generateFileId(file),
+      file,
+    }))
+
+    const totalFiles = files.length + mappedFiles.length
+    if (totalFiles > 4) {
+      showCustomDangerToast('You can upload a maximum of 4 files.')
+      return
+    }
+
+    setFiles((prev) => [...prev, ...mappedFiles])
+    e.target.value = ''
+  }
+
   return (
     <div className="rounded-2xl bg-white w-full pt-2">
       {isBlocked ? (
         <div className="flex items-center justify-center font-poppins text-lg font-semibold">This chat is Blocked</div>
       ) : (
-        <div className="border-[1px] border-neutral-300 w-full rounded-lg">
+        <div className="border border-neutral-300 w-full rounded-lg">
+          {/* Text Input */}
           <div className="flex gap-3 px-4 py-2">
             <textarea
               ref={textareaRef}
-              className={`w-full border-none resize-none focus:outline-none overflow-y-auto  ${images?.length ? 'h-16' : 'h-8'} `}
+              className={`w-full border-none resize-none focus:outline-none overflow-y-auto ${files?.length ? 'h-20' : 'h-8'}`}
               placeholder="What’s on your mind?"
               onInput={handleInput}
-            ></textarea>
+            />
           </div>
-          {/* Display selected images */}
+
+          {/* Media Preview */}
           <div className="flex flex-wrap gap-2 px-4">
-            {images.map((image, index) => (
-              <div key={index} className="relative">
-                <Image width={64} height={64} src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-16 h-16 object-cover rounded" />
-                {/* Remove image button */}
-                <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
-                  <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
-                </div>
-              </div>
-            ))}
+            <MediaPreview files={files} onRemove={handleFileRemove} onOpenPDF={handleOpenPDF} />
           </div>
+
+          {/* Footer Buttons */}
           <div className="flex items-center justify-between px-4 py-2">
-            <div className="flex gap-6 items-center ">
+            <div className="flex gap-3 items-center">
+              {/* Emoji Picker */}
               <Popover>
                 <PopoverTrigger>
                   <HiOutlineEmojiHappy size={24} className="text-neutral-400" />
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0 border-none shadow-lg shadow-gray-light">
-                  <div>
-                    <EmojiPicker onEmojiClick={handleEmojiClick} />
-                  </div>
+                  <EmojiPicker onEmojiClick={handleEmojiClick} />
                 </PopoverContent>
               </Popover>
 
-              {/* <label htmlFor="postGof">
-              <MdOutlineGifBox size={24} className="text-neutral-400" />
-            </label> */}
-              <label htmlFor="userMessageImage" className="cursor-pointer inline-block">
+              {/* Image Upload */}
+              <label htmlFor="chatImageUpload" className="cursor-pointer">
                 <input
-                  id="userMessageImage"
+                  id="chatImageUpload"
                   type="file"
                   multiple
                   accept="image/jpeg,image/png,image/jpg"
                   className="hidden"
-                  onChange={(e) => handleImageChange(e)}
+                  onChange={handleFileChange}
                 />
                 <GoFileMedia size={24} className="text-neutral-400" />
               </label>
+
+              {/* Document Upload */}
+              <label htmlFor="chatFileUpload" className="cursor-pointer">
+                <input
+                  id="chatFileUpload"
+                  type="file"
+                  multiple
+                  accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <TbFileUpload size={24} className="text-neutral-400" />
+              </label>
             </div>
-            <div className="flex">
+
+            {/* Send / Accept & Send Button */}
+            <div>
               {isRequestNotAccepted ? (
-                <button
-                  onClick={(e) => handleAcceptRequestAndSendNewMessage(e)}
-                  className={`
-                  bg-primary-500 text-white text-2xs
-               rounded-lg px-3 py-2 `}
-                >
+                <button onClick={handleAcceptRequestAndSendNewMessage} className="bg-primary-500 text-white text-2xs rounded-lg px-3 py-2">
                   {isPending ? <Spinner /> : 'Accept & Send Message'}
                 </button>
               ) : (
-                <button
-                  onClick={handleSubmit}
-                  className={`
-                  bg-primary-500 text-white text-xs
-                  rounded-lg px-3 py-1`}
-                >
+                <Buttons onClick={handleSubmit} variant="primary" size="height40">
                   {isPending || isImageUploading ? <Spinner /> : 'Send'}
-                </button>
+                </Buttons>
+                //<button onClick={handleSubmit} className="bg-primary-500 text-white text-xs rounded-lg px-3 py-1">
+                //  {isPending || isImageUploading ? <Spinner /> : 'Send'}
+                //</button>
               )}
             </div>
           </div>

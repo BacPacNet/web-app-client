@@ -177,3 +177,5 @@ export const getMimeTypeFromUrl = (url: string): string => {
       return 'other'
   }
 }
+
+export const generateFileId = (file: File) => `${file.name}-${file.size}-${file.lastModified}`
