@@ -6,7 +6,7 @@ import { PostType } from '@/types/constants'
 import Spinner from '@/components/atoms/spinner'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { FaArrowDown, FaPlusCircle } from 'react-icons/fa'
+import { FaPlusCircle } from 'react-icons/fa'
 import NewPostComment from '../NewPostComment'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
@@ -33,9 +33,6 @@ const PostCommentBox = ({
   const [newPost, setNewPost] = useState(false)
   const [closeInitialComments, setCloseInitialComments] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
-
-  const router = useRouter()
-  const searchParams = useSearchParams()
 
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])

@@ -1,12 +1,10 @@
 'use client'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
-import { Controller, useForm } from 'react-hook-form'
-import SelectUsers from '@/components/atoms/SelectUsers'
+import { useForm } from 'react-hook-form'
 import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
-import { IoClose } from 'react-icons/io5'
 import { CommunityGroupType, CommunityGroupTypeEnum, status, subCategories } from '@/types/CommuityGroup'
 
 import { useUniStore } from '@/store/store'
@@ -29,6 +27,9 @@ import {
 import { BsExclamationCircleFill } from 'react-icons/bs'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import UserSelectDropdown from '../UserSearchList'
+import SelectedUserTags from '@/components/atoms/SelectedUserTags'
+import { Users } from '@/types/Connections'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -50,9 +51,11 @@ type User = {
 }
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
-  const { userData } = useUniStore()
+  const { userProfileData } = useUniStore()
   const [logoImage, setLogoImage] = useState(communityGroups?.communityGroupLogoUrl?.imageUrl)
   const [coverImage, setCoverImage] = useState(communityGroups?.communityGroupLogoCoverUrl?.imageUrl)
+  const [searchInput, setSearchInput] = useState('')
+  const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
@@ -74,7 +77,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     handleSubmit,
     formState: { errors: GroupErrors, isDirty },
     setValue,
-    getValues,
     watch,
     reset,
     control,
@@ -111,15 +113,15 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const CommunityGroupLogoCoverUrl = watch('communityGroupLogoCoverUrl')
   const communityGroupLogoUrl = watch('communityGroupLogoUrl')
 
-  const sortedUsers = useMemo(() => {
-    return allCommunityUsers?.users
-      ? [...allCommunityUsers.users].sort((a, b) => {
-          const aSelected = SelectedUsers?.some((user) => user.id === a.id)
-          const bSelected = SelectedUsers?.some((user) => user.id === b.id)
-          return bSelected ? 1 : aSelected ? -1 : 0 // Push selected users to the top
-        })
-      : []
-  }, [allCommunityUsers, SelectedUsers])
+  //  const sortedUsers = useMemo(() => {
+  //    return allCommunityUsers?.users
+  //      ? [...allCommunityUsers.users].sort((a, b) => {
+  //          const aSelected = SelectedUsers?.some((user) => user.id === a.id)
+  //          const bSelected = SelectedUsers?.some((user) => user.id === b.id)
+  //          return bSelected ? 1 : aSelected ? -1 : 0 // Push selected users to the top
+  //        })
+  //      : []
+  //  }, [allCommunityUsers, SelectedUsers])
 
   // Handle image preview
   const handleBannerImagePreview = (e: any) => {
@@ -210,7 +212,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     const communityGroupCategory = {
       communityGroupCategory: selectedFilters,
     }
-    const mergedUsers = [...SelectedUsers, ...filteredUsers, ...filteredFacultyUsers]
+    const mergedUsers = [...individualsUsers, ...SelectedUsers, ...filteredUsers, ...filteredFacultyUsers]
     const uniqueUsers = getUniqueById(mergedUsers)
     const existingUserIds = communityGroups.users.map((user) => user.userId)
     const finalUsers = uniqueUsers.filter((user) => !existingUserIds.includes(user.id))
@@ -299,6 +301,43 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     setFilteredOccupationCount(occupationCounts)
     setFilteredAffiliationCount(affiliationCounts)
   }, [occupation, affiliation])
+
+  const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowSelectUsers(false)
+
+    const isAlreadySelected = individualsUsers.some((u) => u._id === user._id)
+
+    if (!isAlreadySelected) {
+      setIndividualsUsers((prev) => [...prev, user])
+    }
+  }
+
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowSelectUsers(false)
+    setSearchInput('')
+  }
+
+  const removeUser = (userId: string) => {
+    setIndividualsUsers((prev: any[]) => prev.filter((u) => u._id !== userId))
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSelectUsers(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <>
@@ -536,29 +575,36 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
               Add Individuals
             </label>
+
             <InputBox
+              isCancel={true}
+              onCancel={handleClear}
+              onClick={() => setShowSelectUsers(true)}
+              onChange={(e) => setSearchInput(e.target.value)}
+              type="text"
+              placeholder="Search Users"
+            />
+            <UserSelectDropdown
+              searchInput={searchInput}
+              show={showSelectUsers}
+              onSelect={handleSelectIndividuals}
+              currentUserId={userProfileData?.users_id as string}
+            />
+            <div className="flex flex-wrap mt-2">
+              <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />
+            </div>
+
+            {/*<InputBox
               isCancel={true}
               onCancel={() => setShowSelectUsers(false)}
               onClick={() => setShowSelectUsers(true)}
               type="text"
               placeholder="Search Users"
-            />
+            />*/}
 
-            {showSelectUsers && (
+            {/*{showSelectUsers && (
               <div ref={dropdownRef} className="w-full min-h-[200px] rounded-b-lg shadow-xl">
-                {/* <div className="flex flex-wrap gap-2 p-4">
-                  <Pill onClick={handleSelectAll} size="extra_small" variant={selectedFilter === 'ALL' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'ALL' ? 'Clear All from Community' : 'Select All from Community'}
-                  </Pill>
-
-                  <Pill onClick={handleSelectSameYear} size="extra_small" variant={selectedFilter === 'SAME_YEAR' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'SAME_YEAR' ? 'Clear All Same Year' : 'Select all Same Year'}
-                  </Pill>
-
-                  <Pill onClick={handleSelectSameMajor} size="extra_small" variant={selectedFilter === 'SAME_MAJOR' ? 'primary' : 'border_primary'}>
-                    {selectedFilter === 'SAME_MAJOR' ? 'Clear All Same Major' : 'Select All Same Major'}
-                  </Pill>
-                </div> */}
+        
                 <div className="flex flex-col overflow-y-scroll max-h-64">
                   {!communityData?.users.length ? (
                     <p className="text-center">No Data!</p>
@@ -569,13 +615,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                   )}
                 </div>
               </div>
-            )}
+            )}*/}
 
-            <div className="flex flex-wrap mt-2">
+            {/*<div className="flex flex-wrap mt-2">
               {SelectedUsers?.length < 9 ? (
                 <div className="flex gap-2 flex-wrap">
                   {SelectedUsers?.map((item) => (
-                    // <div key={item.id} className="bg-secondary px-2 py-1 text-xs text-primary-500 rounded-md flex items-center gap-2">
                     <div key={item.id} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
                       {item?.firstName}{' '}
                       <span onClick={() => handleClick(item.id as string)} className="cursor-pointer text-sm">
@@ -591,9 +636,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                   {SelectedUsers?.length} <span></span>
                 </div>
               )}
-            </div>
+            </div>*/}
           </div>
-          <div className="flex flex-col gap-8">
+          {/*<div className="flex flex-col gap-8">
             <Controller
               name="studentYear"
               control={control}
@@ -661,7 +706,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 />
               )}
             />
-          </div>
+          </div>*/}
           <button disabled={isPending} onClick={handleSubmit(onSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-full mx-auto">
             {isLoading || isPending ? <Spinner /> : <p>Update Group</p>}
           </button>

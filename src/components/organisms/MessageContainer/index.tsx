@@ -2,12 +2,11 @@
 import MessageTopBar from '@/components/molecules/MessageTopBar'
 import React, { useEffect, useMemo, useState } from 'react'
 import UserChats from '../UserChats'
-import { Chat, ChatsArray, SocketConnectionEnums, SocketEnums } from '@/types/constants'
+import { Chat, ChatsArray, SocketConnectionEnums } from '@/types/constants'
 import MessageUserStickyBar from '@/components/molecules/MessageUserStickyBar'
 import UserMessages from '@/components/molecules/UserMessages'
 import { useUniStore } from '@/store/store'
 import { useGetUserChats, useUpdateMessageIsSeen } from '@/services/Messages'
-import { useQueryClient } from '@tanstack/react-query'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import { useSearchParams } from 'next/navigation'
@@ -16,15 +15,6 @@ import UserMessageInput from '@/components/molecules/userMessageInput'
 import { useFilteredChats } from '@/hooks/useFilteredChats'
 import { useNewMessageHandler } from '@/hooks/useNewMessageHandler'
 
-interface Message {
-  _id: string
-  chat: {
-    _id: string
-  }
-  createdAt: string
-  readByUsers?: string[]
-}
-
 const MessageContainer = () => {
   const searchQuery = useSearchParams()
   const [currTab, setCurrTab] = useState('Inbox')
@@ -32,7 +22,6 @@ const MessageContainer = () => {
 
   const { userData, socket, userProfileData } = useUniStore()
   const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData?.id)
-  const queryClient = useQueryClient()
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
   const { data: chatsData, isLoading: isChatLoading, isFetching } = useGetUserChats()

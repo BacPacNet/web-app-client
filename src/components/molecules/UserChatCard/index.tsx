@@ -29,7 +29,6 @@ type Props = {
 const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, groupName, isGroupChat, unRead }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != YourID)
 
-  console.log(lastMessage, 'lastMessage')
   return (
     <>
       <div className=" hover:bg-neutral-100">

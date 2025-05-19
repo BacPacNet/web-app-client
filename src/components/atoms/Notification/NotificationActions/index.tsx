@@ -17,8 +17,7 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
 
   const handleAcceptInvite = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    if (!data?.communityGroupId?._id || !id) return
-    console.log('asdwqer')
+    if (!data?.communityGroupId?._id) return
 
     if (data.type === notificationRoleAccess.GROUP_INVITE) {
       const dataToPush = {
