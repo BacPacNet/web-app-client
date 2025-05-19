@@ -12,17 +12,17 @@ import badge from '@/assets/badge.svg'
 
 import { useUniStore } from '@/store/store'
 import { EmailType } from '@/models/auth'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 import ChangeUserNameModal from '../SettingModals/ChangeUserNameModal'
 import ChangePasswordModal from '../SettingModals/ChangePasswordModal'
 import UniversityVerificationModal from '../SettingModals/UniversityVerificationModal'
 import ChangeEmailModal from '../SettingModals/ChangeEmailModal'
 import DeActivateModal from '../SettingModals/DeActivateModal'
 import UniversityVerificationPerks from '@/components/atoms/UniversityVerificationPerks'
+import { useModal } from '@/context/ModalContext'
 
 const SettingAccount = () => {
   const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
-
+  const { openModal } = useModal()
   const email: EmailType[] = userProfileData.email || []
 
   const userData = useUniStore((state) => state.userData) || {}

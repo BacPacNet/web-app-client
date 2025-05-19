@@ -8,7 +8,6 @@ import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/comp
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -484,6 +483,10 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
           }),
         })
       }
+      console.log(res, 'res')
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['getPost'] })
     },
     onError: (res: any) => {
       showCustomDangerToast(res.response?.data?.message as string)
@@ -733,6 +736,6 @@ export function useGetPost(postId: string, isType: string | null = 'userPost', c
   return useQuery({
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, commentId, cookieValue),
-    enabled: !!postId,
+    enabled: !!postId && !!cookieValue,
   })
 }

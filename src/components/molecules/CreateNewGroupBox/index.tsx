@@ -31,6 +31,7 @@ import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import UserSearchList from '../UserSearchList'
 import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { validateSingleImageFile } from '@/lib/utils'
 
 type Props = {
   communityId: string
@@ -47,6 +48,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [searchInput, setSearchInput] = useState('')
+  const logoInputRef = useRef<HTMLInputElement>(null)
+
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
@@ -186,6 +189,11 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     setNewGroup(false)
     closeModal()
   }
+  const handleDivClick = () => {
+    if (logoInputRef.current) {
+      logoInputRef.current.click()
+    }
+  }
 
   const handleClick = (userId: string) => {
     if (SelectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
@@ -266,6 +274,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       setIndividualsUsers((prev) => [...prev, user])
     }
   }
+  const handleLogoImage = (e: any) => {
+    const file = e.target.files[0]
+    const { isValid, message } = validateSingleImageFile(file, 3 * 1024 * 1024)
+    if (!isValid) {
+      alert(message)
+      return
+    }
+
+    setLogoImage(file)
+  }
 
   return (
     <>
@@ -276,14 +294,18 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">
             Group Profile
           </label>
-          <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
+          <div
+            onClick={handleDivClick}
+            className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer`}
+          >
             {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
             <input
+              ref={logoInputRef}
               style={{ display: 'none' }}
               accept="image/jpeg,image/png,image/jpg"
               type="file"
               id="CreateGroupLogoImage"
-              onChange={(e: any) => setLogoImage(e.target.files[0])}
+              onChange={handleLogoImage}
             />
 
             {logoImage ? (

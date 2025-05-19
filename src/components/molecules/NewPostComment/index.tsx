@@ -42,16 +42,17 @@ type Props = {
   postId?: string
   isReply: boolean
   isNested?: boolean
+  expandCommentSection?: (id: string) => void
 }
 
-const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial }: Props) => {
+const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial, expandCommentSection }: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false)
-  const { mutate: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false)
-  const { mutate: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
+  const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false)
+  const { mutateAsync: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
     false,
     true,
     postType,
@@ -142,6 +143,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     }
     resetPostContent()
     setNewPost(false)
+    expandCommentSection && expandCommentSection(payload.commentId as string)
     setIsLoading(false)
 
     //const payload: CommunityPostData = {

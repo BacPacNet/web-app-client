@@ -5,7 +5,6 @@ import React from 'react'
 import { FaChevronLeft } from 'react-icons/fa'
 import blueTick from '@/assets/blueBGTick.svg'
 import Buttons from '@/components/atoms/Buttons'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 import UniversityVerificationModal from '../../SettingModals/UniversityVerificationModal'
 import { useUniStore } from '@/store/store'
 import { EmailType } from '@/models/auth'
@@ -13,9 +12,10 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import uniLogo from '@/assets/unibuzz-orange.png'
 import { IoIosAddCircle } from 'react-icons/io'
 import badge from '@assets/badge.svg'
+import { useModal } from '@/context/ModalContext'
 const UniversityVerificationPage = () => {
   const router = useRouter()
-
+  const { openModal } = useModal()
   const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
 
   const email: EmailType[] = userProfileData.email || []

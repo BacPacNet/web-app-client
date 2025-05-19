@@ -14,7 +14,6 @@ import { MdBlockFlipped } from 'react-icons/md'
 import { IoFlagOutline } from 'react-icons/io5'
 import Buttons from '@/components/atoms/Buttons'
 import { useState } from 'react'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -25,6 +24,7 @@ import { HiMail } from 'react-icons/hi'
 import NewMessageModal from '@/components/molecules/NewMessageModal'
 import { useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
+import { useModal } from '@/context/ModalContext'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -77,6 +77,7 @@ export function UserProfileCard({
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
   const router = useRouter()
+  const { openModal } = useModal()
   const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()

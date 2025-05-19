@@ -13,10 +13,10 @@ import { FaUser } from 'react-icons/fa'
 import GroupSelectUsers from '@/components/atoms/GroupChatSelectUsers'
 import Buttons from '@/components/atoms/Buttons'
 import { IoClose } from 'react-icons/io5'
-import { openModal } from '../Modal/ModalManager'
 import OneToChat from '../OneToOneChat'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { useModal } from '@/context/ModalContext'
 
 type user = {
   _id: string
@@ -44,7 +44,7 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
       description: '',
     },
   })
-
+  const { openModal } = useModal()
   const [groupLogoImage, setGroupLogoImage] = useState()
   const [selectedUsers, setSelectedUsers] = useState<user[]>([])
   const [searchInput, setSearchInput] = useState('')

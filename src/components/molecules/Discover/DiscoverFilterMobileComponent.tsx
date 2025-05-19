@@ -1,7 +1,6 @@
 import Buttons from '@/components/atoms/Buttons'
 import React, { useEffect, useState } from 'react'
 import { IoIosSearch } from 'react-icons/io'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 import { Controller, useForm } from 'react-hook-form'
 import ModalDropdown from '@/components/atoms/ModalSelect'
 import COUNTRY_TO_CITY from '@/content/country_to_city.json'
@@ -10,6 +9,7 @@ import REGION_TO_CITY from '@/content/region_to_city.json'
 import { COUNTRY } from '@/content/country'
 import { cities } from '@/content/city'
 import { REGION } from '@/content/constant'
+import { useModal } from '@/context/ModalContext'
 
 type Props = {
   setQuery: (value: any) => void
@@ -17,6 +17,7 @@ type Props = {
 
 const DiscoverFilterMobileComponent = ({ setQuery }: Props) => {
   const { register, control, handleSubmit: handleFormSubmit, watch, reset, setValue } = useForm()
+  const { openModal } = useModal()
   const [cityOptions, setCityOptions] = useState<string[]>(cities)
   const [countryOptions, setCountryOptions] = useState<string[]>(COUNTRY)
   const allValues = watch()

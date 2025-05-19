@@ -14,12 +14,12 @@ import universityPlaceholder from '@assets/universityBackgroudImage.svg'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { IconType } from 'react-icons/lib'
 import { useUniStore } from '@/store/store'
-import { openModal } from '@/components/molecules/Modal/ModalManager'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import VerifyUniversityToJoinModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
+import { useModal } from '@/context/ModalContext'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -43,6 +43,7 @@ const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: st
 
 export default function UniversityProfile() {
   const params = useParams()
+  const { openModal } = useModal()
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
   const { userData, userProfileData } = useUniStore()

@@ -13,7 +13,6 @@ import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
-import { openModal } from '../Modal/ModalManager'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 import Buttons from '@/components/atoms/Buttons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -23,6 +22,7 @@ import useDebounce from '@/hooks/useDebounce'
 import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 import { isEmpty } from '@/lib/utils'
 import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs'
+import { useModal } from '@/context/ModalContext'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -66,6 +66,7 @@ const sortOptions = [
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
+  const { openModal } = useModal()
   const [cookieValue] = useCookie('uni_user_token')
   const [isOpen, setIsOpen] = useState(false)
 
