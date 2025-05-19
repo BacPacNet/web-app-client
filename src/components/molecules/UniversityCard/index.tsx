@@ -12,10 +12,10 @@ import './index.css'
 import { useUniStore } from '@/store/store'
 import { useGetCommunity, useJoinCommunity } from '@/services/community-university'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import Buttons from '@/components/atoms/Buttons'
+import { useModal } from '@/context/ModalContext'
 
 interface Props {
   communityID: string
@@ -27,6 +27,7 @@ interface Props {
 export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
   const { userData } = useUniStore()
+  const { openModal } = useModal()
   const [toggleDropdown, setToggleDropdown] = useState(false)
 
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)

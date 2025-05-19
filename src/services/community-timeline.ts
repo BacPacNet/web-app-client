@@ -86,6 +86,8 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
             return page
           }),
         })
+        queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+        queryClient.invalidateQueries({ queryKey: ['getPost'] })
       }
     },
     onError: (res: any) => {

@@ -48,10 +48,10 @@ const SinglePost = () => {
     )
   }
 
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount } = item
+  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName } = item
   return (
-    <div className="w-full   flex justify-center ">
-      <div className="w-full shadow-card rounded-2xl mt-4">
+    <div className="w-full flex justify-center py-4 post-container">
+      <div className="w-full shadow-card rounded-2xl">
         <PostCard
           key={_id}
           user={user?.firstName + ' ' + user?.lastName}
@@ -75,6 +75,8 @@ const SinglePost = () => {
           occupation={profile.occupation}
           role={profile.role}
           initialComment={comment}
+          communityName={communityName}
+          communityGroupName={communityGroupName}
         />
       </div>
     </div>

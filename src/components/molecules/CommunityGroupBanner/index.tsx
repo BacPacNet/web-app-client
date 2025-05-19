@@ -9,7 +9,6 @@ import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-u
 import { Skeleton } from '@/components/ui/Skeleton'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useDeleteCommunityGroup, useJoinCommunityGroup } from '@/services/community-group'
-import { openModal } from '../Modal/ModalManager'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import { CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import publicIcon from '@assets/public.svg'
@@ -24,6 +23,8 @@ import { useRouter } from 'next/navigation'
 import JoinGroupButton from '@/components/atoms/JoinGroupButton'
 import { CommunityGroupModal } from '../Modal/CommunityGroupModal'
 import useDeviceType from '@/hooks/useDeviceType'
+import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
+import { useModal } from '@/context/ModalContext'
 interface Props {
   communityID: string
   communityGroupID: string
@@ -42,6 +43,7 @@ export default function CommunityGroupBanner({
   isUserJoinedCommunityGroup,
 }: Props) {
   const { userData, userProfileData } = useUniStore()
+  const { openModal } = useModal()
   const { isMobile } = useDeviceType()
   const [_showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [toggleDropdown, setToggleDropdown] = useState(false)
@@ -112,8 +114,9 @@ export default function CommunityGroupBanner({
   }
 
   const handleDeleteGroup = () => {
-    deleteCommunityGroup(communityGroups?._id || '')
-    router.push(`/community/${communityGroups?.communityId._id}`)
+    openModal(<DeleteCommunityGroupModal communityId={communityGroups?.communityId?._id} communityGroupId={communityGroups?._id} />, 'h-max w-96')
+    //deleteCommunityGroup(communityGroups?._id || '')
+    //router.push(`/community/${communityGroups?.communityId._id}`)
   }
 
   if (isCommunityGroupsLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />

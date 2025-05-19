@@ -98,6 +98,21 @@ export const validateImageFiles = (files: File[], maxFiles: number = 4, maxSize:
   return { isValid: true, message: '' }
 }
 
+export const validateSingleImageFile = (
+  file: File,
+  maxSize: number = 5 * 1024 * 1024 // 5MB default
+): { isValid: boolean; message: string } => {
+  if (!file) {
+    return { isValid: false, message: 'No file selected.' }
+  }
+
+  if (file.size > maxSize) {
+    return { isValid: false, message: 'Image must be less than 5MB.' }
+  }
+
+  return { isValid: true, message: '' }
+}
+
 export const validateUploadedFiles = (
   files: File[],
   options: {

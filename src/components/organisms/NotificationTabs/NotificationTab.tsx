@@ -48,7 +48,7 @@ const NotificationTab = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
-    <div ref={containerRef} className="overflow-y-scroll custom-scrollbar flex flex-col h-[inherit] ">
+    <div ref={containerRef} className="overflow-y-scroll hideScrollbar flex flex-col h-[inherit] ">
       <div className="flex justify-between items-center">
         <h6 className="text-[20px] text-neutral-700 font-bold font-poppins p-4">Notifications</h6>
         <Buttons variant="shade" size="extra_small_paddind_2" className="mx-4" onClick={() => mutate()}>

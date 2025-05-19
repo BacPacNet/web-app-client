@@ -6,8 +6,10 @@ import { FiMessageCircle } from 'react-icons/fi'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import avatar from '@assets/avatar.svg'
+import Spinner from '@/components/atoms/spinner'
 
 const CommentItem = ({
+  key,
   comment,
   currentUserId,
   postID,
@@ -22,7 +24,7 @@ const CommentItem = ({
 }: any) => {
   return (
     <div
-      key={comment._id}
+      key={key}
       className={`w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
         comment.level == 1 ? 'mt-4 ml-6' : 'first:mt-8 '
       }`}

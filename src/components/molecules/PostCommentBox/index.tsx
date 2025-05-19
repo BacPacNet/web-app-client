@@ -116,6 +116,12 @@ const PostCommentBox = ({
       [commentId]: !prevState[commentId],
     }))
   }
+  const expandCommentSection = (commentId: string) => {
+    setVisibleComments((prevState) => ({
+      ...prevState,
+      [commentId]: true,
+    }))
+  }
 
   const handleChildComments = (comments: any) => {
     const childCommentsIds = comments?.map((item: { _id: string }) => item?._id)
@@ -133,13 +139,13 @@ const PostCommentBox = ({
     }
   }
 
-  if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
-    return (
-      <div className="my-2">
-        <Spinner />
-      </div>
-    )
-  }
+  //  if ((isFetching && !isFetchingNextPage) || (communityCommentsIsFetching && !communityCommentsIsFetchingNextPage)) {
+  //    return (
+  //      <div className="my-2">
+  //        <Spinner />
+  //      </div>
+  //    )
+  //  }
 
   return (
     <div
@@ -170,10 +176,10 @@ const PostCommentBox = ({
         <div ref={containerRef} className="flex flex-col gap-4">
           {showInitial && showCommentSec !== postID ? (
             <>
-              {[initialComment].map((comment, index) => {
+              {[initialComment].map((comment) => {
                 return (
                   <CommentItem
-                    key={index}
+                    key={comment?._id}
                     comment={comment}
                     currentUserId={userData?.id}
                     childCommentsId={childCommentsId}
@@ -194,7 +200,7 @@ const PostCommentBox = ({
               {comments.map((comment, index) => {
                 return (
                   <CommentItem
-                    key={index}
+                    key={comment?._id}
                     comment={comment}
                     currentUserId={userData?.id}
                     childCommentsId={childCommentsId}
@@ -223,6 +229,7 @@ const PostCommentBox = ({
             data={isReply ? commentData : data}
             isReply={isReply}
             postId={postID}
+            expandCommentSection={expandCommentSection}
           />
         )}
         {showInitial && showCommentSec !== postID ? <ShowAllComponent postID={postID} setShowCommentSection={setShowCommentSection} /> : ''}
