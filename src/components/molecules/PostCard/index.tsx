@@ -18,8 +18,8 @@ import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
 dayjs.extend(relativeTime)
 
-const SharePopup = React.memo(({ postId }: { postId: string }) => {
-  const postUrl = useMemo(() => `${window.location.host}/post/${postId}`, [postId])
+const SharePopup = React.memo(({ postId, type }: { postId: string; type: PostType }) => {
+  const postUrl = useMemo(() => `${window.location.host}/post/${postId}isType=${type}`, [postId])
 
   return (
     <div>
@@ -304,7 +304,7 @@ const PostCard = React.memo(
                 </button>
               </PopoverTrigger>
               <PopoverContent className="relative -left-5 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
-                <MemoizedSharePopup postId={postID} />
+                <MemoizedSharePopup type={type} postId={postID} />
               </PopoverContent>
             </Popover>
           </div>
