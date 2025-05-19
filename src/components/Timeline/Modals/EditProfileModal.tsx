@@ -175,7 +175,6 @@ const EditProfileModal = () => {
     if (profilePicture) {
       profileImageData = await handleImageUpload()
     }
-    console.log(profileImageData, 'profileImageData')
     mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
     setIsProfileLoading(false)
     closeModal()

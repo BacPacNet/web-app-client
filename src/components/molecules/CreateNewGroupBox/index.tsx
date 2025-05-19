@@ -169,7 +169,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     const communityGroupCategory = {
       communityGroupCategory: selectedFilters,
     }
-    const mergedUsers = [...SelectedUsers, ...filteredUsers, ...filteredFacultyUsers]
+    const mergedUsers = [...individualsUsers, ...SelectedUsers, ...filteredUsers, ...filteredFacultyUsers]
     const uniqueUsers = getUniqueById(mergedUsers)
     const payload = {
       ...data,

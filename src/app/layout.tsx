@@ -26,25 +26,14 @@ const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 })
 
-export const metadata: Metadata = {
-  title: 'UniBuzz',
+export const metadata = {
+  title: 'UniBuzz | All in one University Network',
   description: 'Connect with universities and students around the world.',
-  generator: 'Next.js',
-  manifest: '/manifest.json',
-  keywords: ['nextjs', 'nextjs13', 'next13', 'pwa', 'next-pwa'],
-  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#6744ff' }],
-  authors: [
-    { name: '' },
-    {
-      name: '',
-      url: '',
-    },
-  ],
-  viewport: 'maximum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
-  icons: [
-    { rel: 'apple-touch-icon', url: 'icons/icon-192x192.png' },
-    { rel: 'icon', url: 'icons/icon-192x192.png' },
-  ],
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

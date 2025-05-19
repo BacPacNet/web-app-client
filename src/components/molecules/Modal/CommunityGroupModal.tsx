@@ -29,7 +29,7 @@ export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: P
   return (
     <div>
       <Title>Members</Title>
-      {members.map((user) => {
+      {members?.map((user) => {
         return (
           <UserListItem
             key={user.userId as string}

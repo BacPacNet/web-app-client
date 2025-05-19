@@ -205,11 +205,9 @@ export const useJoinCommunityGroup = () => {
   return useMutation({
     mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
 
-    onSuccess: (response: any) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
       queryClient.invalidateQueries({ queryKey: ['user_notification_total_count'] })
-
-      router.push(`/community/${response.communityId}/${response._id}`)
     },
     onError: (res: any) => {
       showCustomDangerToast(res.response.data.message)

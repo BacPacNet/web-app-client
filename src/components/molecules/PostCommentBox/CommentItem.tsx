@@ -20,7 +20,6 @@ const CommentItem = ({
   showReplies,
   childCommentsId,
 }: any) => {
-  console.log(comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName, 'comment')
   return (
     <div
       key={comment._id}
