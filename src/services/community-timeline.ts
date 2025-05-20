@@ -407,6 +407,7 @@ export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
           })),
         }
       })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (res: any) => {
       return showCustomDangerToast(res.response.data.message)

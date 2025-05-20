@@ -2,9 +2,9 @@ import Buttons from '@/components/atoms/Buttons'
 import { useLeaveCommunity } from '@/services/community-university'
 import React from 'react'
 import { RiErrorWarningLine } from 'react-icons/ri'
-import { closeModal } from '../Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useLeaveCommunityGroup } from '@/services/community-group'
+import { useModal } from '@/context/ModalContext'
 
 type Props = {
   communityID?: string
@@ -17,6 +17,7 @@ type Props = {
 const CommunityLeaveModal = ({ communityID, setIsUserJoinedCommunity, communityGroupID, setIsUserJoinedCommunityGroup, setIsMember }: Props) => {
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
   const { mutate: leaveCommunityGroup, isPending: isLeaveCommunityPending } = useLeaveCommunityGroup()
+  const { closeModal } = useModal()
   const handleLeaveCommunity = () => {
     if (communityGroupID && setIsUserJoinedCommunityGroup) {
       leaveCommunityGroup(communityGroupID, {

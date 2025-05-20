@@ -11,11 +11,11 @@ import { useEffect, useState } from 'react'
 import { degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
-import { closeModal } from '@/components/molecules/Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Country, City } from 'country-state-city'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { useModal } from '@/context/ModalContext'
 
 export interface editProfileInputs {
   firstName: string
@@ -47,6 +47,7 @@ const Badge = () => {
 const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userProfileData } = useUniStore()
+  const { closeModal } = useModal()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
   const [user, setUser] = useState<any>(null)
   const [userType, setUserType] = useState('student')

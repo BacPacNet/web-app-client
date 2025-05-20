@@ -2,6 +2,7 @@ import Buttons from '@/components/atoms/Buttons'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import RadioOption from '@/components/atoms/RadioSelect'
 import CollegeResult from '@/components/CollegeResult'
+import { useModal } from '@/context/ModalContext'
 import {
   filterData,
   filterFacultyData,
@@ -48,7 +49,6 @@ interface ConnectionUserSelectModalProps {
   handleClear: () => void
 }
 export default function ConnectionUserSelectModal({
-  closeModal,
   setFilteredUsers,
   setIsFiltered,
   setFilteredAffiliationCount,
@@ -64,6 +64,7 @@ export default function ConnectionUserSelectModal({
   handleClear,
 }: ConnectionUserSelectModalProps) {
   const { userData } = useUniStore()
+  const { closeModal } = useModal()
   const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '' })
   const [searchTerm, setSearchTerm] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)

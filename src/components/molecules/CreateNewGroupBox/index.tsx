@@ -9,7 +9,6 @@ import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
 import { CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
-import { closeModal } from '../Modal/ModalManager'
 import { CommunityUsers } from '@/types/Community'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
@@ -28,10 +27,10 @@ import {
 import { useUploadToS3 } from '@/services/upload'
 import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
-import UserSearchList from '../UserSearchList'
 import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { validateSingleImageFile } from '@/lib/utils'
+import { useModal } from '@/context/ModalContext'
 
 type Props = {
   communityId: string
@@ -39,7 +38,8 @@ type Props = {
 }
 
 const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
-  const { userData, userProfileData } = useUniStore()
+  const { userProfileData } = useUniStore()
+  const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File>()
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
@@ -189,11 +189,6 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
     setNewGroup(false)
     closeModal()
   }
-  const handleDivClick = () => {
-    if (logoInputRef.current) {
-      logoInputRef.current.click()
-    }
-  }
 
   const handleClick = (userId: string) => {
     if (SelectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
@@ -266,13 +261,16 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
     e.preventDefault()
     e.stopPropagation()
-    setShowSelectUsers(false)
 
-    const isAlreadySelected = individualsUsers.some((u) => u._id === user._id)
+    setIndividualsUsers((prev) => {
+      const isAlreadySelected = prev.some((u) => u._id === user._id)
 
-    if (!isAlreadySelected) {
-      setIndividualsUsers((prev) => [...prev, user])
-    }
+      if (isAlreadySelected) {
+        return prev.filter((u) => u._id !== user._id) // remove user
+      } else {
+        return [...prev, user] // add user
+      }
+    })
   }
   const handleLogoImage = (e: any) => {
     const file = e.target.files[0]
@@ -294,10 +292,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">
             Group Profile
           </label>
-          <div
-            onClick={handleDivClick}
-            className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer`}
-          >
+          <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer`}>
             {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
             <input
               ref={logoInputRef}
@@ -566,6 +561,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               show={showSelectUsers}
               onSelect={handleSelectIndividuals}
               currentUserId={userProfileData?.users_id as string}
+              individualsUsers={individualsUsers}
             />
             <div className="flex flex-wrap mt-2">
               <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />

@@ -4,7 +4,7 @@ import { useGetFilteredSubscribedCommunities } from '@/services/university-commu
 import { subCategories } from '@/types/CommuityGroup'
 import React, { useEffect, useState } from 'react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { closeModal } from '../Modal/ModalManager'
+import { useModal } from '@/context/ModalContext'
 
 const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 
@@ -28,6 +28,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [selectedType, setSelectedType] = useState<string[]>([])
   const { mutate } = useGetFilteredSubscribedCommunities(communityId)
+  const { closeModal } = useModal()
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {

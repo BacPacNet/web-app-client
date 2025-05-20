@@ -1,10 +1,11 @@
 import Buttons from '@/components/atoms/Buttons'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import { closeModal } from '../Modal/ModalManager'
+import { useModal } from '@/context/ModalContext'
 
 const VerifyUniversityToJoinModal = () => {
   const router = useRouter()
+  const { closeModal } = useModal()
 
   const handleRedirect = () => {
     closeModal()

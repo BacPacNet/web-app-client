@@ -1,13 +1,12 @@
 import { useCreateUserChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { RxCross2 } from 'react-icons/rx'
 import avatar from '@assets/avatar.svg'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
 import Buttons from '@/components/atoms/Buttons'
-import { openModal, closeModal } from '../Modal/ModalManager'
 import CreateGroupChat from '../CreateGroupChat'
 import { useRouter } from 'next/navigation'
+import { useModal } from '@/context/ModalContext'
 type Props = {
   setSelectedChat: (value: any) => void
 }
@@ -17,6 +16,7 @@ const UsersModal = ({ setSelectedChat }: Props) => {
   const { data } = useGetUserFollowingAndFollowers(searchInput)
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const router = useRouter()
+  const { openModal, closeModal } = useModal()
   const handleUserClick = async (userId: string) => {
     const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
 
