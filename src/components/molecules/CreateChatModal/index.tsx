@@ -7,9 +7,9 @@ import IndividualUsers from './IndividualUsers'
 import GroupChatModal from './GroupChatModal'
 import { useCreateGroupChat, useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
-import { closeModal } from '../Modal/ModalManager'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { useModal } from '@/context/ModalContext'
 
 interface OneToOneProps {
   setSelectedChat: (value: any) => void
@@ -29,6 +29,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const { mutate: createGroupChat, isPending: groupChatPending } = useCreateGroupChat()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const router = useRouter()
+  const { closeModal } = useModal()
 
   const {
     register,

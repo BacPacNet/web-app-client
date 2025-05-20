@@ -15,7 +15,7 @@ import { MdCancel } from 'react-icons/md'
 import { GoFileMedia } from 'react-icons/go'
 import { useRouter } from 'next/navigation'
 import avatar from '@assets/avatar.svg'
-import { closeModal } from '../Modal/ModalManager'
+import { useModal } from '@/context/ModalContext'
 
 const NewMessageModal = ({ userIdToStartChatWith, avatarUrl, name }: { userIdToStartChatWith: string; avatarUrl: string; name: string }) => {
   const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
@@ -25,6 +25,7 @@ const NewMessageModal = ({ userIdToStartChatWith, avatarUrl, name }: { userIdToS
   const valueRef = useRef<string>('')
   const [images, setImages] = useState<File[]>([])
   const router = useRouter()
+  const { closeModal } = useModal()
   const [isImageUploading, setIsImageUploading] = useState(false)
 
   const handleIndividualUserClick = async (message: string) => {

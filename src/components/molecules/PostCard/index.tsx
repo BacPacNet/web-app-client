@@ -191,7 +191,12 @@ const PostCard = React.memo(
         setLocalLikes((prev: any) => (newIsLiked ? [...prev, { userId: userData?.id }] : prev.filter((like: any) => like.userId !== userData?.id)))
 
         // Debounced API call
-        debouncedLikeUnlike(postId)
+        if (type === PostType.Timeline) {
+          LikeUnlikeTimelinePost(postId)
+        } else if (type === PostType.Community) {
+          LikeUnlikeGroupPost(postId)
+        }
+        //debouncedLikeUnlike(postId)
       },
       [localIsLiked, userData?.id, debouncedLikeUnlike]
     )
@@ -289,7 +294,7 @@ const PostCard = React.memo(
               className="flex gap-1 items-center cursor-pointer"
               disabled={isLikeUnlikePending || isLikeUnlikeGroupPending}
             >
-              {localLikeCount}
+              {likes?.length}
 
               <FiThumbsUp className="mr-1 text-neutral-600 transition-all duration-300" color={localIsLiked ? '#6647FF' : ''} />
             </button>

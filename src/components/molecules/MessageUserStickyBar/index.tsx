@@ -20,10 +20,10 @@ import { useRouter } from 'next/navigation'
 import { MdOutlineBlock } from 'react-icons/md'
 import { FaEdit } from 'react-icons/fa'
 import { userTypeEnum } from '@/types/RegisterForm'
-import { openModal } from '../Modal/ModalManager'
 import ChatGroupMembers from '../ChatGroupMembers'
 import EditGroupChatModal from '../EditChatGroup'
 import { ChatUser } from '@/types/constants'
+import { useModal } from '@/context/ModalContext'
 type Props = {
   setSelectedChat: (value: any) => void
   yourID: string
@@ -73,6 +73,7 @@ const MessageUserStickyBar = ({
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
   const [open, setOpen] = useState(false)
+  const { openModal } = useModal()
 
   const { mutate: acceptRequest } = useAcceptRequest()
   const { mutate: acceptGroupRequest } = useAcceptGroupRequest()

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Buttons from '@/components/atoms/Buttons'
-import { openModal } from '../Modal/ModalManager'
 import { GoSearch } from 'react-icons/go'
 import { BiChevronDown } from 'react-icons/bi'
 import CreateChatModal from '../CreateChatModal'
+import { useModal } from '@/context/ModalContext'
 
 type Props = {
   setCurrTab: (value: string) => void
@@ -26,6 +26,7 @@ const MessageTopBar = ({
 }: Props) => {
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const { openModal } = useModal()
 
   const handleShowModal = () => {
     openModal(<CreateChatModal setSelectedChat={setSelectedChat} />, ' bg-white rounded-xl  custom-scrollbar', false)

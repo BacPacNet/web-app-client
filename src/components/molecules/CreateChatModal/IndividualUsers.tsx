@@ -32,7 +32,6 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
 
   const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
 
-  const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -101,6 +100,7 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
           show={showSelectUsers}
           onSelect={handleSelectIndividuals}
           currentUserId={userProfileData?.users_id as string}
+          individualsUsers={selectedUser}
         />
 
         {selectedUser?.firstName && (

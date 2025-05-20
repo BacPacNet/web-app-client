@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Buttons from '@/components/atoms/Buttons'
 import image from '../../../assets/notloggedinmodalImage.png'
 import { useRouter } from 'next/navigation'
-import { closeModal } from '../Modal/ModalManager'
+import { useModal } from '@/context/ModalContext'
 type Props = {
   title: string
   desc: string
@@ -12,6 +12,7 @@ type Props = {
 
 const NotLoggedInModal = ({ title, desc }: Props) => {
   const router = useRouter()
+  const { closeModal } = useModal()
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
       <Image src={image.src} alt="img" width={300} height={200} className="w-full rounded-md" />

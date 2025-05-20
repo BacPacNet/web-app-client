@@ -5,7 +5,6 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import { useEditGroupChat } from '@/services/Messages'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { closeModal } from '../Modal/ModalManager'
 import Buttons from '@/components/atoms/Buttons'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useUsersProfileForConnections } from '@/services/user'
@@ -17,6 +16,8 @@ import UserList from '@/components/atoms/UserList'
 import { ChatUser } from '@/types/constants'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { useModal } from '@/context/ModalContext'
+import UserSelectDropdown from '../UserSearchList'
 
 const EditGroupChatModal = ({
   users,
@@ -62,6 +63,7 @@ const EditGroupChatModal = ({
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(true)
   const { mutateAsync: editGroup, isPending } = useEditGroupChat(chatId)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
+  const { closeModal } = useModal()
   const {
     register,
     watch,
@@ -123,13 +125,17 @@ const EditGroupChatModal = ({
   const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
     e.preventDefault()
     e.stopPropagation()
-    setShowSelectUsers(false)
 
     const currentSelected = watch('selectedIndividualsUsers') as Users[]
 
     const isAlreadySelected = currentSelected.some((u) => u._id === user._id)
 
-    if (!isAlreadySelected) {
+    if (isAlreadySelected) {
+      // Remove user if already selected
+      const updated = currentSelected.filter((u) => u._id !== user._id)
+      setValue('selectedIndividualsUsers', updated as any)
+    } else {
+      // Add user if not selected
       setValue('selectedIndividualsUsers', [...currentSelected, user] as any)
     }
   }
@@ -222,11 +228,20 @@ const EditGroupChatModal = ({
             placeholder="Search Users"
           />
 
-          {showSelectUsers && (
+          {/*{showSelectUsers && (
             <div ref={dropdownRef} className="w-full mt-2 rounded-lg border-[1px] border-neutral-200 bg-white max-h-72 overflow-y-auto">
               <UserList users={filteredUserProfiles} onUserClick={handleSelectIndividuals} fallbackImage={avatar} />
             </div>
-          )}
+          )}*/}
+
+          <UserSelectDropdown
+            searchInput={searchInput}
+            show={true}
+            onSelect={handleSelectIndividuals}
+            currentUserId={userProfileData?.users_id as string}
+            individualsUsers={SelectedIndividualsUsers}
+            //  maxHeight={512}
+          />
 
           <div className="flex flex-wrap mt-2">
             <SelectedUserTags users={SelectedIndividualsUsers} onRemove={(id) => removeUser(id as string)} />
@@ -234,11 +249,11 @@ const EditGroupChatModal = ({
         </div>
       </div>
 
-      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} className="w-[500px] my-4 fixed bottom-0">
+      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} className="">
         {isPending || isImageLoading ? <Spinner /> : 'Apply Changes'}
       </Buttons>
 
-      {/*<div className=" min-h-[10px] w-4"></div>*/}
+      <div className=" min-h-[10px] w-4"></div>
     </div>
   )
 }

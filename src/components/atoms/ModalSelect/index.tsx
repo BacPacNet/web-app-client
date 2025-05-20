@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { closeModal } from '@/components/molecules/Modal/ModalManager'
+import { useModal } from '@/context/ModalContext'
 
 interface ModalDropdownProps {
   options: string[]
@@ -11,6 +11,7 @@ interface ModalDropdownProps {
 }
 
 const ModalDropdown = ({ options, onChange, value, showSearch = true }: ModalDropdownProps) => {
+  const { closeModal } = useModal()
   const [filteredOptions, setFilteredOptions] = useState(options)
   const searchRef = useRef<HTMLInputElement>(null)
 

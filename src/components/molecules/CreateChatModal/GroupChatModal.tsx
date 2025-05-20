@@ -156,13 +156,16 @@ const GroupChatModal = ({
   const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
     e.preventDefault()
     e.stopPropagation()
-    setShowSelectUsers(false)
 
-    const isAlreadySelected = individualsUsers.some((u) => u._id === user._id)
+    setIndividualsUsers((prev) => {
+      const isAlreadySelected = prev.some((u) => u._id === user._id)
 
-    if (!isAlreadySelected) {
-      setIndividualsUsers((prev) => [...prev, user])
-    }
+      if (isAlreadySelected) {
+        return prev.filter((u) => u._id !== user._id) // remove user
+      } else {
+        return [...prev, user] // add user
+      }
+    })
   }
 
   const handleClear = (e: React.MouseEvent) => {
@@ -256,6 +259,7 @@ const GroupChatModal = ({
             show={showSelectUsers}
             onSelect={handleSelectIndividuals}
             currentUserId={userProfileData?.users_id as string}
+            individualsUsers={individualsUsers}
           />
 
           <div className="flex flex-wrap mt-2">

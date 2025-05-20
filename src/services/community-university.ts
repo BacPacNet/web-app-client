@@ -433,6 +433,8 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
           }
         })
       }
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

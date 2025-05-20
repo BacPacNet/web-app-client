@@ -1,10 +1,10 @@
 import Buttons from '@/components/atoms/Buttons'
 import React from 'react'
-import { closeModal } from '../Modal/ModalManager'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useDeleteCommunityGroup } from '@/services/community-group'
 import { useRouter } from 'next/navigation'
 import { RiErrorWarningLine } from 'react-icons/ri'
+import { useModal } from '@/context/ModalContext'
 
 type Props = {
   communityId?: string
@@ -15,6 +15,7 @@ type Props = {
 
 const DeleteCommunityGroupModal = ({ communityGroupId, communityId }: Props) => {
   const router = useRouter()
+  const { closeModal } = useModal()
   const { mutate: deleteCommunityGroup, isPending: isDeleteCommunityGroupPending } = useDeleteCommunityGroup()
 
   const handleDeleteCommunityGroup = () => {
