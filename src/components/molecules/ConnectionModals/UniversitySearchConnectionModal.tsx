@@ -62,9 +62,9 @@ export default function ConnectionUserSelectModal({
   selectedFilters,
   setSelectedFilters,
   handleClear,
+  closeModal,
 }: ConnectionUserSelectModalProps) {
   const { userData } = useUniStore()
-  const { closeModal } = useModal()
   const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '' })
   const [searchTerm, setSearchTerm] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
@@ -203,12 +203,22 @@ export default function ConnectionUserSelectModal({
     closeModal()
   }
 
-  //  const handleClear = () => {
-  //    setSelectedFilters({})
-  //    setIsFiltered(false)
-  //    closeModal()
-  //    refetch()
-  //  }
+  const handleClearButton = () => {
+    handleClear()
+
+    setSelectedUniversity({
+      name: '',
+      id: '',
+    })
+    setIsFiltered(false)
+    reset({
+      selectedRadio: '',
+      studentYear: [],
+      major: [],
+      occupation: [],
+      affiliation: [],
+    })
+  }
 
   return (
     <>
@@ -216,7 +226,7 @@ export default function ConnectionUserSelectModal({
         <div ref={modalRef} className="relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible">
           <div className="flex justify-between items-center mb-8">
             <h2 className=" font-bold font-poppins text-md ">Search Filter</h2>
-            <Buttons variant="shade" size="extra_small" onClick={handleClear} className="w-max">
+            <Buttons variant="shade" size="extra_small" onClick={handleClearButton} className="w-max">
               Clear
             </Buttons>
           </div>

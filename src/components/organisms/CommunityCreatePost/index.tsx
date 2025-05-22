@@ -72,8 +72,14 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
   }
 
   const handleSubmit = async () => {
-    const isContentEmpty = quillInstance?.getText().trim().length === 0
-    if (isContentEmpty) return
+    const plainText = quillInstance?.getText().trim()
+    const hasText = !!plainText && plainText.length > 0
+    const hasFiles = files.length > 0
+
+    if (!hasText && !hasFiles) {
+      showCustomDangerToast('Post must contain text or at least one file.')
+      return
+    }
 
     setIsPostCreating(true)
 
@@ -87,7 +93,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
       }
 
       // Upload image if present
-      if (files.length > 0) {
+      if (hasFiles) {
         const uploadPayload = {
           files: files.map((f) => f.file),
           context: UPLOAD_CONTEXT.COMMUNITY,

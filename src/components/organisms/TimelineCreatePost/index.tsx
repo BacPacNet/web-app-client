@@ -70,7 +70,14 @@ function TimelineCreatePost() {
   }
 
   const handleSubmit = async () => {
-    if (!quillInstance || quillInstance.getText().trim().length === 0) return
+    const plainText = quillInstance?.getText().trim()
+    const hasText = !!plainText && plainText.length > 0
+    const hasFiles = files.length > 0
+
+    if (!hasText && !hasFiles) {
+      showCustomDangerToast('Post must contain text or at least one file.')
+      return
+    }
 
     if (files.length > 4) {
       showCustomDangerToast('You can upload a maximum of 4 files.')
@@ -85,7 +92,7 @@ function TimelineCreatePost() {
     }
 
     try {
-      if (files.length) {
+      if (hasFiles) {
         const uploadPayload = {
           files: files.map((f) => f.file),
           context: UPLOAD_CONTEXT.TIMELINE,
@@ -173,17 +180,6 @@ function TimelineCreatePost() {
           </div>
 
           <div className="flex gap-2 h-10">
-            <SelectDropdown
-              options={Object.values(UserPostTypeOption)}
-              value={postAccessType}
-              onChange={(e: any) => setPostAccessType(e)}
-              placeholder="Visibility"
-              icon="single"
-              err={false}
-              showIcon={true}
-              isAllowedToRemove={false}
-              variant="primary"
-            />
             <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>

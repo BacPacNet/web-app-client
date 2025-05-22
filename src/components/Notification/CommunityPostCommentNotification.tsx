@@ -65,7 +65,7 @@ const CommunityPostCommentNotification = ({ data }: Props) => {
         <p>{dayjs(new Date(data?.createdAt).toString()).fromNow()}</p>
       </div>
       <p className="text-sm">
-        <span className="font-semibold "> {data?.sender_id?.firstName + ' ' + data?.sender_id?.lastName} </span> Commented on your Community post.{' '}
+        <span className="font-semibold "> {data?.sender_id?.firstName + ' ' + data?.sender_id?.lastName} </span> commented on your community post.{' '}
       </p>
     </div>
   )

@@ -53,6 +53,31 @@ export async function CreateUserPostCommentReply(data: PostCommentData, token: s
   return response
 }
 
+export async function deleteUserPostComment(postId: string, token: string) {
+  const response = await client(`/userpostcomment/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useDeleteUserPostComment() {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (postId: string) => deleteUserPostComment(postId, cookieValue),
+    onSuccess: () => {
+      // Invalidate or update the specific post's comments cache
+      queryClient.invalidateQueries({
+        queryKey: ['userPostComments'],
+      })
+      showCustomSuccessToast('comment deleted sucessfully')
+    },
+    onError: (error) => {
+      console.error('Failed to delete comment:', error)
+      showCustomDangerToast(error.message)
+    },
+  })
+}
+
 export async function LikeUnlikeUserPostComment(UserPostCommentId: string, token: string) {
   const response = await client(`/userpostcomment/likeUnlike/${UserPostCommentId}`, {
     method: 'PUT',
@@ -408,6 +433,7 @@ export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
         }
       })
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
     },
     onError: (res: any) => {
       return showCustomDangerToast(res.response.data.message)

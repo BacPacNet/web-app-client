@@ -90,7 +90,14 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
   }
 
   const handleSubmit = async () => {
-    if (quillInstance && quillInstance?.getText().toString().length - 1 === 0) return
+    const plainText = quillInstance?.getText().trim()
+    const hasText = !!plainText && plainText.length > 0
+    const hasFiles = images.length > 0
+
+    if (!hasText && !hasFiles) {
+      showCustomDangerToast('Post must contain text or at least one file.')
+      return
+    }
     setIsLoading(true)
     // Default data structure for the comment
     const payload: PostCommentData = {
@@ -100,7 +107,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     }
 
     // If images exist, process them
-    if (images.length) {
+    if (hasFiles) {
       const uploadPayload = {
         files: images,
         context: UPLOAD_CONTEXT.POST_COMMENT,
