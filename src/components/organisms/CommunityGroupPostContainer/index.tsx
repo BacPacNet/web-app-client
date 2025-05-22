@@ -33,7 +33,9 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     dataUpdatedAt,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, 10)
   const [communityGroupPostDatas, setCommunityGroupPostDatas] = useState([])
-  // const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+  const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+
+  console.log(communityGroupPostData, 'communityGroupPostData')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,32 +56,19 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
-  //   useEffect(() => {
-  //     if (isFetching) {
-  //       setCommunityGroupPostDatas([])
-  //     }
-  //   }, [isFetching, queryClient])
-
-  useEffect(() => {
-    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
-    setCommunityGroupPostDatas(communityDatas)
-  }, [communityGroupPost, dataUpdatedAt])
-
-  //   if (isLoading || isFetching)
-  //     return (
-  //       <div className="flex justify-center items-center py-10">
-  //         <Spinner />
-  //       </div>
-  //     )
+  //  useEffect(() => {
+  //    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
+  //    setCommunityGroupPostDatas(communityDatas)
+  //  }, [communityGroupPost, dataUpdatedAt])
 
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
-  if (communityGroupPostDatas?.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+  if (communityGroupPostData?.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6 post-container">
-      {communityGroupPostDatas?.map((post: communityPostType, idx: number) => (
+      {communityGroupPostData?.map((post: communityPostType, idx: number) => (
         <PostCard
           key={post?._id}
           user={post?.user?.firstName + ' ' + post?.user?.lastName}
@@ -105,8 +94,8 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           occupation={post?.userProfile?.occupation}
           role={post?.userProfile?.role}
           isPostVerified={post?.isPostVerified}
-          communityName={post.communityName}
-          communityGroupName={post.communityGroupName}
+          communityName={post?.communityName}
+          communityGroupName={post?.communityGroupName}
         />
       ))}
     </div>
