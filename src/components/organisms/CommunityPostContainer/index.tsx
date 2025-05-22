@@ -26,7 +26,9 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     dataUpdatedAt,
     isLoading,
   } = useGetCommunityPost(communityID, true, 10)
-  const [communityDatas, setCommunityDatas] = useState([])
+  //  const [communityDatas, setCommunityDatas] = useState([])
+
+  const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -58,10 +60,10 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
-  useEffect(() => {
-    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
-    setCommunityDatas(communityDatas)
-  }, [communityGroupPost, dataUpdatedAt])
+  //  useEffect(() => {
+  //    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
+  //    setCommunityDatas(communityDatas)
+  //  }, [communityGroupPost, dataUpdatedAt])
 
   useEffect(() => {
     if (imageCarasol.isShow) {

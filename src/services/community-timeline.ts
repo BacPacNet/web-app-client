@@ -410,31 +410,40 @@ export function useGetTimelinePosts(limit: number) {
 
 export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
   const [cookieValue] = useCookie('uni_user_token')
+  const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
+    onMutate: async (postId: string) => {
+      queryClient.cancelQueries({ queryKey: ['timelinePosts'] })
 
-    onSuccess: (res: any, postId: string) => {
+      const previousPosts = queryClient.getQueryData(['timelinePosts'])
+
       queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
-        if (!oldData || !oldData.pages) return oldData
+        if (!oldData) return
+
         return {
           ...oldData,
           pages: oldData.pages.map((page: any) => ({
             ...page,
-            allPosts: page.allPosts.map((post: any) =>
-              post._id === postId
-                ? {
-                    ...post,
-                    likeCount: res.likeCount,
-                  }
-                : post
-            ),
+            allPosts: page.allPosts.map((post: any) => {
+              if (post._id !== postId) return post
+
+              const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+
+              return {
+                ...post,
+                likeCount: hasLiked
+                  ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+                  : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+              }
+            }),
           })),
         }
       })
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      return { previousPosts }
     },
+
     onError: (res: any) => {
       return showCustomDangerToast(res.response.data.message)
     },

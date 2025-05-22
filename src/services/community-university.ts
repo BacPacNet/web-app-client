@@ -414,55 +414,110 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
 
 export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroupId: string = '', isTimeline: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
+  const { userData } = useUniStore()
   const queryClient = useQueryClient()
+
+  const queryKey = isTimeline ? ['timelinePosts'] : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : [])]
 
   return useMutation({
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
-    onSuccess: (res: any, communityGroupPostId) => {
-      if (isTimeline) {
-        queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
-          if (!oldData || !oldData.pages) return oldData
+    onMutate: async (postId: string) => {
+      queryClient.cancelQueries({ queryKey: queryKey })
 
+      const previousPosts = queryClient.getQueryData(queryKey)
+
+      queryClient.setQueryData(queryKey, (oldData: any) => {
+        if (!oldData) return
+
+        if (isTimeline) {
           return {
             ...oldData,
             pages: oldData.pages.map((page: any) => ({
               ...page,
-              allPosts: page.allPosts.map((post: any) =>
-                post._id === communityGroupPostId
-                  ? {
-                      ...post,
-                      likeCount: res.likeCount,
-                    }
-                  : post
-              ),
+              allPosts: page.allPosts.map((post: any) => {
+                if (post._id !== postId) return post
+
+                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+
+                return {
+                  ...post,
+                  likeCount: hasLiked
+                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                }
+              }),
             })),
           }
-        })
-      } else {
-        queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
-          if (!oldData || !oldData.pages) return oldData
+        } else {
           return {
             ...oldData,
             pages: oldData.pages.map((page: any) => ({
               ...page,
-              finalPost: page.finalPost.map((post: any) =>
-                post._id === communityGroupPostId
-                  ? {
-                      ...post,
-                      likeCount: res.likeCount,
-                    }
-                  : post
-              ),
+              finalPost: page.finalPost.map((post: any) => {
+                if (post._id !== postId) return post
+
+                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+
+                return {
+                  ...post,
+                  likeCount: hasLiked
+                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                }
+              }),
             })),
           }
-        })
-      }
-      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
-      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+        }
+      })
+      return { previousPosts }
     },
+
+    //onSuccess: (res: any, communityGroupPostId) => {
+    //  if (isTimeline) {
+    //    queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
+    //      if (!oldData || !oldData.pages) return oldData
+
+    //      return {
+    //        ...oldData,
+    //        pages: oldData.pages.map((page: any) => ({
+    //          ...page,
+    //          allPosts: page.allPosts.map((post: any) =>
+    //            post._id === communityGroupPostId
+    //              ? {
+    //                  ...post,
+    //                  likeCount: res.likeCount,
+    //                }
+    //              : post
+    //          ),
+    //        })),
+    //      }
+    //    })
+    //  } else {
+    //    queryClient.setQueryData(['communityGroupsPost', communityId, communityGroupId], (oldData: any) => {
+    //      if (!oldData || !oldData.pages) return oldData
+    //      return {
+    //        ...oldData,
+    //        pages: oldData.pages.map((page: any) => ({
+    //          ...page,
+    //          finalPost: page.finalPost.map((post: any) =>
+    //            post._id === communityGroupPostId
+    //              ? {
+    //                  ...post,
+    //                  likeCount: res.likeCount,
+    //                }
+    //              : post
+    //          ),
+    //        })),
+    //      }
+    //    })
+    //  }
+    //  queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+    //  queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    //},
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }
