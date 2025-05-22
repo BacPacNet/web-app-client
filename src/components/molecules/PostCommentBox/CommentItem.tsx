@@ -1,12 +1,14 @@
 import React from 'react'
 import UserCard from '@/components/atoms/UserCard'
-import { AiOutlineLike } from 'react-icons/ai'
+import { AiOutlineDelete, AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
 import { FiMessageCircle } from 'react-icons/fi'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import avatar from '@assets/avatar.svg'
-import Spinner from '@/components/atoms/spinner'
+import { useDeleteUserPostComment } from '@/services/community-timeline'
+import { PostType } from '@/types/constants'
+import { useDeleteCommunityPostComment } from '@/services/community-university'
 
 const CommentItem = ({
   key,
@@ -22,6 +24,18 @@ const CommentItem = ({
   showReplies,
   childCommentsId,
 }: any) => {
+  const { mutate: deleteUserPost } = useDeleteUserPostComment()
+  const { mutate: deleteCommunityPost } = useDeleteCommunityPostComment()
+
+  console.log(currentUserId, comment)
+
+  const handleDelete = () => {
+    if (type === PostType.Community) {
+      deleteCommunityPost(comment._id)
+    } else {
+      deleteUserPost(comment._id)
+    }
+  }
   return (
     <div
       key={key}
@@ -71,6 +85,13 @@ const CommentItem = ({
             <div onClick={() => handleReplyClick(comment)} className="flex items-center cursor-pointer">
               <HiReply className="text-gray-dark" />
               <span className="ml-1 font-poppins text-xs">reply</span>
+            </div>
+          )}
+          {/* Show delete button if current user is the commenter */}
+          {(currentUserId === comment?.commenterId?.id || currentUserId === comment?.commenterId?._id) && (
+            <div onClick={handleDelete} className="flex items-center cursor-pointer text-red-500">
+              <AiOutlineDelete />
+              <span className="ml-1 text-xs">delete</span>
             </div>
           )}
         </div>

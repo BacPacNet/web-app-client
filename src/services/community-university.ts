@@ -151,6 +151,31 @@ export async function LikeUnilikeGroupPostCommnet(communityGroupPostCommentId: s
   return response
 }
 
+export async function deleteCommunityPostComment(postId: string, token: string) {
+  const response = await client(`/communitypostcomment/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useDeleteCommunityPostComment() {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (postId: string) => deleteCommunityPostComment(postId, cookieValue),
+    onSuccess: () => {
+      // Invalidate or update the specific post's comments cache
+      queryClient.invalidateQueries({
+        queryKey: ['communityPostComments'],
+      })
+      showCustomSuccessToast('comment deleted sucessfully')
+    },
+    onError: (error) => {
+      console.error('Failed to delete comment:', error)
+      showCustomDangerToast(error.message)
+    },
+  })
+}
+
 export function useGetCommunity(communityId: string) {
   return useQuery({
     queryKey: ['community', communityId],
@@ -469,6 +494,7 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
 
     onSuccess: (res: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+      console.log(res.comment, 'resresresres')
 
       if (currUserComments) {
         queryClient.setQueryData(['communityPostComments'], {

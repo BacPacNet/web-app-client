@@ -59,13 +59,13 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       if (data?.commentedBy?.totalCount > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b> and {data?.commentedBy?.totalCount - 1} others commented on your Community post
+            <b>{firstCommenterName}</b> and {data?.commentedBy?.totalCount - 1} others commented on your community post
           </span>
         )
       } else {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b> commented on your Community post.
+            <b>{firstCommenterName}</b> commented on your community post.
           </span>
         )
       }
@@ -146,6 +146,8 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           Your request to join <b>{data?.communityGroupId?.title}</b> in {data?.communityDetails?.name} has been accepted.
         </span>
       )
+    case notificationRoleAccess.DELETED_COMMUNITY_GROUP:
+      return <span className="text-xs font-inter">{data.message}.</span>
 
     default:
       return <span className="text-xs font-inter">You have a new notification.</span>

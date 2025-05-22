@@ -1,12 +1,11 @@
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { Spinner } from '@/components/spinner/Spinner'
 import UserListItem from '@/components/Timeline/UserListItem'
 import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FaFilter } from 'react-icons/fa6'
-import { GoSearch } from 'react-icons/go'
 import ConnectionUserSelectModal from '../ConnectionModals/UniversitySearchConnectionModal'
+import UserSearchInput from '@/components/atoms/UserSearchBox'
 
 type User = {
   _id: string
@@ -96,6 +95,14 @@ export default function FindPeople() {
 
   const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || null
 
+  //  useInfiniteScroll({
+  //    containerRef: ref,
+  //    onBottomReach: () => {
+  //      fetchNextPage()
+  //    },
+  //    deps: [fetchNextPage, hasNextPage, isFetchingNextPage],
+  //  })
+
   useEffect(() => {
     const handleScroll = () => {
       if (ref.current) {
@@ -147,45 +154,35 @@ export default function FindPeople() {
       major: [],
       occupation: [],
       affiliation: [],
-      university: { name: userProfileData?.university_name as string, id: userProfileData?.university_id as string },
+      university: { name: '', id: '' },
     })
-    setIsFiltered(false)
-    closeModal()
-    refetch()
+  }
+
+  const handleChange = (value: string) => {
+    setName(value)
+
+    if (isFiltered) {
+      const trimmed = value.trim()
+
+      if (trimmed === '') {
+        setFilteredUsers(baseFilteredUsers)
+      } else {
+        const lowerInput = trimmed.toLowerCase()
+        const searched = baseFilteredUsers.filter((user) => {
+          const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
+          const match = fullName.includes(lowerInput)
+          return match
+        })
+        setFilteredUsers(searched)
+      }
+    }
   }
 
   return (
     <>
       <div className="flex gap-4 justify-between items-center mb-2">
-        <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4  h-10">
-          <input
-            onChange={(e) => {
-              const input = e.target.value
-              setName(input)
+        <UserSearchInput value={name} onChange={(value) => handleChange(value)} />
 
-              if (isFiltered) {
-                const trimmed = input.trim()
-
-                if (trimmed === '') {
-                  setFilteredUsers(baseFilteredUsers)
-                } else {
-                  const lowerInput = trimmed.toLowerCase()
-                  const searched = baseFilteredUsers.filter((user) => {
-                    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase()
-                    const match = fullName.includes(lowerInput)
-                    return match
-                  })
-                  setFilteredUsers(searched)
-                }
-              }
-            }}
-            type="text"
-            value={name}
-            className="text-xs w-full outline-none text-neutral-700"
-            placeholder="Searching All Users"
-          />
-          <GoSearch className="text-neutral-500" size={20} />
-        </div>
         <div
           onClick={openModal}
           className="cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"

@@ -293,12 +293,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           <div className="flex-1">
             <Buttons
               onClick={() => handleCommunityGroupFilter()}
-              variant={isFilterApplied ? 'primary' : 'border'}
+              variant={'border'}
               size="extra_small_paddind_2"
-              className="h-9 w-full gap-1 "
+              className="h-9 w-full gap-1 relative"
             >
+              {isFilterApplied && <span className="w-[5px] h-[5px] bg-red-600 rounded-full"></span>}
               Filter
-              <LuFilter className={`h-3.5 w-3.5 ${isFilterApplied ? 'text-white' : 'text-primary-500'}`} />
+              <LuFilter className={`h-3.5 w-3.5 ${'text-primary-500'}`} />
             </Buttons>
           </div>
 
