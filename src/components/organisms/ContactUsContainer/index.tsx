@@ -135,7 +135,7 @@ export function ContactForm() {
             By pressing the submit button, I agree to Unibuzz contacting me by email and/or phone to share opportunities exclusively available to
             Select or Enterprise customers. I also understand that any information Ive shared in this form is subject to Unibuzz Privacy Policy.
           </p>
-          <Buttons disabled={isPending} variant="primary" type="submit" className=" w-full">
+          <Buttons disabled={isPending} variant="primary" size="large" type="submit" className=" w-full">
             {isPending ? <Spinner /> : 'Submit Form'}
           </Buttons>
         </div>

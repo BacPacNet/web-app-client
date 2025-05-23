@@ -182,7 +182,7 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
             </div>
             {showUsers && (
               <div className="flex flex-col gap-4  mt-4">
-                <Buttons type="button" onClick={handleSelectAll} size="extra_small" variant="border_primary" className="w-max">
+                <Buttons type="button" onClick={handleSelectAll} size="large" variant="border_primary" className="w-max">
                   Select All Users
                 </Buttons>
                 <div className="flex flex-col gap-4 h-[200px] overflow-y-scroll">

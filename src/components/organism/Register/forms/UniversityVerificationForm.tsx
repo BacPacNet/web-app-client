@@ -209,11 +209,11 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
         </div>
       </div>
       <div className="w-full flex flex-col gap-4">
-        <Button disabled={isPending} onClick={() => handleNext()} variant="shade" type="button" className="h-10">
+        <Button size="large" disabled={isPending} onClick={() => handleNext()} variant="shade" type="button">
           Skip University Verification
         </Button>
 
-        <Button disabled={isPending} variant="primary">
+        <Button disabled={isPending} variant="primary" size="large">
           {isPending ? <Spinner /> : 'Confirm'}
         </Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">University Email verified.</p>}

@@ -51,7 +51,7 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
                 : 'Please enter your referral code!'}
             </InputWarningText>
           )}
-          <Button variant="border_primary" className="h-10">
+          <Button variant="border_primary" className="h-10" size="large">
             Confirm Code
           </Button>
           <p className="text-xs text-neutral-500 text-center">Plan will immediately apply to account after confirmation.</p>
@@ -59,7 +59,9 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Button variant="primary">{isPending ? <Spinner /> : 'Complete Sign Up '}</Button>
+        <Button variant="primary" size="large">
+          {isPending ? <Spinner /> : 'Complete Sign Up '}
+        </Button>
       </div>
     </div>
   )

@@ -291,12 +291,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
         <div className="flex gap-2 my-4">
           <div className="flex-1">
-            <Buttons
-              onClick={() => handleCommunityGroupFilter()}
-              variant={'border'}
-              size="extra_small_paddind_2"
-              className="h-9 w-full gap-1 relative"
-            >
+            <Buttons onClick={() => handleCommunityGroupFilter()} variant={'border'} size="small" className="h-9 w-full gap-1 relative">
               {isFilterApplied && <span className="w-[5px] h-[5px] bg-red-600 rounded-full"></span>}
               Filter
               <LuFilter className={`h-3.5 w-3.5 ${'text-primary-500'}`} />
@@ -306,7 +301,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           <div className="flex-1">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger className="w-full">
-                <Buttons variant="border" size="extra_small_paddind_2" className="h-9 w-full gap-1">
+                <Buttons variant="border" size="small" className="h-9 w-full gap-1">
                   Sort
                   <LuArrowUpDown className="h-3.5 w-3.5 text-primary-500" />
                 </Buttons>

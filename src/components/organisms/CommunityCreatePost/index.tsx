@@ -199,7 +199,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
               showIcon={true}
               isAllowedToRemove={false}
             />*/}
-            <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
+            <Buttons className="w-[70px]" size="medium" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>
           </div>

@@ -495,7 +495,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
                 {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
               </div>
-              <Buttons variant="shade" type="button" onClick={() => setView('ADD_MEMBERS')}>
+              <Buttons variant="shade" type="button" onClick={() => setView('ADD_MEMBERS')} size="large">
                 Add Member
               </Buttons>
               <div className="flex flex-wrap">
