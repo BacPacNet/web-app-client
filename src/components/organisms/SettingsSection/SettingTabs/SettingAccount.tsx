@@ -59,7 +59,7 @@ const SettingAccount = () => {
             </div>
           </div>
         ))}
-        <Button onClick={() => openModal(<UniversityVerificationModal />)} className="w-max flex gap-2 items-center" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<UniversityVerificationModal />)} className="w-max flex gap-2 items-center" size="medium">
           Verify Account {email?.length ? <FaCirclePlus /> : ''}
         </Button>
       </div>
@@ -73,7 +73,7 @@ const SettingAccount = () => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userName} disabled />
         </div>
-        <Button onClick={() => openModal(<ChangeUserNameModal />)} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangeUserNameModal />)} className="w-max" size="large">
           Change Username
         </Button>
       </div>
@@ -81,7 +81,7 @@ const SettingAccount = () => {
       <div className="flex flex-col gap-6">
         <SettingsText className="text-md">Change Password</SettingsText>
         {/* <div className="relative w-full flex flex-col gap-2"> */}
-        {/* <label htmlFor="Current Password" className="font-medium text-neutral-900">
+        {/* <label htmlFor="Current Password" className="font-large text-neutral-900">
             Current Password
           </label> */}
         {/* <div className="relative w-80">
@@ -95,7 +95,7 @@ const SettingAccount = () => {
             </div>
           </div> */}
         {/* </div> */}
-        <Button onClick={() => openModal(<ChangePasswordModal />)} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangePasswordModal />)} className="w-max" size="large">
           Change Password
         </Button>
       </div>
@@ -103,13 +103,13 @@ const SettingAccount = () => {
       <div className="flex flex-col gap-6">
         <SettingsText className="text-md">Change Email</SettingsText>
         <div className="relative w-full flex flex-col gap-2">
-          <label htmlFor="Current Username" className="font-medium text-neutral-900">
+          <label htmlFor="Current Username" className="font-large text-neutral-900">
             Current Email
           </label>
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userEmail} disabled />
         </div>
-        <Button onClick={() => openModal(<ChangeEmailModal />)} className="w-max" size="extra_small_paddind_2">
+        <Button onClick={() => openModal(<ChangeEmailModal />)} className="w-max" size="large">
           Change Email
         </Button>
       </div>
@@ -123,7 +123,7 @@ const SettingAccount = () => {
             restore your Unibuzz account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.{' '}
           </SubText>
         </div>
-        <Button onClick={() => openModal(<DeActivateModal />)} className="w-max" size="extra_small_paddind_2" variant="danger">
+        <Button onClick={() => openModal(<DeActivateModal />)} className="w-max" size="medium" variant="danger">
           Deactivate Account
         </Button>
       </div>
