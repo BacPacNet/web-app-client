@@ -26,8 +26,6 @@ async function uploadtoS3(uploadPayload: S3UploadRequest, cookieValue: string): 
   files.forEach((file) => formData.append('files', file))
   formData.append('context', context)
 
-  console.log('formData', formData, 'files', files)
-
   const response: S3UploadResponse = await client(`/upload`, {
     method: 'POST',
     data: formData,
