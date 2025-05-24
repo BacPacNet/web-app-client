@@ -40,7 +40,7 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, sh
   if (!show) return null
 
   return (
-    <div ref={containerRef} className={`w-full mt-2 rounded-lg border border-neutral-200 bg-white max-h-[50vh] overflow-y-auto`}>
+    <div ref={containerRef} className={`w-full mt-2 rounded-lg border border-neutral-200 bg-white max-h-[50vh] overflow-y-auto `}>
       {isLoading ? (
         <p className="text-center text-sm text-neutral-500 py-4">Loading...</p>
       ) : userProfiles.length > 0 ? (
@@ -52,7 +52,7 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, sh
               onClick={(e) => {
                 handleSelect(e, user)
               }}
-              className="flex justify-between items-center w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
+              className="flex justify-between items-center w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer expand"
             >
               <div className="flex items-center gap-4">
                 <Image

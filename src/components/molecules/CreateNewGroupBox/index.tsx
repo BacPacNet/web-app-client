@@ -552,6 +552,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
               isCancel={true}
               onCancel={handleClear}
               onClick={() => setShowSelectUsers(true)}
+              value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               type="text"
               placeholder="Search Users"

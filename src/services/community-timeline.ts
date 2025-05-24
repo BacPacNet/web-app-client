@@ -408,38 +408,80 @@ export function useGetTimelinePosts(limit: number) {
   })
 }
 
-export const useLikeUnlikeTimelinePost = (communityId: string = '') => {
+export const useLikeUnlikeTimelinePost = (source: string, adminId: string) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
+
+  const queryKey = source === 'profile' ? ['userPosts', adminId] : ['timelinePosts']
   return useMutation({
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
     onMutate: async (postId: string) => {
-      queryClient.cancelQueries({ queryKey: ['timelinePosts'] })
+      queryClient.cancelQueries({ queryKey: queryKey })
 
       const previousPosts = queryClient.getQueryData(['timelinePosts'])
 
-      queryClient.setQueryData(['timelinePosts'], (oldData: any) => {
+      queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
 
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page: any) => ({
-            ...page,
-            allPosts: page.allPosts.map((post: any) => {
-              if (post._id !== postId) return post
+        if (source === 'profile') {
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              data: page.data.map((post: any) => {
+                if (post._id !== postId) return post
 
-              const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
 
-              return {
-                ...post,
-                likeCount: hasLiked
-                  ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-                  : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
-              }
-            }),
-          })),
+                return {
+                  ...post,
+                  likeCount: hasLiked
+                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                }
+              }),
+            })),
+          }
+        } else {
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              allPosts: page.allPosts.map((post: any) => {
+                if (post._id !== postId) return post
+
+                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+
+                return {
+                  ...post,
+                  likeCount: hasLiked
+                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                }
+              }),
+            })),
+          }
         }
+
+        //return {
+        //  ...oldData,
+        //  pages: oldData.pages.map((page: any) => ({
+        //    ...page,
+        //    allPosts: page.allPosts.map((post: any) => {
+        //      if (post._id !== postId) return post
+
+        //      const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
+
+        //      return {
+        //        ...post,
+        //        likeCount: hasLiked
+        //          ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
+        //          : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+        //      }
+        //    }),
+        //  })),
+        //}
       })
       return { previousPosts }
     },

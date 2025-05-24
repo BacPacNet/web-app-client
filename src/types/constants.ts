@@ -255,11 +255,14 @@ export type LatestMessage = {
   __v: number
 }
 
+export type CommunityChat = { name: string; id: string }
+
 export type Chat = {
   chatName: string
   createdAt: string
   groupAdmin: string
   groupDescription: string
+  community?: CommunityChat
   groupLogo: GroupLogo
   groupLogoImage: string | undefined
   latestMessage: LatestMessage

@@ -154,6 +154,16 @@ h6 {
   color: #000 !important;
 }
 
+.collapse {
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0;
+}
+
+.expand {
+  max-height: 1000px; /* Use a high value to simulate "auto" behavior */
+}
+
 @layer utilities {
   .animation-delay-200 {
     animation-delay: 0.2s;

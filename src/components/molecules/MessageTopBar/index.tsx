@@ -4,6 +4,7 @@ import { GoSearch } from 'react-icons/go'
 import { BiChevronDown } from 'react-icons/bi'
 import CreateChatModal from '../CreateChatModal'
 import { useModal } from '@/context/ModalContext'
+import NotificationBadge from '@/components/atoms/NotificationBadge'
 
 type Props = {
   setCurrTab: (value: string) => void
@@ -55,11 +56,10 @@ const MessageTopBar = ({
         <div className="relative " ref={dropdownRef}>
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className={` flex justify-between items-center border 
-                   border-neutral-200
-                        rounded-lg py-3 px-4  text-xs font-semibold text-neutral-700 h-10 bg-white shadow-sm w-[106px]`}
+            className={`flex justify-between gap-1 items-center border border-neutral-200 rounded-lg py-3 px-4  text-xs font-semibold text-neutral-700 h-10 bg-white shadow-sm w-auto`}
           >
             {currTab}
+            {unreadChatsCount + unreadNotAcceptedChatsCount > 0 && <span className="w-2 h-2 bg-red-600 rounded-full"></span>}
 
             <BiChevronDown className="w-4 h-4 ml-2" />
           </button>
@@ -77,15 +77,7 @@ const MessageTopBar = ({
                   } ps-2 cursor-pointer text-neutral-700 text-2xs font-medium flex items-center gap-2`}
                 >
                   Inbox
-                  {unreadChatsCount > 0 && (
-                    <p
-                      className={`bg-destructive-600  h-4 ${
-                        unreadChatsCount > 9 ? 'px-1 min-w-4' : 'w-4'
-                      }  rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
-                    >
-                      {unreadChatsCount}
-                    </p>
-                  )}
+                  {unreadChatsCount > 0 && <NotificationBadge count={unreadChatsCount} maxCount={9} />}
                 </p>
                 <p
                   onClick={() => {

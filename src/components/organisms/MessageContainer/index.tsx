@@ -2,7 +2,7 @@
 import MessageTopBar from '@/components/molecules/MessageTopBar'
 import React, { useEffect, useMemo, useState } from 'react'
 import UserChats from '../UserChats'
-import { Chat, ChatsArray, SocketConnectionEnums } from '@/types/constants'
+import { Chat, ChatsArray, CommunityChat, SocketConnectionEnums } from '@/types/constants'
 import MessageUserStickyBar from '@/components/molecules/MessageUserStickyBar'
 import UserMessages from '@/components/molecules/UserMessages'
 import { useUniStore } from '@/store/store'
@@ -233,6 +233,7 @@ const MessageContainer = () => {
             setCurrTab={setCurrTab}
             isBlockedByYou={selectedChat.blockedBy.some((id) => id.toString() == userData?.id)}
             groupAdminId={selectedChat?.groupAdmin}
+            communitySelected={selectedChat?.community as CommunityChat}
           />
           <UserMessages
             chatId={selectedChat._id}

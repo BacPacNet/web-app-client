@@ -75,7 +75,7 @@ export default function CommunityGroupBanner({
     if (communityGroups && userData) {
       setIsGroupAdmin(communityGroups.adminUserId.toString() === userData.id?.toString())
 
-      setIsUserJoinedCommunityGroup(communityGroups.users.some((item) => item.userId.toString() === userData.id && item.isRequestAccepted))
+      setIsUserJoinedCommunityGroup(communityGroups?.users?.some((item) => item?._id?.toString() === userData?.id && item?.isRequestAccepted))
     }
   }, [communityGroups, userData, setIsGroupAdmin])
 
@@ -101,11 +101,11 @@ export default function CommunityGroupBanner({
   }
 
   const isUserRequestPending = useMemo(() => {
-    return communityGroups?.users?.some((user) => user.userId === userProfileData?.users_id && user.status === status.pending) || false
+    return communityGroups?.users?.some((user) => user._id === userProfileData?.users_id && user.status === status.pending) || false
   }, [communityGroups, userProfileData])
 
   const userStatus = useMemo(() => {
-    return communityGroups?.users?.find((user) => user.userId === userProfileData?.users_id)?.status as status
+    return communityGroups?.users?.find((user) => user._id === userProfileData?.users_id)?.status as status
   }, [communityGroups, userProfileData])
 
   const handleEditCommunityGroupModal = () => {

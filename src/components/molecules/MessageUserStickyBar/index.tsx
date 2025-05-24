@@ -22,7 +22,7 @@ import { FaEdit } from 'react-icons/fa'
 import { userTypeEnum } from '@/types/RegisterForm'
 import ChatGroupMembers from '../ChatGroupMembers'
 import EditGroupChatModal from '../EditChatGroup'
-import { ChatUser } from '@/types/constants'
+import { ChatUser, CommunityChat } from '@/types/constants'
 import { useModal } from '@/context/ModalContext'
 type Props = {
   setSelectedChat: (value: any) => void
@@ -39,21 +39,7 @@ type Props = {
   setCurrTab: (value: string) => void
   isBlockedByYou: boolean
   groupAdminId: string
-}
-
-type User = {
-  userId: {
-    _id: string
-    firstName: string
-    lastName: string
-    role: userTypeEnum
-    occupation: string
-    affiliation: string
-    major: string
-    studyYear: string
-  }
-  isOnline?: boolean
-  isStarred: boolean
+  communitySelected: CommunityChat
 }
 
 const MessageUserStickyBar = ({
@@ -70,6 +56,7 @@ const MessageUserStickyBar = ({
   setCurrTab,
   isBlockedByYou,
   groupAdminId,
+  communitySelected,
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
   const [open, setOpen] = useState(false)
@@ -109,7 +96,15 @@ const MessageUserStickyBar = ({
   }
 
   const handleEditGroupModal = () => {
-    openModal(<EditGroupChatModal users={users} chatId={chatId} groupLogo={profileCover || ''} groupCurrentName={name} />)
+    openModal(
+      <EditGroupChatModal
+        users={users}
+        chatId={chatId}
+        groupLogo={profileCover || ''}
+        groupCurrentName={name}
+        communitySelected={communitySelected}
+      />
+    )
   }
   return (
     <div className="w-full top-0 p-4 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">

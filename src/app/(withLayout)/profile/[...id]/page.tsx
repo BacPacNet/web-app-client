@@ -67,7 +67,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           universityLogo={universityLogo || ''}
         />
       )}
-      <ProfilePostContainer userId={userId} containerRef={containerRef} />
+      <ProfilePostContainer source="profile" userId={userId} containerRef={containerRef} />
     </div>
   )
 }

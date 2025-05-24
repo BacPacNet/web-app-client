@@ -39,7 +39,7 @@ export const useJoinCommunityGroup = () => {
     },
 
     onError: (error: any) => {
-      showCustomDangerToast(error?.message || MESSAGES.SOMETHING_WENT_WRONG)
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
     },
   })
 }
