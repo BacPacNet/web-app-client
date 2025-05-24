@@ -32,10 +32,10 @@ export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: P
       {members?.map((user) => {
         return (
           <UserListItem
-            key={user.userId as string}
+            key={user._id as string}
             firstName={user.firstName}
             lastName={user.lastName}
-            id={user.userId as string}
+            id={user._id as string}
             university={''}
             study_year={user.year}
             degree={''}
@@ -43,8 +43,8 @@ export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: P
             occupation={user.occupation}
             imageUrl={user.profileImageUrl}
             type={''}
-            isSelfProfile={userProfileData?.users_id === user.userId}
-            isFollowing={userProfileData?.following?.some((userItem) => userItem.userId === user.userId) as boolean}
+            isSelfProfile={userProfileData?.users_id === user._id}
+            isFollowing={userProfileData?.following?.some((userItem) => userItem.userId === user._id) as boolean}
             role={user.role || 'student'}
             affiliation={user.affiliation}
             showCommunityGroupMember={true}

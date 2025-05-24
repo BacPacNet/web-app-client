@@ -4,31 +4,38 @@ import { FiCamera } from 'react-icons/fi'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { useEditGroupChat } from '@/services/Messages'
 import Image from 'next/image'
-import avatar from '@assets/avatar.svg'
 import Buttons from '@/components/atoms/Buttons'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useUsersProfileForConnections } from '@/services/user'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useUniStore } from '@/store/store'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import { Users } from '@/types/Connections'
-import UserList from '@/components/atoms/UserList'
-import { ChatUser } from '@/types/constants'
+import { ChatUser, CommunityChat } from '@/types/constants'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { useModal } from '@/context/ModalContext'
 import UserSelectDropdown from '../UserSearchList'
+import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
+import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
+import { filterData, filterFacultyData } from '@/lib/communityGroup'
+import { useGetCommunity } from '@/services/community-university'
+import { FaXmark } from 'react-icons/fa6'
+import CollegeResult from '@/components/CollegeResult'
+import { BiChevronDown } from 'react-icons/bi'
 
 const EditGroupChatModal = ({
   users,
   chatId,
   groupLogo,
   groupCurrentName,
+  communitySelected,
 }: {
   users: ChatUser[]
   chatId: string
   groupLogo: string
   groupCurrentName: string
+  communitySelected: CommunityChat
 }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -59,24 +66,41 @@ const EditGroupChatModal = ({
 
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [isImageLoading, setIsImageLoading] = useState<boolean>(false)
+  const [universityError, setUniversityError] = useState(false)
 
-  const [showSelectUsers, setShowSelectUsers] = useState<boolean>(true)
+  const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
+  const [filteredUsers, setFilterUsers] = useState<any[]>([])
+  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
   const { mutateAsync: editGroup, isPending } = useEditGroupChat(chatId)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const { closeModal } = useModal()
+  const { data: communityData } = useGetCommunity(communitySelected?.id)
+
   const {
     register,
     watch,
     formState: { errors },
     setValue,
     handleSubmit,
+    control,
   } = useForm({
     defaultValues: {
       groupLogo: groupLogo,
       title: groupCurrentName || '',
       selectedIndividualsUsers: [],
+      studentYear: [],
+      major: [],
+      occupation: [],
+      affiliation: [],
+      community: { name: communitySelected?.name, id: communitySelected?.id },
     },
   })
+
+  const studentYear = watch('studentYear') || []
+  const major = watch('major') || []
+  const occupation = watch('occupation') || []
+  const affiliation = watch('affiliation') || []
+  const community = watch('community') || []
 
   const SelectedIndividualsUsers = watch('selectedIndividualsUsers')
   useEffect(() => {
@@ -90,14 +114,47 @@ const EditGroupChatModal = ({
   }, [])
 
   useEffect(() => {
+    const allUsers = communityData?.users || []
+    const allStudentUsers = allUsers.filter((user) => user.role == 'student')
+
+    const filters = { year: studentYear, major: major }
+
+    const filtered = filterData(allStudentUsers, filters)
+
+    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
+
+    setFilterUsers(filtered)
+  }, [studentYear, major, communityData])
+
+  useEffect(() => {
+    const allUsers = communityData?.users || []
+    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
+
+    const filters = { occupation: occupation, affiliation: affiliation }
+    const filtered = filterFacultyData(allFacultyUsers, filters)
+
+    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
+
+    //const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
+
+    //const affiliationCounts = getFilteredAffiliationCounts(filtered)
+
+    setFilterFacultyUsers(filtered)
+  }, [occupation, affiliation])
+
+  useEffect(() => {
     if (showDropdown) inputRef.current?.focus()
   }, [showDropdown])
 
   const onSubmit = async (formData: any) => {
+    const mergedUsers = [
+      ...formData.selectedIndividualsUsers.map((user: any) => user._id),
+      ...filteredUsers.map((user) => user.id),
+      ...filteredFacultyUsers.map((user) => user.id),
+    ]
     const paylod: any = {
-      //...(ImageData?.groupLogo && { groupLogo: ImageData.groupLogo }),
       groupName: formData.title,
-      users: formData.selectedIndividualsUsers.map((user: any) => user._id),
+      users: mergedUsers,
     }
 
     if (groupLogoImage) {
@@ -115,6 +172,12 @@ const EditGroupChatModal = ({
     await editGroup(paylod)
     setIsImageLoading(false)
     closeModal()
+  }
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setShowSelectUsers(false)
+    setSearchInput('')
   }
 
   const removeUser = (userId: string) => {
@@ -220,7 +283,7 @@ const EditGroupChatModal = ({
         <div>
           <InputBox
             isCancel={true}
-            onCancel={() => setShowSelectUsers(false)}
+            onCancel={handleClear}
             onClick={() => setShowSelectUsers(true)}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -236,7 +299,7 @@ const EditGroupChatModal = ({
 
           <UserSelectDropdown
             searchInput={searchInput}
-            show={true}
+            show={showSelectUsers}
             onSelect={handleSelectIndividuals}
             currentUserId={userProfileData?.users_id as string}
             individualsUsers={SelectedIndividualsUsers}
@@ -249,7 +312,179 @@ const EditGroupChatModal = ({
         </div>
       </div>
 
-      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} className="" size="large">
+      <div className="relative mb-2" ref={dropdownRef}>
+        <label className="text-xs font-medium mb-2">University</label>
+        <button
+          onClick={() => setShowDropdown(!showDropdown)}
+          className={`w-full flex justify-between items-center border ${
+            universityError ? 'border-destructive-600' : 'border-neutral-200'
+          } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
+        >
+          {community?.name || 'Select University'}
+          {community?.name ? (
+            <FaXmark
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowDropdown(false)
+                setValue('community', { name: '', id: '' })
+                //setValueGroup('community', { name: '', id: '' })
+                //setSelectedUniversity({ name: '', id: '' })
+              }}
+              className="w-4 h-4 ml-2"
+            />
+          ) : (
+            <BiChevronDown className="w-4 h-4 ml-2" />
+          )}
+        </button>
+        {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
+        {showDropdown && (
+          <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
+            {userProfileData && userProfileData.email!.length > 0 ? (
+              userProfileData.email!.map((university: any) => (
+                <div
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    setValue('community', {
+                      name: university.UniversityName,
+                      id: university?.communityId,
+                    })
+                    //setValueGroup('community', { name: university.UniversityName, id: university?.communityId })
+                    setShowDropdown(false)
+                    setUniversityError(false)
+                  }}
+                  key={university?._id}
+                  className="bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
+                >
+                  <CollegeResult university={university} />
+                </div>
+              ))
+            ) : (
+              <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
+                <p className="p-3 text-gray-500">No results found</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div
+        className="flex flex-col gap-8 mb-4"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+      >
+        <Controller
+          name="studentYear"
+          control={control}
+          render={({ field }) => (
+            <div
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+            >
+              <MultiSelectDropdown
+                options={Object.keys(degreeAndMajors)}
+                value={field.value || []}
+                onChange={field.onChange}
+                placeholder="Add By Year"
+                label="Year (Students)"
+                err={false}
+                //filteredCount={filteredYearCount}
+                multiSelect={false}
+                disabled={!communitySelected?.name?.length}
+                setUniversityErr={setUniversityError}
+              />
+            </div>
+          )}
+        />
+        <Controller
+          name="major"
+          control={control}
+          render={({ field }) => (
+            <div
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+            >
+              <MultiSelectDropdown
+                options={value}
+                value={field.value || []}
+                onChange={field.onChange}
+                placeholder="Add By Major"
+                label="Major (Students)"
+                err={false}
+                search
+                //filteredCount={filteredMajorsCount}
+                parentCategory={studentYear}
+                disabled={!communitySelected?.name?.length}
+                setUniversityErr={setUniversityError}
+              />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className="flex flex-col gap-8">
+        <Controller
+          name="occupation"
+          control={control}
+          render={({ field }) => (
+            <div
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+            >
+              <MultiSelectDropdown
+                options={Object.keys(occupationAndDepartment)}
+                value={field.value || []}
+                onChange={field.onChange}
+                placeholder="Add By Occupation"
+                label="Occupation (Faculty)"
+                err={false}
+                search
+                multiSelect={false}
+                //filteredCount={filteredOccupationCount}
+                disabled={!communitySelected?.name?.length}
+                setUniversityErr={setUniversityError}
+              />
+            </div>
+          )}
+        />
+        <Controller
+          name="affiliation"
+          control={control}
+          render={({ field }) => (
+            <div
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+              }}
+            >
+              <MultiSelectDropdown
+                options={value}
+                value={field.value || []}
+                onChange={field.onChange}
+                placeholder="Add By Affiliation"
+                label="Affiliation/Department (Faculty)"
+                err={false}
+                search
+                //filteredCount={filteredAffiliationCount}
+                parentCategory={occupation}
+                disabled={!communitySelected?.name?.length}
+                setUniversityErr={setUniversityError}
+              />
+            </div>
+          )}
+        />
+      </div>
+
+      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} size="large" className="">
         {isPending || isImageLoading ? <Spinner /> : 'Apply Changes'}
       </Buttons>
 

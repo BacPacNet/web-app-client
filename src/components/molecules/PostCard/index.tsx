@@ -44,6 +44,7 @@ interface Like {
 
 interface PostProps {
   user: string
+  source?: string
   university: string
   communityName?: string
   communityGroupName?: string
@@ -100,6 +101,7 @@ const FilePreviewCard = ({ url }: { url: string }) => {
 const PostCard = React.memo(
   ({
     user,
+    source,
     university,
     adminId,
     year,
@@ -140,7 +142,7 @@ const PostCard = React.memo(
     const debounceTimeoutRef = useRef<NodeJS.Timeout>()
 
     const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(communityId, communityGroupId, isTimeline)
-    const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(communityId)
+    const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId)
 
     const handleProfileClicked = useCallback(
       (adminId: string) => {
@@ -315,18 +317,21 @@ const PostCard = React.memo(
           </div>
         </div>
 
-        <PostCommentBox
-          handleProfileClicked={handleProfileClicked}
-          showCommentSec={showCommentSection}
-          setShowCommentSection={setShowCommentSection}
-          postID={postID}
-          type={type}
-          data={PostData}
-          setImageCarasol={setImageCarasol}
-          initialComment={initialComment}
-          setShowInitial={setShowInitial}
-          showInitial={showInitial}
-        />
+        {/* Add a wrapper for the comment section with the animation */}
+        <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showCommentSection === postID ? 'max-h-screen' : 'max-h-0'}`}>
+          <PostCommentBox
+            handleProfileClicked={handleProfileClicked}
+            showCommentSec={showCommentSection}
+            setShowCommentSection={setShowCommentSection}
+            postID={postID}
+            type={type}
+            data={PostData}
+            setImageCarasol={setImageCarasol}
+            initialComment={initialComment}
+            setShowInitial={setShowInitial}
+            showInitial={showInitial}
+          />
+        </div>
       </div>
     )
   }

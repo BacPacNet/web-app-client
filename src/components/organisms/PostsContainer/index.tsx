@@ -12,8 +12,9 @@ import React, { useEffect, useState } from 'react'
 type Props = {
   userId?: string
   containerRef?: React.RefObject<HTMLDivElement> | any
+  source: string
 }
-const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
+const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
   const [showCommentSection, setShowCommentSection] = useState('')
 
   const { data: userSelfPostsData, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, error, status } = useGetUserPosts(userId, 10)
@@ -61,6 +62,7 @@ const ProfilePostContainer = ({ userId = '', containerRef }: Props) => {
     return userSelfPosts?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post?._id}
+        source={source}
         user={post?.user?.firstName + ' ' + post?.user?.lastName}
         adminId={post?.user?._id}
         university={post?.userProfile?.university_name}

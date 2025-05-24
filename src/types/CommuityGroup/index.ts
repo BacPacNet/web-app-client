@@ -3,7 +3,8 @@ import { userTypeEnum } from '../RegisterForm'
 import { S3UploadItem } from '@/services/upload'
 
 export interface CommunityGroupUsers {
-  userId: mongoose.Types.ObjectId | string
+  //  userId: string
+  _id: string
   isRequestAccepted: boolean
   firstName: string
   lastName: string

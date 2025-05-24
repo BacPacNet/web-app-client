@@ -33,17 +33,19 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
   const {
     register,
-    watch,
     formState: { errors },
-
+    watch,
     reset,
+    setValue,
   } = useForm({
     defaultValues: {
       selectedRadio: '',
+      community: { name: '', id: '' },
     },
   })
 
   const selectedRadio = watch('selectedRadio')
+  const community = watch('community')
 
   const handleIndividualUserClick = async (userId: string) => {
     const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
@@ -73,6 +75,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
       groupLogo: ImageData?.groupLogo,
       groupName: groupName,
       users: mergedUsers,
+      community,
     }
 
     createGroupChat(dataTopush)
@@ -154,6 +157,8 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
                 // hadleClear={handleClear}
                 setGroupLogoImage={setGroupLogoImage}
                 groupLogoImage={groupLogoImage}
+                setValueGroup={setValue}
+                communitySelected={community}
               />
             </div>
           }

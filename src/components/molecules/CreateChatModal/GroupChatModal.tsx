@@ -33,6 +33,8 @@ type Props = {
   setGroupName: (value: string) => void
   setGroupLogoImage: (value: File | null) => void
   groupLogoImage: File | null
+  setValueGroup: any
+  communitySelected: { name: string; id: string }
 }
 
 const GroupChatModal = ({
@@ -43,6 +45,8 @@ const GroupChatModal = ({
   setGroupName,
   setGroupLogoImage,
   groupLogoImage,
+  setValueGroup,
+  communitySelected,
 }: Props) => {
   const { userProfileData } = useUniStore()
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -51,13 +55,11 @@ const GroupChatModal = ({
   const [showDropdown, setShowDropdown] = useState(false)
   const [universityError, setUniversityError] = useState(false)
 
-  const [selectedUniversity, setSelectedUniversity] = useState<{ name: string; id: string }>({ name: '', id: '' })
+  //  const [selectedUniversity, setSelectedUniversity] = useState<{ name: string; id: string }>({ name: '', id: '' })
   const [filteredYearCount, setFilteredYearsCount] = useState<Record<string, number>>()
   const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
-
-  const { data: communityData } = useGetCommunity(selectedUniversity?.id)
 
   const [searchInput, setSearchInput] = useState('')
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
@@ -69,13 +71,14 @@ const GroupChatModal = ({
     //isLoading: isUserProfilesLoading,
   } = useUsersProfileForConnections(searchInput, 10, !!searchInput)
 
-  const userProfiles = data?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
+  //  const userProfiles = data?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || []
 
   const {
     register,
     watch,
     formState: { errors },
     control,
+    setValue,
   } = useForm({
     defaultValues: {
       selectedIndividualsUsers: [],
@@ -85,8 +88,10 @@ const GroupChatModal = ({
       occupation: [],
       affiliation: [],
       title: '',
+      //  community: { name: '', id: '' },
     },
   })
+  const { data: communityData } = useGetCommunity(communitySelected?.id)
 
   //  const selectedIndividualsUsers = watch('selectedIndividualsUsers') || []
   const studentYear = watch('studentYear') || []
@@ -276,13 +281,14 @@ const GroupChatModal = ({
             universityError ? 'border-destructive-600' : 'border-neutral-200'
           } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
         >
-          {selectedUniversity?.name || 'Select University'}
-          {selectedUniversity?.name ? (
+          {communitySelected?.name || 'Select University'}
+          {communitySelected?.name ? (
             <FaXmark
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setSelectedUniversity({ name: '', id: '' })
+                setValueGroup('community', { name: '', id: '' })
+                //setSelectedUniversity({ name: '', id: '' })
               }}
               className="w-4 h-4 ml-2"
             />
@@ -299,7 +305,7 @@ const GroupChatModal = ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    setSelectedUniversity({ name: university.UniversityName, id: university?.communityId })
+                    setValueGroup('community', { name: university.UniversityName, id: university?.communityId })
                     setShowDropdown(false)
                     setUniversityError(false)
                   }}
@@ -344,7 +350,7 @@ const GroupChatModal = ({
                 err={false}
                 filteredCount={filteredYearCount}
                 multiSelect={false}
-                disabled={!selectedUniversity?.name?.length}
+                disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
               />
             </div>
@@ -370,7 +376,7 @@ const GroupChatModal = ({
                 search
                 filteredCount={filteredMajorsCount}
                 parentCategory={studentYear}
-                disabled={!selectedUniversity?.name?.length}
+                disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
               />
             </div>
@@ -399,7 +405,7 @@ const GroupChatModal = ({
                 search
                 multiSelect={false}
                 filteredCount={filteredOccupationCount}
-                disabled={!selectedUniversity?.name?.length}
+                disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
               />
             </div>
@@ -425,7 +431,7 @@ const GroupChatModal = ({
                 search
                 filteredCount={filteredAffiliationCount}
                 parentCategory={occupation}
-                disabled={!selectedUniversity?.name?.length}
+                disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
               />
             </div>

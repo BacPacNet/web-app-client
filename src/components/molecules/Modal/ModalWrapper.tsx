@@ -24,7 +24,7 @@ const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', 
           }  rounded-2xl shadow-lg py-4 px-6 `}
         >
           {showCloseIcon ? (
-            <div className="absolute right-2 top-2">
+            <div className="absolute right-2 top-2 z-50">
               <button onClick={() => setModal(false)} className="p-2">
                 <IoClose size={24} />
               </button>

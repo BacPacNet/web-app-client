@@ -32,10 +32,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     isFetching,
     dataUpdatedAt,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, 10)
-  const [communityGroupPostDatas, setCommunityGroupPostDatas] = useState([])
   const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
-
-  console.log(communityGroupPostData, 'communityGroupPostData')
 
   useEffect(() => {
     const handleScroll = () => {
