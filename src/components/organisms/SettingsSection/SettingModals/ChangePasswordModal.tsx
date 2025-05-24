@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
@@ -152,7 +151,7 @@ const ChangePasswordModal = () => {
           </div>
           {errors.confirmPassword && <InputWarningText>{errors.confirmPassword?.message || 'Please enter your password!'}</InputWarningText>}
         </div>
-        <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+        <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="large">
           {isPendingChangeApi ? <Spinner /> : 'Push Change'}
         </Button>
       </form>

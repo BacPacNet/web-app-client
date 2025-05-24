@@ -1,10 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
-
 import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
 import InputWarningText from '@/components/atoms/InputWarningText'
@@ -179,7 +177,7 @@ const ChangeEmailModal = () => {
           )}
         </div>
         {otpData?.isAvailable ? (
-          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="large">
             {isPendingChangeApi ? <Spinner /> : 'Push Change'}
           </Button>
         ) : (

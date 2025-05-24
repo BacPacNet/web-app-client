@@ -197,7 +197,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
           )}
         </div>
         {otpData?.isAvailable ? (
-          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="small">
+          <Button disabled={isPendingChangeApi} type="submit" className=" w-11/12" size="large">
             {isPendingChangeApi ? <Spinner /> : 'Complete Verification'}
           </Button>
         ) : (

@@ -130,7 +130,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
           )
         })}
         <div className="fixed w-full bottom-0 left-0 bg-white rounded-2xl  border-t-[1px] border-neutral-200">
-          <Buttons onClick={() => handleClick()} className="mx-auto my-4 w-[300px]" size="small" variant="primary">
+          <Buttons onClick={() => handleClick()} className="mx-auto my-4 w-[300px]" size="large" variant="primary">
             Apply Filters
           </Buttons>
         </div>

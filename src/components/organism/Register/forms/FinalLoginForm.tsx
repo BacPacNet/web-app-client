@@ -76,7 +76,7 @@ const FinalLoginForm = ({ email }: { email: string }) => {
         {/* <Button className="mt-5" variant="primary">
           Log in
         </Button> */}
-        <Button onClick={handleSubmit(onSubmit)} className="mt-5" disabled={isPending} variant="primary">
+        <Button size="large" onClick={handleSubmit(onSubmit)} className="mt-5" disabled={isPending} variant="primary">
           {isPending ? <Spinner /> : 'Log in'}
         </Button>
       </div>

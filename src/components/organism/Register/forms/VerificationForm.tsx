@@ -138,11 +138,11 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Button disabled={isPending} variant="primary">
+        <Button disabled={isPending} variant="primary" size="large">
           {' '}
           {isPending ? <Spinner /> : 'Confirm'}
         </Button>
-        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+        <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account
         </Button>
         {isVerificationSuccess && <p className="text-xs text-green-500 text-center">Login credentials verified.</p>}

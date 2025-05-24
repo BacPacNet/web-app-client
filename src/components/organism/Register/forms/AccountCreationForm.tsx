@@ -146,7 +146,7 @@ const AccountCreationForm = ({ isPending }: Props) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-4">
-        <Button disabled={isPending} variant="primary">
+        <Button disabled={isPending} variant="primary" size="large">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
 

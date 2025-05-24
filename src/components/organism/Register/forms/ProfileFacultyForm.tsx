@@ -126,8 +126,10 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Button variant="primary">Next Step</Button>
-        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+        <Button variant="primary" size="large">
+          Next Step
+        </Button>
+        <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account
         </Button>
       </div>

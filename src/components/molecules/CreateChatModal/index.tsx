@@ -107,7 +107,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
       <div className="w-[300px] sm:w-[500px]">
         <div className="flex justify-between items-center mb-8">
           <h2 className=" font-bold font-poppins text-md ">Select Chat Type</h2>
-          <Buttons type="button" onClick={handleClear} variant="shade" size="extra_small" className="w-max">
+          <Buttons type="button" onClick={handleClear} variant="shade" size="small" className="w-max">
             Clear
           </Buttons>
         </div>
@@ -166,6 +166,7 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
         onClick={handleCreateChat}
         variant="primary"
         className="w-full mt-4 "
+        size="large"
       >
         Start Chat
       </Buttons>

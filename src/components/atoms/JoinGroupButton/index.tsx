@@ -14,21 +14,21 @@ const JoinGroupButton: React.FC<Props> = ({ isPrivate, isVerified, isPending, on
   if (isPrivate) {
     if (!isVerified) {
       return (
-        <Buttons variant="disable" size="extra_small_paddind_2" disabled>
+        <Buttons variant="disable" size="medium" disabled>
           Verified Users Only
         </Buttons>
       )
     }
 
     return (
-      <Buttons disabled={userStatus === status.pending} size="extra_small_paddind_2" onClick={onClick}>
+      <Buttons disabled={userStatus === status.pending} size="medium" onClick={onClick}>
         {userStatus === status.pending ? 'Request Pending' : 'Request Access'}
       </Buttons>
     )
   }
 
   return (
-    <Buttons disabled={isPending} size="extra_small_paddind_2" onClick={onClick}>
+    <Buttons disabled={isPending} size="medium" onClick={onClick}>
       Join Group
     </Buttons>
   )

@@ -3,7 +3,7 @@ import React from 'react'
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary' | 'disable' | 'danger_secondary' | 'notificationDanger'
-  size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2' | 'height40' | 'small_profile'
+  size?: 'small' | 'medium' | 'large'
   leftIcon?: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
@@ -30,13 +30,9 @@ const Buttons: React.FC<ButtonProps> = ({
     disable: 'bg-primary-300 text-white',
   }
   const variantSizes = {
-    small: 'text-sm py-2 px-4 ',
-    small_profile: 'py-3 px-4 text-2xs',
-    medium: 'text-xs py-3 px-3 h-10',
-    large: 'text-sm p-3  h-12 ',
-    extra_small: 'text-3xs sm:text-2xs py-1 px-2',
-    extra_small_paddind_2: 'text-2xs py-2 px-3',
-    height40: 'text-2xs sm:text-xs p-2 sm:p-3 sm:h-10 ',
+    small: 'text-2xs py-3 px-4 h-9 ',
+    medium: 'text-xs py-3 px-4 h-10',
+    large: 'text-sm py-3 px-4  h-12 ',
   }
 
   const variantClass = variantClasses[variant]

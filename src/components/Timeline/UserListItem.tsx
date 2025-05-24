@@ -102,7 +102,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       </div>
 
       {showRemoveButton && (
-        <Button disabled={isRemovePending} onClick={() => handleRemoveClick?.(id)} variant="danger_secondary" size="extra_small">
+        <Button disabled={isRemovePending} onClick={() => handleRemoveClick?.(id)} variant="danger_secondary" size="small">
           Remove
         </Button>
       )}
@@ -110,11 +110,11 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       {showFollowButton && (
         <div className="p-2 bg-primary-50 rounded-md">
           {isFollowingState ? (
-            <Button onClick={handleProfileClick} className="whitespace-nowrap text-neutral-700" variant="border" size="extra_small_paddind_2">
+            <Button onClick={handleProfileClick} className="whitespace-nowrap text-neutral-700" variant="border" size="small">
               View Profile
             </Button>
           ) : (
-            <Button onClick={handleFollowClick} variant="shade" size="extra_small_paddind_2" disabled={isProcessing}>
+            <Button onClick={handleFollowClick} variant="shade" size="small" disabled={isProcessing}>
               {isProcessing ? <Spinner /> : 'Follow'}
             </Button>
           )}

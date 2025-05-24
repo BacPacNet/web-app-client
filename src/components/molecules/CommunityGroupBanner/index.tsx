@@ -161,7 +161,7 @@ export default function CommunityGroupBanner({
           <div>
             <p className="text-xs text-neutral-500 py-4">{communityGroups?.description}</p>
             <div className="flex items-center gap-2">
-              <Buttons onClick={handleShowMembers} className="text-neutral-500" size="extra_small_paddind_2" variant="border">
+              <Buttons onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
                 {totalCommunityGroupMember} Members
               </Buttons>
               <CustomTooltip

@@ -32,7 +32,7 @@ const UserCard = ({ user }: { user: User }) => {
         {/*<Button variant="border" size="extra_small">
           Following
         </Button>*/}
-        <Button variant="shade" size="extra_small">
+        <Button variant="shade" size="small">
           Follow
         </Button>
       </div>

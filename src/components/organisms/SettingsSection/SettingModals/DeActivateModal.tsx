@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import SettingModalWrapper from '../SettingModalWrapper'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
@@ -187,7 +186,7 @@ const DeActivateModal = () => {
           </div>
           {errors.sure && <InputWarningText>{'Please accept to continue'}</InputWarningText>}
         </div>
-        <Button type="submit" className=" w-11/12" size="small" variant="danger">
+        <Button type="submit" className=" w-11/12" size="large" variant="danger">
           {isPendingChangeApi ? <Spinner /> : '  Deactivate Account'}
         </Button>
       </form>

@@ -61,7 +61,7 @@ const UsersModal = ({ setSelectedChat }: Props) => {
             </div>
           </div>
         ))}
-        <Buttons className="w-full sticky bottom-0" variant="shade" onClick={() => handleShowModal()}>
+        <Buttons className="w-full sticky bottom-0" variant="shade" size="large" onClick={() => handleShowModal()}>
           Create Group
         </Buttons>
       </div>

@@ -87,10 +87,10 @@ const CommunityAndCommunityGroupJoinNotification = ({ data }: Props) => {
           </span>
         </p>
         <div className="flex gap-2 items-center">
-          <Buttons onClick={() => handleJoinGroup(data?.communityGroupId?._id, data._id)} size="extra_small">
+          <Buttons onClick={() => handleJoinGroup(data?.communityGroupId?._id, data._id)} size="medium">
             Accept
           </Buttons>
-          <Buttons disabled={data?.isRead} onClick={() => handleReject(data._id)} size="extra_small">
+          <Buttons disabled={data?.isRead} onClick={() => handleReject(data._id)} size="medium">
             Reject
           </Buttons>
         </div>

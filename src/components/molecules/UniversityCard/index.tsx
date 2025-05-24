@@ -108,7 +108,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
               </PopoverContent>
             </Popover>
           ) : (
-            <Buttons size="extra_small_paddind_2" onClick={handleToggleJoinCommunity}>
+            <Buttons size="medium" onClick={handleToggleJoinCommunity}>
               Join Community
             </Buttons>
           )}

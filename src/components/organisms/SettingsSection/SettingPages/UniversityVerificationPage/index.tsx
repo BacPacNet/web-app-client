@@ -71,7 +71,7 @@ const UniversityVerificationPage = () => {
       ) : (
         ''
       )}
-      <Buttons onClick={() => openModal(<UniversityVerificationModal />)} size="small_profile" className=" mt-6 flex items-center gap-1">
+      <Buttons onClick={() => openModal(<UniversityVerificationModal />)} size="large" className=" mt-6 flex items-center gap-1">
         Verify Account <IoIosAddCircle className="w-5 h-5" />
       </Buttons>
     </div>

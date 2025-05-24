@@ -248,7 +248,7 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
                 </label>
               </div>
               <div className="flex gap-2 h-10">
-                <Buttons className="w-[70px]" size="small" disabled={isLoading} onClick={handleSubmit}>
+                <Buttons className="w-[70px]" size="large" disabled={isLoading} onClick={handleSubmit}>
                   {isUserPostCommentPending || isGroupPostCommentPending ? <Spinner /> : 'Post'}
                 </Buttons>
               </div>

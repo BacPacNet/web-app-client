@@ -27,6 +27,7 @@ const NotLoggedInModal = ({ title, desc }: Props) => {
           }}
           className=""
           variant="primary"
+          size="large"
         >
           Login
         </Buttons>
@@ -35,6 +36,7 @@ const NotLoggedInModal = ({ title, desc }: Props) => {
             router.push('/register'), closeModal()
           }}
           variant="border"
+          size="large"
         >
           Sign up
         </Buttons>

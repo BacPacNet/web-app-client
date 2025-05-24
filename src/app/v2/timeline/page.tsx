@@ -118,11 +118,11 @@ export default function UnibuzzPage() {
               </div>
 
               <div className="flex gap-2">
-                <Buttons className="h-8 gap-1 text-xs">
+                <Buttons className="h-8 gap-1 text-xs" size="small">
                   <LuFilter className="h-3.5 w-3.5" />
                   Filter
                 </Buttons>
-                <Buttons className="h-8 gap-1 text-xs">
+                <Buttons className="h-8 gap-1 text-xs" size="small">
                   <LuArrowUpDown className="h-3.5 w-3.5" />
                   Sort
                 </Buttons>

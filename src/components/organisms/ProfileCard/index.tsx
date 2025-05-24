@@ -181,11 +181,11 @@ export function UserProfileCard({
                 //     }
                 className="flex items-center gap-2 h-10 "
                 variant="shade"
-                size="small_profile"
+                size="small"
               >
                 <HiMail className="w-4 h-4" /> Message
               </Buttons>
-              <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small_profile">
+              <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
                 {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
               </Buttons>
             </div>
@@ -229,10 +229,10 @@ export function UserProfileCard({
               </PopoverContent>
             </Popover>
           </div>
-          <Buttons className="flex items-center gap-2 h-10 " variant="shade" size="small_profile">
+          <Buttons className="flex items-center gap-2 h-10 " variant="shade" size="small">
             <HiMail className="w-4 h-4" /> Message
           </Buttons>
-          <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small_profile">
+          <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
             {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
           </Buttons>
         </div>

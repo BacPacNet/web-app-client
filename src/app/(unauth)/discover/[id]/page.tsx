@@ -144,11 +144,11 @@ export default function UniversityProfile() {
             <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
 
             {isCommunityAlreadyJoined ? (
-              <Buttons variant="shade" className="w-max" onClick={handleViewCommunity}>
+              <Buttons variant="shade" className="w-max" size="large" onClick={handleViewCommunity}>
                 View Community
               </Buttons>
             ) : (
-              <Buttons disabled={isJoinLoading} className="w-max" onClick={handleClick}>
+              <Buttons disabled={isJoinLoading} className="w-max" size="large" onClick={handleClick}>
                 Join Community
               </Buttons>
             )}

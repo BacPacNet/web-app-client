@@ -120,8 +120,10 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">
-        <Button variant="primary">Next Step</Button>
-        <Button onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+        <Button size="large" variant="primary">
+          Next Step
+        </Button>
+        <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
           Review Account
         </Button>
       </div>

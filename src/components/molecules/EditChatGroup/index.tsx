@@ -249,7 +249,7 @@ const EditGroupChatModal = ({
         </div>
       </div>
 
-      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} className="">
+      <Buttons disabled={isPending} onClick={handleSubmit(onSubmit)} className="" size="large">
         {isPending || isImageLoading ? <Spinner /> : 'Apply Changes'}
       </Buttons>
 

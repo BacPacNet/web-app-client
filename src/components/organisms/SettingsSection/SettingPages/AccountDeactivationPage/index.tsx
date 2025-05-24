@@ -5,7 +5,6 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useDeActivateUserAccount } from '@/services/user'
-import { useUniStore } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -172,7 +171,7 @@ const AccountDeactivationPage = () => {
       </div>
 
       <Buttons
-        size="small_profile"
+        size="large"
         variant="danger"
         className="h-[42px] mt-6 flex items-center gap-1"
         onClick={handleSubmit(onSubmit)}

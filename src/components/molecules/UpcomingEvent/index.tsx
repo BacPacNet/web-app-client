@@ -22,7 +22,7 @@ export default function UpcomingEvent({ eventDate = '29/07/2024' }) {
         </div>
       </div>
       <div className="text-right">
-        <Button variant="primary" size="extra_small">
+        <Button variant="primary" size="small">
           Check Post
         </Button>
       </div>

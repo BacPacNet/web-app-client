@@ -28,10 +28,10 @@ const DeleteCommunityGroupModal = ({ communityGroupId, communityId }: Props) => 
       <RiErrorWarningLine size={100} className="text-neutral-700" />
       <h3 className="text-base font-semibold font-poppins text-center">Are you sure you want to delete community group?</h3>
       <div className="flex items-center gap-4 w-full px-5">
-        <Buttons onClick={() => closeModal()} className="w-11/12" size="small">
+        <Buttons onClick={() => closeModal()} className="w-11/12" size="large">
           No
         </Buttons>
-        <Buttons onClick={() => handleDeleteCommunityGroup()} className="w-11/12" size="small" variant="danger">
+        <Buttons onClick={() => handleDeleteCommunityGroup()} className="w-11/12" size="large" variant="danger">
           {isDeleteCommunityGroupPending ? <Spinner /> : 'Yes'}
         </Buttons>
       </div>

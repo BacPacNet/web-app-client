@@ -226,7 +226,7 @@ export default function ConnectionUserSelectModal({
         <div ref={modalRef} className="relative w-full max-w-md bg-white rounded-2xl p-6 shadow-lg overflow-visible">
           <div className="flex justify-between items-center mb-8">
             <h2 className=" font-bold font-poppins text-md ">Search Filter</h2>
-            <Buttons variant="shade" size="extra_small" onClick={handleClearButton} className="w-max">
+            <Buttons variant="shade" size="small" onClick={handleClearButton} className="w-max">
               Clear
             </Buttons>
           </div>
@@ -388,7 +388,7 @@ export default function ConnectionUserSelectModal({
               </div>
             }
           />
-          <Buttons onClick={() => handleClick()} className="w-full mt-8">
+          <Buttons onClick={() => handleClick()} className="w-full mt-8" size="large">
             Apply Filters
           </Buttons>
         </div>

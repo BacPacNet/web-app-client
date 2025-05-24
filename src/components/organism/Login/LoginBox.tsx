@@ -75,10 +75,10 @@ const LoginBox = () => {
             {errors.password && <InputWarningText>{errors.password.message}</InputWarningText>}
           </div>
           <div className="flex flex-col gap-4">
-            <Button disabled={isPending} variant="primary">
+            <Button disabled={isPending} variant="primary" size="large">
               {isPending ? <Spinner /> : 'Log in'}
             </Button>
-            <Button type="button" onClick={() => router.push('/forget-password')} disabled={isPending} variant="border">
+            <Button type="button" onClick={() => router.push('/forget-password')} disabled={isPending} variant="border" size="large">
               Forgot Password
             </Button>
             <p className="mt-4 mx-auto text-primary-500 font-normal cursor-pointer" onClick={() => router.push('/register')}>

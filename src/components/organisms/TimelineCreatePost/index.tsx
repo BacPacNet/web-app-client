@@ -180,7 +180,7 @@ function TimelineCreatePost() {
           </div>
 
           <div className="flex gap-2 h-10">
-            <Buttons className="w-[70px]" size="small" disabled={isPending} onClick={handleSubmit}>
+            <Buttons className="w-[70px]" size="medium" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>
           </div>
