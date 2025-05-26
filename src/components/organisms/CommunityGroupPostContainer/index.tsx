@@ -27,10 +27,10 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     fetchNextPage: communityPostNextpage,
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
-    isLoading,
+    //isLoading,
     error,
     isFetching,
-    dataUpdatedAt,
+    //dataUpdatedAt,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, 10)
   const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
 

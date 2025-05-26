@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import { Spinner } from '../spinner/Spinner'
 import Image from 'next/image'
 import { userTypeEnum } from '@/types/RegisterForm'
-import { closeModal } from '../molecules/Modal/ModalManager'
 import avatar from '@assets/avatar.svg'
 import { showCustomDangerToast } from '../atoms/CustomToasts/CustomToasts'
+import { useModal } from '@/context/ModalContext'
 
 interface FollowingItemProps {
   firstName: string
@@ -50,7 +50,9 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   handleRemoveClick,
   isRemovePending,
 }) => {
+  console.log(isSelfProfile, 'isSelf')
   const router = useRouter()
+  const { closeModal } = useModal()
   const { mutateAsync: toggleFollow } = useToggleFollow(type)
 
   const [imgSrc, setImgSrc] = useState(imageUrl || '')

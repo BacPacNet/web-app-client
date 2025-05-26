@@ -6,7 +6,7 @@ import { useUniStore } from '@/store/store'
 import { MessageNotification } from '@/components/molecules/MessageNotification'
 import { useRouter } from 'next/navigation'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import axios from 'axios'
 
 type Notification = {
@@ -205,9 +205,10 @@ export const useJoinCommunityGroup = () => {
   return useMutation({
     mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
 
-    onSuccess: () => {
+    onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
       queryClient.invalidateQueries({ queryKey: ['user_notification_total_count'] })
+      //  showCustomSuccessToast()
     },
     onError: (res: any) => {
       showCustomDangerToast(res.response.data.message)
