@@ -43,6 +43,7 @@ export interface CreateCommunityGroupType {
   occupation: []
   affiliation: []
   repostOption: string
+  community: { name: string; id: string }
 }
 
 export enum status {

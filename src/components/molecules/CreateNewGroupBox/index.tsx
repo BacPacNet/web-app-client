@@ -31,6 +31,10 @@ import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
+import CollegeResult from '@/components/CollegeResult'
+import { FaXmark } from 'react-icons/fa6'
+import { BiChevronDown } from 'react-icons/bi'
+import UniversityDropdown from './Dropdown'
 
 type Props = {
   communityId: string
@@ -44,12 +48,12 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
-  const { data: communityData } = useGetCommunity(communityId)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [searchInput, setSearchInput] = useState('')
   const logoInputRef = useRef<HTMLInputElement>(null)
 
+  const [universityError, setUniversityError] = useState(false)
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [filtersError, setFIltersError] = useState('')
@@ -77,6 +81,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
       communityGroupAccess: '',
       communityGroupType: '',
       selectedUsers: [],
+      community: { name: '', id: '' },
     },
   })
   const categoryRef = useRef<HTMLDivElement>(null)
@@ -86,6 +91,9 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const major = watch('major') || ''
   const occupation = watch('occupation') || ''
   const affiliation = watch('affiliation') || ''
+  const community = watch('community')
+
+  const { data: communityData } = useGetCommunity(community.id)
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
@@ -207,20 +215,24 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   const removeUser = (userId: string) => {
     setIndividualsUsers((prev: any[]) => prev.filter((u) => u._id !== userId))
   }
+  const handleUniversityClear = () => {
+    setValue('community', { name: '', id: '' })
+    setUniversityError(true)
+  }
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowSelectUsers(false)
-      }
-    }
+  //  useEffect(() => {
+  //    const handleClickOutside = (event: MouseEvent) => {
+  //      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+  //        setShowSelectUsers(false)
+  //      }
+  //    }
 
-    document.addEventListener('mousedown', handleClickOutside)
+  //    document.addEventListener('mousedown', handleClickOutside)
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  //    return () => {
+  //      document.removeEventListener('mousedown', handleClickOutside)
+  //    }
+  //  }, [])
 
   useEffect(() => {
     const allUsers = communityData?.users || []
@@ -587,8 +599,78 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 </div>
               )}
             </div>
+            {/*<div className="relative mb-2">*/}
+            <UniversityDropdown
+              selected={community}
+              options={userProfileData?.email || []}
+              onSelect={(val) => {
+                setValue('community', val)
+                setUniversityError(false)
+              }}
+              onClear={() => handleUniversityClear()}
+              error={!!universityError}
+              errorMessage="Select university to filter based on student or faculty."
+            />
+            {/*<label className="text-xs font-medium mb-2">University</label>
+              <button
+                type="button"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className={`w-full flex justify-between items-center border ${
+                  universityError ? 'border-destructive-600' : 'border-neutral-200'
+                } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
+              >
+                {community?.name || 'Select University'}
+                {community?.name ? (
+                  <FaXmark
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setValue('community', { name: '', id: '' })
+                      //setSelectedUniversity({ name: '', id: '' })
+                    }}
+                    className="w-4 h-4 ml-2"
+                  />
+                ) : (
+                  <BiChevronDown className="w-4 h-4 ml-2" />
+                )}
+              </button>
+
+              {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
+              {showDropdown && (
+                <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
+                  {userProfileData && userProfileData.email!.length > 0 ? (
+                    userProfileData.email!.map((university: any) => (
+                      <div
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setValue('community', { name: university.UniversityName, id: university?.communityId })
+                          setShowDropdown(false)
+                          setUniversityError(false)
+                        }}
+                        key={university?._id}
+                        className="bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
+                      >
+                        <CollegeResult university={university} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
+                      <p className="p-3 text-gray-500">No results found</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>*/}
           </div>
-          <div className="flex flex-col gap-8">
+
+          <div
+            className="flex flex-col gap-8"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+          >
             <Controller
               name="studentYear"
               control={control}
@@ -602,6 +684,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   err={false}
                   filteredCount={filteredYearCount}
                   multiSelect={false}
+                  disabled={!community?.name?.length}
+                  setUniversityErr={setUniversityError}
                 />
               )}
             />
@@ -619,6 +703,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   search={true}
                   filteredCount={filteredMajorsCount}
                   parentCategory={studentYear}
+                  disabled={!community?.name?.length}
+                  setUniversityErr={setUniversityError}
                 />
               )}
             />
@@ -636,6 +722,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   search={true}
                   multiSelect={false}
                   filteredCount={filteredOccupationCount}
+                  disabled={!community?.name?.length}
+                  setUniversityErr={setUniversityError}
                 />
               )}
             />
@@ -653,6 +741,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                   search={true}
                   filteredCount={filteredAffiliationCount}
                   parentCategory={occupation}
+                  disabled={!community?.name?.length}
+                  setUniversityErr={setUniversityError}
                 />
               )}
             />

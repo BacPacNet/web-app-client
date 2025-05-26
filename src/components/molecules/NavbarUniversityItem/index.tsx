@@ -23,6 +23,7 @@ import { LuArrowUpDown, LuFilter } from 'react-icons/lu'
 import { isEmpty } from '@/lib/utils'
 import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs'
 import { useModal } from '@/context/ModalContext'
+import { status } from '@/types/CommuityGroup'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -148,7 +149,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     return selectedCommunityGroup
       ?.filter(
         (userCommunityGroup) =>
-          userCommunityGroup?.users?.some((selectCommunityGroup) => selectCommunityGroup?.userId?.toString() === userData?.id?.toString())
+          userCommunityGroup?.users?.some(
+            (selectCommunityGroup) => selectCommunityGroup?.userId === userData?.id && selectCommunityGroup.status === status.accepted
+          ) || userCommunityGroup.adminUserId === userData?.id
       )
       ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
   }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])

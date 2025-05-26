@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { status } from '../CommuityGroup'
 
 export interface Community {
   _id: string
@@ -30,6 +31,7 @@ export interface CommunityUsers {
   occupation: string
   affiliation: string
   role: string
+  status: status
 }
 
 export interface CommunityGroup {

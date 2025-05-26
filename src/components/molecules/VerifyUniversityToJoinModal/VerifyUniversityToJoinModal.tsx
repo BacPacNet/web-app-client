@@ -9,7 +9,7 @@ const VerifyUniversityToJoinModal = () => {
 
   const handleRedirect = () => {
     closeModal()
-    router.push('/setting')
+    router.push('/setting/university-verification')
   }
   return (
     <div className="flex flex-col gap-4">

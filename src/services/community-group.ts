@@ -34,12 +34,16 @@ export const useJoinCommunityGroup = () => {
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
-      setUserProfileCommunities(response.data.communities)
+      if (!response.data.isGroupPrivate) {
+        setUserProfileCommunities(response.data.communities)
+      }
       showCustomSuccessToast(response.message)
+      console.log(response, 'response')
     },
 
     onError: (error: any) => {
-      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+      console.log(error, 'error')
+      showCustomDangerToast('errrrorr')
     },
   })
 }

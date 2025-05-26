@@ -49,8 +49,6 @@ export default function CommunityGroupBanner({
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityID, communityGroupID)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
-  const { mutate: deleteCommunityGroup } = useDeleteCommunityGroup()
-  const router = useRouter()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
   const handleShowMembers = () => {
     openModal(<CommunityGroupModal communityGroupId={communityGroupID} isGroupAdmin={isGroupAdmin} users={CommunityGroupMember || []} />)
@@ -82,12 +80,7 @@ export default function CommunityGroupBanner({
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
     if (isUserRequestPending) return
     if (!isUserJoinedCommunityGroup) {
-      joinCommunityGroup(communityGroupID),
-        {
-          onSuccess: (response: any) => {
-            showCustomSuccessToast(response.data.message)
-          },
-        }
+      joinCommunityGroup(communityGroupID)
     } else {
       openModal(
         <CommunityLeaveModal
@@ -161,7 +154,7 @@ export default function CommunityGroupBanner({
           <div>
             <p className="text-xs text-neutral-500 py-4">{communityGroups?.description}</p>
             <div className="flex items-center gap-2">
-              <Buttons onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
+              <Buttons disabled={isGroupPrivate} onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
                 {totalCommunityGroupMember} Members
               </Buttons>
               <CustomTooltip
