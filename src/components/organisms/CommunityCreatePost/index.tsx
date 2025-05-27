@@ -83,13 +83,14 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
 
     setIsPostCreating(true)
 
+    console.log(userProfileData?.email?.some((entry) => entry.communityId === communityId), 'dsdsd')
     try {
       const basePayload: CommunityPostData = {
         content: cleanInnerHTML(quillHTMLState.current!),
         communityPostsType: PostTypeOption[postAccessType as never],
         communityId,
         communityGroupId: communityGroupId || null,
-        isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) || false,
+        isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) as boolean,
       }
 
       // Upload image if present
@@ -105,6 +106,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
       }
 
       // Create the post
+      console.log(basePayload)
       CreateGroupPost(basePayload)
     } catch (error) {
       showCustomDangerToast('Failed to create post')

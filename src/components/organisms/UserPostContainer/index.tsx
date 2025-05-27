@@ -109,7 +109,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
-          isPostVerified: false,
+          isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityID) as boolean,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {
@@ -125,7 +125,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
           ...data,
           communityId: communityID,
           ...(communityGroupID && communityGroupID?.length > 0 && { communiyGroupId: communityGroupID }),
-          isPostVerified: false,
+          isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityID) as boolean,
         }
         CreateGroupPost(communityData)
       } else if (type === PostInputType.Timeline) {

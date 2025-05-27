@@ -44,7 +44,7 @@ const UserCard: React.FC<UserCardProps> = ({
         <Image src={avatarLink || avatar} width={48} height={48} className="object-cover rounded-full h-[inherit]" alt="User Avatar" />
       </div>
       <div>
-        <div className="flex gap-1 items-start">
+        <div className="flex gap-1 items-center">
           <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
           {isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />}
         </div>
