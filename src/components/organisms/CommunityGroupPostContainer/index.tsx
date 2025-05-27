@@ -1,12 +1,13 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
 import { Spinner } from '@/components/spinner/Spinner'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import { useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
@@ -27,12 +28,13 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     fetchNextPage: communityPostNextpage,
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
-    //isLoading,
+    isLoading,
     error,
     isFetching,
     //dataUpdatedAt,
   } = useGetCommunityGroupPost(communityId, communityGroupId, true, 10)
-  const communityGroupPostData = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+
+  const communityGroupPostData = useMemo(() => communityGroupPost?.pages.flatMap((page) => page?.finalPost) || null, [communityGroupPost?.pages])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,10 +60,14 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   //    setCommunityGroupPostDatas(communityDatas)
   //  }, [communityGroupPost, dataUpdatedAt])
 
+  if ((isLoading && !communityPostIsFetchingNextPage) || communityGroupPost === null) {
+    return <PostSkeleton count={3} />
+  }
+
   if (error) {
     return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
   }
-  if (communityGroupPostData?.length === 0 && !isFetching) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+  if (communityGroupPostData?.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
   return (
     <div className="py-8 flex flex-col gap-6 post-container">

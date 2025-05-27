@@ -2,8 +2,6 @@
 import CommunityGroupBanner from '@/components/molecules/CommunityGroupBanner'
 import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
 import CommunityGroupPostContainer from '@/components/organisms/CommunityGroupPostContainer'
-import UserPostContainer from '@/components/organisms/UserPostContainer'
-import { PostInputType, PostType } from '@/types/constants'
 import { useRef, useState } from 'react'
 
 export default function Page({ params }: { params: { communityId: string; groupId: string } }) {
@@ -13,7 +11,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi outline-none">
       <CommunityGroupBanner
         communityID={communityId}
         communityGroupID={communityGroupID}
@@ -23,9 +21,6 @@ export default function Page({ params }: { params: { communityId: string; groupI
         isUserJoinedCommunityGroup={isUserJoinedCommunityGroup}
       />
 
-      {/*{isUserJoinedCommunityGroup && (
-        <UserPostContainer communityID={communityId} communityGroupID={communityGroupID} type={PostInputType.Community} />
-      )}*/}
       {(isUserJoinedCommunityGroup || isGroupAdmin) && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupID} />}
       <CommunityGroupPostContainer containerRef={containerRef} />
     </div>

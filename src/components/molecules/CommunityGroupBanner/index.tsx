@@ -6,25 +6,23 @@ import logoPlaceholder from '@assets/Logo Circle.svg'
 import './index.css'
 import { useUniStore } from '@/store/store'
 import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-university'
-import { Skeleton } from '@/components/ui/Skeleton'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
-import { useDeleteCommunityGroup, useJoinCommunityGroup } from '@/services/community-group'
+import { useJoinCommunityGroup } from '@/services/community-group'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import { CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import publicIcon from '@assets/public.svg'
 import Buttons from '@/components/atoms/Buttons'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { FaLock } from 'react-icons/fa6'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import GroupAvatarWithBadge from '@/components/atoms/GroupAvatarWithBadge'
 import CoverImageUploader from '@/components/atoms/CoverImage'
 import CommunitySettingMenu from '@/components/atoms/CommunitySettingMenu'
-import { useRouter } from 'next/navigation'
 import JoinGroupButton from '@/components/atoms/JoinGroupButton'
 import { CommunityGroupModal } from '../Modal/CommunityGroupModal'
 import useDeviceType from '@/hooks/useDeviceType'
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
 import { useModal } from '@/context/ModalContext'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 interface Props {
   communityID: string
   communityGroupID: string
@@ -112,7 +110,7 @@ export default function CommunityGroupBanner({
     //router.push(`/community/${communityGroups?.communityId._id}`)
   }
 
-  if (isCommunityGroupsLoading) return <Skeleton className="w-full h-60 bg-slate-300 my-4" />
+  if (isCommunityGroupsLoading) return <PostSkeleton count={1} />
 
   return (
     <>
