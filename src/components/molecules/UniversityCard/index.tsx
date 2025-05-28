@@ -5,7 +5,6 @@ import universityPlaceholder from '@assets/university_placeholder.jpg'
 import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
 import settingIcon from '@assets/settingIcon.svg'
 import { TbLogout2 } from 'react-icons/tb'
-import { FaUniversity } from 'react-icons/fa'
 import { FiEdit } from 'react-icons/fi'
 
 import './index.css'
@@ -35,7 +34,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   useEffect(() => {
     if (communityData && userData) {
-      setIsUserJoinedCommunity(communityData.users.some((user) => user?.id?.toString() === userData?.id))
+      setIsUserJoinedCommunity(communityData.users.some((user) => user?._id?.toString() === userData?.id))
       setIsGroupAdmin(communityData?.adminId?.toString() === userData?.id?.toString())
     }
   }, [communityData, userData, setIsGroupAdmin])

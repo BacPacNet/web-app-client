@@ -201,9 +201,8 @@ export function useGetUserNotification(limit: number, toCall: boolean) {
 export const useJoinCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-  const router = useRouter()
   return useMutation({
-    mutationFn: (data: { groupId: string; id: string }) => JoinCommunityGroup(data, cookieValue),
+    mutationFn: (data: { groupId: string; id: string; isAccepted?: boolean }) => JoinCommunityGroup(data, cookieValue),
 
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })

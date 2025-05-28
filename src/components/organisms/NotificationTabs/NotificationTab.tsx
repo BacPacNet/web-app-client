@@ -4,6 +4,7 @@ import { useGetUserNotification, useMarkAllNotificationAsRead } from '@/services
 
 import NotificationCard from '@/components/Notification/NotificationCard'
 import Buttons from '@/components/atoms/Buttons'
+import Title from '@/components/atoms/Title'
 
 export const notificationRoleAccess = {
   GROUP_INVITE: 'GROUP_INVITE',
@@ -50,9 +51,9 @@ const NotificationTab = () => {
 
   return (
     <div ref={containerRef} className="overflow-y-scroll hideScrollbar flex flex-col h-[inherit] ">
-      <div className="flex justify-between items-center">
-        <h6 className="text-[20px] text-neutral-700 font-bold font-poppins p-4">Notifications</h6>
-        <Buttons variant="shade" size="small" className="mx-4" onClick={() => mutate()}>
+      <div className="flex justify-between items-center p-6">
+        <Title>Notifications</Title>
+        <Buttons variant="shade" size="small" onClick={() => mutate()}>
           Mark All as Read
         </Buttons>
       </div>

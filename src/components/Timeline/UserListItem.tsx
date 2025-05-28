@@ -50,7 +50,6 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   handleRemoveClick,
   isRemovePending,
 }) => {
-  console.log(isSelfProfile, 'isSelf')
   const router = useRouter()
   const { closeModal } = useModal()
   const { mutateAsync: toggleFollow } = useToggleFollow(type)

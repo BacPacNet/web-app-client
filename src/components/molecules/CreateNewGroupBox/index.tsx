@@ -199,8 +199,8 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
   }
 
   const handleClick = (userId: string) => {
-    if (SelectedUsers?.some((selectedUser) => selectedUser.id == userId)) {
-      const filterUsers = SelectedUsers.filter((selectedUser) => selectedUser.id !== userId)
+    if (SelectedUsers?.some((selectedUser) => selectedUser?._id == userId)) {
+      const filterUsers = SelectedUsers.filter((selectedUser) => selectedUser?._id !== userId)
       setValue('selectedUsers', filterUsers as any)
     }
   }
@@ -585,9 +585,9 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
                 <div className="flex gap-2 flex-wrap">
                   {SelectedUsers?.map((item) => (
                     // <div key={item.id} className="bg-secondary px-2 py-1 text-xs text-primary-500 rounded-md flex items-center gap-2">
-                    <div key={item.id} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
+                    <div key={item._id} className="flex items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
                       {item?.firstName}{' '}
-                      <span onClick={() => handleClick(item.id as string)} className="cursor-pointer text-sm">
+                      <span onClick={() => handleClick(item._id as string)} className="cursor-pointer text-sm">
                         <IoClose />
                       </span>
                     </div>

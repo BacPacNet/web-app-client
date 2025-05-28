@@ -83,7 +83,6 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
 
     setIsPostCreating(true)
 
-    console.log(userProfileData?.email?.some((entry) => entry.communityId === communityId), 'dsdsd')
     try {
       const basePayload: CommunityPostData = {
         content: cleanInnerHTML(quillHTMLState.current!),
@@ -106,7 +105,6 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
       }
 
       // Create the post
-      console.log(basePayload)
       CreateGroupPost(basePayload)
     } catch (error) {
       showCustomDangerToast('Failed to create post')

@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect } from 'react'
-import logo from '@/assets/unibuzz_logo.svg'
 import InputBox from '@/components/atoms/Input/InputBox'
 import Title from '@/components/atoms/Title'
 import Button from '@/components/atoms/Buttons'
