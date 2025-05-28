@@ -142,7 +142,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
     const filtered = filterData(allStudentUsers, filters)
 
-    console.log(filtered, 'filtered')
     setFilterUsers(filtered)
   }, [studentYear, major, communityData])
 
@@ -210,7 +209,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       communityGroupCategory: selectedFilters,
     }
 
-    console.log(filteredUsers, 'filteredUsers')
     const mergedUsers: string[] = [
       ...individualsUsers,
       ...filteredUsers.map((user) => ({ ...user, _id: user.id })),

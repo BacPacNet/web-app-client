@@ -45,13 +45,13 @@ const MessageTopBar = ({
 
   return (
     <>
-      <div className="flex justify-between items-center p-4 mb-2">
+      <div className="flex justify-between items-center p-6 mb-2">
         <h6 className="font-poppins font-bold text-[20px]  ">Messages</h6>
         <Buttons className="block" size="medium" onClick={() => handleShowModal()}>
           Start a Chat
         </Buttons>
       </div>
-      <div className="flex gap-4 justify-between items-center px-4 my-2">
+      <div className="flex gap-4 justify-between items-center px-6 my-2">
         {/* // tabs  */}
         <div className="relative " ref={dropdownRef}>
           <button

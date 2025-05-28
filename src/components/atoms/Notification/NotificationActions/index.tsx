@@ -20,11 +20,12 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
     if (!data?.communityGroupId?._id) return
 
     if (data.type === notificationRoleAccess.GROUP_INVITE) {
-      const dataToPush = {
+      const payload = {
+        isAccepted: true,
         groupId: data.communityGroupId._id,
         id: id,
       }
-      joinGroup(dataToPush)
+      joinGroup(payload)
     }
   }
 

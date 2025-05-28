@@ -150,7 +150,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       ?.filter(
         (userCommunityGroup) =>
           userCommunityGroup?.users?.some(
-            (selectCommunityGroup) => selectCommunityGroup?.userId === userData?.id && selectCommunityGroup.status === status.accepted
+            (selectCommunityGroup) => selectCommunityGroup?._id === userData?.id && selectCommunityGroup.status === status.accepted
           ) || userCommunityGroup.adminUserId === userData?.id
       )
       ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
@@ -201,6 +201,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
+          selectedCommunityImage={selectedCommunityImage}
         />
       ),
     },

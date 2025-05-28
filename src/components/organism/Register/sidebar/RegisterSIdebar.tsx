@@ -2,7 +2,6 @@ import React from 'react'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import Image from 'next/image'
 import RegisterStepper from '../stepper/RegisterStepper'
-import { IoIosArrowBack } from 'react-icons/io'
 interface props {
   step: number
   subStep: number

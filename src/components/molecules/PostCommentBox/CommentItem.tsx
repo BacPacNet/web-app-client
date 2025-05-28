@@ -27,8 +27,6 @@ const CommentItem = ({
   const { mutate: deleteUserPost } = useDeleteUserPostComment()
   const { mutate: deleteCommunityPost } = useDeleteCommunityPostComment()
 
-  console.log(currentUserId, comment)
-
   const handleDelete = () => {
     if (type === PostType.Community) {
       deleteCommunityPost(comment._id)
