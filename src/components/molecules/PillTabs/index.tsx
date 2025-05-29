@@ -28,7 +28,7 @@ const PillTabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left'
   return (
     <div className={`w-full ${className}`}>
       {/* Buttons List */}
-      <div className={`flex justify-${tabAlign} gap-2 overflow-x-auto custom-scrollbar`}>
+      <div className={`flex justify-${tabAlign} px-6 gap-2 overflow-x-auto custom-scrollbar`}>
         {tabs.map((tab, index) => (
           <button
             key={index}

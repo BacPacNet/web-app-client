@@ -181,21 +181,22 @@ export default function FindPeople() {
   return (
     <>
       <div className="flex gap-4 justify-between items-center mb-2">
-        <UserSearchInput value={name} onChange={(value) => handleChange(value)} />
-
-        <div
-          onClick={openModal}
-          className="cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"
-        >
-          <FaFilter className="text-primary-500" />
+        <div className="flex px-6 w-full gap-4">
+          <UserSearchInput value={name} onChange={(value) => handleChange(value)} />
+          <div
+            onClick={openModal}
+            className="cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"
+          >
+            <FaFilter className="text-primary-500" />
+          </div>
         </div>
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar pb-10">
+      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar pb-10 px-2">
         {renderUserProfileList()}
       </div>
       {isFetchingNextPage && (
         <div className="text-center pt-2">
-          <UserListItemSkeleton />
+          <UserListItemSkeleton count={4} />
         </div>
       )}
       {isModalOpen && (

@@ -87,7 +87,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
             }}
             render={({ field }) => (
               <DateSelect
-                placeholder="DD/MM/YYYY"
+                placeholder="dd/mm/yyyy"
                 value={field.value}
                 onChange={(value) => setValue('birthDate', value)}
                 label="Birthday"
@@ -112,7 +112,7 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 label="Status"
                 icon={'single'}
                 err={!!ProfileFormErrors.userType}
-                placeholder="Select your current role."
+                placeholder="select your current role"
               />
             )}
           />

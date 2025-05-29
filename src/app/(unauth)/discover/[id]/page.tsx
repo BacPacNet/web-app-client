@@ -17,9 +17,10 @@ import { useUniStore } from '@/store/store'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import VerifyUniversityToJoinModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import { useModal } from '@/context/ModalContext'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useQueryClient } from '@tanstack/react-query'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -44,9 +45,10 @@ const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: st
 export default function UniversityProfile() {
   const params = useParams()
   const { openModal } = useModal()
+  const queryClient = useQueryClient()
   const { id: universityName } = params
   const { data: university, isLoading: isUniversityLoading, isFetching } = useUniversitySearchByName(universityName as string)
-  const { userData, userProfileData } = useUniStore()
+  const { userData, userProfileData, setUserProfileCommunities } = useUniStore()
   const [imageSrc, setImageSrc] = useState(university?.campus || universityPlaceholder)
   const [logoSrc, setLogoSrc] = useState(university?.logo || universityLogoPlaceholder)
 
@@ -120,7 +122,12 @@ export default function UniversityProfile() {
       joinCommunityFromUniversity(university._id, {
         onSuccess: (response: any) => {
           if (response.statusCode === 406) {
-            return openModal(<VerifyUniversityToJoinModal />, 'h-[390px] w-[350px] sm:w-[490px] noi')
+            return openModal(<VerifyUniversityToJoinModal />, 'w-[350px] sm:w-[490px] noi')
+          } else {
+            queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+            if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
+            router.push(`/community/${response.data.community._id}`)
+            showCustomSuccessToast(`Joined Community `)
           }
         },
       })

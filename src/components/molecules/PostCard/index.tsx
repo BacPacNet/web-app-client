@@ -19,7 +19,7 @@ import UserCard from '@/components/atoms/UserCard'
 dayjs.extend(relativeTime)
 
 const SharePopup = React.memo(({ postId, type }: { postId: string; type: PostType }) => {
-  const postUrl = useMemo(() => `${window.location.host}/post/${postId}isType=${type}`, [postId])
+  const postUrl = useMemo(() => `${window.location.host}/post/${postId}?isType=${type}`, [postId])
 
   return (
     <div>

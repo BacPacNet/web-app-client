@@ -109,7 +109,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
       )}
 
       {showFollowButton && (
-        <div className="p-2 bg-primary-50 rounded-md">
+        <div className="py-2 bg-primary-50 rounded-md">
           {isFollowingState ? (
             <Button onClick={handleProfileClick} className="whitespace-nowrap text-neutral-700" variant="border" size="small">
               View Profile

@@ -6,8 +6,10 @@ import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState } from 'react'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostSkeleton from '@/components/atoms/PostSkeleton'
-import Card from '@/components/atoms/Card'
+import notMember from '@/assets/notMember.svg'
 import { useGetCommunityPost } from '@/services/community-university'
+import { AxiosError } from 'axios'
+import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 
 type Props = {
   communityID?: string
@@ -108,8 +110,14 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
       return <PostSkeleton />
     }
 
-    if (communityPostError) {
-      return <Card className="px-4 rounded-lg text-center">{(communityPostError as any).response?.data?.message || 'Error loading posts'}</Card>
+    if (communityPostError && (communityPostError as AxiosError).response!.status === 401) {
+      return (
+        <EmptyStateCard
+          imageSrc={notMember}
+          title="You are not a member of this group"
+          description="This group is for members only. Become a member to access exclusive content and discussions."
+        />
+      )
     }
 
     return renderPostWithRespectToPathName()

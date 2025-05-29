@@ -29,9 +29,8 @@ export default function ConnectionPage() {
 
   return (
     <div className="h-[inherit] py-4">
-      <Card className="rounded-2xl h-full overflow-hidden px-6">
-        {/* <Tabs tabs={tabs} className={'h-full'} /> */}
-        <h6 className="font-poppins font-bold text-[20px]  mb-4">Connections</h6>
+      <Card className="rounded-2xl h-full overflow-hidden">
+        <h6 className="font-poppins font-bold text-[20px] px-6 mb-4">Connections</h6>
         <PillTabs tabs={tabs} className={'h-full'} labelSize="medium" />
       </Card>
     </div>
