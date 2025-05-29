@@ -15,7 +15,7 @@ const CommunityGroupUserSelectModal = ({ setSelectedUsers, communityId, selected
   const { data: communityData } = useGetCommunity(communityId)
 
   const handleSelectAll = useCallback(() => {
-    const getAlluserIds = communityData?.users?.map((user) => user?._id)
+    const getAlluserIds = communityData?.users?.map((user) => user?.id)
     setSelectedUsers(getAlluserIds as string[])
   }, [])
 
@@ -42,8 +42,8 @@ const CommunityGroupUserSelectModal = ({ setSelectedUsers, communityId, selected
       </div>
       {communityData?.users?.map((user) => (
         <SelectUsers
-          key={user?._id}
-          userID={user?._id || ''}
+          key={user?.id}
+          userID={user?.id || ''}
           user={user}
           setSelectedUsers={setSelectedUsers}
           selectedUsers={selectedUsersId as string[]}

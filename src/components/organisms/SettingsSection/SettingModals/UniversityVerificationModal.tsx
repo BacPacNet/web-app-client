@@ -38,7 +38,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     getValues,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
-  const { mutate, data: addUniversityEmailData, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
+  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')

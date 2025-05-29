@@ -18,7 +18,7 @@ export interface Community {
 }
 
 export interface CommunityUsers {
-  _id: string
+  id: string
   isRequestAccepted: boolean
   firstName: string
   lastName: string

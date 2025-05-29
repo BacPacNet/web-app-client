@@ -122,8 +122,6 @@ export default function UniversityProfile() {
           if (response.statusCode === 406) {
             return openModal(<VerifyUniversityToJoinModal />, 'h-[390px] w-[350px] sm:w-[490px] noi')
           }
-          showCustomSuccessToast('Joined Community')
-          return router.push(`/community/${response.data.community._id}`)
         },
       })
     }

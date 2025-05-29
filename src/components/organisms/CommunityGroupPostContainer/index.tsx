@@ -1,17 +1,17 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
-import { Spinner } from '@/components/spinner/Spinner'
+import notMember from '@/assets/notMember.svg'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import { useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
+import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 
 function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
-  const queryClient = useQueryClient()
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
     images: any
@@ -64,8 +64,14 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     return <PostSkeleton count={3} />
   }
 
-  if (error) {
-    return <div className="text-center my-4 bg-white rounded-xl p-4">{(error as any)?.response?.data?.message || 'Something went wrong'}</div>
+  if (error && (error as AxiosError).response!.status === 401) {
+    return (
+      <EmptyStateCard
+        imageSrc={notMember}
+        title="You are not a member of this group"
+        description="This group is for members only. Become a member to access exclusive content and discussions."
+      />
+    )
   }
   if (communityGroupPostData?.length === 0) return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
 
