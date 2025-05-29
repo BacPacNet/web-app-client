@@ -8,7 +8,6 @@ import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/comp
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import { MESSAGES } from '@/content/constant'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -245,23 +244,20 @@ export const useUpdateCommunity = () => {
 
 export const useJoinCommunityFromUniversity = () => {
   const [cookieValue] = useCookie('uni_user_token')
-  const queryClient = useQueryClient()
-  const router = useRouter()
-  const { setUserProfileCommunities } = useUniStore()
   return useMutation({
     mutationFn: (universityId: string) => joinCommunityFromUniversityAPI(universityId, cookieValue),
-    onSuccess: (response: any) => {
-      //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    //onSuccess: (response: any) => {
+    //  //queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
 
-      showCustomSuccessToast('Joined Community')
-      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
-      router.push(`/community/${response.data.community._id}`)
+    //  //  showCustomSuccessToast('Joined Community')
+    //  //  queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+    //  if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
+    //  router.push(`/community/${response.data.community._id}`)
 
-      //   showCustomSuccessToast(`Joined Community `)
-    },
-    onError: (res: any) => {
-      showCustomDangerToast(MESSAGES.SOMETHING_WENT_WRONG)
+    //  //   showCustomSuccessToast(`Joined Community `)
+    //},
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message)
     },
   })
 }

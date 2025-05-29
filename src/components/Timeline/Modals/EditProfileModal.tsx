@@ -487,7 +487,7 @@ const EditProfileModal = () => {
             </>
           )}
         </div>
-        <div>
+        {/*<div>
           <div className="flex items-center gap-2">
             <input
               className="w-4 h-4"
@@ -499,7 +499,7 @@ const EditProfileModal = () => {
             />
             <label htmlFor="applicant">Applicant</label>
           </div>
-        </div>
+        </div>*/}
         <div>
           <div className="flex items-center gap-2">
             <input

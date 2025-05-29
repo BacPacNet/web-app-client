@@ -112,7 +112,7 @@ const SelectDropdown = ({
           variantBg[variant]
         } focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} ${variantText[variant]} text-xs px-1`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : '!text-neutral-400'} ${variantText[variant]} px-1`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2

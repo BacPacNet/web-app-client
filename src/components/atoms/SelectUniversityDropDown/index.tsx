@@ -63,7 +63,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
           err ? 'border-red-400' : 'border-neutral-200'
         } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400 h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-xs line-clamp-1`}> {value || placeholder}</p>
+        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'} text-sm line-clamp-1`}> {value || placeholder}</p>
         <div>
           {icon == 'single' ? (
             <IoIosArrowDown />
