@@ -66,9 +66,10 @@ export function useDeleteUserPostComment() {
     mutationFn: (postId: string) => deleteUserPostComment(postId, cookieValue),
     onSuccess: () => {
       // Invalidate or update the specific post's comments cache
-      queryClient.invalidateQueries({
-        queryKey: ['userPostComments'],
-      })
+      queryClient.invalidateQueries({ queryKey: ['userPostComments'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+
       showCustomSuccessToast('comment deleted sucessfully')
     },
     onError: (error) => {
@@ -112,6 +113,7 @@ export const useCreateUserPostComment = (isSinglePost: boolean) => {
           }),
         })
         queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+        queryClient.invalidateQueries({ queryKey: ['userPosts'] })
         queryClient.invalidateQueries({ queryKey: ['getPost'] })
       }
     },

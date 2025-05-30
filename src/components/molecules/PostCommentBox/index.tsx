@@ -32,7 +32,6 @@ const PostCommentBox = ({
 
   const [newPost, setNewPost] = useState(false)
   const [closeInitialComments, setCloseInitialComments] = useState(false)
-  const [showReplies, setShowReplies] = useState(false)
 
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])

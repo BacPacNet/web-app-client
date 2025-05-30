@@ -10,15 +10,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import avatar from '@assets/avatar.svg'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { FaAngleDown, FaBell, FaRegUser } from 'react-icons/fa'
+import { FaAngleDown, FaRegUser } from 'react-icons/fa'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 
 import { MdInfoOutline, MdOutlineLock, MdOutlineSettings } from 'react-icons/md'
 import { PiChatTextBold, PiPaintBrushDuotone } from 'react-icons/pi'
 import { TbLogout } from 'react-icons/tb'
 import MobileViewNavbar from '@/components/organism/MobileViewNavbar'
-import { useGetMessageNotification, useGetNotification } from '@/services/notification'
-import { IoMenu } from 'react-icons/io5'
+import { IoBugOutline, IoMenu } from 'react-icons/io5'
 import { RxCross2 } from 'react-icons/rx'
 import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 import { useLogout } from '@/hooks/useLogOut'
@@ -124,22 +123,27 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                       <MdOutlineSettings />
                       <p>Settings</p>
                     </li>
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    {/*<li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                       <MdOutlineLock />
                       <p>Privacy</p>
-                    </li>
-
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
-                      <PiPaintBrushDuotone />
-                      <p>Preferences</p>
-                    </li>
+                    </li>*/}
                   </ul>
                   <ul className="border-b-[1px] border-neutral-200 ">
                     <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                      <IoBugOutline />
+                      <p>Report bug</p>
+                    </li>
+                    <li
+                      onClick={() => router.push('/contact')}
+                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                    >
                       <MdInfoOutline />
                       <p>Help Center</p>
                     </li>
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <li
+                      onClick={() => router.push('/contact')}
+                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                    >
                       <PiChatTextBold />
                       <p>Feedback</p>
                     </li>

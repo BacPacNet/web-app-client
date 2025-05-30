@@ -168,6 +168,8 @@ export function useDeleteCommunityPostComment() {
         queryKey: ['communityPostComments'],
       })
       showCustomSuccessToast('comment deleted sucessfully')
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
     onError: (error) => {
       console.error('Failed to delete comment:', error)
@@ -538,7 +540,6 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
 
     onSuccess: (res: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
-      console.log(res.comment, 'resresresres')
 
       if (currUserComments) {
         queryClient.setQueryData(['communityPostComments'], {
@@ -555,7 +556,6 @@ export const useCreateGroupPostComment = (isSinglePost: boolean) => {
           }),
         })
       }
-      console.log(res, 'res')
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['getPost'] })
