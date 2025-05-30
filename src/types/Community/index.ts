@@ -33,6 +33,22 @@ export interface CommunityUsers {
   status: status
 }
 
+export interface CommunityGroupUsers {
+  _id: string
+  isRequestAccepted: boolean
+  firstName: string
+  lastName: string
+  profileImageUrl: string
+  universityName: string
+  year: string
+  degree: string
+  major: string
+  occupation: string
+  affiliation: string
+  role: string
+  status: status
+}
+
 export interface CommunityGroup {
   _id: string
   adminUserId: string
@@ -49,7 +65,7 @@ export interface CommunityGroup {
   memberCount: number
   communityGroupType: string
   about: string
-  users: CommunityUsers[]
+  users: CommunityGroupUsers[]
 }
 
 export interface communityPostType {

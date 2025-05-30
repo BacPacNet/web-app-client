@@ -82,7 +82,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
               />
             </div>
             <p className="text-xs font-bold text-neutral-700">{communityData?.name}</p>
-            <p className="ai-power text-xs font-black">AI POWERED</p>
+            {/*<p className="ai-power text-xs font-black">AI POWERED</p>*/}
           </div>
           {isUserJoinedCommunity ? (
             <Popover open={toggleDropdown} onOpenChange={(open) => setToggleDropdown(open)}>

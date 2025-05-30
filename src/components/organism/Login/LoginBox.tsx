@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import InputBox from '@/components/atoms/Input/InputBox'
 import Title from '@/components/atoms/Title'
 import Button from '@/components/atoms/Buttons'
@@ -9,10 +9,10 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/spinner/Spinner'
-import { useUniStore } from '@/store/store'
 
 const LoginBox = () => {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -20,23 +20,32 @@ const LoginBox = () => {
     setValue,
   } = useForm<LoginForm>({ defaultValues: { email: '' } })
 
-  const { mutate: login, error, isPending } = useHandleLogin()
-  const { userData } = useUniStore()
+  const { mutateAsync: login, isPending } = useHandleLogin()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const emailValue = localStorage.getItem('registeredEmail')
       if (emailValue) setValue('email', emailValue)
     }
-  }, [setValue])
+  }, [])
 
-  const onSubmit = (data: LoginForm) => login(data)
-
-  useEffect(() => {
-    if (userData) {
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      setIsLoading(true)
+      await login(data)
       router.push('/timeline')
+    } catch (error) {
+      console.error('Login error:', error)
+    } finally {
+      setIsLoading(false)
     }
-  }, [router, userData])
+  }
+
+  //  useEffect(() => {
+  //    if (userData) {
+  //      router.push('/timeline')
+  //    }
+  //  }, [router, userData])
 
   return (
     <div className="flex flex-col w-11/12 sm:w-[448px] mx-auto">
@@ -74,8 +83,8 @@ const LoginBox = () => {
             {errors.password && <InputWarningText>{errors.password.message}</InputWarningText>}
           </div>
           <div className="flex flex-col gap-4">
-            <Button disabled={isPending} variant="primary" size="large">
-              {isPending ? <Spinner /> : 'Log in'}
+            <Button disabled={isPending || isLoading} variant="primary" size="large">
+              {isPending || isLoading ? <Spinner /> : 'Log in'}
             </Button>
             <Button type="button" onClick={() => router.push('/forget-password')} disabled={isPending} variant="border" size="large">
               Forgot Password

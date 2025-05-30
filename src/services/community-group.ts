@@ -35,11 +35,10 @@ export const useJoinCommunityGroup = () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroup'] })
       console.log(response, 'response')
-      if (!response.data.isGroupPrivate) {
-        //setUserProfileCommunities(response.data.communities)
+      if (response.success && response.isGroupPrivate) {
+        return showCustomSuccessToast(response.message)
       }
-      showCustomSuccessToast(response.message)
-      console.log(response, 'response')
+      return setUserProfileCommunities(response.data.communities)
     },
 
     onError: (error: any) => {

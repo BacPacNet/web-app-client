@@ -1,14 +1,15 @@
 import React from 'react'
 import UserCard from '@/components/atoms/UserCard'
-import { AiOutlineDelete, AiOutlineLike } from 'react-icons/ai'
+import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
-import { FiMessageCircle } from 'react-icons/fi'
+import { FiMessageCircle, FiMoreHorizontal } from 'react-icons/fi'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import avatar from '@assets/avatar.svg'
 import { useDeleteUserPostComment } from '@/services/community-timeline'
 import { PostType } from '@/types/constants'
 import { useDeleteCommunityPostComment } from '@/services/community-university'
+import CommentCardOption from '@/components/atoms/CommentCardOption'
 
 const CommentItem = ({
   key,
@@ -24,6 +25,8 @@ const CommentItem = ({
   showReplies,
   childCommentsId,
 }: any) => {
+  const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
+
   const { mutate: deleteUserPost } = useDeleteUserPostComment()
   const { mutate: deleteCommunityPost } = useDeleteCommunityPostComment()
 
@@ -41,20 +44,26 @@ const CommentItem = ({
         comment.level == 1 ? 'mt-4 ml-6' : 'first:mt-8 '
       }`}
     >
-      <UserCard
-        user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
-        university={comment?.commenterProfileId?.university_name}
-        major={comment?.commenterProfileId?.major}
-        year={comment?.commenterProfileId?.study_year}
-        avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-        adminId={comment?.commenterId?._id}
-        postID={postID}
-        type={type}
-        handleProfileClicked={handleProfileClicked}
-        role={comment?.commenterProfileId?.role}
-        affiliation={comment?.commenterProfileId?.affiliation}
-        occupation={comment?.commenterProfileId?.occupation}
-      />
+      <div className="flex items-start gap-2 justify-between">
+        <UserCard
+          user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
+          university={comment?.commenterProfileId?.university_name}
+          major={comment?.commenterProfileId?.major}
+          year={comment?.commenterProfileId?.study_year}
+          avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
+          adminId={comment?.commenterId?._id}
+          postID={postID}
+          type={type}
+          handleProfileClicked={handleProfileClicked}
+          role={comment?.commenterProfileId?.role}
+          affiliation={comment?.commenterProfileId?.affiliation}
+          occupation={comment?.commenterProfileId?.occupation}
+        />
+
+        <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
+          <CommentCardOption isSelfPost={commenterId === currentUserId} commentId={comment._id} isType={type} />
+        </div>
+      </div>
 
       <div className="flex flex-col gap-2 pt-2 border-b border-neutral-200">
         <p className="text-2xs sm:text-xs break-words lg:min-w-[450px]" dangerouslySetInnerHTML={{ __html: comment?.content }} />
@@ -83,13 +92,6 @@ const CommentItem = ({
             <div onClick={() => handleReplyClick(comment)} className="flex items-center cursor-pointer">
               <HiReply className="text-gray-dark" />
               <span className="ml-1 font-poppins text-xs">reply</span>
-            </div>
-          )}
-          {/* Show delete button if current user is the commenter */}
-          {(currentUserId === comment?.commenterId?.id || currentUserId === comment?.commenterId?._id) && (
-            <div onClick={handleDelete} className="flex items-center cursor-pointer text-red-500">
-              <AiOutlineDelete />
-              <span className="ml-1 text-xs">delete</span>
             </div>
           )}
         </div>
