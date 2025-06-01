@@ -304,7 +304,7 @@ export const useLeaveCommunity = () => {
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomSuccessToast('community left')
+      showCustomSuccessToast('You have successfully left the community group.')
       setUserProfileCommunities(response.data.community)
     },
     onError: (res: any) => {

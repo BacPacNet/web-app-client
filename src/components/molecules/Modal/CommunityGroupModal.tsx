@@ -7,11 +7,11 @@ import React, { useState } from 'react'
 
 interface Props {
   users: CommunityGroupUsers[]
-  isGroupAdmin: boolean
+  adminId: string
   communityGroupId: string
 }
 
-export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: Props) => {
+export const CommunityGroupModal = ({ users, adminId, communityGroupId }: Props) => {
   const { userProfileData } = useUniStore()
   const [members, setMembers] = useState<CommunityGroupUsers[]>(users)
   const { mutate: mutateRemoveUserFromCommunityGroup, isPending: isPending } = useRemoveUserFromCommunityGroup()
@@ -21,7 +21,7 @@ export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: P
       { communityGroupId, userId: id },
       {
         onSuccess: (response: any) => {
-          setMembers(response.data.users)
+          setMembers(response.data.communityGroup.users)
         },
       }
     )
@@ -48,7 +48,8 @@ export const CommunityGroupModal = ({ users, isGroupAdmin, communityGroupId }: P
             role={user.role || 'student'}
             affiliation={user.affiliation}
             showCommunityGroupMember={true}
-            isGroupAdmin={isGroupAdmin}
+            isViewerAdmin={adminId === userProfileData?.users_id}
+            isGroupAdmin={user._id === adminId}
             handleRemoveClick={(id) => handleRemoveUser(id)}
             isRemovePending={isPending}
           />

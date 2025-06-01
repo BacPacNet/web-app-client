@@ -15,6 +15,7 @@ import CommunityLeaveModal from '../CommunityLeaveModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import Buttons from '@/components/atoms/Buttons'
 import { useModal } from '@/context/ModalContext'
+import LeavingCommunityCard from '../LeaveCommunityModal'
 
 interface Props {
   communityID: string
@@ -34,7 +35,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   useEffect(() => {
     if (communityData && userData) {
-      setIsUserJoinedCommunity(communityData.users.some((user) => user?.id === userData?.id))
+      setIsUserJoinedCommunity(communityData.users.some((user) => user?._id === userData?.id))
       setIsGroupAdmin(communityData?.adminId?.toString() === userData?.id?.toString())
     }
   }, [communityData, userData, setIsGroupAdmin])
@@ -52,7 +53,15 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
         onSuccess: () => setIsUserJoinedCommunity(true),
       })
     } else {
-      openModal(<CommunityLeaveModal communityID={communityID} setIsUserJoinedCommunity={setIsUserJoinedCommunity} />, 'h-max w-96')
+      openModal(
+        <LeavingCommunityCard
+          universityName={communityData?.name || ''}
+          logo={communityData?.communityLogoUrl.imageUrl || ''}
+          setIsUserJoinedCommunity={setIsUserJoinedCommunity}
+          communityId={communityID}
+        />,
+        'h-max w-[500px]'
+      )
     }
   }
 

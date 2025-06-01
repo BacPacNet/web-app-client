@@ -49,7 +49,14 @@ export default function CommunityGroupBanner({
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
   const handleShowMembers = () => {
-    openModal(<CommunityGroupModal communityGroupId={communityGroupID} isGroupAdmin={isGroupAdmin} users={CommunityGroupMember || []} />)
+    openModal(
+      <CommunityGroupModal
+        adminId={communityGroups?.adminUserId as string}
+        communityGroupId={communityGroupID}
+        //isGroupAdmin={isGroupAdmin}
+        users={CommunityGroupMember || []}
+      />
+    )
   }
 
   useEffect(() => {
@@ -152,7 +159,7 @@ export default function CommunityGroupBanner({
           <div>
             <p className="text-xs text-neutral-500 py-4">{communityGroups?.description}</p>
             <div className="flex items-center gap-2">
-              <Buttons disabled={isGroupPrivate} onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
+              <Buttons disabled={!isUserJoinedCommunityGroup} onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
                 {totalCommunityGroupMember} Members
               </Buttons>
               <CustomTooltip

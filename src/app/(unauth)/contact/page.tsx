@@ -4,8 +4,8 @@ import React from 'react'
 const ContactUs = () => {
   return (
     <main className="flex min-h-screen flex-col items-center   bg-neutral-100">
-      <div className="flex  flex-col items-center  max-width-allowed w-full py-16 ">
-        <div className="w-11/12 md:w-full max-w-[448px] bg-white p-4 sm:p-12 rounded-lg shadow-[0px_6px_15px_-2px_rgba(16,24,40,0.08),0px_6px_15px_-2px_rgba(16,24,40,0.08)]">
+      <div className="flex  flex-col items-center  max-width-allowed w-[90%] py-16 ">
+        <div className="md:w-full max-w-[500px] bg-white  p-6 rounded-lg shadow-card">
           <ContactForm />
         </div>
       </div>

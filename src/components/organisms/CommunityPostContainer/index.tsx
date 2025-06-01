@@ -110,12 +110,12 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
       return <PostSkeleton />
     }
 
-    if (communityPostError && (communityPostError as AxiosError).response!.status === 401) {
+    if (communityPostError && (communityPostError as AxiosError).response?.status === 401) {
       return (
         <EmptyStateCard
           imageSrc={notMember}
-          title="You are not a member of this group"
-          description="This group is for members only. Become a member to access exclusive content and discussions."
+          title="You are not a member of this Community"
+          description="This Community is for members only. Become a member to access exclusive content and discussions."
         />
       )
     }

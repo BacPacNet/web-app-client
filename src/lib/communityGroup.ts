@@ -81,8 +81,8 @@ export const getFilteredAffiliationCounts = (filteredData: any[]) => {
 export const getUniqueById = (arr: any[]) => {
   const seen = new Map()
   arr.forEach((item) => {
-    if (!seen.has(item.id)) {
-      seen.set(item.id, item)
+    if (!seen.has(item._id)) {
+      seen.set(item._id, item)
     }
   })
   return Array.from(seen.values())

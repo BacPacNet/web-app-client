@@ -8,6 +8,7 @@ import { userTypeEnum } from '@/types/RegisterForm'
 import avatar from '@assets/avatar.svg'
 import { showCustomDangerToast } from '../atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
+import { FaCrown } from 'react-icons/fa'
 
 interface FollowingItemProps {
   firstName: string
@@ -29,6 +30,7 @@ interface FollowingItemProps {
   isGroupAdmin?: boolean
   handleRemoveClick?: (id: string) => void
   isRemovePending?: boolean
+  isViewerAdmin?: boolean
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -49,6 +51,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   isGroupAdmin,
   handleRemoveClick,
   isRemovePending,
+  isViewerAdmin,
 }) => {
   const router = useRouter()
   const { closeModal } = useModal()
@@ -59,7 +62,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const [isProcessing, setIsProcessing] = useState(false)
 
   const isStudent = role === userTypeEnum.Student
-  const showRemoveButton = !isSelfProfile && isGroupAdmin && showCommunityGroupMember
+  const showRemoveButton = !isSelfProfile && isViewerAdmin && showCommunityGroupMember
   const showFollowButton = !isSelfProfile && !showRemoveButton
 
   const handleFollowClick = async () => {
@@ -93,8 +96,9 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           className="w-12 h-12 rounded-full object-cover"
         />
         <div>
-          <h3 className="font-semibold text-neutral-700 text-xs">
+          <h3 className="font-semibold text-neutral-700 text-xs flex items-center gap-1">
             {firstName} {lastName}
+            {isGroupAdmin && <FaCrown className="text-warning-500" />}
           </h3>
           {/*{university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}*/}
           <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
