@@ -266,7 +266,7 @@ const MessageContainer = () => {
     }
   }
   return (
-    <>
+    <div className="flex flex-col h-full">
       {!selectedChat ? (
         <MessageTopBar
           currTab={currTab}
@@ -279,8 +279,8 @@ const MessageContainer = () => {
         />
       ) : null}
 
-      <div className={`${selectedChat ? 'h-full relative' : 'h-[90%]'}  `}>{renderChat()}</div>
-    </>
+      <div className="flex-1 relative overflow-y-auto">{renderChat()}</div>
+    </div>
   )
 }
 

@@ -41,7 +41,7 @@ const CommentItem = ({
     <div
       key={key}
       className={`w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
-        comment.level == 1 ? 'mt-4 ml-6' : 'first:mt-8 '
+        comment.level == 1 ? 'mt-4 ml-6 pr-6' : 'first:mt-8 '
       }`}
     >
       <div className="flex items-start gap-2 justify-between">

@@ -149,8 +149,8 @@ const EditGroupChatModal = ({
   const onSubmit = async (formData: any) => {
     const mergedUsers = [
       ...formData.selectedIndividualsUsers.map((user: any) => user._id),
-      ...filteredUsers.map((user) => user.id),
-      ...filteredFacultyUsers.map((user) => user.id),
+      ...filteredUsers.map((user) => user._id),
+      ...filteredFacultyUsers.map((user) => user._id),
     ]
     const paylod: any = {
       groupName: formData.title,

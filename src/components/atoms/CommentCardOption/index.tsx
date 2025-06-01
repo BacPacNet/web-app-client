@@ -23,7 +23,6 @@ const CommentCardOption = ({ commentId, isType, isSelfPost }: CommentOptionType)
   const { mutate: deleteCommunityPostComment } = useDeleteCommunityPostComment()
 
   const handleDeletePost = () => {
-    console.log(isType)
     openModal(
       <DeleteModal
         entityName={'this comment'}
@@ -39,6 +38,7 @@ const CommentCardOption = ({ commentId, isType, isSelfPost }: CommentOptionType)
       'h-auto'
     )
   }
+  if (!isSelfPost) return null
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -47,12 +47,10 @@ const CommentCardOption = ({ commentId, isType, isSelfPost }: CommentOptionType)
       </PopoverTrigger>
       <PopoverContent onClick={() => setIsOpen(false)} className="relative top-0 right-8 w-auto border-none shadow-card  bg-white p-0">
         <div className="flex flex-col">
-          {isSelfPost && (
-            <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2 rounded-md">
-              <MdDeleteForever className="text-primary" size={16} />
-              <p className="font-medium text-xs text-neutral-800">Delete</p>
-            </div>
-          )}
+          <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2 rounded-md">
+            <MdDeleteForever className="text-primary" size={16} />
+            <p className="font-medium text-xs text-neutral-800">Delete</p>
+          </div>
         </div>
       </PopoverContent>
     </Popover>

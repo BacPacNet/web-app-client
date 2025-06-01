@@ -48,13 +48,13 @@ export function ContactForm() {
   }, [isSuccess])
 
   return (
-    <div className="w-full ">
+    <>
       <div className="text-start mb-8">
         <h2 className="text-lg-small sm:md-big font-poppins font-extrabold text-neutral-700 mb-3">Send us a message</h2>
-        <p className="text-neutral-700 text-sm ">Contact us regarding any concerns or inquiries.</p>
+        <p className="text-neutral-700 text-sm">Contact us regarding any concerns or inquiries.</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className=" flex flex-col gap-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[22px]">
           <div className="w-full flex flex-col">
             <InputBox
@@ -140,6 +140,6 @@ export function ContactForm() {
           </Buttons>
         </div>
       </form>
-    </div>
+    </>
   )
 }

@@ -209,11 +209,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       communityGroupCategory: selectedFilters,
     }
 
-    const mergedUsers: string[] = [
-      ...individualsUsers,
-      ...filteredUsers.map((user) => ({ ...user, _id: user.id })),
-      ...filteredFacultyUsers.map((user) => ({ ...user, _id: user.id })),
-    ].filter(Boolean)
+    const mergedUsers: string[] = [...individualsUsers, ...filteredFacultyUsers, ...filteredFacultyUsers].filter(Boolean)
 
     //const uniqueUsers = getUniqueById(mergedUsers)
     //const existingUserIds = communityGroups.users.map((user) => user.userId)

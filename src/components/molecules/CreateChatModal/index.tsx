@@ -68,8 +68,8 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
     const mergedUsers = [
       ...selectedIndividualsUsers.map((user) => user._id),
-      ...filteredUsers.map((user) => user.id),
-      ...filteredFacultyUsers.map((user) => user.id),
+      ...filteredUsers.map((user) => user._id),
+      ...filteredFacultyUsers.map((user) => user._id),
     ]
     const dataTopush = {
       groupLogo: ImageData?.groupLogo,

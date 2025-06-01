@@ -136,7 +136,7 @@ export default function ConnectionUserSelectModal({
   useEffect(() => {
     const allUsers = communityData?.users || []
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-    const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user.id !== userData?.id)
+    const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
 
     if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
       return setFilterUsers(allStudentUsers)
@@ -157,7 +157,7 @@ export default function ConnectionUserSelectModal({
 
   useEffect(() => {
     const allUsers = communityData?.users || []
-    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user.id !== userData?.id)
+    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
 
     if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
       return setFilterFacultyUsers(allFacultyUsers)
@@ -188,7 +188,7 @@ export default function ConnectionUserSelectModal({
       setFilteredUsers(filteredUsers)
     } else {
       const allUsers = communityData?.users || []
-      const allFilteredUsers = allUsers.filter((user) => user.id !== userData?.id)
+      const allFilteredUsers = allUsers.filter((user) => user._id !== userData?.id)
       setFilteredUsers(allFilteredUsers)
     }
 

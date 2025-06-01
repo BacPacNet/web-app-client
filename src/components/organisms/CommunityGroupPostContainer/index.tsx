@@ -64,7 +64,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     return <PostSkeleton count={3} />
   }
 
-  if (error && (error as AxiosError).response!.status === 401) {
+  if (error && (error as AxiosError).response?.status === 401) {
     return (
       <EmptyStateCard
         imageSrc={notMember}
