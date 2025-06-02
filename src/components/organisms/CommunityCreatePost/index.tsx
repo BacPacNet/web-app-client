@@ -171,7 +171,14 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
               </PopoverContent>
             </Popover>
             <label htmlFor="postImage" className="cursor-pointer inline-block">
-              <input id="postImage" type="file" multiple accept="image/jpeg,image/png,image/jpg" className="hidden" onChange={handleFileChange} />
+              <input
+                id="postImage"
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/jpg,image/gif"
+                className="hidden"
+                onChange={handleFileChange}
+              />
               <GoFileMedia size={24} className="text-neutral-400" />
             </label>
 

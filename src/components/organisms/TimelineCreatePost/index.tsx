@@ -159,7 +159,7 @@ function TimelineCreatePost() {
                 id="timelinePostImage"
                 type="file"
                 multiple
-                accept="image/jpeg,image/png,image/jpg"
+                accept="image/jpeg,image/png,image/jpg,image/gif"
                 className="hidden"
                 onChange={handleFileChange}
               />

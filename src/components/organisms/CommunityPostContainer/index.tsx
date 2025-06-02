@@ -101,6 +101,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         role={post?.userProfile?.role}
         communityName={post.communityName}
         communityGroupName={post.communityGroupName}
+        isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
   }

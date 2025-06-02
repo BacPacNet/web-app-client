@@ -15,6 +15,7 @@ import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useModal } from '@/context/ModalContext'
 
 type FormDataType = {
   UniversityOtp: string
@@ -28,6 +29,7 @@ type Props = {
 const UniversityVerificationModal = ({ universityNameProp }: Props) => {
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
+  const { closeModal } = useModal()
   const {
     register,
     handleSubmit,
@@ -38,7 +40,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     getValues,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
-  const { mutate, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
+  const { mutateAsync: mutateAddUniversity, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -60,9 +62,10 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
 
   const onSubmit = async (data: FormDataType) => {
     if (universityNameProp) {
-      mutate({ ...data, universityName: universityNameProp })
+      await mutateAddUniversity({ ...data, universityName: universityNameProp })
+      closeModal()
     } else {
-      mutate(data)
+      mutateAddUniversity(data)
     }
   }
 

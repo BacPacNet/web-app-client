@@ -119,7 +119,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
             {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
             <input
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupImage"
               onChange={(e: any) => setCoverImage(e.target.files[0])}
@@ -134,7 +134,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
             {logoImage && <img className="w-full h-full rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
             <input
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupLogoImage"
               onChange={(e: any) => setLogoImage(e.target.files[0])}

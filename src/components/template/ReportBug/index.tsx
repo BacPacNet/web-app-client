@@ -79,7 +79,7 @@ export default function ReportBug() {
             <input
               {...register('screenshot')}
               type="file"
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             {previewUrl && (

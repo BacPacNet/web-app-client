@@ -202,7 +202,7 @@ const EditProfileModal = () => {
                   {...register('profilePicture')}
                   style={{ display: 'none' }}
                   type="file"
-                  accept="image/jpeg,image/png,image/jpg"
+                  accept="image/jpeg,image/png,image/jpg,image/gif"
                   id="changeProfileImage"
                   onChange={handleImagePreview}
                 />
@@ -219,7 +219,7 @@ const EditProfileModal = () => {
               <input
                 style={{ display: 'none' }}
                 {...register('profilePicture')}
-                accept="image/jpeg,image/png,image/jpg"
+                accept="image/jpeg,image/png,image/jpg,image/gif"
                 type="file"
                 id="changeProfileImage"
                 onChange={handleImagePreview}

@@ -85,6 +85,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
         role={post?.userProfile?.role}
         communityName={post.communityName}
         communityGroupName={post.communityGroupName}
+        isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
   }

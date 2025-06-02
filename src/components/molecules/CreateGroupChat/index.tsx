@@ -111,7 +111,7 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
               )}
               <input
                 style={{ display: 'none' }}
-                accept="image/jpeg,image/png,image/jpg"
+                accept="image/jpeg,image/png,image/jpg,image/gif"
                 type="file"
                 id="CreateGroupLogoImage"
                 onChange={(e: any) => setGroupLogoImage(e.target.files[0])}

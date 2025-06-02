@@ -194,7 +194,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
               id="postImage"
               type="file"
               multiple
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               className="hidden"
               onChange={(e) => handleImageChange(e)}
             />

@@ -82,8 +82,8 @@ export default function Mutuals() {
 
   return (
     <>
-      <div className="flex gap-4 justify-between items-center mb-2">
-        <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4  h-10">
+      <div className="flex gap-4 justify-between items-center mb-2 px-6">
+        <div className="w-full  px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4 h-10">
           <input
             onChange={(e) => setName(e.target.value)}
             type="text"
@@ -100,7 +100,7 @@ export default function Mutuals() {
           <FaFilter className="text-primary-500" />
         </div> */}
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar">
+      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar px-2">
         {renderUserProfileList()}
       </div>
       {isFetchingNextPage && (
