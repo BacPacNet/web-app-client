@@ -53,7 +53,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }, [pathname])
 
   return (
-    <div className="h-with-navbar custom-scrollbar  lg:p-6 overflow-y-auto">
+    <div className="h-with-navbar noi  lg:p-6 overflow-y-auto">
       <div className=" block lg:hidden border-b-2 border-neutral-200 pb-4">
         <p className="text-xs text-neutral-500 font-bold py-2">PAGES</p>
         {PAGE_ITEMS.map(({ name, path }) => (
