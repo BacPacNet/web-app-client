@@ -8,7 +8,6 @@ export default function Timeline() {
 
   return (
     <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi outline-none pt-4">
-      {/*<UserPostForm type={PostInputType.Timeline} />*/}
       <TimelineCreatePost />
       <TimelinePostContainer containerRef={containerRef} />
     </div>

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { PostType } from '@/types/constants'
 import { userTypeEnum } from '@/types/RegisterForm'
 import badge from '@assets/badge.svg'
-
+import communityAdminBadge from '@assets/communityAdminBadge.svg'
 interface UserCardProps {
   user: string
   year?: string
@@ -21,6 +21,8 @@ interface UserCardProps {
   handleProfileClicked: (adminId: string) => void
   isPost?: boolean
   isVerified?: boolean
+  isCommunityAdmin?: boolean
+  adminCommunityId?: string
 }
 
 const UserCard: React.FC<UserCardProps> = ({
@@ -36,6 +38,7 @@ const UserCard: React.FC<UserCardProps> = ({
   handleProfileClicked,
   isPost,
   isVerified,
+  isCommunityAdmin,
 }) => {
   const isStudent = role === userTypeEnum.Student
   return (
@@ -46,7 +49,12 @@ const UserCard: React.FC<UserCardProps> = ({
       <div>
         <div className="flex gap-1 items-center">
           <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
-          {isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />}
+          {/*{}*/}
+          {isCommunityAdmin ? (
+            <Image src={communityAdminBadge} width={14} height={14} alt="Verified" />
+          ) : (
+            isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />
+          )}
         </div>
 
         <div className="flex flex-col">

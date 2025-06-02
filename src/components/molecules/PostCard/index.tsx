@@ -80,6 +80,7 @@ interface PostProps {
   affiliation?: string
   isPostVerified?: boolean
   initialComment?: any
+  isCommunityAdmin?: boolean
 }
 
 const isImageUrl = (url: string) => ['.jpeg', '.jpg', '.png', '.webp', '.heic', '.heif'].some((ext) => url.toLowerCase().endsWith(ext))
@@ -128,6 +129,7 @@ const PostCard = React.memo(
     communityName,
     communityGroupName,
     initialComment,
+    isCommunityAdmin,
   }: PostProps) => {
     const { userData } = useUniStore()
 
@@ -271,6 +273,7 @@ const PostCard = React.memo(
               role={role}
               isPost={true}
               isVerified={isPostVerified}
+              isCommunityAdmin={isCommunityAdmin}
             />
 
             <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">

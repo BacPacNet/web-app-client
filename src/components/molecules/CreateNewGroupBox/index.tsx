@@ -308,7 +308,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             <input
               ref={logoInputRef}
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupLogoImage"
               onChange={handleLogoImage}
@@ -338,7 +338,7 @@ const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
             {coverImage && <img className="w-full h-full  absolute object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
             <input
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupImage"
               onChange={(e: any) => setCoverImage(e.target.files[0])}

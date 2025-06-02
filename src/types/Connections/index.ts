@@ -47,6 +47,8 @@ export interface Profile {
   university_name?: string | null
   role?: string | null
   cover_dp?: ProfileDpOrCoverDp1 | null
+  isCommunityAdmin?: boolean
+  adminCommunityId?: string
 }
 export interface FollowersEntity {
   userId: string

@@ -1,10 +1,12 @@
 'use client'
+
 import Card from '@/components/atoms/Card'
 import LeftNavbar from '@/components/organisms/LeftNavbar'
 import Recommendations from '@/components/Timeline/Recommendations'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import dummy from '@/assets/avatar.svg'
+import Spinner from '@/components/atoms/spinner'
 
 const recommendations = [
   {
@@ -47,16 +49,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     setIsLoading(true)
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 400) // adjust duration if needed
+    }, 300) // adjust delay as needed
 
     return () => clearTimeout(timer)
   }, [pathname])
+
+  //  if (isLoading) {
+  //    return <Spinner />
+  //  }
+
   return (
     <div className="bg-surface-primary-50">
       {isLoading && <div className="fixed top-0 left-0 w-full h-1 bg-primary-500 animate-pulse z-50"></div>}
       <div className="max-w-[1280px] mx-auto flex h-with-navbar">
         {/* Left Sidebar - Fixed */}
-        <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
+        <aside className="hidden lg:block bg-white w-[284px] sticky top-0">
           <LeftNavbar />
         </aside>
 
@@ -64,7 +71,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <main className="md:px-12 px-4 overflow-y-auto h-with-navbar flex-1 !outline-none ">{children}</main>
 
         {/* Right Sidebar - Fixed */}
-        <aside className="hidden lg:block  bg-white w-[284px] sticky top-0">
+        <aside className="hidden lg:block bg-white w-[284px] sticky top-0">
           <Card className="h-with-navbar custom-scrollbar overflow-y-auto px-4">
             <Recommendations people={recommendations} />
           </Card>

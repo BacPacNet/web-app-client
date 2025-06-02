@@ -14,7 +14,7 @@ const SinglePost = () => {
   const searchParams = useSearchParams()
   const Type = searchParams.get('isType')
   const commentID = searchParams.get('commentId')
-  const { data, isFetching, isPending, isError } = useGetPost(id, Type, commentID || ' ')
+  const { data, isFetching, isError } = useGetPost(id, Type, commentID || ' ')
   const item = data?.post
   const comment = data?.comment
 
@@ -48,7 +48,20 @@ const SinglePost = () => {
     )
   }
 
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName } = item
+  const {
+    _id,
+    user,
+    user_id,
+    profile,
+    content,
+    createdAt,
+    imageUrl,
+    likeCount,
+    commentCount,
+    communityName,
+    communityGroupName,
+    isCommunityAdmin = false,
+  } = item
   return (
     <div className="w-full flex justify-center py-4 post-container">
       <div className="w-full shadow-card rounded-2xl">
@@ -77,6 +90,7 @@ const SinglePost = () => {
           initialComment={comment}
           communityName={communityName}
           communityGroupName={communityGroupName}
+          isCommunityAdmin={isCommunityAdmin}
         />
       </div>
     </div>

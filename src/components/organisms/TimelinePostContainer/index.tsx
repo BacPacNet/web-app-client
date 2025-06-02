@@ -3,7 +3,6 @@ import OnboardingPlaceholder from '@/components/atoms/OnboardingPlaceholder'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
-import { Spinner } from '@/components/spinner/Spinner'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetTimelinePosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
@@ -90,6 +89,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         role={post?.userProfile?.role}
         communityName={post.communityName}
         communityGroupName={post.communityGroupName}
+        isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
   }, [timlineDatas, showCommentSection])
@@ -110,11 +110,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     <div className="py-8 post-container">
       <div className="flex flex-col gap-6">
         {renderPostWithRespectToPathName()}
-        {timelinePostIsFetchingNextPage && (
-          <div className="flex justify-center py-4">
-            <Spinner />
-          </div>
-        )}
+        {timelinePostIsFetchingNextPage && <PostSkeleton count={2} />}
       </div>
     </div>
   )

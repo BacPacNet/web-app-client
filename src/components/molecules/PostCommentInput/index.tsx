@@ -244,7 +244,7 @@ function PostCommentInput({
               <input
                 id="commentImage"
                 type="file"
-                accept="image/jpeg,image/png,image/jpg"
+                accept="image/jpeg,image/png,image/jpg,image/gif"
                 className="hidden"
                 onChange={(e) => handleImageChange(e)}
               />

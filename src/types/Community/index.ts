@@ -86,6 +86,8 @@ export interface communityPostType {
     profile_dp: {
       imageUrl: string
     }
+    isCommunityAdmin?: boolean
+    adminCommunityId?: string
   }
   content: string
   createdAt: string

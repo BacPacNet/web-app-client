@@ -31,6 +31,8 @@ interface FollowingItemProps {
   handleRemoveClick?: (id: string) => void
   isRemovePending?: boolean
   isViewerAdmin?: boolean
+  isCommunityAdmin?: boolean
+  adminCommunityId?: string
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({

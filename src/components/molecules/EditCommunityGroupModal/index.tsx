@@ -328,7 +328,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             {/* <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} /> */}
             <input
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupLogoImage"
               onChange={handlelogoImagePreview}
@@ -365,7 +365,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             )}
             <input
               style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg"
+              accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupImage"
               onChange={handleBannerImagePreview}
