@@ -107,8 +107,8 @@ export default function FindPeople() {
     const handleScroll = () => {
       if (ref.current) {
         const { scrollTop, scrollHeight, clientHeight } = ref.current
-
-        if (scrollTop + clientHeight >= scrollHeight - 10 && hasNextPage && !isFetchingNextPage) {
+        const bottom = scrollTop + clientHeight >= scrollHeight - 10
+        if (bottom && hasNextPage && !isFetchingNextPage) {
           fetchNextPage()
         }
       }
@@ -179,7 +179,7 @@ export default function FindPeople() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-[97%]">
       <div className="flex gap-4 justify-between items-center mb-2">
         <div className="flex px-6 w-full gap-4">
           <UserSearchInput value={name} onChange={(value) => handleChange(value)} />
@@ -191,14 +191,15 @@ export default function FindPeople() {
           </div>
         </div>
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%] custom-scrollbar pb-10 px-2">
+      <div ref={ref} className="flex-1 h-[90%] relative overflow-y-auto custom-scrollbar px-2">
         {renderUserProfileList()}
+        {isFetchingNextPage && (
+          <div className="text-center pt-2">
+            <UserListItemSkeleton count={1} />
+          </div>
+        )}
       </div>
-      {isFetchingNextPage && (
-        <div className="text-center pt-2">
-          <UserListItemSkeleton count={4} />
-        </div>
-      )}
+
       {isModalOpen && (
         <ConnectionUserSelectModal
           closeModal={closeModal}
@@ -220,6 +221,6 @@ export default function FindPeople() {
           handleClear={handleClear}
         />
       )}
-    </>
+    </div>
   )
 }
