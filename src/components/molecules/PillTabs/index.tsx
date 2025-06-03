@@ -43,9 +43,7 @@ const PillTabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left'
       </div>
 
       {/* Tabs Content */}
-      <div style={{ height: '-webkit-fill-available' }} className="mt-4 bg-white rounded-md">
-        {tabs[activeTab].content}
-      </div>
+      <div className="mt-4 bg-white rounded-md flex flex-col h-[95%]">{tabs[activeTab].content}</div>
     </div>
   )
 }
