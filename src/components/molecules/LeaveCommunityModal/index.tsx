@@ -33,10 +33,11 @@ const LeavingCommunityCard: React.FC<LeavingCommunityCardProps> = ({ universityN
   return (
     <div className="flex flex-col items-center gap-4 ">
       <Title>Leaving Community</Title>
-      <SubText>
-        If you leave your university community, you’ll be removed from all its groups. If you rejoin the community later, you’ll need to join the
-        groups again manually.
-      </SubText>
+      <SubText className="text-sm">Leaving your university community removes you from all its groups and deletes the ones you created.</SubText>
+      <ul className="list-disc flex flex-col items-start w-full px-4 text-neutral-700 font-semibold">
+        <li>You&apos;ll need to rejoin your groups.</li>
+        <li>Group members will lose access to your groups.</li>
+      </ul>
 
       <div className="flex justify-start items-center gap-2 mt-2 w-full">
         <Image
@@ -50,9 +51,14 @@ const LeavingCommunityCard: React.FC<LeavingCommunityCardProps> = ({ universityN
         {/*<Image src={logo || placeholder} width={36} height={36} alt={''} />*/}
         <span className="text-neutral-700 font-medium">{universityName}</span>
       </div>
-      <Buttons disabled={isLeaveLoading} onClick={onLeave}>
-        Leave Anyways
-      </Buttons>
+      <div className="flex gap-4 w-full">
+        <Buttons variant="danger" className="flex-1" size="medium" disabled={isLeaveLoading} onClick={onLeave}>
+          Leave
+        </Buttons>
+        <Buttons variant="shade" className="flex-1" size="medium" onClick={() => closeModal()}>
+          Cancel
+        </Buttons>
+      </div>
     </div>
   )
 }

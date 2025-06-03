@@ -40,12 +40,15 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
   const { socket } = useUniStore()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
+  const MAX_HEIGHT = 300
+
   const handleInput = () => {
     const textarea = textareaRef.current
     if (textarea) {
       valueRef.current = textareaRef.current.value
       textarea.style.height = 'auto'
-      textarea.style.height = Math.min(textarea.scrollHeight, 80) + 'px'
+      const newHeight = Math.min(textarea.scrollHeight, MAX_HEIGHT)
+      textarea.style.height = `${newHeight}px`
     }
   }
   // Handle emoji click
@@ -393,7 +396,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
           <div className="flex gap-3 px-4 py-2">
             <textarea
               ref={textareaRef}
-              className={`w-full border-none resize-none focus:outline-none overflow-y-auto ${files?.length ? 'h-20' : 'h-8'}`}
+              className={`w-full border-none resize-none focus:outline-none overflow-y-auto`}
               placeholder="What’s on your mind?"
               onInput={handleInput}
             />
@@ -423,7 +426,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
                   id="chatImageUpload"
                   type="file"
                   multiple
-                  accept="image/jpeg,image/png,image/jpg,image/gif"
+                  accept="image/jpeg,image/png,image/jpg"
                   className="hidden"
                   onChange={handleFileChange}
                 />

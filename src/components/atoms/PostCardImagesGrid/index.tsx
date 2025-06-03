@@ -30,6 +30,7 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
   const [photoIndex, setPhotoIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [key, setKey] = useState(0)
+  const [singleImageHeight, setSingleImageHeight] = useState<number | null>(null)
 
   useEffect(() => {
     setTimeout(() => setKey((prev) => prev + 1))
@@ -46,6 +47,12 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
     if (count === 4) return 'grid-cols-2 grid-rows-2 gap-2'
     if (count === 2) return 'grid-cols-2 gap-2'
     return 'grid-cols-1'
+  }
+
+  const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const naturalHeight = event.currentTarget.naturalHeight
+    console.log(naturalHeight, 'naturalHeight')
+    setSingleImageHeight(naturalHeight)
   }
 
   return (
@@ -72,7 +79,8 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
               if (index === 0) customClasses = 'row-span-2 h-full' // Left large image
               if (index === 1 || index === 2) customClasses = 'h-full'
             }
-
+            const isSingleImage = imageItems.length === 1
+            const shouldUseOriginalSize = isSingleImage && singleImageHeight !== null && singleImageHeight < 500
             return (
               <div
                 key={index}
@@ -85,8 +93,15 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
                   alt={`Image ${index + 1}`}
                   width={500}
                   height={500}
-                  className={`w-full h-full cursor-pointer ${imageItems.length === 1 ? 'object-contain' : 'object-cover'}`}
+                  className={`${
+                    isSingleImage
+                      ? shouldUseOriginalSize
+                        ? 'w-auto h-auto' // keep natural size
+                        : 'w-full h-full object-contain'
+                      : 'w-full h-full object-cover'
+                  } cursor-pointer`}
                   onClick={() => handleImageClick(index)}
+                  onLoad={isSingleImage ? handleImageLoad : undefined}
                 />
               </div>
             )
