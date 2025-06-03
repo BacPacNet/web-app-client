@@ -32,6 +32,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 // }
 
 export function showCustomSuccessToast(message: string) {
+  toast.dismiss()
   toast(
     (t) =>
       React.createElement(
@@ -75,6 +76,7 @@ export function showCustomSuccessToast(message: string) {
 }
 
 export function showCustomDangerToast(message: string) {
+  toast.dismiss()
   toast(
     (t) =>
       React.createElement(

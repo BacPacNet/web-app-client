@@ -115,8 +115,8 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
       return (
         <EmptyStateCard
           imageSrc={notMember}
-          title="You are not a member of this Community"
-          description="This Community is for members only. Become a member to access exclusive content and discussions."
+          title="Join Community"
+          description="Join this community to access its groups and connect with fellow university members"
         />
       )
     }
