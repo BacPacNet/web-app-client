@@ -41,7 +41,7 @@ const CommentItem = ({
     <div
       key={key}
       className={`w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
-        comment.level == 1 ? 'mt-4 ml-6 pr-6' : 'first:mt-8 '
+        comment.level == 1 ? 'mt-4 ml-6 ' : 'first:mt-8 '
       }`}
     >
       <div className="flex items-start gap-2 justify-between">
@@ -66,7 +66,7 @@ const CommentItem = ({
       </div>
 
       <div className="flex flex-col gap-2 pt-2 border-b border-neutral-200">
-        <p className="text-2xs sm:text-xs break-words lg:min-w-[450px]" dangerouslySetInnerHTML={{ __html: comment?.content }} />
+        <p className="text-2xs sm:text-xs break-words " dangerouslySetInnerHTML={{ __html: comment?.content }} />
         <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
         <p className="text-2xs text-neutral-500 font-normal">
           {comment?.createdAt ? format(new Date(comment.createdAt), 'h:mm a · MMM d, yyyy') : ''}

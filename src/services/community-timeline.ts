@@ -410,86 +410,58 @@ export function useGetTimelinePosts(limit: number) {
   })
 }
 
-export const useLikeUnlikeTimelinePost = (source: string, adminId: string) => {
+export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSinglePost = false) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
 
-  const queryKey = source === 'profile' ? ['userPosts', adminId] : ['timelinePosts']
   return useMutation({
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
-    onMutate: async (postId: string) => {
-      queryClient.cancelQueries({ queryKey: queryKey })
 
-      const previousPosts = queryClient.getQueryData(['timelinePosts'])
+    onMutate: async (postId: string) => {
+      const queryKey = isSinglePost ? ['getPost', postId] : source === 'profile' ? ['userPosts', adminId] : ['timelinePosts']
+
+      await queryClient.cancelQueries({ queryKey })
 
       queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
 
-        if (source === 'profile') {
+        const toggleLike = (likeCount: any[]) => {
+          const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
+          return hasLiked
+            ? likeCount.filter((like: any) => like.userId !== userData?.id)
+            : [...likeCount, { userId: userData?.id, _id: 'temp-like-id' }]
+        }
+
+        if (isSinglePost) {
           return {
-            ...oldData,
-            pages: oldData.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((post: any) => {
-                if (post._id !== postId) return post
-
-                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
-
-                return {
-                  ...post,
-                  likeCount: hasLiked
-                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
-                }
-              }),
-            })),
-          }
-        } else {
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page: any) => ({
-              ...page,
-              allPosts: page.allPosts.map((post: any) => {
-                if (post._id !== postId) return post
-
-                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
-
-                return {
-                  ...post,
-                  likeCount: hasLiked
-                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
-                }
-              }),
-            })),
+            post: {
+              ...oldData.post,
+              likeCount: toggleLike(oldData.post.likeCount),
+            },
           }
         }
 
-        //return {
-        //  ...oldData,
-        //  pages: oldData.pages.map((page: any) => ({
-        //    ...page,
-        //    allPosts: page.allPosts.map((post: any) => {
-        //      if (post._id !== postId) return post
+        const updatePosts = (posts: any[], key: string) => {
+          return posts.map((post: any) => {
+            if (post._id !== postId) return post
+            return {
+              ...post,
+              likeCount: toggleLike(post.likeCount),
+            }
+          })
+        }
 
-        //      const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
-
-        //      return {
-        //        ...post,
-        //        likeCount: hasLiked
-        //          ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-        //          : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
-        //      }
-        //    }),
-        //  })),
-        //}
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            ...(source === 'profile' ? { data: updatePosts(page.data, 'data') } : { allPosts: updatePosts(page.allPosts, 'allPosts') }),
+          })),
+        }
       })
-      return { previousPosts }
     },
 
-    onError: (res: any) => {
-      return showCustomDangerToast(res.response.data.message)
-    },
+    onError: (res: any) => showCustomDangerToast(res.response.data.message),
   })
 }

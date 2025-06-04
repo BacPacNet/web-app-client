@@ -81,22 +81,7 @@ interface PostProps {
   isPostVerified?: boolean
   initialComment?: any
   isCommunityAdmin?: boolean
-}
-
-const isImageUrl = (url: string) => ['.jpeg', '.jpg', '.png', '.webp', '.heic', '.heif'].some((ext) => url.toLowerCase().endsWith(ext))
-
-const FilePreviewCard = ({ url }: { url: string }) => {
-  const isPDF = url.endsWith('.pdf')
-  return (
-    <div className="border rounded-lg p-4 bg-gray-50 flex items-center justify-between">
-      <div>
-        <p className="text-sm font-semibold text-neutral-700">{isPDF ? 'PDF File' : 'Unsupported File'}</p>
-        <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary text-xs underline">
-          Open file
-        </a>
-      </div>
-    </div>
-  )
+  isSinglePost?: boolean
 }
 
 const PostCard = React.memo(
@@ -130,6 +115,7 @@ const PostCard = React.memo(
     communityGroupName,
     initialComment,
     isCommunityAdmin,
+    isSinglePost,
   }: PostProps) => {
     const { userData } = useUniStore()
 
@@ -138,13 +124,18 @@ const PostCard = React.memo(
 
     const [showInitial, setShowInitial] = useState(!!initialComment)
     // Local state for immediate UI feedback
-    const [localLikes, setLocalLikes] = useState<any>(likes)
+    //const [localLikes, setLocalLikes] = useState<any>(likes)
     const [localIsLiked, setLocalIsLiked] = useState(false)
-    const [localLikeCount, setLocalLikeCount] = useState(likes?.length || 0)
+    //const [localLikeCount, setLocalLikeCount] = useState(likes?.length || 0)
     const debounceTimeoutRef = useRef<NodeJS.Timeout>()
 
-    const { mutate: LikeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(communityId, communityGroupId, isTimeline)
-    const { mutate: LikeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId)
+    const { mutate: likeUnlikeGroupPost, isPending: isLikeUnlikeGroupPending } = useLikeUnilikeGroupPost(
+      communityId,
+      communityGroupId,
+      isTimeline,
+      isSinglePost
+    )
+    const { mutate: likeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId, isSinglePost)
 
     const handleProfileClicked = useCallback(
       (adminId: string) => {
@@ -155,8 +146,8 @@ const PostCard = React.memo(
 
     // Initialize local state
     useEffect(() => {
-      setLocalLikes(likes)
-      setLocalLikeCount(likes?.length || 0)
+      //  setLocalLikes(likes)
+      //  setLocalLikeCount(likes?.length || 0)
       setLocalIsLiked(likes?.some((like) => like.userId === userData?.id) || false)
     }, [likes, userData?.id])
 
@@ -177,13 +168,13 @@ const PostCard = React.memo(
 
         debounceTimeoutRef.current = setTimeout(() => {
           if (type === PostType.Timeline) {
-            LikeUnlikeTimelinePost(postId)
+            likeUnlikeTimelinePost(postId)
           } else if (type === PostType.Community) {
-            LikeUnlikeGroupPost(postId)
+            likeUnlikeGroupPost(postId)
           }
         }, 500) // 500ms debounce delay
       },
-      [type, LikeUnlikeTimelinePost, LikeUnlikeGroupPost]
+      [type, likeUnlikeTimelinePost, likeUnlikeGroupPost]
     )
 
     const handleLikeClick = useCallback(
@@ -191,14 +182,14 @@ const PostCard = React.memo(
         // Immediate local state update
         const newIsLiked = !localIsLiked
         setLocalIsLiked(newIsLiked)
-        setLocalLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1))
-        setLocalLikes((prev: any) => (newIsLiked ? [...prev, { userId: userData?.id }] : prev.filter((like: any) => like.userId !== userData?.id)))
+        //setLocalLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1))
+        //setLocalLikes((prev: any) => (newIsLiked ? [...prev, { userId: userData?.id }] : prev.filter((like: any) => like.userId !== userData?.id)))
 
         // Debounced API call
         if (type === PostType.Timeline) {
-          LikeUnlikeTimelinePost(postId)
+          return likeUnlikeTimelinePost(postId)
         } else if (type === PostType.Community) {
-          LikeUnlikeGroupPost(postId)
+          return likeUnlikeGroupPost(postId)
         }
         //debouncedLikeUnlike(postId)
       },

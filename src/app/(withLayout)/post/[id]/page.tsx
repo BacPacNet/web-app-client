@@ -91,6 +91,7 @@ const SinglePost = () => {
           communityName={communityName}
           communityGroupName={communityGroupName}
           isCommunityAdmin={isCommunityAdmin}
+          isSinglePost={true}
         />
       </div>
     </div>
