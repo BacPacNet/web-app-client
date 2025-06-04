@@ -194,18 +194,18 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
   return (
     <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar p-4 gap-6 ">
       {chatMessages?.map((item: Message, idx: number) => {
-        const currentDate = format(new Date(item.createdAt), 'EEE hh:mm a')
+        const currentDate = format(new Date(item?.createdAt), 'd MMMM h:mm a')
         const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
         previousDate = dayjs(item.createdAt)
 
         return (
           <Fragment key={idx}>
             {shouldShowDateDivider && (
-              <div className="border-b border-neutral-300 relative">
-                <div className="absolute -top-3 flex justify-center items-center w-full">
-                  <span className="px-4 bg-white text-neutral-500 text-2xs"> {currentDate}</span>
-                </div>
-              </div>
+              //  <div className="border-b border-neutral-300 relative">
+              //  <div className="absolute -top-3 flex justify-center items-center w-full">
+              <div className="px-4  w-fit mx-auto text-neutral-500 text-2xs text-center"> {currentDate}</div>
+              //  </div>
+              //  </div>
             )}
             <UserCard
               profilePic={item?.senderProfile?.profile_dp?.imageUrl}

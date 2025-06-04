@@ -90,7 +90,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       }
 
       const messagePayload = {
-        content: message,
+        content: message.trim().replace(/\n{2,}/g, '\n'),
         chatId,
         UserProfileId: userProfileId,
         ...(mediaData && { media: mediaData }),
@@ -155,8 +155,10 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
           socket?.emit(SocketEnums.SEND_MESSAGE, newMessage)
         },
       })
-
-      textareaRef.current && (textareaRef.current.value = '')
+      if (textareaRef.current) {
+        textareaRef.current.value = ''
+        textareaRef.current.style.height = 'auto'
+      }
     } catch (err) {
       console.error('Message send failed:', err)
     } finally {

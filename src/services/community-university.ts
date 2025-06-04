@@ -403,23 +403,45 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
   })
 }
 
-export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroupId: string = '', isTimeline: boolean) => {
+export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroupId: string = '', isTimeline: boolean, isSinglePost = false) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
 
-  const queryKey = isTimeline ? ['timelinePosts'] : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : [])]
+  //  const queryKey = isTimeline ? ['timelinePosts'] : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : [])]
 
   return useMutation({
     mutationFn: (communityGroupPostId: any) => LikeUnilikeGroupPost(communityGroupPostId, cookieValue),
 
     onMutate: async (postId: string) => {
+      const queryKey = isSinglePost
+        ? ['getPost', postId]
+        : isTimeline
+        ? ['timelinePosts']
+        : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : [])]
       queryClient.cancelQueries({ queryKey: queryKey })
 
       const previousPosts = queryClient.getQueryData(queryKey)
 
       queryClient.setQueryData(queryKey, (oldData: any) => {
+        console.log(oldData, 'oldData')
         if (!oldData) return
+
+        const toggleLike = (likeCount: any[]) => {
+          const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
+          return hasLiked
+            ? likeCount.filter((like: any) => like.userId !== userData?.id)
+            : [...likeCount, { userId: userData?.id, _id: 'temp-like-id' }]
+        }
+
+        if (isSinglePost) {
+          return {
+            post: {
+              ...oldData.post,
+              likeCount: toggleLike(oldData.post.likeCount),
+            },
+          }
+        }
 
         if (isTimeline) {
           return {
@@ -429,13 +451,9 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
               allPosts: page.allPosts.map((post: any) => {
                 if (post._id !== postId) return post
 
-                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
-
                 return {
                   ...post,
-                  likeCount: hasLiked
-                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                  likeCount: toggleLike(post.likeCount),
                 }
               }),
             })),
@@ -448,13 +466,9 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
               finalPost: page.finalPost.map((post: any) => {
                 if (post._id !== postId) return post
 
-                const hasLiked = post.likeCount.some((like: any) => like.userId === userData?.id)
-
                 return {
                   ...post,
-                  likeCount: hasLiked
-                    ? post.likeCount.filter((like: any) => like.userId !== userData?.id)
-                    : [...post.likeCount, { userId: userData?.id, _id: 'temp-like-id' }],
+                  likeCount: toggleLike(post.likeCount),
                 }
               }),
             })),
