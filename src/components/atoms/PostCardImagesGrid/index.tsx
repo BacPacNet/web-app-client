@@ -51,7 +51,6 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
 
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const naturalHeight = event.currentTarget.naturalHeight
-    console.log(naturalHeight, 'naturalHeight')
     setSingleImageHeight(naturalHeight)
   }
 
