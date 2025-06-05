@@ -17,10 +17,10 @@ import { useUniStore } from '@/store/store'
 import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
-import VerifyUniversityToJoinModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import { useModal } from '@/context/ModalContext'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useQueryClient } from '@tanstack/react-query'
+import GenericInfoModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 
 const UniversityCard = ({ icon: Icon, title, info }: { icon: IconType; title: string; info: string }) => (
   <div>
@@ -122,7 +122,17 @@ export default function UniversityProfile() {
       joinCommunityFromUniversity(university._id, {
         onSuccess: (response: any) => {
           if (response.statusCode === 406) {
-            return openModal(<VerifyUniversityToJoinModal />, 'w-[350px] sm:w-[490px] noi')
+            return openModal(
+              <GenericInfoModal
+                title="Oops! You've hit the limit."
+                description="Looks like you've already joined a university without verifying your student status. You can only join one unverified university at a time."
+                subTitle="To continue, verify your student email for either:"
+                listItems={['The university you have previously joined', 'The one you are currently attempting to join']}
+                buttonLabel="Verify Student Email"
+                redirectUrl="/setting/university-verification"
+              />,
+              'w-[350px] sm:w-[490px] noi'
+            )
           } else {
             queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
             if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
