@@ -101,9 +101,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     toggleLeftNavbar && toggleLeftNavbar()
   }
 
-  const isUserVerifiedForCommunity = useMemo(() => {
-    return userProfileData?.email?.some((community) => community?.communityId === selectCommunityId)
-  }, [community])
+  const isUserVerifiedForCommunity: boolean = userProfileData?.email?.some((community) => community?.communityId === selectCommunityId) || false
+
+  const canUserCreateGroup = community?.users.some((user) => user._id === userData?.id) && isUserVerifiedForCommunity
 
   const isFilterApplied = useMemo(() => !isEmpty(selectedFiltersMain) || !isEmpty(selectedTypeMain), [selectedFiltersMain, selectedTypeMain])
 
@@ -230,7 +230,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Create',
       content: (
         <div>
-          {isUserVerifiedForCommunity && (
+          {canUserCreateGroup && (
             <div className="flex justify-center items-center p-2">
               <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
                 Create Group
