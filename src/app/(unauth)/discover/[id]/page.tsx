@@ -5,15 +5,31 @@ import ClientUniversityProfile from '@/components/template/ClientUniversityProfi
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-  const url = `${baseUrl}/discover/${params.id}`
-  const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
+  const universityName = params.id
+  const url = `${baseUrl}/discover/${universityName}`
+
+  // Fetch university data
+  let university: any = null
+  try {
+    const data = await getUniversityByName(universityName)
+    university = Array.isArray(data) ? data[0] : data
+    console.log(university, 'university')
+  } catch (e) {
+    // fallback
+  }
+
+  const ogImage = university?.logo || 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
 
   return {
-    title: 'Privacy Policy | UniBuzz',
-    description: 'Read the UniBuzz Privacy Policy to learn how we collect, use, and protect your personal information when you use our services.',
+    title: university?.name ? `${university.name} | UniBuzz` : 'University | UniBuzz',
+    description:
+      university?.short_overview || university?.long_description || 'Discover university communities, connect, and explore opportunities on UniBuzz.',
     openGraph: {
-      title: 'Privacy Policy | UniBuzz',
-      description: 'Read the UniBuzz Privacy Policy to learn how we collect, use, and protect your personal information when you use our services.',
+      title: university?.name ? `${university.name} | UniBuzz` : 'University | UniBuzz',
+      description:
+        university?.short_overview ||
+        university?.long_description ||
+        'Discover university communities, connect, and explore opportunities on UniBuzz.',
       url,
       siteName: 'UniBuzz',
       images: [
@@ -21,7 +37,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
           url: ogImage,
           width: 256,
           height: 256,
-          alt: 'Privacy Policy page on UniBuzz',
+          alt: university?.name ? `Profile page for ${university.name} on UniBuzz` : 'University profile on UniBuzz',
         },
       ],
       locale: 'en_US',
