@@ -8,11 +8,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
 
   return {
-    title: 'Privacy Policy | UniBuzz',
-    description: 'Read the UniBuzz Privacy Policy to learn how we collect, use, and protect your personal information when you use our services.',
+    title: 'Discover | UniBuzz',
+    description: 'Explore trending topics, communities, and more on UniBuzz.',
     openGraph: {
-      title: 'Privacy Policy | UniBuzz',
-      description: 'Read the UniBuzz Privacy Policy to learn how we collect, use, and protect your personal information when you use our services.',
+      title: 'Discover | UniBuzz',
+      description: 'Explore trending topics, communities, and more on UniBuzz.',
       url,
       siteName: 'UniBuzz',
       images: [
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: ogImage,
           width: 52,
           height: 52,
-          alt: 'Privacy Policy page on UniBuzz',
+          alt: 'Discover page on UniBuzz',
         },
       ],
       locale: 'en_US',
