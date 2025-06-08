@@ -1,32 +1,49 @@
+import React from 'react'
 import Buttons from '@/components/atoms/Buttons'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 import { useModal } from '@/context/ModalContext'
 
-const VerifyUniversityToJoinModal = () => {
+interface GenericInfoModalProps {
+  title: string
+  description: string | React.ReactNode
+  subTitle?: string
+  listItems?: string[]
+  buttonLabel: string
+  onButtonClick?: () => void
+  redirectUrl?: string
+}
+
+const GenericInfoModal: React.FC<GenericInfoModalProps> = ({ title, description, subTitle, listItems, buttonLabel, onButtonClick, redirectUrl }) => {
   const router = useRouter()
   const { closeModal } = useModal()
 
-  const handleRedirect = () => {
+  const handleClick = () => {
     closeModal()
-    router.push('/setting/university-verification')
+    if (onButtonClick) {
+      onButtonClick()
+    }
+    if (redirectUrl) {
+      router.push(redirectUrl)
+    }
   }
+
   return (
     <div className="flex flex-col gap-4">
-      <h5 className="font-poppins text-md font-bold text-neutral-700 text-center mb-4">Oops! You’ve hit the limit. </h5>
-      <p className="text-sm text-neutral-700">
-        Looks like you’ve already joined a university without verifying your student status. You can only join one unverified university at a time.
-      </p>
-      <p className="text-sm text-neutral-700 font-semibold">To continue, verify your student email for either:</p>
-      <ul className="list-disc list-inside text-sm text-neutral-700 font-semibold flex flex-col gap-2">
-        <li>The university you’ve previously joined</li>
-        <li>The one you are currently attempting to join</li>
-      </ul>
-      <Buttons onClick={() => handleRedirect()} className="mt-4 w-max mx-auto" size="large">
-        Verify Student Email
+      <h5 className="font-poppins text-md font-bold text-neutral-700 text-center mb-4">{title}</h5>
+      {typeof description === 'string' ? <p className="text-sm text-neutral-700">{description}</p> : description}
+      {subTitle && <p className="text-sm text-neutral-700 font-semibold">{subTitle}</p>}
+      {listItems && (
+        <ul className="list-disc list-inside text-sm text-neutral-700 font-semibold flex flex-col gap-2">
+          {listItems.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      )}
+      <Buttons onClick={handleClick} className="mt-4 w-max mx-auto" size="large">
+        {buttonLabel}
       </Buttons>
     </div>
   )
 }
 
-export default VerifyUniversityToJoinModal
+export default GenericInfoModal

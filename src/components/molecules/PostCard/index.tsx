@@ -247,7 +247,7 @@ const PostCard = React.memo(
 
     return (
       <div className="bg-white rounded-lg shadow-card">
-        <div className="px-6 flex flex-col gap-2">
+        <div className="px-6 flex flex-col gap-4">
           <div className="flex items-start pt-4 gap-2 justify-between">
             <UserCard
               user={user}
@@ -312,7 +312,9 @@ const PostCard = React.memo(
         </div>
 
         {/* Add a wrapper for the comment section with the animation */}
-        <div className={`overflow-hidden transition-all duration-500 ease-in-out ${showCommentSection === postID ? 'max-h-screen' : 'max-h-0'}`}>
+        <div
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${showCommentSection === postID || showInitial ? 'h-auto' : 'max-h-0'}`}
+        >
           <PostCommentBox
             handleProfileClicked={handleProfileClicked}
             showCommentSec={showCommentSection}

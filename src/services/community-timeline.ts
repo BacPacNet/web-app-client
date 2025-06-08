@@ -5,6 +5,7 @@ import useCookie from '@/hooks/useCookie'
 import { AxiosErrorType, PostCommentData, PostType, UserPostData } from '@/types/constants'
 import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useUniStore } from '@/store/store'
+import { Sortby } from '@/types/common'
 
 export async function DeleteUserPost(postId: string, token: string) {
   const response = await client(`/userpost/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -30,8 +31,10 @@ export async function getAllTimelinePosts(token: string, page: number, limit: nu
   const response: any = await client(`/userpost/timeline?page=${page}&limit=${limit}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
-export async function getUserPostComments(postId: string, token: string, page: number, limit: number) {
-  const response: any = await client(`/userpostcomment/${postId}?page=${page}&limit=${limit}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getUserPostComments(postId: string, token: string, page: number, limit: number, sortBy: Sortby) {
+  const response: any = await client(`/userpostcomment/${postId}?page=${page}&limit=${limit}&sortBy=${sortBy}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 export async function getUserPostCommentById(commentId: string, token: string) {
@@ -339,13 +342,13 @@ export function useGetUserPosts(userId: string, limit: number) {
   })
 }
 
-export function useGetUserPostComments(postId: string, showCommentSection: boolean, isTimeline: boolean, limit: number) {
+export function useGetUserPostComments(postId: string, showCommentSection: boolean, isTimeline: boolean, limit: number, sortBy: Sortby) {
   {
     const [cookieValue] = useCookie('uni_user_token')
 
     return useInfiniteQuery({
-      queryKey: ['userPostComments'],
-      queryFn: ({ pageParam = 1 }) => getUserPostComments(postId, cookieValue, pageParam, limit),
+      queryKey: ['userPostComments', postId, sortBy],
+      queryFn: ({ pageParam = 1 }) => getUserPostComments(postId, cookieValue, pageParam, limit, sortBy),
       getNextPageParam: (lastPage) => {
         if (lastPage.currentPage < lastPage.totalPages) {
           return lastPage.currentPage + 1

@@ -1,4 +1,34 @@
+import { Metadata } from 'next'
 import React from 'react'
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = `${baseUrl}/user-guidelines`
+  const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
+
+  return {
+    title: 'User Guidelines | UniBuzz',
+    description: 'Read the UniBuzz User Guidelines to understand the rules and expectations for participating in our community.',
+    openGraph: {
+      title: 'User Guidelines | UniBuzz',
+      description: 'Read the UniBuzz User Guidelines to understand the rules and expectations for participating in our community.',
+      url,
+      siteName: 'UniBuzz',
+      images: [
+        {
+          url: ogImage,
+          width: 52,
+          height: 52,
+          alt: 'User Guidelines page on UniBuzz',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    alternates: {
+      canonical: url,
+    },
+  }
+}
 
 function Userguidelines() {
   return (

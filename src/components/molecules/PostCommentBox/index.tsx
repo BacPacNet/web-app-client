@@ -3,18 +3,80 @@ import { useUniStore } from '@/store/store'
 import { useGetUserPostComments, useLikeUnlikeUserPostComment } from '@/services/community-timeline'
 import { useGetCommunityPostComments, useLikeUnlikeGroupPostComment } from '@/services/community-university'
 import { PostType } from '@/types/constants'
-import Spinner from '@/components/atoms/spinner'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { FaPlusCircle } from 'react-icons/fa'
+import { FaPlusCircle, FaRegClock } from 'react-icons/fa'
 import NewPostComment from '../NewPostComment'
 import NestedCommentModal from '../nestedCommentModal'
 import useDeviceType from '@/hooks/useDeviceType'
 import { PostCommentProps } from '@/types/CommentPost'
-import { useRouter, useSearchParams } from 'next/navigation'
 import CommentItem from './CommentItem'
 import ShowAllComponent from './ShowAllComnet'
 import ShowMoreComponent from './showMoreComment'
+import SimpleDropdown from '../SimpleDropDown'
+import { Sortby } from '@/types/common'
+import { LuRocket } from 'react-icons/lu'
+
+const options = [
+  {
+    value: Sortby.DESC,
+    label: 'Most Recent',
+    icon: <LuRocket className="w-4 h-4" />,
+  },
+  {
+    value: Sortby.ASC,
+    label: 'Oldest to Newest',
+    icon: <FaRegClock className="w-4 h-4" />,
+  },
+]
+
+// CommentList subcomponent for rendering comments
+const CommentList = React.memo(function CommentList({
+  comments,
+  userData,
+  childCommentsId,
+  postID,
+  type,
+  setImageCarasol,
+  handleProfileClicked,
+  likePostCommentHandler,
+  handleCommentClicked,
+  handelCommentData,
+  visibleComments,
+}: {
+  comments: any[]
+  userData: any
+  childCommentsId: string[]
+  postID: string
+  type: PostType.Community | PostType.Timeline
+  setImageCarasol: any
+  handleProfileClicked: (adminId: string) => void
+  likePostCommentHandler: (commentId: string, level: string) => void
+  handleCommentClicked: (comment: any) => void
+  handelCommentData: (comment: any) => void
+  visibleComments: { [key: string]: boolean }
+}) {
+  return (
+    <>
+      {comments.map((comment) => (
+        <CommentItem
+          key={comment?._id}
+          comment={comment}
+          currentUserId={userData?.id}
+          childCommentsId={childCommentsId}
+          postID={postID}
+          type={type}
+          setImageCarasol={setImageCarasol}
+          handleProfileClicked={handleProfileClicked}
+          likeHandler={likePostCommentHandler}
+          toggleCommentSection={handleCommentClicked}
+          handleReplyClick={handelCommentData}
+          showReplies={visibleComments[comment._id]}
+        />
+      ))}
+    </>
+  )
+})
 
 const PostCommentBox = ({
   showCommentSec,
@@ -33,6 +95,9 @@ const PostCommentBox = ({
   const [newPost, setNewPost] = useState(false)
   const [closeInitialComments, setCloseInitialComments] = useState(false)
 
+  const [selectedOption, setSelectedOption] = useState<string>('Most Recent')
+  const [selectedValue, setselectedvalue] = useState(Sortby.DESC)
+
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
   const [commentData, setCommentData] = useState<any>()
@@ -45,39 +110,46 @@ const PostCommentBox = ({
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false, showInitial, postID || '')
   const {
     data: commentsData,
+    refetch: refetchUserPostComment,
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
     isFetching,
-  } = useGetUserPostComments(postID, showCommentSec == postID, type == PostType.Timeline, 5)
+  } = useGetUserPostComments(postID, showCommentSec == postID, type == PostType.Timeline, 5, selectedValue)
   const {
     data: communityCommentsData,
+    refetch: refetchCommunityPostComment,
     fetchNextPage: communityCommentsNextpage,
     isFetchingNextPage: communityCommentsIsFetchingNextPage,
     hasNextPage: communityCommentsHasNextPage,
     isFetching: communityCommentsIsFetching,
-  } = useGetCommunityPostComments(postID, showCommentSec == postID, type == PostType.Community, 5)
-  const commentsDatas = commentsData?.pages.flatMap((page) => page.finalComments) || []
-  const communitCommentsDatas = communityCommentsData?.pages.flatMap((page) => page.finalComments) || []
-
+  } = useGetCommunityPostComments(postID, showCommentSec == postID, type == PostType.Community, 5, selectedValue)
+  const commentsDatas = React.useMemo(() => commentsData?.pages.flatMap((page) => page.finalComments) || [], [commentsData])
+  const communitCommentsDatas = React.useMemo(() => communityCommentsData?.pages.flatMap((page) => page.finalComments) || [], [communityCommentsData])
   const isTimeline = type === PostType.Timeline
-  const comments = type == PostType.Community ? communitCommentsDatas : commentsDatas
+  const comments = React.useMemo(
+    () => (type == PostType.Community ? communitCommentsDatas : commentsDatas),
+    [type, communitCommentsDatas, commentsDatas]
+  )
 
-  const handleShowMore = () => {
+  const handleShowMore = React.useCallback(() => {
     if (type == PostType.Timeline) {
       fetchNextPage()
     } else {
       communityCommentsNextpage()
     }
-  }
+  }, [type, fetchNextPage, communityCommentsNextpage])
 
-  const likePostCommentHandler = (commentId: string, level: string) => {
-    if (isTimeline) {
-      likeUserPostComment({ userPostCommentId: commentId, level })
-    } else if (type === PostType.Community) {
-      likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
-    }
-  }
+  const likePostCommentHandler = React.useCallback(
+    (commentId: string, level: string) => {
+      if (isTimeline) {
+        likeUserPostComment({ userPostCommentId: commentId, level })
+      } else if (type === PostType.Community) {
+        likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
+      }
+    },
+    [isTimeline, likeUserPostComment, likeGroupPostComment, type]
+  )
 
   const handelCommentData = (comment: any) => {
     const commentData = {
@@ -146,6 +218,16 @@ const PostCommentBox = ({
   //    )
   //  }
 
+  const handleSelect = (option: { value: string; label: string }) => {
+    setSelectedOption(option.label)
+    setselectedvalue(option.value as Sortby)
+    if (type === PostType.Timeline) {
+      refetchUserPostComment()
+    } else {
+      refetchCommunityPostComment()
+    }
+  }
+
   return (
     <div
       className={`${
@@ -173,50 +255,37 @@ const PostCommentBox = ({
         </div>
 
         <div ref={containerRef} className="flex flex-col gap-4">
+          {comments.length > 0 && <SimpleDropdown label={selectedOption} options={options} onSelect={handleSelect} />}
+
           {showInitial && showCommentSec !== postID ? (
-            <>
-              {[initialComment].map((comment) => {
-                return (
-                  <CommentItem
-                    key={comment?._id}
-                    comment={comment}
-                    currentUserId={userData?.id}
-                    childCommentsId={childCommentsId}
-                    postID={postID}
-                    type={type}
-                    setImageCarasol={setImageCarasol}
-                    handleProfileClicked={handleProfileClicked}
-                    likeHandler={likePostCommentHandler}
-                    toggleCommentSection={handleCommentClicked}
-                    handleReplyClick={handelCommentData}
-                    showReplies={visibleComments[comment._id]}
-                  />
-                )
-              })}
-            </>
+            <CommentList
+              comments={[initialComment]}
+              userData={userData}
+              childCommentsId={childCommentsId}
+              postID={postID}
+              type={type}
+              setImageCarasol={setImageCarasol}
+              handleProfileClicked={handleProfileClicked}
+              likePostCommentHandler={likePostCommentHandler}
+              handleCommentClicked={handleCommentClicked}
+              handelCommentData={handelCommentData}
+              visibleComments={visibleComments}
+            />
           ) : (
-            <>
-              {comments.map((comment, index) => {
-                return (
-                  <CommentItem
-                    key={comment?._id}
-                    comment={comment}
-                    currentUserId={userData?.id}
-                    childCommentsId={childCommentsId}
-                    postID={postID}
-                    type={type}
-                    setImageCarasol={setImageCarasol}
-                    handleProfileClicked={handleProfileClicked}
-                    likeHandler={likePostCommentHandler}
-                    toggleCommentSection={handleCommentClicked}
-                    handleReplyClick={handelCommentData}
-                    showReplies={visibleComments[comment._id]}
-                  />
-                )
-              })}
-            </>
+            <CommentList
+              comments={comments}
+              userData={userData}
+              childCommentsId={childCommentsId}
+              postID={postID}
+              type={type}
+              setImageCarasol={setImageCarasol}
+              handleProfileClicked={handleProfileClicked}
+              likePostCommentHandler={likePostCommentHandler}
+              handleCommentClicked={handleCommentClicked}
+              handelCommentData={handelCommentData}
+              visibleComments={visibleComments}
+            />
           )}
-          {/* {renderComments(type == PostType.Community ? communitCommentsDatas : commentsDatas)} */}
         </div>
         {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
         {newPost && (

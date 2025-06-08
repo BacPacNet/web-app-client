@@ -8,6 +8,7 @@ import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/comp
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
+import { Sortby } from '@/types/common'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -18,8 +19,10 @@ export async function getCommunityFromUniversity(universityId: string) {
   return response
 }
 
-export async function getCommunityPostComments(postId: string, token: string, page: number, limit: number) {
-  const response: any = await client(`/communitypostcomment/${postId}?page=${page}&limit=${limit}`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getCommunityPostComments(postId: string, token: string, page: number, limit: number, sortBy: Sortby) {
+  const response: any = await client(`/communitypostcomment/${postId}?page=${page}&limit=${limit}&sortBy=${sortBy}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 export async function getCommunityPostCommentById(commentId: string, token: string) {
@@ -193,13 +196,13 @@ export function useGetCommunityFromUniversityId(universityId: string) {
   }) as UseQueryResult<Community>
 }
 
-export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean, limit: number) {
+export function useGetCommunityPostComments(postId: string, showCommentSection: boolean, isCommunity: boolean, limit: number, sortBy: Sortby) {
   {
     const [cookieValue] = useCookie('uni_user_token')
 
     return useInfiniteQuery({
-      queryKey: ['communityPostComments'],
-      queryFn: ({ pageParam = 1 }) => getCommunityPostComments(postId, cookieValue, pageParam, limit),
+      queryKey: ['communityPostComments', postId, sortBy],
+      queryFn: ({ pageParam = 1 }) => getCommunityPostComments(postId, cookieValue, pageParam, limit, sortBy),
       getNextPageParam: (lastPage) => {
         if (lastPage.currentPage < lastPage.totalPages) {
           return lastPage.currentPage + 1

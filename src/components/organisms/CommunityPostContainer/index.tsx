@@ -15,10 +15,12 @@ type Props = {
   communityID?: string
   communityGroupID?: string
   containerRef?: React.RefObject<HTMLDivElement> | any
+  isCommunityData?: boolean
 }
-const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef }: Props) => {
+const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef, isCommunityData }: Props) => {
   const [showCommentSection, setShowCommentSection] = useState('')
 
+  const isEnabled = !!communityID && !!isCommunityData
   const {
     data: communityGroupPost,
     fetchNextPage: communityPostNextpage,
@@ -27,7 +29,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     error: communityPostError,
     dataUpdatedAt,
     isLoading,
-  } = useGetCommunityPost(communityID, true, 10)
+  } = useGetCommunityPost(communityID, isEnabled, 10)
   //  const [communityDatas, setCommunityDatas] = useState([])
 
   const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []

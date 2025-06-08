@@ -24,6 +24,7 @@ import { isEmpty } from '@/lib/utils'
 import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs'
 import { useModal } from '@/context/ModalContext'
 import { status } from '@/types/CommuityGroup'
+import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -108,7 +109,19 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const isFilterApplied = useMemo(() => !isEmpty(selectedFiltersMain) || !isEmpty(selectedTypeMain), [selectedFiltersMain, selectedTypeMain])
 
   const handleNewGroupModal = () => {
-    openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
+    if (!canUserCreateGroup) {
+      openModal(
+        <GenericInfoModal
+          buttonLabel="Verify Student Email"
+          redirectUrl="/setting/university-verification"
+          title="Verify Account to Create Groups"
+          description="Verify your account to unlock group creation and start building your own community. Please complete verification to continue."
+        />,
+        'w-[350px] sm:w-[490px] noi'
+      )
+    } else {
+      openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
+    }
     toggleLeftNavbar && toggleLeftNavbar()
   }
   const handleAssignUsersModal = () => {
@@ -230,13 +243,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'Create',
       content: (
         <div>
-          {canUserCreateGroup && (
-            <div className="flex justify-center items-center p-2">
-              <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
-                Create Group
-              </button>
-            </div>
-          )}
+          <div className="flex justify-center items-center p-2">
+            <button onClick={() => handleNewGroupModal()} className="bg-[#6647FF] py-2 w-11/12  rounded-lg text-white">
+              Create Group
+            </button>
+          </div>
+
           <CommunityGroupAll
             key={subscribedCommunitiesMyGroup}
             communityGroups={subscribedCommunitiesMyGroup}
