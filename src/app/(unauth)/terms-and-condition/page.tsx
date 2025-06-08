@@ -1,4 +1,35 @@
+import { Metadata } from 'next'
 import React from 'react'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = `${baseUrl}/terms-and-condition`
+  const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
+
+  return {
+    title: 'Terms and Conditions | UniBuzz',
+    description: 'Read the UniBuzz Terms and Conditions to understand the rules and guidelines for using our services.',
+    openGraph: {
+      title: 'Terms and Conditions | UniBuzz',
+      description: 'Read the UniBuzz Terms and Conditions to understand the rules and guidelines for using our services.',
+      url,
+      siteName: 'UniBuzz',
+      images: [
+        {
+          url: ogImage,
+          width: 52,
+          height: 52,
+          alt: 'Terms and Conditions page on UniBuzz',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    alternates: {
+      canonical: url,
+    },
+  }
+}
 
 export default function TermsAndCondition() {
   return (

@@ -16,21 +16,24 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import Buttons from '@/components/atoms/Buttons'
 import { useModal } from '@/context/ModalContext'
 import LeavingCommunityCard from '../LeaveCommunityModal'
+import { Community } from '@/types/Community'
 
 interface Props {
   communityID: string
   communityGroupID?: string
   isGroupAdmin: boolean
   setIsGroupAdmin: (isGroupAdmin: boolean) => void
+  communityData?: Community
+  isCommunityLoading: boolean
 }
 
-export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin }: Props) {
+export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAdmin, communityData, isCommunityLoading }: Props) {
   const [isUserJoinedCommunity, setIsUserJoinedCommunity] = useState<boolean | null>(null)
   const { userData } = useUniStore()
   const { openModal } = useModal()
   const [toggleDropdown, setToggleDropdown] = useState(false)
 
-  const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
+  //  const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
   const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
 
   useEffect(() => {

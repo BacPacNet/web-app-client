@@ -20,7 +20,7 @@ const LoginBox = () => {
     setValue,
   } = useForm<LoginForm>({ defaultValues: { email: '' } })
 
-  const { mutateAsync: login, isPending } = useHandleLogin()
+  const { mutate, isPending } = useHandleLogin()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -30,15 +30,13 @@ const LoginBox = () => {
   }, [])
 
   const onSubmit = async (data: LoginForm) => {
-    try {
-      setIsLoading(true)
-      await login(data)
-      router.push('/timeline')
-    } catch (error) {
-      console.error('Login error:', error)
-    } finally {
-      setIsLoading(false)
-    }
+    setIsLoading(true)
+    mutate(data, {
+      onSuccess: () => {
+        router.push('/timeline')
+      },
+      onSettled: () => setIsLoading(false),
+    })
   }
 
   //  useEffect(() => {

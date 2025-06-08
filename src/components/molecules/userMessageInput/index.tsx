@@ -90,7 +90,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
       }
 
       const messagePayload = {
-        content: message.trim().replace(/\n{2,}/g, '\n'),
+        content: message.trim(),
         chatId,
         UserProfileId: userProfileId,
         ...(mediaData && { media: mediaData }),
@@ -399,7 +399,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
             <textarea
               ref={textareaRef}
               className={`w-full border-none resize-none focus:outline-none overflow-y-auto`}
-              placeholder="What’s on your mind?"
+              placeholder="What's on your mind?"
               onInput={handleInput}
             />
           </div>

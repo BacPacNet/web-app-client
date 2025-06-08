@@ -5,11 +5,10 @@ import universityPlaceholder from '@assets/university_banner.png'
 import logoPlaceholder from '@assets/Logo Circle.svg'
 import './index.css'
 import { useUniStore } from '@/store/store'
-import { useGetCommunityGroup, useUpdateCommunity } from '@/services/community-university'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import CommunityLeaveModal from '../CommunityLeaveModal'
-import { CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
+import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import publicIcon from '@assets/public.svg'
 import Buttons from '@/components/atoms/Buttons'
 import { FaLock } from 'react-icons/fa6'
@@ -23,6 +22,8 @@ import useDeviceType from '@/hooks/useDeviceType'
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
 import { useModal } from '@/context/ModalContext'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
+import { CommunityGroup } from '@/types/Community'
+
 interface Props {
   communityID: string
   communityGroupID: string
@@ -30,6 +31,9 @@ interface Props {
   setIsGroupAdmin: (isGroupAdmin: boolean) => void
   isUserJoinedCommunityGroup: boolean | null
   setIsUserJoinedCommunityGroup: (setIsMember: boolean) => void
+  communityGroups: CommunityGroupType
+  isCommunityGroupsLoading: boolean
+  refetch: () => void
 }
 
 export default function CommunityGroupBanner({
@@ -39,13 +43,15 @@ export default function CommunityGroupBanner({
   setIsGroupAdmin,
   setIsUserJoinedCommunityGroup,
   isUserJoinedCommunityGroup,
+  communityGroups,
+  isCommunityGroupsLoading,
+  refetch,
 }: Props) {
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
   const { isMobile } = useDeviceType()
   const [_showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [toggleDropdown, setToggleDropdown] = useState(false)
-  const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityID, communityGroupID)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
   const handleShowMembers = () => {

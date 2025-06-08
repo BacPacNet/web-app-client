@@ -18,7 +18,7 @@ const ShowAllComponent = ({ postID, setShowCommentSection }: any) => {
   }
 
   return (
-    <div className="text-neutral-500 flex items-center gap-2 mb-2 hover:cursor-pointer">
+    <div className="text-neutral-500 flex items-center gap-2 mt-2 hover:cursor-pointer">
       <p onClick={handleClick}>show all comments</p>
       <FaArrowDown />
     </div>

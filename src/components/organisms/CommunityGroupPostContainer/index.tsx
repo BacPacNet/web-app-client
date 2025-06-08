@@ -10,18 +10,25 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 
-function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
+interface CommunityGroupPostContainerProps {
+  containerRef: React.RefObject<HTMLDivElement>
+  iscommunityGroups: boolean
+}
+
+interface ImageCarouselState {
+  isShow: boolean
+  images: any[]
+  currImageIndex: number | null
+}
+
+function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: CommunityGroupPostContainerProps) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
-  const [imageCarasol, setImageCarasol] = useState<{
-    isShow: boolean
-    images: any
-    currImageIndex: number | null
-  }>({
+  const [imageCarasol, setImageCarousel] = useState<ImageCarouselState>({
     isShow: false,
     images: [],
     currImageIndex: null,
   })
-  const [showCommentSection, setShowCommentSection] = useState('')
+  const [showCommentSection, setShowCommentSection] = useState<string>('')
 
   const {
     data: communityGroupPost,
@@ -30,11 +37,9 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     hasNextPage: communityPostHasNextPage,
     isLoading,
     error,
-    isFetching,
-    //dataUpdatedAt,
-  } = useGetCommunityGroupPost(communityId, communityGroupId, true, 10)
+  } = useGetCommunityGroupPost(communityId, communityGroupId, iscommunityGroups, 10)
 
-  const communityGroupPostData = useMemo(() => communityGroupPost?.pages.flatMap((page) => page?.finalPost) || null, [communityGroupPost?.pages])
+  const communityGroupPostData = useMemo(() => communityGroupPost?.pages.flatMap((page) => page?.finalPost) || [], [communityGroupPost?.pages])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,11 +60,6 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
-  //  useEffect(() => {
-  //    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
-  //    setCommunityGroupPostDatas(communityDatas)
-  //  }, [communityGroupPost, dataUpdatedAt])
-
   if ((isLoading && !communityPostIsFetchingNextPage) || communityGroupPost === null) {
     return <PostSkeleton count={3} />
   }
@@ -77,7 +77,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
 
   return (
     <div className="py-8 flex flex-col gap-6 post-container">
-      {communityGroupPostData?.map((post: communityPostType, idx: number) => (
+      {communityGroupPostData.map((post: communityPostType, idx: number) => (
         <PostCard
           key={post?._id}
           user={post?.user?.firstName + ' ' + post?.user?.lastName}
@@ -92,7 +92,7 @@ function CommunityGroupPostContainer({ containerRef }: { containerRef: any }) {
           postID={post?._id}
           type={PostType.Community}
           images={post?.imageUrl}
-          setImageCarasol={setImageCarasol}
+          setImageCarasol={setImageCarousel}
           idx={idx}
           showCommentSection={showCommentSection}
           setShowCommentSection={setShowCommentSection}
