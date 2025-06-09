@@ -10,6 +10,7 @@ import { useDeleteUserPostComment } from '@/services/community-timeline'
 import { PostType } from '@/types/constants'
 import { useDeleteCommunityPostComment } from '@/services/community-university'
 import CommentCardOption from '@/components/atoms/CommentCardOption'
+import { motion } from 'framer-motion'
 
 const CommentItem = ({
   key,
@@ -38,7 +39,11 @@ const CommentItem = ({
     }
   }
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.3 }}
       key={key}
       className={`w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
         comment.level == 1 ? 'mt-4 ml-6 ' : 'first:mt-8 '
@@ -72,26 +77,26 @@ const CommentItem = ({
         </p>
 
         <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
-          <div className="flex items-center cursor-pointer">
+          <motion.div className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
             <AiOutlineLike
               onClick={() => likeHandler(comment._id, comment.level.toString())}
               className={comment?.likeCount?.some((like: any) => like.userId === currentUserId) ? 'text-primary' : ''}
             />
             <span className="mx-1">{comment?.likeCount?.length || 0}</span>
-          </div>
+          </motion.div>
 
           {comment.level < 1 && (
-            <span onClick={() => toggleCommentSection(comment)} className="flex items-center cursor-pointer">
+            <motion.span onClick={() => toggleCommentSection(comment)} className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               <FiMessageCircle className="mr-1 text-neutral-600" />
               {comment?.totalCount || comment?.replies?.length || 0}
-            </span>
+            </motion.span>
           )}
 
           {comment.level < 1 && (
-            <div onClick={() => handleReplyClick(comment)} className="flex items-center cursor-pointer">
+            <motion.div onClick={() => handleReplyClick(comment)} className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               <HiReply className="text-gray-dark" />
               <span className="ml-1 font-poppins text-xs">reply</span>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
@@ -119,7 +124,7 @@ const CommentItem = ({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }
 

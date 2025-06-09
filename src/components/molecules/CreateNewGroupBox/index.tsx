@@ -31,9 +31,6 @@ import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
-import CollegeResult from '@/components/CollegeResult'
-import { FaXmark } from 'react-icons/fa6'
-import { BiChevronDown } from 'react-icons/bi'
 import UniversityDropdown from './Dropdown'
 
 type Props = {
@@ -41,14 +38,13 @@ type Props = {
   setNewGroup: (value: boolean) => void
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId = '' }: Props) => {
+const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File>()
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const [searchInput, setSearchInput] = useState('')
   const logoInputRef = useRef<HTMLInputElement>(null)

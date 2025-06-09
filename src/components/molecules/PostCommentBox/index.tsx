@@ -16,6 +16,7 @@ import ShowMoreComponent from './showMoreComment'
 import SimpleDropdown from '../SimpleDropDown'
 import { Sortby } from '@/types/common'
 import { LuRocket } from 'react-icons/lu'
+import { AnimatePresence } from 'framer-motion'
 
 const options = [
   {
@@ -57,7 +58,7 @@ const CommentList = React.memo(function CommentList({
   visibleComments: { [key: string]: boolean }
 }) {
   return (
-    <>
+    <AnimatePresence>
       {comments.map((comment, index) => (
         <CommentItem
           key={index}
@@ -74,7 +75,7 @@ const CommentList = React.memo(function CommentList({
           showReplies={visibleComments[comment._id]}
         />
       ))}
-    </>
+    </AnimatePresence>
   )
 })
 
@@ -232,7 +233,7 @@ const PostCommentBox = ({
     <div
       className={`${
         showCommentSec !== postID && !showInitial ? 'h-0 overflow-y-hidden py-0' : 'pt-6 pb-4'
-      } flex flex-col gap-2 w-full border-t border-neutral-200`}
+      } flex flex-col gap-2 w-full border-t border-neutral-200 transition-all duration-300 ease-in-out`}
     >
       <div className="px-6">
         <div className="rounded-full  flex gap-4 items-center">
@@ -247,7 +248,7 @@ const PostCommentBox = ({
             onClick={() => {
               setNewPost(true), setIsReply(false)
             }}
-            className="border-2 border-primary py-2 px-3 text-2xs md:text-xs rounded-lg flex items-center gap-1"
+            className="border-2 border-primary py-2 px-3 text-2xs md:text-xs rounded-lg flex items-center gap-1 hover:scale-105 transition-all duration-200"
           >
             <span className="text-primary font-medium"> Add a comment</span>
             <FaPlusCircle className="p-1" size={20} color="#6647ff" />

@@ -51,7 +51,7 @@ const CollapsibleMultiSelect: React.FC<CollapsibleMultiSelectProps> = ({ title, 
               relative after:content-[''] after:absolute after:w-[5px] after:h-[10px] after:border-r-2 after:border-b-2 after:border-white
               after:rotate-45 after:top-[1px] after:left-[5px] checked:after:block after:hidden"
               />
-              <span className="text-3xs text-neutral-700">{option}</span>
+              <span className="text-2xs text-neutral-700">{option}</span>
             </label>
           ))}
         </div>

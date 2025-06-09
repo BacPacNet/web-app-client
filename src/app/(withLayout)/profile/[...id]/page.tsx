@@ -1,6 +1,6 @@
 'use client'
 
-import ProfilePostContainer from '@/components/organisms/PostsContainer'
+import ProfilePostContainer from '@/components/organisms/ProfilePostContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
 
 import { Skeleton } from '@/components/ui/Skeleton'

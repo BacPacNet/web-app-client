@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { format } from 'date-fns'
 import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
+import { motion } from 'framer-motion'
 dayjs.extend(relativeTime)
 
 const SharePopup = React.memo(({ postId, type }: { postId: string; type: PostType }) => {
@@ -246,7 +247,12 @@ const PostCard = React.memo(
     }, [showCommentSection, postID, setShowCommentSection])
 
     return (
-      <div className="bg-white rounded-lg shadow-card">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white rounded-lg shadow-card"
+      >
         <div className="px-6 flex flex-col gap-4">
           <div className="flex items-start pt-4 gap-2 justify-between">
             <UserCard
@@ -284,24 +290,25 @@ const PostCard = React.memo(
 
         <div className="flex items-center justify-end py-2 border-t border-neutral-200 text-sm text-neutral-500 px-6">
           <div className="flex items-center gap-4">
-            <button
+            <motion.button
               onClick={() => handleLikeClick(postID)}
               className="flex gap-1 items-center cursor-pointer"
               disabled={isLikeUnlikePending || isLikeUnlikeGroupPending}
+              whileHover={{ scale: 1.1 }}
             >
               {likes?.length}
 
               <FiThumbsUp className="mr-1 text-neutral-600 transition-all duration-300" color={localIsLiked ? '#6647FF' : ''} />
-            </button>
-            <button onClick={toggleCommentSection} className="flex gap-2 items-center cursor-pointer">
+            </motion.button>
+            <motion.button onClick={toggleCommentSection} className="flex gap-2 items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               {commentCount} <FiMessageCircle className="mr-1 text-neutral-600" />
-            </button>
+            </motion.button>
 
             <Popover>
               <PopoverTrigger asChild>
-                <button className="flex items-center gap-1 text-xs">
+                <motion.button className="flex items-center gap-1 text-xs" whileHover={{ scale: 1.1 }}>
                   Share <FiShare2 className="mr-1 text-neutral-600" />
-                </button>
+                </motion.button>
               </PopoverTrigger>
               <PopoverContent className="relative -left-5 top-0 w-auto p-5 border-none shadow-lg bg-white shadow-gray-light">
                 <MemoizedSharePopup type={type} postId={postID} />
@@ -327,7 +334,7 @@ const PostCard = React.memo(
             showInitial={showInitial}
           />
         </div>
-      </div>
+      </motion.div>
     )
   }
 )

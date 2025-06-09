@@ -59,7 +59,8 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     true,
     postType,
     showInitial,
-    postId || ''
+    postId,
+    sortBy && sortBy
   )
   const { mutate: CreateGroupPostCommentReply, isPending: useCreateGroupPostCommentReplyLoading } = useCreateGroupPostCommentReply(
     false,
@@ -67,7 +68,8 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     true,
     postType,
     showInitial,
-    postId || ''
+    postId,
+    sortBy && sortBy
   )
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
