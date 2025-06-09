@@ -132,7 +132,8 @@ export const useCreateUserPostCommentReply = (
   isNested: boolean,
   type: PostType.Community | PostType.Timeline,
   showInitial: boolean,
-  postId: string
+  postId: string,
+  sortBy: Sortby | null
 ) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
@@ -141,9 +142,9 @@ export const useCreateUserPostCommentReply = (
     mutationFn: (data: PostCommentData) => CreateUserPostCommentReply(data, cookieValue),
 
     onSuccess: (data: any) => {
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, 'desc'])
       if (showInitial) {
-        queryClient.setQueryData(['getPost', postId], (oldData: any) => {
+        queryClient.setQueryData(['userPostComments', postId, sortBy], (oldData: any) => {
           if (!oldData) return oldData
 
           return {
@@ -174,7 +175,7 @@ export const useCreateUserPostCommentReply = (
           }
         })
 
-        queryClient.setQueryData(['userPostComments'], {
+        queryClient.setQueryData(['userPostComments', postId, sortBy], {
           ...currUserComments,
           pages: updatedPages,
         })

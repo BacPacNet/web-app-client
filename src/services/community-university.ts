@@ -549,7 +549,7 @@ export const useCreateGroupPost = () => {
   })
 }
 
-export const useCreateGroupPostComment = (isSinglePost: boolean, postId: string, sortBy?: Sortby | null) => {
+export const useCreateGroupPostComment = (isSinglePost: boolean, postId: string, sortBy: Sortby | null) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
@@ -588,7 +588,8 @@ export const useCreateGroupPostCommentReply = (
   isNested: boolean,
   type: PostType.Community | PostType.Timeline,
   showInitial: boolean,
-  postId: string
+  postId: string,
+  sortBy: Sortby | null
 ) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
@@ -596,10 +597,10 @@ export const useCreateGroupPostCommentReply = (
     mutationFn: (data: any) => CreateGroupPostCommentReply(data, cookieValue),
 
     onSuccess: (data: any) => {
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments', postId, sortBy])
 
       if (showInitial) {
-        queryClient.setQueryData(['getPost', postId], (oldData: any) => {
+        queryClient.setQueryData(['getPost', postId, sortBy], (oldData: any) => {
           if (!oldData) return oldData
 
           return {
@@ -631,7 +632,7 @@ export const useCreateGroupPostCommentReply = (
           }
         })
 
-        queryClient.setQueryData(['communityPostComments'], {
+        queryClient.setQueryData(['communityPostComments', postId, sortBy], {
           ...currUserComments,
           pages: updatedPages,
         })
