@@ -33,7 +33,7 @@ const PillTabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left'
           <button
             key={index}
             onClick={() => handleTabClick(index)}
-            className={`h-10 px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${fontSize[labelSize]} ${
+            className={`sm:h-10 px-2 sm:px-4 py-1 sm:py-2 rounded-lg font-medium transition-colors duration-200 ${fontSize[labelSize]} ${
               activeTab === index ? 'bg-primary-500 text-white' : 'bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 '
             }`}
           >

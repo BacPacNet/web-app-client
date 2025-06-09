@@ -55,7 +55,6 @@ export const useCreateEndorsementAI = () => {
       queryClient.invalidateQueries({ queryKey: ['endorsementAI'] })
     },
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
     },
   })

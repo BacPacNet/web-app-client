@@ -58,9 +58,9 @@ const CommentList = React.memo(function CommentList({
 }) {
   return (
     <>
-      {comments.map((comment) => (
+      {comments.map((comment, index) => (
         <CommentItem
-          key={comment?._id}
+          key={index}
           comment={comment}
           currentUserId={userData?.id}
           childCommentsId={childCommentsId}
@@ -298,6 +298,7 @@ const PostCommentBox = ({
             isReply={isReply}
             postId={postID}
             expandCommentSection={expandCommentSection}
+            sortBy={selectedValue}
           />
         )}
         {showInitial && showCommentSec !== postID ? <ShowAllComponent postID={postID} setShowCommentSection={setShowCommentSection} /> : ''}

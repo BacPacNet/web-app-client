@@ -92,17 +92,18 @@ export async function LikeUnlikeUserPostComment(UserPostCommentId: string, token
 
 //Query Functions for UserPost, UserPostComment
 
-export const useCreateUserPostComment = (isSinglePost: boolean) => {
+export const useCreateUserPostComment = (isSinglePost: boolean, postId: string, sortBy: Sortby | null) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: PostCommentData) => CreateUserPostComment(data, cookieValue),
 
     onSuccess: (res: any) => {
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, sortBy])
+      console.log(currUserComments, 'currUserComments')
 
       if (currUserComments) {
-        queryClient.setQueryData(['userPostComments'], {
+        queryClient.setQueryData(['userPostComments', postId, sortBy], {
           ...currUserComments,
           pages: currUserComments.pages.map((page, index) => {
             if (index === 0) {

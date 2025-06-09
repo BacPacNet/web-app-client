@@ -45,7 +45,7 @@ const MessageTopBar = ({
 
   return (
     <>
-      <div className="flex justify-between items-center p-6 mb-2">
+      <div className="flex justify-between items-center p-6">
         <h6 className="font-poppins font-bold text-[20px]  ">Messages</h6>
         <Buttons className="block" size="medium" onClick={() => handleShowModal()}>
           Start a Chat

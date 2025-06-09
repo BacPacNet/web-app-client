@@ -261,7 +261,6 @@ const PostCard = React.memo(
               handleProfileClicked={handleProfileClicked}
               affiliation={affiliation}
               occupation={occupation}
-              role={role}
               isPost={true}
               isVerified={isPostVerified}
               isCommunityAdmin={isCommunityAdmin}
