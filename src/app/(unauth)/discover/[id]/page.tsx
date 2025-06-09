@@ -13,7 +13,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   try {
     const data = await getUniversityByName(universityName)
     university = Array.isArray(data) ? data[0] : data
-    console.log(university, 'university')
   } catch (e) {
     // fallback
   }

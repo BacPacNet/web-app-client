@@ -549,17 +549,17 @@ export const useCreateGroupPost = () => {
   })
 }
 
-export const useCreateGroupPostComment = (isSinglePost: boolean) => {
+export const useCreateGroupPostComment = (isSinglePost: boolean, postId: string, sortBy?: Sortby | null) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => CreateGroupPostComment(data, cookieValue),
 
     onSuccess: (res: any) => {
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments', postId, sortBy])
 
       if (currUserComments) {
-        queryClient.setQueryData(['communityPostComments'], {
+        queryClient.setQueryData(['communityPostComments', postId, sortBy], {
           ...currUserComments,
           pages: currUserComments.pages.map((page, index) => {
             if (index === 0) {

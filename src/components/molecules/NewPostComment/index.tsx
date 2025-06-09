@@ -18,6 +18,7 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { Sortby } from '@/types/common'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -39,19 +40,20 @@ type Props = {
     commentId?: string
     level?: string
   }
-  postId?: string
+  postId: string
   isReply: boolean
   isNested?: boolean
   expandCommentSection?: (id: string) => void
+  sortBy?: Sortby | null
 }
 
-const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial, expandCommentSection }: Props) => {
+const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial, expandCommentSection, sortBy = null }: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false)
-  const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false)
+  const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false, postId, sortBy && sortBy)
+  const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false, postId, sortBy && sortBy)
   const { mutateAsync: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
     false,
     true,

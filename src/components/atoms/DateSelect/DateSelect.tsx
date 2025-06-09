@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import { Calendar } from 'react-date-range'
-import { addYears } from 'date-fns'
+import { addYears, format } from 'date-fns'
 import { enGB } from 'date-fns/locale'
 import 'react-date-range/dist/styles.css' // main style file
 import 'react-date-range/dist/theme/default.css' // theme css file
@@ -22,7 +22,7 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const handleDateChange = (data: Date) => {
-    onChange(new Date(data).toLocaleDateString())
+    onChange(format(new Date(data), 'dd/MM/yyyy'))
     setShow(false)
   }
 

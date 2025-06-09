@@ -55,7 +55,6 @@ const CommentItem = ({
           postID={postID}
           type={type}
           handleProfileClicked={handleProfileClicked}
-          role={comment?.commenterProfileId?.role}
           affiliation={comment?.commenterProfileId?.affiliation}
           occupation={comment?.commenterProfileId?.occupation}
         />

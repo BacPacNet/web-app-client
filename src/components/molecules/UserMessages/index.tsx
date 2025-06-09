@@ -120,7 +120,7 @@ const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, id
           <p className="text-sm font-semibold text-neutral-700">{name}</p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
-        <p className="text-2xs lg:text-xs text-neutral-900 font-inter whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
+        <p className="text-xs lg:text-xs text-neutral-900 font-inter whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
 
         {media.length > 0 && (
           <div className="w-full">

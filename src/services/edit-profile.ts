@@ -28,7 +28,6 @@ export const useEditProfile = () => {
     },
     onError: (res: any) => {
       showCustomSuccessToast('Failed to update profile')
-      console.log(res.response.data.message, 'res')
     },
   })
 }
