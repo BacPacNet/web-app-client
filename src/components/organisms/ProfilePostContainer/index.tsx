@@ -7,7 +7,7 @@ import PostCard from '@/components/molecules/PostCard'
 import { useGetUserPosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 type Props = {
   userId?: string
@@ -31,25 +31,25 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
     currImageIndex: null,
   })
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        const bottom = scrollTop + clientHeight >= scrollHeight - 10
+  const handleScroll = useCallback(() => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+      const bottom = scrollTop + clientHeight >= scrollHeight - 10
 
-        if (bottom && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
-        }
+      if (bottom && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
       }
     }
+  }, [containerRef, hasNextPage, isFetchingNextPage, fetchNextPage])
 
+  useEffect(() => {
     const container = containerRef.current
     container?.addEventListener('scroll', handleScroll)
 
     return () => {
       container?.removeEventListener('scroll', handleScroll)
     }
-  }, [hasNextPage, isFetchingNextPage, userSelfPostsData])
+  }, [containerRef, handleScroll])
 
   useEffect(() => {
     if (imageCarasol.isShow) {
@@ -57,7 +57,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
     }
   }, [imageCarasol])
 
-  const renderPostWithRespectToPathName = () => {
+  const renderPostWithRespectToPathName = useCallback(() => {
     if (userSelfPosts?.length === 0) return <Card className="rounded-2xl px-4 text-center text-xs">No Post Available</Card>
     return userSelfPosts?.map((post: communityPostType, idx: number) => (
       <PostCard
@@ -74,7 +74,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
         likes={post?.likeCount}
         postID={post?._id}
         type={'communityId' in post ? PostType.Community : PostType.Timeline}
-        images={post?.imageUrl}
+        images={post?.imageUrl || []}
         setImageCarasol={setImageCarasol}
         idx={idx}
         showCommentSection={showCommentSection}
@@ -88,7 +88,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
-  }
+  }, [userSelfPosts, showCommentSection])
 
   const PostCardRender = () => {
     if (isLoading) {

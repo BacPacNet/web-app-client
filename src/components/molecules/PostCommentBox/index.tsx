@@ -44,6 +44,7 @@ const CommentList = React.memo(function CommentList({
   handleCommentClicked,
   handelCommentData,
   visibleComments,
+  sortBy,
 }: {
   comments: any[]
   userData: any
@@ -52,10 +53,11 @@ const CommentList = React.memo(function CommentList({
   type: PostType.Community | PostType.Timeline
   setImageCarasol: any
   handleProfileClicked: (adminId: string) => void
-  likePostCommentHandler: (commentId: string, level: string) => void
+  likePostCommentHandler: (commentId: string, level: string, sortBy: Sortby) => void
   handleCommentClicked: (comment: any) => void
   handelCommentData: (comment: any) => void
   visibleComments: { [key: string]: boolean }
+  sortBy: Sortby | null
 }) {
   return (
     <AnimatePresence>
@@ -73,6 +75,7 @@ const CommentList = React.memo(function CommentList({
           toggleCommentSection={handleCommentClicked}
           handleReplyClick={handelCommentData}
           showReplies={visibleComments[comment._id]}
+          sortBy={sortBy}
         />
       ))}
     </AnimatePresence>
@@ -97,7 +100,7 @@ const PostCommentBox = ({
   const [closeInitialComments, setCloseInitialComments] = useState(false)
 
   const [selectedOption, setSelectedOption] = useState<string>('Most Recent')
-  const [selectedValue, setselectedvalue] = useState(Sortby.DESC)
+  const [selectedSortValue, setSelectedSortValue] = useState(Sortby.DESC)
 
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
@@ -116,7 +119,7 @@ const PostCommentBox = ({
     isFetchingNextPage,
     hasNextPage,
     isFetching,
-  } = useGetUserPostComments(postID, showCommentSec == postID, type == PostType.Timeline, 5, selectedValue)
+  } = useGetUserPostComments(postID, showCommentSec == postID, type == PostType.Timeline, 5, selectedSortValue)
   const {
     data: communityCommentsData,
     refetch: refetchCommunityPostComment,
@@ -124,7 +127,7 @@ const PostCommentBox = ({
     isFetchingNextPage: communityCommentsIsFetchingNextPage,
     hasNextPage: communityCommentsHasNextPage,
     isFetching: communityCommentsIsFetching,
-  } = useGetCommunityPostComments(postID, showCommentSec == postID, type == PostType.Community, 5, selectedValue)
+  } = useGetCommunityPostComments(postID, showCommentSec == postID, type == PostType.Community, 5, selectedSortValue)
   const commentsDatas = React.useMemo(() => commentsData?.pages.flatMap((page) => page.finalComments) || [], [commentsData])
   const communitCommentsDatas = React.useMemo(() => communityCommentsData?.pages.flatMap((page) => page.finalComments) || [], [communityCommentsData])
   const isTimeline = type === PostType.Timeline
@@ -142,11 +145,11 @@ const PostCommentBox = ({
   }, [type, fetchNextPage, communityCommentsNextpage])
 
   const likePostCommentHandler = React.useCallback(
-    (commentId: string, level: string) => {
+    (commentId: string, level: string, sortBy: Sortby) => {
       if (isTimeline) {
-        likeUserPostComment({ userPostCommentId: commentId, level })
+        likeUserPostComment({ userPostCommentId: commentId, level, sortBy })
       } else if (type === PostType.Community) {
-        likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
+        likeGroupPostComment({ communityGroupPostCommentId: commentId, level, sortBy })
       }
     },
     [isTimeline, likeUserPostComment, likeGroupPostComment, type]
@@ -221,7 +224,7 @@ const PostCommentBox = ({
 
   const handleSelect = (option: { value: string; label: string }) => {
     setSelectedOption(option.label)
-    setselectedvalue(option.value as Sortby)
+    setSelectedSortValue(option.value as Sortby)
     if (type === PostType.Timeline) {
       refetchUserPostComment()
     } else {
@@ -271,6 +274,7 @@ const PostCommentBox = ({
               handleCommentClicked={handleCommentClicked}
               handelCommentData={handelCommentData}
               visibleComments={visibleComments}
+              sortBy={selectedSortValue}
             />
           ) : (
             <CommentList
@@ -285,10 +289,11 @@ const PostCommentBox = ({
               handleCommentClicked={handleCommentClicked}
               handelCommentData={handelCommentData}
               visibleComments={visibleComments}
+              sortBy={selectedSortValue}
             />
           )}
         </div>
-        {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} />}
+        {replyModal.enabled && <NestedCommentModal reply={replyModal} setReply={setReplyModal} type={type} sortBy={selectedSortValue} />}
         {newPost && (
           <NewPostComment
             setShowCommentSection={setShowCommentSection}
@@ -299,7 +304,7 @@ const PostCommentBox = ({
             isReply={isReply}
             postId={postID}
             expandCommentSection={expandCommentSection}
-            sortBy={selectedValue}
+            sortBy={selectedSortValue}
           />
         )}
         {showInitial && showCommentSec !== postID ? <ShowAllComponent postID={postID} setShowCommentSection={setShowCommentSection} /> : ''}

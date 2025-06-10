@@ -25,6 +25,7 @@ const CommentItem = ({
   handleReplyClick,
   showReplies,
   childCommentsId,
+  sortBy,
 }: any) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
 
@@ -77,11 +78,12 @@ const CommentItem = ({
         </p>
 
         <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
-          <motion.div className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
-            <AiOutlineLike
-              onClick={() => likeHandler(comment._id, comment.level.toString())}
-              className={comment?.likeCount?.some((like: any) => like.userId === currentUserId) ? 'text-primary' : ''}
-            />
+          <motion.div
+            onClick={() => likeHandler(comment._id, comment.level.toString(), sortBy)}
+            className="flex items-center cursor-pointer"
+            whileHover={{ scale: 1.1 }}
+          >
+            <AiOutlineLike className={comment?.likeCount?.some((like: any) => like.userId === currentUserId) ? 'text-primary' : ''} />
             <span className="mx-1">{comment?.likeCount?.length || 0}</span>
           </motion.div>
 
