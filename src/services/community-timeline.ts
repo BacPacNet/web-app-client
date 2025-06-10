@@ -425,12 +425,10 @@ export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSin
 
     onMutate: async (postId: string) => {
       const queryKey = isSinglePost ? ['getPost', postId] : source === 'profile' ? ['userPosts'] : ['timelinePosts']
-      console.log(queryKey)
       await queryClient.cancelQueries({ queryKey })
 
       queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
-        console.log(oldData, 'oldData')
         const toggleLike = (likeCount: any[]) => {
           const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
           return hasLiked
