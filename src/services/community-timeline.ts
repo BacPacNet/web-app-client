@@ -192,14 +192,14 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ userPostCommentId, level }: { userPostCommentId: string; level: string }) =>
+    mutationFn: ({ userPostCommentId, level, sortBy }: { userPostCommentId: string; level: string; sortBy: Sortby | null }) =>
       LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
     onSuccess: (_, variables) => {
-      const { userPostCommentId, level } = variables
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments'])
+      const { userPostCommentId, level, sortBy } = variables
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, sortBy])
 
       if (showInitial) {
-        const singlePostData: any = queryClient.getQueryData(['getPost', postId])
+        const singlePostData: any = queryClient.getQueryData(['getPost', postId, sortBy])
         if (singlePostData?.comment) {
           const comment = singlePostData.comment
 
@@ -213,7 +213,7 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
                 : [...comment.likeCount, { userId: userData?.id }],
             }
 
-            queryClient.setQueryData(['getPost', postId], {
+            queryClient.setQueryData(['getPost', postId, sortBy], {
               ...singlePostData,
               comment: updatedComment,
             })
@@ -234,7 +234,7 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
               return reply
             })
 
-            queryClient.setQueryData(['getPost', postId], {
+            queryClient.setQueryData(['getPost', postId, 'desc'], {
               ...singlePostData,
               comment: {
                 ...comment,
@@ -247,7 +247,7 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
 
       //   single end
       if (currUserComments) {
-        queryClient.setQueryData(['userPostComments'], {
+        queryClient.setQueryData(['userPostComments', postId, 'desc'], {
           ...currUserComments,
           pages: currUserComments.pages.map((page) => {
             return {
@@ -331,7 +331,7 @@ export function useGetUserPosts(userId: string, limit: number) {
   const [cookieValue] = useCookie('uni_user_token')
 
   return useInfiniteQuery({
-    queryKey: ['userPosts', userId],
+    queryKey: ['userPosts'],
     queryFn: ({ pageParam = 1 }) => getAllUserPosts(cookieValue, userId, pageParam, limit),
     getNextPageParam: (lastPage) => {
       if (lastPage.currentPage < lastPage.totalPages) {
@@ -424,13 +424,11 @@ export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSin
     mutationFn: (postId: string) => LikeUnilikeUserPost(postId, cookieValue),
 
     onMutate: async (postId: string) => {
-      const queryKey = isSinglePost ? ['getPost', postId] : source === 'profile' ? ['userPosts', adminId] : ['timelinePosts']
-
+      const queryKey = isSinglePost ? ['getPost', postId] : source === 'profile' ? ['userPosts'] : ['timelinePosts']
       await queryClient.cancelQueries({ queryKey })
 
       queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
-
         const toggleLike = (likeCount: any[]) => {
           const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
           return hasLiked

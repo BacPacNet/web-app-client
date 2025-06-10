@@ -28,6 +28,7 @@ import {
 } from 'react-share'
 import { IoMdCode } from 'react-icons/io'
 import useDeviceType from '@/hooks/useDeviceType'
+import { Sortby } from '@/types/common'
 
 const SharePopup = (commentId: { commentId: string }) => {
   return (
@@ -127,8 +128,9 @@ type reply = {
   }
   setReply: (value: { enabled: boolean; commentID: string }) => void
   type: PostType.Community | PostType.Timeline
+  sortBy: Sortby | null
 }
-const NestedCommentModal = ({ reply, setReply, type }: reply) => {
+const NestedCommentModal = ({ reply, setReply, type, sortBy }: reply) => {
   const { userData } = useUniStore()
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
@@ -161,9 +163,9 @@ const NestedCommentModal = ({ reply, setReply, type }: reply) => {
 
   const likePostCommentHandler = (commentId: string, level: string) => {
     if (type === PostType.Timeline) {
-      likeUserPostComment({ userPostCommentId: commentId, level })
+      likeUserPostComment({ userPostCommentId: commentId, level, sortBy })
     } else if (type === PostType.Community) {
-      likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
+      likeGroupPostComment({ communityGroupPostCommentId: commentId, level, sortBy })
     }
   }
 

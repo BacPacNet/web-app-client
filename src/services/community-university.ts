@@ -9,6 +9,7 @@ import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import { Sortby } from '@/types/common'
+import { ChildProcessWithoutNullStreams } from 'child_process'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -649,15 +650,15 @@ export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boo
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ communityGroupPostCommentId, level }: { communityGroupPostCommentId: string; level: string }) =>
+    mutationFn: ({ communityGroupPostCommentId, level, sortBy }: { communityGroupPostCommentId: string; level: string; sortBy: Sortby | null }) =>
       LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: (_, variables) => {
-      const { communityGroupPostCommentId, level } = variables
-      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments'])
+      const { communityGroupPostCommentId, level, sortBy } = variables
+      const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments', postId, sortBy])
 
       if (showInitial) {
-        const singlePostData: any = queryClient.getQueryData(['getPost', postId])
+        const singlePostData: any = queryClient.getQueryData(['getPost', postId, sortBy])
         if (singlePostData?.comment) {
           const comment = singlePostData.comment
 
@@ -671,7 +672,7 @@ export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boo
                 : [...comment.likeCount, { userId: userData?.id }],
             }
 
-            queryClient.setQueryData(['getPost', postId], {
+            queryClient.setQueryData(['getPost', postId, sortBy], {
               ...singlePostData,
               comment: updatedComment,
             })
@@ -692,7 +693,7 @@ export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boo
               return reply
             })
 
-            queryClient.setQueryData(['getPost', postId], {
+            queryClient.setQueryData(['getPost', postId, sortBy], {
               ...singlePostData,
               comment: {
                 ...comment,
@@ -705,7 +706,7 @@ export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boo
 
       //   single end
       if (currUserComments) {
-        queryClient.setQueryData(['communityPostComments'], {
+        queryClient.setQueryData(['communityPostComments', postId, sortBy], {
           ...currUserComments,
           pages: currUserComments.pages.map((page) => {
             return {
