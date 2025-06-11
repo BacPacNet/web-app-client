@@ -69,7 +69,7 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
       )}
 
       {imageItems.length > 0 && (
-        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-6/12 max-h-[500px]' : 'w-full max-w-2xl mx-auto max-h-[500px]'} mt-4`}>
+        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-6/12 max-h-[400px]' : 'w-full max-w-2xl mx-auto max-h-[400px]'} mt-4`}>
           {imageItems.slice(0, 4).map((item, index) => {
             const isThreeImageLayout = imageItems.length === 3
             let customClasses = 'max-h-[300px]'
@@ -79,26 +79,19 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
               if (index === 1 || index === 2) customClasses = 'h-full'
             }
             const isSingleImage = imageItems.length === 1
-            const shouldUseOriginalSize = isSingleImage && singleImageHeight !== null && singleImageHeight < 500
             return (
               <div
                 key={index}
                 className={`relative overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center ${
-                  isThreeImageLayout ? customClasses : imageItems.length === 1 ? 'w-full max-h-[500px]' : 'h-48 w-full'
+                  isThreeImageLayout ? customClasses : imageItems.length === 1 ? 'w-full max-h-[400px]' : 'h-48 w-full'
                 }`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={`Image ${index + 1}`}
                   width={500}
-                  height={500}
-                  className={`${
-                    isSingleImage
-                      ? shouldUseOriginalSize
-                        ? 'w-auto h-auto' // keep natural size
-                        : 'w-full h-full object-contain'
-                      : 'w-full h-full object-cover'
-                  } cursor-pointer`}
+                  height={400}
+                  className={`${isSingleImage ? 'w-full h-full object-contain' : 'w-full h-full object-cover'} cursor-pointer`}
                   onClick={() => handleImageClick(index)}
                   onLoad={isSingleImage ? handleImageLoad : undefined}
                 />

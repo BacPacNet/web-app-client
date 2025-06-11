@@ -119,7 +119,7 @@ const PostCard = React.memo(
     isSinglePost,
   }: PostProps) => {
     const { userData } = useUniStore()
-
+    const commentSectionRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -147,8 +147,6 @@ const PostCard = React.memo(
 
     // Initialize local state
     useEffect(() => {
-      //  setLocalLikes(likes)
-      //  setLocalLikeCount(likes?.length || 0)
       setLocalIsLiked(likes?.some((like) => like.userId === userData?.id) || false)
     }, [likes, userData?.id])
 
@@ -244,6 +242,13 @@ const PostCard = React.memo(
       }
       handleClick()
       setShowCommentSection(showCommentSection === postID ? '' : postID)
+
+      // Add a small delay to ensure the comment section is rendered before scrolling
+      setTimeout(() => {
+        if (showCommentSection !== postID && commentSectionRef.current) {
+          commentSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }
+      }, 100)
     }, [showCommentSection, postID, setShowCommentSection])
 
     return (
@@ -317,8 +322,9 @@ const PostCard = React.memo(
           </div>
         </div>
 
-        {/* Add a wrapper for the comment section with the animation */}
+        {/* Add ref to the comment section wrapper */}
         <div
+          ref={commentSectionRef}
           className={`overflow-hidden transition-all duration-500 ease-in-out ${showCommentSection === postID || showInitial ? 'h-auto' : 'max-h-0'}`}
         >
           <PostCommentBox

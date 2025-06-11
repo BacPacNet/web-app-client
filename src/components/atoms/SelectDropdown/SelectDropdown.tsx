@@ -36,7 +36,7 @@ const motionStyle = {
 
 const variantText: any = {
   primary: 'text-primary-500',
-  default: 'text-neutral-800',
+  default: 'text-neutral-700',
 }
 const variantBg: any = {
   primary: 'bg-surface-primary-50',
@@ -112,7 +112,7 @@ const SelectDropdown = ({
           variantBg[variant]
         } focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-400  outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : '!text-neutral-400'} ${variantText[variant]} px-1`}> {value || placeholder}</p>
+        <p className={`font-normal ${value ? 'text-neutral-700' : '!text-neutral-400'} ${variantText[variant]} px-1`}> {value || placeholder}</p>
         <div>
           {value && isAllowedToRemove ? (
             <RxCross2
@@ -153,7 +153,7 @@ const SelectDropdown = ({
                 const IconComponent = icons[key % icons.length]
                 return (
                   <div
-                    className={` flex gap-2 items-center  text-xs text-neutral-900 p-1 px-2 cursor-pointer hover:bg-neutral-100 rounded-md`}
+                    className={` flex gap-2 items-center  text-xs text-neutral-700 p-1 px-2 cursor-pointer hover:bg-neutral-100 rounded-md`}
                     onClick={() => handleSelect(item)}
                     key={key}
                   >

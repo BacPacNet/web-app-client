@@ -2,9 +2,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
-import { showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/context/ModalContext'
+import { AxiosError } from 'axios'
 
 const editProfile = async (data: any, id: string) => {
   const res = await client(`/userprofile/${id}`, { method: 'PUT', data })
@@ -23,11 +24,11 @@ export const useEditProfile = () => {
     mutationFn: (data: any) => editProfile(data, userProfileData?._id || ''),
     onSuccess: (response: any) => {
       showCustomSuccessToast('Profile Updated Successfully')
-      setUserProfileData(response.updatedUserProfile)
+      setUserProfileData(response.data)
       queryClient.invalidateQueries({ queryKey: ['getRefetchUserData'] })
     },
-    onError: (res: any) => {
-      showCustomSuccessToast('Failed to update profile')
+    onError: (error: AxiosError<{ message: string }>) => {
+      showCustomDangerToast(error.response?.data?.message || 'An error occurred')
     },
   })
 }

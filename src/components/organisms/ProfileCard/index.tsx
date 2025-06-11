@@ -138,7 +138,7 @@ export function UserProfileCard({
           {isSelfProfile ? (
             <div
               onClick={() => {
-                openModal(<EditProfileModal />)
+                openModal(<EditProfileModal />, 'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar')
               }}
               className="hidden  h-10 sm:flex gap-1  items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-primary-500 bg-secondary border border-shade-button-border  drop-shadow-sm whitespace-nowrap cursor-pointer"
             >

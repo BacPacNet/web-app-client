@@ -83,6 +83,7 @@ export interface Profile {
   profile_dp: ProfileDp
   communities: UserCommunities
   universityLogo: string
+  displayEmail: string
 }
 
 export interface CommunityDetail {

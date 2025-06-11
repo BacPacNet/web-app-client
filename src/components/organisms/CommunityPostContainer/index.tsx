@@ -3,13 +3,13 @@ import PostImageSlider from '@/components/atoms/PostImageSlider'
 import PostCard from '@/components/molecules/PostCard'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
-import PostSkeleton from '@/components/atoms/PostSkeleton'
 import notMember from '@/assets/notMember.svg'
 import { useGetCommunityPost } from '@/services/community-university'
 import { AxiosError } from 'axios'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 
 type Props = {
   communityID?: string
@@ -17,6 +17,7 @@ type Props = {
   containerRef?: React.RefObject<HTMLDivElement> | any
   isCommunityData?: boolean
 }
+
 const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', containerRef, isCommunityData }: Props) => {
   const [showCommentSection, setShowCommentSection] = useState('')
 
@@ -27,12 +28,11 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     isFetchingNextPage: communityPostIsFetchingNextPage,
     hasNextPage: communityPostHasNextPage,
     error: communityPostError,
-    dataUpdatedAt,
     isLoading,
   } = useGetCommunityPost(communityID, isEnabled, 10)
-  //  const [communityDatas, setCommunityDatas] = useState([])
 
-  const communityDatas = communityGroupPost?.pages.flatMap((page) => page?.finalPost) || []
+  // Memoize flattened posts data
+  const communityDatas = useMemo(() => communityGroupPost?.pages.flatMap((page) => page?.finalPost) || [], [communityGroupPost?.pages])
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -44,30 +44,25 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     currImageIndex: null,
   })
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (containerRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
-        const bottom = scrollTop + clientHeight >= scrollHeight - 10
+  const handleScroll = useCallback(() => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+      const bottom = scrollTop + clientHeight >= scrollHeight - 10
 
-        if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage) {
-          communityPostNextpage()
-        }
+      if (bottom && communityPostHasNextPage && !communityPostIsFetchingNextPage) {
+        communityPostNextpage()
       }
     }
+  }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
 
+  useEffect(() => {
     const container = containerRef.current
     container?.addEventListener('scroll', handleScroll)
 
     return () => {
       container?.removeEventListener('scroll', handleScroll)
     }
-  }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
-
-  //  useEffect(() => {
-  //    const communityDatas: any = communityGroupPost?.pages.flatMap((page) => page?.finalPost)
-  //    setCommunityDatas(communityDatas)
-  //  }, [communityGroupPost, dataUpdatedAt])
+  }, [handleScroll])
 
   useEffect(() => {
     if (imageCarasol.isShow) {
@@ -75,7 +70,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     }
   }, [imageCarasol])
 
-  const renderPostWithRespectToPathName = () => {
+  const renderPostWithRespectToPathName = useCallback(() => {
     return communityDatas?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post?._id}
@@ -106,30 +101,35 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
+  }, [communityDatas, showCommentSection, communityID, communityGroupID])
+
+  if (isLoading && !communityPostIsFetchingNextPage) {
+    return (
+      <div className="space-y-6">
+        <PostSkeleton count={3} />
+      </div>
+    )
   }
 
-  const PostCardRender = () => {
-    if (isLoading) {
-      return <PostSkeleton />
-    }
-
-    if (communityPostError && (communityPostError as AxiosError).response?.status === 401) {
-      return (
-        <EmptyStateCard
-          imageSrc={notMember}
-          title="Join Community"
-          description="Join this community to access its groups and connect with fellow university members"
-        />
-      )
-    }
-
-    return renderPostWithRespectToPathName()
+  if (communityPostError && (communityPostError as AxiosError).response?.status === 401) {
+    return (
+      <EmptyStateCard
+        imageSrc={notMember}
+        title="Join Community"
+        description="Join this community to access its groups and connect with fellow university members"
+      />
+    )
   }
 
   return (
     <div className="py-8 post-container">
       <div className="flex flex-col gap-6">
-        <PostCardRender />
+        {renderPostWithRespectToPathName()}
+        {communityPostIsFetchingNextPage && (
+          <div className="space-y-6">
+            <PostSkeleton count={2} />
+          </div>
+        )}
       </div>
     </div>
   )

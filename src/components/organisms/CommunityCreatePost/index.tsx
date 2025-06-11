@@ -184,7 +184,7 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
 
             <label htmlFor="communityPostFile" className="cursor-pointer inline-block">
               <input
-                id="timelinePostFile"
+                id="communityPostFile"
                 type="file"
                 multiple
                 accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"

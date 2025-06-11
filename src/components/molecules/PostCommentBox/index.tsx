@@ -110,8 +110,8 @@ const PostCommentBox = ({
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
   const { isMobile } = useDeviceType()
 
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false, showInitial, postID || '')
-  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false, showInitial, postID || '')
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false, showInitial, postID || '', selectedSortValue)
+  const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false, showInitial, postID || '', selectedSortValue)
   const {
     data: commentsData,
     refetch: refetchUserPostComment,
@@ -147,9 +147,9 @@ const PostCommentBox = ({
   const likePostCommentHandler = React.useCallback(
     (commentId: string, level: string, sortBy: Sortby) => {
       if (isTimeline) {
-        likeUserPostComment({ userPostCommentId: commentId, level, sortBy })
+        likeUserPostComment({ userPostCommentId: commentId, level })
       } else if (type === PostType.Community) {
-        likeGroupPostComment({ communityGroupPostCommentId: commentId, level, sortBy })
+        likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
       }
     },
     [isTimeline, likeUserPostComment, likeGroupPostComment, type]
