@@ -1,25 +1,27 @@
 'use client'
-import Loading from '@/app/register/loading'
 import Card from '@/components/atoms/Card'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
+import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetUserPosts } from '@/services/community-timeline'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 
 type Props = {
   userId?: string
   containerRef?: React.RefObject<HTMLDivElement> | any
   source: string
 }
+
 const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
   const [showCommentSection, setShowCommentSection] = useState('')
 
-  const { data: userSelfPostsData, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, error, status } = useGetUserPosts(userId, 10)
+  const { data: userSelfPostsData, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, error } = useGetUserPosts(userId, 10)
 
-  const userSelfPosts = userSelfPostsData?.pages.flatMap((page) => page?.data) || []
+  // Memoize flattened posts data
+  const userSelfPosts = useMemo(() => userSelfPostsData?.pages.flatMap((page) => page?.data) || [], [userSelfPostsData?.pages])
 
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -88,26 +90,21 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))
-  }, [userSelfPosts, showCommentSection])
+  }, [userSelfPosts, showCommentSection, source])
 
-  const PostCardRender = () => {
-    if (isLoading) {
-      return (
-        <div>
-          <Loading />
-        </div>
-      )
-    }
+  if (isLoading && !isFetchingNextPage) {
+    return <PostSkeleton count={3} />
+  }
 
-    if (error) return <div>{error.message || 'Error loading posts'}</div>
-
-    return renderPostWithRespectToPathName()
+  if (error) {
+    return <div className="p-4 text-red-500">{error.message || 'Error loading posts'}</div>
   }
 
   return (
     <div className="py-8 post-container">
       <div className="flex flex-col gap-6">
-        <PostCardRender />
+        {renderPostWithRespectToPathName()}
+        {isFetchingNextPage && <PostSkeleton count={2} />}
       </div>
     </div>
   )

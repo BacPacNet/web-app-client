@@ -7,7 +7,7 @@ import { useEditProfile } from '@/services/edit-profile'
 import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { TiCameraOutline } from 'react-icons/ti'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, ChangeEvent } from 'react'
 import { degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
@@ -16,14 +16,16 @@ import { Country, City } from 'country-state-city'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { useModal } from '@/context/ModalContext'
+import { ProfileDp } from '@/types/User'
+import Title from '@/components/atoms/Title'
 
 export interface editProfileInputs {
   firstName: string
   lastName: string
-  profilePicture: string | null
+  profilePicture: File | null
   users_id: string
-  profile_dp?: string
-  email?: string
+  profile_dp?: ProfileDp
+  displayEmail?: string
   cover_dp?: string
   bio?: string
   gender: string
@@ -41,18 +43,38 @@ export interface editProfileInputs {
   _id: string
 }
 
-const Badge = () => {
-  return <span className="bg-primary-500 h-5 py-[2px] px-[6px] text-2xs font-medium text-white rounded-3xl">Required</span>
-}
+// Reusable labeled input component
+const LabeledInput = ({
+  label,
+  required = false,
+  error,
+  children,
+  htmlFor,
+}: {
+  label: string
+  required?: boolean
+  error?: string | boolean
+  children: React.ReactNode
+  htmlFor?: string
+}) => (
+  <div className="flex flex-col">
+    <label htmlFor={htmlFor} className="py-1 text-sm text-neutral-700 font-medium">
+      {label} {required && <span className="text-destructive-600">*</span>}
+    </label>
+    {children}
+    {error && <span className="text-red-500 font-normal">{error}</span>}
+  </div>
+)
+
 const EditProfileModal = () => {
   const { mutate: mutateEditProfile, isPending } = useEditProfile()
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
-  const [user, setUser] = useState<any>(null)
-  const [userType, setUserType] = useState('student')
+  const [userType, setUserType] = useState<'student' | 'faculty'>('student')
   const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
   const [isProfileLoading, setIsProfileLoading] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
 
   const {
@@ -73,236 +95,198 @@ const EditProfileModal = () => {
       const userDefault = {
         firstName: firstName || '',
         lastName: lastName || '',
-        email: email || '',
+        displayEmail: email || '',
         gender: gender || '',
-        affiliation: profile.affiliation || '',
-        bio: profile.bio || '',
-        city: profile.city || '',
-        country: profile.country || '',
-        degree: profile.degree || '',
-        dob: profile.dob || '',
-        major: profile.major || '',
-        occupation: profile.occupation || '',
-        phone_number: profile.phone_number || '',
-        study_year: profile.study_year || '',
+        affiliation: profile?.affiliation || '',
+        bio: profile?.bio || '',
+        city: profile?.city || '',
+        country: profile?.country || '',
+        degree: profile?.degree || '',
+        dob: profile?.dob || '',
+        major: profile?.major || '',
+        occupation: profile?.occupation || '',
+        phone_number: profile?.phone_number || '',
+        study_year: profile?.study_year || '',
         profilePicture: null,
       }
       reset(userDefault)
-      setUser({ ...userDefault, profile_dp: profile?.profile_dp })
       setPreviewProfileImage(profile?.profile_dp?.imageUrl)
     }
   }, [userProfile, reset])
 
-  const [cityOptions, setCityOptions] = useState<string[]>([])
-  const [isCityAvailable, setIsCityAvailable] = useState(true)
   const currCountry = watch('country') || ''
   const currBio = watch('bio') || ''
+  const cityOptions = useMemo(() => {
+    const isoCode = Country.getAllCountries().find((country) => country.name === currCountry)?.isoCode
+    if (!isoCode) return []
+    return City.getCitiesOfCountry(isoCode)?.map((state) => state.name) ?? []
+  }, [currCountry])
 
-  const handleCountryChange = (selectedCountry: string, field?: any) => {
-    const getCountyCode = Country.getAllCountries().find((country) => country.name === selectedCountry)?.isoCode
-    if (getCountyCode) {
-      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
-      field.onChange(selectedCountry) // Update the country field value
-    }
+  const handleCountryChange = (selectedCountry: string, field: any) => {
+    field.onChange(selectedCountry)
   }
 
   type DegreeKeys = keyof typeof degreeAndMajors
-  const currDegree = watch('degree') as DegreeKeys
   const currYear = watch('study_year') as DegreeKeys
-  const [currMajor, setCurrMajor] = useState<any>([])
 
   type occupationKeys = keyof typeof occupationAndDepartment
   const currOccupation = watch('occupation') as occupationKeys
   const currFormDepartment = watch('affiliation') as occupationKeys
 
-  const [currDepartment, setCurrDepartment] = useState<any>([])
+  const currDepartment = useMemo(() => occupationAndDepartment[currOccupation] || [], [currOccupation])
 
   useEffect(() => {
-    setCurrDepartment(occupationAndDepartment[currOccupation] || [])
-    if (!occupationAndDepartment[currOccupation]?.includes(currFormDepartment)) {
+    if (!currDepartment.includes(currFormDepartment)) {
       setValue('affiliation', '')
     }
-  }, [currOccupation, setValue])
-
-  useEffect(() => {
-    setCurrMajor(degreeAndMajors[currDegree] || [])
-  }, [currDegree, setValue])
-
-  useEffect(() => {
-    const getCountyCode = Country.getAllCountries().find((country) => country.name === currCountry)?.isoCode
-    if (getCountyCode) {
-      setCityOptions(City.getCitiesOfCountry(getCountyCode)!.map((state) => state.name))
-    }
-  }, [currCountry, setValue])
+  }, [currDepartment, currFormDepartment, setValue])
 
   const validateBio = (value: string | undefined): string | boolean => {
     if (!value || value.trim() === '') return true
-
     const trimmedValue = value.trim()
     const charCount = trimmedValue.length
-
-    if (charCount > 160) return 'Bio must not exceed 150 characters'
-
+    if (charCount > 160) return 'Bio must not exceed 160 characters'
     return true
   }
-  //   200 char
 
+  // Handle image upload with error handling
   const handleImageUpload = async () => {
     const files = profilePicture
     if (files) {
-      const uploadPayload = {
-        files: [files] as unknown as File[],
-        context: UPLOAD_CONTEXT.DP,
+      try {
+        const uploadPayload = {
+          files: [files] as unknown as File[],
+          context: UPLOAD_CONTEXT.DP,
+        }
+        const uploadResponse = await uploadtoS3(uploadPayload)
+        return uploadResponse.data[0]
+      } catch (err) {
+        setSubmitError('Failed to upload image. Please try again.')
+        return null
       }
-      const uploadResponse = await uploadtoS3(uploadPayload)
-      return uploadResponse.data[0]
     } else {
-      console.error('No file selected.')
+      setSubmitError('No file selected.')
+      return null
     }
   }
 
   // Handle image preview
-  const handleImagePreview = (e: any) => {
-    const file = e.target.files[0]
+  const handleImagePreview = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       setPreviewProfileImage(URL.createObjectURL(file))
       setValue('profilePicture', file)
     }
   }
 
+  // Form submit handler with error handling
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
     setIsProfileLoading(true)
-    let profileImageData = user?.profile_dp
+    setSubmitError(null)
+    let profileImageData = userProfile?.profile?.profile_dp
     if (profilePicture) {
-      profileImageData = await handleImageUpload()
+      const uploaded = await handleImageUpload()
+      if (!uploaded) {
+        setIsProfileLoading(false)
+        return
+      }
+      if (!uploaded.imageUrl || !uploaded.publicId) {
+        setSubmitError('Image upload failed: missing imageUrl or publicId.')
+        setIsProfileLoading(false)
+        return
+      }
+      profileImageData = { imageUrl: uploaded.imageUrl, publicId: uploaded.publicId }
     }
-    mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
-    setIsProfileLoading(false)
-    closeModal()
+    try {
+      await mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
+      closeModal()
+    } catch (err) {
+      setSubmitError('Failed to update profile. Please try again.')
+    } finally {
+      setIsProfileLoading(false)
+    }
   }
 
   return (
-    <div className=" flex flex-col justify-center rounded-xl  font-poppins w-full">
-      <h1 className="text-md font-bold text-neutral-700">Edit Profile</h1>
-      {/* <p className="text-xs text-neutral-600">This will show up on your profile for others to see</p> */}
-      <p className="text-xs text-neutral-600">
+    <div className="flex flex-col justify-center rounded-xl font-poppins w-full">
+      <Title>Edit Profile</Title>
+      <p className="text-2xs text-neutral-600">
         <span className="text-destructive-600">*</span> Are required fields to fill.
       </p>
-      <form className="flex flex-col font-medium text-sm gap-4">
-        <div className="flex items-center gap-4 mt-4">
-          {previewProfileImage ? (
-            <div className="relative w-20 h-20 rounded-full border border-neutral-200 group">
-              <img
-                className="rounded-full object-cover w-20 h-20"
-                src={typeof previewProfileImage === 'string' ? previewProfileImage : URL.createObjectURL(previewProfileImage)}
-                alt="aa"
-              />
-              <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
-                <input
-                  {...register('profilePicture')}
-                  style={{ display: 'none' }}
-                  type="file"
-                  accept="image/jpeg,image/png,image/jpg,image/gif"
-                  id="changeProfileImage"
-                  onChange={handleImagePreview}
-                />
-                <label
-                  htmlFor="changeProfileImage"
-                  className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800"
-                >
-                  <FaCamera color="white" />
-                </label>
-              </div>
-            </div>
-          ) : (
-            <label htmlFor="changeProfileImage" className="w-20 h-20 rounded-full border border-neutral-200 flex items-center justify-center">
+      {submitError && <div className="text-red-500 text-sm mb-2">{submitError}</div>}
+      <form className="flex flex-col font-medium text-sm gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col items-start gap-4 mt-4">
+          <p className="text-sm text-neutral-700">Profile Picture</p>
+          <div className="relative w-20 h-20 rounded-full border border-neutral-200 group">
+            <img
+              className="rounded-full object-cover w-20 h-20"
+              src={
+                typeof previewProfileImage === 'string' ? previewProfileImage : previewProfileImage ? URL.createObjectURL(previewProfileImage) : ''
+              }
+              alt="Profile Preview"
+            />
+            <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
               <input
-                style={{ display: 'none' }}
                 {...register('profilePicture')}
-                accept="image/jpeg,image/png,image/jpg,image/gif"
+                style={{ display: 'none' }}
                 type="file"
+                accept="image/jpeg,image/png,image/jpg,image/gif"
                 id="changeProfileImage"
                 onChange={handleImagePreview}
+                tabIndex={0}
+                aria-label="Change profile image"
               />
-              <TiCameraOutline className="text-primary text-lg" />
-            </label>
-          )}
-
-          <p className="text-sm text-neutral-700">Edit Profile Picture</p>
+              <label
+                htmlFor="changeProfileImage"
+                className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800"
+                tabIndex={0}
+                aria-label="Change profile image"
+              >
+                <FaCamera color="white" />
+              </label>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <p className="text-sm font-bold py-2">Basic Information</p>
-          <label htmlFor="firstname" className="py-1 text-sm text-neutral-700">
-            First Name <Badge />
-          </label>
+        <LabeledInput label="First Name" required error={errors.firstName && 'Please enter first name'} htmlFor="firstname">
           <input
             {...register('firstName', { required: true })}
             placeholder="Enter First Name"
-            className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
+            className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal text-neutral-700"
+            id="firstname"
+            disabled={isProfileLoading}
           />
-          {errors.firstName && <span className="text-red-500 font-normal">Please enter first name</span>}
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="lastname" className="py-1 text-sm text-neutral-700">
-            Last Name <Badge />
-          </label>
+        </LabeledInput>
+        <LabeledInput label="Last Name" required error={errors.lastName && 'Please enter last name'} htmlFor="lastname">
           <input
             {...register('lastName', { required: true })}
             placeholder="Enter Last Name"
-            className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
+            className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal text-neutral-700"
+            id="lastname"
+            disabled={isProfileLoading}
           />
-          {errors.lastName && <span className="text-red-500 font-normal">Please enter your date of birth</span>}
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="dob" className="py-1 text-sm text-neutral-700">
-            Date of Birth <Badge />
-          </label>
+        </LabeledInput>
+        <LabeledInput label="Date of Birth" required error={errors.dob && 'Please enter your Birthday!'} htmlFor="dob">
           <Controller
             name="dob"
             control={control}
             rules={{ required: 'Birth date is required!' }}
             render={({ field }) => <DateSelect value={field.value} onChange={field.onChange} placeholder="Birthday" err={!!errors.dob} />}
           />
-          {errors.dob && <InputWarningText>Please enter your Birthday!</InputWarningText>}
-        </div>
+        </LabeledInput>
 
-        <div className="w-full flex flex-col relative">
-          <label htmlFor="dob" className="py-1 text-sm text-neutral-700">
-            Gender
-          </label>
-          <Controller
-            name="gender"
-            control={control}
-            // rules={{ required: 'Gender is required!' }}
-            render={({ field }) => (
-              <SelectDropdown
-                options={GenderOptions}
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Select a Gender"
-                icon={'single'}
-                err={!!errors.gender}
-              />
-            )}
-          />
-          {errors.gender && <InputWarningText>{errors?.gender?.message?.toString()}</InputWarningText>}
-        </div>
         <div className="flex flex-col">
           <div className="flex justify-between">
             <label htmlFor="bio" className="py-1">
               Bio
             </label>
-            <p className="text-xs text-neutral-500">{currBio?.trim()?.length}/160</p>
+            <p className="text-xs text-neutral-500 font-normal">{currBio?.trim()?.length}/160</p>
           </div>
-          {/* <input
-            {...register('bio', { validate: validateBio })}
-            placeholder="Write a short bio to introduce yourself"
-            className="text-base border pl-3 py-1 rounded-lg border-gray-light font-normal"
-          /> */}
           <textarea
             {...register('bio', { validate: validateBio })}
             placeholder="Write a short bio to introduce yourself"
             className="text-base border pl-3 py-2 rounded-lg border-neutral-200 font-normal h-32 resize-none outline-none"
+            maxLength={160}
+            disabled={isProfileLoading}
           />
           {errors.bio && <span className="text-red-500 font-normal">{errors.bio.message}</span>}
         </div>
@@ -313,7 +297,6 @@ const EditProfileModal = () => {
           <Controller
             name="country"
             control={control}
-            // rules={{ required: 'country is required!' }}
             render={({ field }) => (
               <SelectDropdown
                 options={Country.getAllCountries().map((country) => country.name)}
@@ -328,17 +311,13 @@ const EditProfileModal = () => {
           />
           {errors.country && <InputWarningText>{errors?.country?.message?.toString()}</InputWarningText>}
         </div>
-
         <div className="flex flex-col">
-          <label htmlFor="country" className="py-1">
+          <label htmlFor="city" className="py-1">
             City
           </label>
           <Controller
             name="city"
             control={control}
-            // rules={{
-            //   validate: (value?: string) => (isCityAvailable || value === 'Not available' || value ? true : 'City selection is required!'),
-            // }}
             render={({ field }) => (
               <SelectDropdown
                 options={cityOptions}
@@ -352,67 +331,56 @@ const EditProfileModal = () => {
               />
             )}
           />
-
-          {errors.country && <InputWarningText>{errors?.country?.message?.toString()}</InputWarningText>}
+          {errors.city && <InputWarningText>{errors?.city?.message?.toString()}</InputWarningText>}
         </div>
-        {/* contact information start */}
         <div>
           <div className="flex flex-col gap-4">
-            <p className="text-sm font-bold ">Contact Information</p>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="phone_number" className="py-1 ">
-                Email
-              </label>
+            <LabeledInput label="Email" htmlFor="email">
               <input
-                {...register('email')}
+                {...register('displayEmail')}
                 placeholder="Enter an email you would like to show others"
                 type="email"
-                className="border pl-3 py-2 rounded-lg border-gray-light text-2xs"
+                className="border pl-3 py-2 rounded-lg border-gray-light text-xs font-normal"
+                id="email"
+                disabled={isProfileLoading}
               />
-              {errors.phone_number && <span className="text-red-500 font-normal">Please enter your phone number!</span>}
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="phone_number" className="py-1 ">
-                Phone Number
-              </label>
+            </LabeledInput>
+            <LabeledInput label="Phone Number" error={errors.phone_number && 'Please enter your phone number!'} htmlFor="phone_number">
               <input
                 {...register('phone_number')}
                 placeholder=""
                 type="number"
-                className=" text-xs border pl-3 py-1 rounded-lg border-gray-light font-normal"
+                className="text-xs border pl-3 py-2 rounded-lg border-gray-light font-normal"
+                id="phone_number"
+                disabled={isProfileLoading}
               />
-              {errors.phone_number && <span className="text-red-500 font-normal">Please enter your phone number!</span>}
-            </div>
+            </LabeledInput>
           </div>
         </div>
-        {/* contact information end */}
-
         <div>
-          <p className="text-sm font-bold py-2 ">
-            What is your status? <span className="text-destructive-600">*</span>
-          </p>
-          <p className="text-2xs text-destructive-600">
-            You can only change your status once every academic year. You cannot change back after updating your status for 1 year.
-          </p>
+          <Title>
+            Edit status<span className="text-destructive-600">*</span>
+          </Title>
+          <p className="text-2xs font-normal text-destructive-500">You can only change your status twice within 14 days</p>
         </div>
         <div>
           <div className="flex items-center gap-2">
             <input
               className="w-4 h-4"
-              checked={userType == 'student'}
+              checked={userType === 'student'}
               id="student"
-              onClick={() => setUserType('student')}
+              onChange={() => setUserType('student')}
               type="radio"
               name="userType"
+              disabled={isProfileLoading}
             />
             <label htmlFor="student">Student</label>
           </div>
-
           {userType === 'student' && (
             <>
               <div className="flex flex-col py-2">
                 <label htmlFor="study_year" className="py-1">
-                  Year <Badge />
+                  Year <span className="text-destructive-600">*</span>
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller
@@ -421,7 +389,6 @@ const EditProfileModal = () => {
                     rules={{ required: 'Year is required!' }}
                     render={({ field }) => (
                       <SelectDropdown
-                        // options={currYear}
                         options={Object.keys(degreeAndMajors)}
                         value={field.value || ''}
                         onChange={field.onChange}
@@ -434,33 +401,9 @@ const EditProfileModal = () => {
                   {errors.study_year && <InputWarningText>{errors?.study_year?.message?.toString()}</InputWarningText>}
                 </div>
               </div>
-              {/* <div className="flex flex-col py-2">
-                <label htmlFor="degree" className="py-1">
-                  Degree <span className="text-destructive-600">*</span>
-                </label>
-                <div className="w-full flex flex-col relative">
-                  <Controller
-                    name="degree"
-                    control={control}
-                    rules={{ required: 'Degree is required!' }}
-                    render={({ field }) => (
-                      <SelectDropdown
-                        options={Object.keys(degreeAndMajors)}
-                        value={field.value || ''}
-                        onChange={field.onChange}
-                        placeholder="Select a degree"
-                        icon={'single'}
-                        search={true}
-                        err={!!errors.degree}
-                      />
-                    )}
-                  />
-                  {errors.degree && <InputWarningText>{errors?.degree?.message?.toString()}</InputWarningText>}
-                </div>
-              </div> */}
               <div className="flex flex-col py-2">
                 <label htmlFor="major" className="py-1">
-                  Major <Badge />
+                  Major <span className="text-destructive-600">*</span>
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller
@@ -470,8 +413,6 @@ const EditProfileModal = () => {
                     disabled={!currYear}
                     render={({ field }) => (
                       <SelectDropdown
-                        // key={currMajor}
-                        // options={currMajor}
                         options={degreeAndMajors[currYear]}
                         value={field.value || ''}
                         onChange={field.onChange}
@@ -487,37 +428,24 @@ const EditProfileModal = () => {
             </>
           )}
         </div>
-        {/*<div>
-          <div className="flex items-center gap-2">
-            <input
-              className="w-4 h-4"
-              checked={userType == 'applicant'}
-              id="applicant"
-              onClick={() => setUserType('applicant')}
-              type="radio"
-              name="userType"
-            />
-            <label htmlFor="applicant">Applicant</label>
-          </div>
-        </div>*/}
         <div>
           <div className="flex items-center gap-2">
             <input
               className="w-4 h-4"
-              checked={userType == 'faculty'}
+              checked={userType === 'faculty'}
               id="faculty"
-              onClick={() => setUserType('faculty')}
+              onChange={() => setUserType('faculty')}
               type="radio"
               name="userType"
+              disabled={isProfileLoading}
             />
             <label htmlFor="faculty">Faculty</label>
           </div>
-
           {userType === 'faculty' && (
             <>
               <div className="flex flex-col">
                 <label htmlFor="occupation" className="py-1">
-                  Occupation <Badge />
+                  Occupation <span className="text-destructive-600">*</span>
                 </label>
                 <div className="w-full flex flex-col py-2 relative">
                   <Controller
@@ -541,17 +469,17 @@ const EditProfileModal = () => {
               </div>
               <div className="flex flex-col py-2">
                 <label htmlFor="affiliation" className="py-1">
-                  Affiliation <Badge />
+                  Affiliation <span className="text-destructive-600">*</span>
                 </label>
                 <div className="w-full flex flex-col relative">
                   <Controller
                     name="affiliation"
                     control={control}
                     rules={{ required: 'Department is required!' }}
-                    disabled={!currDepartment}
+                    disabled={currDepartment.length === 0}
                     render={({ field }) => (
                       <SelectDropdown
-                        key={currDepartment}
+                        key={currDepartment[0] || 'no-dept'}
                         options={currDepartment}
                         value={field.value || ''}
                         onChange={field.onChange}
@@ -567,12 +495,10 @@ const EditProfileModal = () => {
             </>
           )}
         </div>
-
-        <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)} disabled={!isDirty}>
-          {/* <Button variant="primary" type="submit" onClick={handleSubmit(onSubmit)}> */}
+        <Button variant="primary" type="submit" disabled={!isDirty || isProfileLoading}>
           {isProfileLoading ? <Spinner /> : 'Update Profile'}
         </Button>
-        <Button type="button" variant="shade" onClick={() => reset()}>
+        <Button type="button" variant="shade" onClick={() => reset()} disabled={isProfileLoading}>
           Redo Changes
         </Button>
       </form>

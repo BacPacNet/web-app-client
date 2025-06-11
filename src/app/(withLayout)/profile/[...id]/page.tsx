@@ -16,7 +16,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
 
-  const { profile, firstName, lastName, email } = userProfileData || {}
+  const { profile, firstName, lastName } = userProfileData || {}
   const {
     bio,
     university_name,
@@ -33,6 +33,7 @@ export default function Profile({ params }: { params: { id: string } }) {
     affiliation,
     occupation,
     role,
+    displayEmail,
   } = profile || {}
   //  const { logos } = university || {}
 
@@ -55,7 +56,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           role={role || ''}
           affiliation={affiliation || ''}
           occupation={occupation || ''}
-          email={email || ''}
+          email={displayEmail || ''}
           phone={phone_number || ''}
           location={city || ''}
           birthday={dob || ''}

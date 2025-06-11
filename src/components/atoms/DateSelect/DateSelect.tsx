@@ -42,14 +42,14 @@ const DateSelect = ({ onChange, value, placeholder, err, label }: SelectDropdown
 
   return (
     <motion.div ref={dropdownRef} className="relative flex flex-col gap-2">
-      {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
+      {label && <label className="text-xs text-neutral-700 font-normal">{label}</label>}
       <div
         onClick={() => setShow(!show)}
         className={`${
           err ? 'border-red-400' : 'border-neutral-200'
-        } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm   h-10 outline-none`}
+        } flex justify-between items-center py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  h-10 outline-none`}
       >
-        <p className={`${value ? 'text-neutral-900' : 'text-neutral-400'}`}> {value ? value : placeholder}</p>
+        <p className={`${value ? 'text-neutral-700 font-normal' : 'text-neutral-400 font-normal'}`}> {value ? value : placeholder}</p>
         <CiCalendar size={22} />
       </div>
       <AnimatePresence>

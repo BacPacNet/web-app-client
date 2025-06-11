@@ -645,16 +645,16 @@ export const useCreateGroupPostCommentReply = (
   })
 }
 
-export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boolean, postId: string) => {
+export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boolean, postId: string, sortBy: Sortby | null) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ communityGroupPostCommentId, level, sortBy }: { communityGroupPostCommentId: string; level: string; sortBy: Sortby | null }) =>
+    mutationFn: ({ communityGroupPostCommentId, level }: { communityGroupPostCommentId: string; level: string }) =>
       LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: (_, variables) => {
-      const { communityGroupPostCommentId, level, sortBy } = variables
+      const { communityGroupPostCommentId, level } = variables
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments', postId, sortBy])
 
       if (showInitial) {

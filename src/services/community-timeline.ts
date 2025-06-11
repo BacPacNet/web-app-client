@@ -187,17 +187,15 @@ export const useCreateUserPostCommentReply = (
   })
 }
 
-export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: boolean, postId: string) => {
+export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: boolean, postId: string, sortBy: Sortby | null) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ userPostCommentId, level, sortBy }: { userPostCommentId: string; level: string; sortBy: Sortby | null }) =>
-      LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
+    mutationFn: ({ userPostCommentId }: { userPostCommentId: string; level: string }) => LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
     onSuccess: (_, variables) => {
-      const { userPostCommentId, level, sortBy } = variables
+      const { userPostCommentId, level } = variables
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, sortBy])
-
       if (showInitial) {
         const singlePostData: any = queryClient.getQueryData(['getPost', postId, sortBy])
         if (singlePostData?.comment) {
@@ -290,8 +288,8 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
         })
       }
     },
-    onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+    onError: (res: AxiosErrorType) => {
+      showCustomDangerToast(res.response?.data.message as string)
     },
   })
 }
@@ -305,8 +303,8 @@ export const useDeleteUserPost = () => {
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     },
-    onError: (res: AxiosErrorType) => {
-      console.log(res.response?.data.message, 'res')
+    onError: (error: AxiosErrorType) => {
+      showCustomDangerToast(error.response?.data.message as string)
     },
   })
 }
@@ -429,6 +427,8 @@ export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSin
 
       queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
+
+        console.log(oldData, 'oldData')
         const toggleLike = (likeCount: any[]) => {
           const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
           return hasLiked
