@@ -180,6 +180,9 @@ export const useCreateUserPostCommentReply = (
           pages: updatedPages,
         })
       }
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['getPost'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

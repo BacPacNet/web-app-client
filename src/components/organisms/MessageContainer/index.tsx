@@ -279,7 +279,7 @@ const MessageContainer = () => {
         />
       ) : null}
 
-      <div className="flex-1 relative overflow-y-auto">{renderChat()}</div>
+      <div className="flex-1 relative overflow-y-auto custom-scrollbar">{renderChat()}</div>
     </div>
   )
 }

@@ -96,7 +96,7 @@ export default function Followers() {
           <FaFilter className="text-primary-500" />
         </div> */}
       </div>
-      <div ref={ref} className="overflow-y-auto h-[85%] px-2">
+      <div ref={ref} className="overflow-y-auto h-[85%] px-2 custom-scrollbar">
         {renderUserFollowing()}
       </div>
     </>

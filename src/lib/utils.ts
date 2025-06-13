@@ -141,7 +141,7 @@ export const validateUploadedFiles = (
   }
 
   if (files.some((file) => file.size > maxSize)) {
-    return { isValid: false, message: 'File too large' }
+    return { isValid: false, message: 'This file is too large. Maximum allowed size is 5 MB.' }
   }
 
   if (files.some((file) => !allowedTypes.includes(file.type))) {
