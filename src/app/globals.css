@@ -4,6 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Apply custom scrollbar globally */
+/** {
+  scrollbar-width: thin;
+  scrollbar-color: #e9e8ff white;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}*/
+
 div:focus {
   outline: none;
 }
@@ -24,7 +44,7 @@ div:focus {
 }
 
 .hideScrollbar::-webkit-scrollbar {
-  display: none;
+  display: none !important;
 }
 .noi::-webkit-scrollbar {
   display: none !important;

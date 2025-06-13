@@ -638,6 +638,9 @@ export const useCreateGroupPostCommentReply = (
           pages: updatedPages,
         })
       }
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['userPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['getPost'] })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
