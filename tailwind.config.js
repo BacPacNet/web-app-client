@@ -89,8 +89,7 @@ module.exports = {
                 'destructive-600': '#16A34A',
                 'destructive-500': '#EF4444',
                 'destructive-700': '#15803D',
-
-                'destructive-600': "#DC2626",
+                //'destructive-600': "#DC2626",
                 'destructive-800': '#991B1B'
             },
             dropShadow: {

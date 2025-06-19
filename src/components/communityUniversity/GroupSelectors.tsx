@@ -2,6 +2,7 @@ import { CommunityGroupTypeEnum } from '@/types/CommuityGroup'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { IoIosPeople } from 'react-icons/io'
 import { PiStudentFill } from 'react-icons/pi'
 
 const GroupSelectors = ({
@@ -32,29 +33,30 @@ const GroupSelectors = ({
         onClick={() => handleGroupNavigate()}
         className={`flex w-full  items-center gap-3 py-2 px-2  first-of-type:border-0  relative after:content-[''] after:absolute after:left-3 after:z-30 after:top-[calc(90%+10px)]  after:w-[calc(60%)]  after:bg-[#6647FF] `}
       >
-        {data?.communityGroupLogoUrl?.imageUrl ? (
-          <div
-            className={`relative z-1 ${
-              isGroupOfficial ? 'w-12 h-12 border-2 border-primary-500 flex justify-center items-center rounded-full shadow-card' : ''
-            } `}
-          >
+        <div
+          className={`relative z-1 ${
+            isGroupOfficial ? 'w-12 h-12 border-2 border-primary-500 flex justify-center items-center rounded-full shadow-card' : ''
+          } `}
+        >
+          {data?.communityGroupLogoUrl?.imageUrl ? (
             <Image
               width={48}
               height={48}
               className="w-11 h-11 object-cover rounded-full shadow-card flex-none"
-              src={data?.communityGroupLogoUrl.imageUrl}
+              src={data?.communityGroupLogoUrl?.imageUrl}
               alt="dp"
             />
+          ) : (
+            <IoIosPeople className="w-11 h-11 p-2 rounded-full text-primary shadow-logo bg-white  " />
+          )}
 
-            {isGroupOfficial && (
-              <div className="absolute bg-white -bottom-2 w-5 h-5 border-2 border-primary-500 rounded-full flex justify-center">
-                <Image className="object-contain rounded-full" src={selectedCommunityImage as string} width={12} height={12} alt="" />
-              </div>
-            )}
-          </div>
-        ) : (
-          <PiStudentFill className="w-12 h-12 p-2 rounded-full text-primary shadow-logo bg-white  " />
-        )}
+          {isGroupOfficial && (
+            <div className="absolute bg-white -bottom-2 w-5 h-5 border-2 border-primary-500 rounded-full flex justify-center">
+              <Image className="object-contain rounded-full" src={selectedCommunityImage as string} width={12} height={12} alt="" />
+            </div>
+          )}
+        </div>
+
         <label className={`text-xs ${isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium'} `}>
           {data?.title || data?.communityGroupName}
         </label>

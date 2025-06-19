@@ -50,7 +50,8 @@ const ChatGroupMembers = ({ users, chatId, adminId }: Props) => {
             role={userId.role || 'student'}
             affiliation={userId.affiliation}
             showCommunityGroupMember={true}
-            isGroupAdmin={adminId === userProfileData?.users_id}
+            isViewerAdmin={adminId === userProfileData?.users_id}
+            isGroupAdmin={userId._id === adminId}
             handleRemoveClick={(id) => handleRemoveUser(id)}
             isRemovePending={isPending}
           />

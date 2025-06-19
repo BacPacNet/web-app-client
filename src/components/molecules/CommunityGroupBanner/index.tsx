@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
 import universityPlaceholder from '@assets/university_banner.png'
-import logoPlaceholder from '@assets/Logo Circle.svg'
 import './index.css'
 import { useUniStore } from '@/store/store'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
@@ -134,7 +133,7 @@ export default function CommunityGroupBanner({
           <div className="card-title flex justify-between items-center">
             <div className="flex gap-2 flex-wrap items-center">
               <GroupAvatarWithBadge
-                groupLogoUrl={communityGroups?.communityGroupLogoUrl?.imageUrl || logoPlaceholder}
+                groupLogoUrl={communityGroups?.communityGroupLogoUrl?.imageUrl as string}
                 isOfficial={isGroupOfficial}
                 badgeLogoUrl={communityGroups?.communityId?.communityLogoUrl.imageUrl}
               />
