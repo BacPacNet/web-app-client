@@ -192,6 +192,9 @@ export const useHandleLoginEmailVerification = () => {
 export const useHandleUniversityEmailVerificationGenerate = () => {
   return useMutation({
     mutationFn: (data: { email: string }) => universityEmailVerificationCodeGenerate(data),
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 
