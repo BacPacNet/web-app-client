@@ -106,7 +106,7 @@ export default function ClientUniversityProfile({ universityName }: { university
                 buttonLabel="Verify Student Email"
                 redirectUrl="/setting/university-verification"
               />,
-              'w-[350px] sm:w-[490px] noi'
+              'w-[350px] sm:w-[490px] hideScrollbar'
             )
           } else {
             queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })

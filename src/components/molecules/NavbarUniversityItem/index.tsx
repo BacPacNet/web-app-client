@@ -117,7 +117,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           title="Verify Account to Create Groups"
           description="Verify your account to unlock group creation and start building your own community. Please complete verification to continue."
         />,
-        'w-[350px] sm:w-[490px] noi'
+        'w-[350px] sm:w-[490px] hideScrollbar'
       )
     } else {
       openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)

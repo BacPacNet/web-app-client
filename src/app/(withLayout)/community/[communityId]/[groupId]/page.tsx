@@ -19,7 +19,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityId, communityGroupId)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi outline-none">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar outline-none">
       <CommunityGroupBanner
         communityID={communityId}
         communityGroupID={communityGroupId}

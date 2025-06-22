@@ -12,7 +12,7 @@ export default function Page({ params }: { params: { communityId: string; groupI
   const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityId)
 
   return (
-    <div ref={containerRef} className="h-with-navbar overflow-y-scroll noi pt-4">
+    <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar pt-4">
       <UniversityCard
         communityID={communityId}
         communityGroupID={communityGroupId}

@@ -8,7 +8,7 @@ import { useCreateEndorsementAI, useGetEndorsementAI, useGetEndorsementAIOfUser 
 
 const AINoUniversity = ({ communityId }: { communityId: string }) => {
   return (
-    <div className="w-full flex justify-center items-center h-full font-poppins overflow-y-scroll noi">
+    <div className="w-full flex justify-center items-center h-full font-poppins overflow-y-scroll hideScrollbar">
       <div className="flex flex-col h-full gap-8 mt-8 items-center w-full">
         <Image src={aibot} alt="bot" width={40} height={40} className=" w-32 md:w-[194px] h-[185px]  " />
         <div className="w-full flex flex-col gap-5 justify-center">

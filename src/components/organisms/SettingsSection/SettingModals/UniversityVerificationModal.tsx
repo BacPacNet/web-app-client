@@ -39,9 +39,10 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     clearErrors,
     getValues,
   } = useForm<FormDataType>({})
-  const { mutate: generateUniversityEmailOTP, data: otpData, isPending } = useHandleUniversityEmailVerificationGenerate()
+  const { mutate: generateUniversityEmailOTP, data: otpData, isPending, isError } = useHandleUniversityEmailVerificationGenerate()
   const { mutateAsync: mutateAddUniversity, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
+  console.log(isError, 'error')
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
     if (!email) {
@@ -88,7 +89,10 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     if (isSuccess) {
       showCustomSuccessToast('University email added successfully!')
     }
-  }, [isSuccess])
+    if (isError) {
+      setIsCounting(false)
+    }
+  }, [isSuccess, isError])
 
   return (
     <div className="flex flex-col items-center gap-8">

@@ -53,7 +53,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   }, [pathname])
 
   return (
-    <div className="h-with-navbar noi  lg:p-6 overflow-y-auto">
+    <div className="h-with-navbar hideScrollbar  lg:p-6 overflow-y-auto">
       <div className=" block lg:hidden border-b-2 border-neutral-200 pb-4">
         <p className="text-xs text-neutral-500 font-bold py-2">PAGES</p>
         {PAGE_ITEMS.map(({ name, path }) => (
@@ -96,7 +96,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
               <span
                 className={` bg-destructive-600 ${
                   Number(unreadNotificationCount) > 9 ? 'px-1  min-w-4' : ' w-4'
-                } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
+                } h-4 rounded-full text-white flex items-start justify-center  text-2xs font-semibold `}
               >
                 {Number(unreadNotificationCount)}
               </span>

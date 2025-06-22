@@ -43,10 +43,12 @@ div:focus {
   }
 }
 
-.hideScrollbar::-webkit-scrollbar {
-  display: none !important;
+.hideScrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
-.noi::-webkit-scrollbar {
+
+.hideScrollbar::-webkit-scrollbar {
   display: none !important;
 }
 
@@ -201,6 +203,20 @@ h6 {
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: #e9e8ff white;
+  }
+  /* Chrome, Safari, Edge (WebKit-based) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #e9e8ff;
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: white;
   }
 }
 

@@ -72,7 +72,7 @@ const CommunityHolder = ({ community, index, handleCommunityClick, communityId, 
       key={index}
       className={`flex items-center justify-between overflow-x-hidden hover:bg-neutral-100 rounded-md pl-2 my-1 ${isSelected && 'bg-secondary'}`}
     >
-      <div className={` flex items-center gap-3 py-2 cursor-pointer`}>
+      <div className={` flex items-center gap-3 py-2 pr-2 cursor-pointer`}>
         <Image
           width={40}
           height={40}
