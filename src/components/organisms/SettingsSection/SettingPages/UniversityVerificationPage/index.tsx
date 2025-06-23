@@ -50,7 +50,7 @@ const UniversityVerificationPage = () => {
                     </label>
 
                     <InputBox className="max-w-sm" placeholder="Email Address" type="email" value={item.UniversityEmail} disabled={true} />
-                    <div className=" flex  items-center gap-3 ">
+                    <div className=" flex items-center gap-2">
                       <Image
                         width={40}
                         height={40}
@@ -60,7 +60,7 @@ const UniversityVerificationPage = () => {
                       />
 
                       <p className=" text-xs text-neutral-500">{item?.UniversityName}</p>
-                      <Image src={badge} width={24} height={24} alt="tick" />
+                      <Image src={badge} width={18} height={18} alt="tick" />
                     </div>
                   </div>
                 </div>

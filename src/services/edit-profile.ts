@@ -38,7 +38,6 @@ export const useAddUniversityEmail = (redirect: boolean = false) => {
   const { setUserData, setUserProfileData } = useUniStore()
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
-  const router = useRouter()
   const { closeModal } = useModal()
   return useMutation({
     mutationFn: (data: any) => addUniversityEmail(data, cookieValue),
@@ -46,6 +45,8 @@ export const useAddUniversityEmail = (redirect: boolean = false) => {
       setUserProfileData(response)
       closeModal()
       showCustomSuccessToast('email verified successfully')
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+
       //  if (redirect) {
       //    const community = response.userProfile.email.find((community: any) => community.UniversityName == variables.universityName)
       //    if (community) {

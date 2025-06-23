@@ -65,7 +65,8 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       } else {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b> commented on your community post.
+            <b>{firstCommenterName}</b>
+            {data?.message}
           </span>
         )
       }
