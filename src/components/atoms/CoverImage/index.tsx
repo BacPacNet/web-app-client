@@ -1,6 +1,6 @@
 import React from 'react'
 import Image, { StaticImageData } from 'next/image'
-import universityPlaceholder from '@assets/university_banner.png'
+import universityPlaceholder from '@assets/university_banner.svg'
 
 interface Props {
   imageUrl: string | StaticImageData

@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useMemo, useState } from 'react'
-import universityPlaceholder from '@assets/university_banner.png'
+import universityPlaceholder from '@assets/university_banner.svg'
 import './index.css'
 import { useUniStore } from '@/store/store'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'

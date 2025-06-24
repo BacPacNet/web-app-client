@@ -91,11 +91,11 @@ const EditProfileModal = () => {
 
   useEffect(() => {
     if (userProfile) {
-      const { firstName, lastName, gender, profile, email } = userProfile || {}
+      const { firstName, lastName, gender, profile } = userProfile || {}
       const userDefault = {
         firstName: firstName || '',
         lastName: lastName || '',
-        displayEmail: email || '',
+        displayEmail: profile?.displayEmail || '',
         gender: gender || '',
         affiliation: profile?.affiliation || '',
         bio: profile?.bio || '',

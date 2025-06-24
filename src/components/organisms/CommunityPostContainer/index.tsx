@@ -5,7 +5,7 @@ import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
-import notMember from '@/assets/notMember.svg'
+import notMember from '@/assets/notCommunityMember.svg'
 import { useGetCommunityPost } from '@/services/community-university'
 import { AxiosError } from 'axios'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
@@ -115,7 +115,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
     return (
       <EmptyStateCard
         imageSrc={notMember}
-        title="Join Community"
+        title="Join University Community"
         description="Join this community to access its groups and connect with fellow university members"
       />
     )
