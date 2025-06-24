@@ -24,6 +24,7 @@ import { useUniStore } from '@/store/store'
 import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import UserSelectDropdown from '../UserSearchList'
+import ProfileImageUploader from '../ProfileImageUploader'
 
 type Props = {
   individualsUsers: any[]
@@ -191,40 +192,12 @@ const GroupChatModal = ({
         }
       }}
     >
-      <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-          Group Profile
-        </label>
-        <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
-          {groupLogoImage && (
-            <Image
-              width={96}
-              height={96}
-              className="w-24 h-24 rounded-full absolute  object-cover"
-              src={URL.createObjectURL(groupLogoImage)}
-              alt=""
-            />
-          )}
-          <input
-            style={{ display: 'none' }}
-            accept="image/jpeg,image/png,image/jpg,image/gif"
-            type="file"
-            id="CreateGroupLogoImage"
-            onChange={(e: any) => setGroupLogoImage(e.target.files[0])}
-          />
-
-          {groupLogoImage ? (
-            <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
-              <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
-              <FiCamera size={32} className="text-white" />
-            </label>
-          ) : (
-            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-              <FiCamera size={32} className="text-slate-400 z-30" />
-            </label>
-          )}
-        </div>
-      </div>
+      <ProfileImageUploader
+        label="Group Profile"
+        imageFile={groupLogoImage}
+        onImageChange={(file) => setGroupLogoImage(file)}
+        id="CreateGroupLogoImage"
+      />
       {/* //name  */}
       <div className="flex gap-4 items-center justify-between">
         <div className="relative w-full flex flex-col gap-2">

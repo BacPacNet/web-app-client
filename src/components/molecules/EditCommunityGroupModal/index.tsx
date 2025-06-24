@@ -24,6 +24,9 @@ import Buttons from '@/components/atoms/Buttons'
 import { IoClose } from 'react-icons/io5'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
+import ProfileImageUploader from '../ProfileImageUploader'
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -38,9 +41,10 @@ type media = {
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const { userProfileData } = useUniStore()
   const { closeModal, openModal } = useModal()
-  const [logoImage, setLogoImage] = useState<File | string>(communityGroups?.communityGroupLogoUrl?.imageUrl as string)
+  const [logoImage, setLogoImage] = useState<File | string | null>(communityGroups?.communityGroupLogoUrl?.imageUrl as string)
   const [coverImage, setCoverImage] = useState<File | string>(communityGroups?.communityGroupLogoCoverUrl?.imageUrl as string)
   const [searchInput, setSearchInput] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
   const [filteredUsers, setFilterUsers] = useState<any[]>([])
   const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
@@ -126,11 +130,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     }
   }
 
-  const handlelogoImagePreview = (e: any) => {
-    const file = e.target.files[0]
+  const handlelogoImagePreview = (file: File) => {
     if (file) {
       setLogoImage(file)
-      //  setValue('communityGroupLogoCoverUrl', file)
     }
   }
 
@@ -313,39 +315,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       <div className="flex flex-col gap-8 justify-start items-start w-full  ">
         <h3 className="text-neutral-700 text-md font-poppins font-bold">Edit Group</h3>
 
-        <div className="flex flex-col gap-2">
-          <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-            Group Profile
-          </label>
-          <div className={'border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full'}>
-            {logoImage && (
-              <img
-                className="w-[100px] h-[100px] rounded-full absolute  object-cover"
-                src={typeof logoImage === 'object' ? URL.createObjectURL(logoImage) : logoImage}
-                alt=""
-              />
-            )}
-            {/* <input style={{ display: 'none' }} type="file" id="CreateGroupLogoImage" onChange={(e: any) => setLogoImage(e.target.files[0])} /> */}
-            <input
-              style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              type="file"
-              id="CreateGroupLogoImage"
-              onChange={handlelogoImagePreview}
-            />
-
-            {logoImage ? (
-              <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
-                <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
-                <FiCamera size={32} className="text-white" />
-              </label>
-            ) : (
-              <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                <FiCamera size={32} className="text-primary-500 z-30" />
-              </label>
-            )}
-          </div>
-        </div>
+        <ProfileImageUploader
+          label="Group Profile"
+          imageFile={logoImage}
+          onImageChange={(file) => handlelogoImagePreview(file)}
+          id="updateGroupLogoImage"
+        />
 
         <div className="flex flex-col gap-2 w-full">
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">
@@ -585,75 +560,98 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               )}
             </div>
 
-            <div className="flex flex-col gap-8">
-              <Controller
-                name="studentYear"
-                control={control}
-                render={({ field }) => (
-                  <MultiSelectDropdown
-                    options={Object.keys(degreeAndMajors)}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                    placeholder="Add By Year"
-                    label="Year (Students)"
-                    err={false}
-                    //filteredCount={filteredYearCount}
-                    multiSelect={false}
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full my-2 flex items-center justify-center border border-primary-500 text-primary-500 text-sm font-medium rounded-full px-4 py-2 focus:outline-none"
+            >
+              <span>Bulk Add Members</span>
+              <span className="ml-2">{isOpen ? <IoIosArrowUp className="text-primary" /> : <IoIosArrowDown className="text-primary" />}</span>
+            </button>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  key="bulk-section"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                  className="flex flex-col gap-8 overflow-hidden my-2"
+                >
+                  <Controller
+                    name="studentYear"
+                    control={control}
+                    render={({ field }) => (
+                      <MultiSelectDropdown
+                        options={Object.keys(degreeAndMajors)}
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Add By Year"
+                        label="Year (Students)"
+                        err={false}
+                        //filteredCount={filteredYearCount}
+                        multiSelect={false}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="major"
-                control={control}
-                render={({ field }) => (
-                  <MultiSelectDropdown
-                    options={value}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                    placeholder="Add By Major"
-                    label="Major (Students)"
-                    err={false}
-                    search={true}
-                    //filteredCount={filteredMajorsCount}
-                    parentCategory={studentYear}
+                  <Controller
+                    name="major"
+                    control={control}
+                    render={({ field }) => (
+                      <MultiSelectDropdown
+                        options={value}
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Add By Major"
+                        label="Major (Students)"
+                        err={false}
+                        search={true}
+                        //filteredCount={filteredMajorsCount}
+                        parentCategory={studentYear}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="occupation"
-                control={control}
-                render={({ field }) => (
-                  <MultiSelectDropdown
-                    options={Object.keys(occupationAndDepartment)}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                    placeholder="Add By Major"
-                    label="Occupation (Faculty)"
-                    err={false}
-                    search={true}
-                    multiSelect={false}
-                    //filteredCount={filteredOccupationCount}
+                  <Controller
+                    name="occupation"
+                    control={control}
+                    render={({ field }) => (
+                      <MultiSelectDropdown
+                        options={Object.keys(occupationAndDepartment)}
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Add By Major"
+                        label="Occupation (Faculty)"
+                        err={false}
+                        search={true}
+                        multiSelect={false}
+                        //filteredCount={filteredOccupationCount}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                name="affiliation"
-                control={control}
-                render={({ field }) => (
-                  <MultiSelectDropdown
-                    options={value}
-                    value={field.value || []}
-                    onChange={field.onChange}
-                    placeholder="Add By Major"
-                    label="Affiliation/Department (Faculty)"
-                    err={false}
-                    search={true}
-                    //filteredCount={filteredAffiliationCount}
-                    parentCategory={occupation}
+                  <Controller
+                    name="affiliation"
+                    control={control}
+                    render={({ field }) => (
+                      <MultiSelectDropdown
+                        options={value}
+                        value={field.value || []}
+                        onChange={field.onChange}
+                        placeholder="Add By Major"
+                        label="Affiliation/Department (Faculty)"
+                        err={false}
+                        search={true}
+                        //filteredCount={filteredAffiliationCount}
+                        parentCategory={occupation}
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <button disabled={isPending} onClick={handleSubmit(onSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-full mx-auto">
             {isLoading || isPending ? <Spinner /> : <p>Update Group</p>}

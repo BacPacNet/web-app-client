@@ -19,7 +19,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 
   const openModal = (
     content: React.ReactNode,
-    style = 'h-[70vh] w-[350px] sm:w-[550px] custom-scrollbar',
+    style = 'h-[70vh] w-[350px] sm:w-[550px] hideScrollbar',
     showCloseIcon = true,
     isAllowedToScroll = true
   ) => {

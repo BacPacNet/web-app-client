@@ -32,6 +32,9 @@ import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
 import UniversityDropdown from './Dropdown'
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { AnimatePresence, motion } from 'framer-motion'
+import ProfileImageUploader from '../ProfileImageUploader'
 
 type Props = {
   communityId: string
@@ -41,10 +44,11 @@ type Props = {
 const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
-  const [logoImage, setLogoImage] = useState<File>()
+  const [logoImage, setLogoImage] = useState<File | null>(null)
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const [searchInput, setSearchInput] = useState('')
   const logoInputRef = useRef<HTMLInputElement>(null)
@@ -279,14 +283,12 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       }
     })
   }
-  const handleLogoImage = (e: any) => {
-    const file = e.target.files[0]
+  const handleLogoImage = (file: File) => {
     const { isValid, message } = validateSingleImageFile(file, 3 * 1024 * 1024)
     if (!isValid) {
       alert(message)
       return
     }
-
     setLogoImage(file)
   }
 
@@ -295,12 +297,23 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       <div className="flex flex-col gap-8 justify-start items-start w-full  ">
         <h3 className="text-neutral-700 text-md font-poppins font-bold">Group Information</h3>
 
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">
             Group Profile
           </label>
-          <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer`}>
-            {logoImage && <img className="w-24 h-24 rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
+
+          <label
+            htmlFor="CreateGroupLogoImage"
+            className="relative border-2 border-neutral-200 bg-white flex items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer overflow-hidden hover:shadow-card"
+          >
+            {logoImage && (
+              <img
+                className="w-full h-full rounded-full object-cover absolute inset-0"
+                src={URL.createObjectURL(logoImage)}
+                alt="Group logo"
+              />
+            )}
+
             <input
               ref={logoInputRef}
               style={{ display: 'none' }}
@@ -310,18 +323,20 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               onChange={handleLogoImage}
             />
 
-            {logoImage ? (
-              <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
-                <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
-                <FiCamera size={32} className="text-white" />
-              </label>
-            ) : (
-              <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-                <FiCamera size={32} className="text-slate-400 z-30" />
-              </label>
-            )}
-          </div>
-        </div>
+            <div className="relative z-10 flex flex-col items-center">
+              {logoImage ? (
+                <>
+                  <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+                  <FiCamera size={32} className="text-white" />
+                </>
+              ) : (
+                <FiCamera size={32} className="text-slate-400" />
+              )}
+            </div>
+          </label>
+        </div> */}
+        <ProfileImageUploader label="Group Profile" imageFile={logoImage} onImageChange={(file) => handleLogoImage(file)} id="CreateGroupLogoImage" />
+
         <div className="flex flex-col gap-2 w-full">
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">
             Group Banner
@@ -594,8 +609,127 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 </div>
               )}
             </div>
-            {/*<div className="relative mb-2">*/}
-            <UniversityDropdown
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full my-2 flex items-center justify-center border border-primary-500 text-primary-500 text-sm font-medium rounded-full px-4 py-2 focus:outline-none"
+            >
+              <span>Bulk Add Members</span>
+              <span className="ml-2">{isOpen ? <IoIosArrowUp className="text-primary" /> : <IoIosArrowDown className="text-primary" />}</span>
+            </button>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  key="bulk-section"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
+                >
+                  <div
+                    className="flex flex-col gap-8 my-2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
+                  >
+                    <UniversityDropdown
+                      selected={community}
+                      options={userProfileData?.email || []}
+                      onSelect={(val) => {
+                        setValue('community', val)
+                        setUniversityError(false)
+                      }}
+                      onClear={() => handleUniversityClear()}
+                      error={!!universityError}
+                      errorMessage="Select university to filter based on student or faculty."
+                    />
+                    <Controller
+                      name="studentYear"
+                      control={control}
+                      render={({ field }) => (
+                        <MultiSelectDropdown
+                          options={Object.keys(degreeAndMajors)}
+                          value={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Add By Year"
+                          label="Year (Students)"
+                          err={false}
+                          filteredCount={filteredYearCount}
+                          multiSelect={false}
+                          disabled={!community?.name?.length}
+                          setUniversityErr={setUniversityError}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="major"
+                      control={control}
+                      render={({ field }) => (
+                        <MultiSelectDropdown
+                          options={value}
+                          value={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Add By Major"
+                          label="Major (Students)"
+                          err={false}
+                          search={true}
+                          filteredCount={filteredMajorsCount}
+                          parentCategory={studentYear}
+                          disabled={!community?.name?.length}
+                          setUniversityErr={setUniversityError}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="occupation"
+                      control={control}
+                      render={({ field }) => (
+                        <MultiSelectDropdown
+                          options={Object.keys(occupationAndDepartment)}
+                          value={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Add By Major"
+                          label="Occupation (Faculty)"
+                          err={false}
+                          search={true}
+                          multiSelect={false}
+                          filteredCount={filteredOccupationCount}
+                          disabled={!community?.name?.length}
+                          setUniversityErr={setUniversityError}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="affiliation"
+                      control={control}
+                      render={({ field }) => (
+                        <MultiSelectDropdown
+                          options={value}
+                          value={field.value || []}
+                          onChange={field.onChange}
+                          placeholder="Add By Major"
+                          label="Affiliation/Department (Faculty)"
+                          err={false}
+                          search={true}
+                          filteredCount={filteredAffiliationCount}
+                          parentCategory={occupation}
+                          disabled={!community?.name?.length}
+                          setUniversityErr={setUniversityError}
+                        />
+                      )}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* <UniversityDropdown
               selected={community}
               options={userProfileData?.email || []}
               onSelect={(val) => {
@@ -605,61 +739,10 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               onClear={() => handleUniversityClear()}
               error={!!universityError}
               errorMessage="Select university to filter based on student or faculty."
-            />
-            {/*<label className="text-xs font-medium mb-2">University</label>
-              <button
-                type="button"
-                onClick={() => setShowDropdown(!showDropdown)}
-                className={`w-full flex justify-between items-center border ${
-                  universityError ? 'border-destructive-600' : 'border-neutral-200'
-                } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
-              >
-                {community?.name || 'Select University'}
-                {community?.name ? (
-                  <FaXmark
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      setValue('community', { name: '', id: '' })
-                      //setSelectedUniversity({ name: '', id: '' })
-                    }}
-                    className="w-4 h-4 ml-2"
-                  />
-                ) : (
-                  <BiChevronDown className="w-4 h-4 ml-2" />
-                )}
-              </button>
-
-              {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
-              {showDropdown && (
-                <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
-                  {userProfileData && userProfileData.email!.length > 0 ? (
-                    userProfileData.email!.map((university: any) => (
-                      <div
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          setValue('community', { name: university.UniversityName, id: university?.communityId })
-                          setShowDropdown(false)
-                          setUniversityError(false)
-                        }}
-                        key={university?._id}
-                        className="bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
-                      >
-                        <CollegeResult university={university} />
-                      </div>
-                    ))
-                  ) : (
-                    <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
-                      <p className="p-3 text-gray-500">No results found</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>*/}
+            /> */}
           </div>
 
-          <div
+          {/* <div
             className="flex flex-col gap-8"
             onClick={(e) => {
               e.preventDefault()
@@ -741,7 +824,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                 />
               )}
             />
-          </div>
+          </div> */}
           <button disabled={isPending} onClick={handleGroupCreate(onGroupSubmit)} className="bg-[#6647FF] py-2 rounded-lg text-white w-full mx-auto">
             {isLoading || isPending ? <Spinner /> : <p>Create New Group</p>}
           </button>

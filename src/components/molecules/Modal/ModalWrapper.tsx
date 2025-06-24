@@ -21,11 +21,11 @@ const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', 
         <div
           className={`relative bg-white  ${style} mt-[68px]  max-h-[85%] ${
             isAllowScroll ? 'overflow-y-auto' : 'overflow-y-hidden'
-          }  rounded-2xl shadow-lg py-4 px-6 `}
+          }  rounded-2xl shadow-lg p-6 `}
         >
           {showCloseIcon ? (
             <div className="absolute right-2 top-2 z-50">
-              <button onClick={() => setModal(false)} className="p-2">
+              <button onClick={() => setModal(false)} className="p-2 hover:bg-neutral-200 rounded-md">
                 <IoClose size={24} />
               </button>
             </div>
