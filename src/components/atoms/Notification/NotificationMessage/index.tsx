@@ -65,8 +65,7 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       } else {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b>
-            {data?.message}
+            <b>{firstCommenterName}</b> {data?.message}
           </span>
         )
       }

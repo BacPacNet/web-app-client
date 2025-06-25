@@ -78,7 +78,6 @@ async function universityEmailVerification(data: { universityEmail: string; Univ
 export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
-  const router = useRouter()
   const [, setCookieValue] = useCookie('uni_user_token')
   const [, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
 

@@ -18,6 +18,7 @@ import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { useModal } from '@/context/ModalContext'
 import { ProfileDp } from '@/types/User'
 import Title from '@/components/atoms/Title'
+import SubText from '@/components/atoms/SubText'
 
 export interface editProfileInputs {
   firstName: string
@@ -345,6 +346,11 @@ const EditProfileModal = () => {
                 disabled={isProfileLoading}
               />
             </LabeledInput>
+            <SubText>
+              This is the email other users will see if they want to contact you. It is separate from your login email and doesn&apos;t affect your
+              account access.
+            </SubText>
+
             <LabeledInput label="Phone Number" error={errors.phone_number && 'Please enter your phone number!'} htmlFor="phone_number">
               <input
                 {...register('phone_number')}

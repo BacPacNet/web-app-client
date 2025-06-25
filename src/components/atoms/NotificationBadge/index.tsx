@@ -6,10 +6,12 @@ type NotificationBadgeProps = {
 const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count, maxCount = 99 }) => {
   const displayCount = count > maxCount ? `${maxCount}+` : count
 
+  const isDoubleDigit = count > 9 || displayCount.toString().length > 1
+
   return (
     <span
-      className={`bg-destructive-600 h-4 rounded-full text-white flex items-center justify-center text-2xs font-semibold ${
-        count > 9 ? 'px-1 min-w-4' : 'w-4'
+      className={`bg-destructive-600 rounded-full text-white text-[10px] leading-none font-semibold flex items-center justify-center ${
+        isDoubleDigit ? 'w-5 h-5' : 'w-4 h-4'
       }`}
     >
       {displayCount}

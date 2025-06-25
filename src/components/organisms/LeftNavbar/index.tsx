@@ -12,6 +12,7 @@ import { useUniStore } from '@/store/store'
 import botIcon from '@/assets/botIcon.svg'
 import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
 import Image from 'next/image'
+import NotificationBadge from '@/components/atoms/NotificationBadge'
 
 interface Props {
   toggleLeftNavbar?: () => void
@@ -81,27 +82,11 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
           >
             <span className="text-[20px]">{icon}</span>
             <span className="">{name}</span>
-            {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 ? (
-              <span
-                className={` bg-destructive-600 ${
-                  Number(userUnreadMessagesCount?.messageTotalCount) > 9 ? 'px-1  min-w-4' : ' w-4'
-                } h-4 rounded-full text-white flex items-center justify-center  text-2xs font-semibold `}
-              >
-                {userUnreadMessagesCount?.messageTotalCount}
-              </span>
-            ) : (
-              ''
+            {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 && (
+              <NotificationBadge count={Number(unreadNotificationCount)} maxCount={9} />
             )}
-            {name == 'Notification' && Number(unreadNotificationCount) > 0 ? (
-              <span
-                className={` bg-destructive-600 ${
-                  Number(unreadNotificationCount) > 9 ? 'px-1  min-w-4' : ' w-4'
-                } h-4 rounded-full text-white flex items-start justify-center  text-2xs font-semibold `}
-              >
-                {Number(unreadNotificationCount)}
-              </span>
-            ) : (
-              ''
+            {name == 'Notification' && Number(unreadNotificationCount) > 0 && (
+              <NotificationBadge count={Number(unreadNotificationCount)} maxCount={99} />
             )}
           </div>
         ))}

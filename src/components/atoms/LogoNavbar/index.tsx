@@ -129,17 +129,14 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                     </li>*/}
                   </ul>
                   <ul className="border-b-[1px] border-neutral-200 ">
-                    <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                    <li
+                      onClick={() => router.push('/report-bug')}
+                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                    >
                       <IoBugOutline />
                       <p>Report bug</p>
                     </li>
-                    <li
-                      onClick={() => router.push('/contact')}
-                      className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
-                    >
-                      <MdInfoOutline />
-                      <p>Help Center</p>
-                    </li>
+
                     <li
                       onClick={() => router.push('/contact')}
                       className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
