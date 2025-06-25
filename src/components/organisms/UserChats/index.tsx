@@ -132,7 +132,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
   }
 
   return (
-    <div className="flex flex-col h-[inherit] overflow-y-scroll">
+    <div className="flex flex-col h-[inherit]">
       <RenderChats />
     </div>
   )

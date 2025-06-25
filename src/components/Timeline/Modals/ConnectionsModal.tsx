@@ -44,6 +44,7 @@ const Tabs: React.FC<TabsProps> = ({ content, setContent }) => (
 )
 
 const UserListRenderer: React.FC<UserListRenderProps> = ({ isLoading, userList, isFetchingNextPage, content }) => {
+  const { userProfileData } = useUniStore()
   if (isLoading) return <UserListItemSkeleton count={7} />
   if (userList.length === 0) return <p className="text-center text-neutral-500 font-bold p-4">No User Found</p>
 
@@ -65,6 +66,7 @@ const UserListRenderer: React.FC<UserListRenderProps> = ({ isLoading, userList, 
           isFollowing={item.isFollowing}
           role={item.profile?.role || ''}
           affiliation={item.profile?.affiliation || ''}
+          isSelfProfile={userProfileData?.users_id === item._id}
         />
       ))}
       {isFetchingNextPage && <Spinner />}

@@ -6,7 +6,7 @@ import Recommendations from '@/components/Timeline/Recommendations'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import dummy from '@/assets/avatar.svg'
-import Spinner from '@/components/atoms/spinner'
+import FooterLinks from '@/components/molecules/FooterLinks'
 
 const recommendations = [
   {
@@ -68,12 +68,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Main Content - Scrollable */}
-        <main className="md:px-12 px-4 overflow-y-auto h-with-navbar flex-1 !outline-none ">{children}</main>
+        <main className="md:px-12 px-4 overflow-y-auto h-with-navbar flex-1 !outline-none hideScrollbar">{children}</main>
 
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block bg-white w-[284px] sticky top-0">
           <Card className="h-with-navbar custom-scrollbar overflow-y-auto px-4">
             <Recommendations people={recommendations} />
+            <FooterLinks isOnLeft={true} />
+            <p className="text-neutral-500 text-xs font-normal text-center">Unibuzz Networks © 2024 </p>
           </Card>
         </aside>
       </div>

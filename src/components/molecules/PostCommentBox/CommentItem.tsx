@@ -63,6 +63,7 @@ const CommentItem = ({
           handleProfileClicked={handleProfileClicked}
           affiliation={comment?.commenterProfileId?.affiliation}
           occupation={comment?.commenterProfileId?.occupation}
+          isCommunityAdmin={comment?.commenterProfileId?.isCommunityAdmin}
         />
 
         <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
