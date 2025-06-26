@@ -63,6 +63,8 @@ const CommentItem = ({
           handleProfileClicked={handleProfileClicked}
           affiliation={comment?.commenterProfileId?.affiliation}
           occupation={comment?.commenterProfileId?.occupation}
+          isPost={true}
+          isVerified={comment?.isCommentVerified}
           isCommunityAdmin={comment?.commenterProfileId?.isCommunityAdmin}
         />
 
