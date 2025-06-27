@@ -25,12 +25,14 @@ import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import UserSelectDropdown from '../UserSearchList'
 import ProfileImageUploader from '../ProfileImageUploader'
+import { useCommunityUsers } from '@/services/community'
+import { userProfileType } from '@/store/userProfileSlice/userProfileType'
 
 type Props = {
   individualsUsers: any[]
   setIndividualsUsers: (value: Users[] | ((prev: Users[]) => Users[])) => void
-  setFilterUsers: (value: string[]) => void
-  setFilterFacultyUsers: (value: string[]) => void
+  setFilterUsers: (value: userProfileType[]) => void
+  setFilterFacultyUsers: (value: userProfileType[]) => void
   setGroupName: (value: string) => void
   setGroupLogoImage: (value: File | null) => void
   groupLogoImage: File | null
@@ -92,7 +94,8 @@ const GroupChatModal = ({
       //  community: { name: '', id: '' },
     },
   })
-  const { data: communityData } = useGetCommunity(communitySelected?.id)
+
+  const { data: communityUsers } = useCommunityUsers(communitySelected.id)
 
   //  const selectedIndividualsUsers = watch('selectedIndividualsUsers') || []
   const studentYear = watch('studentYear') || []
@@ -120,14 +123,14 @@ const GroupChatModal = ({
   }, [title])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allStudentUsers = allUsers.filter((user) => user.role == 'student')
+    const allUsers = communityUsers?.data || []
+    // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
 
     const filters = { year: studentYear, major: major }
 
-    const filtered = filterData(allStudentUsers, filters)
+    const filtered = filterData(allUsers, filters)
 
-    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
+    const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
     const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
 
     const majorCounts = getFilteredMajorCounts(filtered)
@@ -135,16 +138,16 @@ const GroupChatModal = ({
     setFilterUsers(filtered)
     setFilteredYearsCount(yearCounts)
     setFilteredMajorsCount(majorCounts)
-  }, [studentYear, major, communityData])
+  }, [studentYear, major, communityUsers])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
+    const allUsers = communityUsers?.data || []
+    // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
 
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allFacultyUsers, filters)
+    const filtered = filterFacultyData(allUsers, filters)
 
-    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
+    const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
 
     const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
 

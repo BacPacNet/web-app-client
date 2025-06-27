@@ -19,10 +19,10 @@ import UserSelectDropdown from '../UserSearchList'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
 import { filterData, filterFacultyData } from '@/lib/communityGroup'
-import { useGetCommunity } from '@/services/community-university'
 import { FaXmark } from 'react-icons/fa6'
 import CollegeResult from '@/components/CollegeResult'
 import { BiChevronDown } from 'react-icons/bi'
+import { useCommunityUsers } from '@/services/community'
 
 const EditGroupChatModal = ({
   users,
@@ -74,7 +74,7 @@ const EditGroupChatModal = ({
   const { mutateAsync: editGroup, isPending } = useEditGroupChat(chatId)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const { closeModal } = useModal()
-  const { data: communityData } = useGetCommunity(communitySelected?.id)
+  const { data: communityUsers } = useCommunityUsers(communitySelected.id)
 
   const {
     register,
@@ -114,30 +114,17 @@ const EditGroupChatModal = ({
   }, [])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-
+    const allUsers = communityUsers?.data || []
     const filters = { year: studentYear, major: major }
-
-    const filtered = filterData(allStudentUsers, filters)
-
-    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
-
+    const filtered = filterData(allUsers, filters)
     setFilterUsers(filtered)
-  }, [studentYear, major, communityData])
+  }, [studentYear, major, communityUsers])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
+    const allUsers = communityUsers?.data || []
 
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allFacultyUsers, filters)
-
-    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
-
-    //const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
-
-    //const affiliationCounts = getFilteredAffiliationCounts(filtered)
+    const filtered = filterFacultyData(allUsers, filters)
 
     setFilterFacultyUsers(filtered)
   }, [occupation, affiliation])

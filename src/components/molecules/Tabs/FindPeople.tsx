@@ -44,7 +44,7 @@ export default function FindPeople() {
     major: [],
     occupation: [],
     affiliation: [],
-    university: { name: '' as string, id: '' as string },
+    university: { name: '' as string, id: '' as string, communityId: '' },
   })
 
   const openModal = () => {
@@ -154,7 +154,7 @@ export default function FindPeople() {
       major: [],
       occupation: [],
       affiliation: [],
-      university: { name: '', id: '' },
+      university: { name: '', id: '', communityId: '' },
     })
   }
 

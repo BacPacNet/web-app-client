@@ -2,16 +2,9 @@ import Buttons from '@/components/atoms/Buttons'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import RadioOption from '@/components/atoms/RadioSelect'
 import CollegeResult from '@/components/CollegeResult'
-import { useModal } from '@/context/ModalContext'
-import {
-  filterData,
-  filterFacultyData,
-  getFilteredAffiliationCounts,
-  getFilteredMajorCounts,
-  getFilteredYearCounts,
-  getOccupationCounts,
-} from '@/lib/communityGroup'
-import { useGetCommunityFromUniversityId } from '@/services/community-university'
+
+import { filterData, filterFacultyData } from '@/lib/communityGroup'
+import { useCommunityUsers } from '@/services/community'
 import { useUniversitySearch } from '@/services/universitySearch'
 import { useUniStore } from '@/store/store'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
@@ -43,7 +36,7 @@ interface ConnectionUserSelectModalProps {
     major: string[]
     occupation: string[]
     affiliation: string[]
-    university: { name: string; id: string }
+    university: { name: string; id: string; communityId: string }
   }
   setSelectedFilters: React.Dispatch<React.SetStateAction<any>>
   handleClear: () => void
@@ -51,10 +44,6 @@ interface ConnectionUserSelectModalProps {
 export default function ConnectionUserSelectModal({
   setFilteredUsers,
   setIsFiltered,
-  setFilteredAffiliationCount,
-  setFilteredMajorsCount,
-  setFilteredOccupationCount,
-  setFilteredYearsCount,
   filteredAffiliationCount,
   filteredMajorsCount,
   filteredOccupationCount,
@@ -65,7 +54,7 @@ export default function ConnectionUserSelectModal({
   closeModal,
 }: ConnectionUserSelectModalProps) {
   const { userData } = useUniStore()
-  const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '' })
+  const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '', communityId: '' })
   const [searchTerm, setSearchTerm] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
   const [universityError, setUniversityError] = useState(false)
@@ -74,8 +63,10 @@ export default function ConnectionUserSelectModal({
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { data: universitiesData, isLoading } = useUniversitySearch(searchTerm || 'india', 1, 10)
   const universities = universitiesData?.result?.universities
+
   //   const filtered = universities.filter((u) => u.toLowerCase().includes(query.toLowerCase()))
-  const { data: communityData } = useGetCommunityFromUniversityId(selectedUniversity?.id)
+
+  const { data: communityUsers } = useCommunityUsers(selectedUniversity?.communityId)
 
   const [filteredUsers, setFilterUsers] = useState<any>()
   const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>()
@@ -134,46 +125,46 @@ export default function ConnectionUserSelectModal({
   }, [showDropdown])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
+    const allUsers = communityUsers?.data || []
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-    const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
+    // const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
 
     if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
-      return setFilterUsers(allStudentUsers)
+      return setFilterUsers(allUsers)
     }
     const filters = { year: studentYear, major: major }
 
-    const filtered = filterData(allStudentUsers, filters)
-
-    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
-    const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
-
-    const majorCounts = getFilteredMajorCounts(filtered)
-
+    const filtered = filterData(allUsers, filters)
     setFilterUsers(filtered)
-    setFilteredYearsCount(yearCounts)
-    setFilteredMajorsCount(majorCounts)
-  }, [studentYear, major, communityData, selectedRadio])
+
+    // const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
+    // const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
+
+    // const majorCounts = getFilteredMajorCounts(filtered)
+
+    // setFilteredYearsCount(yearCounts)
+    // setFilteredMajorsCount(majorCounts)
+  }, [studentYear, major, communityUsers, selectedRadio])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
+    const allUsers = communityUsers?.data || []
+    // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
 
     if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
-      return setFilterFacultyUsers(allFacultyUsers)
+      return setFilterFacultyUsers(allUsers)
     }
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allFacultyUsers, filters)
-
-    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
-
-    const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
-
-    const affiliationCounts = getFilteredAffiliationCounts(filtered)
-
+    const filtered = filterFacultyData(allUsers, filters)
     setFilterFacultyUsers(filtered)
-    setFilteredOccupationCount(occupationCounts)
-    setFilteredAffiliationCount(affiliationCounts)
+
+    // const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
+
+    // const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
+
+    // const affiliationCounts = getFilteredAffiliationCounts(filtered)
+
+    // setFilteredOccupationCount(occupationCounts)
+    // setFilteredAffiliationCount(affiliationCounts)
   }, [occupation, affiliation, selectedRadio])
 
   const handleClick = () => {
@@ -187,7 +178,7 @@ export default function ConnectionUserSelectModal({
     } else if (selectedRadio == 'Student') {
       setFilteredUsers(filteredUsers)
     } else {
-      const allUsers = communityData?.users || []
+      const allUsers = communityUsers?.data || []
       const allFilteredUsers = allUsers.filter((user) => user._id !== userData?.id)
       setFilteredUsers(allFilteredUsers)
     }
@@ -209,6 +200,7 @@ export default function ConnectionUserSelectModal({
     setSelectedUniversity({
       name: '',
       id: '',
+      communityId: '',
     })
     setIsFiltered(false)
     reset({
@@ -244,7 +236,7 @@ export default function ConnectionUserSelectModal({
                 <FaXmark
                   onClick={(e) => {
                     e.stopPropagation()
-                    setSelectedUniversity({ name: '', id: '' })
+                    setSelectedUniversity({ name: '', id: '', communityId: '' })
                   }}
                   className="w-4 h-4 ml-2"
                 />
@@ -269,7 +261,7 @@ export default function ConnectionUserSelectModal({
                     {universities?.map((university: any) => (
                       <div
                         onClick={() => {
-                          setSelectedUniversity({ name: university.name, id: university?._id })
+                          setSelectedUniversity({ name: university.name, id: university?._id, communityId: university.communityId })
                           setShowDropdown(false)
                           setUniversityError(false)
                         }}

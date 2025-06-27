@@ -48,7 +48,8 @@ const SinglePost = () => {
     )
   }
 
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName } = item
+  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName, isPostVerified } =
+    item
 
   return (
     <div className="w-full flex justify-center py-4 post-container">
@@ -78,6 +79,7 @@ const SinglePost = () => {
           initialComment={comment}
           communityName={communityName}
           communityGroupName={communityGroupName}
+          isPostVerified={isPostVerified}
           isCommunityAdmin={profile.isCommunityAdmin}
           isSinglePost={true}
         />

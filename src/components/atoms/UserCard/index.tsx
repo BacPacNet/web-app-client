@@ -49,7 +49,7 @@ const UserCard: React.FC<UserCardProps> = ({
           {isCommunityAdmin ? (
             <Image src={communityAdminBadge} width={14} height={14} alt="Verified" />
           ) : (
-            isPost && isVerified && <Image src={badge} width={14} height={14} alt="Verified" />
+            isVerified && <Image src={badge} width={14} height={14} alt="Verified" />
           )}
         </div>
 

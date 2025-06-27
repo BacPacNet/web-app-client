@@ -89,6 +89,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         role={post?.userProfile?.role}
         communityName={post.communityName}
         communityGroupName={post.communityGroupName}
+        isPostVerified={post.isPostVerified}
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
       />
     ))

@@ -1,7 +1,6 @@
 import useDebounce from '@/hooks/useDebounce'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
-import { ServerResponse } from '@/models/common/api-client'
 import axios from 'axios'
 
 export function useUniversitySearch(searchTerm: string, page: number, limit: number) {

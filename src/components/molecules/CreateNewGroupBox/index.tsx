@@ -35,6 +35,7 @@ import UniversityDropdown from './Dropdown'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
 import ProfileImageUploader from '../ProfileImageUploader'
+import { useCommunityUsers } from '@/services/community'
 
 type Props = {
   communityId: string
@@ -94,6 +95,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const community = watch('community')
 
   const { data: communityData } = useGetCommunity(community.id)
+  const { data: communityUsers } = useCommunityUsers(community.id)
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
@@ -235,13 +237,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   //  }, [])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allStudentUsers = allUsers.filter((user) => user.role == 'student')
+    const allUsers = communityUsers?.data || []
+    // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
     const filters = { year: studentYear, major: major }
 
-    const filtered = filterData(allStudentUsers, filters)
+    const filtered = filterData(allUsers, filters)
 
-    const yearOnlyFiltered = filterData(allStudentUsers, { year: studentYear, major: [] })
+    const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
     const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
 
     const majorCounts = getFilteredMajorCounts(filtered)
@@ -252,13 +254,13 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   }, [studentYear, major, communityData])
 
   useEffect(() => {
-    const allUsers = communityData?.users || []
-    const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
+    const allUsers = communityUsers?.data || []
+    // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
 
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allFacultyUsers, filters)
+    const filtered = filterFacultyData(allUsers, filters)
 
-    const occupationOnlyFiltered = filterFacultyData(allFacultyUsers, { occupation: occupation, affiliation: [] })
+    const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
 
     const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
 

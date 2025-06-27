@@ -1,4 +1,6 @@
-export const filterData = (data: any[], selectedFilters: any) => {
+import { userProfileType } from '@/store/userProfileSlice/userProfileType'
+
+export const filterData = (data: userProfileType[], selectedFilters: any) => {
   const { year: selectedYears, major: selectedMajors } = selectedFilters
 
   if ((!selectedYears || selectedYears.length === 0) && (!selectedMajors || selectedMajors.length === 0)) {
@@ -6,7 +8,7 @@ export const filterData = (data: any[], selectedFilters: any) => {
   }
 
   return data?.filter((item) => {
-    const matchesYear = selectedYears ? item.year == selectedYears[0] : true
+    const matchesYear = selectedYears ? item.study_year == selectedYears[0] : true
 
     const matchesMajor = selectedMajors?.length ? selectedMajors.includes(item.major) : true
 
@@ -20,7 +22,7 @@ export const filterData = (data: any[], selectedFilters: any) => {
   })
 }
 
-export const filterFacultyData = (data: any[], selectedFilters: any) => {
+export const filterFacultyData = (data: userProfileType[], selectedFilters: any) => {
   const { occupation, affiliation } = selectedFilters
   if ((!occupation || occupation.length === 0) && (!affiliation || affiliation.length === 0)) {
     return []
