@@ -21,10 +21,10 @@ import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
 import { HiMail } from 'react-icons/hi'
-import NewMessageModal from '@/components/molecules/NewMessageModal'
 import { useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/context/ModalContext'
+import { RxCrossCircled } from 'react-icons/rx'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -78,9 +78,10 @@ export function UserProfileCard({
   const { userProfileData } = useUniStore()
   const router = useRouter()
   const { openModal } = useModal()
+  const [isOpen, setIsOpen] = useState(false)
   const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
-  const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
+  const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
@@ -148,16 +149,26 @@ export function UserProfileCard({
           ) : (
             <div className=" items-start gap-4 mt-4 sm:mt-0 hidden sm:flex ">
               <div className=" text-primary-500 text-sm bg-surface-primary-50 rounded-full flex p-1">
-                <Popover>
+                <Popover open={isOpen} onOpenChange={setIsOpen}>
                   <PopoverTrigger>
                     <HiDotsHorizontal className="text-primary w-8 h-8" />
                   </PopoverTrigger>
-                  <PopoverContent className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
+                  <PopoverContent onClick={() => setIsOpen(false)} className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
                     <ul>
                       <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoIosShareAlt />
                         <p>Share Profile</p>
                       </li>
+                      {userFollowingIDs?.includes(userId as string) && (
+                        <li
+                          onClick={() => toggleFollow(userId as string)}
+                          className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                        >
+                          <RxCrossCircled />
+                          <p>Unfollow</p>
+                        </li>
+                      )}
+
                       <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <MdBlockFlipped />
                         <p>Block User</p>
@@ -170,24 +181,17 @@ export function UserProfileCard({
                   </PopoverContent>
                 </Popover>
               </div>
-              <Buttons
-                onClick={() => handleMessage()}
-                //   <Buttons
-                //     onClick={() =>
-                //       openModal(
-                //         <NewMessageModal userIdToStartChatWith={userId || ''} avatarUrl={avatarUrl} name={name} />,
-                //         ' min-h-[240px] max-h-[300px] w-[350px] sm:w-[550px]   custom-scrollbar'
-                //       )
-                //     }
-                className="flex items-center gap-2 h-10 "
-                variant="shade"
-                size="small"
-              >
+              <Buttons onClick={() => handleMessage()} className="flex items-center gap-2 h-10 " variant="shade" size="small">
                 <HiMail className="w-4 h-4" /> Message
               </Buttons>
-              <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
+              {!userFollowingIDs?.includes(userId as string) && (
+                <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
+                  Follow
+                </Buttons>
+              )}
+              {/* <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
                 {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
-              </Buttons>
+              </Buttons> */}
             </div>
           )}
         </div>

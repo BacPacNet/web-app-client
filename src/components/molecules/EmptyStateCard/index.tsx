@@ -13,7 +13,7 @@ const EmptyStateCard = ({ imageSrc, imageAlt = '', title, description }: EmptySt
   return (
     <Card className="rounded-2xl px-6 my-4">
       <div className="flex flex-col gap-8 justify-center items-center">
-        <Image src={imageSrc} width={320} height={171} alt={imageAlt} />
+        <Image src={imageSrc} width={250} height={171} alt={imageAlt} />
         <Title className="text-center">{title}</Title>
       </div>
       <p className="text-neutral-700 font-normal pt-4">{description}</p>

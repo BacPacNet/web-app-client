@@ -83,7 +83,7 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
             <span className="text-[20px]">{icon}</span>
             <span className="">{name}</span>
             {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 && (
-              <NotificationBadge count={Number(unreadNotificationCount)} maxCount={9} />
+              <NotificationBadge count={Number(userUnreadMessagesCount?.messageTotalCount)} maxCount={9} />
             )}
             {name == 'Notification' && Number(unreadNotificationCount) > 0 && (
               <NotificationBadge count={Number(unreadNotificationCount)} maxCount={99} />
