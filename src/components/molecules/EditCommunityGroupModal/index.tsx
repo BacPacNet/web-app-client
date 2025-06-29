@@ -27,6 +27,7 @@ import ProfileImageUploader from '../ProfileImageUploader'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCommunityUsers } from '@/services/community'
+import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -53,8 +54,10 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [filtersError, setFIltersError] = useState('')
 
-  const { data: communityData } = useGetCommunity(communityGroups?.communityId?._id)
-  const { data: communityUsers } = useCommunityUsers(communityGroups?.communityId?._id)
+  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityGroups?.communityId?._id, true)
+
+  const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
+
   const { mutateAsync: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
@@ -91,54 +94,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const occupation = watch('occupation') || ''
   const affiliation = watch('affiliation') || []
 
-  // useEffect(() => {
-  //   if (communityGroups) {
-  //     reset({
-  //       title: communityGroups.title,
-  //       description: communityGroups.description,
-  //       communityGroupAccess: communityGroups.communityGroupAccess,
-  //       // communityGroupType: communityGroups.communityGroupType,
-  //       selectedUsers: [],
-  //       // communityGroupLogoUrl: null,
-  //       // communityGroupLogoCoverUrl: null,
-  //     })
-  //     setSelectedFilters(communityGroups.communityGroupCategory)
-  //   }
-  //   // Only run when communityGroups._id changes, not the entire object
-  // }, [communityGroups?._id])
-
-  // useEffect(() => {
-  //   if (communityGroups) {
-  //     const { title, description, communityGroupAccess, communityGroupType, communityGroupCategory, users } = communityGroups
-  //     const defaultCommunityGroup = {
-  //       title: title,
-  //       description: description,
-  //       communityGroupAccess: communityGroupAccess,
-  //       communityGroupType: communityGroupType,
-
-  //       selectedUsers: [],
-  //       communityGroupLogoUrl: null,
-  //       communityGroupLogoCoverUrl: null,
-  //     }
-  //     setSelectedFilters(communityGroupCategory)
-  //     reset(defaultCommunityGroup)
-  //   }
-  // }, [communityGroups, reset])
-
-  //   const SelectedUsers = watch('selectedUsers') as User[]
-  //  const CommunityGroupLogoCoverUrl = watch('communityGroupLogoCoverUrl')
-  //  const communityGroupLogoUrl = watch('communityGroupLogoUrl')
-
-  //  const sortedUsers = useMemo(() => {
-  //    return allCommunityUsers?.users
-  //      ? [...allCommunityUsers.users].sort((a, b) => {
-  //          const aSelected = SelectedUsers?.some((user) => user.id === a.id)
-  //          const bSelected = SelectedUsers?.some((user) => user.id === b.id)
-  //          return bSelected ? 1 : aSelected ? -1 : 0 // Push selected users to the top
-  //        })
-  //      : []
-  //  }, [allCommunityUsers, SelectedUsers])
-
   // Handle image preview
   const handleBannerImagePreview = (e: any) => {
     const file = e.target.files[0] as File
@@ -155,14 +110,14 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   }
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     const filters = { year: studentYear, major: major }
     const filtered = filterData(allUsers, filters)
     setFilterUsers(filtered)
   }, [studentYear, major, communityUsers])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     const filters = { occupation: occupation, affiliation: affiliation }
     const filtered = filterFacultyData(allUsers, filters)
     setFilterFacultyUsers(filtered)
@@ -281,7 +236,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     return true
   }
 
-  const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
+  const handleSelectIndividuals = (e: React.MouseEvent, user: any) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -540,13 +495,18 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               type="text"
               placeholder="Search Users"
             />
-            <UserSelectDropdown
-              searchInput={searchInput}
+
+            <VerifyUserSelectDropdown
               show={showSelectUsers}
+              users={communityUsers || []}
               onSelect={handleSelectIndividuals}
               currentUserId={userProfileData?.users_id as string}
-              individualsUsers={individualsUsers}
+              selectedUsers={individualsUsers}
+              onBottomReach={fetchNextPage}
+              isFetchingMore={isFetchingNextPage}
+              hasNextPage={hasNextPage}
             />
+
             <div className="flex flex-wrap mt-2">
               <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />
             </div>

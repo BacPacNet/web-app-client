@@ -66,10 +66,11 @@ export default function ConnectionUserSelectModal({
 
   //   const filtered = universities.filter((u) => u.toLowerCase().includes(query.toLowerCase()))
 
-  const { data: communityUsers } = useCommunityUsers(selectedUniversity?.communityId)
+  const { data: communityUsersData } = useCommunityUsers(selectedUniversity?.communityId)
+  const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userData?.id) || []
 
-  const [filteredUsers, setFilterUsers] = useState<any>()
-  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>()
+  // const [filteredUsers, setFilterUsers] = useState<any>()
+  // const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any>()
 
   const {
     register,
@@ -124,48 +125,60 @@ export default function ConnectionUserSelectModal({
     }
   }, [showDropdown])
 
-  useEffect(() => {
-    const allUsers = communityUsers?.data || []
-    // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-    // const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
+  // useEffect(() => {
+  //   const allUsers = communityUsers || []
+  //   // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
+  //   // const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
 
-    if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
-      return setFilterUsers(allUsers)
-    }
+  //   if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
+  //     return setFilterUsers(allUsers)
+  //   }
+  //   const filters = { year: studentYear, major: major }
+
+  //   const filtered = filterData(allUsers, filters)
+  //   setFilterUsers(filtered)
+
+  //   // const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
+  //   // const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
+
+  //   // const majorCounts = getFilteredMajorCounts(filtered)
+
+  //   // setFilteredYearsCount(yearCounts)
+  //   // setFilteredMajorsCount(majorCounts)
+  // }, [studentYear, major, communityUsers, selectedRadio])
+
+  // useEffect(() => {
+  //   const allUsers = communityUsers || []
+  //   // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
+
+  //   if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
+  //     return setFilterFacultyUsers(allUsers)
+  //   }
+  //   const filters = { occupation: occupation, affiliation: affiliation }
+  //   const filtered = filterFacultyData(allUsers, filters)
+  //   setFilterFacultyUsers(filtered)
+
+  //   // const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
+
+  //   // const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
+
+  //   // const affiliationCounts = getFilteredAffiliationCounts(filtered)
+
+  //   // setFilteredOccupationCount(occupationCounts)
+  //   // setFilteredAffiliationCount(affiliationCounts)
+  // }, [occupation, affiliation, selectedRadio])
+
+  const filteredUsers = React.useMemo(() => {
+    const allUsers = communityUsers || []
     const filters = { year: studentYear, major: major }
+    return filterData(allUsers, filters)
+  }, [studentYear, major, communityUsers])
 
-    const filtered = filterData(allUsers, filters)
-    setFilterUsers(filtered)
-
-    // const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
-    // const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
-
-    // const majorCounts = getFilteredMajorCounts(filtered)
-
-    // setFilteredYearsCount(yearCounts)
-    // setFilteredMajorsCount(majorCounts)
-  }, [studentYear, major, communityUsers, selectedRadio])
-
-  useEffect(() => {
-    const allUsers = communityUsers?.data || []
-    // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
-
-    if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
-      return setFilterFacultyUsers(allUsers)
-    }
+  const filteredFacultyUsers = React.useMemo(() => {
+    const allUsers = communityUsers || []
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allUsers, filters)
-    setFilterFacultyUsers(filtered)
-
-    // const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
-
-    // const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
-
-    // const affiliationCounts = getFilteredAffiliationCounts(filtered)
-
-    // setFilteredOccupationCount(occupationCounts)
-    // setFilteredAffiliationCount(affiliationCounts)
-  }, [occupation, affiliation, selectedRadio])
+    return filterFacultyData(allUsers, filters)
+  }, [occupation, affiliation, communityUsers])
 
   const handleClick = () => {
     if (selectedUniversity?.name?.length < 1 || selectedUniversity?.name == undefined) {
@@ -178,7 +191,7 @@ export default function ConnectionUserSelectModal({
     } else if (selectedRadio == 'Student') {
       setFilteredUsers(filteredUsers)
     } else {
-      const allUsers = communityUsers?.data || []
+      const allUsers = communityUsers || []
       const allFilteredUsers = allUsers.filter((user) => user._id !== userData?.id)
       setFilteredUsers(allFilteredUsers)
     }

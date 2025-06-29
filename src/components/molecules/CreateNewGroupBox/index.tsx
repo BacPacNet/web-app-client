@@ -36,13 +36,15 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
 import ProfileImageUploader from '../ProfileImageUploader'
 import { useCommunityUsers } from '@/services/community'
+import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 
 type Props = {
   communityId: string
   setNewGroup: (value: boolean) => void
+  communityName: string
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
+const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File | null>(null)
@@ -95,7 +97,9 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   const community = watch('community')
 
   const { data: communityData } = useGetCommunity(community.id)
-  const { data: communityUsers } = useCommunityUsers(community.id)
+  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityId, true, searchInput)
+
+  const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
@@ -222,25 +226,10 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
     setUniversityError(true)
   }
 
-  //  useEffect(() => {
-  //    const handleClickOutside = (event: MouseEvent) => {
-  //      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-  //        setShowSelectUsers(false)
-  //      }
-  //    }
-
-  //    document.addEventListener('mousedown', handleClickOutside)
-
-  //    return () => {
-  //      document.removeEventListener('mousedown', handleClickOutside)
-  //    }
-  //  }, [])
-
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
     const filters = { year: studentYear, major: major }
-
     const filtered = filterData(allUsers, filters)
 
     const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
@@ -254,7 +243,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
   }, [studentYear, major, communityData])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
 
     const filters = { occupation: occupation, affiliation: affiliation }
@@ -271,7 +260,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
     setFilteredAffiliationCount(affiliationCounts)
   }, [occupation, affiliation])
 
-  const handleSelectIndividuals = (e: React.MouseEvent, user: Users) => {
+  const handleSelectIndividuals = (e: React.MouseEvent, user: any) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -299,44 +288,6 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
       <div className="flex flex-col gap-8 justify-start items-start w-full  ">
         <h3 className="text-neutral-700 text-md font-poppins font-bold">Group Information</h3>
 
-        {/* <div className="flex flex-col gap-2">
-          <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-            Group Profile
-          </label>
-
-          <label
-            htmlFor="CreateGroupLogoImage"
-            className="relative border-2 border-neutral-200 bg-white flex items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer overflow-hidden hover:shadow-card"
-          >
-            {logoImage && (
-              <img
-                className="w-full h-full rounded-full object-cover absolute inset-0"
-                src={URL.createObjectURL(logoImage)}
-                alt="Group logo"
-              />
-            )}
-
-            <input
-              ref={logoInputRef}
-              style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              type="file"
-              id="CreateGroupLogoImage"
-              onChange={handleLogoImage}
-            />
-
-            <div className="relative z-10 flex flex-col items-center">
-              {logoImage ? (
-                <>
-                  <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-                  <FiCamera size={32} className="text-white" />
-                </>
-              ) : (
-                <FiCamera size={32} className="text-slate-400" />
-              )}
-            </div>
-          </label>
-        </div> */}
         <ProfileImageUploader label="Group Profile" imageFile={logoImage} onImageChange={(file) => handleLogoImage(file)} id="CreateGroupLogoImage" />
 
         <div className="flex flex-col gap-2 w-full">
@@ -508,23 +459,6 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
             </label>
             {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
-          {/* <div>
-            <h2 className="font-medium text-sm text-neutral-900">Repost Setting</h2>
-            <div className="flex items-center gap-3 py-3 ">
-              <input type="radio" value="Casual" {...GroupRegister('repostOption', { required: true })} className="w-[18px] h-[18px] mt-1" />
-              <div className="">
-                <span className="text-neutral-900 text-[12px] font-medium">Allow reposting on user’s timelines</span>
-              </div>
-            </div>
-
-            <label className="flex items-center gap-3">
-              <input type="radio" value="Official" {...GroupRegister('repostOption', { required: true })} className="w-[18px] h-[18px] mt-1" />
-              <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Only allow reposting within group</span>
-              </div>
-            </label>
-            {errors.repostOption && <p className="text-red-500 text-2xs ">This field is required</p>}
-          </div> */}
 
           <div ref={categoryRef}>
             <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
@@ -581,13 +515,23 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
               type="text"
               placeholder="Search Users"
             />
-            <UserSelectDropdown
+            <VerifyUserSelectDropdown
+              show={showSelectUsers}
+              users={communityUsers || []}
+              onSelect={handleSelectIndividuals}
+              currentUserId={userProfileData?.users_id as string}
+              selectedUsers={individualsUsers}
+              onBottomReach={fetchNextPage}
+              isFetchingMore={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+            />
+            {/* <UserSelectDropdown
               searchInput={searchInput}
               show={showSelectUsers}
               onSelect={handleSelectIndividuals}
               currentUserId={userProfileData?.users_id as string}
               individualsUsers={individualsUsers}
-            />
+            /> */}
             <div className="flex flex-wrap mt-2">
               <SelectedUserTags users={individualsUsers} onRemove={(id) => removeUser(id as string)} />
             </div>
@@ -640,17 +584,11 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                       e.stopPropagation()
                     }}
                   >
-                    <UniversityDropdown
-                      selected={community}
-                      options={userProfileData?.email || []}
-                      onSelect={(val) => {
-                        setValue('community', val)
-                        setUniversityError(false)
-                      }}
-                      onClear={() => handleUniversityClear()}
-                      error={!!universityError}
-                      errorMessage="Select university to filter based on student or faculty."
-                    />
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">University</label>
+                      <p className="text-xs text-neutral-600">{communityName}</p>
+                    </div>
+
                     <Controller
                       name="studentYear"
                       control={control}
@@ -664,7 +602,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                           err={false}
                           filteredCount={filteredYearCount}
                           multiSelect={false}
-                          disabled={!community?.name?.length}
+                          // disabled={!community?.name?.length}
                           setUniversityErr={setUniversityError}
                         />
                       )}
@@ -683,7 +621,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                           search={true}
                           filteredCount={filteredMajorsCount}
                           parentCategory={studentYear}
-                          disabled={!community?.name?.length}
+                          // disabled={!community?.name?.length}
                           setUniversityErr={setUniversityError}
                         />
                       )}
@@ -702,7 +640,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                           search={true}
                           multiSelect={false}
                           filteredCount={filteredOccupationCount}
-                          disabled={!community?.name?.length}
+                          // disabled={!community?.name?.length}
                           setUniversityErr={setUniversityError}
                         />
                       )}
@@ -721,7 +659,7 @@ const CreateNewGroup = ({ setNewGroup, communityId }: Props) => {
                           search={true}
                           filteredCount={filteredAffiliationCount}
                           parentCategory={occupation}
-                          disabled={!community?.name?.length}
+                          // disabled={!community?.name?.length}
                           setUniversityErr={setUniversityError}
                         />
                       )}

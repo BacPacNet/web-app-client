@@ -23,6 +23,7 @@ import { FaXmark } from 'react-icons/fa6'
 import CollegeResult from '@/components/CollegeResult'
 import { BiChevronDown } from 'react-icons/bi'
 import { useCommunityUsers } from '@/services/community'
+import { useGetCommunity } from '@/services/community-university'
 
 const EditGroupChatModal = ({
   users,
@@ -74,7 +75,8 @@ const EditGroupChatModal = ({
   const { mutateAsync: editGroup, isPending } = useEditGroupChat(chatId)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const { closeModal } = useModal()
-  const { data: communityUsers } = useCommunityUsers(communitySelected.id)
+  const { data: communityUsersData } = useCommunityUsers(communitySelected.id)
+  const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
   const {
     register,
@@ -114,14 +116,14 @@ const EditGroupChatModal = ({
   }, [])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     const filters = { year: studentYear, major: major }
     const filtered = filterData(allUsers, filters)
     setFilterUsers(filtered)
   }, [studentYear, major, communityUsers])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
 
     const filters = { occupation: occupation, affiliation: affiliation }
     const filtered = filterFacultyData(allUsers, filters)

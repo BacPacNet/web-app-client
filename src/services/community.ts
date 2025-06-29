@@ -1,23 +1,63 @@
 import { userProfileType } from '@/store/userProfileSlice/userProfileType'
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
+import useDebounce from '@/hooks/useDebounce'
 
 interface CommunityUsersReponse {
   success: boolean
   data: userProfileType[]
+  pagination: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
 }
 
-const fetchCommunityUsers = async (communityId: string, token: string): Promise<any> => {
-  const response = await client(`/community/${communityId}/users`, { headers: { Authorization: `Bearer ${token}` } })
+const fetchCommunityUsers = async (
+  communityId: string,
+  token: string,
+  isVerified: boolean = false,
+  searchQuery: string = '',
+  page: number = 1,
+  limit: number = 20
+): Promise<any> => {
+  const params = new URLSearchParams()
+
+  if (isVerified) params.append('isVerified', 'true')
+  if (page) params.append('page', page.toString())
+  if (limit) params.append('limit', limit.toString())
+  if (searchQuery.trim() !== '') params.append('searchQuery', searchQuery.trim())
+
+  const query = params.toString() ? `?${params.toString()}` : ''
+
+  const response = await client(`/community/${communityId}/users${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
-export const useCommunityUsers = (communityId: string) => {
+export const useCommunityUsers = (
+  communityId: string,
+  isVerified: boolean = false,
+  searchQuery: string = '',
+  page: number = 1,
+  limit: number = 10
+) => {
   const [cookieValue] = useCookie('uni_user_token')
-  return useQuery<CommunityUsersReponse>({
-    queryKey: ['community-users', communityId],
-    queryFn: () => fetchCommunityUsers(communityId!, cookieValue),
+  const debouncedSearchTerm = useDebounce(searchQuery, 1000)
+
+  return useInfiniteQuery<CommunityUsersReponse>({
+    queryKey: ['community-users', communityId, isVerified, page, limit, debouncedSearchTerm],
+    queryFn: () => fetchCommunityUsers(communityId, cookieValue, isVerified, debouncedSearchTerm, page, limit),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination.page < lastPage.pagination.totalPages) {
+        return lastPage.pagination.page + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
     enabled: !!communityId && !!cookieValue,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })

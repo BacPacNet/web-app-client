@@ -95,7 +95,8 @@ const GroupChatModal = ({
     },
   })
 
-  const { data: communityUsers } = useCommunityUsers(communitySelected.id)
+  const { data: communityUsersData } = useCommunityUsers(communitySelected.id)
+  const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
   //  const selectedIndividualsUsers = watch('selectedIndividualsUsers') || []
   const studentYear = watch('studentYear') || []
@@ -123,7 +124,7 @@ const GroupChatModal = ({
   }, [title])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
 
     const filters = { year: studentYear, major: major }
@@ -141,7 +142,7 @@ const GroupChatModal = ({
   }, [studentYear, major, communityUsers])
 
   useEffect(() => {
-    const allUsers = communityUsers?.data || []
+    const allUsers = communityUsers || []
     // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
 
     const filters = { occupation: occupation, affiliation: affiliation }

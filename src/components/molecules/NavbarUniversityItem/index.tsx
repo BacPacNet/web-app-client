@@ -120,7 +120,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         'w-[350px] sm:w-[490px] hideScrollbar'
       )
     } else {
-      openModal(<CreateNewGroupBox communityId={communityId || communityIdForNewGroup} setNewGroup={setShowNewGroup} />)
+      openModal(
+        <CreateNewGroupBox
+          communityName={community?.name || 'Sd'}
+          communityId={communityId || communityIdForNewGroup}
+          setNewGroup={setShowNewGroup}
+        />
+      )
     }
     toggleLeftNavbar && toggleLeftNavbar()
   }

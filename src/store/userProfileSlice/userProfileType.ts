@@ -8,6 +8,8 @@ interface following {
 
 export interface userProfileType {
   users_id: string | null
+  firstName?: string
+  lastName?: string
   profile_dp?: { imageUrl: string; publicId: string }
   email: EmailType[]
   communities: UserCommunities[]
