@@ -213,7 +213,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     }
     if (coverImage && typeof coverImage === 'object') {
       const uploadCoverPayload = {
-        files: [logoImage] as File[],
+        files: [coverImage] as File[],
         context: UPLOAD_CONTEXT.COVER_DP,
       }
       const imagedata = await uploadToS3(uploadCoverPayload)
