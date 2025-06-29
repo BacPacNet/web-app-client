@@ -46,8 +46,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [coverImage, setCoverImage] = useState<File | string>(communityGroups?.communityGroupLogoCoverUrl?.imageUrl as string)
   const [searchInput, setSearchInput] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [filteredUsers, setFilterUsers] = useState<any[]>([])
-  const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
+  // const [filteredUsers, setFilterUsers] = useState<any[]>([])
+  // const [filteredFacultyUsers, setFilterFacultyUsers] = useState<any[]>([])
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
@@ -109,19 +109,31 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     }
   }
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const allUsers = communityUsers || []
+  //   const filters = { year: studentYear, major: major }
+  //   const filtered = filterData(allUsers, filters)
+  //   setFilterUsers(filtered)
+  // }, [studentYear, major, communityUsers])
+
+  // useEffect(() => {
+  //   const allUsers = communityUsers || []
+  //   const filters = { occupation: occupation, affiliation: affiliation }
+  //   const filtered = filterFacultyData(allUsers, filters)
+  //   setFilterFacultyUsers(filtered)
+  // }, [occupation, affiliation])
+
+  const filteredUsers = React.useMemo(() => {
     const allUsers = communityUsers || []
     const filters = { year: studentYear, major: major }
-    const filtered = filterData(allUsers, filters)
-    setFilterUsers(filtered)
+    return filterData(allUsers, filters)
   }, [studentYear, major, communityUsers])
 
-  useEffect(() => {
+  const filteredFacultyUsers = React.useMemo(() => {
     const allUsers = communityUsers || []
     const filters = { occupation: occupation, affiliation: affiliation }
-    const filtered = filterFacultyData(allUsers, filters)
-    setFilterFacultyUsers(filtered)
-  }, [occupation, affiliation])
+    return filterFacultyData(allUsers, filters)
+  }, [occupation, affiliation, communityUsers])
 
   const handleClick = (userId: string) => {
     if (userId == communityGroups.adminUserId) return console.log('you can not remove yourself')
@@ -183,10 +195,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     //const existingUserIds = communityGroups.users.map((user) => user.userId)
     //const finalUsers = uniqueUsers.filter((user) => !existingUserIds.includes(user.id))
     const payload: any = {
-      //  ...data,
-      title: title,
-      description: initialDescription,
-      communityGroupAccess: communityGroupAccess,
+      title: data.title,
+      description: data.description,
+      communityGroupAccess: data.communityGroupAccess,
       ...communityGroupCategory,
       selectedUsers: mergedUsers,
     }
@@ -214,15 +225,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     setSelectedFilters({})
     setNewGroup(false)
     closeModal()
-  }
-
-  const handleDeleteGroup = () => {
-    if (communityGroups?._id) {
-      openModal(
-        <DeleteCommunityGroupModal communityId={communityGroups?.communityId?._id} communityGroupId={communityGroups?._id} />,
-        'h-auto w-[400px]'
-      )
-    }
   }
 
   const validateDescription = (value: string | undefined): string | boolean => {

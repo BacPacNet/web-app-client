@@ -88,7 +88,8 @@ export default function CommunityGroupBanner({
   }, [communityGroups, userData, setIsGroupAdmin])
 
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
-    if (isUserRequestPending) return
+    console.log('clicked', isUserRequestPending)
+    if (isUserRequestPending && isGroupPrivate) return
     if (!isUserJoinedCommunityGroup) {
       joinCommunityGroup(communityGroupID)
     } else {
