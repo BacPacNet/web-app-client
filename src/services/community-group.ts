@@ -42,7 +42,7 @@ export const useJoinCommunityGroup = () => {
 
     onError: (error: any) => {
       console.log(error, 'error')
-      showCustomDangerToast('errrrorr')
+      showCustomDangerToast(error.response.data.message)
     },
   })
 }

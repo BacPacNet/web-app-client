@@ -113,6 +113,8 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
   if (error && (error as AxiosError).response?.status === 401) {
     return (
       <EmptyStateCard
+        imageWidth={126}
+        imageHeight={158}
         imageSrc={notMember}
         title="You are not a member of this group"
         description="This group is for members only. Become a member to access exclusive content and discussions."

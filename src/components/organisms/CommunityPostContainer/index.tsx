@@ -114,6 +114,8 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
   if (communityPostError && (communityPostError as AxiosError).response?.status === 401) {
     return (
       <EmptyStateCard
+        imageWidth={320}
+        imageHeight={171}
         imageSrc={notMember}
         title="Join University Community"
         description="Join this community to access its groups and connect with fellow university members"
