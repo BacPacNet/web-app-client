@@ -8,7 +8,7 @@ import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { TiCameraOutline } from 'react-icons/ti'
 import { useEffect, useState, useMemo, ChangeEvent } from 'react'
-import { degreeAndMajors, GenderOptions, occupationAndDepartment } from '@/types/RegisterForm'
+import { degreeAndMajors, GenderOptions, occupationAndDepartment, userTypeEnum } from '@/types/RegisterForm'
 import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -72,7 +72,7 @@ const EditProfileModal = () => {
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
-  const [userType, setUserType] = useState<'student' | 'faculty'>('student')
+  const [userType, setUserType] = useState<userTypeEnum>(userProfileData?.role || userTypeEnum.Student)
   const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
   const [isProfileLoading, setIsProfileLoading] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -375,7 +375,7 @@ const EditProfileModal = () => {
               className="w-4 h-4"
               checked={userType === 'student'}
               id="student"
-              onChange={() => setUserType('student')}
+              onChange={() => setUserType(userTypeEnum.Student)}
               type="radio"
               name="userType"
               disabled={isProfileLoading}
@@ -440,7 +440,7 @@ const EditProfileModal = () => {
               className="w-4 h-4"
               checked={userType === 'faculty'}
               id="faculty"
-              onChange={() => setUserType('faculty')}
+              onChange={() => setUserType(userTypeEnum.Faculty)}
               type="radio"
               name="userType"
               disabled={isProfileLoading}
@@ -491,6 +491,7 @@ const EditProfileModal = () => {
                         onChange={field.onChange}
                         placeholder="Select a department"
                         icon={'single'}
+                        search={true}
                         err={!!errors.affiliation}
                       />
                     )}
