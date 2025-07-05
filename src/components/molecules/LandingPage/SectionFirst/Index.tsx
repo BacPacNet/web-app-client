@@ -23,7 +23,7 @@ export default function SectionFirst() {
           Learn More
         </Buttons>
       </div>
-      <div className="relative w-full max-w-xs lg:max-w-3xl mb-12">
+      <div className="relative w-full max-w-3xl mb-12">
         <UniversitySearchBox />
       </div>
       <div className="w-full flex justify-center">
