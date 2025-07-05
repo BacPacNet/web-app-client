@@ -23,7 +23,7 @@ const client = async <T, U>(
   }
 
   const config: AxiosRequestConfig = {
-    url: customBaseUrl ? `${process.env.NEXT_PUBLIC_CUSTOM_BASE_URL}/${endpoint}` : `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`,
+    url: customBaseUrl ? `${endpoint}` : `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`,
     method: method || (data ? 'POST' : 'GET'),
     data: isFormData ? data : data ? JSON.stringify(data) : undefined,
     headers: finalHeaders,
