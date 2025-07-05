@@ -9,7 +9,7 @@ export function useUniversitySearch(searchTerm: string, page: number, limit: num
   return useQuery<any, Error>({
     queryKey: ['universitySearch', debouncedSearchTerm],
     queryFn: () => getUniversitySearch(debouncedSearchTerm, page, limit),
-    enabled: true,
+    enabled: !!debouncedSearchTerm, // Only run if there's a search term
     retry: false, // Optional: Prevent retries on failure
   })
 }

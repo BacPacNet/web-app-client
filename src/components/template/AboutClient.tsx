@@ -16,8 +16,7 @@ import image1 from '@assets/image1.svg'
 import image2 from '@assets/image2.svg'
 import image3 from '@assets/image3.svg'
 import image4 from '@assets/image4.svg'
-import heroTabletBanner from '@assets/heroTabletBanner.svg'
-import heroMobileBanner from '@assets/heroMobileBanner.svg'
+import bannerImage from '@assets/heroTabletBanner.svg'
 
 const features = [
   {
@@ -93,18 +92,7 @@ const AboutClient = () => {
               <h1 className="md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3 font-poppins">All-in-one university network</h1>
               <SupportingText className="mt-6">The premier social network platform made entirely for university students and faculty.</SupportingText>
             </div>
-            <Image
-              src={
-                isMobile
-                  ? heroMobileBanner
-                  : isTablet
-                  ? heroTabletBanner
-                  : 'https://s3-alpha-sig.figma.com/img/82ea/05b8/55c309cd7efcc592e38afbb8d182e760?Expires=1742169600&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=qVfkZoQBZsxYy9peij3rb0o89dT42jgBCCPXL9q-8DsrHUYPiIM97wZPiD45a16xemxyG3jwFJwvOEF6IZM~4ZWIdVI7H2IsqYV~A~WcMhlT2NZIdVwpjpW71IWArHT-OCPaLAPCRKJZCXwjyamiYSM29ruiGA59IzXwed8HL4TJJ~xEGWGSNhCx3rLwSiKfvbAc8c0rEvaXZq5HTXQRMQiucAo9SjieA4srjwWHf1Dxd9bAw8SAeLkl2ePCU76zd7e5qzG0lPubHoBu9~UO1XS9MdNC7qaDcUwU2ib4rcEDiptyOS8a1uO8WNw78FRHHpYYiAHQCKZ5eHCPY271qA__'
-              }
-              alt="Mobile UI"
-              width={500}
-              height={100}
-            />
+            <Image src={bannerImage} alt="Mobile UI" width={500} height={100} />
           </section>
 
           {/* Welcome Unibuzz Section */}

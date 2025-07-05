@@ -6,10 +6,8 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { useEditProfile } from '@/services/edit-profile'
 import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { TiCameraOutline } from 'react-icons/ti'
-import { useEffect, useState, useMemo, ChangeEvent } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { degreeAndMajors, GenderOptions, occupationAndDepartment, userTypeEnum } from '@/types/RegisterForm'
-import { FaCamera } from 'react-icons/fa'
 import { useGetUserData } from '@/services/user'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Country, City } from 'country-state-city'
@@ -19,6 +17,7 @@ import { useModal } from '@/context/ModalContext'
 import { ProfileDp } from '@/types/User'
 import Title from '@/components/atoms/Title'
 import SubText from '@/components/atoms/SubText'
+import ProfileImageUploader from '@/components/molecules/ProfileImageUploader'
 
 export interface editProfileInputs {
   firstName: string
@@ -68,12 +67,12 @@ const LabeledInput = ({
 )
 
 const EditProfileModal = () => {
-  const { mutate: mutateEditProfile, isPending } = useEditProfile()
+  const { mutateAsync: mutateEditProfile, isPending } = useEditProfile()
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const { data: userProfile } = useGetUserData(userProfileData?.users_id as string)
   const [userType, setUserType] = useState<userTypeEnum>(userProfileData?.role || userTypeEnum.Student)
-  const [previewProfileImage, setPreviewProfileImage] = useState<File | null | string>(null)
+  const [profileImageFile, setProfileImageFile] = useState<File | string | null>(null)
   const [isProfileLoading, setIsProfileLoading] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
@@ -87,8 +86,6 @@ const EditProfileModal = () => {
     setValue,
     formState: { errors, isDirty },
   } = useForm<editProfileInputs>()
-
-  const profilePicture = watch('profilePicture')
 
   useEffect(() => {
     if (userProfile) {
@@ -111,36 +108,31 @@ const EditProfileModal = () => {
         profilePicture: null,
       }
       reset(userDefault)
-      setPreviewProfileImage(profile?.profile_dp?.imageUrl)
+      setProfileImageFile(profile?.profile_dp?.imageUrl || null)
     }
   }, [userProfile, reset])
 
   const currCountry = watch('country') || ''
   const currBio = watch('bio') || ''
+  const countryOptions = useMemo(() => Country.getAllCountries().map((country) => country.name), [])
+
   const cityOptions = useMemo(() => {
     const isoCode = Country.getAllCountries().find((country) => country.name === currCountry)?.isoCode
     if (!isoCode) return []
-    return City.getCitiesOfCountry(isoCode)?.map((state) => state.name) ?? []
+    return City.getCitiesOfCountry(isoCode)?.map((city) => city.name) ?? []
   }, [currCountry])
 
-  const handleCountryChange = (selectedCountry: string, field: any) => {
+  const handleCountryChange = useCallback((selectedCountry: string, field: any) => {
     field.onChange(selectedCountry)
-  }
+  }, [])
 
   type DegreeKeys = keyof typeof degreeAndMajors
   const currYear = watch('study_year') as DegreeKeys
 
   type occupationKeys = keyof typeof occupationAndDepartment
   const currOccupation = watch('occupation') as occupationKeys
-  const currFormDepartment = watch('affiliation') as occupationKeys
 
   const currDepartment = useMemo(() => occupationAndDepartment[currOccupation] || [], [currOccupation])
-
-  useEffect(() => {
-    if (!currDepartment.includes(currFormDepartment)) {
-      setValue('affiliation', '')
-    }
-  }, [currDepartment, currFormDepartment, setValue])
 
   const validateBio = (value: string | undefined): string | boolean => {
     if (!value || value.trim() === '') return true
@@ -152,11 +144,10 @@ const EditProfileModal = () => {
 
   // Handle image upload with error handling
   const handleImageUpload = async () => {
-    const files = profilePicture
-    if (files) {
+    if (profileImageFile && typeof profileImageFile === 'object') {
       try {
         const uploadPayload = {
-          files: [files] as unknown as File[],
+          files: [profileImageFile] as unknown as File[],
           context: UPLOAD_CONTEXT.DP,
         }
         const uploadResponse = await uploadtoS3(uploadPayload)
@@ -171,21 +162,22 @@ const EditProfileModal = () => {
     }
   }
 
-  // Handle image preview
-  const handleImagePreview = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setPreviewProfileImage(URL.createObjectURL(file))
+  // Handle profile image change
+  const handleProfileImageChange = useCallback(
+    (file: File) => {
+      setProfileImageFile(file)
       setValue('profilePicture', file)
-    }
-  }
+    },
+    [setValue]
+  )
 
   // Form submit handler with error handling
   const onSubmit: SubmitHandler<editProfileInputs> = async (data) => {
     setIsProfileLoading(true)
     setSubmitError(null)
     let profileImageData = userProfile?.profile?.profile_dp
-    if (profilePicture) {
+
+    if (profileImageFile && typeof profileImageFile === 'object') {
       const uploaded = await handleImageUpload()
       if (!uploaded) {
         setIsProfileLoading(false)
@@ -198,6 +190,7 @@ const EditProfileModal = () => {
       }
       profileImageData = { imageUrl: uploaded.imageUrl, publicId: uploaded.publicId }
     }
+
     try {
       await mutateEditProfile({ ...data, profile_dp: profileImageData, role: userType })
       closeModal()
@@ -216,38 +209,8 @@ const EditProfileModal = () => {
       </p>
       {submitError && <div className="text-red-500 text-sm mb-2">{submitError}</div>}
       <form className="flex flex-col font-medium text-sm gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col items-start gap-4 mt-4">
-          <p className="text-sm text-neutral-700">Profile Picture</p>
-          <div className="relative w-20 h-20 rounded-full border border-neutral-200 group">
-            <img
-              className="rounded-full object-cover w-20 h-20"
-              src={
-                typeof previewProfileImage === 'string' ? previewProfileImage : previewProfileImage ? URL.createObjectURL(previewProfileImage) : ''
-              }
-              alt="Profile Preview"
-            />
-            <div className="group-hover:block hidden absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-primary-50 py-1 px-2 rounded-full text-primary font-medium cursor-pointer">
-              <input
-                {...register('profilePicture')}
-                style={{ display: 'none' }}
-                type="file"
-                accept="image/jpeg,image/png,image/jpg,image/gif"
-                id="changeProfileImage"
-                onChange={handleImagePreview}
-                tabIndex={0}
-                aria-label="Change profile image"
-              />
-              <label
-                htmlFor="changeProfileImage"
-                className="bg-primary w-10 h-10 flex justify-center items-center rounded-full p-2 text-neutral-800"
-                tabIndex={0}
-                aria-label="Change profile image"
-              >
-                <FaCamera color="white" />
-              </label>
-            </div>
-          </div>
-        </div>
+        <ProfileImageUploader label="Profile Picture" imageFile={profileImageFile} onImageChange={handleProfileImageChange} id="editProfileImage" />
+
         <LabeledInput label="First Name" required error={errors.firstName && 'Please enter first name'} htmlFor="firstname">
           <input
             {...register('firstName', { required: true })}
@@ -300,7 +263,7 @@ const EditProfileModal = () => {
             control={control}
             render={({ field }) => (
               <SelectDropdown
-                options={Country.getAllCountries().map((country) => country.name)}
+                options={countryOptions}
                 value={field.value || ''}
                 onChange={(selectedCountry: string) => handleCountryChange(selectedCountry, field)}
                 placeholder="Select a country"
@@ -502,10 +465,10 @@ const EditProfileModal = () => {
             </>
           )}
         </div>
-        <Button variant="primary" type="submit" disabled={!isDirty || isProfileLoading}>
-          {isProfileLoading ? <Spinner /> : 'Update Profile'}
+        <Button variant="primary" type="submit" disabled={!isDirty || isProfileLoading || isPending}>
+          {isProfileLoading || isPending ? <Spinner /> : 'Update Profile'}
         </Button>
-        <Button type="button" variant="shade" onClick={() => reset()} disabled={isProfileLoading}>
+        <Button type="button" variant="shade" onClick={() => reset()} disabled={isProfileLoading || isPending}>
           Redo Changes
         </Button>
       </form>

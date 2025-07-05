@@ -1,26 +1,34 @@
 import Image from 'next/image'
 import React from 'react'
+import bannerImage from '@assets/landing-banner.svg'
+import Buttons from '@/components/atoms/Buttons'
 import UniversitySearchBox from '../../UniversitySearchBox'
-import bannerImage from '@assets/landing-mobile.svg'
 
 export default function SectionFirst() {
   return (
-    <div className="flex flex-col-reverse lg:flex-row gap-16 lg:gap-[150px] items-center justify-between mb-32  md:mb-[192px]">
-      <div className="flex flex-col text-center lg:text-left justify-start h-full lg:w-[453px]">
-        <p className="text-primary-500 font-semibold text-xs mb-3">YOU&apos;RE ALMOST THERE</p>
-
-        <h2 className="font-poppins text-md sm:text-[32px] text-neutral-700 font-bold sm:font-extrabold tracking-tighter  ">
-          Search your university!
-        </h2>
-        <p className="text-neutral-500 text-xs sm:text-2sm mt-4  ">
-          {' '}
-          University not listed? Send us feedback and we will add your university to the database, along with extra perks for you
-        </p>
+    <section className="flex flex-col items-center justify-center text-center py-16 w-full">
+      <h1 className="font-poppins font-extrabold text-2xl sm:text-4xl md:text-5xl text-neutral-800 mb-4">
+        One Stop Academic
+        <br />
+        and Social Networking Platform
+      </h1>
+      <p className="text-neutral-500 text-base lg:text-sm max-w-3xl mb-8">
+        Our platform bridges the gap between students and universities, making your academic journey more enriching and engaging.
+      </p>
+      <div className="flex gap-4 mb-8">
+        <Buttons variant="primary" size="large">
+          Get Started
+        </Buttons>
+        <Buttons variant="shade" size="large">
+          Learn More
+        </Buttons>
+      </div>
+      <div className="relative w-full max-w-xs lg:max-w-3xl mb-12">
         <UniversitySearchBox />
       </div>
-      <div>
-        <Image width={453} height={471} src={bannerImage} alt={bannerImage} />
+      <div className="w-full flex justify-center">
+        <Image src={bannerImage} alt="Landing Banner" width={700} height={500} className="w-full max-w-3xl h-auto" />
       </div>
-    </div>
+    </section>
   )
 }

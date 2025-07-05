@@ -32,7 +32,7 @@ const Buttons: React.FC<ButtonProps> = ({
   const variantSizes = {
     small: 'text-2xs py-3 px-4 h-9 ',
     medium: 'text-xs py-3 px-4 h-10',
-    large: 'text-sm py-3 px-4  h-12 ',
+    large: 'text-xs py-3 px-4 h-10 md:text-sm md:h-12',
   }
 
   const variantClass = variantClasses[variant]
@@ -41,7 +41,7 @@ const Buttons: React.FC<ButtonProps> = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-medium flex items-center justify-center ${
+      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 font-medium flex items-center justify-center hover:shadow-md transition-all duration-200 ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       } ${className}`}
       {...props}

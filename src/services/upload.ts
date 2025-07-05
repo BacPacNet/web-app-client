@@ -48,7 +48,13 @@ export const useUploadToS3 = () => {
       // Optionally show success toast
     },
     onError: (error: any) => {
-      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+      console.log(error)
+      // Handle specific 413 error for file size too large
+      if (error?.response?.status === 413) {
+        showCustomDangerToast('File size is too large. Please upload files smaller than 5MB.')
+      } else {
+        showCustomDangerToast(error?.response?.data?.message || 'File size is too large. Please upload files smaller than 5MB.')
+      }
     },
   })
 }
