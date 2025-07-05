@@ -17,7 +17,7 @@ export async function getRecommendations(userId: string): Promise<Recommendation
     method: 'GET',
     customBaseUrl: true,
     headers: {
-      'x-api-key': process.env.RECOMMENDATION_API_KEY || '',
+      'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
     },
   })
   return response
@@ -33,7 +33,7 @@ export async function getGroupRecommendations(userId: string): Promise<GroupReco
     method: 'GET',
     customBaseUrl: true,
     headers: {
-      'x-api-key': process.env.RECOMMENDATION_API_KEY || '',
+      'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
     },
   })
   return response
