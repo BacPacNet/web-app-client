@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ZustandSocketProvider>
             <ModalProvider>
               <Toaster />
-              <ModalManager />
+              {/* <ModalManager /> */}
               <ImageManager />
               <LogoNavbar />
               {children}

@@ -70,6 +70,7 @@ module.exports = {
                 'neutral-900': '#18191A',
                 'neutral-800': '#242526',
                 'neutral-700': '#3A3B3C',
+                'neon': '#A544FF',
                 'gray-dark': '#525252',
                 'gray': '#8492a6',
                 'gray-light': '#d3dce6',

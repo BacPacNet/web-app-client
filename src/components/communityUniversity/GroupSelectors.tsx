@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { IoIosPeople } from 'react-icons/io'
-import { PiStudentFill } from 'react-icons/pi'
+import officialLogo from '@assets/official-logo.svg'
 
 const GroupSelectors = ({
   setCurrSelectedGroup,
@@ -35,7 +35,7 @@ const GroupSelectors = ({
       >
         <div
           className={`relative z-1 ${
-            isGroupOfficial ? 'w-12 h-12 border-2 border-primary-500 flex justify-center items-center rounded-full shadow-card' : ''
+            isGroupOfficial ? 'w-12 h-12 border-2 border-neon flex justify-center items-center rounded-full shadow-card' : ''
           } `}
         >
           {data?.communityGroupLogoUrl?.imageUrl ? (
@@ -51,8 +51,8 @@ const GroupSelectors = ({
           )}
 
           {isGroupOfficial && (
-            <div className="absolute bg-white -bottom-2 w-5 h-5 border-2 border-primary-500 rounded-full flex justify-center">
-              <Image className="object-contain rounded-full" src={selectedCommunityImage as string} width={12} height={12} alt="" />
+            <div className="absolute bg-white -bottom-2 w-5 h-5 border-2 border-neon rounded-full flex justify-center">
+              <Image className="object-contain rounded-full" src={officialLogo as string} width={12} height={12} alt="" />
             </div>
           )}
         </div>
