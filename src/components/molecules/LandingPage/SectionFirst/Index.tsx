@@ -12,10 +12,11 @@ export default function SectionFirst() {
       <h1 className="font-poppins font-bold text-2xl sm:text-4xl md:text-5xl text-neutral-800 mb-4 !leading-tight">
         One Stop Academic
         <br />
-        and Social Networking Platform
+        and Student Community Platform
       </h1>
       <p className="text-neutral-500 text-xs lg:text-sm max-w-3xl mb-8">
-        Our platform bridges the gap between students and universities, making your academic journey more enriching and engaging.
+        Join Unibuzz to bridge the gap between students and universities, discover opportunities, collaborate with peers, and make your academic
+        journey engaging and productive.
       </p>
       <div className="flex gap-4 mb-8">
         <Buttons onClick={() => router.push('/login')} variant="primary" size="large">

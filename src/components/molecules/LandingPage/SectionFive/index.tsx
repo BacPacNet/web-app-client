@@ -2,7 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import { FaCheckCircle } from 'react-icons/fa'
 import lightningIcon from '@assets/lightningIcon.svg'
-import aiAssistantUI from '@assets/aiAssistantUI.svg'
+import aiAssistantUI from '@assets/aiAssistantUi.svg'
 import { BsStars } from 'react-icons/bs'
 
 export default function SectionFive() {
