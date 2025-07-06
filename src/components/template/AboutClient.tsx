@@ -4,52 +4,13 @@ import Image from 'next/image'
 import useDeviceType from '@/hooks/useDeviceType'
 import Buttons from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
-import { CiMail } from 'react-icons/ci'
-import { IoFileTrayStackedOutline } from 'react-icons/io5'
-import { HiOutlinePencil } from 'react-icons/hi'
-import { PiRobotBold } from 'react-icons/pi'
-import { IoIosSearch } from 'react-icons/io'
 import { BsDiscord } from 'react-icons/bs'
-import { HiMiniUserGroup } from 'react-icons/hi2'
 import { RiMessage2Fill } from 'react-icons/ri'
 import image1 from '@assets/image1.svg'
 import image2 from '@assets/image2.svg'
 import image3 from '@assets/image3.svg'
 import image4 from '@assets/image4.svg'
 import bannerImage from '@assets/heroTabletBanner.svg'
-
-const features = [
-  {
-    title: 'Private and Group Messaging',
-    description: 'Communicate one-on-one or within groups in a secure and user-friendly interface.',
-    icon: <CiMail className="text-blue-600" />,
-  },
-  {
-    title: 'LaTeX Editing',
-    description: 'Communicate scientific and mathematical information directly within our platform.',
-    icon: <HiOutlinePencil />,
-  },
-  {
-    title: 'Large File Transfers',
-    description: 'Transfer large files such as ebooks or research material based on your plan.',
-    icon: <IoFileTrayStackedOutline />,
-  },
-  {
-    title: 'AI Assistant',
-    description: 'Ask anything related to your university to our AI Assistant.',
-    icon: <PiRobotBold />,
-  },
-  {
-    title: 'Smart Search and Filters',
-    description: 'Instantly find your university, courses, clubs, circles, and people.',
-    icon: <IoIosSearch />,
-  },
-  {
-    title: 'Intuitive Organization',
-    description: 'Have all your universities and groups organized neatly with our intuitive interface.',
-    icon: <HiMiniUserGroup />,
-  },
-]
 
 const team = [
   {
@@ -141,22 +102,6 @@ const AboutClient = () => {
           </section>
         </main>
 
-        {/* UNiversity features cards section */}
-        <section className="bg-surface-neutral-100 flex flex-col items-center gap-6 md:pt-24 sm:pt-16 pt-12 px-8 md:pb-32 sm:pb-20 pb-14 mt-10">
-          <h2 className="font-poppins md:text-4xl sm:text-3xl text-2xl max-w-lg font-bold text-neutral-700 text-center">
-            Features made for everything university related.
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:mt-8 sm:mt-6 mt-4 max-w-5xl my-auto">
-            {features.map((feature, index) => (
-              <div key={index} className="flex flex-col items-start bg-white py-6 px-4 rounded-sm shadow-lg text-left gap-3">
-                <div className="xs:p-3 p-2 md:text-2xl xs:text-xl text-lg bg-[#F3F2FF] text-primary-500 rounded-full">{feature.icon}</div>
-                <h3 className="font-poppins text-md font-semibold text-neutral-700">{feature.title}</h3>
-                <p className="text-sm text-neutral-500 mt-1">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
         {/* TEam section */}
         <section className="md:py-24 py-16  text-center max-width-allowed mx-auto">
           <h2 className="font-poppins md:text-4xl sm:text-3xl text-2xl font-bold text-neutral-700">Meet our team</h2>

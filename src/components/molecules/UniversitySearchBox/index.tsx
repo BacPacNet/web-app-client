@@ -14,7 +14,7 @@ export default function UniversitySearchBox() {
   const universities = universitiesData?.result?.universities
 
   return (
-    <div className="relative mt-8">
+    <div className="relative lg:mt-8 mt-2">
       <div className="absolute top-1/2 -translate-y-1/2 left-4">
         <PiMagnifyingGlassBold size={20} strokeWidth={5} className="text-neutral-400 " />
       </div>
@@ -25,7 +25,7 @@ export default function UniversitySearchBox() {
         style={{ width: '-webkit-fill-available' }}
         className="py-1 md:py-2 pl-10 border-[3px] border-neutral-300 rounded-full focus:outline-none focus:border-gray-500 w-full"
         type="text"
-        placeholder="Search Institute"
+        placeholder="Search University"
       />
 
       <AnimatePresence>

@@ -2,7 +2,8 @@ import Image from 'next/image'
 import React from 'react'
 import { FaCheckCircle } from 'react-icons/fa'
 import lightningIcon from '@assets/lightningIcon.svg'
-import section5 from '@assets/section-5.svg'
+import aiAssistantUI from '@assets/aiAssistantUI.svg'
+import { BsStars } from 'react-icons/bs'
 
 export default function SectionFive() {
   return (
@@ -25,21 +26,25 @@ export default function SectionFive() {
             </li>
             <li className="flex gap-3 my-5">
               <div>
-                <FaCheckCircle className="text-[#22C55E] text-md" />
+                <BsStars className="text-primary-500 text-md" />
               </div>
-              <p>LaTeX syntax for academic for communication of scientific documents and technical note-taking</p>
+              <p>
+                <b>Upcoming: </b>LaTeX syntax for academic for communication of scientific documents and technical note-taking
+              </p>
             </li>
             <li className="flex gap-3 my-5">
               <div>
-                <FaCheckCircle className="text-[#22C55E] text-md" />
+                <BsStars className="text-primary-500 text-md" />
               </div>
-              <p>Move up to 5gb of files within platform for ebooks, research data, etc</p>
+              <p>
+                <b>Upcoming: </b> Move up to 5gb of files within platform for ebooks, research data, etc
+              </p>
             </li>
           </ul>
         </div>
       </div>
       <div className="lg:w-1/2">
-        <Image className="shadow-xl" width={650} height={650} src={section5} alt={section5} />
+        <Image className="shadow-xl" width={650} height={650} src={aiAssistantUI} alt={aiAssistantUI} />
       </div>
     </div>
   )

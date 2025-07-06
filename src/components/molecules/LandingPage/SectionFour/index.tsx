@@ -1,14 +1,14 @@
 import Image from 'next/image'
 import React from 'react'
-import section4 from '@assets/section-4.svg'
 import lightningIcon from '@assets/lightningIcon.svg'
 import { FaCheckCircle } from 'react-icons/fa'
+import connectionsUI from '@assets/connectionsUI.svg'
 
 export default function SectionFour() {
   return (
     <div className="flex flex-col-reverse lg:flex-row items-center justify-between mb-32  md:mb-[192px] lg:gap-8 gap-12 px-4  lg:px-0">
       <div className="lg:w-1/2">
-        <Image className="shadow-xl" width={650} height={650} src={section4} alt={section4} />
+        <Image className="shadow-xl" width={650} height={650} src={connectionsUI} alt={connectionsUI} />
       </div>
       <div className="lg:w-1/2 flex flex-col  sm:items-start  sm:text-left justify-start h-full gap-6">
         <div className="flex gap-1 bg-surface-primary-50 rounded-full py-1 px-4 w-fit ">
