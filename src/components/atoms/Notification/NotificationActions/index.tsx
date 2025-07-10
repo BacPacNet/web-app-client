@@ -64,7 +64,7 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
     case notificationRoleAccess.GROUP_INVITE: {
       if (data?.status === notificationStatus.default) {
         return (
-          <Buttons onClick={handleAcceptInvite(data._id)} className="w-max" variant="shade" size="medium">
+          <Buttons onClick={handleAcceptInvite(data._id)} className="w-max" variant="border_primary" size="medium">
             Accept Request
           </Buttons>
         )
@@ -86,10 +86,10 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
       } else {
         return (
           <div className="flex items-center gap-4">
-            <Buttons onClick={handleChangeGroupStatus('accepted', data._id)} className="w-max font-inter" variant="shade" size="medium">
+            <Buttons onClick={handleChangeGroupStatus('accepted', data._id)} className="w-max font-inter" variant="border_primary" size="medium">
               Accept Request
             </Buttons>
-            <Buttons onClick={handleChangeGroupStatus('rejected', data._id)} className="w-max font-inter" variant="notificationDanger" size="medium">
+            <Buttons onClick={handleChangeGroupStatus('rejected', data._id)} className="w-max font-inter" variant="border_danger" size="medium">
               Reject Request
             </Buttons>
           </div>

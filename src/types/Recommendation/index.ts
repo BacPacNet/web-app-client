@@ -19,6 +19,7 @@ export interface UserRecommendations {
   major: string
   affiliation: string
   occupation: string
+  role: string
   score: number
   profile_image: string
 }

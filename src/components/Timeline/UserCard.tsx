@@ -12,7 +12,12 @@ const RecommendationsUserCard: React.FC<UserCardProps> = ({ user }) => {
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex gap-2 items-center">
+      <div
+        onClick={() => {
+          router.push(`/profile/${user.user_id}`)
+        }}
+        className="flex gap-2 items-center hover:cursor-pointer"
+      >
         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
           {/* {user.avatar ? (
             <Image
@@ -28,20 +33,9 @@ const RecommendationsUserCard: React.FC<UserCardProps> = ({ user }) => {
         </div>
         <div>
           <p className="font-semibold text-neutral-700 text-xs flex items-center gap-1">{user.name}</p>
-          <p className="text-3xs text-neutral-500">{user.study_year}</p>
-          <p className="text-3xs text-neutral-500 ">{user.major}</p>
+          <p className="text-3xs text-neutral-500">{user.role === 'student' ? user.study_year : user.occupation}</p>
+          <p className="text-3xs text-neutral-500">{user.role === 'student' ? user.major : user.affiliation}</p>
         </div>
-      </div>
-      <div>
-        <Buttons
-          onClick={() => {
-            router.push(`/profile/${user.user_id}`)
-          }}
-          variant="border"
-          size="small"
-        >
-          View
-        </Buttons>
       </div>
     </div>
   )

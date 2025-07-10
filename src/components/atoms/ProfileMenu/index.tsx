@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { FaAngleDown, FaRegUser } from 'react-icons/fa'
 import { MdOutlineSettings } from 'react-icons/md'
@@ -36,7 +37,17 @@ const ProfileMenu = ({ userProfileData, userData, onLogout, onNavigate }: Profil
     <div className="flex gap-4 items-center pl-4">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger onClick={() => setIsOpen(false)}>
-          <div className="flex gap-2 items-center">
+          <motion.div
+            className="flex gap-2 items-center"
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.2, ease: 'easeInOut' },
+            }}
+            whileTap={{
+              scale: 0.95,
+              transition: { duration: 0.1 },
+            }}
+          >
             <Image
               width={40}
               height={40}
@@ -46,42 +57,66 @@ const ProfileMenu = ({ userProfileData, userData, onLogout, onNavigate }: Profil
               alt="profile.png"
             />
             <FaAngleDown className="text-neutral-600" size={16} />
-          </div>
+          </motion.div>
         </PopoverTrigger>
         <PopoverContent className="p-0 relative right-4 top-6 w-[168px] bg-white shadow-card border-none">
           <div>
             <ul className="border-b-[1px] border-neutral-200">
               {menuItems.slice(0, 2).map((item, index) => (
-                <li
+                <motion.li
                   key={index}
                   onClick={() => handleItemClick(item.action)}
                   className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                  whileHover={{
+                    scale: 1.02,
+                    transition: { duration: 0.2, ease: 'easeInOut' },
+                  }}
+                  whileTap={{
+                    scale: 0.98,
+                    transition: { duration: 0.1 },
+                  }}
                 >
                   <item.icon />
                   <p>{item.label}</p>
-                </li>
+                </motion.li>
               ))}
             </ul>
             <ul className="border-b-[1px] border-neutral-200">
               {menuItems.slice(2, 4).map((item, index) => (
-                <li
+                <motion.li
                   key={index + 2}
                   onClick={() => handleItemClick(item.action)}
                   className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                  whileHover={{
+                    scale: 1.02,
+                    transition: { duration: 0.2, ease: 'easeInOut' },
+                  }}
+                  whileTap={{
+                    scale: 0.98,
+                    transition: { duration: 0.1 },
+                  }}
                 >
                   <item.icon />
                   <p>{item.label}</p>
-                </li>
+                </motion.li>
               ))}
             </ul>
             <ul>
-              <li
+              <motion.li
                 onClick={() => handleItemClick(onLogout)}
                 className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                whileHover={{
+                  scale: 1.02,
+                  transition: { duration: 0.2, ease: 'easeInOut' },
+                }}
+                whileTap={{
+                  scale: 0.98,
+                  transition: { duration: 0.1 },
+                }}
               >
                 <TbLogout />
                 <p>Logout</p>
-              </li>
+              </motion.li>
             </ul>
           </div>
         </PopoverContent>

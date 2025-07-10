@@ -14,25 +14,35 @@ const RedirectFromRegister = () => {
   const [progress, setProgress] = useState(0)
   const router = useRouter()
   const [cookieLoginValue, setCookieLoginValue, deleteCookie] = useCookie('login_data')
-  const { mutate: login, error, isPending } = useHandleLogin()
+  const { mutate: login, error, isPending, isSuccess, isError } = useHandleLogin()
   const [isTimeComplete, setIsTimeComplete] = useState(false)
+  const [showFallback, setShowFallback] = useState(false)
+
   useEffect(() => {
     setProgress(100)
 
     const timeout = setTimeout(() => {
-      //   router.push('/timeline')
-
       setIsTimeComplete(true)
+      // Only redirect if login was successful
+      if (isSuccess) {
+        router.push('/timeline')
+      } else {
+        setShowFallback(true)
+      }
     }, 3000)
 
     return () => clearTimeout(timeout)
-  }, [])
+  }, [isSuccess, router])
 
   useEffect(() => {
-    if (cookieLoginValue) {
+    if (cookieLoginValue && isTimeComplete) {
       login(JSON.parse(cookieLoginValue))
     }
-  }, [isTimeComplete])
+  }, [isTimeComplete, cookieLoginValue, login])
+
+  const handleManualRedirect = () => {
+    router.push('/timeline')
+  }
 
   return (
     <div className="h-with-navbar flex   bg-neutral-100 flex-col items-center justify-center px-8 pt-16">
@@ -50,7 +60,16 @@ const RedirectFromRegister = () => {
             steps={100}
             transition="3s ease"
           />
-          <p className="text-sm text-neutral-700 ">Login you in...</p>
+          <p className="text-sm text-neutral-700 ">{isPending ? 'Logging you in...' : isSuccess ? 'Login successful!' : 'Login you in...'}</p>
+
+          {showFallback && (
+            <p className="text-sm text-neutral-700 mt-2">
+              <span onClick={handleManualRedirect} className="text-primary-500 hover:text-primary-600 underline cursor-pointer">
+                Click here
+              </span>{' '}
+              if not redirected automatically
+            </p>
+          )}
         </div>
       </div>
     </div>

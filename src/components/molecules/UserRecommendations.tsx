@@ -16,6 +16,7 @@ const UserRecommendations: React.FC = () => {
       major: rec.major,
       affiliation: rec.affiliation,
       occupation: rec.occupation,
+      role: rec.role,
       score: rec.score,
       profile_image: rec.profile_image,
       user_id: rec.user_id,

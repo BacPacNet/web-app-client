@@ -17,7 +17,12 @@ const GroupCard: React.FC<GroupCardProps> = ({ group }) => {
 
   return (
     <div className="flex justify-between items-center">
-      <div className="flex gap-2 items-center">
+      <div
+        onClick={() => {
+          router.push(`/community/${group.communityId}/${group.group_id}`)
+        }}
+        className="flex gap-2 items-center hover:cursor-pointer"
+      >
         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
           {group.communityGroupLogoUrl ? (
             <Image src={group.communityGroupLogoUrl} alt={`${group.name} logo`} width={48} height={48} className="w-full h-full object-cover" />
@@ -27,20 +32,9 @@ const GroupCard: React.FC<GroupCardProps> = ({ group }) => {
         </div>
         <div>
           <p className="font-semibold text-neutral-700 text-xs flex items-center gap-1">{group.name}</p>
-          <p className="text-3xs text-neutral-500">{categoryName}</p>
         </div>
       </div>
-      <div>
-        <Buttons
-          onClick={() => {
-            router.push(`/community/${group.communityId}/${group.group_id}`)
-          }}
-          variant="border"
-          size="small"
-        >
-          View
-        </Buttons>
-      </div>
+      <div></div>
     </div>
   )
 }

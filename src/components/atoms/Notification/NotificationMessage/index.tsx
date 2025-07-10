@@ -101,7 +101,7 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       } else {
         return (
           <span className="text-xs font-inter">
-            <b>{firstLikerName}</b> liked your Community post.
+            <b>{firstLikerName}</b> liked your community post.
           </span>
         )
       }

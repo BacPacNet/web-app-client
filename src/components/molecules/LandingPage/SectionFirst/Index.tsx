@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React from 'react'
-import bannerImage from '@assets/landing-banner.svg'
+import heroImage from '@assets/hero.svg'
 import Buttons from '@/components/atoms/Buttons'
 import UniversitySearchBox from '../../UniversitySearchBox'
 import { useRouter } from 'next/navigation'
@@ -30,7 +30,7 @@ export default function SectionFirst() {
         <UniversitySearchBox />
       </div>
       <div className="w-full flex justify-center">
-        <Image src={bannerImage} alt="Landing Banner" width={700} height={500} className="w-full max-w-3xl h-auto" />
+        <Image src={heroImage} alt="Landing Banner" width={700} height={500} className="w-full max-w-3xl h-auto" />
       </div>
     </section>
   )

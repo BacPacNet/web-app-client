@@ -14,10 +14,11 @@ interface EditorProps {
   type?: PostInputType
   getQuillInstance?: (quill: Quill) => void
   placeholder?: string
+  preventImagePaste?: boolean // Add new prop to control image paste prevention
 }
 
 const Editor = forwardRef<Quill | null, EditorProps>(
-  ({ readOnly = false, defaultValue, onTextChange, onSelectionChange, getQuillInstance, placeholder }, ref) => {
+  ({ readOnly = false, defaultValue, onTextChange, onSelectionChange, getQuillInstance, placeholder, preventImagePaste = true }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null)
     const quillInstanceRef = useRef<Quill | null>(null)
 
@@ -47,6 +48,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
       const quill = new Quill(editorContainer, {
         theme: 'snow',
         placeholder: placeholder || '',
+        formats: preventImagePaste ? ['bold', 'italic', 'underline', 'strike', 'align', 'code-block', 'list', 'link'] : undefined,
         modules: {
           toolbar: [
             //[{ header: [1, 2, 3, false] }],
@@ -56,6 +58,10 @@ const Editor = forwardRef<Quill | null, EditorProps>(
             [{ list: 'ordered' }, { list: 'bullet' }],
             ['link'],
           ],
+          clipboard: {
+            // Disable image pasting in clipboard module
+            matchVisual: false,
+          },
         },
       })
 
@@ -70,6 +76,41 @@ const Editor = forwardRef<Quill | null, EditorProps>(
 
       if (defaultValue) {
         quill.setText(defaultValue)
+      }
+
+      // Prevent image pasting
+      if (preventImagePaste) {
+        // Handle paste events to filter out images
+        const handlePaste = (e: ClipboardEvent) => {
+          const clipboardData = e.clipboardData
+          if (!clipboardData) return
+
+          // Check if clipboard contains images
+          const hasImages = Array.from(clipboardData.items).some((item) => item.type.startsWith('image/'))
+
+          if (hasImages) {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+          }
+        }
+
+        // Add paste event listener to the editor container
+        const editorElement = quill.root
+        editorElement.addEventListener('paste', handlePaste)
+
+        // Clean up event listener
+        return () => {
+          editorElement.removeEventListener('paste', handlePaste)
+          if (getQuillInstance) getQuillInstance(null as any)
+          if (typeof ref === 'function') {
+            ref(null)
+          } else if (ref) {
+            ref.current = null
+          }
+          quillInstanceRef.current = null
+          container.innerHTML = ''
+        }
       }
 
       quill.on('text-change', (_delta, oldDelta, source: any) => {
@@ -93,7 +134,7 @@ const Editor = forwardRef<Quill | null, EditorProps>(
         quillInstanceRef.current = null
         container.innerHTML = ''
       }
-    }, [defaultValue, ref])
+    }, [defaultValue, ref, preventImagePaste])
 
     return <div className="quill-container" ref={containerRef} />
   }
