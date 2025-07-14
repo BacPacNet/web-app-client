@@ -3,8 +3,8 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import { OTPInput } from 'input-otp'
 import SupportingText from '@/components/atoms/SupportingText'
-import { useHandleRegister_v2, useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
-import React, { useEffect, useState } from 'react'
+import { useHandleRegister_v2, useHandleUniversityEmailVerificationGenerateWithCountdown } from '@/services/auth'
+import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import Spinner from '@/components/atoms/spinner'
@@ -19,8 +19,6 @@ interface props {
 }
 
 const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess, isPending }: props) => {
-  const [countdown, setCountdown] = useState(30)
-  const [isCounting, setIsCounting] = useState(false)
   const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const {
     register,
@@ -30,7 +28,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     setError,
     clearErrors,
   } = useFormContext()
-  const { mutate: generateUniversityEmailOTP } = useHandleUniversityEmailVerificationGenerate()
+  const { mutate: generateUniversityEmailOTP, countdown, isCounting } = useHandleUniversityEmailVerificationGenerateWithCountdown()
   const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
   const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
   const all = getValues()
@@ -51,7 +49,6 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
     clearErrors('universityEmail')
     const data = { email }
-    handleLoginEmailSendCodeCount()
     generateUniversityEmailOTP(data)
   }
 
@@ -72,21 +69,6 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
       setSubStep(0)
     }
   }
-
-  const handleLoginEmailSendCodeCount = () => {
-    setIsCounting(true)
-    setCountdown(30)
-  }
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (isCounting && countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-    } else if (countdown === 0) {
-      setIsCounting(false)
-    }
-    return () => clearTimeout(timer)
-  }, [countdown, isCounting])
 
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">

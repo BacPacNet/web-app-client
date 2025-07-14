@@ -11,6 +11,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
+import noPostGroup from '@/assets/noPostGroup.svg'
 
 interface CommunityGroupPostContainerProps {
   containerRef: React.RefObject<HTMLDivElement>
@@ -123,7 +124,15 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
   }
 
   if (communityGroupPostData?.length === 0) {
-    return <div className="text-center my-4 bg-white rounded-xl p-4">No posts found</div>
+    return (
+      <EmptyStateCard
+        imageWidth={320}
+        imageHeight={169}
+        imageSrc={noPostGroup}
+        title="No Posts from Group."
+        description="No posts in this group yet. Once members start sharing, you’ll see them here."
+      />
+    )
   }
 
   return (

@@ -60,7 +60,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
   }, [imageCarasol])
 
   const renderPostWithRespectToPathName = useCallback(() => {
-    if (userSelfPosts?.length === 0) return <Card className="rounded-2xl px-4 text-center text-xs">No Post Available</Card>
+    if (userSelfPosts?.length === 0) return <Card className="rounded-lg px-4 text-center text-xs">No Post Available</Card>
     return userSelfPosts?.map((post: communityPostType, idx: number) => (
       <PostCard
         key={post?._id}

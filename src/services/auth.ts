@@ -6,6 +6,7 @@ import useCookie from '@/hooks/useCookie'
 import { useRouter } from 'next/navigation'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { MESSAGES } from '@/content/constant'
+import { useState, useEffect } from 'react'
 
 interface data {
   email: string
@@ -201,4 +202,76 @@ export const useHandleUniversityEmailVerification = () => {
   return useMutation({
     mutationFn: (data: { universityEmail: string; UniversityOtp: string }) => universityEmailVerification(data),
   })
+}
+
+// Custom hook that combines OTP generation with countdown functionality
+export const useHandleLoginEmailVerificationGenerateWithCountdown = () => {
+  const [countdown, setCountdown] = useState(0)
+  const [isCounting, setIsCounting] = useState(false)
+
+  const mutation = useMutation({
+    mutationFn: (data: { email: string }) => loginEmailVerificationCodeGenerate(data),
+    onSuccess: () => {
+      showCustomSuccessToast('OTP sent successfully')
+      // Start countdown only on success
+      setIsCounting(true)
+      setCountdown(30)
+    },
+    onError: (error: any) => {
+      setIsCounting(false)
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
+  })
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCounting && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+    } else if (countdown === 0) {
+      setIsCounting(false)
+    }
+    return () => clearTimeout(timer)
+  }, [countdown, isCounting])
+
+  return {
+    ...mutation,
+    countdown,
+    isCounting,
+  }
+}
+
+// Custom hook that combines University OTP generation with countdown functionality
+export const useHandleUniversityEmailVerificationGenerateWithCountdown = () => {
+  const [countdown, setCountdown] = useState(0)
+  const [isCounting, setIsCounting] = useState(false)
+
+  const mutation = useMutation({
+    mutationFn: (data: { email: string }) => universityEmailVerificationCodeGenerate(data),
+    onSuccess: () => {
+      showCustomSuccessToast('OTP sent successfully')
+      // Start countdown only on success
+      setIsCounting(true)
+      setCountdown(30)
+    },
+    onError: (error: any) => {
+      setIsCounting(false)
+      showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
+  })
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCounting && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
+    } else if (countdown === 0) {
+      setIsCounting(false)
+    }
+    return () => clearTimeout(timer)
+  }, [countdown, isCounting])
+
+  return {
+    ...mutation,
+    countdown,
+    isCounting,
+  }
 }

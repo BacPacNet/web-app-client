@@ -40,7 +40,7 @@ const UsersModal = ({ setSelectedChat }: Props) => {
             value={searchInput}
             type="text"
             placeholder="Search users by name"
-            className="w-full pl-12 pr-3 py-2 text-gray-500 bg-transparent outline-none border border-neutral-300  rounded-2xl"
+            className="w-full pl-12 pr-3 py-2 text-gray-500 bg-transparent outline-none border border-neutral-300  rounded-lg"
           />
         </div>
         {data?.user?.map((data: any) => (

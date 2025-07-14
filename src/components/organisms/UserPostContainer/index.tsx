@@ -149,7 +149,7 @@ export const UserPostContainer = ({ communityID, communityGroupID, type }: props
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-card mt-4 p-4">
+    <div className="rounded-lg bg-white shadow-card mt-4 p-4">
       <div className="flex gap-3 items-center">
         <div style={{ boxShadow: '0px 8px 40px rgba(0, 0, 0, 0.10)' }} className="flex-none rounded-full w-[45px] h-[45px]">
           {userProfileData ? (

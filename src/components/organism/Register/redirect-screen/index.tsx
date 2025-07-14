@@ -13,8 +13,8 @@ import { useHandleLogin } from '@/services/auth'
 const RedirectFromRegister = () => {
   const [progress, setProgress] = useState(0)
   const router = useRouter()
-  const [cookieLoginValue, setCookieLoginValue, deleteCookie] = useCookie('login_data')
-  const { mutate: login, error, isPending, isSuccess, isError } = useHandleLogin()
+  const [cookieLoginValue] = useCookie('login_data')
+  const { mutate: login, isPending, isSuccess } = useHandleLogin()
   const [isTimeComplete, setIsTimeComplete] = useState(false)
   const [showFallback, setShowFallback] = useState(false)
 
@@ -58,7 +58,7 @@ const RedirectFromRegister = () => {
             strokeLinecap="square"
             trackStrokeWidth={8}
             steps={100}
-            transition="3s ease"
+            transition="5s ease"
           />
           <p className="text-sm text-neutral-700 ">{isPending ? 'Logging you in...' : isSuccess ? 'Login successful!' : 'Login you in...'}</p>
 

@@ -13,7 +13,7 @@ interface EmptyStateCardProps {
 
 const EmptyStateCard = ({ imageSrc, imageAlt = 'placeholder', imageWidth = 250, imageHeight = 171, title, description }: EmptyStateCardProps) => {
   return (
-    <Card className="rounded-2xl px-6 my-4">
+    <Card className="rounded-lg px-6 my-4">
       <div className="flex flex-col gap-8 justify-center items-center">
         <Image src={imageSrc} width={imageWidth} height={imageHeight} alt={imageAlt} />
         <Title className="text-center">{title}</Title>

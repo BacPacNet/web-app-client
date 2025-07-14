@@ -60,7 +60,7 @@ const DiscoverFilterComponent = ({ setQuery, query }: Props) => {
 
   return (
     <div className=" lg:block hidden">
-      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-2xl ">
+      <form onSubmit={handleFormSubmit(handleFilterSubmit)} className=" border border-neutral-300 shadow-xl rounded-lg ">
         <h3 className="border-b border-neutral-300 text-neutral-700 text-[20px] font-bold font-poppins p-6 w-[297px]">Search Filter</h3>
         <div className="p-6 flex flex-col gap-4">
           {/* <div className="w-full flex flex-col relative">

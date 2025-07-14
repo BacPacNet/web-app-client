@@ -127,7 +127,7 @@ export default function CommunityGroupBanner({
 
   return (
     <>
-      <div className="rounded-2xl bg-white shadow-card mb-4">
+      <div className="rounded-lg bg-white shadow-card mb-4">
         <CoverImageUploader imageUrl={communityGroups?.communityGroupLogoCoverUrl?.imageUrl || universityPlaceholder} />
 
         <div className="p-4">

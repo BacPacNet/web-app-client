@@ -54,7 +54,7 @@ const ChangeUserPasswordPage = () => {
     )
   }
   return (
-    <div className="rounded-2xl">
+    <div className="rounded-lg">
       <div onClick={() => router.back()} className="flex items-center gap-2 pb-4 pt-0  border-b border-neutral-300 cursor-pointer">
         <FaChevronLeft className="text-neutral-500" />
         <span className="text-neutral-500 font-medium text-sm">Account</span>

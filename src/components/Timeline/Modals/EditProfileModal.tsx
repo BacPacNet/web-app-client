@@ -18,6 +18,7 @@ import { ProfileDp } from '@/types/User'
 import Title from '@/components/atoms/Title'
 import SubText from '@/components/atoms/SubText'
 import ProfileImageUploader from '@/components/molecules/ProfileImageUploader'
+import { parseDateOfBirth } from '@/lib/date'
 
 export interface editProfileInputs {
   firstName: string
@@ -100,7 +101,7 @@ const EditProfileModal = () => {
         city: profile?.city || '',
         country: profile?.country || '',
         degree: profile?.degree || '',
-        dob: profile?.dob || '',
+        dob: parseDateOfBirth(profile?.dob),
         major: profile?.major || '',
         occupation: profile?.occupation || '',
         phone_number: profile?.phone_number || '',

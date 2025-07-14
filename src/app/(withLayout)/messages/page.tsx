@@ -5,7 +5,7 @@ import React from 'react'
 const Message = () => {
   return (
     <div className="h-[inherit] py-4">
-      <Card defaultPadding={false} className="rounded-2xl h-full overflow-hidden w-full ">
+      <Card defaultPadding={false} className="rounded-lg h-full overflow-hidden w-full ">
         <MessageContainer />
       </Card>
     </div>

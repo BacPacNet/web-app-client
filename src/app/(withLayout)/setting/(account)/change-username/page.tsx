@@ -6,7 +6,7 @@ import React from 'react'
 const ChangeUsernameSettingPage = () => {
   return (
     <div className="py-4 h-[inherit]">
-      <Card defaultPadding={false} className="rounded-2xl h-max w-full p-6 overflow-y-scroll hideScrollbar">
+      <Card defaultPadding={false} className="rounded-lg h-max w-full p-6 overflow-y-scroll hideScrollbar">
         <ChangeUserNamePage />
       </Card>
     </div>

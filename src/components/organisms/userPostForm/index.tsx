@@ -146,7 +146,7 @@
 //  }
 
 //  return (
-//    <div className="rounded-2xl bg-white shadow-card mt-4 p-4 ">
+//    <div className="rounded-lg bg-white shadow-card mt-4 p-4 ">
 //      <form onSubmit={handleSubmit}>
 //        <div className="mb-4">
 //          <Editor

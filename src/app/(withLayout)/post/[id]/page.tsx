@@ -53,7 +53,7 @@ const SinglePost = () => {
 
   return (
     <div className="w-full flex justify-center py-4 post-container">
-      <div className="w-full shadow-card rounded-2xl">
+      <div className="w-full shadow-card rounded-lg">
         <PostCard
           key={_id}
           user={user?.firstName + ' ' + user?.lastName}

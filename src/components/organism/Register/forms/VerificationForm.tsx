@@ -5,8 +5,8 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
-import { useHandleLoginEmailVerificationGenerate } from '@/services/auth'
-import React, { useEffect, useState } from 'react'
+import { useHandleLoginEmailVerificationGenerateWithCountdown } from '@/services/auth'
+import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
@@ -20,8 +20,6 @@ interface props {
 }
 
 const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: props) => {
-  const [countdown, setCountdown] = useState(30)
-  const [isCounting, setIsCounting] = useState(false)
   const {
     register,
     formState: { errors: VerificationFormErrors },
@@ -30,7 +28,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
     setError,
     clearErrors,
   } = useFormContext()
-  const { mutate: generateLoginEmailOTP } = useHandleLoginEmailVerificationGenerate()
+  const { mutate: generateLoginEmailOTP, countdown, isCounting } = useHandleLoginEmailVerificationGenerateWithCountdown()
 
   const email = getValues('email')
   const handleLoginEmailSendCode = () => {
@@ -48,23 +46,7 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
     const data = { email }
 
     generateLoginEmailOTP(data)
-    handleLoginEmailSendCodeCount()
   }
-
-  const handleLoginEmailSendCodeCount = () => {
-    setIsCounting(true)
-    setCountdown(30)
-  }
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (isCounting && countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-    } else if (countdown === 0) {
-      setIsCounting(false)
-    }
-    return () => clearTimeout(timer)
-  }, [countdown, isCounting])
 
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">

@@ -125,7 +125,7 @@ const NewMessageModal = ({ userIdToStartChatWith, avatarUrl, name }: { userIdToS
   }
 
   return (
-    <div className="rounded-2xl bg-white w-full pt-2">
+    <div className="rounded-lg bg-white w-full pt-2">
       <div className="flex items-center gap-3 py-2">
         <Image src={avatarUrl || avatar} width={24} height={24} objectFit="cover" className="rounded-full w-6 h-6" alt="avatar.png" />
         <p className=" text-sm text-neutral-400">{'Messaging to ' + name}</p>

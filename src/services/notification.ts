@@ -207,6 +207,7 @@ export const useJoinCommunityGroup = () => {
     onSuccess: (response: any) => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
       queryClient.invalidateQueries({ queryKey: ['user_notification_total_count'] })
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
       showCustomSuccessToast(response.message)
     },
     onError: (res: any) => {
