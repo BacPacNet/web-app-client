@@ -70,8 +70,9 @@ function TimelineCreatePost() {
   }
 
   const handleSubmit = async () => {
-    const plainText = quillInstance?.getText().trim()
-    const hasText = !!plainText && plainText.length > 0
+    // Get plain text from Quill instance with proper null checks
+    const plainText = quillInstance?.getText()?.trim() || ''
+    const hasText = plainText.length > 0
     const hasFiles = files.length > 0
 
     if (!hasText && !hasFiles) {

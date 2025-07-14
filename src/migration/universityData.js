@@ -4,10 +4,8 @@ import { readFileSync } from 'fs'
 //const {mongoose} = require('mongoose')
 import { mongoose } from 'mongoose'
 
-// MongoDB Connection URI (Replace with your MongoDB URI)
-const MONGO_URI = 'mongodb+srv://bacpactech:BACPAC2023@bacpac.e1tsleh.mongodb.net/bacpac'
-const DB_NAME = 'bacpac'
-const COLLECTION_NAME = 'university'
+// MongoDB Connection URI (Use environment variable)
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bacpac'
 
 // Connect to MongoDB
 mongoose

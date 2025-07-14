@@ -78,10 +78,24 @@ const Editor = forwardRef<Quill | null, EditorProps>(
         quill.setText(defaultValue)
       }
 
-      // Prevent image pasting
+      // Set up text-change and selection-change event listeners
+      quill.on('text-change', (_delta, oldDelta, source: any) => {
+        onTextChangeRef.current?.(quill.root.innerHTML, oldDelta, source)
+      })
+
+      quill.on('selection-change', (range, oldRange, source: any) => {
+        onSelectionChangeRef.current?.(range, oldRange, source)
+      })
+
+      if (getQuillInstance) {
+        getQuillInstance(quill) // 👈 Pass instance to parent
+      }
+
+      // Prevent image pasting if enabled
+      let pasteEventListener: ((e: ClipboardEvent) => void) | null = null
       if (preventImagePaste) {
         // Handle paste events to filter out images
-        const handlePaste = (e: ClipboardEvent) => {
+        pasteEventListener = (e: ClipboardEvent) => {
           const clipboardData = e.clipboardData
           if (!clipboardData) return
 
@@ -97,34 +111,17 @@ const Editor = forwardRef<Quill | null, EditorProps>(
 
         // Add paste event listener to the editor container
         const editorElement = quill.root
-        editorElement.addEventListener('paste', handlePaste)
-
-        // Clean up event listener
-        return () => {
-          editorElement.removeEventListener('paste', handlePaste)
-          if (getQuillInstance) getQuillInstance(null as any)
-          if (typeof ref === 'function') {
-            ref(null)
-          } else if (ref) {
-            ref.current = null
-          }
-          quillInstanceRef.current = null
-          container.innerHTML = ''
-        }
+        editorElement.addEventListener('paste', pasteEventListener)
       }
 
-      quill.on('text-change', (_delta, oldDelta, source: any) => {
-        onTextChangeRef.current?.(quill.root.innerHTML, oldDelta, source)
-      })
-
-      quill.on('selection-change', (range, oldRange, source: any) => {
-        onSelectionChangeRef.current?.(range, oldRange, source)
-      })
-      if (getQuillInstance) {
-        getQuillInstance(quill) // 👈 Pass instance to parent
-      }
-
+      // Cleanup function
       return () => {
+        // Remove paste event listener if it was added
+        if (pasteEventListener) {
+          const editorElement = quill.root
+          editorElement.removeEventListener('paste', pasteEventListener)
+        }
+
         if (getQuillInstance) getQuillInstance(null as any)
         if (typeof ref === 'function') {
           ref(null)
