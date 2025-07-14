@@ -211,7 +211,7 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
               profilePic={item?.senderProfile?.profile_dp?.imageUrl}
               name={item?.sender?.firstName}
               content={item?.content}
-              myMessage={item?.sender.id === userData?.id}
+              myMessage={item?.sender?.id === userData?.id}
               date={item.createdAt}
               id={item?._id}
               reactions={item?.reactions}

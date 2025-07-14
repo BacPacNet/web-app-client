@@ -95,7 +95,7 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       if (data?.likedBy?.totalCount > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstLikerName}</b> and <b>{data?.likedBy?.totalCount - 1} others</b> liked your Community post
+            <b>{firstLikerName}</b> and <b>{data?.likedBy?.totalCount - 1} others</b> liked your community post
           </span>
         )
       } else {
