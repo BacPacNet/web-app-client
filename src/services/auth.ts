@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { MESSAGES } from '@/content/constant'
 import { useState, useEffect } from 'react'
+import { trackUserLogin } from '@/utils/analytics'
 
 interface data {
   email: string
@@ -89,6 +90,7 @@ export const useHandleLogin = () => {
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
       setRefreshCookieValue(response.tokens.refresh.token, response.tokens.refresh.expires)
+      trackUserLogin(response.user.email)
     },
     onError: (error: any) => {
       console.log(error)
