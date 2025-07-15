@@ -11,6 +11,7 @@ import LogoNavbar from '@/components/atoms/LogoNavbar'
 import { ModalManager } from '@/components/molecules/Modal/ModalManager'
 import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 import { ModalProvider } from '@/context/ModalContext'
+import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
 type FontClassName = string
 
 const inter = Inter({
@@ -58,6 +59,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </ModalProvider>
           </ZustandSocketProvider>
         </ReactQueryClientProvider>
+
+        {/* Google Analytics */}
+        <GoogleAnalyticsComponent GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''} />
       </body>
     </html>
   )
