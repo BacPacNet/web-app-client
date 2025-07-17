@@ -1,15 +1,15 @@
-import type { Meta } from '@storybook/react'
-import Navbar from '../app/components/Navbar/Navbar'
-const navbarStory: Meta = {
-  title: 'Navbar',
-  component: Navbar,
-  parameters: {
-    componentSubtitle: 'Navbar with animations',
-  },
-}
+//import type { Meta } from '@storybook/react'
+//import Navbar from '@components/Navbar/Navbar'
+//const navbarStory: Meta = {
+//  title: 'Navbar',
+//  component: Navbar,
+//  parameters: {
+//    componentSubtitle: 'Navbar with animations',
+//  },
+//}
 
-export default navbarStory
+//export default navbarStory
 
-const Template = () => <Navbar />
-// const Template = () => <Navbar withAnimation />
-export const simpleNavbar = Template.bind({})
+//const Template = () => <Navbar />
+//// const Template = () => <Navbar withAnimation />
+//export const simpleNavbar = Template.bind({})

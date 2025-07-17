@@ -1,0 +1,15 @@
+.slick-dots li.slick-active div {
+  background-color: #9ca3af !important;
+}
+
+ul.slick-dots {
+  position: static;
+
+  display: flex !important;
+  justify-content: center;
+  gap: 56px;
+}
+
+ul.slick-dots li {
+  margin-top: 18px;
+}

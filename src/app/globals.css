@@ -1,38 +1,228 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Signika+Negative&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Apply custom scrollbar globally */
+/** {
+  scrollbar-width: thin;
+  scrollbar-color: #e9e8ff white;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}*/
+
+div:focus {
+  outline: none;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --surface-primary-50: 243 242 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
 }
 
+.hideScrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+@media only screen and (max-width: 769px) {
+  .hideScrollbar::-webkit-scrollbar {
+    display: block;
+  }
+}
+
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-  font-style: 'Montserrat', sans-serif;
+  /*background: rgb(var(--surface-primary-50));*/
+  /* font-style: 'Montserrat', sans-serif; */
+  font-family: 'Inter', sans-serif;
 }
 .searchBox::-webkit-scrollbar {
   display: none;
 }
+
+.noscroll {
+  overflow-y: hidden;
+}
+
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Webkit browsers */
+.ql-toolbar.ql-snow::-webkit-scrollbar {
+  height: 2px;
+}
+
+.ql-toolbar.ql-snow::-webkit-scrollbar-thumb {
+  background-color: #6b7280;
+}
+
+/* Make Quill toolbar scrollable on small screens */
+.ql-toolbar.ql-snow {
+  overflow-x: scroll !important;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 8px 0;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
+
+/* Optional: Improve spacing between toolbar buttons */
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.quill-container {
+  background: #fff;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-toolbar {
+  border: none !important;
+  border-bottom: 2px solid #e5e7eb !important;
+}
+.ql-container {
+  min-height: 100px;
+  max-height: 300px;
+  overflow: auto;
+}
+.ql-editor {
+  min-height: 100px;
+  max-height: 300px;
+  overflow: auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.ql-editor p {
+  font-size: 1rem;
+}
+.ql-tooltip {
+  left: 0 !important;
+}
+.ql-editor.ql-blank::before {
+  font-size: 1rem;
+}
+
+.post-container a {
+  color: revert !important;
+}
+
+.post-container h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: revert;
+}
+.post-container .ql-align-left {
+  text-align: left;
+}
+
+.post-container .ql-align-center {
+  text-align: center;
+}
+.post-container .ql-align-right {
+  text-align: right;
+}
+
+.post-container .ql-align-justify {
+  text-align: justify;
+}
+
+.post-container li[data-list='ordered'] {
+  list-style-type: decimal;
+  margin-left: 16px;
+}
+
+.post-container li[data-list='bullet'] {
+  list-style-type: disc;
+  margin-left: 16px;
+}
+
+.ql-code-block-container {
+  background-color: #f0f0f0 !important;
+  padding: 10px !important;
+  border: 1px solid #ccc !important;
+  color: #000 !important;
+  font-family: monospace;
+}
+
+.collapse {
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out;
+  max-height: 0;
+}
+
+.expand {
+  max-height: 1000px; /* Use a high value to simulate "auto" behavior */
+}
+
+@layer utilities {
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #e9e8ff white;
+  }
+  /* Chrome, Safari, Edge (WebKit-based) */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #e9e8ff;
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: white;
+  }
+}
+
 @layer components {
   .btn {
-    @apply p-3 rounded-lg flex text-[#ffffff] items-center justify-center text-base;
-  }
-  .btn-primary {
-    @apply bg-[#BC9CFF];
-  }
-  .btn-secondary {
-    @apply bg-[#6744FF];
+    @apply p-3 rounded-md flex text-[#ffffff] items-center justify-center text-base;
   }
   .center {
     @apply flex items-center justify-center;
@@ -47,4 +237,98 @@ body {
   .icon {
     @apply w-8 h-6 text-black;
   }
+  .circle {
+    @apply w-3 h-3 bg-neutral-500 rounded-full;
+  }
+}
+
+/* @layer utilities {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
+  }
+} */
+
+.primary-btn {
+  background-color: #6647ff;
+  border-radius: 4px;
+  color: white;
+  padding: 8px 24px;
+  width: 100%;
+}
+.primary-btn:hover {
+  background-color: #5d40ee;
+}
+.primary-btn:active {
+  background-color: #553adc;
+}
+
+/* //scrollbar  */
+/* .testScrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #fcfcfc;
+  overflow: auto;
+  border-radius: 100px;
+}
+
+.testScrollbar::-webkit-scrollbar-button {
+  display: none;
+}
+
+.testScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ff0101 !important;
+  transition: all 0.5s ease;
+} */
+
+@layer utilities {
+  [data-testid='toast'] {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+.ProgressBarCircle {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  position: absolute;
+  width: 200px;
+  top: 0;
+
+  margin: 0 auto;
+  user-select: none;
+}
+
+.chatbot-container a {
+  color: revert;
+}
+.ril__navButtons {
+  background: rgba(0, 0, 0, 0.8)
+    url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjM0Ij48cGF0aCBkPSJtIDE5LDMgLTIsLTIgLTE2LDE2IDE2LDE2IDEsLTEgLTE1LC0xNSAxNSwtMTUgeiIgZmlsbD0iI0ZGRiIvPjwvc3ZnPg==)
+    no-repeat center !important;
+  padding: 24px 24px !important;
+  border-radius: 50% !important;
+}
+.ril__navButtonNext {
+  background: rgba(0, 0, 0, 0.8)
+    url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjM0Ij48cGF0aCBkPSJtIDEsMyAyLC0yIDE2LDE2IC0xNiwxNiAtMSwtMSAxNSwtMTUgLTE1LC0xNSB6IiBmaWxsPSIjRkZGIi8+PC9zdmc+)
+    no-repeat center !important;
+  padding: 24px 24px !important;
+  border-radius: 50% !important;
 }

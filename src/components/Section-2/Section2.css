@@ -1,0 +1,138 @@
+.college-info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: url('../../assets/test.png');
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+}
+.typing-effect {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 48px;
+  color: #171717;
+  /* text-align: center; */
+  margin-bottom: 26px;
+}
+.h2 {
+  text-align: center;
+}
+
+.pic-1 {
+  width: 368.35px;
+  height: 90.73px;
+}
+.pic-2 {
+  position: relative;
+  top: -40px;
+  width: 600px;
+  height: 264.22px;
+  border-radius: 300px;
+}
+.hp1 {
+  font-size: 44px;
+}
+.desc {
+  color: #525252;
+}
+
+@media only screen and (max-width: 768px) and (min-width: 375px) {
+  .typing-effect {
+    height: 96px;
+    text-align: center;
+  }
+  .right-sec2 {
+    position: relative;
+    top: 220px;
+    width: 100%;
+    height: 196px;
+    padding: 24px;
+    justify-content: center;
+  }
+
+  .college-info {
+    display: flex;
+    flex-direction: column-reverse;
+    /* border: 2px solid red; */
+    width: 100%;
+    height: fit-content;
+    background-size: contain;
+  }
+  .pic-2 {
+    width: 603px;
+    height: 264.23px;
+    border-radius: 300px;
+  }
+  .pic-1 {
+    width: 530px;
+    height: 118px;
+  }
+  .h2 {
+    font-size: 44px;
+    width: 100%;
+    height: 216px;
+    font-weight: 700;
+    line-height: 48px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #171717;
+  }
+}
+@media only screen and (max-width: 375px) {
+  /*.h1 {
+    text-align: center;
+    margin-bottom: 24px;
+  }*/
+  .right-sec2 {
+    position: relative;
+    top: 220px;
+    margin-left: 0px;
+    padding: -0px;
+    left: 0px;
+    justify-content: center;
+    width: 100%;
+    height: 249px;
+  }
+  .college-info {
+    margin-top: 550px;
+    background-size: contain;
+    height: 390px;
+    /* border: 2px solid red; */
+  }
+  .h2 {
+    width: 337px;
+    height: 168px;
+  }
+  .hp1 {
+    width: 337px;
+    height: 80px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: #171717;
+    margin-top: -30px;
+  }
+
+  .desc {
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
+@media only screen and (max-width: 359px) {
+  .hp1 {
+    font-size: 32px;
+    width: 100%;
+  }
+  .h2 {
+    width: 100%;
+  }
+
+  .right-sec2 {
+    padding-inline: 5px;
+  }
+}

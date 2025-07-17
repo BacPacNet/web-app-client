@@ -1,0 +1,6 @@
+.ai-power {
+  background: linear-gradient(99deg, #bd00ff -0.27%, #00b6de 99.73%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
