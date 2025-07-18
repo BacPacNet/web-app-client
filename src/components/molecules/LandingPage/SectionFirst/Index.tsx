@@ -30,7 +30,7 @@ export default function SectionFirst() {
         <UniversitySearchBox />
       </div>
       <div className="w-full flex justify-center">
-        <Image src={heroImage} alt="Landing Banner" width={700} height={500} className="w-full max-w-3xl h-auto" />
+        <Image src={heroImage} alt="Landing Banner" width={700} height={500} className="w-full h-auto" />
       </div>
     </section>
   )

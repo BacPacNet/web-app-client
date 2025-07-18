@@ -209,7 +209,7 @@ const EditProfileModal = () => {
         <span className="text-destructive-600">*</span> Are required fields to fill.
       </p>
       {submitError && <div className="text-red-500 text-sm mb-2">{submitError}</div>}
-      <form className="flex flex-col font-medium text-sm gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col font-medium text-sm gap-4 my-4" onSubmit={handleSubmit(onSubmit)}>
         <ProfileImageUploader label="Profile Picture" imageFile={profileImageFile} onImageChange={handleProfileImageChange} id="editProfileImage" />
 
         <LabeledInput label="First Name" required error={errors.firstName && 'Please enter first name'} htmlFor="firstname">
@@ -320,6 +320,7 @@ const EditProfileModal = () => {
                 {...register('phone_number')}
                 placeholder=""
                 type="number"
+                min="0"
                 className="text-xs border pl-3 py-2 rounded-lg border-gray-light font-normal"
                 id="phone_number"
                 disabled={isProfileLoading}

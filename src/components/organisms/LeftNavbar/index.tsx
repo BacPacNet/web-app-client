@@ -23,7 +23,7 @@ const MENU_ITEMS = [
   { name: 'Connections', icon: <IoMdPeople />, path: '/connections' },
   { name: 'Message', icon: <BiSolidMessageDots />, path: '/messages' },
   { name: 'Notification', icon: <FaBell />, path: '/notifications' },
-  { name: 'AI Assistant', icon: <Image width={20} height={20} alt="" src={botIcon} />, path: '/ai-assistant' },
+  // { name: 'AI Assistant', icon: <Image width={20} height={20} alt="" src={botIcon} />, path: '/ai-assistant' },
 ]
 const PAGE_ITEMS = [
   { name: 'Community', path: '/timeline' },
