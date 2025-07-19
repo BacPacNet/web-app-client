@@ -4,7 +4,7 @@ import LandingPageClient from '@/components/LandingPageClient'
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
   const url = `${baseUrl}`
-  const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
+  const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz_logo_extralarge.png'
   return {
     title: 'Unibuzz | The Student Community Platform that connects you',
     description:

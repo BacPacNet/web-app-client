@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     // fallback
   }
 
-  const ogImage = university?.logo || 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz-logo.png'
+  const ogImage = university?.logo || 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz_logo_extralarge.png'
 
   return {
     title: university?.name ? `${university.name} | UniBuzz` : 'University | UniBuzz',

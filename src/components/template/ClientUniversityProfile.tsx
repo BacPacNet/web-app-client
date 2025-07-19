@@ -125,8 +125,8 @@ export default function ClientUniversityProfile({ universityName }: { university
         <div className="flex justify-between flex-col-reverse lg:flex-row gap-8 md:gap-16 lg:gap-[67px]">
           <div className="flex flex-col  gap-4 md:gap-8 flex-1 ">
             <div className="flex items-center lg:items-start gap-8 pb-4">
-              <div className="flex justify-start items-start  drop-shadow-lg rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
-                <Image onError={() => setLogoSrc(universityLogoPlaceholder)} fill src={logoSrc} alt="logo" className="object-contain p-2" />
+              <div className="flex justify-start items-start  rounded-full bg-white w-16 min-w-[64px] h-16  relative overflow-hidden">
+                <Image onError={() => setLogoSrc(universityLogoPlaceholder)} fill src={logoSrc} alt="logo" className="object-contain" />
               </div>
               <p className="text-neutral-900 md:text-lg-small text-md font-extrabold font-poppins">{university?.name}</p>
             </div>

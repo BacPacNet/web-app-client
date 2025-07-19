@@ -10,6 +10,7 @@ import { useGetCommunityPost } from '@/services/community-university'
 import { AxiosError } from 'axios'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
+import noPostCommunity from '@/assets/noPostCommunity.svg'
 
 type Props = {
   communityID?: string
@@ -119,6 +120,18 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         imageSrc={notMember}
         title="Join University Community"
         description="Join this community to access its groups and connect with fellow university members"
+      />
+    )
+  }
+
+  if (communityDatas?.length === 0) {
+    return (
+      <EmptyStateCard
+        imageWidth={240}
+        imageHeight={188}
+        imageSrc={noPostCommunity}
+        title="No Posts from University."
+        description="Your university admins will share important updates here when the time comes. Stay tuned!"
       />
     )
   }

@@ -9,7 +9,7 @@ import UniversityVerificationModal from '../../SettingModals/UniversityVerificat
 import { useUniStore } from '@/store/store'
 import { EmailType } from '@/models/auth'
 import InputBox from '@/components/atoms/Input/InputBox'
-import uniLogo from '@/assets/unibuzz-orange.png'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { IoIosAddCircle } from 'react-icons/io'
 import badge from '@assets/badge.svg'
 import { useModal } from '@/context/ModalContext'
@@ -55,7 +55,7 @@ const UniversityVerificationPage = () => {
                         width={40}
                         height={40}
                         className="w-[40px] h-[40px] object-contain rounded-full shadow-logo p-1"
-                        src={item?.logo || uniLogo}
+                        src={item?.logo || universityLogoPlaceholder}
                         alt="logo"
                       />
 

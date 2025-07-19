@@ -1,6 +1,6 @@
 import './CollegeResult.css'
 
-import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { UniversityInfo } from '@/types/University'
 
 const CollegeResult = ({ university }: { university: UniversityInfo }) => {
@@ -13,7 +13,7 @@ const CollegeResult = ({ university }: { university: UniversityInfo }) => {
             width={32}
             height={32}
             alt=""
-            src={university?.logo || (ImagePlaceholder as unknown as string)}
+            src={university?.logo || (universityLogoPlaceholder as unknown as string)}
           />
         </div>
         <p className="w-4/5 line-clamp-1 text-neutral-700 text-left">{university?.name || university?.UniversityName}</p>
