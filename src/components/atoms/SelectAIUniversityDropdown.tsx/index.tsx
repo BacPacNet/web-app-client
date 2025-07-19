@@ -2,7 +2,7 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 
 type dataType = {
   _id: string
@@ -48,7 +48,7 @@ const SelectAIUniversityDropdown = ({ data, show, setShow, setSelectedUniversity
                 <Image
                   width={20}
                   height={20}
-                  src={item?.communityLogoUrl?.imageUrl || ImagePlaceholder}
+                  src={item?.communityLogoUrl?.imageUrl || universityLogoPlaceholder}
                   alt="logo"
                   className="h-5 w-5 object-contain"
                 />

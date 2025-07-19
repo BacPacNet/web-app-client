@@ -5,7 +5,7 @@ import SupportingText from '@/components/atoms/SupportingText'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { FaCirclePlus } from 'react-icons/fa6'
-import uniLogo from '@/assets/unibuzz-orange.png'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import Button from '@/components/atoms/Buttons'
 import InputBox from '@/components/atoms/Input/InputBox'
 import badge from '@/assets/badge.svg'
@@ -50,7 +50,13 @@ const SettingAccount = () => {
                 <InputBox className="w-80" placeholder="Email Address" type="email" value={item.UniversityEmail} disabled={true} />
                 <div className=" flex items-center gap-2">
                   <div className="rounded-full w-7 h-7 flex justify-center items-center border border-neutral-200 shadow-card">
-                    <Image className="w-6 h-6 object-contain rounded-full" src={item.logo || uniLogo} width={10} height={10} alt="logo" />
+                    <Image
+                      className="w-6 h-6 object-contain rounded-full"
+                      src={item.logo || universityLogoPlaceholder}
+                      width={10}
+                      height={10}
+                      alt="logo"
+                    />
                   </div>
                   <p className="text-neutral-700 font-semibold">{item?.UniversityName}</p>
                   <Image src={badge} width={18} height={18} alt="badge" />

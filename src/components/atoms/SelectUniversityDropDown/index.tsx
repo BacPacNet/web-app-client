@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { useUniversitySearch } from '@/services/universitySearch'
-import ImagePlaceholder from '@assets/unibuzz-orange.png'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { Spinner } from '@/components/spinner/Spinner'
 
 interface SelectDropdownProps {
@@ -103,7 +103,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
                     className="rounded-full object-contain"
                     style={{ width: '40px', height: '40px' }}
                     alt="logo"
-                    src={item?.logo || (ImagePlaceholder as unknown as string)}
+                    src={item?.logo || (universityLogoPlaceholder as unknown as string)}
                   />
                   <p className="text-2xs"> {item?.name}</p>
                 </div>
