@@ -46,7 +46,7 @@ function PrivacyPolicyPage() {
       </p>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Information We Collect</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Information We Collect</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
           We collect information you provide directly to us when you create an account, use our Service, or communicate with us. This includes but is
           not limited to:
@@ -67,7 +67,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">How We Use Your Information</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">How We Use Your Information</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
           We use the information we collect to provide, maintain, and improve our services. This includes using information to:
         </p>
@@ -83,7 +83,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Sharing of Information</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Sharing of Information</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">We may share personal information as follows:</p>
         <ul className="list-disc pl-6 text-neutral-600 font-normal md:text-xs text-2xs space-y-2">
           <li>With vendors, consultants, and other service providers who need access to such information to carry out work on our behalf.</li>
@@ -107,7 +107,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">International Data Transfers</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">International Data Transfers</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           We are based in [Country] and the information we collect is governed by [Country] law. By accessing or using the Service or otherwise
           providing information to us, you consent to the processing, transfer, and storage of information in and to the U.S. and other countries,
@@ -116,7 +116,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Your Rights</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Your Rights</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           You have the right to access, rectify, or erase your personal information, and restrict or object to certain processing of your information.
           Where applicable, you may also have a right to data portability and to lodge a complaint with your local data protection authority.
@@ -124,7 +124,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Data Retention</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Data Retention</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           We retain your personal information for as long as necessary to provide the Service and fulfill the transactions you have requested, or for
           other essential purposes such as complying with our legal obligations, resolving disputes, and enforcing our policies.
@@ -132,7 +132,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Changes to Privacy Policy</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to Privacy Policy</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           We may change this Privacy Policy from time to time. If we make changes, we will notify you by revising the date at the top of the policy
           and, in some cases, we may provide you with additional notice (such as adding a statement to our homepage or sending you a notification).
@@ -140,7 +140,7 @@ function PrivacyPolicyPage() {
       </section>
 
       <section className="">
-        <h2 className="font-poppins md:text-md-big text-2sm font-bold text-neutral-700 mb-4">Contact Information</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Contact Information</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           If you have any questions about these Terms, please contact us through our contact form.
         </p>
