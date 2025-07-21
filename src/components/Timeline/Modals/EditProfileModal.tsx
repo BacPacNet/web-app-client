@@ -319,8 +319,9 @@ const EditProfileModal = () => {
               <input
                 {...register('phone_number')}
                 placeholder=""
-                type="number"
-                min="0"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 className="text-xs border pl-3 py-2 rounded-lg border-gray-light font-normal"
                 id="phone_number"
                 disabled={isProfileLoading}

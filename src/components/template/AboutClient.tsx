@@ -36,9 +36,14 @@ const team = [
     image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/pratik.png',
   },
   {
-    name: 'Aamil',
+    name: 'Aamil Shafi',
     role: 'Full-Stack Engineer',
     image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/aamil.png',
+  },
+  {
+    name: 'Priyanshi',
+    role: 'AI/ML Intern',
+    image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/priyanshi.jpg',
   },
 ]
 
@@ -65,8 +70,8 @@ const AboutClient = () => {
 
   return (
     <>
-      <div className="pt-16 ">
-        <main className="flex flex-col items-center justify-center md:gap-28 gap-16">
+      <div className="">
+        <main className="flex flex-col items-center justify-center gap-16">
           {/* Hero Section */}
           <motion.section
             ref={heroRef}
@@ -80,7 +85,7 @@ const AboutClient = () => {
               animate={isHeroInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
             >
-              <Image src={landingMobile} alt="Mobile UI" width={500} height={100} />
+              <Image src={landingMobile} alt="Mobile UI" width={452} height={227} />
             </motion.div>
             <motion.div
               className="max-w-3xl text-center"
@@ -102,7 +107,7 @@ const AboutClient = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={isDiscoverInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center w-full max-width-allowed"
+            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center w-full max-width-allowed mt-6"
           >
             <motion.div
               className="max-w-xl lg:text-left text-center"
@@ -110,7 +115,7 @@ const AboutClient = () => {
               animate={isDiscoverInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
             >
-              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Discover & Explore Universities!</h1>
+              <h1 className="font-poppins text-2xl text-neutral-700 font-semibold mt-3">Discover & Explore Universities!</h1>
               <SupportingText className="mt-4">
                 Search for any university and find all essential details in one place—fees, funding, deadlines, scholarships, and more. Stay informed
                 and make well-informed decisions about your academic journey.
@@ -131,7 +136,7 @@ const AboutClient = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={isCommunityInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-width-allowed space-x-4"
+            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col-reverse justify-between md:gap-20 gap-10 items-center max-width-allowed space-x-4 md:mt-60 mt-16"
           >
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -149,7 +154,7 @@ const AboutClient = () => {
               animate={isCommunityInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.6 }}
             >
-              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Join your Community</h1>
+              <h1 className="font-poppins text-2xl text-neutral-700 font-semibold mt-3">Join your Community</h1>
               <SupportingText className="mt-4">
                 Gain access to the university community to communicate with current, past, and future students! Join university clubs, collaborate on
                 projects, discuss assignments, and engage beyond the classroom.
@@ -163,7 +168,7 @@ const AboutClient = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={isLevelUpInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center max-width-allowed"
+            className="lg:px-0 sm:px-8 px-4 flex lg:flex-row flex-col justify-between md:gap-20 gap-10 items-center max-width-allowed md:mt-60 mt-16"
           >
             <motion.div
               className="lg:text-left text-center"
@@ -171,7 +176,7 @@ const AboutClient = () => {
               animate={isLevelUpInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
             >
-              <h1 className="font-poppins md:text-4xl sm:text-3xl text-2xl text-neutral-700 font-bold mt-3">Level Up Your Campus Life</h1>
+              <h1 className="font-poppins  text-2xl text-neutral-700 font-semibold mt-3">Level Up Your Campus Life</h1>
               <p className=" md:max-w-md max-w-2xl text-neutral-500 mt-4">
                 With a wide range of social networking features, messaging, and an AI powered assistant, we will make your university life a blast.
                 Download our mobile app for syncing!
@@ -193,7 +198,7 @@ const AboutClient = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={isVisionMissionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-          className="w-full bg-[#FAFAFA] py-16 my-24 lg:px-0 sm:px-8 px-4"
+          className="w-full bg-[#FAFAFA] py-16 my-48 lg:px-0 sm:px-8 px-4"
         >
           <div className="max-width-allowed mx-auto">
             <motion.div
@@ -202,7 +207,7 @@ const AboutClient = () => {
               animate={isVisionMissionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-800 mb-2 font-poppins">Vision</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-neutral-700 mb-2 font-poppins">Vision</h2>
               <SupportingText className=" leading-relaxed">
                 To create a global student community where learning, collaboration, and meaningful connections thrive beyond classrooms. We envision a
                 space where students can share knowledge, support each other, and make the most of their university life through engaging discussions,
@@ -220,7 +225,7 @@ const AboutClient = () => {
               animate={isVisionMissionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.8, ease: 'easeOut', delay: 0.8 }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-800 mb-2 font-poppins">Mission</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-neutral-700 mb-2 font-poppins">Mission</h2>
               <SupportingText className=" leading-relaxed">
                 Our mission is to empower students by providing a dynamic space where they can learn, grow, and build lasting relationships. Whether
                 you&apos;re looking for academic support, extracurricular engagement, or just a place to share your university experience, UniBuzz is
@@ -301,7 +306,9 @@ const AboutClient = () => {
               <SupportingText className="sm:text-sm text-xs text-neutral-700  text-center">
                 Keep up with the latest updates, send us your thoughts or personal feedback, and take part in the development process.
               </SupportingText>
-              <Buttons variant="primary">Join Discord</Buttons>
+              <Buttons onClick={() => window.open('https://discord.gg/FRbdHraQj3', '_blank')} variant="primary">
+                Join Discord
+              </Buttons>
             </motion.div>
 
             {/* Contact Support Card */}

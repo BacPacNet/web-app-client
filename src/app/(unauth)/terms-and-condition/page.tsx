@@ -47,7 +47,7 @@ export default function TermsAndCondition() {
       </p>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Acceptance of Terms</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Acceptance of Terms</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           By creating an account, accessing, or using the Service, you confirm that you have read, understood, and agree to be bound by these Terms.
           If you are using the Service on behalf of an organization or entity, you are agreeing to these Terms for that organization and promising
@@ -56,7 +56,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Changes to Terms</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to Terms</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           We reserve the right to modify these Terms at any time. We will notify you of any material changes to the Terms by posting the new Terms on
           the Service and updating the &quot;Effective Date&quot; above. Your continued use of the Service after any such changes take effect
@@ -65,7 +65,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Your Account</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Your Account</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You must provide accurate and complete information when creating an account and keep this information up to date. You are responsible for
           maintaining the confidentiality of your account password and for all activities that occur under your account. Unibuzz Networks is not
@@ -74,7 +74,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">User Content</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">User Content</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You retain all ownership rights in your User Content. However, by submitting, posting, or displaying User Content, you grant Unibuzz
           Networks a worldwide, non-exclusive, royalty-free license (with the right to sublicense) to use, copy, reproduce, process, adapt, modify,
@@ -83,7 +83,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Prohibited Conduct</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Prohibited Conduct</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You agree not to engage in any of the following prohibited activities: (i) copying, distributing, or disclosing any part of the Service in
           any medium, including without limitation by any automated or non-automated &quot;scraping&quot;; (ii) using any automated system, including
@@ -101,7 +101,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Privacy</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Privacy</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           Your privacy is important to us. Our Privacy Policy explains how we collect, use, and share information about you and is incorporated into
           these Terms by reference. By using the Service, you agree to the collection, use, and sharing of your information as set forth in the
@@ -110,7 +110,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Security</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Security</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           We care about the integrity and security of your personal information. However, we cannot guarantee that unauthorized third parties will
           never be able to defeat our security measures or use your personal information for improper purposes. You acknowledge that you provide your
@@ -119,7 +119,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Third-Party Links, Sites, and Services</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Third-Party Links, Sites, and Services</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           The Service may contain links to third-party websites, advertisers, services, special offers, or other events or activities that are not
           owned or controlled by Unibuzz Networks. Unibuzz Networks does not endorse or assume any responsibility for any such third-party sites,
@@ -129,7 +129,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Termination</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Termination</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           Unibuzz may terminate or suspend your access to or ability to use the Service immediately, without prior notice or liability, for any reason
           whatsoever, including without limitation if you breach the Terms. Upon termination of your access, your right to use the Service will
@@ -138,7 +138,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Indemnity</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Indemnity</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You agree to defend, indemnify, and hold harmless Unibuzz Networks, its officers, directors, employees, and agents, from and against any
           claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorneys&apos; fees and costs, arising out of
@@ -149,7 +149,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Disclaimer of Warranty</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Disclaimer of Warranty</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           The Service is provided on an &quot;as is&quot; and &quot;as available&quot; basis. Use of the Service is at your own risk. To the maximum
           extent permitted by applicable law, the Service is provided without warranties of any kind, whether express or implied, including, but not
@@ -165,7 +165,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Limitation of Liability</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Limitation of Liability</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           To the maximum extent permitted by applicable law, in no event shall Unibuzz Networks, its affiliates, agents, directors, employees,
           suppliers, or licensors be liable for any indirect, punitive, incidental, special, consequential, or exemplary damages, including without
@@ -178,7 +178,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Governing Law</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Governing Law</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           These Terms shall be governed by and construed in accordance with the laws of the country you are residing in, without giving effect to any
           principles of conflicts of law.
@@ -186,7 +186,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Dispute Resolution</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Dispute Resolution</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           You agree that any disputes between you and Unibuzz Networks will be resolved by binding, individual arbitration and you waive your right to
           participate in a class action lawsuit or class-wide arbitration. We explain the process in more detail in our Arbitration Agreement included
@@ -195,7 +195,7 @@ export default function TermsAndCondition() {
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">General</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">General</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
           These Terms, together with the Privacy Policy and any amendments and any additional agreements you may enter into with Unibuzz Networks in
           connection with the Service, shall constitute the entire agreement between you and Unibuzz Networks concerning the Service. If any provision
