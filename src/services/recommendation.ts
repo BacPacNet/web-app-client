@@ -13,13 +13,16 @@ import { RecommendationResponse, GroupRecommendationResponse } from '@/types/Rec
  * @returns Promise with recommendation data
  */
 export async function getRecommendations(userId: string): Promise<RecommendationResponse> {
-  const response: RecommendationResponse = await client(`https://7jbzzcbvub.execute-api.ap-south-1.amazonaws.com/dev/data?user_id=${userId}`, {
-    method: 'GET',
-    customBaseUrl: true,
-    headers: {
-      'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
-    },
-  })
+  const response: RecommendationResponse = await client(
+    `https://7jbzzcbvub.execute-api.ap-south-1.amazonaws.com/${process.env.NODE_ENV}/data?user_id=${userId}`,
+    {
+      method: 'GET',
+      customBaseUrl: true,
+      headers: {
+        'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
+      },
+    }
+  )
   return response
 }
 
@@ -29,13 +32,16 @@ export async function getRecommendations(userId: string): Promise<Recommendation
  * @returns Promise with group recommendation data
  */
 export async function getGroupRecommendations(userId: string): Promise<GroupRecommendationResponse> {
-  const response: GroupRecommendationResponse = await client(`https://to80y9n4nl.execute-api.ap-south-1.amazonaws.com/dev/data?user_id=${userId}`, {
-    method: 'GET',
-    customBaseUrl: true,
-    headers: {
-      'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
-    },
-  })
+  const response: GroupRecommendationResponse = await client(
+    `https://to80y9n4nl.execute-api.ap-south-1.amazonaws.com/${process.env.NODE_ENV}/data?user_id=${userId}`,
+    {
+      method: 'GET',
+      customBaseUrl: true,
+      headers: {
+        'x-api-key': process.env.NEXT_PUBLIC_RECOMMENDATION_API_KEY || '',
+      },
+    }
+  )
   return response
 }
 
