@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
-import universityLogoPlaceholder from '@assets/unibuzz_rounded.svg'
+import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { useRouter } from 'next/navigation'
 import badge from '@assets/badge.svg'
 
