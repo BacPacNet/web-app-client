@@ -11,8 +11,8 @@ import { RiMessage2Fill } from 'react-icons/ri'
 import image1 from '@assets/image1.svg'
 import image2 from '@assets/image2.svg'
 import image3 from '@assets/image3.svg'
-import image4 from '@assets/image4.svg'
 import landingMobile from '@assets/landing-mobile.svg'
+import { useRouter } from 'next/navigation'
 
 const team = [
   {
@@ -67,6 +67,7 @@ const AboutClient = () => {
   const isVisionMissionInView = useInView(visionMissionRef, { once: true, margin: '-100px' })
   const isTeamInView = useInView(teamRef, { once: true, margin: '-100px' })
   const isContactInView = useInView(contactRef, { once: true, margin: '-100px' })
+  const router = useRouter()
 
   return (
     <>
@@ -324,11 +325,13 @@ const AboutClient = () => {
                   <RiMessage2Fill size={25} className="text-[#6744FF]" />
                 </div>
               </div>
-              <h3 className="font-poppins md:text-md text-sm font-semibold text-neutral-700 text-center">Contact customer support</h3>
+              <h3 className="font-poppins md:text-md text-sm font-semibold text-neutral-700 text-center">Send us Feedback</h3>
               <SupportingText className="sm:text-sm text-xs text-neutral-700  text-center">
-                Do you have any issues while using Unibuzz? Contact us through customer support and we will get back to you asap.
+                Do you have any issues while using Unibuzz? Contact us through the feedback form and we will get back to you ASAP.
               </SupportingText>
-              <Buttons variant="primary">Contact Support</Buttons>
+              <Buttons onClick={() => router.push('/contact')} variant="primary">
+                Contact Support
+              </Buttons>
             </motion.div>
           </div>
         </motion.section>

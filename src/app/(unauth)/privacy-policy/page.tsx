@@ -139,7 +139,7 @@ function PrivacyPolicyPage() {
         </p>
       </section>
 
-      <section className="">
+      <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Contact Information</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
           If you have any questions about these Terms, please contact us through our contact form.
