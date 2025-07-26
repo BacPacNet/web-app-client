@@ -6,16 +6,9 @@ import { useUniStore } from '@/store/store'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import ChatInput from '@/components/atoms/AI_AssistantInput'
-import { useAskToChatbot, useGetThread } from '@/services/chatbot'
+import { useAskToChatbot } from '@/services/chatbot'
 import StartAIChat from './StartAIChat'
 
-const dummyChatData = [
-  {
-    prompt: 'what is the address?',
-    response:
-      "Nagoya University's address is as follows:\n\n**Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan**【14:10†source】. \n\nIf you need more information or assistance, you can refer to their official website [here](https://www.nagoya-u.ac.jp).",
-  },
-]
 interface ChatbotData {
   prompt: string
   response: string
@@ -27,39 +20,56 @@ interface Props {
   setChatbotData: (chatbotItem: any) => void
 }
 
-const AIChat = ({ communityId, chatbotData, setChatbotData }: Props) => {
+const AIChat = ({ chatbotData, setChatbotData }: Props) => {
   const lastMessageRef = useRef<HTMLDivElement | null>(null) // Reference for last message
-  //  const [chatbotData, setChatbotData] = useState<Array<{ prompt: string; response: string }>>([])
-  const { error, isLoading: isThreadLoading, refetch: refetchThread } = useGetThread()
   const [threadId, setThreadId] = useState()
   const { mutate: mutateAskToChatbot, isPending: isAskToChatbotLoading } = useAskToChatbot()
-  const { updateChatbotData } = useUniStore()
+  const { updateChatbotData, userData } = useUniStore()
 
   const handleAskChatbot = (message: string) => {
     setChatbotData({ prompt: message, response: '' })
 
     const handleMutationSuccess = (chatBotResponse: any) => {
+      // Update threadId if a new thread is created
+      if (chatBotResponse.threadId && chatBotResponse.isNewThread) {
+        setThreadId(chatBotResponse.threadId)
+      }
+
+      // Update chatbot data with the response
       updateChatbotData(message, chatBotResponse.response || 'Something went wrong')
     }
 
+    const handleMutationError = (error: any) => {
+      // Update chatbot data with error message
+      const errorMessage = error?.response?.data?.message || error?.message || 'Sorry, I encountered an error. Please try again.'
+      updateChatbotData(message, errorMessage)
+    }
+
+    const userId = userData?.id
+    if (!userId) {
+      // Handle case when user is not authenticated
+      updateChatbotData(message, 'Please log in to use the chatbot.')
+      return
+    }
+
+    // Only include threadId in payload if it exists
+    const basePayload = threadId ? { userId, prompt: message, threadId } : { userId, prompt: message }
+
     if (chatbotData.length === 0) {
-      refetchThread().then((respone: any) => {
-        const threadId = respone?.data?.id
-        setThreadId(threadId)
-        mutateAskToChatbot(
-          { threadId, message, communityId },
-          {
-            onSuccess: handleMutationSuccess,
-          }
-        )
-      })
-    } else {
+      // For first message, don't pass threadId
       mutateAskToChatbot(
-        { threadId, message, communityId },
+        { userId, prompt: message },
         {
           onSuccess: handleMutationSuccess,
+          onError: handleMutationError,
         }
       )
+    } else {
+      // For subsequent messages, pass threadId if it exists
+      mutateAskToChatbot(basePayload, {
+        onSuccess: handleMutationSuccess,
+        onError: handleMutationError,
+      })
     }
   }
 

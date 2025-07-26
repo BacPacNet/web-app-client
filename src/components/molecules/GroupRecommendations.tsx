@@ -22,22 +22,25 @@ const GroupRecommendations: React.FC = () => {
       communityGroupCategory: group.communityGroupCategory,
     })) || []
 
+  // Only show the component if there's data available
+  if (groupLoading) {
+    return <UserListItemSkeleton count={2} />
+  }
+
+  if (groupError || !transformedGroups || transformedGroups.length === 0) {
+    return null // Don't show anything if there's an error or no data
+  }
+
   return (
     <div>
       <p className="text-xs text-neutral-500 font-bold my-4">JOIN GROUPS</p>
-      {groupLoading ? (
-        <UserListItemSkeleton count={2} />
-      ) : groupError ? (
-        <p className="text-xs text-red-500">Failed to load group recommendations</p>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {transformedGroups.slice(0, 5).map((group, index) => (
-            <div key={index} className="border-b border-neutral-200 pb-4">
-              <GroupCard group={group} key={`${group.group_id}${group.name}`} />
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-4">
+        {transformedGroups.slice(0, 5).map((group, index) => (
+          <div key={index} className="border-b border-neutral-200 pb-4">
+            <GroupCard group={group} key={`${group.group_id}${group.name}`} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
