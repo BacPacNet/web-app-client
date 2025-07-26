@@ -5,7 +5,6 @@ import { SlReload } from 'react-icons/sl'
 import Spinner from '@/components/atoms/spinner'
 import AIChat from '../AI_Section/AIChat'
 import { useUniStore } from '@/store/store'
-import { useCheckAssistantAvailable } from '@/services/chatbot'
 import Buttons from '@/components/atoms/Buttons'
 import Title from '@/components/atoms/Title'
 
@@ -18,7 +17,7 @@ type dataType = {
 }
 const Ai_AssistantContainer = () => {
   const [selectedUniversity, setSelectedUniversity] = useState<dataType>()
-  const { data: isAssistantExist, isLoading: isAssistantLoading, refetch } = useCheckAssistantAvailable(selectedUniversity?._id || '')
+  // const { data: isAssistantExist, isLoading: isAssistantLoading, refetch } = useCheckAssistantAvailable(selectedUniversity?._id || '')
 
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
   const { chatbotData, setChatbotData, resetChatbotData } = useUniStore()
@@ -26,10 +25,6 @@ const Ai_AssistantContainer = () => {
   const handleRefresh = () => {
     resetChatbotData()
   }
-
-  useEffect(() => {
-    refetch()
-  }, [selectedUniversity])
 
   useEffect(() => {
     if (subscribedCommunities?.length) {
@@ -59,7 +54,7 @@ const Ai_AssistantContainer = () => {
   //    )
   //  }
 
-  if (isLoading || isAssistantLoading) {
+  if (isLoading) {
     return (
       <div className="bg-white mt-4 rounded-lg drop-shadow-lg h-with-navbar-space flex  justify-center items-center pb-4 ">
         <Spinner />
@@ -72,16 +67,8 @@ const Ai_AssistantContainer = () => {
       <div className=" pb-4   flex flex-col gap-9 relative border-b-[1px] border-neutral-200 font-poppins ">
         <div className="flex justify-between items-center">
           <Title>AI Assistant</Title>
-          {/*<div className="relative">
-            <UniversityDropdown />
-          </div>*/}
-          <Buttons
-            disabled={!isAssistantExist?.isAssistantAvailable}
-            size="medium"
-            variant="shade"
-            className="flex items-center gap-1"
-            onClick={handleRefresh}
-          >
+
+          <Buttons disabled={chatbotData.length === 0} size="medium" variant="shade" className="flex items-center gap-1" onClick={handleRefresh}>
             <span>Refresh</span>
             <SlReload />
           </Buttons>
