@@ -410,6 +410,7 @@ const GroupChatModal = ({
                 parentCategory={occupation}
                 disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
+                isRelative={true}
               />
             </div>
           )}

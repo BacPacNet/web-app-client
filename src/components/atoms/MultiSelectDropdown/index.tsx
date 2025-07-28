@@ -22,6 +22,7 @@ interface MultiSelectDropdownProps {
   parentCategory?: string[]
   setUniversityErr?: (value: boolean) => void
   onShowChange?: (show: boolean) => void
+  isRelative?: boolean
 }
 
 const motionStyle = {
@@ -57,6 +58,7 @@ const MultiSelectDropdown = ({
   disabled = false,
   setUniversityErr,
   onShowChange,
+  isRelative = false,
 }: MultiSelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -140,7 +142,7 @@ const MultiSelectDropdown = ({
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />
       </div>
-      <div className="flex flex-wrap gap-4 mt-2">
+      <div className="flex flex-wrap gap-4">
         {parentCategory && parentCategory?.length > 0 ? (
           <div className="flex items-center text-2xs  px-2 py-1 h-7 text-primary-500 bg-white rounded-md border border-primary">
             <span className=" mr-1">{parentCategory}</span>
@@ -170,7 +172,9 @@ const MultiSelectDropdown = ({
       <AnimatePresence>
         {show && (
           <motion.div
-            className={`flex flex-col custom-scrollbar gap-2 p-2 absolute left-0 top-14 mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-50 w-full max-h-52 overflow-y-auto`}
+            className={`flex flex-col custom-scrollbar gap-2 p-2 ${
+              isRelative ? 'relative mb-3' : 'absolute left-0 top-14 mt-2'
+            } bg-white border border-neutral-200 rounded-lg z-50 w-full max-h-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (
