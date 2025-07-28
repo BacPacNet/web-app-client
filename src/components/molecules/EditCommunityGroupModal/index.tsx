@@ -619,6 +619,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                         search={true}
                         //filteredCount={filteredAffiliationCount}
                         parentCategory={occupation}
+                        isRelative={true}
                       />
                     )}
                   />

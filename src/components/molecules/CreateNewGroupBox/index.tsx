@@ -661,6 +661,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                           parentCategory={occupation}
                           // disabled={!community?.name?.length}
                           setUniversityErr={setUniversityError}
+                          isRelative={true}
                         />
                       )}
                     />

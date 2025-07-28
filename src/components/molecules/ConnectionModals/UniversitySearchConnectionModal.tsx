@@ -387,6 +387,7 @@ export default function ConnectionUserSelectModal({
                       search={true}
                       filteredCount={filteredAffiliationCount}
                       parentCategory={occupation}
+                      isRelative={true}
                     />
                   )}
                 />

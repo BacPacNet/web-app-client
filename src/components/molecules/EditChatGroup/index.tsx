@@ -467,6 +467,7 @@ const EditGroupChatModal = ({
                 parentCategory={occupation}
                 disabled={!communitySelected?.name?.length}
                 setUniversityErr={setUniversityError}
+                isRelative={true}
               />
             </div>
           )}
