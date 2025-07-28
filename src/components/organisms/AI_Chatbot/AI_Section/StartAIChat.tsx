@@ -17,9 +17,11 @@ const StartAIChat = () => {
       <div className="flex flex-col gap-4 items-center">
         <Image src={aiLogo} width={40} height={40} alt="logo" className="w-40 h-40" />
         <div className="flex gap-6 flex-wrap justify-center">
-          {badgeData.map((item, idx) => (
-            <Badge key={idx} Icon={item.icon} desc={item.desc} color={item.color} />
-          ))}
+          <Badge
+            Icon={IoCalendarOutline}
+            desc="Need help with courses, study skills, or academic planning?"
+            color="text-primary-500 border border-primary-500"
+          />
         </div>
       </div>
     </div>
@@ -36,7 +38,7 @@ type BadgeProps = {
 
 const Badge = ({ Icon, desc, color }: BadgeProps) => {
   return (
-    <div className={`${color} flex gap-2 rounded-full py-2 px-3 items-center w-52 border-2 cursor-pointer`}>
+    <div className={`${color} flex gap-2 rounded-full py-2 px-3 items-center w-fit border-2 cursor-pointer`}>
       <p>
         <Icon />
       </p>

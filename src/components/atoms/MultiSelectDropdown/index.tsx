@@ -21,6 +21,7 @@ interface MultiSelectDropdownProps {
   disabled?: boolean
   parentCategory?: string[]
   setUniversityErr?: (value: boolean) => void
+  onShowChange?: (show: boolean) => void
 }
 
 const motionStyle = {
@@ -55,6 +56,7 @@ const MultiSelectDropdown = ({
   parentCategory,
   disabled = false,
   setUniversityErr,
+  onShowChange,
 }: MultiSelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -87,6 +89,9 @@ const MultiSelectDropdown = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShow(false)
+        if (onShowChange) {
+          onShowChange(false)
+        }
       }
     }
 
@@ -95,7 +100,7 @@ const MultiSelectDropdown = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [onShowChange])
 
   const toggleDropdown = () => {
     if (disabled) {
@@ -108,7 +113,13 @@ const MultiSelectDropdown = ({
       setFilteredOptions(options)
       if (searchRef.current) searchRef.current.value = ''
     }
-    setShow((prevShow) => !prevShow)
+    setShow((prevShow) => {
+      const newShow = !prevShow
+      if (onShowChange) {
+        onShowChange(newShow)
+      }
+      return newShow
+    })
   }
 
   return (
@@ -159,7 +170,7 @@ const MultiSelectDropdown = ({
       <AnimatePresence>
         {show && (
           <motion.div
-            className={`flex flex-col custom-scrollbar gap-2 p-2 absolute left-0 top-14 mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-10 w-full max-h-52 overflow-y-auto`}
+            className={`flex flex-col custom-scrollbar gap-2 p-2 absolute left-0 top-14 mt-1 bg-white shadow-lg border border-neutral-200 rounded-lg z-50 w-full max-h-52 overflow-y-auto`}
             {...motionStyle}
           >
             {search && (

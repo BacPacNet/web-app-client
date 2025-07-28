@@ -5,6 +5,8 @@ import aiLogo from '@/assets/chatbot/aiIcon.svg'
 import { useUniStore } from '@/store/store'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import ChatInput from '@/components/atoms/AI_AssistantInput'
 import { useAskToChatbot } from '@/services/chatbot'
 import StartAIChat from './StartAIChat'
@@ -105,6 +107,60 @@ export default AIChat
 
 const ChatCard = ({ data, lastMessageRef }: any) => {
   const { userProfileData } = useUniStore()
+
+  // Custom CodeBlock component with copy functionality
+  const CodeBlock = ({ children, className, ...props }: any) => {
+    const [copied, setCopied] = useState(false)
+    const match = /language-(\w+)/.exec(className || '')
+    const language = match ? match[1] : ''
+    const codeString = String(children).replace(/\n$/, '')
+
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(codeString)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } catch (err) {
+        console.error('Failed to copy code:', err)
+      }
+    }
+
+    if (!match) {
+      return (
+        <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono" {...props}>
+          {children}
+        </code>
+      )
+    }
+
+    return (
+      <div className="relative group">
+        <SyntaxHighlighter style={tomorrow} language={language} PreTag="div" className="rounded-md my-2" {...props}>
+          {codeString}
+        </SyntaxHighlighter>
+        <button
+          onClick={handleCopy}
+          className="absolute top-2 right-2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-gray-600"
+          title="Copy to clipboard"
+        >
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
+    )
+  }
+
+  // Custom components for Markdown rendering
+  const components = {
+    code: CodeBlock,
+    pre({ children, ...props }: any) {
+      return (
+        <pre className="my-2" {...props}>
+          {children}
+        </pre>
+      )
+    },
+  }
+
   return (
     <>
       <div ref={lastMessageRef} className="flex flex-col gap-2 chatbot-container">
@@ -113,7 +169,7 @@ const ChatCard = ({ data, lastMessageRef }: any) => {
             width={40}
             height={40}
             objectFit="cover"
-            className="w-[40px] h-[40px] rounded-full"
+            className="w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full"
             src={userProfileData?.profile_dp?.imageUrl || avatar}
             alt="profile.png"
           />
@@ -121,14 +177,30 @@ const ChatCard = ({ data, lastMessageRef }: any) => {
         </div>
         {data?.response ? (
           <div className="flex gap-3 items-start mt-5">
-            <Image width={40} height={40} objectFit="cover" className="w-[40px] h-[40px] rounded-full" src={aiLogo} alt="profile.png" />
-            <p className={`max-w-[80%] text-neutral-700 py-2 px-3 rounded-xl text-xs bg-neutral-100`}>
-              <Markdown remarkPlugins={[remarkGfm]}>{data?.response}</Markdown>
-            </p>
+            <Image
+              width={40}
+              height={40}
+              objectFit="cover"
+              className="w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full"
+              src={aiLogo}
+              alt="profile.png"
+            />
+            <div className={`max-w-[80%] text-neutral-700 py-2 px-3 rounded-xl text-xs bg-neutral-100`}>
+              <Markdown remarkPlugins={[remarkGfm]} components={components}>
+                {data?.response}
+              </Markdown>
+            </div>
           </div>
         ) : (
           <div className="flex gap-3 items-center mt-5">
-            <Image width={40} height={40} objectFit="cover" className="w-[40px] h-[40px] rounded-full" src={aiLogo} alt="profile.png" />
+            <Image
+              width={40}
+              height={40}
+              objectFit="cover"
+              className="w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full"
+              src={aiLogo}
+              alt="profile.png"
+            />
             <div className="flex gap-1 justify-center">
               <span className="circle animate-loader"></span>
               <span className="circle animate-loader animation-delay-200"></span>
