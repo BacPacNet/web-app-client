@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Message, messages, SocketEnums } from '@/types/constants'
@@ -11,6 +11,7 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 import calendar from 'dayjs/plugin/calendar'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
+import { useRouter } from 'next/navigation'
 
 dayjs.extend(relativeTime)
 dayjs.extend(calendar)
@@ -89,10 +90,11 @@ type Props = {
   occupation: string
 }
 
-const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, idx }: Props) => {
+const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, idx, id }: Props) => {
   const [isReact, setIsReact] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
   const { mutate: reactToMessage } = useReactMessageEmoji(chatId)
+  const router = useRouter()
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -109,15 +111,28 @@ const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, id
     }
   }
 
+  const handleProfileClicked = useCallback((id: string) => {
+    router.push(`/profile/${id}`)
+  }, [])
+
   return (
     <div ref={ref} className="flex gap-2 relative w-full last-of-type:mb-2">
       <div className="relative w-10 h-10 flex-none">
-        <Image src={profilePic || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
+        <Image
+          onClick={() => handleProfileClicked(id as string)}
+          src={profilePic || avatar}
+          alt="dp"
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full object-cover cursor-pointer"
+        />
         <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
       </div>
       <div className="flex-1 overflow-y-auto">
         <div className="flex gap-2 items-center">
-          <p className="text-sm font-semibold text-neutral-700">{name}</p>
+          <p onClick={() => handleProfileClicked(id as string)} className="text-sm font-semibold text-neutral-700 cursor-pointer">
+            {name}
+          </p>
           <p className="text-xs font-normal text-neutral-400">{dayjs(new Date(date).toString()).fromNow()}</p>
         </div>
         <p className="text-xs lg:text-xs text-neutral-900 font-inter whitespace-pre-wrap break-words overflow-hidden text-ellipsis">{content}</p>
@@ -213,7 +228,7 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
               content={item?.content}
               myMessage={item?.sender?.id === userData?.id}
               date={item.createdAt}
-              id={item?._id}
+              id={item?.sender?.id}
               reactions={item?.reactions}
               chatId={chatId}
               media={item?.media}

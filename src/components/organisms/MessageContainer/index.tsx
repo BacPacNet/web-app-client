@@ -222,6 +222,7 @@ const MessageContainer = () => {
           <MessageUserStickyBar
             setSelectedChat={setSelectedChat}
             name={selectedChat?.isGroupChat ? selectedChat?.chatName : userName?.userId.firstName ?? 'Unknown'}
+            id={userName?.userId?._id}
             users={selectedChat?.users}
             yourID={userData?.id || ''}
             isGroupChat={selectedChat?.isGroupChat}
