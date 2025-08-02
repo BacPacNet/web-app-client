@@ -44,7 +44,7 @@ const FooterLinks: React.FC<Props> = ({ isOnLeft = false }) => {
     <div className={`${isOnLeft ? 'my-4' : 'lg:flex-row'} flex  flex-col items-center justify-center gap-4 text-neutral-500 text-xs font-normal`}>
       <Link href="/privacy-policy">Privacy Policy</Link>
       <Link href="/terms-and-condition">Terms and Conditions</Link>
-      <Link href="/user-guidelines"> Usability Guidelines</Link>
+      <Link href="/user-guidelines"> User Guidelines</Link>
       <Link href="/contact">Contact Us</Link>
       <div className="flex">
         <div className="icons twitter center" onClick={() => handleRedirect(3)}>

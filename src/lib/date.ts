@@ -6,9 +6,9 @@ export const parseDateOfBirth = (dob: string | undefined): string => {
   try {
     // First, try to parse as timestamp (from registration)
     const timestamp = parseInt(dob)
-    if (!isNaN(timestamp)) {
+    if (!isNaN(timestamp) && timestamp > 0) {
       const date = new Date(timestamp)
-      if (isValid(date)) {
+      if (isValid(date) && date.getFullYear() > 1970) {
         return format(date, 'dd/MM/yyyy')
       }
     }
@@ -23,7 +23,7 @@ export const parseDateOfBirth = (dob: string | undefined): string => {
 
     // If all else fails, try to create a new Date (for ISO strings)
     const date = new Date(dob)
-    if (isValid(date)) {
+    if (isValid(date) && date.getFullYear() > 1970) {
       return format(date, 'dd/MM/yyyy')
     }
 

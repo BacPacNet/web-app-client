@@ -414,7 +414,7 @@ export default function UnibuzzPage() {
                 </p>
                 <p>
                   <Link href="#" className="hover:underline">
-                    Usability Guidelines
+                    User Guidelines
                   </Link>
                 </p>
                 <p>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import InputBox from '@/components/atoms/Input/InputBox'
 import Title from '@/components/atoms/Title'
 import Button from '@/components/atoms/Buttons'
@@ -12,7 +12,6 @@ import { Spinner } from '@/components/spinner/Spinner'
 
 const LoginBox = () => {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -30,20 +29,13 @@ const LoginBox = () => {
   }, [])
 
   const onSubmit = async (data: LoginForm) => {
-    setIsLoading(true)
     mutate(data, {
       onSuccess: () => {
+        // Force navigation to timeline after successful login
         router.push('/timeline')
       },
-      onSettled: () => setIsLoading(false),
     })
   }
-
-  //  useEffect(() => {
-  //    if (userData) {
-  //      router.push('/timeline')
-  //    }
-  //  }, [router, userData])
 
   return (
     <div className="flex flex-col w-11/12 sm:w-[448px] mx-auto">
@@ -81,8 +73,8 @@ const LoginBox = () => {
             {errors.password && <InputWarningText>{errors.password.message}</InputWarningText>}
           </div>
           <div className="flex flex-col gap-4">
-            <Button disabled={isPending || isLoading} variant="primary" size="large">
-              {isPending || isLoading ? <Spinner /> : 'Log in'}
+            <Button disabled={isPending} variant="primary" size="large">
+              {isPending ? <Spinner /> : 'Log in'}
             </Button>
             <Button type="button" onClick={() => router.push('/forget-password')} disabled={isPending} variant="border" size="large">
               Forgot Password

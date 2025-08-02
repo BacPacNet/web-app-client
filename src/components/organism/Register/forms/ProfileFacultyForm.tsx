@@ -52,6 +52,7 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
                 onChange={(selectedUniversity: any) => {
                   field.onChange(selectedUniversity.name)
                   setValue('universityId', selectedUniversity._id)
+                  setValue('universityLogo', selectedUniversity.logo)
                 }}
                 placeholder="Select University Name"
                 label="University"

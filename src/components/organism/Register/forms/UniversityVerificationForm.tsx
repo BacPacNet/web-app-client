@@ -54,9 +54,10 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
   const handleNext = async () => {
     const data = JSON.parse(cookieValue)
-    const dob = new Date(data.birthDate)
-    const timestampMs = dob.getTime()
-    data.birthDate = timestampMs.toString()
+    // Keep birthDate in dd/MM/yyyy format instead of converting to timestamp
+    // const dob = new Date(data.birthDate)
+    // const timestampMs = dob.getTime()
+    // data.birthDate = timestampMs.toString()
 
     const res = await HandleRegister(data)
     if (res?.isRegistered) {
