@@ -86,8 +86,8 @@ export function UserProfileCard({
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
 
-  const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday)
-  const dateOfBirth = dobFormat && format(new Date(dobFormat), 'dd MMM yyyy')
+  const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday) > 0 ? new Date(Number(birthday)) : null
+  const dateOfBirth = dobFormat && format(dobFormat, 'dd MMM yyyy')
 
   const handleMessage = async () => {
     const createChatResponse: any = await mutateCreateUserChat({ userId: userId })

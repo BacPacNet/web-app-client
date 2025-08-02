@@ -241,7 +241,7 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
                 >
                   <Link onClick={toggleRightMenu} href="/user-guidelines">
                     {' '}
-                    Usability Guidelines
+                    User Guidelines
                   </Link>
                 </motion.div>
                 <motion.div
