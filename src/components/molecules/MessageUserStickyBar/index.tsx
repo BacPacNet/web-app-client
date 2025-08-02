@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { IoIosArrowBack } from 'react-icons/io'
@@ -40,6 +40,7 @@ type Props = {
   isBlockedByYou: boolean
   groupAdminId: string
   communitySelected: CommunityChat
+  id: string
 }
 
 const MessageUserStickyBar = ({
@@ -57,6 +58,7 @@ const MessageUserStickyBar = ({
   isBlockedByYou,
   groupAdminId,
   communitySelected,
+  id,
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
   const [open, setOpen] = useState(false)
@@ -106,6 +108,11 @@ const MessageUserStickyBar = ({
       />
     )
   }
+
+  const handleProfileClicked = useCallback((id: string) => {
+    if (isGroupChat) return
+    router.push(`/profile/${id}`)
+  }, [])
   return (
     <div className="w-full top-0 p-4 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
       <div className="flex items-center gap-4">
@@ -114,7 +121,14 @@ const MessageUserStickyBar = ({
         </p>
         <div className="relative">
           <div className="w-10 h-10">
-            <Image src={profileCover || avatar} alt="dp" width={40} height={40} className="w-10 h-10 rounded-full object-cover" />
+            <Image
+              onClick={() => handleProfileClicked(id as string)}
+              src={profileCover || avatar}
+              alt="dp"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover cursor-pointer"
+            />
           </div>
           <p
             className={`w-4 h-4 ${
@@ -123,7 +137,9 @@ const MessageUserStickyBar = ({
           ></p>
         </div>
         <div>
-          <h3 className="text-xs font-semibold text-neutral-700">{name}</h3>
+          <h3 onClick={() => handleProfileClicked(id as string)} className="text-xs font-semibold text-neutral-700 cursor-pointer">
+            {name}
+          </h3>
         </div>
       </div>
       <div className="flex gap-4 items-center ">

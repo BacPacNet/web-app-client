@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
@@ -172,6 +172,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     if (e instanceof KeyboardEvent && (e.key !== 'Enter' || e.shiftKey)) {
       return
     }
+
     if ((textareaRef.current && textareaRef.current.value.trim() !== '') || files.length) {
       handleNewMessage(textareaRef.current?.value || '')
       if (textareaRef.current) {
@@ -213,19 +214,20 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
 
     let fileLink
     let data
-    if (files) {
+    if (files.length) {
+      let mediaData = null
       const uploadPayload = {
         files: files.map((f) => f.file),
         context: UPLOAD_CONTEXT.MESSAGE,
       }
-      fileLink = await uploadToS3(uploadPayload)
+      const uploaded = await uploadToS3(uploadPayload)
+      mediaData = uploaded.data
 
       data = {
         content: message,
         chatId,
         UserProfileId: userProfileId,
-
-        media: fileLink ? fileLink.data : '',
+        ...(mediaData && { media: mediaData }),
       }
     } else {
       data = {
@@ -332,16 +334,23 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
     }
   }
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      if (e.shiftKey) {
-        return
-      } else {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      console.log('resrser', files)
+
+      if (e.key === 'Enter') {
+        if (e.shiftKey) return
+
         e.preventDefault()
-        handleSubmit(e)
+        if (isRequestNotAccepted) {
+          handleAcceptRequestAndSendNewMessage(e)
+        } else {
+          handleSubmit(e)
+        }
       }
-    }
-  }
+    },
+    [files, isRequestNotAccepted]
+  )
 
   useEffect(() => {
     const textarea = textareaRef.current
@@ -354,7 +363,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
         textarea.removeEventListener('keydown', handleKeyDown)
       }
     }
-  }, [])
+  }, [handleKeyDown])
 
   const handleFileRemove = (id: string) => {
     setFiles((prev) => prev.filter((f) => f.id !== id))
