@@ -192,6 +192,24 @@ h6 {
   max-height: 1000px; /* Use a high value to simulate "auto" behavior */
 }
 
+/* globals.css */
+input[type='range']::-webkit-slider-thumb {
+  background-color: #6647ff; /* blue-500 */
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+input[type='range']::-moz-range-thumb {
+  background-color: #6647ff;
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
 @layer utilities {
   .animation-delay-200 {
     animation-delay: 0.2s;

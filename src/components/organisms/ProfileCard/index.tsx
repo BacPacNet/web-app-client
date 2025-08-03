@@ -25,6 +25,8 @@ import { useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
 import { useModal } from '@/context/ModalContext'
 import { RxCrossCircled } from 'react-icons/rx'
+import Lightbox from 'react-image-lightbox'
+import 'react-image-lightbox/style.css'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -86,6 +88,9 @@ export function UserProfileCard({
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
 
+  // Lightbox state
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+
   const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday) > 0 ? new Date(Number(birthday)) : null
   const dateOfBirth = dobFormat && format(dobFormat, 'dd MMM yyyy')
 
@@ -94,16 +99,24 @@ export function UserProfileCard({
     router.replace(`/messages?id=${createChatResponse._id}`)
   }
 
+  const handleProfileImageClick = () => {
+    setIsLightboxOpen(true)
+  }
+
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
-      <div className="flex flex-nowrap gap-4  items-start ">
+      {/* Lightbox */}
+      {isLightboxOpen && <Lightbox mainSrc={avatarUrl ? avatarUrl : avatar} onCloseRequest={() => setIsLightboxOpen(false)} />}
+
+      <div className="flex flex-nowrap gap-4 items-start ">
         <div className="flex-none  w-[80px] h-[80px] group relative">
           <Image
             src={avatarUrl ? avatarUrl : avatar}
             alt={name}
             width={isDesktop ? 80 : 80}
             height={isDesktop ? 80 : 80}
-            className="rounded-full object-cover  w-[80px] h-[80px]"
+            className="rounded-full object-cover  w-[80px] h-[80px] cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={handleProfileImageClick}
           />
         </div>
         <div className={`w-full flex justify-between sm:flex-nowrap flex-wrap `}>

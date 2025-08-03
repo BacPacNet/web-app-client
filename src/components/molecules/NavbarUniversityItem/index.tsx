@@ -125,7 +125,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           communityName={community?.name || 'Sd'}
           communityId={communityId || communityIdForNewGroup}
           setNewGroup={setShowNewGroup}
-        />
+        />,
+        'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar'
       )
     }
     toggleLeftNavbar && toggleLeftNavbar()

@@ -68,7 +68,7 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               <p
                 className={`text-neutral-500 text-2xs whitespace-pre-wrap break-words w-[90%] ${
                   unRead > 0 ? 'font-semibold' : 'font-medium'
-                } flex items-center gap-1`}
+                } !flex items-center gap-1`}
                 style={{
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
