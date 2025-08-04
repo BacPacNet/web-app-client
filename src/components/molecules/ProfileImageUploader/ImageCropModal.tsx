@@ -122,10 +122,10 @@ const ImageCropModal: React.FC<ImageCropModalProps> = ({ imageSrc, isOpen, onClo
         </div>
 
         <div className="flex gap-3">
-          <Buttons onClick={onClose} variant="border_primary" size="large" className="w-full">
+          <Buttons type="button" onClick={onClose} variant="border_primary" size="large" className="w-full">
             Cancel
           </Buttons>
-          <Buttons onClick={handleCropConfirm} variant="primary" size="large" className="w-full">
+          <Buttons type="button" onClick={handleCropConfirm} variant="primary" size="large" className="w-full">
             Confirm
           </Buttons>
         </div>
