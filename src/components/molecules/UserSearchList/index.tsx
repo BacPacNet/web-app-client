@@ -13,10 +13,11 @@ type UserSelectDropdownProps = {
   currentUserId: string
   dropdownRef?: React.RefObject<HTMLDivElement>
   maxHeight?: number
-  individualsUsers: Users[]
+  individualsUsers: Users[] | Users | null | undefined
 }
 
 const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, show, onSelect, currentUserId, individualsUsers, maxHeight = 312 }) => {
+  console.log('individualsUsers', individualsUsers)
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } = useUsersProfileForConnections(searchInput, 10, true)
   //  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
 
@@ -45,7 +46,7 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, sh
         <p className="text-center text-sm text-neutral-500 py-4">Loading...</p>
       ) : userProfiles.length > 0 ? (
         userProfiles.map((user) => {
-          const isSelected = individualsUsers?.some((u) => u._id === user._id)
+          const isSelected = Array.isArray(individualsUsers) ? individualsUsers.some((u) => u._id === user._id) : false
           return (
             <div
               key={user._id}

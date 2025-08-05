@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import CollegeResult from '@/components/CollegeResult'
 import {
@@ -105,6 +105,13 @@ const GroupChatModal = ({
   const affiliation = watch('affiliation') || []
   const title = watch('title') || ''
 
+  // Use refs to track previous values and prevent unnecessary updates
+  const prevStudentYearRef = useRef(studentYear)
+  const prevMajorRef = useRef(major)
+  const prevOccupationRef = useRef(occupation)
+  const prevAffiliationRef = useRef(affiliation)
+  const prevCommunityUsersRef = useRef(communityUsers)
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -124,6 +131,15 @@ const GroupChatModal = ({
   }, [title])
 
   useEffect(() => {
+    // Check if values have actually changed to prevent unnecessary updates
+    const studentYearChanged = JSON.stringify(prevStudentYearRef.current) !== JSON.stringify(studentYear)
+    const majorChanged = JSON.stringify(prevMajorRef.current) !== JSON.stringify(major)
+    const communityUsersChanged = JSON.stringify(prevCommunityUsersRef.current) !== JSON.stringify(communityUsers)
+
+    if (!studentYearChanged && !majorChanged && !communityUsersChanged) {
+      return
+    }
+
     const allUsers = communityUsers || []
     // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
 
@@ -139,9 +155,23 @@ const GroupChatModal = ({
     setFilterUsers(filtered)
     setFilteredYearsCount(yearCounts)
     setFilteredMajorsCount(majorCounts)
+
+    // Update refs with current values
+    prevStudentYearRef.current = studentYear
+    prevMajorRef.current = major
+    prevCommunityUsersRef.current = communityUsers
   }, [studentYear, major, communityUsers])
 
   useEffect(() => {
+    // Check if values have actually changed to prevent unnecessary updates
+    const occupationChanged = JSON.stringify(prevOccupationRef.current) !== JSON.stringify(occupation)
+    const affiliationChanged = JSON.stringify(prevAffiliationRef.current) !== JSON.stringify(affiliation)
+    const communityUsersChanged = JSON.stringify(prevCommunityUsersRef.current) !== JSON.stringify(communityUsers)
+
+    if (!occupationChanged && !affiliationChanged && !communityUsersChanged) {
+      return
+    }
+
     const allUsers = communityUsers || []
     // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty')
 
@@ -157,7 +187,12 @@ const GroupChatModal = ({
     setFilterFacultyUsers(filtered)
     setFilteredOccupationCount(occupationCounts)
     setFilteredAffiliationCount(affiliationCounts)
-  }, [occupation, affiliation])
+
+    // Update refs with current values
+    prevOccupationRef.current = occupation
+    prevAffiliationRef.current = affiliation
+    prevCommunityUsersRef.current = communityUsers
+  }, [occupation, affiliation, communityUsers])
 
   const removeUser = (userId: string) => {
     setIndividualsUsers((prev: any[]) => prev.filter((u) => u._id !== userId))
