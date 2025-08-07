@@ -371,7 +371,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                 {...GroupRegister('communityGroupAccess', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
                 after:w-[8px] after:h-[8px] after:rounded-full
                 after:bg-primary after:hidden checked:after:block"
               />
@@ -389,7 +389,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                 {...GroupRegister('communityGroupAccess', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
                 after:w-[8px] after:h-[8px] after:rounded-full
                 after:bg-primary after:hidden checked:after:block"
               />
@@ -415,7 +415,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                 {...GroupRegister('communityGroupType', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
                 after:w-[8px] after:h-[8px] after:rounded-full
                 after:bg-primary after:hidden checked:after:block"
               />
@@ -432,7 +432,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                 {...GroupRegister('communityGroupType', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3.5px]
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
                 after:w-[8px] after:h-[8px] after:rounded-full
                 after:bg-primary after:hidden checked:after:block"
               />
@@ -460,28 +460,89 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
             {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
 
+          <div>
+            <h2 className="font-medium text-sm text-neutral-900">
+              Group Label <span className="text-destructive-600">*</span>
+            </h2>
+            <label className="flex items-center gap-3 mt-2">
+              <input
+                type="radio"
+                value="Course"
+                {...GroupRegister('communityLabel', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300 checked:border-primary relative bg-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary after:hidden checked:after:block"
+              />
+              <div>
+                <span className="text-neutral-900 text-[12px] font-medium">Course</span>
+                <p className="text-neutral-400 text-[12px]">Group for a particular academic subject</p>
+              </div>
+            </label>
+            <label className="flex items-center gap-3 mt-2">
+              <input
+                type="radio"
+                value="Club"
+                {...GroupRegister('communityLabel', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300 checked:border-primary relative bg-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary after:hidden checked:after:block"
+              />
+              <div>
+                <span className="text-neutral-900 text-[12px] font-medium">Club</span>
+                <p className="text-neutral-400 text-[12px]">Formal and competitive, often university-recognized</p>
+              </div>
+            </label>
+            <label className="flex items-center gap-3 mt-2">
+              <input
+                type="radio"
+                value="Circle"
+                {...GroupRegister('communityLabel', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300 checked:border-primary relative bg-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary after:hidden checked:after:block"
+              />
+              <div>
+                <span className="text-neutral-900 text-[12px] font-medium">Circle</span>
+                <p className="text-neutral-400 text-[12px]">Casual and interest-based</p>
+              </div>
+            </label>
+            <label className="flex items-center gap-3 mt-2">
+              <input
+                type="radio"
+                value="Other"
+                {...GroupRegister('communityLabel', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300 checked:border-primary relative bg-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:w-[8px] after:h-[8px] after:rounded-full after:bg-primary after:hidden checked:after:block"
+              />
+              <div>
+                <span className="text-neutral-900 text-[12px] font-medium">Other</span>
+              </div>
+            </label>
+            {errors.communityLabel && <p className="text-red-500 text-2xs ">This field is required</p>}
+          </div>
+
           <div ref={categoryRef}>
             <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
             <CollapsibleMultiSelect
-              title="Academic Focus"
-              options={subCategories['Academic Focus']}
-              selectedOptions={selectedFilters['Academic Focus'] || []}
-              onSelect={(value: string) => handleSelect('Academic Focus', value)}
-              handleSelectAll={() => handleSelectAllFilter('Academic Focus', subCategories['Academic Focus'])}
+              title="Academic"
+              options={subCategories['Academic']}
+              selectedOptions={selectedFilters['Academic'] || []}
+              onSelect={(value: string) => handleSelect('Academic', value)}
+              handleSelectAll={() => handleSelectAllFilter('Academic', subCategories['Academic'])}
             />
             <CollapsibleMultiSelect
-              title="Recreation and Hobbies"
-              options={subCategories['Recreation and Hobbies']}
-              selectedOptions={selectedFilters['Recreation and Hobbies'] || []}
-              onSelect={(value: string) => handleSelect('Recreation and Hobbies', value)}
-              handleSelectAll={() => handleSelectAllFilter('Recreation and Hobbies', subCategories['Recreation and Hobbies'])}
+              title="Educational"
+              options={subCategories['Educational']}
+              selectedOptions={selectedFilters['Educational'] || []}
+              onSelect={(value: string) => handleSelect('Educational', value)}
+              handleSelectAll={() => handleSelectAllFilter('Educational', subCategories['Educational'])}
             />
             <CollapsibleMultiSelect
-              title="Advocacy and Awareness"
-              options={subCategories['Advocacy and Awareness']}
-              selectedOptions={selectedFilters['Advocacy and Awareness'] || []}
-              onSelect={(value: string) => handleSelect('Advocacy and Awareness', value)}
-              handleSelectAll={() => handleSelectAllFilter('Advocacy and Awareness', subCategories['Advocacy and Awareness'])}
+              title="Interest"
+              options={subCategories['Interest']}
+              selectedOptions={selectedFilters['Interest'] || []}
+              onSelect={(value: string) => handleSelect('Interest', value)}
+              handleSelectAll={() => handleSelectAllFilter('Interest', subCategories['Interest'])}
+            />
+            <CollapsibleMultiSelect
+              title="Events & Activities"
+              options={subCategories['Events & Activities']}
+              selectedOptions={selectedFilters['Events & Activities'] || []}
+              onSelect={(value: string) => handleSelect('Events & Activities', value)}
+              handleSelectAll={() => handleSelectAllFilter('Events & Activities', subCategories['Events & Activities'])}
             />
             <CollapsibleMultiSelect
               title="Personal Growth"
@@ -491,11 +552,25 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
               handleSelectAll={() => handleSelectAllFilter('Personal Growth', subCategories['Personal Growth'])}
             />
             <CollapsibleMultiSelect
+              title="Advocacy and Awareness"
+              options={subCategories['Advocacy and Awareness']}
+              selectedOptions={selectedFilters['Advocacy and Awareness'] || []}
+              onSelect={(value: string) => handleSelect('Advocacy and Awareness', value)}
+              handleSelectAll={() => handleSelectAllFilter('Advocacy and Awareness', subCategories['Advocacy and Awareness'])}
+            />
+            <CollapsibleMultiSelect
               title="Professional Development"
               options={subCategories['Professional Development']}
               selectedOptions={selectedFilters['Professional Development'] || []}
               onSelect={(value: string) => handleSelect('Professional Development', value)}
               handleSelectAll={() => handleSelectAllFilter('Professional Development', subCategories['Professional Development'])}
+            />
+            <CollapsibleMultiSelect
+              title="Utility & Campus Life"
+              options={subCategories['Utility & Campus Life']}
+              selectedOptions={selectedFilters['Utility & Campus Life'] || []}
+              onSelect={(value: string) => handleSelect('Utility & Campus Life', value)}
+              handleSelectAll={() => handleSelectAllFilter('Utility & Campus Life', subCategories['Utility & Campus Life'])}
             />
 
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
