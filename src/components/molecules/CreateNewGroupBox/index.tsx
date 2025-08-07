@@ -328,7 +328,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           <div className="flex gap-4 items-center justify-between">
             <div className="relative w-full flex flex-col gap-2">
               <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-                Group Name
+                Group Name <span className="text-destructive-600">*</span>
               </label>
               <InputBox
                 className="text-xs"
@@ -346,7 +346,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           <div className="relative flex flex-col gap-2">
             <div className="flex justify-between items-center">
               <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-                Description
+                Description <span className="text-destructive-600">*</span>
               </label>
               <p className="text-xs text-neutral-500">{description?.trim()?.length}/160</p>
             </div>
@@ -363,7 +363,9 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           </div>
 
           <div>
-            <h2 className="font-medium text-sm text-neutral-900">Group Access</h2>
+            <h2 className="font-medium text-sm text-neutral-900">
+              Group Access <span className="text-destructive-600">*</span>
+            </h2>
             <label className="flex items-center gap-3">
               <input
                 type="radio"
@@ -404,7 +406,9 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           {/* communty group type  */}
 
           <div>
-            <h2 className="font-medium text-sm text-neutral-900">Group Type</h2>
+            <h2 className="font-medium text-sm text-neutral-900">
+              Group Type <span className="text-destructive-600">*</span>
+            </h2>
             <p className="text-destructive-600 text-xs font-semibold py-2">
               Once you select your group type and create the group, you will not be able to change your selection.
             </p>
@@ -515,7 +519,9 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           </div>
 
           <div ref={categoryRef}>
-            <h2 className="font-medium text-sm text-neutral-900">Group Category</h2>
+            <h2 className="font-medium text-sm text-neutral-900">
+              Group Category <span className="text-destructive-600">*</span>
+            </h2>
             <CollapsibleMultiSelect
               title="Academic"
               options={subCategories['Academic']}

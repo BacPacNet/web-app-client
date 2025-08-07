@@ -151,8 +151,9 @@ export const subCategories: Record<Category, string[]> = {
     'Architecture & Design',
     'Media & Communication',
     'Hospitality & Tourism',
+    'Other',
   ],
-  Educational: ['Course Discussion', 'Exam Prep', 'Study Materials', 'Research', 'Study Group', 'Peer Tutoring'],
+  Educational: ['Course Discussion', 'Exam Prep', 'Study Materials', 'Research', 'Study Group', 'Peer Tutoring', 'Other'],
   Interest: [
     'Sports & Fitness',
     'Music & Performing Arts',
@@ -168,8 +169,9 @@ export const subCategories: Record<Category, string[]> = {
     'Finance & Advice',
     'Language Learning',
     'Memes & Fun',
+    'Other',
   ],
-  'Events & Activities': ['Fest', 'Competition', 'Talks & Webinar', 'Workshop', 'Social Meetup', 'Event Organizing', 'Volunteering'],
+  'Events & Activities': ['Fest', 'Competition', 'Talks & Webinar', 'Workshop', 'Social Meetup', 'Event Organizing', 'Volunteering', 'Other'],
   'Personal Growth': [
     'Mindfulness & Meditation',
     'Physical Health',
@@ -178,6 +180,7 @@ export const subCategories: Record<Category, string[]> = {
     'Public Speaking',
     'Confidence Building',
     'Sex Education',
+    'Other',
   ],
   'Advocacy and Awareness': [
     'Environmental Conservation',
@@ -187,6 +190,7 @@ export const subCategories: Record<Category, string[]> = {
     'Mental Health',
     'Animal Welfare',
     'Political Activism',
+    'Other',
   ],
   'Professional Development': [
     'Entrepreneurship & Startups',
@@ -196,6 +200,7 @@ export const subCategories: Record<Category, string[]> = {
     'Networking & Mixers',
     'Job Hunting',
     'Certificates & Licenses',
+    'Other',
   ],
   'Utility & Campus Life': [
     'Cab Sharing',
@@ -207,6 +212,7 @@ export const subCategories: Record<Category, string[]> = {
     'Study Exchange',
     'Study Abroad',
     'Alumni Connections',
+    'Other',
   ],
 }
 
