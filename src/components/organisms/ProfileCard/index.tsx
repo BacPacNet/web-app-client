@@ -13,7 +13,7 @@ import { IoIosShareAlt } from 'react-icons/io'
 import { MdBlockFlipped } from 'react-icons/md'
 import { IoFlagOutline } from 'react-icons/io5'
 import Buttons from '@/components/atoms/Buttons'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -90,6 +90,11 @@ export function UserProfileCard({
 
   // Lightbox state
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+
+  // Update logo when universityLogo prop changes
+  useEffect(() => {
+    setLogoSrc(universityLogo || universityLogoPlaceholder)
+  }, [universityLogo])
 
   const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday) > 0 ? new Date(Number(birthday)) : null
   const dateOfBirth = dobFormat && format(dobFormat, 'dd MMM yyyy')
