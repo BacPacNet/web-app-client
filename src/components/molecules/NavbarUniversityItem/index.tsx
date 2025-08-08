@@ -80,6 +80,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
+  const [selectedLabel, setSelectedLabel] = useState<string[]>([])
   const [sort, setSort] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 1000)
@@ -106,7 +107,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const canUserCreateGroup = community?.users.some((user) => user._id === userData?.id) && isUserVerifiedForCommunity
 
-  const isFilterApplied = useMemo(() => !isEmpty(selectedFiltersMain) || !isEmpty(selectedTypeMain), [selectedFiltersMain, selectedTypeMain])
+  const isFilterApplied = useMemo(
+    () => !isEmpty(selectedFiltersMain) || !isEmpty(selectedTypeMain) || !isEmpty(selectedLabel),
+    [selectedFiltersMain, selectedTypeMain, selectedLabel]
+  )
 
   const handleNewGroupModal = () => {
     if (!canUserCreateGroup) {
@@ -143,6 +147,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         selectedFiltersMain={selectedFiltersMain}
         setSelectedTypeMain={setSelectedTypeMain}
         selectedTypeMain={selectedTypeMain}
+        setSelectedLabel={setSelectedLabel}
+        selectedLabel={selectedLabel}
         sort={sort}
       />
     )

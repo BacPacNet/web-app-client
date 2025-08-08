@@ -7,6 +7,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useModal } from '@/context/ModalContext'
 
 const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
+const GroupLabelCategories = ['Course', 'Club', 'Circle', 'Other']
 
 type Props = {
   communityId: string
@@ -15,6 +16,8 @@ type Props = {
   setSelectedFiltersMain: React.Dispatch<React.SetStateAction<Record<string, string[]>>>
   selectedTypeMain: string[]
   setSelectedTypeMain: React.Dispatch<React.SetStateAction<string[]>>
+  selectedLabel: string[]
+  setSelectedLabel: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const CommunityGroupFilterComponent: React.FC<Props> = ({
@@ -23,10 +26,13 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   selectedFiltersMain,
   setSelectedTypeMain,
   selectedTypeMain,
+  setSelectedLabel,
+  selectedLabel,
   sort,
 }) => {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [selectedType, setSelectedType] = useState<string[]>([])
+  const [selectedLabelLocal, setSelectedLabelLocal] = useState<string[]>([])
   const { mutate } = useGetFilteredSubscribedCommunities(communityId)
   const { closeModal } = useModal()
 
@@ -56,15 +62,21 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     setSelectedType((prev) => (prev.includes(type) ? prev.filter((item) => item !== type) : [...prev, type]))
   }
 
+  const handleSelectGroupLabels = (label: string) => {
+    setSelectedLabelLocal((prev) => (prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label]))
+  }
+
   const clearFilters = () => {
     setSelectedFilters({})
     setSelectedType([])
+    setSelectedLabelLocal([])
   }
 
   const handleClick = () => {
-    const data = { selectedType, selectedFilters, sort }
+    const data = { selectedType, selectedFilters, selectedLabel: selectedLabelLocal, sort }
     setSelectedFiltersMain(selectedFilters)
     setSelectedTypeMain(selectedType)
+    setSelectedLabel(selectedLabelLocal)
     mutate(data)
     closeModal()
   }
@@ -76,7 +88,10 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     if (selectedTypeMain) {
       setSelectedType(selectedTypeMain)
     }
-  }, [])
+    if (selectedLabel) {
+      setSelectedLabelLocal(selectedLabel)
+    }
+  }, [selectedFiltersMain, selectedTypeMain, selectedLabel])
   return (
     <div className="h-[58vh] hideScrollbar overflow-y-scroll">
       <div className="max-w-md mx-auto flex flex-col justify-center relative">
@@ -98,6 +113,23 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
                 onClick={() => handleSelectTypes(option)}
                 className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
                   selectedType?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <h3 className="font-medium text-sm mb-2">Group Label</h3>
+          <div className="flex flex-wrap gap-2">
+            {GroupLabelCategories.map((option) => (
+              <button
+                key={option}
+                onClick={() => handleSelectGroupLabels(option)}
+                className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
+                  selectedLabelLocal?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
                 }`}
               >
                 {option}
