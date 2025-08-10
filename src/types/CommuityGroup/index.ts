@@ -44,6 +44,7 @@ export interface CreateCommunityGroupType {
   affiliation: []
   repostOption: string
   community: { name: string; id: string }
+  communityLabel: string
 }
 
 export enum status {
@@ -72,6 +73,7 @@ export interface CommunityGroupType {
   communityGroupType: string
   communityGroupAccess: string
   communityGroupCategory: any
+  communityGroupLabel: string
   __v: number
   adminUserProfile: AdminUserProfile
   communityGroupLogoCoverUrl?: S3UploadItem | null
@@ -108,71 +110,87 @@ export interface EmailEntity {
 }
 
 export type Category =
-  | 'Academic Focus'
-  | 'Recreation and Hobbies'
-  | 'Advocacy and Awareness'
+  | 'Academic'
+  | 'Educational'
+  | 'Interest'
+  | 'Events & Activities'
   | 'Personal Growth'
+  | 'Advocacy and Awareness'
   | 'Professional Development'
-  | 'Others'
+  | 'Utility & Campus Life'
 
 export const categories: Category[] = [
-  'Academic Focus',
-  'Recreation and Hobbies',
-  'Advocacy and Awareness',
+  'Academic',
+  'Educational',
+  'Interest',
+  'Events & Activities',
   'Personal Growth',
+  'Advocacy and Awareness',
   'Professional Development',
-  'Others',
+  'Utility & Campus Life',
 ]
 
 export const subCategories: Record<Category, string[]> = {
-  'Academic Focus': [
-    'Science & Technology',
-    'Arts & Humanities',
+  Academic: [
+    'Science',
+    'Technology',
+    'Arts and Humanities',
     'Social Sciences',
     'Education',
-    'Business & Economics',
+    'Business and Economics',
     'Health & Medicine',
     'Environmental Studies',
-    'Law & Policy',
+    'Laws & Policy',
     'Mathematics & Statistics',
     'Engineering',
+    'Coding',
+    'Robotics',
+    'Philosophy & Religion',
+    'Literature & Language',
+    'Agriculture',
+    'Architecture & Design',
+    'Media & Communication',
+    'Hospitality & Tourism',
+    'Other',
   ],
-  'Recreation and Hobbies': [
+  Educational: ['Course Discussion', 'Exam Prep', 'Study Materials', 'Research', 'Study Group', 'Peer Tutoring', 'Other'],
+  Interest: [
     'Sports & Fitness',
     'Music & Performing Arts',
     'Gaming & Esports',
     'Outdoor Activities',
     'Crafting & DIY',
     'Culinary Arts',
-    'Media Arts',
+    'Media',
     'Dance',
     'Travel & Exploration',
-    'Literature & Writing',
-    'Others',
+    'Literature',
+    'Culture',
+    'Finance & Advice',
+    'Language Learning',
+    'Memes & Fun',
+    'Other',
+  ],
+  'Events & Activities': ['Fest', 'Competition', 'Talks & Webinar', 'Workshop', 'Social Meetup', 'Event Organizing', 'Volunteering', 'Other'],
+  'Personal Growth': [
+    'Mindfulness & Meditation',
+    'Physical Health',
+    'Leadership Development',
+    'Stress Management',
+    'Public Speaking',
+    'Confidence Building',
+    'Sex Education',
+    'Other',
   ],
   'Advocacy and Awareness': [
     'Environmental Conservation',
     'Human Rights',
     'Gender Equality',
-    'LGBTQ+ Advocacy',
+    'LGBTQ+',
     'Mental Health',
-    'Disability Rights',
     'Animal Welfare',
     'Political Activism',
-    'Scientific Education',
-    'Others',
-  ],
-  'Personal Growth': [
-    'Mindfulness & Meditation',
-    'Physical Health',
-    'Leadership Development',
-    'Finance Advice',
-    'Stress Management',
-    'Public Speaking',
-    'Confidence Building',
-    'Sex Education',
-    'Language Learning',
-    'Others',
+    'Other',
   ],
   'Professional Development': [
     'Entrepreneurship & Startups',
@@ -180,13 +198,22 @@ export const subCategories: Record<Category, string[]> = {
     'Professional Workshops',
     'Internships',
     'Networking & Mixers',
-    'Alumni Connections',
     'Job Hunting',
-    'Certificates',
-    'Business Communication',
-    'Others',
+    'Certificates & Licenses',
+    'Other',
   ],
-  Others: [],
+  'Utility & Campus Life': [
+    'Cab Sharing',
+    'Housing & Roommates',
+    'Buy/Sell/Exchange',
+    'Lost & Found',
+    'Local Services',
+    'Student Hacks',
+    'Study Exchange',
+    'Study Abroad',
+    'Alumni Connections',
+    'Other',
+  ],
 }
 
 // export const sortBy = ['name', 'latest', 'users', 'oldest']

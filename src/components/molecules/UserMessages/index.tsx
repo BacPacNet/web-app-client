@@ -12,6 +12,7 @@ import calendar from 'dayjs/plugin/calendar'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 
 dayjs.extend(relativeTime)
 dayjs.extend(calendar)
@@ -208,40 +209,56 @@ const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-320px)] overflow-y-auto custom-scrollbar p-4 gap-6 ">
-      {chatMessages?.map((item: Message, idx: number) => {
-        const currentDate = format(new Date(item?.createdAt), 'd MMMM h:mm a')
-        const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
-        previousDate = dayjs(item.createdAt)
+      <AnimatePresence>
+        {chatMessages?.map((item: Message, idx: number) => {
+          const currentDate = format(new Date(item?.createdAt), 'd MMMM h:mm a')
+          const shouldShowDateDivider = !dayjs(item.createdAt).isSame(previousDate, 'day')
+          previousDate = dayjs(item.createdAt)
 
-        return (
-          <Fragment key={idx}>
-            {shouldShowDateDivider && (
-              //  <div className="border-b border-neutral-300 relative">
-              //  <div className="absolute -top-3 flex justify-center items-center w-full">
-              <div className="px-4  w-fit mx-auto text-neutral-500 text-2xs text-center"> {currentDate}</div>
-              //  </div>
-              //  </div>
-            )}
-            <UserCard
-              profilePic={item?.senderProfile?.profile_dp?.imageUrl}
-              name={item?.sender?.firstName}
-              content={item?.content}
-              myMessage={item?.sender?.id === userData?.id}
-              date={item.createdAt}
-              id={item?.sender?.id}
-              reactions={item?.reactions}
-              chatId={chatId}
-              media={item?.media}
-              isOnline={userName?.some((item) => item?.isOnline)}
-              setImageCarasol={setImageCarasol}
-              idx={idx}
-              role={item?.sender?.role}
-              affiliation={item?.sender?.affiliation}
-              occupation={item?.sender?.occupation}
-            />
-          </Fragment>
-        )
-      })}
+          return (
+            <Fragment key={idx}>
+              {shouldShowDateDivider && (
+                <motion.div
+                  className="px-4  w-fit mx-auto text-neutral-500 text-2xs text-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {currentDate}
+                </motion.div>
+              )}
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{
+                  duration: 0.3,
+                  delay: idx === chatMessages.length - 1 ? 0.1 : 0,
+                  ease: 'easeOut',
+                }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              >
+                <UserCard
+                  profilePic={item?.senderProfile?.profile_dp?.imageUrl}
+                  name={item?.sender?.firstName}
+                  content={item?.content}
+                  myMessage={item?.sender?.id === userData?.id}
+                  date={item.createdAt}
+                  id={item?.sender?.id}
+                  reactions={item?.reactions}
+                  chatId={chatId}
+                  media={item?.media}
+                  isOnline={userName?.some((item) => item?.isOnline)}
+                  setImageCarasol={setImageCarasol}
+                  idx={idx}
+                  role={item?.sender?.role}
+                  affiliation={item?.sender?.affiliation}
+                  occupation={item?.sender?.occupation}
+                />
+              </motion.div>
+            </Fragment>
+          )
+        })}
+      </AnimatePresence>
       <div ref={bottomRef} />
     </div>
   )

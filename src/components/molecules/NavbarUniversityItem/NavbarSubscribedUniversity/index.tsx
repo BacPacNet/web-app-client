@@ -1,6 +1,6 @@
 'use client'
 import Button from '@/components/atoms/Buttons'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { userType } from '@/store/userSlice/userType'
 import { Community } from '@/types/Community'
@@ -65,6 +65,11 @@ const CommunityHolder = ({ community, index, handleCommunityClick, communityId, 
   const [logoSrc, setLogoSrc] = useState(community?.communityLogoUrl?.imageUrl)
 
   const isSelected = communityId === community?._id && !isGroup
+
+  // Update logo when community data changes
+  useEffect(() => {
+    setLogoSrc(community?.communityLogoUrl?.imageUrl)
+  }, [community])
 
   return (
     <div

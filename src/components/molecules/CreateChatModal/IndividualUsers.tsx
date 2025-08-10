@@ -10,6 +10,7 @@ import { useUsersProfileForConnections } from '@/services/user'
 import { useUniStore } from '@/store/store'
 import { Users } from '@/types/Connections'
 import UserSelectDropdown from '../UserSearchList'
+import { FaXmark } from 'react-icons/fa6'
 
 type Props = {
   selectedUser: any
@@ -78,6 +79,12 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
     setSearchInput('')
   }
 
+  const handleRemoveUser = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSelectedUser(null)
+  }
+
   return (
     <div className="relative w-full flex flex-col">
       <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
@@ -100,25 +107,30 @@ const IndividualUsers = ({ selectedUser, setSelectedUser }: Props) => {
           show={showSelectUsers}
           onSelect={handleSelectIndividuals}
           currentUserId={userProfileData?.users_id as string}
-          individualsUsers={selectedUser}
+          individualsUsers={selectedUser ? [selectedUser] : []}
         />
 
         {selectedUser?.firstName && (
-          <div className="flex items-center gap-4 mt-4">
-            <Image
-              src={selectedUser?.profile?.profile_dp?.imageUrl || avatar}
-              alt="dp"
-              width={44}
-              height={44}
-              className="w-12 h-12 rounded-full object-cover"
-            />
-            <div>
-              <p className="text-sm font-semibold">{selectedUser?.firstName}</p>
-              <p className="text-2xs text-neutral-600">{selectedUser?.profile?.university_name || ''}</p>
-              <p className="text-2xs text-neutral-600">
-                {selectedUser?.profile?.study_year ? `${selectedUser.profile.study_year} Year` : ''} {selectedUser?.profile?.degree}
-              </p>
+          <div className="flex items-center justify-between gap-4 mt-4 p-3 bg-neutral-50 rounded-lg">
+            <div className="flex items-center gap-4">
+              <Image
+                src={selectedUser?.profile?.profile_dp?.imageUrl || avatar}
+                alt="dp"
+                width={44}
+                height={44}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div>
+                <p className="text-sm font-semibold">{selectedUser?.firstName}</p>
+                <p className="text-2xs text-neutral-600">{selectedUser?.profile?.university_name || ''}</p>
+                <p className="text-2xs text-neutral-600">
+                  {selectedUser?.profile?.study_year ? `${selectedUser.profile.study_year} Year` : ''} {selectedUser?.profile?.degree}
+                </p>
+              </div>
             </div>
+            <button onClick={handleRemoveUser} className="p-1 hover:bg-neutral-200 rounded-full transition-colors" title="Remove user">
+              <FaXmark className="w-4 h-4 text-neutral-500 hover:text-neutral-700" />
+            </button>
           </div>
         )}
       </div>

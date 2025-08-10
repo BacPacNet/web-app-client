@@ -1,7 +1,7 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
 import RadioOption from '@/components/atoms/RadioSelect'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import IndividualUsers from './IndividualUsers'
 import GroupChatModal from './GroupChatModal'
@@ -24,6 +24,15 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [groupName, setGroupName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  // Memoize setter functions to prevent infinite re-renders
+  const memoizedSetFilterUsers = useCallback((users: any[]) => {
+    setFilterUsers(users)
+  }, [])
+
+  const memoizedSetFilterFacultyUsers = useCallback((users: any[]) => {
+    setFilterFacultyUsers(users)
+  }, [])
 
   const { mutateAsync: mutateCreateUserChat, isPending: userChatPending } = useCreateUserChat()
   const { mutate: createGroupChat, isPending: groupChatPending } = useCreateGroupChat()
@@ -152,8 +161,8 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
                 setGroupName={setGroupName}
                 individualsUsers={selectedIndividualsUsers}
                 setIndividualsUsers={setSelectedIndividualsUsers}
-                setFilterUsers={setFilterUsers}
-                setFilterFacultyUsers={setFilterFacultyUsers}
+                setFilterUsers={memoizedSetFilterUsers}
+                setFilterFacultyUsers={memoizedSetFilterFacultyUsers}
                 // hadleClear={handleClear}
                 setGroupLogoImage={setGroupLogoImage}
                 groupLogoImage={groupLogoImage}

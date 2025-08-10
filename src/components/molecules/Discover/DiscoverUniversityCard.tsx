@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import universityPlaceholder from '@assets/universityBackgroudImage.svg'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { useRouter } from 'next/navigation'
@@ -12,6 +12,13 @@ const DiscoverUniversityCard = ({ data }: { data: UniversityInfo }) => {
   const [logoSrc, setLogoSrc] = useState(data?.logo || universityLogoPlaceholder)
 
   const router = useRouter()
+
+  // Update logo and image when data changes
+  useEffect(() => {
+    setImageSrc(data?.campus || universityPlaceholder)
+    setLogoSrc(data?.logo || universityLogoPlaceholder)
+  }, [data])
+
   return (
     <div
       onClick={() => router.push(`/discover/${encodeURIComponent(data.name)}`)}

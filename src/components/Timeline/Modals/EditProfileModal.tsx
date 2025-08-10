@@ -3,6 +3,7 @@ import DateSelect from '@/components/atoms/DateSelect/DateSelect'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
+import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { useEditProfile } from '@/services/edit-profile'
 import { useUniStore } from '@/store/store'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
@@ -35,6 +36,8 @@ export interface editProfileInputs {
   country?: string
   city?: string
   university_name?: string
+  universityId?: string
+  universityLogo?: string
   study_year?: string
   degree?: string
   major?: string
@@ -106,6 +109,9 @@ const EditProfileModal = () => {
         occupation: profile?.occupation || '',
         phone_number: profile?.phone_number || '',
         study_year: profile?.study_year || '',
+        university_name: profile?.university_name || '',
+        universityId: profile?.university_id || '',
+        universityLogo: profile?.universityLogo || '',
         profilePicture: null,
       }
       reset(userDefault)
@@ -329,6 +335,34 @@ const EditProfileModal = () => {
             </LabeledInput>
           </div>
         </div>
+        <div className="flex flex-col py-2">
+          <label htmlFor="university_name" className="py-1">
+            University <span className="text-destructive-600">*</span>
+          </label>
+          <div className="w-full flex flex-col relative">
+            <Controller
+              name="university_name"
+              control={control}
+              rules={{ required: 'University is required!' }}
+              render={({ field }) => (
+                <SelectUniversityDropdown
+                  value={field.value || ''}
+                  onChange={(selectedUniversity: any) => {
+                    field.onChange(selectedUniversity.name)
+                    setValue('universityId', selectedUniversity._id)
+                    setValue('universityLogo', selectedUniversity.logo)
+                  }}
+                  // label="University"
+                  placeholder="Select University Name"
+                  icon={'single'}
+                  search={true}
+                  err={!!errors.university_name}
+                />
+              )}
+            />
+            {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
+          </div>
+        </div>
         <div>
           <Title>
             Edit status<span className="text-destructive-600">*</span>
@@ -415,6 +449,33 @@ const EditProfileModal = () => {
           </div>
           {userType === 'faculty' && (
             <>
+              <div className="flex flex-col py-2">
+                <label htmlFor="university_name" className="py-1">
+                  University <span className="text-destructive-600">*</span>
+                </label>
+                <div className="w-full flex flex-col relative">
+                  <Controller
+                    name="university_name"
+                    control={control}
+                    rules={{ required: 'University is required!' }}
+                    render={({ field }) => (
+                      <SelectUniversityDropdown
+                        value={field.value || ''}
+                        onChange={(selectedUniversity: any) => {
+                          field.onChange(selectedUniversity.name)
+                          setValue('universityId', selectedUniversity._id)
+                          setValue('universityLogo', selectedUniversity.logo || '/src/assets/Logo Circle.svg')
+                        }}
+                        placeholder="Select University Name"
+                        icon={'single'}
+                        search={true}
+                        err={!!errors.university_name}
+                      />
+                    )}
+                  />
+                  {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
+                </div>
+              </div>
               <div className="flex flex-col">
                 <label htmlFor="occupation" className="py-1">
                   Occupation <span className="text-destructive-600">*</span>

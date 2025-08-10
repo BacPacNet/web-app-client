@@ -27,7 +27,7 @@ const UsersModal = ({ setSelectedChat }: Props) => {
 
   const handleShowModal = () => {
     closeModal()
-    openModal(<CreateGroupChat setSelectedChat={setSelectedChat} />)
+    openModal(<CreateGroupChat setSelectedChat={setSelectedChat} />, 'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar')
   }
 
   return (
