@@ -88,6 +88,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       referralCode: '',
       isJoinUniversity: true,
       isUniversityVerified: false,
+      isEmailVerified: false,
     },
   })
   const currUserType = methods.watch('userType')
@@ -119,6 +120,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         referralCode: registerData?.referralCode || '',
         isJoinUniversity: registerData?.isJoinUniversity,
         isUniversityVerified: registerData?.isUniversityVerified,
+        isEmailVerified: registerData?.isEmailVerified,
       })
     }
   }, [registerData, methods])
@@ -151,6 +153,9 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         verificationOtp: data.verificationOtp,
       }
       const isAvailable = await handleUserLoginEmailVerification(dataToSend)
+      if (isAvailable?.isAvailable) {
+        methods.setValue('isEmailVerified', true)
+      }
       return isAvailable
     } catch (error: any) {
       methods.setError('verificationOtp', { message: error.response.data.message })
@@ -214,7 +219,13 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         // const dob = convertToDateObj(data.birthDate)?.getTime().toString()
         // data.birthDate = dob || ''
 
-        const res = await HandleRegister(data)
+        // Get the current value from the form methods
+        const isEmailVerified = methods.getValues('isEmailVerified')
+
+        const res = await HandleRegister({
+          ...data,
+          isEmailVerified: isEmailVerified,
+        } as FormDataType)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
           setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
@@ -244,7 +255,14 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         // Keep birthDate in dd/MM/yyyy format instead of converting to timestamp
         // const dob = convertToDateObj(data.birthDate)?.getTime().toString()
         // data.birthDate = dob || ''
-        const res = await HandleRegister(data)
+
+        // Get the current value from the form methods
+        const isEmailVerified = methods.getValues('isEmailVerified')
+
+        const res = await HandleRegister({
+          ...data,
+          isEmailVerified: isEmailVerified,
+        } as FormDataType)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
           setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)

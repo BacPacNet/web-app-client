@@ -25,6 +25,7 @@ export interface FormDataType {
   referralCode: string
   isJoinUniversity: boolean
   isUniversityVerified: boolean
+  isEmailVerified: boolean
 }
 
 export const value = [
