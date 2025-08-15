@@ -46,6 +46,18 @@ const Register = () => {
     } else if (step === 2 && subStep === 0 && userType !== userTypeEnum.Applicant) {
       setStep(step - 1)
       return setSubStep(1)
+    } else if (step === 2 && subStep === 0 && userType == userTypeEnum.Student) {
+      setStep(1)
+      return setSubStep(1)
+    } else if (step === 2 && subStep === 0 && userType == userTypeEnum.Faculty) {
+      setStep(1)
+      return setSubStep(1)
+    } else if (step === 3 && subStep === 0 && userType == userTypeEnum.Student) {
+      setStep(1)
+      return setSubStep(1)
+    } else if (step === 3 && subStep === 0 && userType == userTypeEnum.Faculty) {
+      setStep(1)
+      return setSubStep(1)
     } else if (step === 2 && subStep === 1) {
       setSubStep(0)
     } else if (step === 3) {
