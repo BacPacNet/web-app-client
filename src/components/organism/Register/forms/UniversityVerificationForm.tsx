@@ -59,7 +59,8 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     // const timestampMs = dob.getTime()
     // data.birthDate = timestampMs.toString()
 
-    const res = await HandleRegister(data)
+    const isEmailVerified = getValues('isEmailVerified')
+    const res = await HandleRegister({ ...data, isEmailVerified: isEmailVerified })
     if (res?.isRegistered) {
       const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
 
