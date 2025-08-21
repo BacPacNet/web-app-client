@@ -25,6 +25,7 @@ export interface userType {
   dob: string
   role: string
   isEmailVerified: boolean
+  isNewUser: boolean
   userVerifiedCommunities: verifiedInterface[]
   userUnVerifiedCommunities: unverifiedInterface[]
 }
