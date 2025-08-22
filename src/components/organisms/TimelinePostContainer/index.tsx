@@ -66,16 +66,6 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
   }, [imageCarasol])
 
   const openNewUserModal = () => {
-    // openModal(
-    // //   <div>
-    // //     <h1>Welcome to UniBuzz</h1>
-    // //     <p>We're excited to have you on board. Please take a moment to complete your profile and start exploring the platform.</p>
-    // //   </div>
-
-    // )
-
-    console.log('inter')
-
     openModal(<UserGuidelinesModal />, 'w-[350px] sm:w-[490px] hideScrollbar')
   }
 
