@@ -41,6 +41,7 @@ export interface User {
   role: string
   isEmailVerified: boolean
   id: string
+  isNewUser: boolean
 }
 export interface EmailType {
   UniversityName: string

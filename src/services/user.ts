@@ -28,6 +28,10 @@ const deActivateUserAccount = async (data: any, token: string) => {
   const res = await client(`/users/deActivateUserAccount`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
 }
+const newUserTrue = async (token: string) => {
+  const res = await client(`/users/new-user`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return res
+}
 
 export function useGetUserData(userId: string) {
   const [cookieValue] = useCookie('uni_user_token')
@@ -135,6 +139,22 @@ export const useDeActivateUserAccount = () => {
   const [cookieValue] = useCookie('uni_user_token')
   return useMutation({
     mutationFn: (data: any) => deActivateUserAccount(data, cookieValue),
+
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+export const useNewUserTrue = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const setUserData = useUniStore((state) => state.setUserData)
+  return useMutation({
+    mutationFn: () => newUserTrue(cookieValue),
+
+    onSuccess: (res: any) => {
+      setUserData(res.UserData)
+    },
 
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')

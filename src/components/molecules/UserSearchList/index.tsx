@@ -17,7 +17,6 @@ type UserSelectDropdownProps = {
 }
 
 const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, show, onSelect, currentUserId, individualsUsers, maxHeight = 312 }) => {
-  console.log('individualsUsers', individualsUsers)
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } = useUsersProfileForConnections(searchInput, 10, true)
   //  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
 
