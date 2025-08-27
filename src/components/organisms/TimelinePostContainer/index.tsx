@@ -66,7 +66,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
   }, [imageCarasol])
 
   const openNewUserModal = () => {
-    openModal(<UserGuidelinesModal />, 'w-[350px] sm:w-[490px] hideScrollbar')
+    openModal(<UserGuidelinesModal />, 'w-[350px] sm:w-[490px] hideScrollbar', false, true, true)
   }
 
   useEffect(() => {

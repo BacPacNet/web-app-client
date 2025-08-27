@@ -173,6 +173,8 @@ export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+
       showCustomSuccessToast(`status of community group changed`)
     },
 
