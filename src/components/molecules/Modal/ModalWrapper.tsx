@@ -8,9 +8,10 @@ type ModalWrapperProps = {
   showCloseIcon: boolean
   isAllowScroll?: boolean
   style?: string
+  disableClose?: boolean
 }
 
-const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', isAllowScroll = true, disableClose }: ModalWrapperProps) => {
+const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', isAllowScroll = true, disableClose = false }: ModalWrapperProps) => {
   if (!isShown) return null
 
   return (

@@ -4,7 +4,7 @@ import ModalWrapper from '@/components/molecules/Modal/ModalWrapper'
 import React, { createContext, useContext, useState } from 'react'
 
 interface ModalContextType {
-  openModal: (content: React.ReactNode, style?: string, showCloseIcon?: boolean, isAllowedToScroll?: boolean) => void
+  openModal: (content: React.ReactNode, style?: string, showCloseIcon?: boolean, isAllowedToScroll?: boolean, disableClose?: boolean) => void
   closeModal: () => void
 }
 
