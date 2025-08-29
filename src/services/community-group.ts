@@ -168,7 +168,7 @@ export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: { status: string; notificationId: string; communityGroupId: string; adminId: string; userId: string }) =>
+    mutationFn: (data: { status: string; notificationId: string; communityGroupId: string; adminId: string; userId: string; text: string }) =>
       ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
 
     onSuccess: () => {

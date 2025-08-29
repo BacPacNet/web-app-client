@@ -57,6 +57,9 @@ export enum status {
 export interface CommunityGroupType {
   _id: string
   adminUserId: AdminUserId | string
+  notificationId: string
+  notificationTypes: string
+  notificationStatus: string
   status: status
   communityId: {
     _id: string
@@ -64,6 +67,8 @@ export interface CommunityGroupType {
       imageUrl: string
       publicId: string
     }
+    adminId: string
+    name: string
   }
   title: string
   description: string
@@ -79,6 +84,7 @@ export interface CommunityGroupType {
   communityGroupLogoCoverUrl?: S3UploadItem | null
   communityGroupLogoUrl?: S3UploadItem | null
   users: CommunityGroupUsers[]
+  isCommunityGroupLive: boolean
 }
 export interface AdminUserId {
   _id: string
@@ -107,6 +113,20 @@ export interface EmailEntity {
   UniversityName: string
   UniversityEmail: string
   _id: string
+}
+
+export type CommunityGroupNotLiveCardProps = {
+  communityAdminId: string
+  communityGroupId: string
+  communityGroupAdminId: string
+  notificationType: string
+  notificationId: string
+  notificationStatus: string
+  refetch: () => void
+  communityID: string
+
+  communityGroupTitle: string
+  communityName: string
 }
 
 export type Category =
