@@ -1,4 +1,5 @@
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
+import { notificationStatus } from '@/services/notification'
 import { useRouter } from 'next/navigation'
 
 type NotificationMessageProps = {
@@ -110,7 +111,13 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
       return (
         <span className="text-xs font-inter">
-          <b>{data?.communityGroupId?.title}</b> in {data?.communityDetails?.name} has sent a request to become an official group.
+          <b>{data?.message}</b> has sent a request to become an official group.
+          {data?.status == notificationStatus.default && (
+            <span className="text-neutral-500 mt-2 font-inter text-2xs">
+              <br />
+              You will be automatically added to the group if you accept.
+            </span>
+          )}
         </span>
       )
 
@@ -123,13 +130,21 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
       return (
         <span className="text-xs font-inter">
-          Your request to make <b>{data?.communityGroupId?.title}</b> in {data?.communityDetails?.name} official has been rejected.
+          {data?.message}{' '}
+          <span className="text-[#EF4444] mt-2 font-inter text-2xs">
+            <br />
+            Your group has been deleted.
+          </span>
         </span>
       )
     case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
       return (
         <span className="text-xs font-inter">
-          Your request to make <b>{data?.communityGroupId?.title}</b> in {data?.communityDetails?.name} official has been accepted.
+          {data?.message}{' '}
+          <span className="text-[#15803D] mt-2 font-inter text-2xs">
+            <br />
+            Your group is now visible to other members in the community.
+          </span>
         </span>
       )
 
