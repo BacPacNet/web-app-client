@@ -33,6 +33,7 @@ interface FollowingItemProps {
   isViewerAdmin?: boolean
   isCommunityAdmin?: boolean
   adminCommunityId?: string
+  isOfficialGroup?: boolean
 }
 
 const UserListItem: React.FC<FollowingItemProps> = ({
@@ -54,6 +55,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   handleRemoveClick,
   isRemovePending,
   isViewerAdmin,
+  isCommunityAdmin,
+  isOfficialGroup,
 }) => {
   const router = useRouter()
   const { closeModal } = useModal()
@@ -66,6 +69,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const isStudent = role === userTypeEnum.Student
   const showRemoveButton = !isSelfProfile && isViewerAdmin && showCommunityGroupMember
   const showFollowButton = !isSelfProfile && !showRemoveButton
+  const isAllowedToRemove = isCommunityAdmin && !isOfficialGroup
 
   const handleFollowClick = async () => {
     setIsFollowingState(true)
@@ -108,7 +112,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
         </div>
       </div>
 
-      {showRemoveButton && (
+      {showRemoveButton && isAllowedToRemove && (
         <Button disabled={isRemovePending} onClick={() => handleRemoveClick?.(id)} variant="danger_secondary" size="small">
           Remove
         </Button>

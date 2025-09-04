@@ -22,7 +22,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const [isCommunityGroupLive, setIsCommunityGroupLive] = useState<boolean | null>(null)
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityId, communityGroupId)
-  const { userData } = useUniStore()
+
   return (
     <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar outline-none">
       <CommunityGroupBanner
@@ -37,12 +37,11 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
         refetch={refetch}
         isCommunityGroupLive={isCommunityGroupLive}
         setIsCommunityGroupLive={setIsCommunityGroupLive}
+        notificationType={communityGroups?.notificationTypes as string}
+        notificationId={communityGroups?.notificationId as string}
       />
 
-      {isCommunityGroupLive == null ? null : !isCommunityGroupLive ||
-        (communityGroups?.notificationStatus == notificationStatus.default &&
-          communityGroups?.notificationTypes == notificationRoleAccess.GROUP_INVITE &&
-          userData?.id?.toString() !== communityGroups?.adminUserId.toString()) ? (
+      {isCommunityGroupsLoading || isCommunityGroupLive == null ? null : !isCommunityGroupLive ? (
         <CommunityGroupNotLiveCard
           communityID={communityId}
           communityAdminId={communityGroups?.communityId.adminId as string}
