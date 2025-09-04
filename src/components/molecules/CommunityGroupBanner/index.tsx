@@ -127,6 +127,14 @@ export default function CommunityGroupBanner({
     }
   }, [communityGroups])
 
+  useEffect(() => {
+    if (communityGroups?.isCommunityGroupLive) {
+      setIsCommunityGroupLive(true)
+    } else {
+      setIsCommunityGroupLive(false)
+    }
+  }, [communityGroups])
+
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
     if (isUserRequestPending && isGroupPrivate) return
     if (!isUserJoinedCommunityGroup) {

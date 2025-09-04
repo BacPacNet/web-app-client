@@ -22,7 +22,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const [isCommunityGroupLive, setIsCommunityGroupLive] = useState<boolean | null>(null)
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityId, communityGroupId)
-
+  const { userData } = useUniStore()
   return (
     <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar outline-none">
       <CommunityGroupBanner
