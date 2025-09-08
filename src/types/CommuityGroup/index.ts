@@ -2,6 +2,17 @@ import mongoose from 'mongoose'
 import { userTypeEnum } from '../RegisterForm'
 import { S3UploadItem } from '@/services/upload'
 
+export const AllFiltersCommunityGroupPost = {
+  myPosts: 'Your Posts',
+  pendingPosts: 'Pending Posts',
+  allPosts: 'All Posts',
+}
+export enum communityPostStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  REJECTED = 'REJECTED',
+  DEFAULT = 'DEFAULT',
+}
 export interface CommunityGroupUsers {
   //  userId: string
   _id: string

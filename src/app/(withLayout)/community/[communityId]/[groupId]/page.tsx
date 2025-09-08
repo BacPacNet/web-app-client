@@ -1,4 +1,5 @@
 'use client'
+import CommunityGroupPostFilterDropDown from '@/components/atoms/CommunityGroupPostFilterDropDown'
 import CommunityGroupBanner from '@/components/molecules/CommunityGroupBanner'
 import CommunityGroupNotLiveCard from '@/components/molecules/CommunityGroupNotLiveCard'
 import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
@@ -8,6 +9,7 @@ import { useGetCommunityGroup } from '@/services/community-university'
 import { notificationStatus } from '@/services/notification'
 import { useUniStore } from '@/store/store'
 import { CommunityGroupType } from '@/types/CommuityGroup'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
 
 // Types
@@ -18,11 +20,17 @@ interface PageParams {
 
 export default function Page({ params: { communityId, groupId: communityGroupId } }: { params: PageParams }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const filterPostBy = searchParams.get('filterPostBy') ?? ''
   const [isGroupAdmin, setIsGroupAdmin] = useState(false)
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const [isCommunityGroupLive, setIsCommunityGroupLive] = useState<boolean | null>(null)
+  const [pendingPostCount, setPendingPostCount] = useState(0)
   const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityId, communityGroupId)
-  const { userData } = useUniStore()
+  const changePostFilter = (filter: string) => {
+    router.push(`?filterPostBy=${filter}`)
+  }
   return (
     <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar outline-none">
       <CommunityGroupBanner
@@ -57,8 +65,18 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
       ) : (
         <>
           {(isUserJoinedCommunityGroup || isGroupAdmin) && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupId} />}
+
           {communityGroups && !isCommunityGroupsLoading && (
-            <CommunityGroupPostContainer containerRef={containerRef} iscommunityGroups={!!communityGroups} />
+            <CommunityGroupPostFilterDropDown pendingPostCount={pendingPostCount} changePostFilter={changePostFilter} filterPostBy={filterPostBy} />
+          )}
+          {communityGroups && !isCommunityGroupsLoading && (
+            <CommunityGroupPostContainer
+              communityGroupAdminId={communityGroups?.adminUserId as string}
+              filterPostBy={filterPostBy}
+              containerRef={containerRef}
+              iscommunityGroups={!!communityGroups}
+              setPendingPostCount={setPendingPostCount}
+            />
           )}
         </>
       )}

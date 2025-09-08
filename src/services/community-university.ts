@@ -112,9 +112,16 @@ export async function getAllCommunityPost(communityId: string, token: any, page:
   })
   return response
 }
-export async function getAllCommunityGroupPost(communityId: string, communityGroupId: string, token: any, page: number, limit: number) {
+export async function getAllCommunityGroupPost(
+  communityId: string,
+  communityGroupId: string,
+  token: any,
+  page: number,
+  limit: number,
+  filterPostBy: string
+) {
   const response: any = await client(
-    `/communitypost/group?communityId=${communityId}&communityGroupId=${communityGroupId}&page=${page}&limit=${limit}`,
+    `/communitypost/group?communityId=${communityId}&communityGroupId=${communityGroupId}&page=${page}&limit=${limit}&filterPostBy=${filterPostBy}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -134,6 +141,15 @@ export async function CreateGroupPost(data: any, token: string) {
   const response = await client(`/communitypost`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
+
+export async function updateCommunityPostStatus(postID: string, status: string | null, token: string) {
+  const response: any = await client(`/communitypost/post/${postID}?status=${status}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    method: 'PUT',
+  })
+  return response
+}
+
 export async function CreateGroupPostComment(data: any, token: string) {
   const response = await client(`/communitypostcomment/${data.postID}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
@@ -390,11 +406,11 @@ export function useGetCommunityPost(communityId: string, isCommunity: boolean, l
   })
 }
 
-export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isCommunity: boolean, limit: number) {
+export function useGetCommunityGroupPost(communityId: string, communityGroupID: string, isCommunity: boolean, limit: number, filterPostBy: string) {
   const [cookieValue] = useCookie('uni_user_token')
   return useInfiniteQuery({
-    queryKey: ['communityGroupsPost', communityId, communityGroupID],
-    queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit),
+    queryKey: ['communityGroupsPost', communityId, communityGroupID, filterPostBy],
+    queryFn: ({ pageParam = 1 }) => getAllCommunityGroupPost(communityId, communityGroupID, cookieValue, pageParam, limit, filterPostBy),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1
@@ -831,5 +847,29 @@ export function useGetPost(postId: string, isType: string | null = 'userPost', c
     queryKey: ['getPost', postId],
     queryFn: () => getPost(postId, isType, commentId, cookieValue),
     enabled: !!postId && !!cookieValue,
+  })
+}
+
+// post live change
+export const useCreateGroupPostStatusChange = (postId: string) => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (status: string) => updateCommunityPostStatus(postId, status, cookieValue),
+
+    onSuccess: (_, status) => {
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+
+      if (status == 'rejected') {
+        showCustomDangerToast('This post was not approved and won’t be visible to other group members.')
+      } else {
+        showCustomSuccessToast('You’ve approved this post. It’s now visible to other group members.')
+      }
+      console.log('status', status)
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response?.data?.message as string)
+    },
   })
 }

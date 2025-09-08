@@ -105,7 +105,8 @@ const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment
       notificationType == notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST ||
       notificationType == notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST ||
       notificationType == notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST ||
-      notificationType == notificationRoleAccess.OFFICIAL_GROUP_REQUEST
+      notificationType == notificationRoleAccess.OFFICIAL_GROUP_REQUEST ||
+      notificationType == notificationRoleAccess.community_post_live_request_notification
     ) {
       return (
         <Image
