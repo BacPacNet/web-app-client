@@ -37,12 +37,11 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
         refetch={refetch}
         isCommunityGroupLive={isCommunityGroupLive}
         setIsCommunityGroupLive={setIsCommunityGroupLive}
+        notificationType={communityGroups?.notificationTypes as string}
+        notificationId={communityGroups?.notificationId as string}
       />
 
-      {isCommunityGroupLive == null ? null : !isCommunityGroupLive ||
-        (communityGroups?.notificationStatus == notificationStatus.default &&
-          communityGroups?.notificationTypes == notificationRoleAccess.GROUP_INVITE &&
-          userData?.id?.toString() !== communityGroups?.adminUserId.toString()) ? (
+      {isCommunityGroupsLoading || isCommunityGroupLive == null ? null : !isCommunityGroupLive ? (
         <CommunityGroupNotLiveCard
           communityID={communityId}
           communityAdminId={communityGroups?.communityId.adminId as string}

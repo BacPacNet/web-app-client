@@ -9,9 +9,11 @@ interface Props {
   users: CommunityGroupUsers[]
   adminId: string
   communityGroupId: string
+  communityAdminId: string
+  isOfficialGroup: boolean
 }
 
-export const CommunityGroupModal = ({ users, adminId, communityGroupId }: Props) => {
+export const CommunityGroupModal = ({ users, adminId, communityGroupId, communityAdminId, isOfficialGroup }: Props) => {
   const { userProfileData } = useUniStore()
   const [members, setMembers] = useState<CommunityGroupUsers[]>(users)
   const { mutate: mutateRemoveUserFromCommunityGroup, isPending: isPending } = useRemoveUserFromCommunityGroup()
@@ -26,6 +28,7 @@ export const CommunityGroupModal = ({ users, adminId, communityGroupId }: Props)
       }
     )
   }
+
   return (
     <div>
       <Title>Members</Title>
@@ -52,6 +55,8 @@ export const CommunityGroupModal = ({ users, adminId, communityGroupId }: Props)
             isGroupAdmin={user._id === adminId}
             handleRemoveClick={(id) => handleRemoveUser(id)}
             isRemovePending={isPending}
+            isCommunityAdmin={communityAdminId?.toString() === user?._id?.toString()}
+            isOfficialGroup={isOfficialGroup}
           />
         )
       })}
