@@ -101,6 +101,9 @@ const NotificationCard = ({ data }: Props) => {
         return router.push(`/post/${data.userPostId}?isType=Timeline`)
       case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
         return router.push(`/post/${data.communityPostId}?isType=Community`)
+      case notificationRoleAccess.community_post_live_request_notification:
+        return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}?filterPostBy=pendingPosts`)
+
       case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST:
@@ -108,6 +111,8 @@ const NotificationCard = ({ data }: Props) => {
       case notificationRoleAccess.GROUP_INVITE:
       case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.REJECTED_PRIVATE_GROUP_REQUEST:
+      case notificationRoleAccess.community_post_accepted_notification:
+      case notificationRoleAccess.community_post_rejected_notification:
         return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}`)
       default:
         break

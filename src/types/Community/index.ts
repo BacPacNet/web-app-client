@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { status } from '../CommuityGroup'
+import { communityPostStatus, status } from '../CommuityGroup'
 
 export interface Community {
   _id: string
@@ -100,4 +100,6 @@ export interface communityPostType {
   communityName?: string
   communityGroupName?: string
   communityGroupId?: string
+  postStatus: communityPostStatus
+  isPostLive: boolean
 }
