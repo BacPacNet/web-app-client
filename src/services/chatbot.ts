@@ -62,6 +62,37 @@ export const useAskToChatbot = () => {
   })
 }
 
+// Streaming API function todo
+export const useStreamChatbot = () => {
+  return useMutation({
+    mutationKey: ['streamChatbot'],
+    mutationFn: async ({ userId, prompt }: { userId: string; prompt: string }) => {
+      const response = await fetch('http://localhost:8080/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          prompt,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      // Return the response as a ReadableStream for streaming
+      return response.body
+    },
+    onError: (error: any) => {
+      console.error('Stream Chatbot API Error:', error)
+      const errorMessage = error.message || 'Failed to get streaming response from chatbot'
+      showCustomDangerToast(errorMessage)
+    },
+  })
+}
+
 // Legacy functions - keeping for backward compatibility but they may need updates
 const getChatbotThread = async (cookieValue: string) => {
   const response = await client(`/chatbot/thread`, {

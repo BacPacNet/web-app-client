@@ -27,7 +27,12 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const [isCommunityGroupLive, setIsCommunityGroupLive] = useState<boolean | null>(null)
   const [pendingPostCount, setPendingPostCount] = useState(0)
-  const { data: communityGroups, isLoading: isCommunityGroupsLoading, refetch } = useGetCommunityGroup(communityId, communityGroupId)
+  const {
+    data: communityGroups,
+    isLoading: isCommunityGroupsLoading,
+    refetch,
+    isError: isCommunityGroupError,
+  } = useGetCommunityGroup(communityId, communityGroupId)
   const changePostFilter = (filter: string) => {
     router.push(`?filterPostBy=${filter}`)
   }
@@ -49,7 +54,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
         notificationId={communityGroups?.notificationId as string}
       />
 
-      {isCommunityGroupsLoading || isCommunityGroupLive == null ? null : !isCommunityGroupLive ? (
+      {isCommunityGroupsLoading || isCommunityGroupLive == null || isCommunityGroupError ? null : !isCommunityGroupLive ? (
         <CommunityGroupNotLiveCard
           communityID={communityId}
           communityAdminId={communityGroups?.communityId.adminId as string}
