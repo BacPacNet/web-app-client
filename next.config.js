@@ -6,7 +6,7 @@ require('dotenv').config();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withPWA = require("next-pwa")({
     dest: "public", // Destination directory for the PWA files
-    disable: process.env.NODE_ENV === "development", // Disable PWA in development mode
+    disable: process.env.NEXT_PUBLIC_NODE_ENV === "development", // Disable PWA in development mode
     register: true, // Register the PWA service worker
     skipWaiting: true, // Skip waiting for service worker activation
 });
@@ -35,7 +35,7 @@ const nextConfig = {
                 source: "/api/:path*",
                 headers: [
                     {key: "Access-Control-Allow-Credentials", value: "true"},
-                    {key: "Access-Control-Allow-Origin", value: process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_API_BASE_URL || "https://your-domain.com" : "*"},
+                    {key: "Access-Control-Allow-Origin", value: process.env.NEXT_PUBLIC_NODE_ENV === "production" ? process.env.NEXT_PUBLIC_API_BASE_URL || "https://your-domain.com" : "*"},
                     {key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT"},
                     {
                         key: "Access-Control-Allow-Headers",

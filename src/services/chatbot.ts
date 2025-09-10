@@ -21,7 +21,7 @@ interface ChatbotResponse {
 }
 
 const generateResponse = async (requestData: ChatbotRequest): Promise<ChatbotResponse> => {
-  const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
+  const env = process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? 'prod' : 'dev'
   const response = await fetch(`https://38l5g2xzuk.execute-api.ap-south-1.amazonaws.com/${env}/chatbot`, {
     method: 'POST',
     headers: {
