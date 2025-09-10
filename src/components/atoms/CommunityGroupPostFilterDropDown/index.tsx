@@ -20,7 +20,7 @@ const CommunityGroupPostFilterDropDown = ({ changePostFilter, filterPostBy, pend
           <p>{filterPostBy}</p>
         </div> */}
         <button
-          className={`mt-4 flex justify-between gap-1 items-center border border-neutral-200 rounded-lg py-3 px-4  text-xs font-medium font-inter text-neutral-700 h-10 bg-white shadow-sm min-w-[135px]`}
+          className={`mt-4 flex justify-between gap-4 items-center border border-neutral-200 rounded-lg py-3 px-4  text-xs font-medium font-inter text-neutral-700 h-10 bg-white shadow-sm min-w-[135px]`}
         >
           <p>
             {filterPostBy.length > 0
@@ -28,13 +28,13 @@ const CommunityGroupPostFilterDropDown = ({ changePostFilter, filterPostBy, pend
               : AllFiltersCommunityGroupPost['allPosts']}
           </p>
           <div className="flex items-center gap-1">
-            {filterPostBy == AllFiltersCommunityGroupPost['pendingPosts'] ? (
+            {pendingPostCount > 0 ? (
               <p className="bg-red-500 rounded-full min-w-[16px] min-h-[16px] flex items-center justify-center text-white font-inter font-semibold text-[8px]">
                 {pendingPostCount > 0 ? pendingPostCount : null}
               </p>
             ) : null}
 
-            <BiChevronDown className="w-4 h-4 ml-2" />
+            <BiChevronDown className="w-4 h-4 " />
           </div>
         </button>
       </PopoverTrigger>

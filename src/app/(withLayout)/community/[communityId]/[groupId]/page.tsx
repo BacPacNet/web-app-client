@@ -71,7 +71,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
         <>
           {(isUserJoinedCommunityGroup || isGroupAdmin) && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupId} />}
 
-          {communityGroups && !isCommunityGroupsLoading && (
+          {communityGroups && !isCommunityGroupsLoading && isUserJoinedCommunityGroup && (
             <CommunityGroupPostFilterDropDown pendingPostCount={pendingPostCount} changePostFilter={changePostFilter} filterPostBy={filterPostBy} />
           )}
           {communityGroups && !isCommunityGroupsLoading && (
