@@ -1,6 +1,7 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
 import notMember from '@/assets/notMember.svg'
+import notPendingNoPostPlaceholder from '@/assets/onboading-placeholder.svg'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
@@ -14,6 +15,7 @@ import PostImageSlider from '@/components/atoms/PostImageSlider'
 import noPostGroup from '@/assets/noPostGroup.svg'
 import PendingPostCard from '@/components/molecules/PeningPostCard'
 import { AllFiltersCommunityGroupPost, communityPostStatus } from '@/types/CommuityGroup'
+import { useUniStore } from '@/store/store'
 
 interface CommunityGroupPostContainerProps {
   containerRef: React.RefObject<HTMLDivElement>
@@ -37,6 +39,7 @@ function CommunityGroupPostContainer({
   setPendingPostCount,
 }: CommunityGroupPostContainerProps) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
+  const { userData } = useUniStore()
   const [imageCarasol, setImageCarousel] = useState<ImageCarouselState>({
     isShow: false,
     images: [],
@@ -74,6 +77,8 @@ function CommunityGroupPostContainer({
   useEffect(() => {
     if (Array.isArray(communityGroupPendingPostCount) && communityGroupPendingPostCount[0] > 0) {
       setPendingPostCount(communityGroupPendingPostCount[0])
+    } else {
+      setPendingPostCount(0)
     }
   }, [communityGroupPendingPostCount])
 
@@ -178,6 +183,21 @@ function CommunityGroupPostContainer({
     )
   }
 
+  if (
+    communityGroupPostData?.length === 0 &&
+    filterPostBy === Object.keys(AllFiltersCommunityGroupPost)[1] &&
+    communityGroupAdminId.toString() == userData?.id?.toString()
+  ) {
+    return (
+      <EmptyStateCard
+        imageWidth={320}
+        imageHeight={169}
+        imageSrc={notPendingNoPostPlaceholder}
+        title="You are all done!"
+        description="No pending posts requests at the moment."
+      />
+    )
+  }
   if (communityGroupPostData?.length === 0) {
     return (
       <EmptyStateCard
