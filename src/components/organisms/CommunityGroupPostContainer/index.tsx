@@ -1,10 +1,11 @@
 'use client'
 import PostCard from '@/components/molecules/PostCard'
 import notMember from '@/assets/notMember.svg'
+import notPendingNoPostPlaceholder from '@/assets/onboading-placeholder.svg'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { useGetCommunityGroupPost } from '@/services/community-university'
 import { communityPostType } from '@/types/Community'
-import { PostType } from '@/types/constants'
+import { communityPostUpdateStatus, PostType } from '@/types/constants'
 import { AxiosError } from 'axios'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
@@ -12,10 +13,16 @@ import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import noPostGroup from '@/assets/noPostGroup.svg'
+import PendingPostCard from '@/components/molecules/PeningPostCard'
+import { AllFiltersCommunityGroupPost, communityPostStatus } from '@/types/CommuityGroup'
+import { useUniStore } from '@/store/store'
 
 interface CommunityGroupPostContainerProps {
   containerRef: React.RefObject<HTMLDivElement>
   iscommunityGroups: boolean
+  filterPostBy: string
+  communityGroupAdminId: string
+  setPendingPostCount: (value: number) => void
 }
 
 interface ImageCarouselState {
@@ -24,8 +31,15 @@ interface ImageCarouselState {
   currImageIndex: number | null
 }
 
-function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: CommunityGroupPostContainerProps) {
+function CommunityGroupPostContainer({
+  containerRef,
+  iscommunityGroups,
+  filterPostBy,
+  communityGroupAdminId,
+  setPendingPostCount,
+}: CommunityGroupPostContainerProps) {
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
+  const { userData } = useUniStore()
   const [imageCarasol, setImageCarousel] = useState<ImageCarouselState>({
     isShow: false,
     images: [],
@@ -40,9 +54,15 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
     hasNextPage: communityPostHasNextPage,
     isLoading,
     error,
-  } = useGetCommunityGroupPost(communityId, communityGroupId, iscommunityGroups, 10)
+  } = useGetCommunityGroupPost(communityId, communityGroupId, iscommunityGroups, 10, filterPostBy)
+  const communityGroupPendingPostCount = useMemo(
+    () => communityGroupPost?.pages.flatMap((page) => page?.pendingTotal) || 0,
+    [communityGroupPost?.pages]
+  )
 
-  const communityGroupPostData = useMemo(() => communityGroupPost?.pages.flatMap((page) => page?.finalPost) || [], [communityGroupPost?.pages])
+  const communityGroupPostData = useMemo(() => {
+    return communityGroupPost?.pages?.flatMap((page) => page?.finalPost) ?? []
+  }, [communityGroupPost])
 
   const handleScroll = useCallback(() => {
     if (containerRef.current) {
@@ -53,6 +73,14 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
       }
     }
   }, [communityPostHasNextPage, communityPostIsFetchingNextPage, communityPostNextpage])
+
+  useEffect(() => {
+    if (Array.isArray(communityGroupPendingPostCount) && communityGroupPendingPostCount[0] > 0) {
+      setPendingPostCount(communityGroupPendingPostCount[0])
+    } else {
+      setPendingPostCount(0)
+    }
+  }, [communityGroupPendingPostCount])
 
   useEffect(() => {
     const container = containerRef.current
@@ -70,37 +98,69 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
   }, [imageCarasol])
 
   const renderPostWithRespectToPathName = useCallback(() => {
-    return communityGroupPostData.map((post: communityPostType, idx: number) => (
-      <PostCard
-        key={post?._id}
-        user={post?.user?.firstName + ' ' + post?.user?.lastName}
-        adminId={post?.user?._id}
-        university={post?.userProfile?.university_name}
-        year={post?.userProfile?.study_year}
-        text={post?.content}
-        date={post?.createdAt}
-        avatarLink={post?.userProfile?.profile_dp?.imageUrl}
-        commentCount={post?.commentCount || 0}
-        likes={post?.likeCount}
-        postID={post?._id}
-        type={PostType.Community}
-        images={post?.imageUrl}
-        setImageCarasol={setImageCarousel}
-        idx={idx}
-        showCommentSection={showCommentSection}
-        setShowCommentSection={setShowCommentSection}
-        communityId={communityId}
-        communityGroupId={communityGroupId}
-        major={post?.userProfile?.major}
-        affiliation={post?.userProfile?.affiliation}
-        occupation={post?.userProfile?.occupation}
-        role={post?.userProfile?.role}
-        isPostVerified={post?.isPostVerified}
-        communityName={post?.communityName}
-        communityGroupName={post?.communityGroupName}
-        isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
-      />
-    ))
+    if (filterPostBy === Object.keys(AllFiltersCommunityGroupPost)[1]) {
+      return communityGroupPostData.map((post: communityPostType, idx: number) => (
+        <PendingPostCard
+          key={post?._id}
+          user={post?.user?.firstName + ' ' + post?.user?.lastName}
+          adminId={post?.user?._id}
+          university={post?.userProfile?.university_name}
+          year={post?.userProfile?.study_year}
+          text={post?.content}
+          date={post?.createdAt}
+          avatarLink={post?.userProfile?.profile_dp?.imageUrl}
+          postID={post?._id}
+          type={PostType.Community}
+          images={post?.imageUrl}
+          setImageCarasol={setImageCarousel}
+          idx={idx}
+          communityId={communityId}
+          communityGroupId={communityGroupId}
+          major={post?.userProfile?.major}
+          affiliation={post?.userProfile?.affiliation}
+          occupation={post?.userProfile?.occupation}
+          isPostVerified={post?.isPostVerified}
+          communityName={post?.communityName}
+          communityGroupName={post?.communityGroupName}
+          isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
+          communityGroupAdminId={communityGroupAdminId}
+          postStatus={post?.postStatus as communityPostStatus}
+          isPostLive={post?.isPostLive}
+        />
+      ))
+    } else {
+      return communityGroupPostData.map((post: communityPostType, idx: number) => (
+        <PostCard
+          key={post?._id}
+          user={post?.user?.firstName + ' ' + post?.user?.lastName}
+          adminId={post?.user?._id}
+          university={post?.userProfile?.university_name}
+          year={post?.userProfile?.study_year}
+          text={post?.content}
+          date={post?.createdAt}
+          avatarLink={post?.userProfile?.profile_dp?.imageUrl}
+          commentCount={post?.commentCount || 0}
+          likes={post?.likeCount}
+          postID={post?._id}
+          type={PostType.Community}
+          images={post?.imageUrl}
+          setImageCarasol={setImageCarousel}
+          idx={idx}
+          showCommentSection={showCommentSection}
+          setShowCommentSection={setShowCommentSection}
+          communityId={communityId}
+          communityGroupId={communityGroupId}
+          major={post?.userProfile?.major}
+          affiliation={post?.userProfile?.affiliation}
+          occupation={post?.userProfile?.occupation}
+          role={post?.userProfile?.role}
+          isPostVerified={post?.isPostVerified}
+          communityName={post?.communityName}
+          communityGroupName={post?.communityGroupName}
+          isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
+        />
+      ))
+    }
   }, [communityGroupPostData, showCommentSection, communityId, communityGroupId])
 
   if (isLoading && !communityPostIsFetchingNextPage) {
@@ -123,6 +183,21 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
     )
   }
 
+  if (
+    communityGroupPostData?.length === 0 &&
+    filterPostBy === Object.keys(AllFiltersCommunityGroupPost)[1] &&
+    communityGroupAdminId.toString() == userData?.id?.toString()
+  ) {
+    return (
+      <EmptyStateCard
+        imageWidth={320}
+        imageHeight={169}
+        imageSrc={notPendingNoPostPlaceholder}
+        title="You are all done!"
+        description="No pending posts requests at the moment."
+      />
+    )
+  }
   if (communityGroupPostData?.length === 0) {
     return (
       <EmptyStateCard
@@ -136,7 +211,7 @@ function CommunityGroupPostContainer({ containerRef, iscommunityGroups }: Commun
   }
 
   return (
-    <div className="py-8 post-container">
+    <div className="py-4 post-container">
       <div className="flex flex-col gap-6">
         {renderPostWithRespectToPathName()}
         {communityPostIsFetchingNextPage && (

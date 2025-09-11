@@ -66,6 +66,7 @@ const GroupChatModal = ({
 
   const [searchInput, setSearchInput] = useState('')
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
+  const isJoined = userProfileData?.communities?.length && userProfileData?.communities?.some((community) => community.isVerified)
   const {
     data,
     //fetchNextPage,
@@ -329,7 +330,7 @@ const GroupChatModal = ({
               ))
             ) : (
               <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
-                <p className="p-3 text-gray-500">No results found</p>
+                <p className="p-3 text-gray-500">{isJoined ? 'No results found' : 'You dont have a verified university'}</p>
               </div>
             )}
           </div>

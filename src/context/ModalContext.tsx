@@ -4,7 +4,7 @@ import ModalWrapper from '@/components/molecules/Modal/ModalWrapper'
 import React, { createContext, useContext, useState } from 'react'
 
 interface ModalContextType {
-  openModal: (content: React.ReactNode, style?: string, showCloseIcon?: boolean, isAllowedToScroll?: boolean) => void
+  openModal: (content: React.ReactNode, style?: string, showCloseIcon?: boolean, isAllowedToScroll?: boolean, disableClose?: boolean) => void
   closeModal: () => void
 }
 
@@ -16,18 +16,21 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [style, setStyle] = useState('')
   const [showCloseIcon, setShowCloseIcon] = useState(false)
   const [isAllowScroll, setIsAllowScroll] = useState(true)
+  const [disableClose, setDisableClose] = useState(false)
 
   const openModal = (
     content: React.ReactNode,
     style = 'h-[70vh] w-[350px] sm:w-[550px] hideScrollbar',
     showCloseIcon = true,
-    isAllowedToScroll = true
+    isAllowedToScroll = true,
+    disableClose = false
   ) => {
     setStyle(style)
     setModalContent(content)
     setShowCloseIcon(showCloseIcon)
     setIsAllowScroll(isAllowedToScroll)
     setIsShown(true)
+    setDisableClose(disableClose)
   }
 
   const closeModal = () => {
@@ -39,7 +42,14 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
       {isShown && (
-        <ModalWrapper setModal={closeModal} isShown={isShown} style={style} showCloseIcon={showCloseIcon} isAllowScroll={isAllowScroll}>
+        <ModalWrapper
+          setModal={closeModal}
+          isShown={isShown}
+          style={style}
+          showCloseIcon={showCloseIcon}
+          disableClose={disableClose}
+          isAllowScroll={isAllowScroll}
+        >
           {modalContent}
         </ModalWrapper>
       )}

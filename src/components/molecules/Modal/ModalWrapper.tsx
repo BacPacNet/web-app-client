@@ -8,14 +8,15 @@ type ModalWrapperProps = {
   showCloseIcon: boolean
   isAllowScroll?: boolean
   style?: string
+  disableClose?: boolean
 }
 
-const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', isAllowScroll = true }: ModalWrapperProps) => {
+const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', isAllowScroll = true, disableClose = false }: ModalWrapperProps) => {
   if (!isShown) return null
 
   return (
     <div>
-      <div onClick={() => setModal(false)} className="bg-black opacity-70 w-screen h-screen fixed z-[60] top-0 left-0"></div>
+      <div onClick={() => !disableClose && setModal(false)} className="bg-black opacity-70 w-screen h-screen fixed z-[60] top-0 left-0"></div>
 
       <div className={`fixed left-1/2 -translate-x-1/2  top-1/2 -translate-y-1/2 flex justify-center items-center z-[70]`}>
         <div
@@ -25,7 +26,7 @@ const ModalWrapper = ({ children, setModal, isShown, showCloseIcon, style = '', 
         >
           {showCloseIcon ? (
             <div className="absolute right-2 top-2 z-[50]">
-              <button onClick={() => setModal(false)} className="p-2 hover:bg-neutral-200 rounded-md">
+              <button onClick={() => !disableClose && setModal(false)} className="p-2 hover:bg-neutral-200 rounded-md">
                 <IoClose size={24} />
               </button>
             </div>

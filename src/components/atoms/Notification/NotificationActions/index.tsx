@@ -40,6 +40,10 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
           communityGroupId: data?.communityGroupId?._id,
           adminId: data?.receiverId,
           userId: data?.sender_id?._id,
+          text:
+            status == notificationStatus.accepted
+              ? `Congratulations! ${data?.communityGroupId?.title} is now officially recognized by ${data?.communityDetails?.name}.`
+              : `Your request to create ${data?.communityGroupId?.title} as an official group at ${data?.communityDetails?.name} was not approved.`,
         })
         break
 

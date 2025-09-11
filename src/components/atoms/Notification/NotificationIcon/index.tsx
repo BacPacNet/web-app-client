@@ -18,6 +18,9 @@ export const NotificationIcon = ({ type }: NotificationIconProps) => {
     case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
     case notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST:
     case notificationRoleAccess.REJECTED_PRIVATE_GROUP_REQUEST:
+    case notificationRoleAccess.community_post_live_request_notification:
+    case notificationRoleAccess.community_post_accepted_notification:
+    case notificationRoleAccess.community_post_rejected_notification:
       return <FaUsers className="w-7 h-7 sm:w-7 sm:h-7" color="#9685FF" />
     case notificationRoleAccess.COMMENT:
     case notificationRoleAccess.COMMUNITY_COMMENT:

@@ -21,7 +21,9 @@ import useDeviceType from '@/hooks/useDeviceType'
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
 import { useModal } from '@/context/ModalContext'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
-import { CommunityGroup } from '@/types/Community'
+import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
+import { notificationStatus } from '@/services/notification'
+import { useJoinCommunityGroup as useJoinCommunityGroupFromNotification } from '@/services/notification'
 
 interface Props {
   communityID: string
@@ -33,6 +35,10 @@ interface Props {
   communityGroups: CommunityGroupType
   isCommunityGroupsLoading: boolean
   refetch: () => void
+  setIsCommunityGroupLive: (isCommunityGroupNotLive: boolean) => void
+  isCommunityGroupLive: boolean | null
+  notificationId: string
+  notificationType: string
 }
 
 export default function CommunityGroupBanner({
@@ -45,6 +51,10 @@ export default function CommunityGroupBanner({
   communityGroups,
   isCommunityGroupsLoading,
   refetch,
+  setIsCommunityGroupLive,
+  isCommunityGroupLive,
+  notificationId,
+  notificationType,
 }: Props) {
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
@@ -52,7 +62,9 @@ export default function CommunityGroupBanner({
   const [_showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
+  const { mutate: joinGroup } = useJoinCommunityGroupFromNotification()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
+
   const handleShowMembers = () => {
     openModal(
       <CommunityGroupModal
@@ -60,8 +72,28 @@ export default function CommunityGroupBanner({
         communityGroupId={communityGroupID}
         //isGroupAdmin={isGroupAdmin}
         users={CommunityGroupMember || []}
+        communityAdminId={communityGroups?.communityId?.adminId as string}
+        isOfficialGroup={communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL}
       />
     )
+  }
+
+  const handleAcceptInvite = () => (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    if (!communityGroupID) return
+
+    if (notificationType === notificationRoleAccess.GROUP_INVITE) {
+      const payload = {
+        isAccepted: true,
+        groupId: communityGroupID,
+        id: notificationId,
+      }
+      joinGroup(payload, {
+        onSuccess: () => {
+          refetch()
+        },
+      })
+    }
   }
 
   useEffect(() => {
@@ -87,8 +119,23 @@ export default function CommunityGroupBanner({
     }
   }, [communityGroups, userData, setIsGroupAdmin])
 
+  useEffect(() => {
+    if (communityGroups?.isCommunityGroupLive) {
+      setIsCommunityGroupLive(true)
+    } else {
+      setIsCommunityGroupLive(false)
+    }
+  }, [communityGroups])
+
+  useEffect(() => {
+    if (communityGroups?.isCommunityGroupLive) {
+      setIsCommunityGroupLive(true)
+    } else {
+      setIsCommunityGroupLive(false)
+    }
+  }, [communityGroups])
+
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
-    console.log('clicked', isUserRequestPending)
     if (isUserRequestPending && isGroupPrivate) return
     if (!isUserJoinedCommunityGroup) {
       joinCommunityGroup(communityGroupID)
@@ -152,6 +199,11 @@ export default function CommunityGroupBanner({
                 onDelete={handleDeleteGroup}
                 onLeave={() => handleToggleJoinCommunityGroup(communityGroupID)}
               />
+            ) : isCommunityGroupLive == null || !isCommunityGroupLive ? null : communityGroups?.notificationStatus == notificationStatus.default &&
+              communityGroups?.notificationTypes == notificationRoleAccess.GROUP_INVITE ? (
+              <Buttons onClick={handleAcceptInvite()} variant="primary" size="medium">
+                Accept Request
+              </Buttons>
             ) : (
               <JoinGroupButton
                 isPrivate={isGroupPrivate}

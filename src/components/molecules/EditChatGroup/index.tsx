@@ -154,7 +154,7 @@ const EditGroupChatModal = ({
       }
       const imagedata = await uploadtoS3(uploadPayload)
       if (imagedata.success) {
-        paylod.groupLogo = imagedata.data
+        paylod.groupLogo = imagedata.data[0]
       }
     }
 
@@ -196,9 +196,12 @@ const EditGroupChatModal = ({
     <div className="relative w-full h-[400px] flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <label htmlFor="name" className="font-medium text-sm text-neutral-900">
-          Edit Profile
+          Edit Group Chat
         </label>
-        <div className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full`}>
+        <div
+          className={` border-2 border-neutral-200 bg-white flex  items-center justify-center w-[100px] h-[100px] rounded-full cursor-pointer`}
+          onClick={() => document.getElementById('CreateGroupLogoImage')?.click()}
+        >
           {groupLogoImage && !groupLogo?.length ? (
             <Image
               width={96}
@@ -235,12 +238,12 @@ const EditGroupChatModal = ({
           />
 
           {groupLogoImage ? (
-            <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  ">
+            <label htmlFor="CreateGroupLogoImage" className="relative flex flex-col items-center gap-2 z-10  " onClick={(e) => e.stopPropagation()}>
               <div className="w-12 h-12 rounded-full bg-black opacity-50 absolute -z-10 top-1/2 -translate-y-1/2"></div>
               <FiCamera size={32} className="text-white" />
             </label>
           ) : (
-            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
+            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2" onClick={(e) => e.stopPropagation()}>
               <FiCamera size={32} className="text-slate-400 z-30" />
             </label>
           )}

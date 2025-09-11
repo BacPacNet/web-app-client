@@ -28,6 +28,8 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCommunityUsers } from '@/services/community'
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
+import CustomTooltip from '@/components/atoms/CustomTooltip'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -443,17 +445,34 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
             {communityGroups?.status == status.pending ? (
               <p className="text-warning-500 text-xs font-semibold py-2">
-                Your Official Group request is pending. Your Casual Group will convert after university admin accepts the request.
+                Your request for creating an Official Group is pending. Your group will be deleted if it is rejected.
               </p>
             ) : (
               ''
             )}
 
             <label className="flex items-center gap-3">
-              {communityGroups?.communityGroupType == CommunityGroupTypeEnum.OFFICIAL ? (
+              {communityGroups?.communityGroupType == CommunityGroupTypeEnum.OFFICIAL || communityGroups?.status == status.pending ? (
                 <div className="py-3">
-                  <span className="text-neutral-900 text-[12px] font-medium">Official</span>
-                  {/*<p className="text-neutral-400 text-[12px] ">Require university approval</p>*/}
+                  {/* <span className="text-neutral-900 text-[12px] font-medium">Official</span> */}
+
+                  <div className="flex gap-4">
+                    <span className="text-neutral-900 text-[12px] font-medium">Official</span>
+                    <CustomTooltip
+                      icon={<AiOutlineInfoCircle size={20} />}
+                      content={
+                        <>
+                          <ul className="mt-2 space-y-2 text-sm text-gray-900 ">
+                            <li className="text-2xs  font-medium">Official groups have a badge</li>
+                            <li className="text-3xs text-neutral-700 max-w-[200px]">
+                              Official groups are recognized and affiliated with the university.
+                            </li>
+                          </ul>
+                        </>
+                      }
+                    />
+                  </div>
+                  <p className="text-neutral-400 text-[12px] ">Require university approval</p>
                 </div>
               ) : (
                 <div className="py-3">

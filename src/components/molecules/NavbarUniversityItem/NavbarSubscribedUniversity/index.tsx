@@ -81,7 +81,7 @@ const CommunityHolder = ({ community, index, handleCommunityClick, communityId, 
         <Image
           width={40}
           height={40}
-          className="w-[40px] h-[40px] object-contain rounded-full shadow-logo p-1"
+          className="w-[40px] h-[40px] object-contain rounded-full shadow-logo"
           src={logoSrc || ''}
           alt={community?.name}
           onError={() => setLogoSrc(universityLogoPlaceholder)}

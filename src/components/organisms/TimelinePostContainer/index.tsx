@@ -3,8 +3,12 @@ import OnboardingPlaceholder from '@/components/atoms/OnboardingPlaceholder'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import PostCard from '@/components/molecules/PostCard'
+import UserGuidelinesModal from '@/components/molecules/UserGuideLinesModal'
+import GenericInfoModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import PostSkeleton from '@/components/Timeline/PostSkeleton'
+import { useModal } from '@/context/ModalContext'
 import { useGetTimelinePosts } from '@/services/community-timeline'
+import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -22,7 +26,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     isFetchingNextPage: timelinePostIsFetchingNextPage,
     hasNextPage: timelinePostHasNextPage,
   } = useGetTimelinePosts(10)
-
+  const { openModal } = useModal()
   const [showCommentSection, setShowCommentSection] = useState('')
   const [imageCarasol, setImageCarasol] = useState<{
     isShow: boolean
@@ -33,6 +37,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     images: [],
     currImageIndex: null,
   })
+  const { userData } = useUniStore()
 
   // Memoize flattened posts data
   const timlineDatas = useMemo(() => TimelinePosts?.pages.flatMap((page) => page?.allPosts) || null, [TimelinePosts?.pages])
@@ -59,6 +64,16 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
       openImageModal(<PostImageSlider images={imageCarasol.images} initialSlide={imageCarasol.currImageIndex} messageImage={true} />)
     }
   }, [imageCarasol])
+
+  const openNewUserModal = () => {
+    openModal(<UserGuidelinesModal />, 'w-[350px] sm:w-[490px] hideScrollbar', false, true, true)
+  }
+
+  useEffect(() => {
+    if (userData?.isNewUser) {
+      openNewUserModal()
+    }
+  }, [userData?.isNewUser])
 
   // Memoize post rendering
   const renderPostWithRespectToPathName = useCallback(() => {

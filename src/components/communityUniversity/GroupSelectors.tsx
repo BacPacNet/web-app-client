@@ -40,9 +40,9 @@ const GroupSelectors = ({
         >
           {data?.communityGroupLogoUrl?.imageUrl ? (
             <Image
-              width={48}
-              height={48}
-              className="w-11 h-11 object-cover rounded-full shadow-card flex-none"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-cover rounded-full shadow-card flex-none"
               src={data?.communityGroupLogoUrl?.imageUrl}
               alt="dp"
             />

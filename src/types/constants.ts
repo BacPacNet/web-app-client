@@ -278,3 +278,8 @@ export type Chat = {
 }
 
 export type ChatsArray = Chat[]
+
+export enum communityPostUpdateStatus {
+  LIVE = 'live',
+  REJECTED = 'rejected',
+}
