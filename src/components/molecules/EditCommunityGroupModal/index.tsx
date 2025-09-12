@@ -63,8 +63,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const { mutateAsync: mutateEditGroup, isPending } = useUpdateCommunityGroup()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
-  console.log('communityGroups', communityGroups)
-
   const { title, description: initialDescription, communityGroupAccess, communityGroupCategory, communityGroupLabel } = communityGroups
   console.log('communityGroupLabel', communityGroupLabel)
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>(communityGroupCategory)

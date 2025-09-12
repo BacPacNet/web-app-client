@@ -558,7 +558,7 @@ export const useCreateGroupPost = () => {
     onSuccess: (_, req) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       if (!req?.isCommunityAdmin && req?.isGroupOfficial) {
-        showCustomInfoToast('Your post has been successfully submitted to the group admin for approval.')
+        showCustomInfoToast('Your post has been submitted for approval.')
       } else {
         showCustomSuccessToast('Post created successfully')
       }
