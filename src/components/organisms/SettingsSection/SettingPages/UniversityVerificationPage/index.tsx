@@ -13,12 +13,12 @@ import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { IoIosAddCircle } from 'react-icons/io'
 import badge from '@assets/badge.svg'
 import { useModal } from '@/context/ModalContext'
+import { useGetUserProfileVerifiedUniversityEmailData } from '@/services/userProfile'
+import { Spinner } from '@/components/spinner/Spinner'
 const UniversityVerificationPage = () => {
   const router = useRouter()
   const { openModal } = useModal()
-  const userProfileData = useUniStore((state) => state.userProfileData) || { email: [] }
-
-  const email: EmailType[] = userProfileData.email || []
+  const { data: verifiedUniversityEmailData, isFetching } = useGetUserProfileVerifiedUniversityEmailData()
 
   return (
     <div className="rounded-lg">
@@ -35,13 +35,15 @@ const UniversityVerificationPage = () => {
           <UniversityBenefits />
         </div>
       </div>
-      {email?.length ? (
+      {isFetching ? (
+        <Spinner />
+      ) : verifiedUniversityEmailData?.length ? (
         <div className="mt-12 border-b border-neutral-300 pb-6">
           <div className="flex flex-col gap-2 mb-6">
             <p className="text-neutral-700 font-semibold text-sm ">You are currently verified for the following universities.</p>
           </div>
           <div className="flex flex-col gap-6">
-            {email?.map((item: EmailType, idx) => (
+            {verifiedUniversityEmailData?.map((item: EmailType, idx: number) => (
               <div key={idx}>
                 <div className="flex flex-col gap-6">
                   <div className="relative  flex flex-col gap-2">

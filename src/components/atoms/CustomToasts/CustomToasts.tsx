@@ -118,6 +118,49 @@ export function showCustomDangerToast(message: string) {
     }
   )
 }
+export function showCustomInfoToast(message: string) {
+  toast.dismiss()
+  toast(
+    (t) =>
+      React.createElement(
+        'div',
+        {
+          className:
+            'bg-[#E9E8FF] text-xs md:text-sm flex justify-between items-center px-4 py-2 rounded-lg shadow-lg min-w-[500px] max-sm:min-w-[250px]',
+          style: {
+            margin: '0 auto',
+            position: 'relative',
+            // minWidth: '300px',
+            // maxWidth: '800px',
+            width: '80%',
+            textAlign: 'center',
+          },
+        },
+        React.createElement('p', { className: 'text-primary-800' }, message || MESSAGES.SOMETHING_WENT_WRONG),
+        React.createElement(
+          'button',
+          {
+            onClick: () => toast.dismiss(t.id),
+            className: 'text-primary-800 ',
+          },
+          React.createElement(AiOutlineClose, { size: 20 })
+        )
+      ),
+    {
+      position: 'bottom-center',
+      duration: 3000,
+      style: {
+        margin: 0,
+        padding: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+      },
+    }
+  )
+}
 
 type ToastVariant = 'default' | 'success' | 'error' | 'warning' | 'info'
 type ThemeMode = 'light' | 'dark'
@@ -140,7 +183,7 @@ const colorVariants = {
     dark: 'bg-[#D97706] text-white border-yellow-800',
   },
   info: {
-    light: '[#E9E8FF] text-blue-800 border-blue-200',
+    light: 'bg-[#E9E8FF] text-[#220B6A] border-blue-200',
     dark: 'bg-[#6744FF] text-blue-300 border-blue-800',
   },
 } as const

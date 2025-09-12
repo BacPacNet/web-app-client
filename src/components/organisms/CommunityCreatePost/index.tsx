@@ -1,5 +1,5 @@
 import Buttons from '@/components/atoms/Buttons'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomInfoToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { cleanInnerHTML, validateUploadedFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
 import { useUploadToS3 } from '@/services/upload'
@@ -29,9 +29,11 @@ const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextE
 interface Props {
   communityId: string
   communityGroupId: string
+  communityGroupAdminId: string
+  isOfficial: boolean
 }
 
-function CommunityCreatePost({ communityId, communityGroupId }: Props) {
+function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdminId, isOfficial }: Props) {
   const quillRef = useRef<Quill | null>(null)
   const quillHTMLState = useRef(null)
   const { userProfileData } = useUniStore()
@@ -90,6 +92,8 @@ function CommunityCreatePost({ communityId, communityGroupId }: Props) {
         communityId,
         communityGroupId: communityGroupId || null,
         isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) as boolean,
+        isCommunityAdmin: communityGroupAdminId == userProfileData?.users_id,
+        isGroupOfficial: isOfficial,
       }
 
       // Upload image if present

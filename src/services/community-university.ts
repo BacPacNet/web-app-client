@@ -4,7 +4,7 @@ import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
-import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomInfoToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
@@ -555,9 +555,13 @@ export const useCreateGroupPost = () => {
   return useMutation({
     mutationFn: (data: any) => CreateGroupPost(data, cookieValue),
 
-    onSuccess: () => {
+    onSuccess: (_, req) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      showCustomSuccessToast('Post created successfully')
+      if (!req?.isCommunityAdmin && req?.isGroupOfficial) {
+        showCustomInfoToast('Your post has been successfully submitted to the group admin for approval.')
+      } else {
+        showCustomSuccessToast('Post created successfully')
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
