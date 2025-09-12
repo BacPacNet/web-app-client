@@ -130,6 +130,7 @@ export interface CommunityPostData extends PostInputData {
   communityGroupId?: string | null
   isPostVerified: boolean
   isCommunityAdmin?: boolean
+  isGroupOfficial?: boolean
 }
 
 export interface PostCommentData {

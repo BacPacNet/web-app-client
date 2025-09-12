@@ -29,8 +29,8 @@ const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextE
 interface Props {
   communityId: string
   communityGroupId: string
-  communityGroupAdminId: string
-  isOfficial: boolean
+  communityGroupAdminId?: string
+  isOfficial?: boolean
 }
 
 function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdminId, isOfficial }: Props) {
