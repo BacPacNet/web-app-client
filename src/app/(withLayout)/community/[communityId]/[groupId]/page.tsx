@@ -8,7 +8,7 @@ import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/
 import { useGetCommunityGroup } from '@/services/community-university'
 import { notificationStatus } from '@/services/notification'
 import { useUniStore } from '@/store/store'
-import { CommunityGroupType } from '@/types/CommuityGroup'
+import { CommunityGroupType, CommunityGroupTypeEnum } from '@/types/CommuityGroup'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
 
@@ -69,7 +69,14 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
         />
       ) : (
         <>
-          {(isUserJoinedCommunityGroup || isGroupAdmin) && <CommunityCreatePost communityId={communityId} communityGroupId={communityGroupId} />}
+          {(isUserJoinedCommunityGroup || isGroupAdmin) && (
+            <CommunityCreatePost
+              communityGroupAdminId={communityGroups?.adminUserId as string}
+              communityId={communityId}
+              communityGroupId={communityGroupId}
+              isOfficial={communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL}
+            />
+          )}
 
           {communityGroups && !isCommunityGroupsLoading && isUserJoinedCommunityGroup && (
             <CommunityGroupPostFilterDropDown pendingPostCount={pendingPostCount} changePostFilter={changePostFilter} filterPostBy={filterPostBy} />

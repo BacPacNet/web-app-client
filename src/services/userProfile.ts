@@ -24,3 +24,24 @@ export function useGetUserProfileData(type: string) {
 
   return { ...state, error: errorMessage }
 }
+export async function getUserProfileVerifiedUniversityEmailData(token: any) {
+  const response: any = await client(`/userprofile/verifiedUniversityEmails`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserProfileVerifiedUniversityEmailData() {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  const state = useQuery({
+    queryKey: ['verifiedUniversityEmails'],
+    queryFn: () => getUserProfileVerifiedUniversityEmailData(cookieValue),
+    enabled: !!cookieValue,
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
+  }
+
+  return { ...state, error: errorMessage }
+}

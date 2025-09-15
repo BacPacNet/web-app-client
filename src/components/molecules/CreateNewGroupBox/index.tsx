@@ -8,7 +8,7 @@ import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
-import { CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
+import { CommunityGroupTypeEnum, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
 import { CommunityUsers } from '@/types/Community'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
@@ -95,6 +95,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
   const occupation = watch('occupation') || ''
   const affiliation = watch('affiliation') || ''
   const community = watch('community')
+  const communityGroupType = watch('communityGroupType')
 
   const { data: communityData } = useGetCommunity(community.id)
   const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityId, true, searchInput)
@@ -197,7 +198,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
       universityAdminId: communityData?.adminId,
     }
 
-    createGroup({ communityId: communityId, data: payload })
+    createGroup({ communityId: communityId, data: payload, isOfficial: communityGroupType.toLowerCase() === CommunityGroupTypeEnum.OFFICIAL })
     setSelectedFilters({})
     setIsLoading(false)
     setNewGroup(false)

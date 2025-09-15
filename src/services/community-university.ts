@@ -4,7 +4,7 @@ import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
 import { PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
-import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomInfoToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
 import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
@@ -359,10 +359,15 @@ export const useCreateCommunityGroup = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
-    onSuccess: (response: any) => {
+    onSuccess: (response: any, req: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomSuccessToast('Community created successfully')
+
+      if (req.isOfficial) {
+        showCustomInfoToast('Your official group has been created and is pending admin approval.')
+      } else {
+        showCustomSuccessToast('Your casual group has been created.')
+      }
       router.push(`/community/${response?.data?.communityId}/${response?.data?._id}`)
     },
     onError: (error: any) => {
@@ -555,9 +560,13 @@ export const useCreateGroupPost = () => {
   return useMutation({
     mutationFn: (data: any) => CreateGroupPost(data, cookieValue),
 
-    onSuccess: () => {
+    onSuccess: (_, req) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      showCustomSuccessToast('Post created successfully')
+      if (!req?.isCommunityAdmin && req?.isGroupOfficial) {
+        showCustomInfoToast('Your post has been submitted for approval.')
+      } else {
+        showCustomSuccessToast('Post created successfully')
+      }
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
