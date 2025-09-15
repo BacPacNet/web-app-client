@@ -359,10 +359,15 @@ export const useCreateCommunityGroup = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
-    onSuccess: (response: any) => {
+    onSuccess: (response: any, req: any) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-      showCustomSuccessToast('Community created successfully')
+
+      if (req.isOfficial) {
+        showCustomInfoToast('Your official group has been created and is pending admin approval.')
+      } else {
+        showCustomSuccessToast('Your casual group has been created.')
+      }
       router.push(`/community/${response?.data?.communityId}/${response?.data?._id}`)
     },
     onError: (error: any) => {

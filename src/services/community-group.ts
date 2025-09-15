@@ -2,8 +2,9 @@ import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import { MESSAGES } from '@/content/constant'
+
 import { useUniStore } from '@/store/store'
+import { notificationStatus as notificationStatusEnum } from '@/services/notification'
 
 /**
  * API call to join a community group
@@ -171,11 +172,14 @@ export const useChangeCommunityGroupStatus = (communityGroupId: string) => {
     mutationFn: (data: { status: string; notificationId: string; communityGroupId: string; adminId: string; userId: string; text: string }) =>
       ChangeCommunityGroupStatusAPI(data, communityGroupId, cookieValue),
 
-    onSuccess: () => {
+    onSuccess: (res, req) => {
       queryClient.invalidateQueries({ queryKey: ['user_notification'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-
-      showCustomSuccessToast(`status of community group changed`)
+      if (req.status == notificationStatusEnum.accepted) {
+        showCustomSuccessToast('You’ve approved the official group request. The group is now active.')
+      } else {
+        showCustomDangerToast('You’ve rejected the official group request. The group has been deleted.')
+      }
     },
 
     onError: (error: any) => {
