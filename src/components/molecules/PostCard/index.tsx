@@ -83,6 +83,7 @@ interface PostProps {
   initialComment?: any
   isCommunityAdmin?: boolean
   isSinglePost?: boolean
+  filterPostBy?: string
 }
 
 const PostCard = React.memo(
@@ -117,6 +118,7 @@ const PostCard = React.memo(
     initialComment,
     isCommunityAdmin,
     isSinglePost,
+    filterPostBy,
   }: PostProps) => {
     const { userData } = useUniStore()
     const commentSectionRef = useRef<HTMLDivElement>(null)
@@ -134,7 +136,8 @@ const PostCard = React.memo(
       communityId,
       communityGroupId,
       isTimeline,
-      isSinglePost
+      isSinglePost,
+      filterPostBy
     )
     const { mutate: likeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId, isSinglePost)
 
