@@ -158,6 +158,7 @@ function CommunityGroupPostContainer({
           communityName={post?.communityName}
           communityGroupName={post?.communityGroupName}
           isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
+          filterPostBy={filterPostBy}
         />
       ))
     }
