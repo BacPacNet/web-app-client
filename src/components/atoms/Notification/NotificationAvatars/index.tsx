@@ -24,6 +24,14 @@ interface CommentedBy {
 }
 type Props = {
   data: {
+    userPost: {
+      likeCount: number
+      totalComments: number
+    }
+    communityPost: {
+      likeCount: number
+      totalComments: number
+    }
     _id: string
     createdAt: string
     isRead: boolean
@@ -95,7 +103,10 @@ const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment
     ))
 
   const renderContent = () => {
-    if (notificationType == notificationRoleAccess.REACTED_TO_POST || notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
+    if (
+      (notificationType == notificationRoleAccess.REACTED_TO_POST && data?.userPost?.likeCount > 1) ||
+      (notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST && data?.communityPost?.likeCount > 1)
+    ) {
       return renderUsers(data?.likedBy?.newFiveUsers)
     } else if (notificationType == notificationRoleAccess.COMMENT) {
       return renderUsers(data?.commentedBy?.newFiveUsers)
