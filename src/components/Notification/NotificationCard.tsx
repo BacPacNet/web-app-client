@@ -45,6 +45,14 @@ interface CommentedBy {
 
 type Props = {
   data: {
+    userPost: {
+      likeCount: number
+      totalComments: number
+    }
+    communityPost: {
+      likeCount: number
+      totalComments: number
+    }
     _id: string
     createdAt: string
     isRead: boolean
