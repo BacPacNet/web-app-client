@@ -81,6 +81,9 @@ type Props = {
     type: string
     likedBy: likedBy
     commentedBy: CommentedBy
+    repliedBy: CommentedBy
+    parentCommentReplies: any
+    communityParentCommentReplies: any
   }
 }
 
@@ -103,21 +106,35 @@ const NotificationCard = ({ data }: Props) => {
         return router.push(`/profile/${data.sender_id?._id}`)
       case notificationRoleAccess.COMMENT:
         return router.push(`/post/${data.userPostId}?isType=Timeline&commentId=${data?.commentedBy.newFiveUsers[0].postCommentId}`)
+      case notificationRoleAccess.REPLIED_TO_COMMENT:
+        return router.push(`/post/${data.userPostId}?isType=Timeline&commentId=${data?.parentCommentReplies[0].parentId}&isReply=${true}`)
       case notificationRoleAccess.COMMUNITY_COMMENT:
         return router.push(`/post/${data.communityPostId}?isType=Community&commentId=${data?.commentedBy.newFiveUsers[0].communityPostCommentId}`)
+      case notificationRoleAccess.REPLIED_TO_COMMUNITY_COMMENT:
+        return router.push(
+          `/post/${data.communityPostId}?isType=Community&commentId=${data?.communityParentCommentReplies[0].parentId}&isReply=${true}`
+        )
       case notificationRoleAccess.REACTED_TO_POST:
         return router.push(`/post/${data.userPostId}?isType=Timeline`)
       case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
         return router.push(`/post/${data.communityPostId}?isType=Community`)
       case notificationRoleAccess.community_post_live_request_notification:
         return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}?filterPostBy=pendingPosts`)
+      case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+        if (data?.status === notificationStatus.rejected) {
+          return
+        }
+        return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}`)
+
+      case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
+        return
 
       case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST:
-      case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
+      //   case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.GROUP_INVITE:
-      case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
+      //   case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.REJECTED_PRIVATE_GROUP_REQUEST:
       case notificationRoleAccess.community_post_accepted_notification:
       case notificationRoleAccess.community_post_rejected_notification:

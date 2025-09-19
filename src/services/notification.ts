@@ -89,6 +89,9 @@ export interface UserMainNotification {
   type: string
   likedBy: likedBy
   commentedBy: likedBy
+  repliedBy: likedBy
+  parentCommentReplies: any
+  communityParentCommentReplies: any
 }
 
 type UserMainNotificationsProps = {

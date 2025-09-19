@@ -93,6 +93,8 @@ const PostCommentBox = ({
   setShowCommentSection,
   setShowInitial,
   showInitial,
+  isReplyTrue,
+  commentID,
 }: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
 
@@ -231,6 +233,12 @@ const PostCommentBox = ({
       refetchCommunityPostComment()
     }
   }
+
+  useEffect(() => {
+    if (isReplyTrue) {
+      expandCommentSection(commentID || '')
+    }
+  }, [isReplyTrue])
 
   return (
     <div
