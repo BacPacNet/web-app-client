@@ -258,11 +258,6 @@ const PostCard = React.memo(
       }, 100)
     }, [showCommentSection, postID, setShowCommentSection])
 
-    useEffect(() => {
-      if (isReply) {
-      }
-    }, [isReply])
-
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}

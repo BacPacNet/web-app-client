@@ -132,9 +132,7 @@ const NotificationCard = ({ data }: Props) => {
       case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST:
-      //   case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.GROUP_INVITE:
-      //   case notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST:
       case notificationRoleAccess.REJECTED_PRIVATE_GROUP_REQUEST:
       case notificationRoleAccess.community_post_accepted_notification:
       case notificationRoleAccess.community_post_rejected_notification:
