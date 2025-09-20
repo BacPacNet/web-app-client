@@ -59,6 +59,7 @@ type Props = {
     type: string
     likedBy: LikedBy
     commentedBy: CommentedBy
+    repliedBy: CommentedBy
   }
 
   notificationType: string
@@ -110,8 +111,12 @@ const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment
       return renderUsers(data?.likedBy?.newFiveUsers)
     } else if (notificationType == notificationRoleAccess.COMMENT) {
       return renderUsers(data?.commentedBy?.newFiveUsers)
+    } else if (notificationType == notificationRoleAccess.REPLIED_TO_COMMENT) {
+      return renderUsers(data?.repliedBy?.newFiveUsers)
     } else if (notificationType == notificationRoleAccess.COMMUNITY_COMMENT) {
       return renderCommunityUsers(data?.commentedBy?.newFiveUsers)
+    } else if (notificationType == notificationRoleAccess.REPLIED_TO_COMMUNITY_COMMENT) {
+      return renderCommunityUsers(data?.repliedBy?.newFiveUsers)
     } else if (
       notificationType == notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST ||
       notificationType == notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST ||
