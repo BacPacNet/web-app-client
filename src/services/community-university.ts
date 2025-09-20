@@ -428,7 +428,13 @@ export function useGetCommunityGroupPost(communityId: string, communityGroupID: 
   })
 }
 
-export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroupId: string = '', isTimeline: boolean, isSinglePost = false) => {
+export const useLikeUnilikeGroupPost = (
+  communityId: string = '',
+  communityGroupId: string = '',
+  isTimeline: boolean,
+  isSinglePost = false,
+  filterPostBy: string = ''
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
@@ -443,7 +449,7 @@ export const useLikeUnilikeGroupPost = (communityId: string = '', communityGroup
         ? ['getPost', postId]
         : isTimeline
         ? ['timelinePosts']
-        : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : [])]
+        : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : []), filterPostBy]
       queryClient.cancelQueries({ queryKey: queryKey })
 
       const previousPosts = queryClient.getQueryData(queryKey)

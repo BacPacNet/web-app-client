@@ -14,6 +14,7 @@ const SinglePost = () => {
   const searchParams = useSearchParams()
   const Type = searchParams.get('isType')
   const commentID = searchParams.get('commentId')
+  const isReply = searchParams.get('isReply')
   const { data, isFetching, isError } = useGetPost(id, Type, commentID || ' ')
   const item = data?.post
   const comment = data?.comment
@@ -82,6 +83,8 @@ const SinglePost = () => {
           isPostVerified={isPostVerified}
           isCommunityAdmin={profile.isCommunityAdmin}
           isSinglePost={true}
+          isReply={isReply == 'true'}
+          commentID={commentID || ''}
         />
       </div>
     </div>

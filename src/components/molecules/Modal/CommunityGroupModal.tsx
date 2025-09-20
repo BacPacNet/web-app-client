@@ -52,7 +52,7 @@ export const CommunityGroupModal = ({ users, adminId, communityGroupId, communit
             affiliation={user.affiliation}
             showCommunityGroupMember={true}
             isViewerAdmin={adminId === userProfileData?.users_id}
-            isGroupAdmin={user._id === adminId}
+            isGroupAdmin={user._id.toString() === adminId.toString()}
             handleRemoveClick={(id) => handleRemoveUser(id)}
             isRemovePending={isPending}
             isCommunityAdmin={communityAdminId?.toString() === user?._id?.toString()}
