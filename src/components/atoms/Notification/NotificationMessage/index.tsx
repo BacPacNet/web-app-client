@@ -40,10 +40,10 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.COMMENT: {
       const firstCommenterName = data?.commentedBy?.newFiveUsers?.length ? data.commentedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
 
-      if (data?.commentedBy?.totalCount > 1) {
+      if (data?.userPost?.totalComments > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b> and {data?.commentedBy?.totalCount - 1} others commented on your post
+            <b>{firstCommenterName}</b> and {data?.userPost?.totalComments - 1} others commented on your post
           </span>
         )
       } else {
@@ -55,12 +55,30 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       }
     }
 
-    case notificationRoleAccess.COMMUNITY_COMMENT: {
-      const firstCommenterName = data?.commentedBy?.newFiveUsers?.length ? data.commentedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
-      if (data?.commentedBy?.totalCount > 1) {
+    case notificationRoleAccess.REPLIED_TO_COMMENT: {
+      const firstCommenterName = data?.repliedBy?.newFiveUsers?.length ? data.repliedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
+
+      if (data?.parentCommentReplies[0]?.totalReplies > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstCommenterName}</b> and {data?.commentedBy?.totalCount - 1} others commented on your community post
+            <b>{firstCommenterName}</b> and {data?.parentCommentReplies[0]?.totalReplies - 1} others replied to your comment
+          </span>
+        )
+      } else {
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> replied to your comment.
+          </span>
+        )
+      }
+    }
+
+    case notificationRoleAccess.COMMUNITY_COMMENT: {
+      const firstCommenterName = data?.commentedBy?.newFiveUsers?.length ? data.commentedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
+      if (data?.communityPost?.totalComments > 1) {
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> and {data?.communityPost?.totalComments - 1} others commented on your community post
           </span>
         )
       } else {
@@ -72,13 +90,31 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
       }
     }
 
+    case notificationRoleAccess.REPLIED_TO_COMMUNITY_COMMENT: {
+      const firstCommenterName = data?.repliedBy?.newFiveUsers?.length ? data.repliedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
+
+      if (data?.communityParentCommentReplies[0]?.totalReplies > 1) {
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> and {data?.communityParentCommentReplies[0]?.totalReplies - 1} others replied to your comment
+          </span>
+        )
+      } else {
+        return (
+          <span className="text-xs font-inter">
+            <b>{firstCommenterName}</b> replied to your comment.
+          </span>
+        )
+      }
+    }
+
     case notificationRoleAccess.REACTED_TO_POST: {
       const firstLikerName = data?.likedBy?.newFiveUsers?.length ? data.likedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
 
-      if (data?.likedBy?.totalCount > 1) {
+      if (data?.userPost?.likeCount > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstLikerName}</b> and <b>{data?.likedBy?.totalCount - 1} others</b> liked your post
+            <b>{firstLikerName}</b> and <b>{data?.userPost?.likeCount - 1} others</b> liked your post
           </span>
         )
       } else {
@@ -93,10 +129,10 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.REACTED_TO_COMMUNITY_POST: {
       const firstLikerName = data?.likedBy?.newFiveUsers?.length ? data.likedBy.newFiveUsers[0]?.name || 'Someone' : 'Someone'
 
-      if (data?.likedBy?.totalCount > 1) {
+      if (data?.communityPost?.likeCount > 1) {
         return (
           <span className="text-xs font-inter">
-            <b>{firstLikerName}</b> and <b>{data?.likedBy?.totalCount - 1} others</b> liked your community post
+            <b>{firstLikerName}</b> and <b>{data?.communityPost?.likeCount - 1} others</b> liked your community post
           </span>
         )
       } else {

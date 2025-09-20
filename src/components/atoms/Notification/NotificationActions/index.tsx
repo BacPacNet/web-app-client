@@ -73,9 +73,9 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
           </Buttons>
         )
       } else if (data?.status === notificationStatus.accepted) {
-        return <p className="text-xs text-success-500">You have accepted the invite.</p>
+        return <p className="text-2xs text-success-500">You have accepted the invite.</p>
       } else if (data?.status === notificationStatus.rejected) {
-        return <p className="text-xs text-destructive-600">You have rejected the invite.</p>
+        return <p className="text-2xs text-destructive-600">You have rejected the invite.</p>
       } else {
         return null
       }
@@ -84,9 +84,9 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
     case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
     case notificationRoleAccess.PRIVATE_GROUP_REQUEST:
       if (data.status === notificationStatus.accepted) {
-        return <p className="text-xs text-success-500">You have accepted the request.</p>
+        return <p className="text-2xs text-success-500">You have accepted the request.</p>
       } else if (data.status === notificationStatus.rejected) {
-        return <p className="text-xs text-destructive-600">You have rejected the request.</p>
+        return <p className="text-2xs text-destructive-600">You have rejected the request.</p>
       } else {
         return (
           <div className="flex items-center gap-4">
