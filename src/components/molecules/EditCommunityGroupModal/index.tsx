@@ -56,7 +56,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [filtersError, setFIltersError] = useState('')
 
-  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityGroups?.communityId?._id, true)
+  const {
+    data: communityUsersData,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useCommunityUsers(communityGroups?.communityId?._id, true, searchInput)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
