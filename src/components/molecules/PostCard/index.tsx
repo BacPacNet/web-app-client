@@ -83,6 +83,9 @@ interface PostProps {
   initialComment?: any
   isCommunityAdmin?: boolean
   isSinglePost?: boolean
+  filterPostBy?: string
+  isReply?: boolean
+  commentID?: string
 }
 
 const PostCard = React.memo(
@@ -117,6 +120,9 @@ const PostCard = React.memo(
     initialComment,
     isCommunityAdmin,
     isSinglePost,
+    filterPostBy,
+    isReply,
+    commentID,
   }: PostProps) => {
     const { userData } = useUniStore()
     const commentSectionRef = useRef<HTMLDivElement>(null)
@@ -134,7 +140,8 @@ const PostCard = React.memo(
       communityId,
       communityGroupId,
       isTimeline,
-      isSinglePost
+      isSinglePost,
+      filterPostBy
     )
     const { mutate: likeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId, isSinglePost)
 
@@ -338,6 +345,8 @@ const PostCard = React.memo(
             initialComment={initialComment}
             setShowInitial={setShowInitial}
             showInitial={showInitial}
+            isReplyTrue={isReply}
+            commentID={commentID}
           />
         </div>
       </motion.div>
