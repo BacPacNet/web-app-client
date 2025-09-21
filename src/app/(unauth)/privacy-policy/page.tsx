@@ -35,50 +35,57 @@ function PrivacyPolicyPage() {
   return (
     <main className="max-width-allowed mx-auto sm:px-0 px-4 pt-8 pb-4 text-justify">
       {/*<div className="mx-auto max-w-4xl">*/}
+      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Updated: September 20, 2025</p>
+
       <h1 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Privacy Policy</h1>
 
-      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Effective Date: August 1, 2024</p>
+      <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+        Welcome to Unibuzz. At Unibuzz Networks, we are committed to protecting your privacy and handling your data in an open, responsible, and
+        transparent manner.
+      </p>
 
-      <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 ">
-        Welcome to UniBuzz. At UniBuzz Networks, we are committed to protecting your privacy and handling your data in an open and transparent manner.
-        This Privacy Policy outlines how we collect, use, process, and share your personal information when you use our services, website, and mobile
-        application (collectively, the &quot;Service&quot;).
+      <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+        This Privacy Policy outlines how Unibuzz collects, uses, processes, and shares personal information when you interact with our websites,
+        mobile application, and related services (collectively, the &quot;Service&quot;).
+      </p>
+
+      <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
+        By using Unibuzz, you consent to the collection and use of information in accordance with this policy.
       </p>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Information We Collect</h2>
+
+        <h3 className="font-poppins text-[16px] font-semibold text-neutral-700 mb-4">Directly Provided Information</h3>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
-          We collect information you provide directly to us when you create an account, use our Service, or communicate with us. This includes but is
-          not limited to:
+          We collect information you provide directly to us when you create an account, use our Service, or communicate with us. This may include:
         </p>
+        <ul className="list-disc pl-6 text-neutral-600 font-normal md:text-xs text-2xs space-y-2 mb-6">
+          <li>Your name, email address (including university-affiliated email), phone number, and other information you provide.</li>
+          <li>Content you submit, such as profile data, messages, photos, posts, or responses.</li>
+          <li>Academic or university affiliation details, if you choose to verify your identity to access university communities.</li>
+        </ul>
+
+        <h3 className="font-poppins text-[16px] font-semibold text-neutral-700 mb-4">Automatically Collected Usage Information</h3>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">We also automatically collect certain usage information, including:</p>
         <ul className="list-disc pl-6 text-neutral-600 font-normal md:text-xs text-2xs space-y-2">
-          <li>Your name, email address, phone number, and any other information you choose to provide.</li>
-          <li>User content (e.g., photos, comments, and other materials) that you post to the Service.</li>
-          <li>We also automatically collect information about your use of the Service, such as:</li>
-          <li>
-            Log information: We log information about your use of the Service, including the type of browser you use, access times, pages viewed, and
-            your IP address.
-          </li>
-          <li>
-            Device information: We collect information about the computer or mobile device you use to access our Service, including the hardware
-            model, operating system and version, unique device identifiers, and mobile network information.
-          </li>
+          <li>Log information such as IP address, browser type, pages visited, and access times.</li>
+          <li>Device details such as operating system, device type, and unique identifiers.</li>
+          <li>Metadata associated with your content (e.g., timestamp, geolocation if enabled).</li>
         </ul>
       </section>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">How We Use Your Information</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
-          We use the information we collect to provide, maintain, and improve our services. This includes using information to:
-        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">We use the information we collect to:</p>
         <ul className="list-disc pl-6 text-neutral-600 font-normal md:text-xs text-2xs space-y-2">
-          <li>Create and maintain your account.</li>
-          <li>Process transactions and send you related information.</li>
-          <li>
-            Communicate with you about products, services, offers, promotions, and provide news and information we think will be of interest to you.
-          </li>
-          <li>Monitor and analyze trends, usage, and activities in connection with our Service.</li>
-          <li>Personalize and improve the Service and provide advertisements, content, or features that match user profiles or interests.</li>
+          <li>Provide, personalize, and maintain the Service.</li>
+          <li>Set up and manage your account.</li>
+          <li>Verify your university affiliation where applicable.</li>
+          <li>Respond to inquiries and provide customer support.</li>
+          <li>Send transactional and promotional communications (you can opt-out).</li>
+          <li>Monitor activity and ensure safety and policy compliance.</li>
+          <li>Improve our features based on usage trends and feedback.</li>
         </ul>
       </section>
 
@@ -108,41 +115,70 @@ function PrivacyPolicyPage() {
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">International Data Transfers</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs">
-          We are based in [Country] and the information we collect is governed by [Country] law. By accessing or using the Service or otherwise
-          providing information to us, you consent to the processing, transfer, and storage of information in and to the U.S. and other countries,
-          where you may not have the same rights and protections as you do under local law.
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We are based in India, and your data will be processed in accordance with Indian laws.
         </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          If you access Unibuzz from outside India, your data may be transferred and processed in jurisdictions that may not offer the same level of
+          data protection as your home country.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs">By using our services, you consent to these transfers.</p>
       </section>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Your Rights</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">You have the right to:</p>
+        <ul className="list-disc pl-6 text-neutral-600 font-normal md:text-xs text-2xs space-y-2 mb-4">
+          <li>Access the personal data we hold about you.</li>
+          <li>Request correction or deletion of your data.</li>
+          <li>Restrict or object to certain processing activities.</li>
+          <li>Withdraw consent at any time (where applicable).</li>
+        </ul>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          You can make these requests by contacting us through the Contact Us form.
+        </p>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
-          You have the right to access, rectify, or erase your personal information, and restrict or object to certain processing of your information.
-          Where applicable, you may also have a right to data portability and to lodge a complaint with your local data protection authority.
+          If you believe your rights are not respected, you may also lodge a complaint with a data protection authority in your country.
         </p>
       </section>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Data Retention</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We retain your information as long as your account is active or as needed to provide the Service.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We may also retain data to comply with legal obligations, resolve disputes, and enforce agreements.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">You can request account deletion via the settings or contact form.</p>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Security</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We take the security of your personal data seriously and use industry-standard measures to protect it. These include encryption, firewalls,
+          and secure access controls.
+        </p>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
-          We retain your personal information for as long as necessary to provide the Service and fulfill the transactions you have requested, or for
-          other essential purposes such as complying with our legal obligations, resolving disputes, and enforcing our policies.
+          However, no system is completely secure. We cannot guarantee the absolute security of your information, and you use the Service at your own
+          risk.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to Privacy Policy</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs">
-          We may change this Privacy Policy from time to time. If we make changes, we will notify you by revising the date at the top of the policy
-          and, in some cases, we may provide you with additional notice (such as adding a statement to our homepage or sending you a notification).
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to This Policy</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We may update this Privacy Policy from time to time. If we make material changes, we will notify you through the Service, by email, or
+          through other reasonable means.
         </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs">The date at the top of this document reflects the latest revision.</p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Contact Information</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Contact Us</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs">
-          If you have any questions about these Terms, please contact us through our contact form.
+          If you have any questions or concerns about this Privacy Policy or your data, please contact us through the Contact Us form on our website
+          or email us at privacy@unibuzz.com.
         </p>
       </section>
       {/*</div>*/}

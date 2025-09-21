@@ -33,25 +33,25 @@ export async function generateMetadata(): Promise<Metadata> {
 function Userguidelines() {
   return (
     <main className="max-width-allowed mx-auto md:px-0 px-4 pt-8 pb-4 text-justify">
-      <h1 className="font-poppins md:text-4xl text-md-big  font-bold text-neutral-700 mb-6">User Guidelines</h1>
+      <h1 className="font-poppins md:text-4xl text-md-big  font-bold text-neutral-700 mb-6">User Guidelines </h1>
 
-      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Effective Date: August 1, 2024</p>
+      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Updated: September 20, 2025</p>
+      <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Welcome to the Unibuzz Community</h2>
       <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-        By using this platform, you agree to uphold these guidelines, ensuring a safe, collaborative, and enriching space for students.
+        Unibuzz is a space built by students, for students. Our mission is to create an inclusive, empowering environment for students, alumni,
+        applicants, and faculty members across universities. We facilitate collaboration on projects, seeking advice, and making lifelong connections,
+        ensuring you feel safe, respected, and valued. By using Unibuzz, you agree to follow these rules.
       </p>
 
-      {/* Respectful Content */}
+      {/* Respectful Conduct */}
       <section className="mb-8">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Respectful Content</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Respectful Conduct</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
+          <li className="text-gray-700">Treat everyone with kindness. Zero tolerance for harassment, hate speech, bullying, or discrimination.</li>
           <li className="text-gray-700">
-            Maintain Civility: Engage in discussions with respect and courtesy. Avoid hate speech, harassment, or any form of discrimination based on
-            race, ethnicity, national origin, religious affiliation, sexual orientation, sex, gender identity, or disabilities.
+            Avoid personal attacks. Disagreements are acceptable, but conversations should focus on ideas, not individuals.
           </li>
-          <li className="text-gray-700">
-            Constructive Engagement: Foster healthy debates and support your peers in academic and extracurricular endeavors.
-          </li>
-          <li className="text-gray-700">No Trolling or Bullying: Intentionally provoking, insulting, or degrading others will not be tolerated.</li>
+          <li className="text-gray-700">Be inclusive. Respect identities, backgrounds, and lived experiences of fellow users.</li>
         </ul>
       </section>
 
@@ -59,13 +59,9 @@ function Userguidelines() {
       <section className="mb-8">
         <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Authentic Identity</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          <li className="text-gray-700">
-            Use Real Identities: Register with your actual name and university affiliation to build trust within the community.
-          </li>
-          <li className="text-gray-700">
-            Avoid Impersonation: Do not create accounts that misrepresent your identity or falsely attribute content to others.
-          </li>
-          <li className="text-gray-700">Keep Profiles Honest: Ensure profile information is accurate and does not mislead other users.</li>
+          <li className="text-gray-700">Use your real name and university affiliation to foster trust within the community.</li>
+          <li className="text-gray-700">Do not impersonate others or misrepresent your background.</li>
+          <li className="text-gray-700">Your profile should reflect who you are, both socially and academically.</li>
         </ul>
       </section>
 
@@ -73,71 +69,61 @@ function Userguidelines() {
       <section className="mb-8">
         <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Privacy and Security</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
+          <li className="text-gray-700">Do not share personal information (e.g., phone numbers, addresses, private messages) without consent.</li>
+          <li className="text-gray-700">Never engage in doxxing or attempts to expose others&apos; private data.</li>
           <li className="text-gray-700">
-            Protect Personal Information: Refrain from sharing sensitive data publicly. Be mindful of your own and others&apos; privacy.
-          </li>
-          <li className="text-gray-700">
-            Report Misconduct: If you encounter suspicious activities or content that violates these guidelines, report it promptly.
-          </li>
-          <li className="text-gray-700">
-            No Doxxing: Sharing personal information (e.g., phone numbers, addresses) without consent is strictly prohibited.
+            If you feel unsafe or notice misconduct, report it using the platform&apos;s built-in tools or contact support.
           </li>
         </ul>
       </section>
 
-      {/* Intellectual Honesty */}
+      {/* Academic and Intellectual Integrity */}
       <section className="mb-8">
-        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Intellectual Honesty</h2>
+        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Academic and Intellectual Integrity</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          <li className="text-gray-700">Avoid Misinformation: Share accurate information and refrain from spreading false or misleading content.</li>
-          <li className="text-gray-700">
-            Cite Sources: When sharing academic materials or external content, provide proper attribution to original authors.
-          </li>
-          <li className="text-gray-700">No Plagiarism: Do not claim other&apos;s work as your own or repost content without permission.</li>
+          <li className="text-gray-700">Don&apos;t plagiarize. Always credit the original source when sharing materials, notes, or research.</li>
+          <li className="text-gray-700">Avoid spreading misinformation. Fact-check before posting, especially in academic groups.</li>
+          <li className="text-gray-700">Use the platform to learn and grow, not to cheat or bypass educational standards.</li>
         </ul>
       </section>
 
-      {/* Appropriate Content Sharing */}
+      {/* Content Standards */}
       <section className="mb-8">
-        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Appropriate Content Sharing</h2>
+        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Content Standards</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          <li className="text-gray-700">Relevant Contributions: Post content pertinent to student life, academics, and university events.</li>
-          <li className="text-gray-700">
-            Prohibited Content: Do not share explicit material, content promoting violence, or any form of illegal activities.
-          </li>
-          <li className="text-gray-700">
-            No Spam or Fake Engagement: Do not artificially boost likes, shares, or comments through bots, multiple accounts, or incentives.
-          </li>
+          <li className="text-gray-700">Keep content relevant to university life — courses, housing, events, clubs, academic resources, etc.</li>
+          <li className="text-gray-700">Do not share or promote illegal content, violence, explicit material, or age-restricted media.</li>
+          <li className="text-gray-700">Refrain from spamming, mass invites, or using bots to artificially boost engagement.</li>
         </ul>
       </section>
 
-      {/* Collaborative Engagement */}
+      {/* Engagement and Collaboration */}
       <section className="mb-8">
-        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Collaborative Engagement</h2>
+        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Engagement and Collaboration</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          <li className="text-gray-700">
-            Participate Actively: Engage in group discussions, study sessions, and collaborative projects to enrich the community experience.
-          </li>
-          <li className="text-gray-700">Respect Group Norms: Adhere to the specific rules of groups or forums you join within the platform.</li>
-          <li className="text-gray-700">
-            No Disruptive Behavior: Refrain from excessive self-promotion, irrelevant content, or hijacking discussions.
-          </li>
+          <li className="text-gray-700">Participate actively and meaningfully. Join study sessions, respond to posts, and offer support.</li>
+          <li className="text-gray-700">Respect group-specific rules in university or course-based communities.</li>
+          <li className="text-gray-700">Don&apos;t derail conversations or use unrelated threads for self-promotion.</li>
         </ul>
       </section>
 
-      {/* Compliance & Enforcement */}
+      {/* Promotions and Advertisements */}
       <section className="mb-8">
-        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Compliance & Enforcement</h2>
+        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Promotions and Advertisements</h2>
         <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          <li className="text-gray-700">Follow Platform Rules: Adherence to these guidelines is mandatory for all users.</li>
-          <li className="text-gray-700">
-            Consequences: Violations may result in content removal, account suspension, or permanent banning, depending on the severity of the
-            offense.
-          </li>
-          <li className="text-gray-700">
-            Reporting & Moderation: Use the platform&apos;s reporting tools to flag inappropriate content. False reports will also be subject to
-            review.
-          </li>
+          <li className="text-gray-700">Promotional content, including group invites and event links, must be approved by Unibuzz moderators.</li>
+          <li className="text-gray-700">DM-based unsolicited promotions are strictly prohibited.</li>
+          <li className="text-gray-700">Student-run initiatives, startups, or clubs are welcome but must follow community promotion policies.</li>
+        </ul>
+      </section>
+
+      {/* Enforcement */}
+      <section className="mb-8">
+        <h2 className="font-poppins text-[20px]  font-bold text-neutral-700 mb-6">Enforcement</h2>
+        <ul className="space-y-3 list-disc pl-4 text-neutral-600 font-normal md:text-xs text-2xs mb-16">
+          <li className="text-gray-700">Breaking these rules may result in warnings, content removal, temporary suspension, or permanent bans.</li>
+          <li className="text-gray-700">Our moderators are here to help — but abusive behavior toward them will not be tolerated.</li>
+          <li className="text-gray-700">False reports or misuse of the reporting system may also result in action.</li>
         </ul>
       </section>
     </main>
