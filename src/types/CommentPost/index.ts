@@ -26,6 +26,8 @@ export type PostCommentProps = {
     adminId: string
   }
   initialComment: any
+  isReplyTrue?: boolean
+  commentID?: string
 }
 
 export type CommentsType = {

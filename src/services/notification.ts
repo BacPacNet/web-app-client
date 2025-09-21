@@ -60,6 +60,14 @@ export interface UserMainNotification {
   message: string
   receiverId: string
   status: notificationStatus
+  userPost: {
+    likeCount: number
+    totalComments: number
+  }
+  communityPost: {
+    likeCount: number
+    totalComments: number
+  }
   sender_id: {
     _id: string
     firstName: string
@@ -81,6 +89,9 @@ export interface UserMainNotification {
   type: string
   likedBy: likedBy
   commentedBy: likedBy
+  repliedBy: likedBy
+  parentCommentReplies: any
+  communityParentCommentReplies: any
 }
 
 type UserMainNotificationsProps = {

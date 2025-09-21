@@ -69,7 +69,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const isStudent = role === userTypeEnum.Student
   const showRemoveButton = !isSelfProfile && isViewerAdmin && showCommunityGroupMember
   const showFollowButton = !isSelfProfile && !showRemoveButton
-  const isAllowedToRemove = isCommunityAdmin && !isOfficialGroup
+  const isNotAllowedToRemove = isCommunityAdmin && isOfficialGroup
 
   const handleFollowClick = async () => {
     setIsFollowingState(true)
@@ -112,7 +112,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
         </div>
       </div>
 
-      {showRemoveButton && isAllowedToRemove && (
+      {showRemoveButton && !isNotAllowedToRemove && (
         <Button disabled={isRemovePending} onClick={() => handleRemoveClick?.(id)} variant="danger_secondary" size="small">
           Remove
         </Button>

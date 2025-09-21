@@ -20,6 +20,7 @@ import { UPLOAD_CONTEXT } from '@/types/Uploads'
 type FileWithId = {
   id: string
   file: File
+  size: number
 }
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
@@ -57,6 +58,7 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
     const mappedFiles: FileWithId[] = newFiles.map((file) => ({
       id: generateFileId(file),
       file,
+      size: file.size,
     }))
 
     const totalFiles = files.length + mappedFiles.length
