@@ -37,171 +37,266 @@ export default function TermsAndCondition() {
       {/*<div className="mx-auto max-w-4xl">*/}
       <h1 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Terms and Conditions</h1>
 
-      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Effective Date: August 1, 2024</p>
-
+      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Updated: September 20, 2025</p>
+      <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6"> Welcome to Unibuzz!</h2>
       <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-        Welcome to Unibuzz! A vibrant social media platform where students connect and share ideas. These Terms and Conditions (&quot;Terms&quot;)
-        govern your access to and use of Unibuzz Networks Pty Ltd (herein referred to as Unibuzz Networks) website, mobile application, and related
-        services (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these Terms, our Privacy Policy,
-        and any additional terms applicable to certain features of the Service, which are incorporated herein by reference.
+        Unibuzz is a platform for students, university applicants, alumni, and faculty to connect, collaborate, and share. These Terms of Service
+        (&quot;Terms&quot;) form a legal agreement between &quot;you&quot; (or &quot;User&quot;) and Unibuzz Networks Pty Ltd (&quot;Unibuzz
+        Networks&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By using Unibuzz, users agree to these Terms, the Privacy Policy, and any
+        community guidelines or policies published. If you do not agree, please do not use the Service.
       </p>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Acceptance of Terms</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          By creating an account, accessing, or using the Service, you confirm that you have read, understood, and agree to be bound by these Terms.
-          If you are using the Service on behalf of an organization or entity, you are agreeing to these Terms for that organization and promising
-          that you have the authority to bind that organization to these Terms.
-        </p>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Who Can Use Unibuzz</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• Users must be at least 13 years old (or the minimum legal age in their jurisdiction).</li>
+          <li>• To access university communities, users must verify a valid university-affiliated email (e.g., .edu, .ac.in, etc.).</li>
+          <li>
+            • If a user does not have a university-affiliated email and/or is unable to verify their university, they are instructed to use the
+            Contact Us form.
+          </li>
+          <li>
+            • If a user is using Unibuzz on behalf of a university or organization, they represent that they have authority to bind them to these
+            Terms.
+          </li>
+        </ul>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to Terms</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          We reserve the right to modify these Terms at any time. We will notify you of any material changes to the Terms by posting the new Terms on
-          the Service and updating the &quot;Effective Date&quot; above. Your continued use of the Service after any such changes take effect
-          constitutes your acceptance of the new Terms.
-        </p>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Changes to These Terms</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• Unibuzz states that they may update these Terms from time to time.</li>
+          <li>• If material changes are made, users will be notified via the platform or email before they take effect.</li>
+          <li>• Continued use of Unibuzz after changes means agreement to the new Terms.</li>
+        </ul>
       </section>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Your Account</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          Users are responsible for their account and the information associated with it.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-2">Key responsibilities include:</p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2 ml-4">
+          <li>• Keeping passwords secure.</li>
+          <li>• Not sharing login credentials.</li>
+          <li>• Notifying Unibuzz of any unauthorized use.</li>
+          <li>• The ability to close an account anytime from settings.</li>
+        </ul>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Content and Intellectual Property</h2>
+
+        <div className="mb-8">
+          <h3 className="font-poppins text-[16px] font-semibold text-neutral-700 mb-4">Your Content</h3>
+          <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+            <li>• Users own the content they post (photos, messages, links, etc.).</li>
+            <li>
+              • By posting on Unibuzz, users grant Unibuzz a worldwide, royalty-free license to use, display, reproduce, and distribute content as
+              necessary to operate and improve the Service.
+            </li>
+          </ul>
+        </div>
+
+        <div className="mb-16">
+          <h3 className="font-poppins text-[16px] font-semibold text-neutral-700 mb-4">Our Content</h3>
+          <ul className="text-neutral-600 font-normal md:text-xs text-2xs space-y-2">
+            <li>• All software, code, and branding associated with Unibuzz is owned by Unibuzz Networks or its licensors.</li>
+            <li>• This content is protected by copyright and trademark laws.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Acceptable Use Policy</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">Users agree not to use Unibuzz to:</p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• Post illegal, harmful, or abusive content.</li>
+          <li>• Harass, impersonate, or threaten others.</li>
+          <li>• Share false, misleading, or confidential information.</li>
+          <li>• Access data or systems they&apos;re not authorized to access.</li>
+          <li>• Upload viruses or spam.</li>
+          <li>• Use bots or automated tools to scrape or manipulate content.</li>
+          <li>• Bypass access restrictions, such as email verification.</li>
+        </ul>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          You must provide accurate and complete information when creating an account and keep this information up to date. You are responsible for
-          maintaining the confidentiality of your account password and for all activities that occur under your account. Unibuzz Networks is not
-          liable for any loss or damage arising from your failure to comply with this requirement.
+          Unibuzz reserves the right to remove content or suspend users for violating these rules.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">User Content</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Enforcement and Termination</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">An account may be suspended or terminated without notice if:</p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• You violate these Terms or our policies.</li>
+          <li>• Your actions threaten the integrity, safety, or reputation of the platform.</li>
+        </ul>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">Users may also delete your account at any time.</p>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          You retain all ownership rights in your User Content. However, by submitting, posting, or displaying User Content, you grant Unibuzz
-          Networks a worldwide, non-exclusive, royalty-free license (with the right to sublicense) to use, copy, reproduce, process, adapt, modify,
-          publish, transmit, display, and distribute such User Content in any and all media or distribution methods (now known or later developed).
+          Termination does not affect rights and obligations that arose before.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Prohibited Conduct</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Feedback and Suggestions</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          We encourage you to share ideas through the Contact Us form or on our official Discord server.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          While not every suggestion can be implemented, all feedback is carefully reviewed.
+        </p>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          By submitting feedback, ideas, or feature requests, you grant us the right to use it freely and without obligation.
+        </p>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          You agree not to engage in any of the following prohibited activities: (i) copying, distributing, or disclosing any part of the Service in
-          any medium, including without limitation by any automated or non-automated &quot;scraping&quot;; (ii) using any automated system, including
-          without limitation &quot;robots,&quot; &quot;spiders,&quot; &quot;offline readers,&quot; etc., to access the Service; (iii) transmitting
-          spam, chain letters, or other unsolicited email; (iv) attempting to interfere with, compromise the system integrity or security, or decipher
-          any transmissions to or from the servers running the Service; (v) taking any action that imposes, or may impose at our sole discretion an
-          unreasonable or disproportionately large load on our infrastructure; (vi) uploading invalid data, viruses, worms, or other software agents
-          through the Service; (vii) collecting or harvesting any personally identifiable information, including account names, from the Service;
-          (viii) using the Service for any commercial solicitation purposes; (ix) impersonating another person or otherwise misrepresenting your
-          affiliation with a person or entity, conducting fraud, hiding or attempting to hide your identity; (x) interfering with the proper working
-          of the Service; (xi) accessing any content on the Service through any technology or means other than those provided or authorized by the
-          Service; or (xii) bypassing the measures we may use to prevent or restrict access to the Service, including without limitation features that
-          prevent or restrict use or copying of any content or enforce limitations on use of the Service or the content therein.
+          Unibuzz is a user-friendly platform built with students in mind, and we take feedback seriously to continuously improve the experience by
+          adding helpful and innovative features.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Privacy</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          Your privacy is important to us. Our Privacy Policy explains how we collect, use, and share information about you and is incorporated into
-          these Terms by reference. By using the Service, you agree to the collection, use, and sharing of your information as set forth in the
-          Privacy Policy.
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Third-Party Services</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• Unibuzz may include links to third-party websites or tools.</li>
+          <li>• We do not control them and are not responsible for their content, practices, or availability.</li>
+          <li>• Your use of third-party services is governed by their terms, not ours.</li>
+        </ul>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Copyright Complaints (DMCA)</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          If you believe your copyrighted work was posted on Unibuzz without permission, please email us at legal@unibuzz.com with the following
+          information:
         </p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• A description of the work</li>
+          <li>• The URL of the infringing content</li>
+          <li>• Your contact information</li>
+          <li>• A statement that you believe in good faith that the use is unauthorized</li>
+          <li>• Your signature (physical or digital)</li>
+        </ul>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
+          We will review and, if necessary, remove the content in accordance with applicable laws.
+        </p>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Data and Privacy</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• We take your privacy seriously.</li>
+          <li>• Review our Privacy Policy to understand what data we collect, how we use it, and your choices.</li>
+          <li>• By using Unibuzz, you consent to our data practices.</li>
+        </ul>
       </section>
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Security</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          We care about the integrity and security of your personal information. However, we cannot guarantee that unauthorized third parties will
-          never be able to defeat our security measures or use your personal information for improper purposes. You acknowledge that you provide your
-          personal information at your own risk.
-        </p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>
+            • We take data security seriously and implement reasonable administrative, technical, and physical safeguards to protect your information.
+          </li>
+          <li>• We regularly update our systems and monitor for threats to maintain a safe environment for our users.</li>
+          <li>• However, no method of data transmission or storage is 100% secure.</li>
+          <li>
+            • You acknowledge that you provide your personal information at your own risk and we cannot guarantee absolute protection against
+            unauthorized access or breaches.
+          </li>
+        </ul>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Third-Party Links, Sites, and Services</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          The Service may contain links to third-party websites, advertisers, services, special offers, or other events or activities that are not
-          owned or controlled by Unibuzz Networks. Unibuzz Networks does not endorse or assume any responsibility for any such third-party sites,
-          information, materials, products, or services. If you access a third-party website from the Service, you do so at your own risk, and you
-          understand that these Terms and Unibuzz Network&apos;s Privacy Policy do not apply to your use of such sites.
-        </p>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Disclaimers</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• We provide Unibuzz &quot;as is&quot; and &quot;as available.&quot;</li>
+          <li>• We do not make warranties about uptime, accuracy, or performance.</li>
+          <li>• We are not liable for losses due to outages, unauthorized access, or data loss.</li>
+        </ul>
       </section>
-
-      <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Termination</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          Unibuzz may terminate or suspend your access to or ability to use the Service immediately, without prior notice or liability, for any reason
-          whatsoever, including without limitation if you breach the Terms. Upon termination of your access, your right to use the Service will
-          immediately cease.
-        </p>
-      </section>
-
+      {/* 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Indemnity</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          You agree to defend, indemnify, and hold harmless Unibuzz Networks, its officers, directors, employees, and agents, from and against any
-          claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorneys&apos; fees and costs, arising out of
-          or in any way connected with: (i) your access to or use of the Service; (ii) your violation of any term of these Terms; (iii) your violation
-          of any third-party right, including without limitation any copyright, property, or privacy right; or (iv) any claim that your User Content
-          caused damage to a third party. This defense and indemnification obligation will survive these Terms and your use of the Service.
+          You agree to defend, indemnify, and hold harmless Unibuzz Networks from and against any claims arising out of your use of the Service or
+          violation of these Terms.
         </p>
-      </section>
+      </section> */}
 
-      <section className="mb-16">
+      {/* <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Disclaimer of Warranty</h2>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          The Service is provided on an &quot;as is&quot; and &quot;as available&quot; basis. Use of the Service is at your own risk. To the maximum
-          extent permitted by applicable law, the Service is provided without warranties of any kind, whether express or implied, including, but not
-          limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement. No advice or information, whether
-          oral or written, obtained by you from Unibuzz Networks or through the Service will create any warranty not expressly stated herein. Without
-          limiting the foregoing, Unibuzz Networks, its subsidiaries, its affiliates, and its licensors do not warrant that the content is accurate,
-          reliable or correct; that the Service will meet your requirements; that the Service will be available at any particular time or location,
-          uninterrupted or secure; that any defects or errors will be corrected; or that the Service is free of viruses or other harmful components.
-          Any content downloaded or otherwise obtained through the use of the Service is downloaded at your own risk and you will be solely
-          responsible for any damage to your computer system or mobile device or loss of data that results from such download or your use of the
-          Service.
+          The Service is provided on an &quot;as is&quot; and &quot;as available&quot; basis. Use of the Service is at your own risk. We make no
+          warranties about the accuracy, reliability, or availability of the Service.
         </p>
-      </section>
+      </section> */}
 
       <section className="mb-16">
         <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Limitation of Liability</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">Unibuzz is not liable for:</p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• Indirect, incidental, or consequential damages.</li>
+          <li>• Lost profits or loss of data.</li>
+          <li>• Unauthorized access or use of your account.</li>
+        </ul>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          To the maximum extent permitted by applicable law, in no event shall Unibuzz Networks, its affiliates, agents, directors, employees,
-          suppliers, or licensors be liable for any indirect, punitive, incidental, special, consequential, or exemplary damages, including without
-          limitation damages for loss of profits, goodwill, use, data, or other intangible losses, that result from the use of, or inability to use,
-          this Service. Under no circumstance will Unibuzz Networks be responsible for any damage, loss, or injury resulting from hacking, tampering,
-          or other unauthorized access or use of the Service or your account or the information contained therein. This limitation of liability
-          section applies whether the alleged liability is based on contract, tort, negligence, strict liability, or any other basis, even if Unibuzz
-          Networks has been advised of the possibility of such damage.
+          Total liability is limited to the amount paid to Unibuzz (if any) in the last 12 months.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Governing Law</h2>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Governing Laws and Dispute Resolution</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• Users waive the right to participate in class actions or jury trials.</li>
+          <li>• We encourage users to first contact Unibuzz via the &quot;Contact Us&quot; form for disputes, aiming for informal resolution.</li>
+          <li>
+            • If informal resolution fails, disputes will be resolved under the jurisdiction of competent courts in India, according to applicable
+            laws.
+          </li>
+          <li>• The Terms are governed by the laws of India. Users outside India are responsible for complying with their local laws.</li>
+        </ul>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Export Control</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>• Prohibits using or exporting Unibuzz in violation of applicable export control laws.</li>
+          <li>• Users must comply with all local laws regarding online conduct and content.</li>
+        </ul>
+      </section>
+
+      <section className="mb-16">
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">University Responsibilities and Liability</h2>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          Affiliated universities are responsible only for content and activities within official university spaces, including:
+        </p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• Posts, announcements, and updates by university administrators in the official university feed.</li>
+          <li>• Content and discussions within official groups.</li>
+        </ul>
+        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
+          Universities are <em>not</em> responsible or liable for activities outside official spaces, such as:
+        </p>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-4 space-y-2">
+          <li>• Personal and group messaging.</li>
+          <li>• Student-created casual groups.</li>
+          <li>• Posts or comments on individual timelines.</li>
+        </ul>
         <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          These Terms shall be governed by and construed in accordance with the laws of the country you are residing in, without giving effect to any
-          principles of conflicts of law.
+          This limitation does not permit misconduct. All users must comply with Unibuzz&apos;s User Guidelines and local university rules. Violations
+          may lead to disciplinary action by Unibuzz (including suspension or permanent bans) and potential action by the affiliated university.
         </p>
       </section>
 
       <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Dispute Resolution</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          You agree that any disputes between you and Unibuzz Networks will be resolved by binding, individual arbitration and you waive your right to
-          participate in a class action lawsuit or class-wide arbitration. We explain the process in more detail in our Arbitration Agreement included
-          in these Terms.
-        </p>
-      </section>
-
-      <section className="mb-16">
-        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">General</h2>
-        <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-16">
-          These Terms, together with the Privacy Policy and any amendments and any additional agreements you may enter into with Unibuzz Networks in
-          connection with the Service, shall constitute the entire agreement between you and Unibuzz Networks concerning the Service. If any provision
-          of these Terms is deemed invalid by a court of competent jurisdiction, the invalidity of such provision shall not affect the validity of the
-          remaining provisions of these Terms, which shall remain in full force and effect.
-        </p>
+        <h2 className="font-poppins text-[20px] font-bold text-neutral-700 mb-6">Entire Agreement</h2>
+        <ul className="text-neutral-600 font-normal md:text-xs text-2xs mb-16 space-y-2">
+          <li>
+            • These Terms, the Privacy Policy, and any supplemental agreements (e.g., for university partnerships) constitute the entire agreement
+            between the user and Unibuzz.
+          </li>
+          <li>• If any part is found unenforceable, the remaining parts still apply.</li>
+        </ul>
       </section>
       {/*</div>*/}
     </main>
