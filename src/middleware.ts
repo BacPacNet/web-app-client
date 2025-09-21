@@ -16,6 +16,12 @@ const protectedRoutes = [
 export default function middleware(req: NextRequest) {
   const pathName = req.nextUrl.pathname
 
+  // Redirect authenticated users from root path to timeline
+  if (pathName === '/' && isAuthenticated(req)) {
+    const absoluteUrl = new URL('/timeline', req.nextUrl.origin)
+    return NextResponse.redirect(absoluteUrl.toString())
+  }
+
   if (pathName === '/login' && isAuthenticated(req)) {
     const absoluteUrl = new URL('/timeline', req.nextUrl.origin)
     return NextResponse.redirect(absoluteUrl.toString())
