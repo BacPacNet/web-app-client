@@ -66,16 +66,13 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
               </div>
 
               <p
-                className={`text-neutral-500 text-2xs whitespace-pre-wrap break-words w-[90%] ${
-                  unRead > 0 ? 'font-semibold' : 'font-medium'
-                } !flex items-center gap-1`}
+                className={`text-neutral-500 text-2xs w-[90%] ${unRead > 0 ? 'font-semibold' : 'font-medium'}`}
                 style={{
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'pre-wrap',
                 }}
               >
                 {lastMessage === undefined ? (

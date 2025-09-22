@@ -110,7 +110,7 @@ const MessageTopBar = ({
             value={searchByNameText}
             onChange={(e) => setSearchByNameText(e.target.value)}
             className="text-xs w-full outline-none text-neutral-700"
-            placeholder="Search Messages"
+            placeholder="Search People"
           />
           <GoSearch className="text-neutral-700" size={20} />
         </div>

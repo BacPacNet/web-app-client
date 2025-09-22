@@ -35,9 +35,9 @@ function PrivacyPolicyPage() {
   return (
     <main className="max-width-allowed mx-auto sm:px-0 px-4 pt-8 pb-4 text-justify">
       {/*<div className="mx-auto max-w-4xl">*/}
-      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Updated: September 20, 2025</p>
-
       <h1 className="font-poppins md:text-4xl text-md-big font-bold text-neutral-700 mb-6">Privacy Policy</h1>
+
+      <p className="text-neutral-500 font-normal md:text-xs text-2xs mb-4">Updated: September 20, 2025</p>
 
       <p className="text-neutral-600 font-normal md:text-xs text-2xs mb-4">
         Welcome to Unibuzz. At Unibuzz Networks, we are committed to protecting your privacy and handling your data in an open, responsible, and
