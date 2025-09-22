@@ -27,6 +27,7 @@ import { useModal } from '@/context/ModalContext'
 import { RxCrossCircled } from 'react-icons/rx'
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
+import { useBlockUser } from '@/services/userProfile'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -51,6 +52,7 @@ interface UserProfileCardProps {
   occupation: string
   affiliation: string
   role: string
+  isBlockedByYou: boolean
 }
 
 export function UserProfileCard({
@@ -75,15 +77,18 @@ export function UserProfileCard({
   role,
   occupation,
   affiliation,
+  isBlockedByYou = false,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
   const router = useRouter()
   const { openModal } = useModal()
   const [isOpen, setIsOpen] = useState(false)
+  const [isBlocked, setIsBlocked] = useState(isBlockedByYou)
   const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
+  const { mutateAsync: mutateBlockUser } = useBlockUser()
   const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
@@ -107,6 +112,18 @@ export function UserProfileCard({
   const handleProfileImageClick = () => {
     setIsLightboxOpen(true)
   }
+
+  const handleBlockUser = () => {
+    mutateBlockUser(userId, {
+      onSuccess: () => {
+        setIsBlocked(!isBlocked)
+      },
+    })
+  }
+
+  useEffect(() => {
+    setIsBlocked(isBlockedByYou)
+  }, [isBlockedByYou])
 
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
@@ -187,10 +204,13 @@ export function UserProfileCard({
                         </li>
                       )}
 
-                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                      {/* <li
+                        onClick={() => handleBlockUser()}
+                        className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                      >
                         <MdBlockFlipped />
-                        <p>Block User</p>
-                      </li>
+                        <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
+                      </li> */}
                       <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoFlagOutline />
                         <p>Report User</p>
@@ -239,10 +259,13 @@ export function UserProfileCard({
                     <IoIosShareAlt />
                     <p>Share Profile</p>
                   </li>
-                  <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                  {/* <li
+                    onClick={() => handleBlockUser()}
+                    className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                  >
                     <MdBlockFlipped />
-                    <p>Block User</p>
-                  </li>
+                    <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
+                  </li> */}
                   <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                     <IoFlagOutline />
                     <p>Report User</p>

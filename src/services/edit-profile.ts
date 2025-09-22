@@ -46,6 +46,7 @@ export const useAddUniversityEmail = (redirect: boolean = false) => {
       closeModal()
       showCustomSuccessToast('email verified successfully')
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      queryClient.invalidateQueries({ queryKey: ['verifiedUniversityEmails'] })
 
       //  if (redirect) {
       //    const community = response.userProfile.email.find((community: any) => community.UniversityName == variables.universityName)

@@ -42,7 +42,6 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending, isError } = useHandleUniversityEmailVerificationGenerate()
   const { mutateAsync: mutateAddUniversity, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
-  console.log(isError, 'error')
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
     if (!email) {

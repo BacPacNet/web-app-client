@@ -8,6 +8,8 @@ import { useParams, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
+import notMember from '@/assets/notCommunityMember.svg'
+import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 
 const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
@@ -38,7 +40,11 @@ const SinglePost = () => {
   }, [imageCarasol])
 
   if (isError) {
-    return <div className="h-screen flex justify-center items-center">Not Allowed</div>
+    return (
+      <div>
+        <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="Post Not Found" description="" />
+      </div>
+    )
   }
 
   if (isFetching || (!data?.post && !isError)) {
