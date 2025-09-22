@@ -116,6 +116,7 @@ export interface IUserProfileResponse {
   __v: number
   profile: Profile
   communityDetails: CommunityDetail[]
+  isBlocked: boolean
 }
 
 export interface Email {

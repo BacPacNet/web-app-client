@@ -8,15 +8,17 @@ import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
 
 import React, { useRef } from 'react'
+import EmptyStateCard from '@/components/molecules/EmptyStateCard'
+import notMember from '@/assets/notCommunityMember.svg'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
 
   const isSelfProfile = useCheckSelfProfile(userId)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { data: userProfileData, isLoading: isUserProfileDataLoading } = useGetUserData(userId)
+  const { data: userProfileData, isLoading: isUserProfileDataLoading, isError: isUserProfileDataError } = useGetUserData(userId)
 
-  const { profile, firstName, lastName } = userProfileData || {}
+  const { profile, firstName, lastName, isBlocked } = userProfileData || {}
   const {
     bio,
     university_name,
@@ -36,6 +38,14 @@ export default function Profile({ params }: { params: { id: string } }) {
     displayEmail,
   } = profile || {}
   //  const { logos } = university || {}
+
+  if (isUserProfileDataError) {
+    return (
+      <div>
+        <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="User Not Found" description="" />
+      </div>
+    )
+  }
 
   return (
     <div ref={containerRef} className="h-with-navbar py-4 overflow-y-scroll hideScrollbar">
@@ -66,6 +76,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           isSelfProfile={isSelfProfile}
           userId={userId}
           universityLogo={universityLogo || ''}
+          isBlockedByYou={isBlocked || false}
         />
       )}
       <ProfilePostContainer source="profile" userId={userId} containerRef={containerRef} />

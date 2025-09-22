@@ -8,7 +8,7 @@ const protectedRoutes = [
   '/:id',
   '/messages',
   '/notifications',
-  '/ai-assistant',
+  // '/ai-assistant',
   '/setting',
   '/connections',
   '/post',

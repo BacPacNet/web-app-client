@@ -1,7 +1,8 @@
 import useCookie from '@/hooks/useCookie'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserProfileData(token: any) {
   const response: any = await client(`/userprofile/me`, { headers: { Authorization: `Bearer ${token}` } })
@@ -44,4 +45,19 @@ export function useGetUserProfileVerifiedUniversityEmailData() {
   }
 
   return { ...state, error: errorMessage }
+}
+
+const blockUser = async (userToBlock: any, token: string) => {
+  const res = await client(`/userprofile/block?userToBlock=${userToBlock}`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
+  return res
+}
+export const useBlockUser = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useMutation({
+    mutationFn: (userToBlock: any) => blockUser(userToBlock, cookieValue),
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
 }
