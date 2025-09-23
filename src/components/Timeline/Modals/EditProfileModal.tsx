@@ -20,6 +20,8 @@ import Title from '@/components/atoms/Title'
 import SubText from '@/components/atoms/SubText'
 import ProfileImageUploader from '@/components/molecules/ProfileImageUploader'
 import { parseDateOfBirth } from '@/lib/date'
+import { validateSingleImageFile } from '@/lib/utils'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export interface editProfileInputs {
   firstName: string
@@ -172,6 +174,11 @@ const EditProfileModal = () => {
   // Handle profile image change
   const handleProfileImageChange = useCallback(
     (file: File) => {
+      const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+      if (!isValid) {
+        showCustomDangerToast(message)
+        return
+      }
       setProfileImageFile(file)
       setValue('profilePicture', file)
     },

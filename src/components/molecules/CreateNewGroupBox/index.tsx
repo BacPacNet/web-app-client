@@ -37,6 +37,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import ProfileImageUploader from '../ProfileImageUploader'
 import { useCommunityUsers } from '@/services/community'
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   communityId: string
@@ -276,12 +277,21 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     })
   }
   const handleLogoImage = (file: File) => {
-    const { isValid, message } = validateSingleImageFile(file, 3 * 1024 * 1024)
+    const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
     if (!isValid) {
-      alert(message)
+      showCustomDangerToast(message)
       return
     }
     setLogoImage(file)
+  }
+
+  const handleCoverImage = (file: File) => {
+    const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+    if (!isValid) {
+      showCustomDangerToast(message)
+      return
+    }
+    setCoverImage(file)
   }
 
   return (
@@ -306,7 +316,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
               accept="image/jpeg,image/png,image/jpg,image/gif"
               type="file"
               id="CreateGroupImage"
-              onChange={(e: any) => setCoverImage(e.target.files[0])}
+              onChange={(e: any) => handleCoverImage(e.target.files[0])}
             />
             {coverImage ? (
               <label htmlFor="CreateGroupImage" className="relative flex flex-col items-center gap-2 z-10  ">

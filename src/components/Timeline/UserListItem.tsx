@@ -9,6 +9,7 @@ import avatar from '@assets/avatar.svg'
 import { showCustomDangerToast } from '../atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
 import { FaCrown } from 'react-icons/fa'
+import communityAdminBadge from '@assets/communityAdminBadge.svg'
 
 interface FollowingItemProps {
   firstName: string
@@ -105,6 +106,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
           <h3 className="font-semibold text-neutral-700 text-xs flex items-center gap-1">
             {firstName} {lastName}
             {isGroupAdmin && <FaCrown className="text-warning-500" />}
+            {isCommunityAdmin && <Image src={communityAdminBadge} alt="university logo" width={14} height={14} />}
           </h3>
           {/*{university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}*/}
           <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>

@@ -27,6 +27,8 @@ import UserSelectDropdown from '../UserSearchList'
 import ProfileImageUploader from '../ProfileImageUploader'
 import { useCommunityUsers } from '@/services/community'
 import { userProfileType } from '@/store/userProfileSlice/userProfileType'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { validateSingleImageFile } from '@/lib/utils'
 
 type Props = {
   individualsUsers: any[]
@@ -221,6 +223,15 @@ const GroupChatModal = ({
     setSearchInput('')
   }
 
+  const handleLogoImage = (file: File) => {
+    const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+    if (!isValid) {
+      showCustomDangerToast(message)
+      return
+    }
+    setGroupLogoImage(file)
+  }
+
   return (
     <div
       className="relative w-full flex flex-col gap-4"
@@ -235,7 +246,7 @@ const GroupChatModal = ({
       <ProfileImageUploader
         label="Group Profile"
         imageFile={groupLogoImage}
-        onImageChange={(file) => setGroupLogoImage(file)}
+        onImageChange={(file) => handleLogoImage(file)}
         id="CreateGroupLogoImage"
       />
       {/* //name  */}

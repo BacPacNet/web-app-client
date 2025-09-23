@@ -104,10 +104,7 @@ const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment
     ))
 
   const renderContent = () => {
-    if (
-      (notificationType == notificationRoleAccess.REACTED_TO_POST && data?.userPost?.likeCount > 1) ||
-      (notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST && data?.communityPost?.likeCount > 1)
-    ) {
+    if (notificationType == notificationRoleAccess.REACTED_TO_POST || notificationType == notificationRoleAccess.REACTED_TO_COMMUNITY_POST) {
       return renderUsers(data?.likedBy?.newFiveUsers)
     } else if (notificationType == notificationRoleAccess.COMMENT) {
       return renderUsers(data?.commentedBy?.newFiveUsers)
