@@ -11,7 +11,6 @@ type User = {
     lastName: string
   }
 
-  isOnline: boolean
   isRequestAccepted: boolean
 }
 type Props = {
@@ -39,12 +38,6 @@ const UserChatCard = ({ profilePic, users, lastMessage, isSeen, date, YourID, gr
                 <FaUsers className="w-12 h-12 rounded-full bg-neutral-200 p-2 text-primary-700" />
               ) : (
                 <Image width={48} height={48} src={profilePic || avatar} alt="dp" objectFit="cover" className="w-12 h-12 rounded-full object-cover" />
-              )}
-
-              {userName?.some((item) => item?.isOnline) ? (
-                <p className="bg-success-500 w-4 h-4 rounded-full absolute bottom-0 left-8 border-2 border-white text-white flex justify-center items-center text-[12px] font-semibold"></p>
-              ) : (
-                <p className="bg-neutral-300 w-4 h-4 rounded-full absolute bottom-0 left-8 border-2 border-white text-white flex justify-center items-center text-[12px] font-semibold"></p>
               )}
             </div>
 

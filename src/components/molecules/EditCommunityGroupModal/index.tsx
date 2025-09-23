@@ -30,6 +30,8 @@ import { useCommunityUsers } from '@/services/community'
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { validateSingleImageFile } from '@/lib/utils'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -120,19 +122,26 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     }
   }, [communityGroups, reset])
 
-  // Handle image preview
+  // Handle image preview with validation
   const handleBannerImagePreview = (e: any) => {
     const file = e.target.files[0] as File
     if (file) {
+      const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+      if (!isValid) {
+        showCustomDangerToast(message)
+        return
+      }
       setCoverImage(file)
-      //  setValue('communityGroupLogoUrl', file)
     }
   }
 
-  const handlelogoImagePreview = (file: File) => {
-    if (file) {
-      setLogoImage(file)
+  const handleLogoImage = (file: File) => {
+    const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+    if (!isValid) {
+      showCustomDangerToast(message)
+      return
     }
+    setLogoImage(file)
   }
 
   // useEffect(() => {
@@ -310,12 +319,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       <div className="flex flex-col gap-8 justify-start items-start w-full  ">
         <h3 className="text-neutral-700 text-md font-poppins font-bold">Edit Group</h3>
 
-        <ProfileImageUploader
-          label="Group Profile"
-          imageFile={logoImage}
-          onImageChange={(file) => handlelogoImagePreview(file)}
-          id="updateGroupLogoImage"
-        />
+        <ProfileImageUploader label="Group Profile" imageFile={logoImage} onImageChange={(file) => handleLogoImage(file)} id="updateGroupLogoImage" />
 
         <div className="flex flex-col gap-2 w-full">
           <label htmlFor="name" className="font-medium text-sm text-neutral-900">

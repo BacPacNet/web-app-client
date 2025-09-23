@@ -59,10 +59,10 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
             <p className="font-medium text-xs text-neutral-800">Open Post</p>
           </Link>
 
-          <div className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
+          {/* <div className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
             <HiOutlineFlag className="text-primary" size={16} />
             <p className="font-medium text-xs text-neutral-800">Report this Post</p>
-          </div>
+          </div> */}
           {isSelfPost && (
             <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
               <MdDeleteForever className="text-primary" size={16} />
