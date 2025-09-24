@@ -127,7 +127,7 @@ const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, id
           height={40}
           className="w-10 h-10 rounded-full object-cover cursor-pointer"
         />
-        <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p>
+        {/* <p className={`w-4 h-4 ${isOnline ? 'bg-success-500' : 'bg-neutral-300'}  rounded-full border-2 border-white absolute bottom-0 right-0`}></p> */}
       </div>
       <div className="flex-1 overflow-y-auto">
         <div className="flex gap-2 items-center">

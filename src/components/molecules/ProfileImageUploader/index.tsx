@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import ImageCropModal from './ImageCropModal'
 import { ProfileImageUploaderProps } from './types'
+import { validateSingleImageFile } from '@/lib/utils'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   label = 'Group Profile',
@@ -16,6 +18,12 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
+      const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
+      if (!isValid) {
+        showCustomDangerToast(message)
+        return
+      }
+
       const imageUrl = URL.createObjectURL(file)
       setTempImageSrc(imageUrl)
       setIsCropModalOpen(true)

@@ -46,7 +46,7 @@ const CommentItem = ({
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
       key={key}
-      className={`w-auto h-full relative ${childCommentsId.includes(comment._id) ? 'ml-6' : 'w-full'} ${
+      className={`w-auto h-full  relative ${childCommentsId.includes(comment._id) ? 'ml-6' : ''} ${
         comment.level == 1 ? 'mt-4 ml-6 ' : 'first:mt-8 '
       }`}
     >
@@ -68,7 +68,7 @@ const CommentItem = ({
           isCommunityAdmin={comment?.commenterProfileId?.isCommunityAdmin}
         />
 
-        <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
+        <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex ">
           <CommentCardOption isSelfPost={commenterId === currentUserId} commentId={comment._id} isType={type} />
         </div>
       </div>

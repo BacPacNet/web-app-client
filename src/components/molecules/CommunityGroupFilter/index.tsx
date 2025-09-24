@@ -5,6 +5,8 @@ import { subCategories } from '@/types/CommuityGroup'
 import React, { useEffect, useState } from 'react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useModal } from '@/context/ModalContext'
+import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
+import Pill from '@/components/atoms/Pill'
 
 const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 const GroupLabelCategories = ['Course', 'Club', 'Circle', 'Other']
@@ -66,6 +68,19 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     setSelectedLabelLocal((prev) => (prev.includes(label) ? prev.filter((item) => item !== label) : [...prev, label]))
   }
 
+  const handleSelectFilters = (item: string) => {
+    setSelectedFilters((prev) => {
+      const newFilters = { ...prev }
+      Object.keys(newFilters).forEach((category) => {
+        newFilters[category] = newFilters[category].filter((filterItem) => filterItem !== item)
+        if (newFilters[category].length === 0) {
+          delete newFilters[category]
+        }
+      })
+      return newFilters
+    })
+  }
+
   const clearFilters = () => {
     setSelectedFilters({})
     setSelectedType([])
@@ -95,73 +110,88 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   return (
     <div className="h-[58vh] hideScrollbar overflow-y-scroll">
       <div className="max-w-md mx-auto flex flex-col justify-center relative">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold font-poppins">Filter</h2>
-          <button onClick={clearFilters} className=" text-2xs flex items-center gap-1 border border-neutral-200 shadow-sm px-3 py-2 rounded-lg">
-            <span className="flex items-center gap-2">
-              Clear <RiDeleteBin6Line />
-            </span>
-          </button>
-        </div>
+        <div className="border-b border-neutral-200 pb-4">
+          <div className="flex justify-between items-center ">
+            <h2 className="text-2xl font-bold font-poppins">Group Filters</h2>
+            <button onClick={clearFilters} className=" text-2xs flex items-center gap-1 border border-neutral-200 shadow-sm px-3 py-2 rounded-lg">
+              <span className="flex items-center gap-2">
+                Clear <RiDeleteBin6Line />
+              </span>
+            </button>
+          </div>
 
-        <div className="mb-6">
-          <h3 className="font-medium text-sm mb-2">Group Access & Type</h3>
-          <div className="flex flex-wrap gap-2">
-            {GroupCategories.map((option) => (
-              <button
-                key={option}
-                onClick={() => handleSelectTypes(option)}
-                className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
-                  selectedType?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
-                }`}
-              >
-                {option}
-              </button>
+          <div
+            className={`flex flex-wrap gap-2 ${
+              selectedType?.length > 0 || selectedLabelLocal?.length > 0 || Object.values(selectedFilters)?.flat()?.length > 0 ? 'mt-4' : ''
+            }`}
+          >
+            {selectedType?.map((item) => (
+              <Pill key={item} variant="primary" size="extra_small" removeIconShown={true} onClick={() => handleSelectTypes(item)}>
+                {item}
+              </Pill>
             ))}
+            {selectedLabelLocal?.map((item) => (
+              <Pill key={item} variant="primary" size="extra_small" removeIconShown={true} onClick={() => handleSelectGroupLabels(item)}>
+                {item}
+              </Pill>
+            ))}
+
+            {Object.values(selectedFilters)
+              ?.flat()
+              ?.map((item) => (
+                <Pill key={item} variant="primary" size="extra_small" removeIconShown={true} onClick={() => handleSelectFilters(item)}>
+                  {item}
+                </Pill>
+              ))}
           </div>
         </div>
 
-        <div className="mb-6">
-          <h3 className="font-medium text-sm mb-2">Group Label</h3>
-          <div className="flex flex-wrap gap-2">
-            {GroupLabelCategories.map((option) => (
-              <button
-                key={option}
-                onClick={() => handleSelectGroupLabels(option)}
-                className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
-                  selectedLabelLocal?.includes(option) ? 'bg-primary text-white border-primary-500' : ' text-neutral-700 border-neutral-300'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+        <div className="">
+          <CollapsibleMultiSelect
+            title="Group Access & Type"
+            titleFontSize="sm"
+            options={GroupCategories}
+            selectedOptions={selectedType || []}
+            onSelect={(value: string) => handleSelectTypes(value)}
+            alwaysExpanded={true}
+            alignStart={true}
+            borderBottom={false}
+            columnView={true}
+          />
         </div>
 
-        {Object.entries(subCategories).map(([category, options]) => {
+        <div className="">
+          <CollapsibleMultiSelect
+            title="Group Label"
+            titleFontSize="sm"
+            options={GroupLabelCategories}
+            selectedOptions={selectedLabelLocal || []}
+            onSelect={(value: string) => handleSelectGroupLabels(value)}
+            alwaysExpanded={true}
+            alignStart={true}
+            borderBottom={false}
+            columnView={true}
+          />
+        </div>
+
+        {Object.entries(subCategories).map(([category, options], index) => {
           if (category == 'Others') return
           return (
-            <div key={category} className="mb-6">
-              <h3 className="font-medium text-sm mb-2">{category}</h3>
-              <div className="flex flex-wrap gap-2">
-                {options.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => handleSelect(category, option)}
-                    className={`px-2 py-1 text-2xs  border border-neutral-200 rounded-3xl ${
-                      selectedFilters[category]?.includes(option)
-                        ? 'bg-primary text-white border-primary-500'
-                        : ' text-neutral-700 border-neutral-300'
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <CollapsibleMultiSelect
+              key={index}
+              title={category}
+              titleFontSize="sm"
+              options={options}
+              selectedOptions={selectedFilters[category] || []}
+              onSelect={(value: string) => handleSelect(category, value)}
+              alwaysExpanded={true}
+              alignStart={true}
+              borderBottom={false}
+            />
           )
         })}
-        <div className="fixed w-full bottom-0 left-0 bg-white rounded-lg  border-t-[1px] border-neutral-200">
+        <div className="py-2"></div>
+        <div className="fixed w-full bottom-0 left-0 bg-white rounded-lg  border-t-[1px] border-neutral-200 ">
           <Buttons onClick={() => handleClick()} className="mx-auto my-4 w-[300px]" size="large" variant="primary">
             Apply Filters
           </Buttons>

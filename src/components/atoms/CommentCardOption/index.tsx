@@ -42,7 +42,7 @@ const CommentCardOption = ({ commentId, isType, isSelfPost }: CommentOptionType)
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger className="p-1">
         <FiMoreHorizontal />
       </PopoverTrigger>
       <PopoverContent onClick={() => setIsOpen(false)} className="relative top-0 right-8 w-auto border-none shadow-card  bg-white p-0">
