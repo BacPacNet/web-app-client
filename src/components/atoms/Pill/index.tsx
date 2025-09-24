@@ -1,12 +1,22 @@
 import React from 'react'
+import { IoClose } from 'react-icons/io5'
 
 interface PillProps extends React.ButtonHTMLAttributes<HTMLDivElement> {
   className?: string
   variant?: 'primary' | 'secondary' | 'danger' | 'shade' | 'border' | 'border_primary'
   size?: 'small' | 'medium' | 'large' | 'extra_small' | 'extra_small_paddind_2'
+  removeIconShown?: boolean
 }
 
-const Pill: React.FC<PillProps> = ({ className = '', variant = 'primary', size = 'small', children, disabled, ...props }) => {
+const Pill: React.FC<PillProps> = ({
+  className = '',
+  variant = 'primary',
+  size = 'small',
+  children,
+  disabled,
+  removeIconShown = false,
+  ...props
+}) => {
   const variantClasses = {
     primary: 'bg-primary-500 text-white',
     secondary: 'bg-gray-500 text-white',
@@ -27,10 +37,15 @@ const Pill: React.FC<PillProps> = ({ className = '', variant = 'primary', size =
   const variantSize = variantSizes[size]
   return (
     <div
-      className={`${variantClass} ${variantSize} rounded-md active:scale-95 transition-transform duration-150 cursor-pointer ${className}`}
+      className={`${variantClass} ${variantSize} flex items-center gap-2 rounded-md active:scale-95 transition-transform duration-150 cursor-pointer ${className}`}
       {...props}
     >
       {children}
+      {removeIconShown && (
+        <span className="cursor-pointer text-sm text-white">
+          <IoClose />
+        </span>
+      )}
     </div>
   )
 }

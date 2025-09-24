@@ -38,7 +38,7 @@ const UserCard: React.FC<UserCardProps> = ({
   isCommunityAdmin,
 }) => {
   return (
-    <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-2 cursor-pointer items-center">
+    <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-2 cursor-pointer items-center flex-shrink-0">
       <div className="rounded-full w-[48px] h-[48px]">
         <Image src={avatarLink || avatar} width={48} height={48} className="object-cover rounded-full h-[inherit]" alt="User Avatar" />
       </div>

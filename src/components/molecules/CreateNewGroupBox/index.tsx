@@ -277,11 +277,6 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     })
   }
   const handleLogoImage = (file: File) => {
-    const { isValid, message } = validateSingleImageFile(file, 5 * 1024 * 1024)
-    if (!isValid) {
-      showCustomDangerToast(message)
-      return
-    }
     setLogoImage(file)
   }
 
