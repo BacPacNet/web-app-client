@@ -130,11 +130,11 @@ const MessageUserStickyBar = ({
               className="w-10 h-10 rounded-full object-cover cursor-pointer"
             />
           </div>
-          <p
+          {/* <p
             className={`w-4 h-4 ${
               userName?.some((item) => item?.isOnline) ? 'bg-success-500' : 'bg-neutral-300'
             } rounded-full border-2 border-white absolute bottom-0 right-0 `}
-          ></p>
+          ></p> */}
         </div>
         <div>
           <h3 onClick={() => handleProfileClicked(id as string)} className="text-xs font-semibold text-neutral-700 cursor-pointer">
