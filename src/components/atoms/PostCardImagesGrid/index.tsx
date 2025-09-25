@@ -4,7 +4,7 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import { FiFile } from 'react-icons/fi'
 import { PostType } from '@/types/constants'
-import { getMimeTypeFromUrl, imageMimeTypes } from '@/lib/utils'
+import { cleanFileName, getMimeTypeFromUrl, imageMimeTypes } from '@/lib/utils'
 
 type Props = {
   images: {
@@ -107,7 +107,10 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
             <a key={index} href={item.imageUrl} target="_blank" rel="noopener noreferrer">
               <div className="border border-neutral-200 rounded-lg bg-white px-3 py-6 flex items-center my-2  cursor-pointer transition duration-300">
                 <FiFile className="text-primary flex-none text-md" />
-                <p className="text-xs font-normal text-primary line-clamp-1 flex-1">{decodeURI(item.imageUrl.split('/').pop() || 'Unknown File')}</p>
+                {/* <p className="text-xs font-normal text-primary line-clamp-1 flex-1">{decodeURI(item.imageUrl.split('/').pop() || 'Unknown File')}</p> */}
+                <p className="text-xs font-normal text-primary line-clamp-1 flex-1">
+                  {cleanFileName(item.imageUrl.split('/').pop() || 'Unknown File')}
+                </p>
               </div>
             </a>
           ))}

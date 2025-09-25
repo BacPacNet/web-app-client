@@ -27,6 +27,7 @@ export const NotificationIcon = ({ type }: NotificationIconProps) => {
     case notificationRoleAccess.COMMUNITY_COMMENT:
     case notificationRoleAccess.REPLIED_TO_COMMENT:
     case notificationRoleAccess.REPLIED_TO_COMMUNITY_COMMENT:
+    case notificationRoleAccess.COMMUNITY_ADMIN_POST:
       return <IoIosChatboxes className="w-7 h-7 sm:w-7 sm:h-7" color="#9685FF" />
     case notificationRoleAccess.REACTED_TO_POST:
     case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
