@@ -28,6 +28,7 @@ import { RxCrossCircled } from 'react-icons/rx'
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import { useBlockUser } from '@/services/userProfile'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -125,6 +126,11 @@ export function UserProfileCard({
     setIsBlocked(isBlockedByYou)
   }, [isBlockedByYou])
 
+  const handleShareProfile = () => {
+    navigator.clipboard.writeText(window.location.href)
+    showCustomSuccessToast('Profile url copied to clipboard.')
+  }
+
   return (
     <div className=" relative z-0 shadow-card bg-white rounded-lg p-6 flex flex-col gap-4 font-inter">
       {/* Lightbox */}
@@ -190,7 +196,10 @@ export function UserProfileCard({
                   </PopoverTrigger>
                   <PopoverContent onClick={() => setIsOpen(false)} className="relative w-fit border-none shadow-lg bg-white p-0 rounded-lg">
                     <ul>
-                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                      <li
+                        onClick={() => handleShareProfile()}
+                        className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
+                      >
                         <IoIosShareAlt />
                         <p>Share Profile</p>
                       </li>
@@ -211,10 +220,10 @@ export function UserProfileCard({
                         <MdBlockFlipped />
                         <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
                       </li> */}
-                      <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
+                      {/* <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoFlagOutline />
                         <p>Report User</p>
-                      </li>
+                      </li> */}
                     </ul>
                   </PopoverContent>
                 </Popover>

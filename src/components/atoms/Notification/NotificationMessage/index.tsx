@@ -17,6 +17,12 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
           <b>{fullName}</b> started following you.
         </span>
       )
+    case notificationRoleAccess.COMMUNITY_ADMIN_POST:
+      return (
+        <span className="text-xs font-inter">
+          <b>{data?.directCommunityDetails?.name}</b> admin has posted a new update. Be sure to check it out.
+        </span>
+      )
 
     case notificationRoleAccess.GROUP_INVITE:
       return (

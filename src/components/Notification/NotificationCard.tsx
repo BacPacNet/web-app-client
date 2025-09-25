@@ -118,6 +118,8 @@ const NotificationCard = ({ data }: Props) => {
         return router.push(`/post/${data.userPostId}?isType=Timeline`)
       case notificationRoleAccess.REACTED_TO_COMMUNITY_POST:
         return router.push(`/post/${data.communityPostId}?isType=Community`)
+      case notificationRoleAccess.COMMUNITY_ADMIN_POST:
+        return router.push(`/post/${data.communityPostId}?isType=Community`)
       case notificationRoleAccess.community_post_live_request_notification:
         return router.push(`/community/${data.communityGroupId?.communityId}/${data.communityGroupId?._id}?filterPostBy=pendingPosts`)
       case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
