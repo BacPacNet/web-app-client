@@ -20,7 +20,7 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.COMMUNITY_ADMIN_POST:
       return (
         <span className="text-xs font-inter">
-          <b>{data?.directCommunityDetails?.name}</b> admin posted a new post.
+          <b>{data?.directCommunityDetails?.name}</b> admin has posted a new update. Be sure to check it out.
         </span>
       )
 
