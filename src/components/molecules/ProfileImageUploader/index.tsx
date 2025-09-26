@@ -83,6 +83,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
             )}
           </div>
         </label>
+        <p className="text-2xs text-neutral-600 font-semibold font-poppins">Max file size: 5MB</p>
       </div>
 
       <ImageCropModal imageSrc={tempImageSrc} isOpen={isCropModalOpen} onClose={handleCropModalClose} onCropComplete={handleCropComplete} />
