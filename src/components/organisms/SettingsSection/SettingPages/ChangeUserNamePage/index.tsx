@@ -1,6 +1,6 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -33,6 +33,11 @@ const ChangeUserNamePage = () => {
   } = useForm<UserForm>({})
 
   const onSubmit = async (data: UserForm) => {
+    if (data.newUserName === userData?.userName) {
+      showCustomDangerToast('New username cannot be the same as the current username')
+      return
+    }
+
     mutate(
       {
         userName: userData?.userName || '',

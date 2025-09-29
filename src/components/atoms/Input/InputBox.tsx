@@ -25,7 +25,7 @@ const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
         {label && <label className="text-xs text-neutral-700 font-medium">{label}</label>}
         <div className="relative">
           <input
-            className={`${className} ${
+            className={`${className} ${disabled ? 'bg-neutral-50 cursor-not-allowed' : ''} ${
               err ? 'border-red-400' : 'border-neutral-200'
             } w-full py-2 px-3 border  rounded-lg drop-shadow-sm text-neutral-900 placeholder:text-neutral-400 h-10 outline-none pr-10`}
             type={isPassword && showPassword ? 'text' : type}
