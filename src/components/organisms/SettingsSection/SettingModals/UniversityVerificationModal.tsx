@@ -14,7 +14,7 @@ import { useAddUniversityEmail } from '@/services/edit-profile'
 import { useHandleUniversityEmailVerificationGenerate } from '@/services/auth'
 import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDown'
 import { Spinner } from '@/components/spinner/Spinner'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
 
 type FormDataType = {
@@ -62,10 +62,21 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
 
   const onSubmit = async (data: FormDataType) => {
     if (universityNameProp) {
-      await mutateAddUniversity({ ...data, universityName: universityNameProp })
+      await mutateAddUniversity(
+        { ...data, universityName: universityNameProp },
+        {
+          onError: (error: any) => {
+            setError('UniversityOtp', { type: 'manual', message: error.response.data.message })
+          },
+        }
+      )
       closeModal()
     } else {
-      mutateAddUniversity(data)
+      await mutateAddUniversity(data, {
+        onError: (error: any) => {
+          setError('UniversityOtp', { type: 'manual', message: error.response.data.message })
+        },
+      })
     }
   }
 
@@ -210,7 +221,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
           ''
         )}
       </form>
-      {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''}
+      {/* {error?.response?.data?.message ? <InputWarningText>{error?.response?.data?.message}</InputWarningText> : ''} */}
     </div>
   )
 }

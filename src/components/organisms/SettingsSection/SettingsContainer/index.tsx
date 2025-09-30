@@ -28,7 +28,7 @@ export default function AccountSettingsPage() {
         { href: '/setting/change-username', label: 'Change Username' },
         { href: '/setting/change-password', label: 'Change Password' },
         // { href: '/setting/change-email', label: 'Change Email' },
-        { href: '/setting/deactivation', label: 'Account Deactivation' },
+        // { href: '/setting/deactivation', label: 'Account Deactivation' },
       ],
     },
     // {

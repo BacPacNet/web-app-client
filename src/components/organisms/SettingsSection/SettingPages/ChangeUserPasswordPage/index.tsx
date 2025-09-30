@@ -3,7 +3,10 @@ import Buttons from '@/components/atoms/Buttons'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
+import ResetPasswordSendOtp from '@/components/organism/ResetPasswordSendOtp'
+
 import { Spinner } from '@/components/spinner/Spinner'
+import { useModal } from '@/context/ModalContext'
 import { useChangeUserPassword } from '@/services/user'
 import { useUniStore } from '@/store/store'
 import { useRouter } from 'next/navigation'
@@ -25,6 +28,7 @@ type PasswordVisibilityState = {
 }
 const ChangeUserPasswordPage = () => {
   const router = useRouter()
+  const { openModal } = useModal()
   const [passwordVisibility, setPasswordVisibility] = useState<PasswordVisibilityState>({
     showPassword: false,
     showNewPassword: false,
@@ -52,6 +56,10 @@ const ChangeUserPasswordPage = () => {
         },
       }
     )
+  }
+
+  const handleForgotPassword = () => {
+    openModal(<ResetPasswordSendOtp />)
   }
   return (
     <div className="rounded-lg">
@@ -84,6 +92,9 @@ const ChangeUserPasswordPage = () => {
               </div>
             </div>
             {errors.currentPassword && <InputWarningText>Please enter your password!</InputWarningText>}
+            <Buttons type="button" variant="border" size="small" onClick={() => router.push('/forget-password')} className="w-max mt-4">
+              {'Forgot Password'}
+            </Buttons>
           </div>
           <div className="flex flex-col  min-w-[343px]">
             <div className="relative w-full flex flex-col gap-2">

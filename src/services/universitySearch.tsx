@@ -9,13 +9,13 @@ export function useUniversitySearch(searchTerm: string, page: number, limit: num
   return useQuery<any, Error>({
     queryKey: ['universitySearch', debouncedSearchTerm],
     queryFn: () => getUniversitySearch(debouncedSearchTerm, page, limit),
-    enabled: !!debouncedSearchTerm, // Only run if there's a search term
+    // enabled: !!debouncedSearchTerm, // Only run if there's a search term
     retry: false, // Optional: Prevent retries on failure
   })
 }
 
 export async function getUniversitySearch(searchTerm: string, page: number, limit: number): Promise<any[]> {
-  if (!searchTerm) return []
+  //   if (!searchTerm) return []
 
   // Fetch university data based on the search term
   const response = await client(`/university/searched?page=${page}&limit=${limit}&searchTerm=${encodeURIComponent(searchTerm)}`)
