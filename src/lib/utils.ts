@@ -196,3 +196,15 @@ export const getMimeTypeFromUrl = (url: string): string => {
 }
 
 export const generateFileId = (file: File) => `${file.name}-${file.size}-${file.lastModified}`
+
+export const cleanFileName = (fileName: string) => {
+  // Match only if UUID + extension exists
+  const regex = /-(\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b)(?=\.\w+$)/i
+
+  if (regex.test(fileName)) {
+    return fileName.replace(regex, '') // Remove only the UUID part
+  }
+
+  // If no UUID found, return original filename unchanged
+  return fileName
+}

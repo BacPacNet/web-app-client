@@ -38,6 +38,7 @@ type Props = {
     message: string
     receiverId: string
     userPostId?: string
+    directCommunityDetails?: any
     sender_id: {
       _id: string
       firstName: string
@@ -114,6 +115,16 @@ const NotificationAvatars = ({ data, notificationType, handleRedirectPostComment
       return renderCommunityUsers(data?.commentedBy?.newFiveUsers)
     } else if (notificationType == notificationRoleAccess.REPLIED_TO_COMMUNITY_COMMENT) {
       return renderCommunityUsers(data?.repliedBy?.newFiveUsers)
+    } else if (notificationType == notificationRoleAccess.COMMUNITY_ADMIN_POST) {
+      return (
+        <Image
+          width={48}
+          height={48}
+          src={data?.directCommunityDetails?.communityLogoUrl?.imageUrl || dummy.src}
+          alt="dp"
+          className="w-10 sm:w-10 h-10 sm:h-10 rounded-full object-cover"
+        />
+      )
     } else if (
       notificationType == notificationRoleAccess.ACCEPTED_PRIVATE_GROUP_REQUEST ||
       notificationType == notificationRoleAccess.REJECTED_OFFICIAL_GROUP_REQUEST ||
