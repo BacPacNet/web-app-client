@@ -26,7 +26,7 @@ import { degreeAndMajors, occupationAndDepartment, value } from '@/types/Registe
 import ProfileImageUploader from '../ProfileImageUploader'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCommunityUsers } from '@/services/community'
+import { useCommunityFilteredUsers, useCommunityUsers } from '@/services/community'
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
@@ -63,7 +63,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useCommunityUsers(communityGroups?.communityId?._id, true, searchInput)
+  } = useCommunityFilteredUsers(communityGroups?.communityId?._id, false, searchInput)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
@@ -71,7 +71,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const { title, description: initialDescription, communityGroupAccess, communityGroupCategory, communityGroupLabel } = communityGroups
-  console.log('communityGroupLabel', communityGroupLabel)
+
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>(communityGroupCategory)
 
   const {

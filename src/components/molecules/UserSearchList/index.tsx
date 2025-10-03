@@ -14,11 +14,29 @@ type UserSelectDropdownProps = {
   dropdownRef?: React.RefObject<HTMLDivElement>
   maxHeight?: number
   individualsUsers: Users[] | Users | null | undefined
+  chatId?: string
 }
 
-const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, show, onSelect, currentUserId, individualsUsers, maxHeight = 312 }) => {
-  console.log('individualsUsers', individualsUsers)
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } = useUsersProfileForConnections(searchInput, 10, true)
+const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
+  searchInput,
+  show,
+  onSelect,
+  currentUserId,
+  individualsUsers,
+  maxHeight = 312,
+  chatId,
+}) => {
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading } = useUsersProfileForConnections(
+    searchInput,
+    10,
+    true,
+    '',
+    [],
+    [],
+    [],
+    [],
+    chatId
+  )
   //  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
 
   const userProfiles = data?.pages.flatMap((page) => page.users).filter((user) => user._id !== currentUserId) || []
@@ -64,7 +82,7 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({ searchInput, sh
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-sm font-semibold">{user?.firstName}</p>
+                  <p className="text-sm font-semibold">{`${user?.firstName} ${user?.lastName}`}</p>
                   <p className="text-2xs text-neutral-600">
                     {user?.profile?.role === 'student' ? `${user.profile.study_year} ` : user?.profile?.occupation}
                   </p>
