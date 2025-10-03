@@ -18,7 +18,7 @@ import { HiOutlineLogin } from 'react-icons/hi'
 import { FaCircleUser } from 'react-icons/fa6'
 import { useRouter } from 'next/navigation'
 import { MdOutlineBlock } from 'react-icons/md'
-import { FaEdit } from 'react-icons/fa'
+import { FaEdit, FaUser, FaUsers } from 'react-icons/fa'
 import { userTypeEnum } from '@/types/RegisterForm'
 import ChatGroupMembers from '../ChatGroupMembers'
 import EditGroupChatModal from '../EditChatGroup'
@@ -113,6 +113,7 @@ const MessageUserStickyBar = ({
     if (isGroupChat) return
     router.push(`/profile/${id}`)
   }, [])
+
   return (
     <div className="w-full top-0 p-4 z-10 flex justify-between border-b border-neutral-300 rounded-t-2xl bg-white pb-4">
       <div className="flex items-center gap-4">
@@ -121,14 +122,18 @@ const MessageUserStickyBar = ({
         </p>
         <div className="relative">
           <div className="w-10 h-10">
-            <Image
-              onClick={() => handleProfileClicked(id as string)}
-              src={profileCover || avatar}
-              alt="dp"
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full object-cover cursor-pointer"
-            />
+            {isGroupChat && ((profileCover?.length && profileCover?.length < 1) || profileCover == undefined) ? (
+              <FaUsers className="w-10 h-10 rounded-full bg-neutral-200 p-2 text-primary-700" />
+            ) : (
+              <Image
+                onClick={() => handleProfileClicked(id as string)}
+                src={profileCover || avatar}
+                alt="dp"
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full object-cover cursor-pointer"
+              />
+            )}
           </div>
           {/* <p
             className={`w-4 h-4 ${
@@ -189,17 +194,28 @@ const MessageUserStickyBar = ({
                     <p>Delete Group </p>
                   </div>
                 ) : (
-                  <div onClick={() => leaveGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                  <div onClick={() => leaveGroup()} className="flex gap-2  px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
                     <HiOutlineLogin size={20} className="text-destructive-600" />
                     <p>Leave </p>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">
-                <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-2 items-center cursor-pointer">
-                  <MdOutlineBlock size={20} className="text-destructive-600" />
-                  {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
+              // ) : isGroupChat ? (
+              //   <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">
+              //     <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-2 items-center cursor-pointer">
+              //       <MdOutlineBlock size={20} className="text-destructive-600" />
+              //       {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
+              //     </div>
+              //   </div>
+              // )
+              <div
+                onClick={() => handleProfileClicked(id as string)}
+                className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 "
+              >
+                <div className="flex gap-2 items-center cursor-pointer">
+                  <FaUser size={20} />
+                  <p>View Profile</p>
                 </div>
               </div>
             )}

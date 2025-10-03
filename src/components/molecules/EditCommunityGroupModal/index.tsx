@@ -351,6 +351,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
               </label>
             )}
           </div>
+          <p className="text-2xs text-neutral-600 font-semibold font-poppins">Max file size: 5MB</p>
         </div>
 
         {/* Forms  */}
