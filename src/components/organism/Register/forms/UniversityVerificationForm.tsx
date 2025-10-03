@@ -27,6 +27,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     getValues,
     setError,
     clearErrors,
+    setValue,
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP, countdown, isCounting } = useHandleUniversityEmailVerificationGenerateWithCountdown()
   const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
@@ -37,6 +38,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
+    const universityId = getValues('universityId')
     if (!email) {
       setError('universityEmail', { type: 'manual', message: 'please enter your email!' })
       return
@@ -48,7 +50,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     }
 
     clearErrors('universityEmail')
-    const data = { email }
+    const data = { email, universityId }
     generateUniversityEmailOTP(data)
   }
 
@@ -115,7 +117,10 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
               render={({ field }) => (
                 <SelectUniversityDropdown
                   value={field.value}
-                  onChange={field.onChange}
+                  onChange={(selectedUniversity: any) => {
+                    field.onChange(selectedUniversity.name)
+                    setValue('universityId', selectedUniversity._id)
+                  }}
                   placeholder="Select University Name"
                   icon={'single'}
                   search={true}
