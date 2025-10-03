@@ -16,17 +16,20 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
+import { useRouter } from 'next/navigation'
 
 type FormDataType = {
   UniversityOtp: string
   universityEmail: string
   universityName: string
+  universityId: string
 }
 
 type Props = {
   universityNameProp?: string
 }
 const UniversityVerificationModal = ({ universityNameProp }: Props) => {
+  const router = useRouter()
   const [countdown, setCountdown] = useState(30)
   const [isCounting, setIsCounting] = useState(false)
   const { closeModal } = useModal()
@@ -38,12 +41,14 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     setError,
     clearErrors,
     getValues,
+    setValue,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending, isError } = useHandleUniversityEmailVerificationGenerate()
   const { mutateAsync: mutateAddUniversity, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
+    const universityId = getValues('universityId')
     if (!email) {
       setError('universityEmail', { type: 'manual', message: 'Please enter your email!' })
       return
@@ -55,7 +60,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     }
 
     clearErrors('universityEmail')
-    const data = { email }
+    const data = { email, universityId }
     handleUniversityEmailSendCodeCount()
     generateUniversityEmailOTP(data)
   }
@@ -104,6 +109,11 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     }
   }, [isSuccess, isError])
 
+  const handleHelpVerifying = () => {
+    closeModal()
+    router.push('/contact')
+  }
+
   return (
     <div className="flex flex-col items-center gap-8">
       <div>
@@ -130,6 +140,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
                     value={field.value}
                     onChange={(selectedUniversity: any) => {
                       field.onChange(selectedUniversity.name)
+                      setValue('universityId', selectedUniversity._id)
                     }}
                     placeholder="Select University Name"
                     icon={'single'}
@@ -141,6 +152,13 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
               {errors.universityName && <InputWarningText>{errors?.universityName?.message?.toString()}</InputWarningText>}
             </>
           )}
+
+          <p
+            onClick={handleHelpVerifying}
+            className="cursor-pointer text-xs text-primary-500 font-semibold decoration-dotted underline underline-offset-2"
+          >
+            Need help verifying?
+          </p>
         </div>
 
         <div className="flex flex-col  w-11/12 gap-4">

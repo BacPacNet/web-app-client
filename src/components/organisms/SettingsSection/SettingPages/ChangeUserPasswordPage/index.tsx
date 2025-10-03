@@ -3,12 +3,9 @@ import Buttons from '@/components/atoms/Buttons'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
 import InputWarningText from '@/components/atoms/InputWarningText'
-import ResetPasswordSendOtp from '@/components/organism/ResetPasswordSendOtp'
-
 import { Spinner } from '@/components/spinner/Spinner'
 import { useModal } from '@/context/ModalContext'
 import { useChangeUserPassword } from '@/services/user'
-import { useUniStore } from '@/store/store'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -58,12 +55,9 @@ const ChangeUserPasswordPage = () => {
     )
   }
 
-  const handleForgotPassword = () => {
-    openModal(<ResetPasswordSendOtp />)
-  }
   return (
     <div className="rounded-lg">
-      <div onClick={() => router.back()} className="flex items-center gap-2 pb-4 pt-0  border-b border-neutral-300 cursor-pointer">
+      <div onClick={() => router.replace('/setting')} className="flex items-center gap-2 pb-4 pt-0  border-b border-neutral-300 cursor-pointer">
         <FaChevronLeft className="text-neutral-500" />
         <span className="text-neutral-500 font-medium text-sm">Account</span>
       </div>
@@ -92,7 +86,13 @@ const ChangeUserPasswordPage = () => {
               </div>
             </div>
             {errors.currentPassword && <InputWarningText>Please enter your password!</InputWarningText>}
-            <Buttons type="button" variant="border" size="small" onClick={() => router.push('/forget-password')} className="w-max mt-4">
+            <Buttons
+              type="button"
+              variant="border"
+              size="small"
+              onClick={() => router.push('/forget-password?redirectFrom=change-password')}
+              className="w-max mt-4"
+            >
               {'Forgot Password'}
             </Buttons>
           </div>
