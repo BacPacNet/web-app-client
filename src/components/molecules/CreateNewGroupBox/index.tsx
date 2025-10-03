@@ -99,7 +99,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
   const communityGroupType = watch('communityGroupType')
 
   const { data: communityData } = useGetCommunity(community.id)
-  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityId, true, searchInput)
+  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityId, false, searchInput)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
