@@ -20,6 +20,10 @@ const UniversityVerificationPage = () => {
   const { openModal } = useModal()
   const { data: verifiedUniversityEmailData, isFetching } = useGetUserProfileVerifiedUniversityEmailData()
 
+  const handleHelpVerifying = () => {
+    router.push('/contact')
+  }
+
   return (
     <div className="rounded-lg">
       <div onClick={() => router.back()} className="flex items-center gap-2 pb-4 pt-0  border-b border-neutral-300 cursor-pointer">
@@ -34,6 +38,12 @@ const UniversityVerificationPage = () => {
         <div>
           <UniversityBenefits />
         </div>
+        <p
+          onClick={handleHelpVerifying}
+          className="mt-4 cursor-pointer text-xs text-primary-500 font-semibold decoration-dotted underline underline-offset-2"
+        >
+          Need help verifying?
+        </p>
       </div>
       {isFetching ? (
         <Spinner />

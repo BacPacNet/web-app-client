@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import Spinner from '@/components/atoms/spinner'
 
@@ -22,7 +22,8 @@ const ResetPasswordSendOtp = () => {
   const [isVerified, setIsVerified] = useState<null | boolean>(null)
   const { resetEmail, resetToken, setResetPasswordEmail, userData } = useUniStore((state) => state)
   const [hasSubmittedPasswordForm, setHasSubmittedPasswordForm] = useState(false)
-
+  const searchParams = useSearchParams()
+  const redirectFrom = searchParams.get('redirectFrom') || ''
   const router = useRouter()
   const {
     register,
@@ -170,9 +171,16 @@ const ResetPasswordSendOtp = () => {
     <div className="flex   bg-neutral-100 flex-col items-center  pb-48">
       <div className="flex  flex-col items-center  max-width-allowed ">
         <div className="flex   flex-col items-start bg-white  shadow-sm rounded-lg w-11/12 sm:w-[448px]   p-12 mt-16">
-          <p onClick={() => router.push('/login')} className="text-2xs text-primary cursor-pointer mb-6 underline">
-            Back to Login
-          </p>
+          {redirectFrom.length > 0 ? (
+            <p onClick={() => router.push('/setting/change-password')} className="text-2xs text-primary cursor-pointer mb-6 underline">
+              Back to Password Change
+            </p>
+          ) : (
+            <p onClick={() => router.push('/login')} className="text-2xs text-primary cursor-pointer mb-6 underline">
+              Back to Login
+            </p>
+          )}
+
           {isVerified ? (
             <form className="w-full  flex flex-col gap-8 items-center ">
               <div className="text-start flex flex-col gap-2 w-full">
