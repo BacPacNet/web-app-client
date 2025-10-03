@@ -25,7 +25,7 @@ const fetchCommunityUsers = async (
 ): Promise<any> => {
   const params = new URLSearchParams()
 
-  if (isVerified) params.append('isVerified', 'false')
+  if (isVerified) params.append('isVerified', 'true')
   if (page) params.append('page', page.toString())
   if (limit) params.append('limit', limit.toString())
   if (searchQuery.trim() !== '') params.append('searchQuery', searchQuery.trim())
