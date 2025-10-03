@@ -85,7 +85,7 @@ const VerifyUserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
               <div className="flex items-center gap-4">
                 <Image src={user?.profile_dp?.imageUrl || avatar} alt="dp" width={44} height={44} className="w-12 h-12 rounded-full object-cover" />
                 <div>
-                  <p className="text-sm font-semibold">{user?.firstName}</p>
+                  <p className="text-sm font-semibold">{`${user?.firstName} ${user?.lastName}`}</p>
                   <p className="text-2xs text-neutral-600">{user?.role === 'student' ? `${user?.study_year} ` : user?.occupation}</p>
                   <p className="text-2xs text-neutral-600">{user?.role === 'student' ? user.major : user?.affiliation}</p>
                 </div>
