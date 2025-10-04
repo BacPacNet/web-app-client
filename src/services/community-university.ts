@@ -449,7 +449,7 @@ export const useLikeUnilikeGroupPost = (
         ? ['getPost', postId]
         : isTimeline
         ? ['timelinePosts']
-        : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : []), filterPostBy]
+        : ['communityGroupsPost', communityId, ...(communityGroupId ? [communityGroupId] : []), ...(communityGroupId ? [filterPostBy] : [])]
       queryClient.cancelQueries({ queryKey: queryKey })
 
       const previousPosts = queryClient.getQueryData(queryKey)

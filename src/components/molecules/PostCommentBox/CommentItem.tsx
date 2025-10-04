@@ -60,6 +60,7 @@ const CommentItem = ({
           adminId={comment?.commenterId?._id}
           postID={postID}
           type={type}
+          role={comment?.commenterProfileId?.role}
           handleProfileClicked={handleProfileClicked}
           affiliation={comment?.commenterProfileId?.affiliation}
           occupation={comment?.commenterProfileId?.occupation}
