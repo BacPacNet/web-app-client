@@ -16,6 +16,7 @@ import noPostGroup from '@/assets/noPostGroup.svg'
 import PendingPostCard from '@/components/molecules/PeningPostCard'
 import { AllFiltersCommunityGroupPost, communityPostStatus } from '@/types/CommuityGroup'
 import { useUniStore } from '@/store/store'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface CommunityGroupPostContainerProps {
   containerRef: React.RefObject<HTMLDivElement>
@@ -126,6 +127,7 @@ function CommunityGroupPostContainer({
           communityGroupAdminId={communityGroupAdminId}
           postStatus={post?.postStatus as communityPostStatus}
           isPostLive={post?.isPostLive}
+          role={post?.userProfile?.role as userTypeEnum}
         />
       ))
     } else {
