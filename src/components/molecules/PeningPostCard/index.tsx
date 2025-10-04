@@ -13,6 +13,7 @@ import UserCard from '@/components/atoms/UserCard'
 import { motion } from 'framer-motion'
 import { useCreateGroupPostStatusChange } from '@/services/community-university'
 import { communityPostStatus } from '@/types/CommuityGroup'
+import { userTypeEnum } from '@/types/RegisterForm'
 dayjs.extend(relativeTime)
 
 interface Like {
@@ -50,7 +51,7 @@ interface PostProps {
   idx: number
 
   isTimeline?: boolean
-
+  role: userTypeEnum
   occupation?: string
   affiliation?: string
   isPostVerified?: boolean
@@ -78,12 +79,11 @@ const PendingPostCard = React.memo(
     setImageCarasol,
     idx,
     major,
-
     occupation,
     affiliation,
     isPostVerified,
     isCommunityAdmin,
-
+    role,
     borderColor = 'yellow',
     communityGroupAdminId,
     postStatus,
@@ -148,6 +148,7 @@ const PendingPostCard = React.memo(
               isPost={true}
               isVerified={isPostVerified}
               isCommunityAdmin={isCommunityAdmin}
+              role={role}
             />
           </div>
 

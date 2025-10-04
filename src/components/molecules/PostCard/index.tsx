@@ -282,6 +282,7 @@ const PostCard = React.memo(
               isPost={true}
               isVerified={isPostVerified}
               isCommunityAdmin={isCommunityAdmin}
+              role={role}
             />
 
             <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
