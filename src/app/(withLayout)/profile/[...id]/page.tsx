@@ -36,6 +36,7 @@ export default function Profile({ params }: { params: { id: string } }) {
     occupation,
     role,
     displayEmail,
+    email,
   } = profile || {}
   //  const { logos } = university || {}
 
@@ -45,6 +46,10 @@ export default function Profile({ params }: { params: { id: string } }) {
         <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="User Not Found" description="" />
       </div>
     )
+  }
+
+  const IsUniversityVerified = (): boolean => {
+    return email?.some((university) => university.UniversityName === university_name) || false
   }
 
   return (
@@ -57,7 +62,6 @@ export default function Profile({ params }: { params: { id: string } }) {
           isPremium={true}
           description={bio || ''}
           university={university_name || 'Lorem University'}
-          isVerified={true}
           following={following?.length || 0}
           followers={followers?.length || 0}
           year={study_year || ''}
@@ -71,7 +75,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           location={city || ''}
           birthday={dob || ''}
           avatarUrl={profile?.profile_dp?.imageUrl || ''}
-          isVerifiedUniversity={true}
+          isVerifiedUniversity={IsUniversityVerified()}
           country={country || ''}
           isSelfProfile={isSelfProfile}
           userId={userId}

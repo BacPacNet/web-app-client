@@ -19,7 +19,7 @@ import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
-import { convertToDateObj, IsUniversityVerified } from '@/lib/utils'
+import { convertToDateObj } from '@/lib/utils'
 import { HiMail } from 'react-icons/hi'
 import { useCreateUserChat } from '@/services/Messages'
 import { useRouter } from 'next/navigation'
@@ -34,7 +34,6 @@ interface UserProfileCardProps {
   isPremium: boolean
   description: string
   university: string
-  isVerified: boolean
   following: number
   followers: number
   year: string
@@ -44,7 +43,6 @@ interface UserProfileCardProps {
   location: string
   birthday: string
   avatarUrl: string
-  isVerifiedUniversity: boolean
   degree: string
   country: string
   isSelfProfile?: boolean
@@ -54,6 +52,7 @@ interface UserProfileCardProps {
   affiliation: string
   role: string
   isBlockedByYou: boolean
+  isVerifiedUniversity: boolean
 }
 
 export function UserProfileCard({
@@ -63,14 +62,12 @@ export function UserProfileCard({
   following,
   followers,
   year,
-  degree,
   major,
   email,
   phone,
   location,
   birthday,
   avatarUrl,
-  isVerifiedUniversity,
   country,
   isSelfProfile,
   userId,
@@ -79,6 +76,7 @@ export function UserProfileCard({
   occupation,
   affiliation,
   isBlockedByYou = false,
+  isVerifiedUniversity,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
@@ -114,13 +112,13 @@ export function UserProfileCard({
     setIsLightboxOpen(true)
   }
 
-  const handleBlockUser = () => {
-    mutateBlockUser(userId, {
-      onSuccess: () => {
-        setIsBlocked(!isBlocked)
-      },
-    })
-  }
+  // const handleBlockUser = () => {
+  //   mutateBlockUser(userId, {
+  //     onSuccess: () => {
+  //       setIsBlocked(!isBlocked)
+  //     },
+  //   })
+  // }
 
   useEffect(() => {
     setIsBlocked(isBlockedByYou)
@@ -305,7 +303,7 @@ export function UserProfileCard({
             />
           </div>
           <p className="text-neutral-500  font-medium text-2xs ">{university}</p>
-          {IsUniversityVerified() && <Image width={16} height={16} src={badge} alt={''} />}
+          {isVerifiedUniversity && <Image width={16} height={16} src={badge} alt={''} />}
         </div>
         <div className="flex gap-4 ">
           <div
