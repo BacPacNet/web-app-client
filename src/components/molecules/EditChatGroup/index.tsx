@@ -296,6 +296,7 @@ const EditGroupChatModal = ({
             currentUserId={userProfileData?.users_id as string}
             individualsUsers={SelectedIndividualsUsers}
             //  maxHeight={512}
+            chatId={chatId}
           />
 
           <div className="flex flex-wrap mt-2">

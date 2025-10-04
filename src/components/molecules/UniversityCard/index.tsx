@@ -33,6 +33,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   //  const { data: communityData, isLoading: isCommunityLoading } = useGetCommunity(communityID)
   const [logoSrc, setLogoSrc] = useState(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
+  const [coverSrc, setCoverSrc] = useState(communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src)
 
   useEffect(() => {
     if (communityData && userData) {
@@ -43,6 +44,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   useEffect(() => {
     setLogoSrc(communityData?.communityLogoUrl?.imageUrl || universityLogoPlaceholder)
+    setCoverSrc(communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src)
   }, [communityData])
 
   const { mutate: joinCommunity } = useJoinCommunity()
@@ -70,13 +72,14 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
 
   return (
     <div className="rounded-lg bg-white shadow-card p-6 mb-4">
-      <div className="relative h-[100px] md:h-[164px] w-full overflow-hidden rounded-lg">
+      <div className="relative h-[100px] md:h-[164px] w-full overflow-hidden rounded-lg ">
         <Image
-          src={communityData?.communityCoverUrl?.imageUrl || universityPlaceholder.src}
+          src={coverSrc}
           layout="fill"
-          objectFit="cover"
+          objectFit="fill"
           alt="university"
-          className="h-full w-full object-cover object-top"
+          className="h-full w-full object-fill object-top"
+          onError={() => setCoverSrc(universityPlaceholder.src)}
         />
       </div>
       <div className="pt-4">
