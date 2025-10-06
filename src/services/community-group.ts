@@ -1,7 +1,8 @@
 import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { useCallback } from 'react'
 
 import { useUniStore } from '@/store/store'
 import { notificationStatus as notificationStatusEnum } from '@/services/notification'
@@ -214,5 +215,37 @@ export const useJoinRequestPrivateGroup = (communityGroupId: string) => {
       const errorMessage = error?.response?.data?.message || 'Something went wrong'
       console.error('Error changing status:', errorMessage)
     },
+  })
+}
+
+export async function getAllCommunityGroupMembersUser(token: string, communityGroupId: string, userStatus: string, page: number, limit: number) {
+  if (!token || token.length === 0) {
+    console.error('Token is empty, cannot make API call')
+    throw new Error('Authentication token is required')
+  }
+
+  const response: any = await client(
+    `/communitygroup/members?communityGroupId=${communityGroupId}&userStatus=${userStatus}&page=${page}&limit=${limit}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  )
+  return response
+}
+
+export function useGetCommunityGroupMembersUser(communityGroupId: string, userStatus: string, limit: number) {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  return useInfiniteQuery({
+    queryKey: ['community-group-members', communityGroupId, userStatus, limit, cookieValue],
+    queryFn: ({ pageParam = 1 }) => {
+      return getAllCommunityGroupMembersUser(cookieValue, communityGroupId, userStatus, pageParam, limit)
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!communityGroupId && !!cookieValue && cookieValue.length > 0,
   })
 }

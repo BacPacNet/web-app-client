@@ -248,6 +248,7 @@ const EditGroupChatModal = ({
             </label>
           )}
         </div>
+        <p className="text-2xs text-neutral-600 font-semibold font-poppins">Max file size: 5MB</p>
       </div>
       {/* //name  */}
       <div className="flex gap-4 items-center justify-between">
