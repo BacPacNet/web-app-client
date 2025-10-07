@@ -1,8 +1,9 @@
+'use client'
 import SubText from '@/components/atoms/SubText'
 import Title from '@/components/atoms/Title'
 import Image from 'next/image'
 import placeholder from '@/assets/Logo Circle.svg'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Buttons from '@/components/atoms/Buttons'
 import { useLeaveCommunity } from '@/services/community-university'
 import { useModal } from '@/context/ModalContext'
@@ -18,6 +19,7 @@ interface LeavingCommunityCardProps {
 const LeavingCommunityCard: React.FC<LeavingCommunityCardProps> = ({ universityName, logo, setIsUserJoinedCommunity, communityId }) => {
   const { mutate: leaveCommunity, isPending: isLeaveLoading } = useLeaveCommunity()
   const { closeModal } = useModal()
+  const [logoSrc, setLogoSrc] = useState(logo || placeholder)
 
   const onLeave = () => {
     if (setIsUserJoinedCommunity && communityId) {
@@ -29,6 +31,10 @@ const LeavingCommunityCard: React.FC<LeavingCommunityCardProps> = ({ universityN
       })
     }
   }
+
+  useEffect(() => {
+    setLogoSrc(logo || placeholder)
+  }, [logo])
 
   return (
     <div className="flex flex-col items-center gap-4 ">
@@ -44,9 +50,9 @@ const LeavingCommunityCard: React.FC<LeavingCommunityCardProps> = ({ universityN
           width={40}
           height={40}
           className="w-[40px] h-[40px] object-contain rounded-full shadow-logo p-1"
-          src={logo || placeholder}
+          src={logoSrc}
           alt={universityName}
-          //  onError={() => setLogoSrc(universityLogoPlaceholder)}
+          onError={() => setLogoSrc(placeholder)}
         />
         {/*<Image src={logo || placeholder} width={36} height={36} alt={''} />*/}
         <span className="text-neutral-700 font-medium">{universityName}</span>
