@@ -240,8 +240,8 @@ export function useGetCommunityGroupMembersUser(communityGroupId: string, userSt
       return getAllCommunityGroupMembersUser(cookieValue, communityGroupId, userStatus, pageParam, limit)
     },
     getNextPageParam: (lastPage) => {
-      if (lastPage.currentPage < lastPage.totalPages) {
-        return lastPage.currentPage + 1
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1
       }
       return undefined
     },

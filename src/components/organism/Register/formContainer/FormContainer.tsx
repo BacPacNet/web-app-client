@@ -118,7 +118,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         universityLogo: registerData?.universityLogo || '',
         UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: registerData?.referralCode || '',
-        isJoinUniversity: registerData?.isJoinUniversity,
+        isJoinUniversity: registerData?.isJoinUniversity || true,
         isUniversityVerified: registerData?.isUniversityVerified,
         isEmailVerified: registerData?.isEmailVerified,
       })
@@ -151,6 +151,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       const dataToSend = {
         email: data.email,
         verificationOtp: data.verificationOtp,
+        universityId: registerData?.universityId,
       }
       const isAvailable = await handleUserLoginEmailVerification(dataToSend)
       if (isAvailable?.isAvailable) {
@@ -241,9 +242,23 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       const isAvailable = await userLoginEmailVerification(data)
 
-      if (isAvailable?.isAvailable) {
+      if (isAvailable?.isAvailable && !isAvailable?.isUniversityDomain) {
         handleNext()
         saveToLocalStorage()
+      } else if (isAvailable?.isAvailable && isAvailable?.isUniversityDomain) {
+        data.isUniversityVerified = true
+        const isEmailVerified = methods.getValues('isEmailVerified')
+        const res = await HandleRegister({
+          ...data,
+          isEmailVerified: isEmailVerified,
+        } as FormDataType)
+        if (res?.isRegistered) {
+          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+          deleteCookie()
+          setStep(4)
+          setSubStep(0)
+        }
       }
 
       return
