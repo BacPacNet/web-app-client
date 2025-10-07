@@ -241,12 +241,12 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
     if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       const isAvailable = await userLoginEmailVerification(data)
-
       if (isAvailable?.isAvailable && !isAvailable?.isUniversityDomain) {
         handleNext()
         saveToLocalStorage()
       } else if (isAvailable?.isAvailable && isAvailable?.isUniversityDomain) {
         data.isUniversityVerified = true
+        data.universityEmail = data.email
         const isEmailVerified = methods.getValues('isEmailVerified')
         const res = await HandleRegister({
           ...data,
