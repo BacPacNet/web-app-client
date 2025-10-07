@@ -3,7 +3,6 @@ import SegmentedControl, { SegmentedOption } from '@/components/atoms/SegmentCon
 import Spinner from '@/components/atoms/spinner'
 import Title from '@/components/atoms/Title'
 import UserListItem from '@/components/Timeline/UserListItem'
-import useCookie from '@/hooks/useCookie'
 import { useGetCommunityGroupMembersUser, useRemoveUserFromCommunityGroup } from '@/services/community-group'
 import { useUniStore } from '@/store/store'
 import { CommunityGroupUsers, status } from '@/types/CommuityGroup'
