@@ -103,7 +103,7 @@ export default function ClientUniversityProfile({ universityName }: { university
                 description="Looks like you've already joined a university without verifying your student status. You can only join one unverified university at a time."
                 subTitle="To continue, verify your student email for either:"
                 listItems={['The university you have previously joined', 'The one you are currently attempting to join']}
-                buttonLabel="Verify Student Email"
+                buttonLabel="Verify University Email"
                 redirectUrl="/setting/university-verification"
               />,
               'w-[350px] sm:w-[490px] hideScrollbar'

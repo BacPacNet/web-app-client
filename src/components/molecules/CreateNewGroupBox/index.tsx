@@ -203,8 +203,8 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     createGroup({ communityId: communityId, data: payload, isOfficial: communityGroupType.toLowerCase() === CommunityGroupTypeEnum.OFFICIAL })
     setSelectedFilters({})
     setIsLoading(false)
-    setNewGroup(false)
-    closeModal()
+    // setNewGroup(false)
+    // closeModal()
   }
 
   const handleClick = (userId: string) => {

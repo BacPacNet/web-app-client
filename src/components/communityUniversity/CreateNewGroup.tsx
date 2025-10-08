@@ -71,7 +71,6 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
 
   return (
     <>
-      <div className="fixed   w-full h-[100%]  top-0 left-0 bg-[#f3f2ff] backdrop-blur-2xl  opacity-50 z-10"></div>
       {userPopUp && (
         <>
           <div className="fixed   w-full h-[100%] top-0 left-0 bg-black backdrop-blur-xl opacity-50 z-50"></div>
@@ -108,114 +107,108 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
           </div>
         </>
       )}
-      <div className={`fixed w-1/3 max-sm:w-11/12 z-40 left-1/3  top-10  bg-white flex flex-col items-center gap-3 shadow-lg px-10 py-2 rounded-lg`}>
-        <div className="flex justify-end w-full absolute">
-          {' '}
-          <RxCross2 onClick={() => setNewGroup(false)} size={24} color="#737373" />
+      <div className="flex flex-col gap-2 justify-start items-start w-full">
+        <h3>Create Group</h3>
+        <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-40 `}>
+          {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
+          <input
+            style={{ display: 'none' }}
+            accept="image/jpeg,image/png,image/jpg,image/gif"
+            type="file"
+            id="CreateGroupImage"
+            onChange={(e: any) => setCoverImage(e.target.files[0])}
+          />
+          <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
+            <FiCamera size={40} className="text-slate-400" />
+            <p>Add Banner Photo</p>
+          </label>
         </div>
-        <div className="flex flex-col gap-2 justify-start items-start w-full">
-          <h3>Create Group</h3>
-          <div className={` ${!coverImage ? 'bg-slate-200' : ''}  relative shadow-lg flex flex-col w-full items-center justify-center h-40 `}>
-            {coverImage && <img className="w-full h-full  absolute -z-10 object-cover rounded-lg" src={URL.createObjectURL(coverImage)} alt="" />}
-            <input
-              style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              type="file"
-              id="CreateGroupImage"
-              onChange={(e: any) => setCoverImage(e.target.files[0])}
-            />
-            <label htmlFor="CreateGroupImage" className="flex flex-col items-center gap-2">
-              <FiCamera size={40} className="text-slate-400" />
-              <p>Add Banner Photo</p>
+        {/* logo */}
+        <div className={` absolute shadow-lg bg-white flex items-center justify-center w-20 h-20 rounded-full top-40`}>
+          {logoImage && <img className="w-full h-full rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
+          <input
+            style={{ display: 'none' }}
+            accept="image/jpeg,image/png,image/jpg,image/gif"
+            type="file"
+            id="CreateGroupLogoImage"
+            onChange={(e: any) => setLogoImage(e.target.files[0])}
+          />
+          <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
+            <FiCamera size={40} className="text-slate-400 z-30" />
+          </label>
+        </div>
+        {/* Forms  */}
+        <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-3">
+          <div className="relative w-full flex flex-col">
+            <label htmlFor="name" className="font-semibold">
+              Group Name
             </label>
-          </div>
-          {/* log0 */}
-          <div className={` absolute  shadow-lg bg-white flex  items-center justify-center w-20 h-20 rounded-full top-28`}>
-            {logoImage && <img className="w-full h-full rounded-full absolute  object-cover" src={URL.createObjectURL(logoImage)} alt="" />}
-            <input
-              style={{ display: 'none' }}
-              accept="image/jpeg,image/png,image/jpg,image/gif"
-              type="file"
-              id="CreateGroupLogoImage"
-              onChange={(e: any) => setLogoImage(e.target.files[0])}
+            <InputBox
+              placeholder="title "
+              type="title"
+              {...GroupRegister('title', {
+                required: true,
+              })}
             />
-            <label htmlFor="CreateGroupLogoImage" className="flex flex-col items-center gap-2">
-              <FiCamera size={40} className="text-slate-400 z-30" />
-            </label>
+
+            {GroupErrors.title && <span className="text-red-500 font-normal"> Please enter your Group Name!</span>}
           </div>
-          {/* Forms  */}
-          <form onSubmit={handleGroupCreate(onGroupSubmit)} className="w-full flex flex-col gap-3">
-            <div className="relative w-full flex flex-col">
-              <label htmlFor="name" className="font-semibold">
-                Group Name
-              </label>
-              <InputBox
-                placeholder="title "
-                type="title"
-                {...GroupRegister('title', {
-                  required: true,
-                })}
-              />
+          <div className="relative w-full flex flex-col">
+            <label htmlFor="description" className="font-semibold">
+              Description
+            </label>
+            <InputBox
+              placeholder="description "
+              type="description"
+              {...GroupRegister('description', {
+                required: true,
+              })}
+            />
 
-              {GroupErrors.title && <span className="text-red-500 font-normal"> Please enter your Group Name!</span>}
-            </div>
-            <div className="relative w-full flex flex-col">
-              <label htmlFor="description" className="font-semibold">
-                Description
-              </label>
-              <InputBox
-                placeholder="description "
-                type="description"
-                {...GroupRegister('description', {
-                  required: true,
-                })}
-              />
+            {GroupErrors.description && <span className="text-red-500 font-normal"> Please enter your Group description!</span>}
+          </div>
+          <div className="relative w-full flex flex-col">
+            <label htmlFor="privacy" className="font-semibold">
+              Choose Privacy
+            </label>
 
-              {GroupErrors.description && <span className="text-red-500 font-normal"> Please enter your Group description!</span>}
-            </div>
-            <div className="relative w-full flex flex-col">
-              <label htmlFor="privacy" className="font-semibold">
-                Choose Privacy
-              </label>
-
-              <select
-                defaultValue={'Public'}
-                className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-900 placeholder:text-neutral-400 h-10 outline-none border-neutral-200"
-                {...GroupRegister('communityGroupType', { required: true })}
-              >
-                {/* <option value="" disabled selected></option> */}
-                <option value="Public">Public</option>
-                <option value="Private">Private</option>
-              </select>
-              {GroupErrors.privacy && <span className="text-red-500 font-normal">Please choose a privacy option!</span>}
-            </div>
-            <div className="relative w-full flex flex-col">
-              <label htmlFor="inviteFriends" className="font-semibold">
-                Invite Friends
-              </label>
-              <div
-                onClick={() => (setUserPopUp(true), values)}
-                className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
-              >
-                {selectedUsers.map((item: any) => (
-                  <p className="bg-[#6647FF] py-1 px-2 text-xs text-white" key={item.id}>
-                    {item.firstName}
-                  </p>
-                ))}
-              </div>
-            </div>
-            <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white">
-              {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
-            </button>
-            <button
-              type="reset"
-              onClick={() => (setLogoImage(undefined), setCoverImage(undefined), setSelectedUsers([]))}
-              className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]"
+            <select
+              defaultValue={'Public'}
+              className="py-2 px-3 border focus:ring-2 rounded-lg drop-shadow-sm  text-neutral-900 placeholder:text-neutral-400 h-10 outline-none border-neutral-200"
+              {...GroupRegister('communityGroupType', { required: true })}
             >
-              Reset
-            </button>
-          </form>
-        </div>
+              {/* <option value="" disabled selected></option> */}
+              <option value="Public">Public</option>
+              <option value="Private">Private</option>
+            </select>
+            {GroupErrors.privacy && <span className="text-red-500 font-normal">Please choose a privacy option!</span>}
+          </div>
+          <div className="relative w-full flex flex-col">
+            <label htmlFor="inviteFriends" className="font-semibold">
+              Invite Friends
+            </label>
+            <div
+              onClick={() => (setUserPopUp(true), values)}
+              className=" border pl-6 py-2 text-md rounded-lg border-gray-light font-normal w-full h-10 flex gap-2 items-center"
+            >
+              {selectedUsers.map((item: any) => (
+                <p className="bg-[#6647FF] py-1 px-2 text-xs text-white" key={item.id}>
+                  {item.firstName}
+                </p>
+              ))}
+            </div>
+          </div>
+          <button type="submit" className="bg-[#6647FF] py-2 rounded-lg text-white">
+            {isLoading || isPending ? <Spinner /> : <p>Create Group</p>}
+          </button>
+          <button
+            type="reset"
+            onClick={() => (setLogoImage(undefined), setCoverImage(undefined), setSelectedUsers([]))}
+            className="bg-[#F3F2FF] py-2 rounded-lg text-[#6647FF]"
+          >
+            Reset
+          </button>
+        </form>
       </div>
     </>
   )
