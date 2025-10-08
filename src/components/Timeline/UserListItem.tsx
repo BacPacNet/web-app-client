@@ -92,7 +92,7 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   }
 
   return (
-    <div className="flex items-center px-2 py-4 md:p-4 border-b border-neutral-200 justify-between">
+    <div className="flex items-center px-2 py-4 md:p-4 border-b border-neutral-200 justify-between ">
       <div onClick={handleProfileClick} className="flex gap-4 items-center cursor-pointer">
         <Image
           onError={() => setImgSrc(avatar)}

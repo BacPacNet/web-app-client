@@ -64,7 +64,7 @@ async function resetPassword(data: any) {
   return response
 }
 async function loginEmailVerification(data: { email: string; verificationOtp: string }) {
-  const response: { isAvailable: boolean } = await client(`/useremailverification`, { method: 'PUT', data })
+  const response: { isAvailable: boolean; isUniversityDomain: boolean } = await client(`/useremailverification`, { method: 'PUT', data })
   return response
 }
 

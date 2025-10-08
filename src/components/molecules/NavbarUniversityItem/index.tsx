@@ -16,6 +16,7 @@ import { Community } from '@/types/Community'
 import CommunityGroupFilterComponent from '../CommunityGroupFilter'
 import Buttons from '@/components/atoms/Buttons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import placeholder from '@/assets/Logo Circle.svg'
 
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
@@ -87,7 +88,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
-  const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl)
+  const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
 
@@ -159,7 +160,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   useEffect(() => {
-    setSelectedCommunityImage(community?.communityLogoUrl.imageUrl)
+    setSelectedCommunityImage(community?.communityLogoUrl.imageUrl || placeholder)
   }, [community])
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
@@ -308,10 +309,11 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           <div className="w-6 h-6 border-2 border-primary-500 overflow-hidden rounded-full flex justify-center items-center">
             <Image
               className="w-[16px] h-[16px] object-contain roundedfull overflow-hidden m-auto"
-              src={(selectedCommunityImage as string) || avatar}
+              src={(selectedCommunityImage as string) || placeholder}
               width={16}
               height={16}
               alt=""
+              onError={() => setSelectedCommunityImage(placeholder)}
             />
           </div>
         </div>

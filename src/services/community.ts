@@ -42,6 +42,7 @@ const fetchCommunityFilteredUsers = async (
   token: string,
   isVerified: boolean = false,
   searchQuery: string = '',
+  communityGroupId: string = '',
   page: number = 1,
   limit: number = 20
 ): Promise<any> => {
@@ -51,6 +52,7 @@ const fetchCommunityFilteredUsers = async (
   if (page) params.append('page', page.toString())
   if (limit) params.append('limit', limit.toString())
   if (searchQuery.trim() !== '') params.append('searchQuery', searchQuery.trim())
+  if (communityGroupId) params.append('communityGroupId', communityGroupId)
 
   const query = params.toString() ? `?${params.toString()}` : ''
 
@@ -88,15 +90,16 @@ export const useCommunityFilteredUsers = (
   communityId: string,
   isVerified: boolean = false,
   searchQuery: string = '',
-  page: number = 1,
+  communityGroupId: string = '',
   limit: number = 10
 ) => {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(searchQuery, 1000)
 
   return useInfiniteQuery<CommunityUsersReponse>({
-    queryKey: ['community-filtered-users', communityId, isVerified, page, limit, debouncedSearchTerm],
-    queryFn: () => fetchCommunityFilteredUsers(communityId, cookieValue, isVerified, debouncedSearchTerm, page, limit),
+    queryKey: ['community-filtered-users', communityId, isVerified, communityGroupId, limit, debouncedSearchTerm],
+    queryFn: ({ pageParam }) =>
+      fetchCommunityFilteredUsers(communityId, cookieValue, isVerified, debouncedSearchTerm, communityGroupId, pageParam as number, limit),
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.page < lastPage.pagination.totalPages) {
         return lastPage.pagination.page + 1
