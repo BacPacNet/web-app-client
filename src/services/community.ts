@@ -99,7 +99,7 @@ export const useCommunityFilteredUsers = (
   return useInfiniteQuery<CommunityUsersReponse>({
     queryKey: ['community-filtered-users', communityId, isVerified, communityGroupId, limit, debouncedSearchTerm],
     queryFn: ({ pageParam }) =>
-      fetchCommunityFilteredUsers(communityId, cookieValue, isVerified, debouncedSearchTerm, communityGroupId, pageParam, limit),
+      fetchCommunityFilteredUsers(communityId, cookieValue, isVerified, debouncedSearchTerm, communityGroupId, pageParam as number, limit),
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination.page < lastPage.pagination.totalPages) {
         return lastPage.pagination.page + 1
