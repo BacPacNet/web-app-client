@@ -48,7 +48,7 @@ const VerifyUserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
     return () => {
       container?.removeEventListener('scroll', handleScroll)
     }
-  }, [onBottomReach, hasNextPage, isFetchingMore])
+  }, [onBottomReach, hasNextPage, isFetchingMore, users])
 
   // Optional: attach infinite scroll if onBottomReach is provided
   // React.useEffect(() => {
