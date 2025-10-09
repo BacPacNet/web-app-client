@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
 import { Sortby } from '@/types/common'
 import { ChildProcessWithoutNullStreams } from 'child_process'
+import { useModal } from '@/context/ModalContext'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -357,6 +358,7 @@ export const useCreateCommunityGroup = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { closeModal } = useModal()
   return useMutation({
     mutationFn: ({ communityId, data }: any) => CreateCommunityGroup(communityId, cookieValue, data),
     onSuccess: (response: any, req: any) => {
@@ -369,6 +371,7 @@ export const useCreateCommunityGroup = () => {
         showCustomSuccessToast('Your casual group has been created.')
       }
       router.push(`/community/${response?.data?.communityId}/${response?.data?._id}`)
+      closeModal()
     },
     onError: (error: any) => {
       console.log(error.response.data.message, 'res')

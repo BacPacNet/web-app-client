@@ -117,7 +117,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     if (!canUserCreateGroup) {
       openModal(
         <GenericInfoModal
-          buttonLabel="Verify Student Email"
+          buttonLabel="Verify University Email"
           redirectUrl="/setting/university-verification"
           title="Verify Account to Create Groups"
           description="Verify your account to unlock group creation and start building your own community. Please complete verification to continue."
