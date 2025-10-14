@@ -78,7 +78,7 @@ export interface CommunityGroupType {
       imageUrl: string
       publicId: string
     }
-    adminId: string
+    adminId: string[]
     name: string
   }
   title: string
@@ -127,7 +127,7 @@ export interface EmailEntity {
 }
 
 export type CommunityGroupNotLiveCardProps = {
-  communityAdminId: string
+  communityAdminId: string[]
   communityGroupId: string
   communityGroupAdminId: string
   notificationType: string

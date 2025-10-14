@@ -72,7 +72,7 @@ export default function CommunityGroupBanner({
         communityGroupId={communityGroupID}
         isGroupAdmin={isGroupAdmin}
         users={CommunityGroupMember || []}
-        communityAdminId={communityGroups?.communityId?.adminId as string}
+        communityAdminIds={communityGroups?.communityId?.adminId as string[]}
         isOfficialGroup={communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL}
       />
     )

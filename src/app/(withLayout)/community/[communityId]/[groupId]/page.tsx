@@ -57,7 +57,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
       {isCommunityGroupsLoading || isCommunityGroupLive == null || isCommunityGroupError ? null : !isCommunityGroupLive ? (
         <CommunityGroupNotLiveCard
           communityID={communityId}
-          communityAdminId={communityGroups?.communityId.adminId as string}
+          communityAdminId={communityGroups?.communityId.adminId as string[]}
           communityGroupId={communityGroups?._id as string}
           communityGroupAdminId={communityGroups?.adminUserId as string}
           notificationType={communityGroups?.notificationTypes as string}

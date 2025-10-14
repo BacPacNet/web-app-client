@@ -24,6 +24,9 @@ const CommunityGroupNotLiveCard = ({
   const { mutate: joinGroup } = useJoinCommunityGroup()
   const router = useRouter()
 
+  const isCommunityAdminId = communityAdminId?.includes(userData?.id?.toString() || '')
+  const filteredCommunityId = communityAdminId?.filter((id) => id == userData?.id?.toString())
+
   const handleAcceptInvite = () => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (!communityGroupId) return
@@ -52,7 +55,7 @@ const CommunityGroupNotLiveCard = ({
             status,
             notificationId,
             communityGroupId: communityGroupId,
-            adminId: communityAdminId,
+            adminId: filteredCommunityId[0],
             userId: communityGroupAdminId,
             text:
               status == notificationStatusEnum.accepted
@@ -86,7 +89,7 @@ const CommunityGroupNotLiveCard = ({
         </p>
       </div>
       <div className="flex justify-end">
-        {userData?.id?.toString() == communityAdminId?.toString() && notificationType == notificationRoleAccess.OFFICIAL_GROUP_REQUEST ? (
+        {isCommunityAdminId && notificationType == notificationRoleAccess.OFFICIAL_GROUP_REQUEST ? (
           <div className="flex items-center gap-4">
             <Buttons onClick={handleChangeGroupStatus('rejected')} className="w-max font-inter " variant="notificationDanger" size="small">
               Reject
