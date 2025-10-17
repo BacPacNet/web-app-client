@@ -3,13 +3,15 @@ import React from 'react'
 type SwitchProps = {
   checked: boolean
   onCheckedChange: (checked: boolean) => void
+  disabled?: boolean
 }
 
-const Switch: React.FC<SwitchProps> = ({ checked, onCheckedChange }) => {
+const Switch: React.FC<SwitchProps> = ({ checked, onCheckedChange, disabled = false }) => {
   return (
     <button
       type="button"
       onClick={() => onCheckedChange(!checked)}
+      disabled={disabled}
       className={`relative w-[26px] h-4 flex items-center bg-gray-300 rounded-full p-1 transition-colors duration-300 ${
         checked ? 'bg-blue-600' : 'bg-neutral-300'
       }`}

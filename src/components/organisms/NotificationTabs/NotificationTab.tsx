@@ -35,6 +35,7 @@ const NotificationTab = () => {
   const { mutate } = useMarkAllNotificationAsRead()
   const notifications = notificationData?.pages.flatMap((page) => page.notifications) || []
 
+  console.log(notifications, 'notifications')
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

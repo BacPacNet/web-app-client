@@ -306,7 +306,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       <>
         <div className="flex gap-2 mt-4 py-2 items-center">
           <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
-          <div className="w-6 h-6 border-2 border-primary-500 overflow-hidden rounded-full flex justify-center items-center">
+          <div className="w-6 h-6  overflow-hidden rounded-full flex justify-center items-center">
             <Image
               className="w-[16px] h-[16px] object-contain roundedfull overflow-hidden m-auto"
               src={(selectedCommunityImage as string) || placeholder}
