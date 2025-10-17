@@ -20,7 +20,9 @@ type SocketActions = {
     refetchNotification: () => void,
     refetchUserProfileData: () => void,
     refetchMessageNotification: () => void,
-    isRouteMessage: boolean
+    isRouteMessage: boolean,
+    refetchUserNotification: () => void,
+    refetchCommunityGroup: () => void
   ) => void
 
   disconnectSocket: () => void
@@ -38,7 +40,16 @@ const initialState: SocketState = {
 export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
   ...initialState,
 
-  initializeSocket: (userId, refetchUserData, refetchNotification, refetchUserProfileData, refetchMessageNotification, isRouteMessage) => {
+  initializeSocket: (
+    userId,
+    refetchUserData,
+    refetchNotification,
+    refetchUserProfileData,
+    refetchMessageNotification,
+    isRouteMessage,
+    refetchUserNotification,
+    refetchCommunityGroup
+  ) => {
     const newSocket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string)
 
     newSocket.on('connect', () => {
@@ -61,7 +72,15 @@ export const createSocketSlice: StateCreator<SocketSlice> = (set, get) => ({
         refetchUserProfileData()
         set({ type: notificationRoleAccess.FOLLOW })
       }
-
+      if (notification.type === notificationRoleAccess.FOLLOW) {
+        refetchUserProfileData()
+        set({ type: notificationRoleAccess.FOLLOW })
+      }
+      if (notification.type === notificationRoleAccess.REFETCHNOTIFICATIONS) {
+        refetchUserNotification()
+        refetchCommunityGroup()
+        // set({ type: notificationRoleAccess.FOLLOW })
+      }
       refetchNotification()
     })
 

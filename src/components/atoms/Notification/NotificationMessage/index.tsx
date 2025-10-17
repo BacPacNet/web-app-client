@@ -1,3 +1,4 @@
+'use client'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
 import { notificationStatus } from '@/services/notification'
 import { useRouter } from 'next/navigation'
