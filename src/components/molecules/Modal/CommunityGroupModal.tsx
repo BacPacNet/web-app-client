@@ -79,10 +79,10 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
 
   return (
     <div>
-      <Title>Members</Title>
+      <Title className="mb-6">Members</Title>
       {isGroupAdmin && <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />}
 
-      <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar">
+      <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar mt-7">
         {isFetchingCommunityGroupMembers && !isFetchingNextPage ? (
           <div className="flex justify-center items-center h-full min-h-[300px]">
             <Spinner />
@@ -117,6 +117,7 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
                 isRemovePending={isPending}
                 isCommunityAdmin={communityAdminIds?.includes(user?._id?.toString())}
                 isOfficialGroup={isOfficialGroup}
+                isVerifiedUserOfCommunity={user?.isVerified}
               />
             )
           })
