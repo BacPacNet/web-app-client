@@ -217,7 +217,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     })
   }
 
-  useMemo(() => {
+  useEffect(() => {
     if (currentCommunityGroupAccess === 'Private') {
       setFetchVerifiedUsers(true)
     }

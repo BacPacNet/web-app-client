@@ -23,6 +23,7 @@ type FormDataType = {
   universityEmail: string
   universityName: string
   universityId: string
+  universityDomain: string[]
 }
 
 type Props = {
@@ -42,9 +43,12 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
     clearErrors,
     getValues,
     setValue,
+    watch,
   } = useForm<FormDataType>({})
   const { mutate: generateUniversityEmailOTP, data: otpData, isPending, isError } = useHandleUniversityEmailVerificationGenerate()
   const { mutateAsync: mutateAddUniversity, error, isPending: isPendingChangeApi, isSuccess } = useAddUniversityEmail(true)
+
+  const universityDomain = watch('universityDomain')
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -141,6 +145,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
                     onChange={(selectedUniversity: any) => {
                       field.onChange(selectedUniversity.name)
                       setValue('universityId', selectedUniversity._id)
+                      setValue('universityDomain', selectedUniversity.domains)
                     }}
                     placeholder="Select University Name"
                     icon={'single'}
@@ -180,6 +185,19 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
               <InputWarningText>
                 {errors.universityEmail.message ? errors.universityEmail.message.toString() : 'Please enter your email!'}
               </InputWarningText>
+            )}
+
+            {universityDomain?.length > 0 ? (
+              <div className="flex flex-col ">
+                <p className="text-xs text-neutral-600">University's associated domain:</p>
+                {universityDomain.map((domain: string) => (
+                  <p key={domain} className="text-xs text-neutral-600 font-bold">
+                    @{domain}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              ''
             )}
             <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
               Send Code

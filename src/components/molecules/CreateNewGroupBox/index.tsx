@@ -301,7 +301,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     })
   }
 
-  useMemo(() => {
+  useEffect(() => {
     if (communityGroupAccess === 'Private') {
       setFetchVerifiedUsers(true)
     }
