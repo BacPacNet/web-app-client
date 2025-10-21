@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
@@ -30,7 +30,7 @@ import { useCommunityFilteredUsers, useCommunityUsers } from '@/services/communi
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
-import { validateSingleImageFile } from '@/lib/utils'
+import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Switch from '@/components/atoms/Switch'
 
@@ -217,7 +217,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     })
   }
 
-  useEffect(() => {
+  useMemo(() => {
     if (currentCommunityGroupAccess === 'Private') {
       setFetchVerifiedUsers(true)
     }
@@ -272,18 +272,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           closeModal()
         },
         onError: (error: any) => {
-          const err = JSON.parse(error.response.data.message)
-          setIsLoading(false)
-          setError(err.for, { message: err.message })
-          setTimeout(() => {
-            const field = err.for
-            const element = document.querySelector(`[name="${field}"]`)
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              setFocus(field)
-            }
-          }, 100)
-          //   showCustomDangerToast(error.response.data.message)
+          const err = JSON.parse(error.response?.data?.message ?? '{}')
+          handleFieldError(err, setError, setIsLoading, setFocus)
         },
       }
     )

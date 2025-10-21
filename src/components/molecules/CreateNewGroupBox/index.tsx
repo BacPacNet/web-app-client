@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -29,7 +29,7 @@ import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
-import { validateSingleImageFile } from '@/lib/utils'
+import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
 import UniversityDropdown from './Dropdown'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
@@ -220,16 +220,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
           const err = error.response.data
 
           if (err.for == 'title') {
-            setError(err.for, { message: err.message })
-            setTimeout(() => {
-              const field = err.for
-              const element = document.querySelector(`[name="${field}"]`)
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                setFocus(field)
-              }
-            }, 100)
-            setIsLoading(false)
+            handleFieldError(err, setError, setIsLoading, setFocus)
           }
         },
       }
@@ -310,11 +301,12 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     })
   }
 
-  useEffect(() => {
+  useMemo(() => {
     if (communityGroupAccess === 'Private') {
       setFetchVerifiedUsers(true)
     }
   }, [communityGroupAccess])
+
   const handleLogoImage = (file: File) => {
     setLogoImage(file)
   }

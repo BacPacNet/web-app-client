@@ -2,7 +2,7 @@ import { useUniStore } from '@/store/store'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { parse, isValid } from 'date-fns'
-
+import { FieldValues, UseFormSetError, UseFormSetFocus, Path } from 'react-hook-form'
 import { formatDistanceToNow, differenceInHours, differenceInDays, differenceInMinutes } from 'date-fns'
 
 export function cn(...inputs: ClassValue[]) {
@@ -203,4 +203,37 @@ export const cleanFileName = (fileName: string) => {
     : decoded
 
   return cleaned
+}
+
+type FieldError = {
+  for: string
+  message: string
+}
+
+export const handleFieldError = <T extends FieldValues>(
+  err: FieldError,
+  setError: UseFormSetError<T>,
+  setIsLoading: (loading: boolean) => void,
+  setFocus: UseFormSetFocus<T>
+): void => {
+  try {
+    setIsLoading(false)
+
+    if (!err.for || !err.message) {
+      throw new Error('Invalid error structure')
+    }
+
+    setError(err.for as Path<T>, { message: err.message })
+
+    setTimeout(() => {
+      const field = err.for
+      const element = document.querySelector<HTMLInputElement>(`[name="${field}"]`)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setFocus(field as Path<T>)
+      }
+    }, 100)
+  } catch {
+    setIsLoading(false)
+  }
 }
