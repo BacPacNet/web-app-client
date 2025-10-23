@@ -37,6 +37,7 @@ export default function Profile({ params }: { params: { id: string } }) {
     role,
     displayEmail,
     email,
+    communities,
   } = profile || {}
   //  const { logos } = university || {}
 
@@ -81,6 +82,7 @@ export default function Profile({ params }: { params: { id: string } }) {
           userId={userId}
           universityLogo={universityLogo || ''}
           isBlockedByYou={isBlocked || false}
+          communities={communities || []}
         />
       )}
       <ProfilePostContainer source="profile" userId={userId} containerRef={containerRef} />

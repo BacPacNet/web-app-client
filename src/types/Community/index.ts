@@ -88,6 +88,12 @@ export interface communityPostType {
     }
     isCommunityAdmin?: boolean
     adminCommunityId?: string
+    communities?: {
+      _id: string
+      name: string
+      logo: string
+      isVerifiedMember: boolean
+    }[]
   }
   content: string
   createdAt: string

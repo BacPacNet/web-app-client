@@ -14,6 +14,7 @@ import { motion } from 'framer-motion'
 import { useCreateGroupPostStatusChange } from '@/services/community-university'
 import { communityPostStatus } from '@/types/CommuityGroup'
 import { userTypeEnum } from '@/types/RegisterForm'
+import PostCommunityHolder from '../PostCommunityHolder'
 dayjs.extend(relativeTime)
 
 interface Like {
@@ -62,6 +63,12 @@ interface PostProps {
   communityGroupAdminId: string
   isPostLive: boolean
   postStatus: communityPostStatus
+  communities?: {
+    _id: string
+    name: string
+    logo: string
+    isVerifiedMember: boolean
+  }[]
 }
 
 const PendingPostCard = React.memo(
@@ -88,6 +95,7 @@ const PendingPostCard = React.memo(
     communityGroupAdminId,
     postStatus,
     isPostLive,
+    communities,
   }: PostProps) => {
     const { userData } = useUniStore()
 
@@ -150,6 +158,16 @@ const PendingPostCard = React.memo(
               isCommunityAdmin={isCommunityAdmin}
               role={role}
             />
+
+            <div className="flex items-center gap-2">
+              {communities?.length && communities?.length > 0 && type === PostType.Community && (
+                <div className="flex items-center gap-2">
+                  {communities?.map((community) => (
+                    <PostCommunityHolder key={community._id} logo={community.logo} name={community.name} isVerified={community.isVerifiedMember} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />

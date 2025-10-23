@@ -337,7 +337,7 @@ const EditProfileModal = () => {
             </LabeledInput>
           </div>
         </div>
-        <div className="flex flex-col py-2">
+        {/* <div className="flex flex-col py-2">
           <label htmlFor="university_name" className="py-1">
             University <span className="text-destructive-600">*</span>
           </label>
@@ -364,7 +364,7 @@ const EditProfileModal = () => {
             />
             {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
           </div>
-        </div>
+        </div> */}
         <div>
           <Title>
             Edit status<span className="text-destructive-600">*</span>
