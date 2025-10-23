@@ -189,7 +189,7 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
 
             {universityDomain?.length > 0 ? (
               <div className="flex flex-col ">
-                <p className="text-xs text-neutral-600">University's associated domain:</p>
+                <p className="text-xs text-neutral-600">University&apos;s associated domain:</p>
                 {universityDomain.map((domain: string) => (
                   <p key={domain} className="text-xs text-neutral-600 font-bold">
                     @{domain}
