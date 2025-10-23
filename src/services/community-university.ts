@@ -374,8 +374,10 @@ export const useCreateCommunityGroup = () => {
       closeModal()
     },
     onError: (error: any) => {
-      console.log(error.response.data.message, 'res')
-      showCustomDangerToast(error.response.data.message)
+      //   console.log(error.response.data.message, 'res')
+      if (!error.response.data.for) {
+        showCustomDangerToast(error.response.data.message)
+      }
     },
   })
 }
@@ -391,8 +393,10 @@ export const useUpdateCommunityGroup = () => {
       showCustomSuccessToast('Updated Sucessfully')
     },
     onError: (res: any) => {
-      console.error(res.response.data.message)
-      showCustomDangerToast(res.response.data.message)
+      const err = JSON.parse(res.response.data.message)
+      if (!err.for) {
+        showCustomDangerToast(res.response.data.message)
+      }
     },
   })
 }
