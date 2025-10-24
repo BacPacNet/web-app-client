@@ -60,12 +60,10 @@ export interface UserCommunities {
   logo: string
   isVerifiedMember: boolean
   isCommunityAdmin: boolean
+  communityId: string
+  isVerified: boolean
+  communityGroups: UserCommunityGroup[]
 }
-// export interface UserCommunities {
-//   communityId: string
-//   isVerified: boolean
-//   communityGroups: UserCommunityGroup[]
-// }
 
 export interface Profile {
   _id: string
