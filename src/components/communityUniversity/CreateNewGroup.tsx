@@ -35,7 +35,7 @@ const CreateNewGroup = ({ setNewGroup }: Props) => {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const selectedUsersId = selectedUsers.map((item: any) => item._id)
   const [searchInput, setSearchInput] = useState('')
-  const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const { mutate: createGroup, isPending } = useCreateCommunityGroup(false)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
   const {
     register: GroupRegister,
