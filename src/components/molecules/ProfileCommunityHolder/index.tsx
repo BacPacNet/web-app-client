@@ -4,14 +4,17 @@ import React, { useState, useEffect } from 'react'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import badge from '@assets/badge.svg'
 import Buttons from '@/components/atoms/Buttons'
+import communityAdminBadge from '@assets/communityAdminBadge.svg'
 
 type Props = {
   logo: string
   name: string
   isVerified: boolean
+  isActive: boolean
+  isCommunityAdmin: boolean
 }
 
-const ProfileCommunityHolder = ({ logo, name, isVerified }: Props) => {
+const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityAdmin }: Props) => {
   const [logoSrc, setLogoSrc] = useState(logo)
 
   useEffect(() => {
@@ -34,10 +37,21 @@ const ProfileCommunityHolder = ({ logo, name, isVerified }: Props) => {
         </div>
         <div className="flex items-center gap-1">
           <p className="text-neutral-500  font-medium text-2xs ">{name}</p>
-          {isVerified && <Image width={16} height={16} src={badge} alt={''} />}
+          {isVerified && !isCommunityAdmin && (
+            <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px] absolute top-5 left-[21px]" />
+          )}
+          {isCommunityAdmin && (
+            <Image
+              src={communityAdminBadge}
+              width={16}
+              height={16}
+              alt="badge"
+              className="bg-white rounded-full min-w-[16px] absolute top-5 left-[21px]"
+            />
+          )}
         </div>
 
-        {isVerified && (
+        {isActive && (
           <Buttons variant="shade" size="extra_small">
             Active
           </Buttons>

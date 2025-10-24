@@ -93,6 +93,7 @@ export interface communityPostType {
       name: string
       logo: string
       isVerifiedMember: boolean
+      isCommunityAdmin?: boolean
     }[]
   }
   content: string

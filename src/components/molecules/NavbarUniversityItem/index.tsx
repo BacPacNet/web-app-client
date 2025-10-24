@@ -27,6 +27,7 @@ import { useModal } from '@/context/ModalContext'
 import { status } from '@/types/CommuityGroup'
 import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
+import { IoIosArrowDown } from 'react-icons/io'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -54,18 +55,20 @@ const sortOptions = [
     value: 'userCountDesc',
     icon: <BsSortDownAlt className="text-primary-500" />,
   },
-  // {
-  //   label: 'Latest',
-  //   value: 'latest',
-  // },
+  {
+    label: 'Latest',
+    value: 'latest',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
   //   {
   //     label: 'Users',
   //     value: 'users',
   //   },
-  //   {
-  //     label: 'Oldest',
-  //     value: 'oldest',
-  //   },
+  {
+    label: 'Oldest',
+    value: 'oldest',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
 ]
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
@@ -85,7 +88,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [selectedLabel, setSelectedLabel] = useState<string[]>([])
-  const [sort, setSort] = useState<string>('')
+  const [sort, setSort] = useState<string>('userCountDesc')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 1000)
   const [assignUsers, setAssignUsers] = useState(false)
@@ -131,8 +134,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       openModal(
         <CreateNewGroupBox
           communityName={community?.name || 'Sd'}
-          communityId={communityId || communityIdForNewGroup}
+          communityId={community?._id || ''}
           setNewGroup={setShowNewGroup}
+          isCommunityAdmin={community?.adminId.includes(userData?.id?.toString() || '') || false}
         />,
         'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar'
       )
@@ -173,17 +177,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }, [community])
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
-    const groups = communityId
-      ? subscribedCommunities?.find((community) => community._id === communityId)?.communityGroups
-      : filteredCommunityGroups?.communityGroups || []
+    const groups = filteredCommunityGroups?.communityGroups || []
     return groups?.filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, debouncedSearchQuery, filteredCommunityGroups, selectedCommunityGroupCommunityId])
+  }, [debouncedSearchQuery, filteredCommunityGroups])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const selectedCommunityGroup = communityId
-      ? subscribedCommunities?.find((community: { _id: string }) => community?._id === (communityId || subscribedCommunities?.[0]._id))
-          ?.communityGroups
-      : filteredCommunityGroups?.communityGroups || []
+    const selectedCommunityGroup = filteredCommunityGroups?.communityGroups || []
     return selectedCommunityGroup
       ?.filter(
         (userCommunityGroup: { users: [{ _id: string; status: string }]; adminUserId: string }) =>
@@ -196,18 +195,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }, [subscribedCommunities, communityId, userData, debouncedSearchQuery, filteredCommunityGroups, selectedCommunityGroupCommunityId])
 
   const subscribedCommunitiesMyGroup = useMemo(() => {
-    const groups = communityId
-      ? subscribedCommunities
-          ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
-          ?.communityGroups.filter((communityGroup: { adminUserId: string }) => communityGroup.adminUserId === userData?.id)
-      : filteredCommunityGroups?.communityGroups || []
+    const groups = filteredCommunityGroups?.communityGroups || []
     return groups?.filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery))
   }, [subscribedCommunities, communityId, userData, debouncedSearchQuery, filteredCommunityGroups, selectedCommunityGroupCommunityId])
 
   useEffect(() => {
-    if (communityId && subscribedCommunities) {
-      setCommunity(subscribedCommunities.find((community) => community._id === communityId))
-    } else if (selectedCommunityGroupCommunityId && subscribedCommunities) {
+    if (selectedCommunityGroupCommunityId && subscribedCommunities) {
       setCommunity(subscribedCommunities?.find((community) => community._id === selectedCommunityGroupCommunityId))
     } else if (subscribedCommunities) {
       setCommunity(subscribedCommunities[0] as Community)
@@ -217,11 +210,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   //sort
   useEffect(() => {
     const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-    if (cookieValue && community?._id && (selectedFiltersMain?.length || selectedTypeMain?.length || sort.length)) {
-      mutateFilterCommunityGroups(data)
-    } else if (cookieValue && selectedCommunityGroupCommunityId) {
-      mutateFilterCommunityGroups(data)
-    }
+
+    mutateFilterCommunityGroups(data)
   }, [sort, cookieValue, community?._id, selectedCommunityGroupCommunityId, selectedFiltersMain, selectedTypeMain])
 
   const handleSelect = (value: string) => {
@@ -236,9 +226,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     // roughly 400 days from now — Chrome’s current cap
     setSelectedCommunityGroupCommunityId(communityId, expirationDateForLoginData)
     const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-    if (cookieValue && communityId) {
-      mutateFilterCommunityGroups(data)
-    }
+
+    mutateFilterCommunityGroups(data)
     setOpen(false)
   }
 
@@ -340,15 +329,16 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-              <div className="w-6 h-6 cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
+              <div className=" cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
                 <Image
-                  className="w-[16px] h-[16px] object-contain roundedfull overflow-hidden m-auto"
+                  className="w-6 h-6 object-contain rounded-full overflow-hidden m-auto"
                   src={(selectedCommunityImage as string) || placeholder}
-                  width={16}
-                  height={16}
+                  width={24}
+                  height={24}
                   alt=""
                   onError={() => setSelectedCommunityImage(placeholder)}
                 />
+                <IoIosArrowDown size={16} strokeWidth={3} />
               </div>
             </PopoverTrigger>
             <PopoverContent className="relative w-[236px]  left-6 top-0  p-5 border-none shadow-lg bg-white shadow-gray-light">

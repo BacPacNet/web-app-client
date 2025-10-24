@@ -59,7 +59,10 @@ interface UserProfileCardProps {
     name: string
     logo: string
     isVerifiedMember: boolean
+    isCommunityAdmin: boolean
   }[]
+  activeUniversityId: string
+  activeUniversityName: string
 }
 
 export function UserProfileCard({
@@ -85,6 +88,8 @@ export function UserProfileCard({
   isBlockedByYou = false,
   isVerifiedUniversity,
   communities,
+  activeUniversityId,
+  activeUniversityName,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
@@ -323,9 +328,34 @@ export function UserProfileCard({
         </div>
 
         <div className="flex  gap-6 flex-wrap">
-          {communities?.map((community) => (
-            <ProfileCommunityHolder key={community._id} logo={community.logo} name={community.name} isVerified={community.isVerifiedMember} />
-          ))}
+          {communities
+            ?.slice()
+            .sort((a, b) => {
+              const aIsActive = activeUniversityName.toString() === a.name.toString()
+              const bIsActive = activeUniversityName.toString() === b.name.toString()
+
+              const aIsAdmin = a.isCommunityAdmin
+              const bIsAdmin = b.isCommunityAdmin
+
+              const aIsVerified = a.isVerifiedMember
+              const bIsVerified = b.isVerifiedMember
+
+              if (aIsActive !== bIsActive) return aIsActive ? -1 : 1
+              if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+              if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
+
+              return 0
+            })
+            .map((community) => (
+              <ProfileCommunityHolder
+                key={community._id}
+                isActive={activeUniversityName.toString() === community.name.toString()}
+                logo={community.logo}
+                name={community.name}
+                isVerified={community.isVerifiedMember}
+                isCommunityAdmin={community.isCommunityAdmin}
+              />
+            ))}
         </div>
       </div>
 

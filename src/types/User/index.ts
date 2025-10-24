@@ -59,6 +59,7 @@ export interface UserCommunities {
   name: string
   logo: string
   isVerifiedMember: boolean
+  isCommunityAdmin: boolean
 }
 // export interface UserCommunities {
 //   communityId: string

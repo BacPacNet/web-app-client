@@ -68,6 +68,7 @@ interface PostProps {
     name: string
     logo: string
     isVerifiedMember: boolean
+    isCommunityAdmin?: boolean
   }[]
 }
 
@@ -162,9 +163,29 @@ const PendingPostCard = React.memo(
             <div className="flex items-center gap-2">
               {communities?.length && communities?.length > 0 && type === PostType.Community && (
                 <div className="flex items-center gap-2">
-                  {communities?.map((community) => (
-                    <PostCommunityHolder key={community._id} logo={community.logo} name={community.name} isVerified={community.isVerifiedMember} />
-                  ))}
+                  {communities
+                    ?.slice()
+                    .sort((a, b) => {
+                      const aIsAdmin = a.isCommunityAdmin
+                      const bIsAdmin = b.isCommunityAdmin
+
+                      const aIsVerified = a.isVerifiedMember
+                      const bIsVerified = b.isVerifiedMember
+
+                      if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+                      if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
+
+                      return 0
+                    })
+                    .map((community) => (
+                      <PostCommunityHolder
+                        key={community._id}
+                        logo={community.logo}
+                        name={community.name}
+                        isVerified={community.isVerifiedMember}
+                        isCommunityAdmin={community.isCommunityAdmin || false}
+                      />
+                    ))}
                 </div>
               )}
             </div>
