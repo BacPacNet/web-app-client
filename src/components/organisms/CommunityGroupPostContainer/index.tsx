@@ -128,6 +128,7 @@ function CommunityGroupPostContainer({
           postStatus={post?.postStatus as communityPostStatus}
           isPostLive={post?.isPostLive}
           role={post?.userProfile?.role as userTypeEnum}
+          communities={post?.userProfile?.communities}
         />
       ))
     } else {
@@ -161,6 +162,7 @@ function CommunityGroupPostContainer({
           communityGroupName={post?.communityGroupName}
           isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
           filterPostBy={filterPostBy}
+          communities={post?.userProfile?.communities}
         />
       ))
     }

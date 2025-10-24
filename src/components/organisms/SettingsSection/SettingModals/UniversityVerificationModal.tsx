@@ -189,15 +189,15 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
 
             {universityDomain?.length > 0 ? (
               <div className="flex flex-col ">
-                <p className="text-xs text-neutral-600">University&apos;s associated domain:</p>
+                <p className="text-xs text-neutral-600">{`University's associated domain:`}</p>
                 {universityDomain.map((domain: string) => (
                   <p key={domain} className="text-xs text-neutral-600 font-bold">
-                    @{domain}
+                    {`@${domain}`}
                   </p>
                 ))}
               </div>
             ) : (
-              ''
+              <p className="text-xs text-neutral-600">Your university email is the one you use for official purposes.</p>
             )}
             <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary">
               Send Code

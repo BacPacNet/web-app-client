@@ -35,6 +35,7 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
   const all = getValues()
   const univeristyName = getValues('universityName')
   const universityLogo = getValues('universityLogo')
+  const universityDomain = getValues('universityDomain')
 
   const handleUniversityEmailSendCode = () => {
     const email = getValues('universityEmail')
@@ -154,6 +155,19 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
                 ? UniversityVerificationFormErrors.universityEmail.message.toString()
                 : 'Please enter your email!'}
             </InputWarningText>
+          )}
+
+          {universityDomain?.length > 0 ? (
+            <div className="flex flex-col ">
+              <p className="text-xs text-neutral-600">{`University's associated domain:`}</p>
+              {universityDomain.map((domain: string) => (
+                <p key={domain} className="text-xs text-neutral-600 font-bold">
+                  {`@${domain}`}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-neutral-600">Your university email is the one you use for official purposes.</p>
           )}
           <Button disabled={isCounting} onClick={() => handleUniversityEmailSendCode()} type="button" variant="border_primary" className="h-10">
             Send Code

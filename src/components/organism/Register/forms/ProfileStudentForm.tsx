@@ -58,6 +58,7 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
                   field.onChange(selectedUniversity.name)
                   setValue('universityId', selectedUniversity._id)
                   setValue('universityLogo', selectedUniversity.logo)
+                  setValue('universityDomain', selectedUniversity.domains)
                 }}
                 label="University"
                 placeholder="Select University Name"

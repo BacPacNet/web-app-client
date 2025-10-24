@@ -17,6 +17,7 @@ import { format } from 'date-fns'
 import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
 import { motion } from 'framer-motion'
+import PostCommunityHolder from '../PostCommunityHolder'
 dayjs.extend(relativeTime)
 
 const SharePopup = React.memo(({ postId, type }: { postId: string; type: PostType }) => {
@@ -86,6 +87,14 @@ interface PostProps {
   filterPostBy?: string
   isReply?: boolean
   commentID?: string
+  communities?: {
+    _id: string
+    name: string
+    logo: string
+    isVerifiedMember: boolean
+
+    isCommunityAdmin?: boolean
+  }[]
 }
 
 const PostCard = React.memo(
@@ -123,6 +132,7 @@ const PostCard = React.memo(
     filterPostBy,
     isReply,
     commentID,
+    communities,
   }: PostProps) => {
     const { userData } = useUniStore()
     const commentSectionRef = useRef<HTMLDivElement>(null)
@@ -285,8 +295,38 @@ const PostCard = React.memo(
               role={role}
             />
 
-            <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
-              <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
+            <div className="flex items-center gap-2">
+              {communities?.length && communities?.length > 0 && (
+                <div className="flex items-center gap-2">
+                  {communities
+                    ?.slice()
+                    .sort((a, b) => {
+                      const aIsAdmin = a.isCommunityAdmin
+                      const bIsAdmin = b.isCommunityAdmin
+
+                      const aIsVerified = a.isVerifiedMember
+                      const bIsVerified = b.isVerifiedMember
+
+                      if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+                      if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
+
+                      return 0
+                    })
+                    .map((community) => (
+                      <PostCommunityHolder
+                        key={community._id}
+                        logo={community.logo}
+                        name={community.name}
+                        isVerified={community.isVerifiedMember}
+                        isCommunityAdmin={community.isCommunityAdmin || false}
+                      />
+                    ))}
+                </div>
+              )}
+
+              <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
+                <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
+              </div>
             </div>
           </div>
 

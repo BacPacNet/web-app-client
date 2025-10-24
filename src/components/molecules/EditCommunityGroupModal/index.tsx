@@ -1,12 +1,13 @@
 'use client'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupUsers, status, subCategories } from '@/types/CommuityGroup'
-
+import badge from '@assets/badge.svg'
 import { useUniStore } from '@/store/store'
 
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
@@ -32,7 +33,6 @@ import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import Switch from '@/components/atoms/Switch'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -626,20 +626,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
-          {/* <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5> */}
-          <div className="flex flex-col  items-start w-full">
-            <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
-            <div className="flex flex-col items-center gap-2">
-              <div className=" flex  gap-2 items-center">
-                <p className="text-2xs text-neutral-700  ">
-                  {communityGroupAccess === 'Private'
-                    ? 'You can only fetch verified users for private '
-                    : `Fetch ${fetchVerifiedUsers ? 'Verified' : 'Un-Verified'} Users to add to the group`}
-                </p>
-                <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
-              </div>
-            </div>
-          </div>
+          <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
           <div className="relative w-full flex flex-col">
             <div className=" flex items-center justify-between">
               <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">

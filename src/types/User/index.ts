@@ -55,6 +55,11 @@ export interface UserCommunityGroup {
 }
 
 export interface UserCommunities {
+  _id: string
+  name: string
+  logo: string
+  isVerifiedMember: boolean
+  isCommunityAdmin: boolean
   communityId: string
   isVerified: boolean
   communityGroups: UserCommunityGroup[]
@@ -81,7 +86,7 @@ export interface Profile {
   bio: string
   phone_number: string
   profile_dp: ProfileDp
-  communities: UserCommunities
+  communities: UserCommunities[]
   universityLogo: string
   displayEmail: string
 }

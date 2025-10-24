@@ -21,6 +21,7 @@ interface SelectDropdownProps {
   search?: boolean
   err?: boolean
   label?: string
+  customUniversities?: University[]
 }
 
 const MOTION_STYLE = {
@@ -30,7 +31,7 @@ const MOTION_STYLE = {
   transition: { type: 'spring', stiffness: 100, duration: 0.75 },
 } as const
 
-const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err, label }: SelectDropdownProps) => {
+const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search = false, err, label, customUniversities }: SelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set())
   const [searchTerm, setSearchTerm] = useState('')
@@ -39,7 +40,7 @@ const SelectUniversityDropdown = ({ onChange, value, placeholder, icon, search =
   const searchRef = useRef<HTMLInputElement>(null)
 
   const { data: universitiesData, isLoading } = useUniversitySearch(searchTerm, 1, 10)
-  const universities = universitiesData?.result?.universities || []
+  const universities = customUniversities && customUniversities.length > 0 ? customUniversities : universitiesData?.result?.universities || []
 
   // Memoized handlers
   const handleImageError = useCallback((logoUrl: string) => {
