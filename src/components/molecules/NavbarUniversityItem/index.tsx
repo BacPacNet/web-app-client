@@ -182,23 +182,24 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }, [debouncedSearchQuery, filteredCommunityGroups])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const selectedCommunityGroup = filteredCommunityGroups?.communityGroups || []
-    return selectedCommunityGroup
-      ?.filter(
-        (userCommunityGroup: { users: [{ _id: string; status: string }]; adminUserId: string }) =>
-          userCommunityGroup?.users?.some(
-            (selectCommunityGroup: { _id: string; status: string }) =>
-              selectCommunityGroup?._id === userData?.id && selectCommunityGroup.status === status.accepted
-          ) || userCommunityGroup.adminUserId === userData?.id
+    const groups = filteredCommunityGroups?.communityGroups || []
+
+    return groups
+      .filter(
+        (group: { users: any[]; adminUserId: string }) =>
+          group.adminUserId === userData?.id ||
+          group.users?.some((u: { _id: string; status: string }) => u._id === userData?.id && u.status === status.accepted)
       )
-      ?.filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery, filteredCommunityGroups, selectedCommunityGroupCommunityId])
+      .filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+  }, [userData, debouncedSearchQuery, filteredCommunityGroups])
 
   const subscribedCommunitiesMyGroup = useMemo(() => {
     const groups = filteredCommunityGroups?.communityGroups || []
-    return groups?.filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery, filteredCommunityGroups, selectedCommunityGroupCommunityId])
 
+    return groups
+      .filter((group: { adminUserId: string }) => group.adminUserId === userData?.id)
+      .filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+  }, [userData, debouncedSearchQuery, filteredCommunityGroups])
   useEffect(() => {
     if (selectedCommunityGroupCommunityId && subscribedCommunities) {
       setCommunity(subscribedCommunities?.find((community) => community._id === selectedCommunityGroupCommunityId))

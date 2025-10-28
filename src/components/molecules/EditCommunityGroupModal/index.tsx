@@ -33,6 +33,8 @@ import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import Image from 'next/image'
+import Switch from '@/components/atoms/Switch'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -627,6 +629,13 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
           <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
+          <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
+            <div className=" flex  gap-2 items-center">
+              <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />
+              <p className="text-xs text-neutral-700  ">Show verified members only</p>
+            </div>
+            <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
+          </div>
           <div className="relative w-full flex flex-col">
             <div className=" flex items-center justify-between">
               <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
