@@ -80,7 +80,7 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
   return (
     <div>
       <Title className="mb-6">Members</Title>
-      {isGroupAdmin && <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />}
+      <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />
 
       <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar mt-7">
         {isFetchingCommunityGroupMembers && !isFetchingNextPage ? (

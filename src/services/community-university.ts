@@ -354,7 +354,7 @@ export function useGetCommunityGroups(communityId: string, communityGroupId: str
 }
 
 //create community
-export const useCreateCommunityGroup = () => {
+export const useCreateCommunityGroup = (isCommunityAdmin: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -365,8 +365,10 @@ export const useCreateCommunityGroup = () => {
       queryClient.invalidateQueries({ queryKey: ['communityGroups'] })
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
 
-      if (req.isOfficial) {
+      if (req.isOfficial && !isCommunityAdmin) {
         showCustomInfoToast('Your official group has been created and is pending admin approval.')
+      } else if (req.isOfficial && isCommunityAdmin) {
+        showCustomSuccessToast('Your official group has been created.')
       } else {
         showCustomSuccessToast('Your casual group has been created.')
       }
