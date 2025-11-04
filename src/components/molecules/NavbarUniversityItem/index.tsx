@@ -26,6 +26,8 @@ import { BsSortDownAlt, BsSortUpAlt } from 'react-icons/bs'
 import { useModal } from '@/context/ModalContext'
 import { status } from '@/types/CommuityGroup'
 import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
+import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
+import { IoIosArrowDown } from 'react-icons/io'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -53,25 +55,29 @@ const sortOptions = [
     value: 'userCountDesc',
     icon: <BsSortDownAlt className="text-primary-500" />,
   },
-  // {
-  //   label: 'Latest',
-  //   value: 'latest',
-  // },
+  {
+    label: 'Latest',
+    value: 'latest',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
   //   {
   //     label: 'Users',
   //     value: 'users',
   //   },
-  //   {
-  //     label: 'Oldest',
-  //     value: 'oldest',
-  //   },
+  {
+    label: 'Oldest',
+    value: 'oldest',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
 ]
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
   const [cookieValue] = useCookie('uni_user_token')
+  const [selectedCommunityGroupCommunityId, setSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
   const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
@@ -82,7 +88,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [selectedLabel, setSelectedLabel] = useState<string[]>([])
-  const [sort, setSort] = useState<string>('')
+  const [sort, setSort] = useState<string>('userCountDesc')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 1000)
   const [assignUsers, setAssignUsers] = useState(false)
@@ -95,7 +101,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const targetCommunityId = subscribedCommunities?.[0]?._id
   const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
 
-  const { mutate: mutateFilterCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
+  const { mutate: mutateFilterCommunityGroups, data: filteredCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
@@ -128,8 +134,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       openModal(
         <CreateNewGroupBox
           communityName={community?.name || 'Sd'}
-          communityId={communityId || communityIdForNewGroup}
+          communityId={community?._id || ''}
           setNewGroup={setShowNewGroup}
+          isCommunityAdmin={community?.adminId.includes(userData?.id?.toString() || '') || false}
         />,
         'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar'
       )
@@ -160,55 +167,69 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   useEffect(() => {
-    setSelectedCommunityImage(community?.communityLogoUrl.imageUrl || placeholder)
+    if (selectedCommunityGroupCommunityId) {
+      setSelectedCommunityImage(
+        subscribedCommunities?.find((community) => community._id === selectedCommunityGroupCommunityId)?.communityLogoUrl.imageUrl || placeholder
+      )
+    } else {
+      setSelectedCommunityImage(community?.communityLogoUrl.imageUrl || placeholder)
+    }
   }, [community])
 
   const subscribedCommunitiesAllGroups = useMemo(() => {
-    const groups = communityId
-      ? subscribedCommunities?.find((community) => community._id === communityId)?.communityGroups
-      : subscribedCommunities?.[0]?.communityGroups
-    return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, debouncedSearchQuery])
+    const groups = filteredCommunityGroups?.communityGroups || []
+    return groups?.filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery))
+  }, [debouncedSearchQuery, filteredCommunityGroups])
 
   const joinedSubscribedCommunitiesGroup = useMemo(() => {
-    const selectedCommunityGroup = subscribedCommunities?.find((community) => community?._id === (communityId || subscribedCommunities?.[0]._id))
-      ?.communityGroups
-    return selectedCommunityGroup
-      ?.filter(
-        (userCommunityGroup) =>
-          userCommunityGroup?.users?.some(
-            (selectCommunityGroup) => selectCommunityGroup?._id === userData?.id && selectCommunityGroup.status === status.accepted
-          ) || userCommunityGroup.adminUserId === userData?.id
+    const groups = filteredCommunityGroups?.communityGroups || []
+
+    return groups
+      .filter(
+        (group: { users: any[]; adminUserId: string }) =>
+          group.adminUserId === userData?.id ||
+          group.users?.some((u: { _id: string; status: string }) => u._id === userData?.id && u.status === status.accepted)
       )
-      ?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
+      .filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+  }, [userData, debouncedSearchQuery, filteredCommunityGroups])
 
   const subscribedCommunitiesMyGroup = useMemo(() => {
-    const groups = subscribedCommunities
-      ?.find((community) => community._id === (communityId || subscribedCommunities?.[0]._id))
-      ?.communityGroups.filter((communityGroup) => communityGroup.adminUserId === userData?.id)
-    return groups?.filter((group) => group.title.toLowerCase().includes(debouncedSearchQuery))
-  }, [subscribedCommunities, communityId, userData, debouncedSearchQuery])
+    const groups = filteredCommunityGroups?.communityGroups || []
 
+    return groups
+      .filter((group: { adminUserId: string }) => group.adminUserId === userData?.id)
+      .filter((group: { title: string }) => group.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+  }, [userData, debouncedSearchQuery, filteredCommunityGroups])
   useEffect(() => {
-    if (communityId && subscribedCommunities) {
-      setCommunity(subscribedCommunities.find((community) => community._id === communityId))
+    if (selectedCommunityGroupCommunityId && subscribedCommunities) {
+      setCommunity(subscribedCommunities?.find((community) => community._id === selectedCommunityGroupCommunityId))
     } else if (subscribedCommunities) {
       setCommunity(subscribedCommunities[0] as Community)
     }
-  }, [subscribedCommunities, communityId])
+  }, [subscribedCommunities, communityId, selectedCommunityGroupCommunityId])
 
   //sort
   useEffect(() => {
     const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-    if (cookieValue && community?._id && (selectedFiltersMain?.length || selectedTypeMain?.length || sort.length)) {
-      mutateFilterCommunityGroups(data)
-    }
-  }, [sort, cookieValue, community?._id])
+
+    mutateFilterCommunityGroups(data)
+  }, [sort, cookieValue, community?._id, selectedCommunityGroupCommunityId, selectedFiltersMain, selectedTypeMain])
 
   const handleSelect = (value: string) => {
     setSort(value)
     setIsOpen(false)
+  }
+
+  const handleCommunityGroupClick = (communityId: string, logo: string) => {
+    setSelectedCommunityImage(logo)
+    setCommunity(subscribedCommunities?.find((community) => community._id === communityId))
+    const expirationDateForLoginData = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000).toUTCString()
+    // roughly 400 days from now — Chrome’s current cap
+    setSelectedCommunityGroupCommunityId(communityId, expirationDateForLoginData)
+    const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
+
+    mutateFilterCommunityGroups(data)
+    setOpen(false)
   }
 
   const tabData = [
@@ -304,18 +325,37 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </div>
 
       <>
-        <div className="flex gap-2 mt-4 py-2 items-center">
+        <div className="flex gap-2 mt-4 py-2 items-center ">
           <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
-          <div className="w-6 h-6 border-2 border-primary-500 overflow-hidden rounded-full flex justify-center items-center">
-            <Image
-              className="w-[16px] h-[16px] object-contain roundedfull overflow-hidden m-auto"
-              src={(selectedCommunityImage as string) || placeholder}
-              width={16}
-              height={16}
-              alt=""
-              onError={() => setSelectedCommunityImage(placeholder)}
-            />
-          </div>
+
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <div className=" cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
+                <Image
+                  className="w-6 h-6 object-contain rounded-full overflow-hidden m-auto"
+                  src={(selectedCommunityImage as string) || placeholder}
+                  width={24}
+                  height={24}
+                  alt=""
+                  onError={() => setSelectedCommunityImage(placeholder)}
+                />
+                <IoIosArrowDown size={16} strokeWidth={3} />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="relative w-[236px]  left-6 top-0  p-5 border-none shadow-lg bg-white shadow-gray-light">
+              <div className=" w-full flex flex-col gap-2">
+                {subscribedCommunities?.map((community) => (
+                  <LeftNavGroupsCommunityHolder
+                    key={community._id}
+                    name={community.name}
+                    logo={community.communityLogoUrl.imageUrl}
+                    communityId={community._id}
+                    handleChange={handleCommunityGroupClick}
+                  />
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />

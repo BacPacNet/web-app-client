@@ -49,12 +49,6 @@ const UserCard: React.FC<UserCardProps> = ({
       <div>
         <div className="flex gap-1 items-center">
           <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
-          {/*{}*/}
-          {isCommunityAdmin ? (
-            <Image src={communityAdminBadge} width={14} height={14} alt="Verified" />
-          ) : (
-            isVerified && <Image src={badge} width={14} height={14} alt="Verified" />
-          )}
         </div>
 
         <div className="flex flex-col">

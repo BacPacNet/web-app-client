@@ -91,6 +91,7 @@ const SinglePost = () => {
           isSinglePost={true}
           isReply={isReply == 'true'}
           commentID={commentID || ''}
+          communities={profile?.communities}
         />
       </div>
     </div>

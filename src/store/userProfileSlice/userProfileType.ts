@@ -32,4 +32,5 @@ export interface userProfileType {
   totalFilled: number
   _id: string
   isFollowing: boolean
+  isVerified?: boolean
 }

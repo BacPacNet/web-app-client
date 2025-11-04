@@ -26,6 +26,7 @@ export interface FormDataType {
   isJoinUniversity: boolean
   isUniversityVerified: boolean
   isEmailVerified: boolean
+  universityDomain: string[]
 }
 
 export const value = [

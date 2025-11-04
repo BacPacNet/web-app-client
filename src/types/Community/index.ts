@@ -6,7 +6,7 @@ export interface Community {
   communityCoverUrl: { imageUrl: string; publicId: string }
   communityLogoUrl: { imageUrl: string; publicId: string }
   name: string
-  adminId: string
+  adminId: string[]
   university_id: string
   numberOfStudent: number
   numberOfFaculty: number
@@ -88,6 +88,13 @@ export interface communityPostType {
     }
     isCommunityAdmin?: boolean
     adminCommunityId?: string
+    communities?: {
+      _id: string
+      name: string
+      logo: string
+      isVerifiedMember: boolean
+      isCommunityAdmin?: boolean
+    }[]
   }
   content: string
   createdAt: string

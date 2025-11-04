@@ -1,3 +1,4 @@
+'use client'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
 import { notificationStatus } from '@/services/notification'
 import { useRouter } from 'next/navigation'
@@ -153,11 +154,15 @@ export const NotificationMessage = ({ data }: NotificationMessageProps) => {
     case notificationRoleAccess.OFFICIAL_GROUP_REQUEST:
       return (
         <span className="text-xs font-inter">
-          <b>{data?.message}</b> has sent a request to become an official group.
+          <b>
+            {data?.sender_id?.firstName || ''} {data?.sender_id?.lastName || ''}
+          </b>{' '}
+          has requested <b>{data?.communityGroupId?.title || ''}</b> in <b>{data?.communityDetails?.name || ''} </b>
+          to become an <b>official group</b>.
           {data?.status == notificationStatus.default && (
             <span className="text-neutral-500 mt-2 font-inter text-2xs">
               <br />
-              You will be automatically added to the group if you accept.
+              You and other admins will automatically be added to the group if you accept.
             </span>
           )}
         </span>

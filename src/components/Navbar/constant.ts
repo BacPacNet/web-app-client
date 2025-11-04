@@ -62,4 +62,5 @@ export const notificationRoleAccess = {
   FOLLOW: 'FOLLOW',
   ASSIGN: 'ASSIGN',
   COMMENT: 'COMMENT',
+  REFETCHNOTIFICATIONS: 'REFETCHNOTIFICATIONS',
 }

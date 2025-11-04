@@ -100,6 +100,7 @@ const CommunityPostsContainer = ({ communityID = '', communityGroupID = '', cont
         communityName={post.communityName}
         communityGroupName={post.communityGroupName}
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
+        communities={post?.userProfile?.communities}
       />
     ))
   }, [communityDatas, showCommentSection, communityID, communityGroupID])

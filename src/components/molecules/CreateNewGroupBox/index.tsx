@@ -1,8 +1,8 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
-
+import badge from '@assets/badge.svg'
 import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
@@ -29,7 +29,7 @@ import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
 import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
-import { validateSingleImageFile } from '@/lib/utils'
+import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
 import UniversityDropdown from './Dropdown'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
@@ -38,14 +38,17 @@ import ProfileImageUploader from '../ProfileImageUploader'
 import { useCommunityFilteredUsers, useCommunityUsers } from '@/services/community'
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import Switch from '@/components/atoms/Switch'
+import Image from 'next/image'
 
 type Props = {
   communityId: string
   setNewGroup: (value: boolean) => void
   communityName: string
+  isCommunityAdmin: boolean
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
+const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAdmin }: Props) => {
   const { userProfileData } = useUniStore()
   const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File | null>(null)
@@ -67,7 +70,8 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
   const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
-  const { mutate: createGroup, isPending } = useCreateCommunityGroup()
+  const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
+  const { mutateAsync: createGroup, isPending } = useCreateCommunityGroup(isCommunityAdmin)
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const {
     register: GroupRegister,
@@ -76,6 +80,8 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
     handleSubmit: handleGroupCreate,
     formState: { errors },
     setValue,
+    setError,
+    setFocus,
   } = useForm<CreateCommunityGroupType>({
     defaultValues: {
       communityGroupLogoUrl: null,
@@ -97,10 +103,15 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
   const affiliation = watch('affiliation') || ''
   const community = watch('community')
   const communityGroupType = watch('communityGroupType')
+  const communityGroupAccess = watch('communityGroupAccess')
 
   const { data: communityData } = useGetCommunity(community.id)
-  //   const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityUsers(communityId, false, searchInput)
-  const { data: communityUsersData, hasNextPage, isFetchingNextPage, fetchNextPage } = useCommunityFilteredUsers(communityId, false, searchInput)
+  const {
+    data: communityUsersData,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useCommunityFilteredUsers(communityId, fetchVerifiedUsers, searchInput)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
@@ -200,9 +211,23 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
       universityAdminId: communityData?.adminId,
     }
 
-    createGroup({ communityId: communityId, data: payload, isOfficial: communityGroupType.toLowerCase() === CommunityGroupTypeEnum.OFFICIAL })
-    setSelectedFilters({})
-    setIsLoading(false)
+    createGroup(
+      { communityId: communityId, data: payload, isOfficial: communityGroupType.toLowerCase() === CommunityGroupTypeEnum.OFFICIAL },
+      {
+        onSuccess: () => {
+          setSelectedFilters({})
+          setIsLoading(false)
+        },
+        onError: (error: any) => {
+          const err = error.response.data
+
+          if (err.for == 'title') {
+            handleFieldError(err, setError, setIsLoading, setFocus)
+          }
+        },
+      }
+    )
+
     // setNewGroup(false)
     // closeModal()
   }
@@ -277,6 +302,13 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
       }
     })
   }
+
+  useEffect(() => {
+    if (communityGroupAccess === 'Private') {
+      setFetchVerifiedUsers(true)
+    }
+  }, [communityGroupAccess])
+
   const handleLogoImage = (file: File) => {
     setLogoImage(file)
   }
@@ -347,7 +379,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
                 })}
               />
 
-              {errors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}
+              {errors.title && <span className="text-red-500 text-2xs font-normal text-"> {errors.title.message || 'This field is required'} </span>}
             </div>
           </div>
 
@@ -590,11 +622,23 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName }: Props) => {
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
 
-          <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
+          <div className="flex flex-col  items-start w-full">
+            <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
+          </div>
+          <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
+            <div className=" flex  gap-2 items-center">
+              <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />
+              <p className="text-xs text-neutral-700  ">Show verified members only</p>
+            </div>
+            <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
+          </div>
           <div className="relative w-full flex flex-col">
-            <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
-              Add Individuals
-            </label>
+            <div className=" flex items-center justify-between">
+              <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
+                Add Individuals
+              </label>
+            </div>
+
             <InputBox
               isCancel={true}
               onCancel={handleClear}

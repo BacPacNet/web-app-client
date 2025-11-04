@@ -29,6 +29,7 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import { useBlockUser } from '@/services/userProfile'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import ProfileCommunityHolder from '@/components/molecules/ProfileCommunityHolder'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -53,6 +54,15 @@ interface UserProfileCardProps {
   role: string
   isBlockedByYou: boolean
   isVerifiedUniversity: boolean
+  communities: {
+    _id: string
+    name: string
+    logo: string
+    isVerifiedMember: boolean
+    isCommunityAdmin: boolean
+  }[]
+  activeUniversityId: string
+  activeUniversityName: string
 }
 
 export function UserProfileCard({
@@ -77,6 +87,9 @@ export function UserProfileCard({
   affiliation,
   isBlockedByYou = false,
   isVerifiedUniversity,
+  communities,
+  activeUniversityId,
+  activeUniversityName,
 }: UserProfileCardProps) {
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
@@ -84,7 +97,6 @@ export function UserProfileCard({
   const { openModal } = useModal()
   const [isOpen, setIsOpen] = useState(false)
   const [isBlocked, setIsBlocked] = useState(isBlockedByYou)
-  const [logoSrc, setLogoSrc] = useState(universityLogo || universityLogoPlaceholder)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
   const { mutateAsync: mutateBlockUser } = useBlockUser()
@@ -94,11 +106,6 @@ export function UserProfileCard({
 
   // Lightbox state
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-
-  // Update logo when universityLogo prop changes
-  useEffect(() => {
-    setLogoSrc(universityLogo || universityLogoPlaceholder)
-  }, [universityLogo])
 
   const dobFormat = birthday.includes('/') ? convertToDateObj(birthday) : Number(birthday) > 0 ? new Date(Number(birthday)) : null
   const dateOfBirth = dobFormat && format(dobFormat, 'dd MMM yyyy')
@@ -289,22 +296,7 @@ export function UserProfileCard({
           </Buttons>
         </div>
       )}
-      <div className="flex gap-4 lg:gap-8 items-center font-poppins  flex-wrap">
-        <div className="flex items-center gap-2 ml-2">
-          <div className="w-[37px] h-[37px]">
-            <Image
-              objectFit="contain"
-              src={logoSrc}
-              onError={() => setLogoSrc(universityLogoPlaceholder)}
-              alt=""
-              width={36}
-              height={36}
-              className="rounded-full shadow-logo h-[36px] object-contain "
-            />
-          </div>
-          <p className="text-neutral-500  font-medium text-2xs ">{university}</p>
-          {isVerifiedUniversity && <Image width={16} height={16} src={badge} alt={''} />}
-        </div>
+      <div className="flex gap-4  items-start font-poppins  flex-col">
         <div className="flex gap-4 ">
           <div
             onClick={() =>
@@ -334,12 +326,43 @@ export function UserProfileCard({
             {followers || '0'} Followers
           </div>
         </div>
+
+        <div className="flex  gap-6 flex-wrap">
+          {communities
+            ?.slice()
+            .sort((a, b) => {
+              const aIsActive = activeUniversityName.toString() === a.name.toString()
+              const bIsActive = activeUniversityName.toString() === b.name.toString()
+
+              const aIsAdmin = a.isCommunityAdmin
+              const bIsAdmin = b.isCommunityAdmin
+
+              const aIsVerified = a.isVerifiedMember
+              const bIsVerified = b.isVerifiedMember
+
+              if (aIsActive !== bIsActive) return aIsActive ? -1 : 1
+              if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+              if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
+
+              return 0
+            })
+            .map((community) => (
+              <ProfileCommunityHolder
+                key={community._id}
+                isActive={activeUniversityName.toString() === community.name.toString()}
+                logo={community.logo}
+                name={community.name}
+                isVerified={community.isVerifiedMember}
+                isCommunityAdmin={community.isCommunityAdmin}
+              />
+            ))}
+        </div>
       </div>
 
-      <p className="text-xs font-medium text-neutral-500 ">{description}</p>
+      {description?.length > 0 && <p className="text-xs font-medium text-neutral-500 ">{description}</p>}
 
       <div className="flex sm:flex-row flex-col text-neutral-500 text-2xs font-inter">
-        <div className="flex flex-col gap-4 pe-4 sm:border-r border-neutral-300">
+        <div className="flex flex-col gap-4 pe-4 ">
           <div className="flex items-center space-x-2">
             <FaEnvelope size={16} />
             {/*<Tooltip text={email}>*/}

@@ -72,7 +72,7 @@ export default function CommunityGroupBanner({
         communityGroupId={communityGroupID}
         isGroupAdmin={isGroupAdmin}
         users={CommunityGroupMember || []}
-        communityAdminId={communityGroups?.communityId?.adminId as string}
+        communityAdminIds={communityGroups?.communityId?.adminId as string[]}
         isOfficialGroup={communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL}
       />
     )
@@ -217,7 +217,13 @@ export default function CommunityGroupBanner({
           <div>
             <p className="text-xs text-neutral-500 py-4">{communityGroups?.description}</p>
             <div className="flex items-center gap-2">
-              <Buttons disabled={!isUserJoinedCommunityGroup} onClick={handleShowMembers} className="text-neutral-500" size="small" variant="border">
+              <Buttons
+                disabled={!isUserJoinedCommunityGroup && communityGroups?.status !== 'pending'}
+                onClick={handleShowMembers}
+                className="text-neutral-500"
+                size="small"
+                variant="border"
+              >
                 {totalCommunityGroupMember} Members
               </Buttons>
               <CustomTooltip

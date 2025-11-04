@@ -12,12 +12,12 @@ interface Props {
   users: CommunityGroupUsers[]
   adminId: string
   communityGroupId: string
-  communityAdminId: string
+  communityAdminIds: string[]
   isOfficialGroup: boolean
   isGroupAdmin?: boolean
 }
 
-export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, communityGroupId, communityAdminId, isOfficialGroup }: Props) => {
+export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, communityGroupId, communityAdminIds, isOfficialGroup }: Props) => {
   const { userProfileData } = useUniStore()
   const ref = useRef<HTMLDivElement>(null)
   const { mutate: mutateRemoveUserFromCommunityGroup, isPending: isPending } = useRemoveUserFromCommunityGroup()
@@ -79,10 +79,10 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
 
   return (
     <div>
-      <Title>Members</Title>
-      {isGroupAdmin && <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />}
+      <Title className="mb-6">Members</Title>
+      <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />
 
-      <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar">
+      <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar mt-7">
         {isFetchingCommunityGroupMembers && !isFetchingNextPage ? (
           <div className="flex justify-center items-center h-full min-h-[300px]">
             <Spinner />
@@ -115,8 +115,9 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
                 isGroupAdmin={user._id.toString() === adminId.toString()}
                 handleRemoveClick={(id) => handleRemoveUser(id)}
                 isRemovePending={isPending}
-                isCommunityAdmin={communityAdminId?.toString() === user?._id?.toString()}
+                isCommunityAdmin={communityAdminIds?.includes(user?._id?.toString())}
                 isOfficialGroup={isOfficialGroup}
+                isVerifiedUserOfCommunity={user?.isVerified}
               />
             )
           })

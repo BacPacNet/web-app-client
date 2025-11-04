@@ -1,12 +1,13 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
 import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
 import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupUsers, status, subCategories } from '@/types/CommuityGroup'
-
+import badge from '@assets/badge.svg'
 import { useUniStore } from '@/store/store'
 
 import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
@@ -30,8 +31,10 @@ import { useCommunityFilteredUsers, useCommunityUsers } from '@/services/communi
 import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDropdown'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
-import { validateSingleImageFile } from '@/lib/utils'
+import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import Image from 'next/image'
+import Switch from '@/components/atoms/Switch'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -57,13 +60,14 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [filtersError, setFIltersError] = useState('')
+  const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
 
   const {
     data: communityUsersData,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useCommunityFilteredUsers(communityGroups?.communityId?._id, false, searchInput, communityGroups?._id)
+  } = useCommunityFilteredUsers(communityGroups?.communityId?._id, fetchVerifiedUsers, searchInput, communityGroups?._id)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
 
@@ -82,6 +86,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     watch,
     reset,
     control,
+    setError,
+    setFocus,
   } = useForm({
     defaultValues: {
       title: title,
@@ -104,6 +110,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const major = watch('major') || []
   const occupation = watch('occupation') || ''
   const affiliation = watch('affiliation') || []
+  const currentCommunityGroupAccess = watch('communityGroupAccess')
 
   // Reset form when communityGroups changes
   useEffect(() => {
@@ -212,6 +219,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     })
   }
 
+  useEffect(() => {
+    if (currentCommunityGroupAccess === 'Private') {
+      setFetchVerifiedUsers(true)
+    }
+  }, [currentCommunityGroupAccess])
+
   const onSubmit = async (data: any) => {
     setIsLoading(true)
 
@@ -251,11 +264,21 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       payload.communityGroupLogoCoverUrl = imagedata.data[0]
     }
 
-    mutateEditGroup({ communityId: communityGroups?._id, payload: payload })
-    setIsLoading(false)
-    setSelectedFilters({})
-    setNewGroup(false)
-    closeModal()
+    mutateEditGroup(
+      { communityId: communityGroups?._id, payload: payload },
+      {
+        onSuccess: () => {
+          setIsLoading(false)
+          setSelectedFilters({})
+          setNewGroup(false)
+          closeModal()
+        },
+        onError: (error: any) => {
+          const err = JSON.parse(error.response?.data?.message ?? '{}')
+          handleFieldError(err, setError, setIsLoading, setFocus)
+        },
+      }
+    )
   }
 
   const validateDescription = (value: string | undefined): string | boolean => {
@@ -370,7 +393,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 })}
               />
 
-              {GroupErrors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}
+              {GroupErrors.title && (
+                <span className="text-red-500 text-2xs font-normal text-"> {GroupErrors.title.message || 'This field is required'} </span>
+              )}
             </div>
           </div>
 
@@ -429,7 +454,9 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
               </div>
             </label>
-            {GroupErrors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
+            {GroupErrors.communityGroupAccess && (
+              <p className="text-red-500 text-2xs">{GroupErrors.communityGroupAccess.message?.toString() || 'This field is required'}</p>
+            )}
           </div>
 
           {/* communty group type  */}
@@ -602,10 +629,19 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
           <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
+          <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
+            <div className=" flex  gap-2 items-center">
+              <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />
+              <p className="text-xs text-neutral-700  ">Show verified members only</p>
+            </div>
+            <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
+          </div>
           <div className="relative w-full flex flex-col">
-            <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
-              Add Individuals
-            </label>
+            <div className=" flex items-center justify-between">
+              <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
+                Add Individuals
+              </label>
+            </div>
 
             <InputBox
               isCancel={true}

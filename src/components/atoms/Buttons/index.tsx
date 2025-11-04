@@ -13,7 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | 'danger_secondary'
     | 'notificationDanger'
     | 'border_danger'
-  size?: 'small' | 'medium' | 'large'
+  size?: 'small' | 'medium' | 'large' | 'extra_small'
   leftIcon?: React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
@@ -44,6 +44,7 @@ const Buttons: React.FC<ButtonProps> = ({
     small: 'text-2xs py-3 px-4 h-9 ',
     medium: 'text-xs py-3 px-4 h-10',
     large: 'text-xs py-3 px-4 h-10 md:text-sm md:h-12',
+    extra_small: 'text-3xs py-2 px-2 h-7',
   }
 
   const variantClass = variantClasses[variant]

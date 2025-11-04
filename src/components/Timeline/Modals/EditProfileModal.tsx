@@ -151,6 +151,31 @@ const EditProfileModal = () => {
     return true
   }
 
+  const mergedUniversities = useMemo(() => {
+    const joinedUniversity = userProfile?.profile?.communities || []
+    const veriFiedEmails = userProfile?.profile?.email || []
+
+    return [
+      ...joinedUniversity.map((u) => ({
+        _id: u._id,
+        name: u.name,
+        UniversityEmail: veriFiedEmails.find((e) => e.communityId === u._id)?.UniversityEmail || '',
+        logo: u.logo,
+        isVerifiedMember: u.isVerifiedMember || false,
+        isCommunityAdmin: (u as any).isCommunityAdmin || false,
+      })),
+      ...veriFiedEmails
+        .filter((e) => !joinedUniversity.some((u) => u._id === e.communityId))
+        .map((e) => ({
+          _id: e.communityId,
+          name: e.UniversityName,
+          UniversityEmail: e.UniversityEmail,
+          logo: (e as any).logo || '',
+          isVerifiedMember: false,
+        })),
+    ]
+  }, [userProfile])
+
   // Handle image upload with error handling
   const handleImageUpload = async () => {
     if (profileImageFile && typeof profileImageFile === 'object') {
@@ -247,6 +272,35 @@ const EditProfileModal = () => {
           />
         </LabeledInput>
 
+        <div className="flex flex-col py-2">
+          <label htmlFor="university_name" className="py-1">
+            University <span className="text-destructive-600">*</span>
+          </label>
+          <div className="w-full flex flex-col relative">
+            <Controller
+              name="university_name"
+              control={control}
+              rules={{ required: 'University is required!' }}
+              render={({ field }) => (
+                <SelectUniversityDropdown
+                  value={field.value || ''}
+                  onChange={(selectedUniversity: any) => {
+                    field.onChange(selectedUniversity.name)
+                    setValue('universityId', selectedUniversity._id)
+                    setValue('universityLogo', selectedUniversity.logo)
+                  }}
+                  // label="University"
+                  placeholder="Select University Name"
+                  icon={'single'}
+                  search={true}
+                  err={!!errors.university_name}
+                  customUniversities={mergedUniversities as any}
+                />
+              )}
+            />
+            {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
+          </div>
+        </div>
         <div className="flex flex-col">
           <div className="flex justify-between">
             <label htmlFor="bio" className="py-1">
@@ -337,34 +391,7 @@ const EditProfileModal = () => {
             </LabeledInput>
           </div>
         </div>
-        <div className="flex flex-col py-2">
-          <label htmlFor="university_name" className="py-1">
-            University <span className="text-destructive-600">*</span>
-          </label>
-          <div className="w-full flex flex-col relative">
-            <Controller
-              name="university_name"
-              control={control}
-              rules={{ required: 'University is required!' }}
-              render={({ field }) => (
-                <SelectUniversityDropdown
-                  value={field.value || ''}
-                  onChange={(selectedUniversity: any) => {
-                    field.onChange(selectedUniversity.name)
-                    setValue('universityId', selectedUniversity._id)
-                    setValue('universityLogo', selectedUniversity.logo)
-                  }}
-                  // label="University"
-                  placeholder="Select University Name"
-                  icon={'single'}
-                  search={true}
-                  err={!!errors.university_name}
-                />
-              )}
-            />
-            {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
-          </div>
-        </div>
+
         <div>
           <Title>
             Edit status<span className="text-destructive-600">*</span>
@@ -455,28 +482,6 @@ const EditProfileModal = () => {
                 <label htmlFor="university_name" className="py-1">
                   University <span className="text-destructive-600">*</span>
                 </label>
-                <div className="w-full flex flex-col relative">
-                  <Controller
-                    name="university_name"
-                    control={control}
-                    rules={{ required: 'University is required!' }}
-                    render={({ field }) => (
-                      <SelectUniversityDropdown
-                        value={field.value || ''}
-                        onChange={(selectedUniversity: any) => {
-                          field.onChange(selectedUniversity.name)
-                          setValue('universityId', selectedUniversity._id)
-                          setValue('universityLogo', selectedUniversity.logo || '/src/assets/Logo Circle.svg')
-                        }}
-                        placeholder="Select University Name"
-                        icon={'single'}
-                        search={true}
-                        err={!!errors.university_name}
-                      />
-                    )}
-                  />
-                  {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
-                </div>
               </div>
               <div className="flex flex-col">
                 <label htmlFor="occupation" className="py-1">
