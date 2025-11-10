@@ -65,7 +65,6 @@ const sortOptions = [
     value: 'userCountDesc',
     icon: <BsSortDownAlt className="text-primary-500" />,
   },
-
   //   {
   //     label: 'Users',
   //     value: 'users',
