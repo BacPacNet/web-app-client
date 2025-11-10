@@ -301,11 +301,11 @@ const PostCard = React.memo(
                   {communities
                     ?.slice()
                     .sort((a, b) => {
-                      const aIsAdmin = a.isCommunityAdmin
-                      const bIsAdmin = b.isCommunityAdmin
+                      const aIsAdmin = a?.isCommunityAdmin
+                      const bIsAdmin = b?.isCommunityAdmin
 
-                      const aIsVerified = a.isVerifiedMember
-                      const bIsVerified = b.isVerifiedMember
+                      const aIsVerified = a?.isVerifiedMember
+                      const bIsVerified = b?.isVerifiedMember
 
                       if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
                       if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
