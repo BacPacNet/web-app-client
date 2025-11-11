@@ -348,8 +348,8 @@ export function UserProfileCard({
               <ProfileCommunityHolder
                 key={community?._id}
                 isActive={activeUniversityName?.toString() === community?.name?.toString()}
-                logo={community?.logo}
-                name={community?.name}
+                logo={community?.logo || ''}
+                name={community?.name || ''}
                 isVerified={community?.isVerifiedMember}
                 isCommunityAdmin={community?.isCommunityAdmin}
               />
