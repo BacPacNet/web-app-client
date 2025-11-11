@@ -1,10 +1,9 @@
 import avatar from '@assets/avatar.svg'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake } from 'react-icons/fa'
+import { FaEnvelope, FaPhone, FaBirthdayCake } from 'react-icons/fa'
 import { ImEarth } from 'react-icons/im'
 import { HiDotsHorizontal, HiPencilAlt } from 'react-icons/hi'
-import badge from '@assets/badge.svg'
 import useDeviceType from '@/hooks/useDeviceType'
 import { format, parse } from 'date-fns'
 import { useUniStore } from '@/store/store'
@@ -17,7 +16,6 @@ import { useState, useEffect } from 'react'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
-import universityLogoPlaceholder from '@assets/Logo Circle.svg'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { convertToDateObj } from '@/lib/utils'
 import { HiMail } from 'react-icons/hi'
@@ -331,14 +329,14 @@ export function UserProfileCard({
           {communities
             ?.slice()
             .sort((a, b) => {
-              const aIsActive = activeUniversityName.toString() === a.name.toString()
-              const bIsActive = activeUniversityName.toString() === b.name.toString()
+              const aIsActive = activeUniversityName?.toString() === a?.name?.toString()
+              const bIsActive = activeUniversityName?.toString() === b?.name?.toString()
 
-              const aIsAdmin = a.isCommunityAdmin
-              const bIsAdmin = b.isCommunityAdmin
+              const aIsAdmin = a?.isCommunityAdmin
+              const bIsAdmin = b?.isCommunityAdmin
 
-              const aIsVerified = a.isVerifiedMember
-              const bIsVerified = b.isVerifiedMember
+              const aIsVerified = a?.isVerifiedMember
+              const bIsVerified = b?.isVerifiedMember
 
               if (aIsActive !== bIsActive) return aIsActive ? -1 : 1
               if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
@@ -348,12 +346,12 @@ export function UserProfileCard({
             })
             .map((community) => (
               <ProfileCommunityHolder
-                key={community._id}
-                isActive={activeUniversityName.toString() === community.name.toString()}
-                logo={community.logo}
-                name={community.name}
-                isVerified={community.isVerifiedMember}
-                isCommunityAdmin={community.isCommunityAdmin}
+                key={community?._id}
+                isActive={activeUniversityName?.toString() === community?.name?.toString()}
+                logo={community?.logo || ''}
+                name={community?.name || ''}
+                isVerified={community?.isVerifiedMember}
+                isCommunityAdmin={community?.isCommunityAdmin}
               />
             ))}
         </div>

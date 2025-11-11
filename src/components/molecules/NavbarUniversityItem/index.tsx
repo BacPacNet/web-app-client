@@ -36,39 +36,39 @@ interface Props {
 
 const sortOptions = [
   {
-    label: 'Alphabet Ascending',
-    value: 'alphabetAsc',
-    icon: <BsSortUpAlt className="text-primary-500" />,
-  },
-  {
-    label: 'Alphabet Descending',
-    value: 'alphabetDesc',
-    icon: <BsSortDownAlt className="text-primary-500" />,
-  },
-  {
-    label: 'User Count Ascending',
-    value: 'userCountAsc',
-    icon: <BsSortUpAlt className="text-primary-500" />,
-  },
-  {
-    label: 'User Count Descending',
-    value: 'userCountDesc',
-    icon: <BsSortDownAlt className="text-primary-500" />,
-  },
-  {
-    label: 'Latest',
+    label: 'Newest',
     value: 'latest',
     icon: <BsSortUpAlt className="text-primary-500" />,
   },
-  //   {
-  //     label: 'Users',
-  //     value: 'users',
-  //   },
   {
     label: 'Oldest',
     value: 'oldest',
     icon: <BsSortDownAlt className="text-primary-500" />,
   },
+  {
+    label: 'Alphabet A-Z',
+    value: 'alphabetAsc',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
+  {
+    label: 'Alphabet Z-A',
+    value: 'alphabetDesc',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
+  {
+    label: 'User Count',
+    value: 'userCountAsc',
+    icon: <BsSortUpAlt className="text-primary-500" />,
+  },
+  {
+    label: 'User Count ',
+    value: 'userCountDesc',
+    icon: <BsSortDownAlt className="text-primary-500" />,
+  },
+  //   {
+  //     label: 'Users',
+  //     value: 'users',
+  //   },
 ]
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {

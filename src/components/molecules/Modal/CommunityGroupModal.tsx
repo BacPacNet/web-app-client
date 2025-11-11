@@ -82,7 +82,7 @@ export const CommunityGroupModal = ({ users, isGroupAdmin = false, adminId, comm
       <Title className="mb-6">Members</Title>
       <SegmentedControl options={statusOptions} value={userStatus} onChange={setUserStatus} className="w-full" />
 
-      <div ref={ref} className="overflow-y-auto h-80  custom-scrollbar mt-7">
+      <div ref={ref} className="overflow-y-auto h-[95%]  custom-scrollbar mt-7">
         {isFetchingCommunityGroupMembers && !isFetchingNextPage ? (
           <div className="flex justify-center items-center h-full min-h-[300px]">
             <Spinner />

@@ -39,7 +39,7 @@ const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityA
         <div className="flex items-center gap-1">
           <p className="text-neutral-500  font-medium text-2xs ">{name}</p>
           {isVerified && !isCommunityAdmin && (
-            <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px] absolute top-5 left-[21px]" />
+            <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px] absolute top-[24px] left-[24px]" />
           )}
           {isCommunityAdmin && (
             <Image
