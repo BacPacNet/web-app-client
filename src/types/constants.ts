@@ -3,6 +3,7 @@ import { AxiosError } from 'axios'
 import { userTypeEnum } from './RegisterForm'
 import { S3UploadItem, S3UploadResponse } from '@/services/upload'
 
+export const verifyUniversityEmailMessage = 'You need to verify your university email to join private groups'
 export const CommunityNavbarLinks: NavLink[] = [
   { label: 'Timeline', href: '/timeline' },
   { label: 'Profile', href: '/:id' },
