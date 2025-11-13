@@ -5,16 +5,20 @@ import { notificationStatus } from '@/services/notification'
 import { useChangeCommunityGroupStatus, useJoinRequestPrivateGroup } from '@/services/community-group'
 import { useJoinCommunityGroup } from '@/services/notification'
 import Buttons from '../../Buttons'
+import GenericInfoModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
+import { showCustomDangerToast } from '../../CustomToasts/CustomToasts'
+import { useModal } from '@/context/ModalContext'
+import { verifyUniversityEmailMessage } from '@/types/constants'
 
 type NotificationActionsProps = {
   data: any
 }
 
 export const NotificationActions = ({ data }: NotificationActionsProps) => {
-  const { mutate: joinGroup } = useJoinCommunityGroup()
+  const { mutateAsync: joinGroup } = useJoinCommunityGroup()
   const { mutate: changeGroupStatus } = useChangeCommunityGroupStatus(data?.communityGroupId?._id || '')
   const { mutate: handleJoinCommunityRequest } = useJoinRequestPrivateGroup(data?.communityGroupId?._id || '')
-
+  const { openModal } = useModal()
   const handleAcceptInvite = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (!data?.communityGroupId?._id) return
@@ -25,7 +29,21 @@ export const NotificationActions = ({ data }: NotificationActionsProps) => {
         groupId: data.communityGroupId._id,
         id: id,
       }
-      joinGroup(payload)
+      joinGroup(payload, {
+        onError: (error: any) => {
+          if (error.response.data.message == verifyUniversityEmailMessage) {
+            openModal(
+              <GenericInfoModal
+                buttonLabel="Verify Student Email"
+                redirectUrl="/setting/university-verification"
+                title="Verify Account to Join "
+                description="Access to private groups is limited to verified users. Please complete verification to continue."
+              />,
+              'w-[350px] sm:w-[490px] hideScrollbar'
+            )
+          }
+        },
+      })
     }
   }
 

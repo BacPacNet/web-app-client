@@ -140,6 +140,7 @@ const PostCard = React.memo(
     const searchParams = useSearchParams()
 
     const [showInitial, setShowInitial] = useState(!!initialComment)
+
     // Local state for immediate UI feedback
     //const [localLikes, setLocalLikes] = useState<any>(likes)
     const [localIsLiked, setLocalIsLiked] = useState(false)
@@ -314,10 +315,10 @@ const PostCard = React.memo(
                     })
                     .map((community) => (
                       <PostCommunityHolder
-                        key={community._id}
-                        logo={community.logo}
-                        name={community.name}
-                        isVerified={community.isVerifiedMember}
+                        key={community?._id}
+                        logo={community?.logo}
+                        name={community?.name}
+                        isVerified={community?.isVerifiedMember}
                         isCommunityAdmin={community.isCommunityAdmin || false}
                       />
                     ))}
