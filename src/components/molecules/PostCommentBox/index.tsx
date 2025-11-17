@@ -76,6 +76,7 @@ const CommentList = React.memo(function CommentList({
           handleReplyClick={handelCommentData}
           showReplies={visibleComments[comment._id]}
           sortBy={sortBy}
+          communities={comment?.commenterProfileId?.communities}
         />
       ))}
     </AnimatePresence>
@@ -321,7 +322,7 @@ const PostCommentBox = ({
             handleShowMore={handleShowMore}
             isFetching={isTimeline ? isFetching : communityCommentsIsFetching}
             isFetchingNextPage={isTimeline ? isFetchingNextPage : communityCommentsIsFetchingNextPage}
-            hasNextPage={hasNextPage}
+            hasNextPage={isTimeline ? hasNextPage : communityCommentsHasNextPage}
           />
         )}
       </div>

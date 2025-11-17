@@ -58,8 +58,8 @@ export default function Error({ error, reset }: ErrorProps) {
         {/* Error Icon */}
         <div className="mb-8">
           <div className="error-icon-container">
-            <div className="w-32 h-32 bg-gradient-to-br from-red-100 to-orange-100 rounded-full flex items-center justify-center mx-auto error-pulse">
-              <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <div className="w-32 h-32 bg-primary-500 rounded-full flex items-center justify-center mx-auto ">
+              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -73,7 +73,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
         {/* Error Message */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold error-gradient-text-red mb-4">Oops! Something went wrong</h1>
+          <h1 className="text-4xl font-bold text-primary-500 mb-4">Oops! Something went wrong</h1>
           <p className="text-2sm text-neutral-600 mb-6">We encountered an unexpected error. Our team has been notified and is working to fix it.</p>
           <p className="text-sm text-neutral-500">Don&apos;t worry, this happens to the best of us!</p>
         </div>
@@ -96,14 +96,14 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <button
             onClick={handleRetry}
-            className="px-8 py-3 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-lg hover:from-red-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="px-8 py-3 bg-primary-500 text-white font-semibold rounded-lg  transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Try Again
           </button>
 
           <Link
             href="/"
-            className="px-8 py-3 bg-white text-red-600 font-semibold rounded-lg border-2 border-red-600 hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="px-8 py-3 bg-white text-primary-500 font-semibold rounded-lg border-2 border-primary-500 hover:bg-red-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Go Home
           </Link>
@@ -130,25 +130,25 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="pt-8 border-t border-neutral-200">
           <p className="text-neutral-500 mb-4">While we fix this, you can:</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/timeline" className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200">
+            <Link href="/timeline" className="text-primary-500 font-medium transition-colors duration-200">
               Check Timeline
             </Link>
-            <Link href="/community" className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200">
+            <Link href="/community" className="text-primary-500 font-medium transition-colors duration-200">
               Browse Community
             </Link>
-            <Link href="/messages" className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200">
+            <Link href="/messages" className="text-primary-500 font-medium transition-colors duration-200">
               View Messages
             </Link>
-            <Link href="/settings" className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200">
+            <Link href="/settings" className="text-primary-500 font-medium transition-colors duration-200">
               Settings
             </Link>
           </div>
         </div>
 
         {/* Status Update */}
-        <div className="mt-8 p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-lg">
+        <div className="mt-8 p-4 bg-white rounded-lg">
           <p className="text-sm text-neutral-600">
-            <span className="font-semibold text-red-600">Status:</span> Our technical team is investigating this issue. If the problem persists,
+            <span className="font-semibold text-primary-500">Status:</span> Our technical team is investigating this issue. If the problem persists,
             please contact our support team with the error details.
           </p>
         </div>

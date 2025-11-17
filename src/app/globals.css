@@ -181,6 +181,14 @@ h6 {
   color: #000 !important;
   font-family: monospace;
 }
+code {
+  background-color: #f0f0f0 !important;
+  padding: 10px !important;
+  border: 1px solid #ccc !important;
+  color: #000 !important;
+  font-family: monospace;
+  width: 100% !important;
+}
 
 .collapse {
   overflow: hidden;

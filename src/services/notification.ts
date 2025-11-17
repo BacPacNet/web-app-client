@@ -222,7 +222,9 @@ export const useJoinCommunityGroup = () => {
       showCustomSuccessToast(response.message)
     },
     onError: (res: any) => {
-      showCustomDangerToast(res.response.data.message)
+      if (res.response.data.message !== 'You need to verify your university email to join private groups') {
+        showCustomDangerToast(res.response.data.message)
+      }
     },
   })
 }

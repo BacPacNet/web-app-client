@@ -11,6 +11,7 @@ import { PostType } from '@/types/constants'
 import { useDeleteCommunityPostComment } from '@/services/community-university'
 import CommentCardOption from '@/components/atoms/CommentCardOption'
 import { motion } from 'framer-motion'
+import PostCommunityHolder from '../PostCommunityHolder'
 
 const CommentItem = ({
   key,
@@ -26,6 +27,7 @@ const CommentItem = ({
   showReplies,
   childCommentsId,
   sortBy,
+  communities,
 }: any) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
 
@@ -69,8 +71,37 @@ const CommentItem = ({
           isCommunityAdmin={comment?.commenterProfileId?.isCommunityAdmin}
         />
 
-        <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex ">
-          <CommentCardOption isSelfPost={commenterId === currentUserId} commentId={comment._id} isType={type} />
+        <div className="flex items-center gap-2">
+          {communities?.length && communities?.length > 0 && (
+            <div className="flex items-center gap-2">
+              {communities
+                ?.slice()
+                .sort((a: any, b: any) => {
+                  const aIsAdmin = a?.isCommunityAdmin
+                  const bIsAdmin = b?.isCommunityAdmin
+
+                  const aIsVerified = a?.isVerifiedMember
+                  const bIsVerified = b?.isVerifiedMember
+
+                  if (aIsAdmin !== bIsAdmin) return aIsAdmin ? -1 : 1
+                  if (aIsVerified !== bIsVerified) return aIsVerified ? -1 : 1
+
+                  return 0
+                })
+                .map((community: any) => (
+                  <PostCommunityHolder
+                    key={community?._id}
+                    logo={community?.logo}
+                    name={community?.name}
+                    isVerified={community?.isVerifiedMember}
+                    isCommunityAdmin={community.isCommunityAdmin || false}
+                  />
+                ))}
+            </div>
+          )}
+          <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex ">
+            <CommentCardOption isSelfPost={commenterId === currentUserId} commentId={comment._id} isType={type} />
+          </div>
         </div>
       </div>
 
@@ -114,6 +145,7 @@ const CommentItem = ({
             <CommentItem
               key={reply._id}
               comment={reply}
+              communities={reply?.commenterProfileId?.communities}
               {...{
                 currentUserId,
                 postID,

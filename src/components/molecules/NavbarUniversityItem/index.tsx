@@ -36,39 +36,39 @@ interface Props {
 
 const sortOptions = [
   {
-    label: 'Alphabet Ascending',
+    label: 'Newest',
+    value: 'latest',
+    // icon: <BsSortUpAlt className="text-primary-500" />,
+  },
+  {
+    label: 'Oldest',
+    value: 'oldest',
+    // icon: <BsSortDownAlt className="text-primary-500" />,
+  },
+  {
+    label: 'Alphabet A-Z',
     value: 'alphabetAsc',
-    icon: <BsSortUpAlt className="text-primary-500" />,
+    // icon: <BsSortUpAlt className="text-primary-500" />,
   },
   {
-    label: 'Alphabet Descending',
+    label: 'Alphabet Z-A',
     value: 'alphabetDesc',
-    icon: <BsSortDownAlt className="text-primary-500" />,
+    // icon: <BsSortDownAlt className="text-primary-500" />,
   },
   {
-    label: 'User Count Ascending',
+    label: 'User Count',
     value: 'userCountAsc',
     icon: <BsSortUpAlt className="text-primary-500" />,
   },
   {
-    label: 'User Count Descending',
+    label: 'User Count ',
     value: 'userCountDesc',
     icon: <BsSortDownAlt className="text-primary-500" />,
-  },
-  {
-    label: 'Latest',
-    value: 'latest',
-    icon: <BsSortUpAlt className="text-primary-500" />,
   },
   //   {
   //     label: 'Users',
   //     value: 'users',
   //   },
-  {
-    label: 'Oldest',
-    value: 'oldest',
-    icon: <BsSortDownAlt className="text-primary-500" />,
-  },
 ]
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
@@ -377,17 +377,17 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
                   <LuArrowUpDown className="h-3.5 w-3.5 text-primary-500" />
                 </Buttons>
               </PopoverTrigger>
-              <PopoverContent className="p-0 w-max border-none bg-white shadow-lg shadow-gray-light">
+              <PopoverContent className="p-0 w-32 border-none bg-white shadow-lg shadow-gray-light">
                 <div className="flex flex-col justify-between">
                   {sortOptions.map(({ label, value, icon }) => (
                     <p
                       key={value}
                       onClick={() => handleSelect(value)}
-                      className={`flex items-center gap-2 cursor-pointer p-2 text-neutral-800 hover:bg-neutral-200 transition ${
+                      className={`flex items-center  gap-2 cursor-pointer p-2 text-neutral-800 hover:bg-neutral-200 transition ${
                         sort === value ? 'bg-neutral-300 font-medium' : ''
                       }`}
                     >
-                      <span className="capitalize text-xs w-40">{label}</span>
+                      <span className="capitalize text-xs w-max">{label}</span>
                       {icon && icon}
                     </p>
                   ))}

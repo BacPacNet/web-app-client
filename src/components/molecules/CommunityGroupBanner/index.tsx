@@ -24,6 +24,8 @@ import PostSkeleton from '@/components/Timeline/PostSkeleton'
 import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
 import { notificationStatus } from '@/services/notification'
 import { useJoinCommunityGroup as useJoinCommunityGroupFromNotification } from '@/services/notification'
+import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
+import { verifyUniversityEmailMessage } from '@/types/constants'
 
 interface Props {
   communityID: string
@@ -62,7 +64,7 @@ export default function CommunityGroupBanner({
   const [_showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
-  const { mutate: joinGroup } = useJoinCommunityGroupFromNotification()
+  const { mutateAsync: joinGroup } = useJoinCommunityGroupFromNotification()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
 
   const handleShowMembers = () => {
@@ -91,6 +93,19 @@ export default function CommunityGroupBanner({
       joinGroup(payload, {
         onSuccess: () => {
           refetch()
+        },
+        onError: (error: any) => {
+          if (error.response.data.message == verifyUniversityEmailMessage) {
+            openModal(
+              <GenericInfoModal
+                buttonLabel="Verify Student Email"
+                redirectUrl="/setting/university-verification"
+                title="Verify Account to Join "
+                description="Access to private groups is limited to verified users. Please complete verification to continue."
+              />,
+              'w-[350px] sm:w-[490px] hideScrollbar'
+            )
+          }
         },
       })
     }
