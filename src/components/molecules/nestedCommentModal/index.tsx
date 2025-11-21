@@ -146,7 +146,7 @@ const NestedCommentModal = ({ reply, setReply, type, sortBy }: reply) => {
     refetch: communityCommentRefetch,
     isFetching: communityCommentIsFetching,
   } = useGetCommunityCommentById(commentId ? commentId : reply.commentID, reply.enabled, type == PostType.Community)
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(true, false, '', sortBy)
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(true, false, '', sortBy, '', '')
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(true, false, '', sortBy)
 
   const toggleCommentSection = (commentId: string) => {
@@ -163,9 +163,9 @@ const NestedCommentModal = ({ reply, setReply, type, sortBy }: reply) => {
 
   const likePostCommentHandler = (commentId: string, level: string) => {
     if (type === PostType.Timeline) {
-      likeUserPostComment({ userPostCommentId: commentId, level })
+      likeUserPostComment({ userPostCommentId: commentId, level, isLiked: false })
     } else if (type === PostType.Community) {
-      likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
+      likeGroupPostComment({ communityGroupPostCommentId: commentId, level, isLiked: false })
     }
   }
 
