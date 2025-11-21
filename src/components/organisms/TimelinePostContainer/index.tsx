@@ -11,6 +11,7 @@ import { useGetTimelinePosts } from '@/services/community-timeline'
 import { useUniStore } from '@/store/store'
 import { communityPostType } from '@/types/Community'
 import { PostType } from '@/types/constants'
+import mixpanel from 'mixpanel-browser'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 type Props = {
@@ -75,6 +76,16 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     }
   }, [userData?.isNewUser])
 
+  useEffect(() => {
+    if (userData?.id) {
+      mixpanel.identify(userData?.id)
+      mixpanel.people.set({
+        $email: userData?.email,
+        $name: `${userData?.firstName} ${userData?.lastName}`,
+      })
+    }
+  }, [userData])
+
   // Memoize post rendering
   const renderPostWithRespectToPathName = useCallback(() => {
     return timlineDatas?.map((post: communityPostType, idx: number) => (
@@ -97,7 +108,8 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         idx={idx}
         showCommentSection={showCommentSection}
         setShowCommentSection={setShowCommentSection}
-        communityId={post?.communityId}
+        communityId={post?.community?._id}
+        communityGroupId={post?.communityGroupId}
         isTimeline={true}
         affiliation={post?.userProfile?.affiliation}
         occupation={post?.userProfile?.occupation}

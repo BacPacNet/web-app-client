@@ -6,6 +6,8 @@ import { AxiosErrorType, PostCommentData, PostType, UserPostData } from '@/types
 import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useUniStore } from '@/store/store'
 import { Sortby } from '@/types/common'
+import { TRACK_EVENT } from '@/content/constant'
+import mixpanel from 'mixpanel-browser'
 
 export async function DeleteUserPost(postId: string, token: string) {
   const response = await client(`/userpost/${postId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -124,6 +126,10 @@ export const useCreateUserPostComment = (isSinglePost: boolean, postId: string, 
         queryClient.invalidateQueries({ queryKey: ['userPosts'] })
         queryClient.invalidateQueries({ queryKey: ['getPost'] })
       }
+      mixpanel.track(TRACK_EVENT.USER_POST_COMMENT_CREATE, {
+        postId: postId,
+        source: 'user_post_comment',
+      })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -187,6 +193,13 @@ export const useCreateUserPostCommentReply = (
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
       queryClient.invalidateQueries({ queryKey: ['getPost'] })
+
+      mixpanel.track(TRACK_EVENT.USER_POST_COMMENT_REPLY_CREATE, {
+        postId: postId,
+        commentId: data.commentReply._id,
+        level: data.commentReply.level,
+        source: 'user_post_comment_reply',
+      })
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -199,9 +212,21 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ userPostCommentId }: { userPostCommentId: string; level: string }) => LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
+    mutationFn: ({ userPostCommentId }: { userPostCommentId: string; level: string; isLiked: boolean }) =>
+      LikeUnlikeUserPostComment(userPostCommentId, cookieValue),
     onSuccess: (_, variables) => {
-      const { userPostCommentId, level } = variables
+      const { userPostCommentId, level, isLiked } = variables
+      const isCommentReply = level !== '0'
+      if (!isLiked) {
+        const event = isCommentReply ? TRACK_EVENT.USER_POST_COMMENT_REPLY_LIKE : TRACK_EVENT.USER_POST_COMMENT_LIKE
+
+        mixpanel.track(event, {
+          postId: postId,
+          commentId: userPostCommentId,
+          level: level,
+          source: isCommentReply ? 'user_post_comment_reply' : 'user_post_comment',
+        })
+      }
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, sortBy])
       if (showInitial) {
         const singlePostData: any = queryClient.getQueryData(['getPost', postId, sortBy])
@@ -295,6 +320,7 @@ export const useLikeUnlikeUserPostComment = (isReply: boolean, showInitial: bool
         })
       }
     },
+
     onError: (res: AxiosErrorType) => {
       showCustomDangerToast(res.response?.data.message as string)
     },
@@ -420,7 +446,7 @@ export function useGetTimelinePosts(limit: number) {
   })
 }
 
-export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSinglePost = false) => {
+export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSinglePost = false, localIsLiked: boolean) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
@@ -435,7 +461,6 @@ export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSin
       queryClient.setQueryData(queryKey, (oldData: any) => {
         if (!oldData) return
 
-        console.log(oldData, 'oldData')
         const toggleLike = (likeCount: any[]) => {
           const hasLiked = likeCount.some((like: any) => like.userId === userData?.id)
           return hasLiked
@@ -470,6 +495,15 @@ export const useLikeUnlikeTimelinePost = (source: string, adminId: string, isSin
           })),
         }
       })
+    },
+
+    onSuccess: (res: any, postId: string) => {
+      if (localIsLiked) {
+        mixpanel.track(TRACK_EVENT.USER_POST_LIKE, {
+          postId: postId,
+          source: isSinglePost ? 'single_post' : source === 'profile' ? 'profile_page' : 'timeline_page',
+        })
+      }
     },
 
     onError: (res: any) => showCustomDangerToast(res.response.data.message),

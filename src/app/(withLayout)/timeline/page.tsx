@@ -1,7 +1,7 @@
 'use client'
 import TimelineCreatePost from '@/components/organisms/TimelineCreatePost'
 import TimelinePostContainer from '@/components/organisms/TimelinePostContainer'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)

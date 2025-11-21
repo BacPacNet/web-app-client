@@ -14,12 +14,16 @@ import Loading from '@/components/atoms/Loading'
 import UserMessageInput from '@/components/molecules/userMessageInput'
 import { useFilteredChats } from '@/hooks/useFilteredChats'
 import { useNewMessageHandler } from '@/hooks/useNewMessageHandler'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 
 const MessageContainer = () => {
   const searchQuery = useSearchParams()
   const [currTab, setCurrTab] = useState('Inbox')
   const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
-
+  useTimeTracking(TRACK_EVENT.MESSAGE_PAGE_VIEW, {
+    currTab,
+  })
   const { userData, socket, userProfileData } = useUniStore()
   const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData?.id)
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()

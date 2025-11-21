@@ -114,7 +114,9 @@ const CommentItem = ({
 
         <div className="flex justify-start gap-8 text-sm text-neutral-500 border-t border-neutral-200 py-2">
           <motion.div
-            onClick={() => likeHandler(comment._id, comment.level.toString(), sortBy)}
+            onClick={() =>
+              likeHandler(comment._id, comment.level.toString(), sortBy, comment?.likeCount?.some((like: any) => like.userId === currentUserId))
+            }
             className="flex items-center cursor-pointer"
             whileHover={{ scale: 1.1 }}
           >
