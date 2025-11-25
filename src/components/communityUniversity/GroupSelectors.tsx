@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { IoIosPeople } from 'react-icons/io'
 import officialLogo from '@assets/official-logo.svg'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 const GroupSelectors = ({
   setCurrSelectedGroup,
@@ -16,7 +18,13 @@ const GroupSelectors = ({
   const router = useRouter()
   const handleGroupNavigate = () => {
     setCurrSelectedGroup(data)
+
     router.push(`/community/${selectCommunityId}/${data?._id}`)
+    mixpanel.track(TRACK_EVENT.COMMUNITY_GROUP_PAGE_VIEW, {
+      communityId: selectCommunityId,
+      groupId: data?._id,
+      groupName: data?.title,
+    })
     toggleLeftNavbar && toggleLeftNavbar()
   }
   const isSelected = selectedCommuntyGroupdId === data?._id

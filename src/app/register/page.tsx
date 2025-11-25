@@ -26,6 +26,7 @@ const Register = () => {
   const [userType, setUserType] = useState('')
   const router = useRouter()
   const [cookieValue] = useCookie('register_data')
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const registerData = cookieValue ? JSON.parse(cookieValue) : null

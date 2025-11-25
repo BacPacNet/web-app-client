@@ -10,6 +10,8 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import Spinner from '@/components/atoms/spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import useCookie from '@/hooks/useCookie'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 interface props {
   setStep: (value: number) => void
 
@@ -30,8 +32,14 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
     setValue,
   } = useFormContext()
   const { mutate: generateUniversityEmailOTP, countdown, isCounting } = useHandleUniversityEmailVerificationGenerateWithCountdown()
-  const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
+  const { mutateAsync: HandleRegister, isPending: registerIsPending, data: registeredData } = useHandleRegister_v2()
   const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
+  useTimeTracking(TRACK_EVENT.UNIVERSITY_VERIFICATION_STEP_VIEW_DURATION, {
+    isUniversityEmailVerified: isVerificationSuccess,
+    email: getValues('email'),
+    universityEmail: getValues('universityEmail'),
+    isRegistered: registeredData?.isRegistered || false,
+  })
   const all = getValues()
   const univeristyName = getValues('universityName')
   const universityLogo = getValues('universityLogo')

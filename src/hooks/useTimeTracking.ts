@@ -6,6 +6,10 @@ export const useTimeTracking = (eventName: string, properties: Record<string, an
   const propsRef = useRef(properties)
 
   useEffect(() => {
+    propsRef.current = properties
+  }, [properties])
+
+  useEffect(() => {
     // Begin timing
     mixpanel.time_event(eventName)
     hasTrackedRef.current = false

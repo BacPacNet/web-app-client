@@ -52,5 +52,13 @@ export enum TRACK_EVENT {
   UNIVERSITY_COMMUNITY_PAGE_VIEW = 'university_community_page_view',
   UNIVERSITY_COMMUNITY_PAGE_VIEW_DURATION = 'university_community_page_view_duration',
 
+  //   groups events
   SIDEBAR_GROUP_FILTER = 'sidebar_group_filter',
+  COMMUNITY_GROUP_PAGE_VIEW = 'community_group_page_view',
+  COMMUNITY_GROUP_PAGE_VIEW_DURATION = 'community_group_page_view_duration',
+  NEW_COMMUNITY_GROUP = 'new_community_group',
+
+  //   register page events
+  REGISTER_PAGE_VIEW_DURATION = 'register_page_view_duration',
+  UNIVERSITY_VERIFICATION_STEP_VIEW_DURATION = 'university_verification_step_view_duration',
 }
