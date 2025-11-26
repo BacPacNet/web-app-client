@@ -53,7 +53,7 @@ const CommentList = React.memo(function CommentList({
   type: PostType.Community | PostType.Timeline
   setImageCarasol: any
   handleProfileClicked: (adminId: string) => void
-  likePostCommentHandler: (commentId: string, level: string, sortBy: Sortby) => void
+  likePostCommentHandler: (commentId: string, level: string, sortBy: Sortby, isLiked: boolean) => void
   handleCommentClicked: (comment: any) => void
   handelCommentData: (comment: any) => void
   visibleComments: { [key: string]: boolean }
@@ -96,6 +96,8 @@ const PostCommentBox = ({
   showInitial,
   isReplyTrue,
   commentID,
+  communityId,
+  communityGroupId,
 }: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
 
@@ -113,7 +115,14 @@ const PostCommentBox = ({
   const [replyModal, setReplyModal] = useState({ enabled: false, commentID: '' })
   const { isMobile } = useDeviceType()
 
-  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(false, showInitial, postID || '', selectedSortValue)
+  const { mutate: likeGroupPostComment } = useLikeUnlikeGroupPostComment(
+    false,
+    showInitial,
+    postID || '',
+    selectedSortValue,
+    communityId || '',
+    communityGroupId || ''
+  )
   const { mutate: likeUserPostComment } = useLikeUnlikeUserPostComment(false, showInitial, postID || '', selectedSortValue)
   const {
     data: commentsData,
@@ -148,11 +157,11 @@ const PostCommentBox = ({
   }, [type, fetchNextPage, communityCommentsNextpage])
 
   const likePostCommentHandler = React.useCallback(
-    (commentId: string, level: string, sortBy: Sortby) => {
+    (commentId: string, level: string, sortBy: Sortby, isLiked: boolean) => {
       if (isTimeline) {
-        likeUserPostComment({ userPostCommentId: commentId, level })
+        likeUserPostComment({ userPostCommentId: commentId, level, isLiked })
       } else if (type === PostType.Community) {
-        likeGroupPostComment({ communityGroupPostCommentId: commentId, level })
+        likeGroupPostComment({ communityGroupPostCommentId: commentId, level, isLiked })
       }
     },
     [isTimeline, likeUserPostComment, likeGroupPostComment, type]
@@ -314,6 +323,8 @@ const PostCommentBox = ({
             postId={postID}
             expandCommentSection={expandCommentSection}
             sortBy={selectedSortValue}
+            communityId={communityId}
+            communityGroupId={communityGroupId}
           />
         )}
         {showInitial && showCommentSec !== postID ? <ShowAllComponent postID={postID} setShowCommentSection={setShowCommentSection} /> : ''}

@@ -1,6 +1,6 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast, showCustomInfoToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import { cleanInnerHTML, validateUploadedFiles } from '@/lib/utils'
+import { cleanInnerHTML, getMimeTypeFromUrl, imageMimeTypes, validateUploadedFiles } from '@/lib/utils'
 import { useCreateGroupPost } from '@/services/community-university'
 import { useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
@@ -16,6 +16,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 type FileWithId = {
   id: string
@@ -108,6 +110,42 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
         if (uploadResponse.success) {
           basePayload.imageUrl = uploadResponse.data
         }
+
+        // mix panel start
+        const imageItems =
+          uploadResponse.data?.filter(
+            (item: { imageUrl: string | null }) => item.imageUrl && imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))
+          ) || []
+        const fileItems =
+          uploadResponse.data?.filter(
+            (item: { imageUrl: string | null }) => item.imageUrl && !imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))
+          ) || []
+        if (imageItems?.length > 0) {
+          imageItems?.forEach((item) => {
+            mixpanel.track(
+              communityGroupId && communityGroupId?.length > 0
+                ? TRACK_EVENT.COMMUNITY_GROUP_POST_IMAGE_UPLOAD
+                : TRACK_EVENT.COMMUNITY_POST_IMAGE_UPLOAD,
+              {
+                imageUrl: item.imageUrl,
+              }
+            )
+          })
+        }
+
+        if (fileItems?.length > 0) {
+          fileItems?.forEach((item) => {
+            mixpanel.track(
+              communityGroupId && communityGroupId?.length > 0
+                ? TRACK_EVENT.COMMUNITY_GROUP_POST_FILE_UPLOAD
+                : TRACK_EVENT.COMMUNITY_POST_FILE_UPLOAD,
+              {
+                fileUrl: item.imageUrl,
+              }
+            )
+          })
+        }
+        // mix panel end
       }
 
       // Create the post
@@ -117,6 +155,18 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
     } finally {
       resetPostContent()
       setIsPostCreating(false)
+      if (communityGroupId && communityGroupId?.length > 0) {
+        mixpanel.track(TRACK_EVENT.COMMUNITY_GROUP_POST_BUTTON_CLICK, {
+          buttonName: 'community_group_post_create',
+          communityId,
+          communityGroupId,
+        })
+      } else {
+        mixpanel.track(TRACK_EVENT.COMMUNITY_POST_BUTTON_CLICK, {
+          buttonName: 'community_post_create',
+          communityId,
+        })
+      }
     }
   }
 
@@ -144,6 +194,21 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
     editor.setSelection(position + emojiData.emoji.length, 0)
   }
 
+  const customEventCallback = (actionName: string) => {
+    if (communityGroupId && communityGroupId?.length > 0) {
+      mixpanel.track(TRACK_EVENT.COMMUNITY_GROUP_POST_TEXT_EDIT, {
+        textEdit: actionName,
+        communityId,
+        communityGroupId,
+      })
+    } else {
+      mixpanel.track(TRACK_EVENT.COMMUNITY_POST_TEXT_EDIT, {
+        textEdit: actionName,
+        communityId,
+      })
+    }
+  }
+
   return (
     <>
       <Editor
@@ -152,6 +217,7 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
         type={PostInputType.Timeline}
         getQuillInstance={setQuillInstance}
         placeholder="What`s on your mind?"
+        customEventCallback={customEventCallback}
       />
       <div className="w-full px-4 bg-white rounded-b-lg">
         <MediaPreview files={files} onRemove={handleFileRemove} onOpenPDF={handleOpenPDF} />

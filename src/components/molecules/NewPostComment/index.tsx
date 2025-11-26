@@ -45,15 +45,34 @@ type Props = {
   isNested?: boolean
   expandCommentSection?: (id: string) => void
   sortBy?: Sortby | null
+  communityId?: string
+  communityGroupId?: string
 }
 
-const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSection, showInitial, expandCommentSection, sortBy = null }: Props) => {
+const NewPostComment = ({
+  setNewPost,
+  data,
+  postId,
+  postType,
+  setShowCommentSection,
+  showInitial,
+  expandCommentSection,
+  sortBy = null,
+  communityId,
+  communityGroupId,
+}: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false, postId, sortBy && sortBy)
-  const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(false, postId, sortBy && sortBy)
+  const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(
+    false,
+    postId,
+    sortBy && sortBy,
+    communityId || '',
+    communityGroupId || ''
+  )
   const { mutateAsync: CreateUserPostCommentReply, isPending: CreateUserPostCommentReplyLoading } = useCreateUserPostCommentReply(
     false,
     true,
@@ -69,7 +88,9 @@ const NewPostComment = ({ setNewPost, data, postId, postType, setShowCommentSect
     postType,
     showInitial,
     postId,
-    sortBy && sortBy
+    sortBy && sortBy,
+    communityId || '',
+    communityGroupId || ''
   )
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)

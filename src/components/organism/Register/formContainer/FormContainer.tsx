@@ -17,6 +17,8 @@ import ProfileFacultyForm from '../forms/ProfileFacultyForm'
 import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
 import useCookie from '@/hooks/useCookie'
 import { convertToDateObj } from '@/lib/utils'
+import { TRACK_EVENT } from '@/content/constant'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
 
 interface Props {
   step: number
@@ -42,8 +44,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     isSuccess: userUniversityEmailVerificationSuccess,
     isPending: UniversityEmailVerificationIsPending,
   } = useHandleUniversityEmailVerification()
+  const { mutateAsync: HandleRegister, isPending: registerIsPending, data: registeredData } = useHandleRegister_v2()
 
-  const { mutateAsync: HandleRegister, isPending: registerIsPending } = useHandleRegister_v2()
   const router = useRouter()
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     },
   })
   const currUserType = methods.watch('userType')
-
+  const currEmail = methods.watch('email')
   useEffect(() => {
     if (registerData) {
       methods.reset({
@@ -126,6 +128,11 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       })
     }
   }, [registerData, methods])
+
+  useTimeTracking(TRACK_EVENT.REGISTER_PAGE_VIEW_DURATION, {
+    isRegistrationCompleted: registeredData?.isRegistered || false,
+    email: currEmail || '',
+  })
 
   useEffect(() => {
     setUserType(currUserType)

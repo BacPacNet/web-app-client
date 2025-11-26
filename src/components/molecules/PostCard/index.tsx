@@ -152,9 +152,15 @@ const PostCard = React.memo(
       communityGroupId,
       isTimeline,
       isSinglePost,
-      filterPostBy
+      filterPostBy,
+      localIsLiked
     )
-    const { mutate: likeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(source as string, adminId, isSinglePost)
+    const { mutate: likeUnlikeTimelinePost, isPending: isLikeUnlikePending } = useLikeUnlikeTimelinePost(
+      source as string,
+      adminId,
+      isSinglePost,
+      localIsLiked
+    )
 
     const handleProfileClicked = useCallback(
       (adminId: string) => {
@@ -389,6 +395,8 @@ const PostCard = React.memo(
             showInitial={showInitial}
             isReplyTrue={isReply}
             commentID={commentID}
+            communityId={communityId}
+            communityGroupId={communityGroupId}
           />
         </div>
       </motion.div>

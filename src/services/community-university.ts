@@ -11,6 +11,8 @@ import { useUniStore } from '@/store/store'
 import { Sortby } from '@/types/common'
 import { ChildProcessWithoutNullStreams } from 'child_process'
 import { useModal } from '@/context/ModalContext'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 export async function getCommunity(communityId: string) {
   const response = await client(`/community/${communityId}`)
@@ -442,7 +444,8 @@ export const useLikeUnilikeGroupPost = (
   communityGroupId: string = '',
   isTimeline: boolean,
   isSinglePost = false,
-  filterPostBy: string = ''
+  filterPostBy: string = '',
+  localIsLiked: boolean
 ) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
@@ -560,6 +563,19 @@ export const useLikeUnilikeGroupPost = (
     //  queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
     //  queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
     //},
+
+    onSuccess: (res: any, postId: string) => {
+      if (localIsLiked) {
+        const hasCommunityGroupId = communityGroupId && communityGroupId.length > 0
+        mixpanel.track(hasCommunityGroupId ? TRACK_EVENT.COMMUNITY_GROUP_POST_LIKE : TRACK_EVENT.COMMUNITY_POST_LIKE, {
+          postId: postId,
+          communityId: communityId,
+          ...(hasCommunityGroupId ? { communityGroupId } : {}),
+
+          source: isSinglePost ? 'single_post' : isTimeline ? 'timeline_post' : hasCommunityGroupId ? 'community_group_post' : 'community_post',
+        })
+      }
+    },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
@@ -590,7 +606,13 @@ export const useCreateGroupPost = () => {
   })
 }
 
-export const useCreateGroupPostComment = (isSinglePost: boolean, postId: string, sortBy: Sortby | null) => {
+export const useCreateGroupPostComment = (
+  isSinglePost: boolean,
+  postId: string,
+  sortBy: Sortby | null,
+  communityId: string,
+  communityGroupId: string
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
@@ -617,6 +639,12 @@ export const useCreateGroupPostComment = (isSinglePost: boolean, postId: string,
       queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['getPost'] })
+      mixpanel.track(communityGroupId.length > 0 ? TRACK_EVENT.COMMUNITY_GROUP_POST_COMMENT_CREATE : TRACK_EVENT.COMMUNITY_POST_COMMENT_CREATE, {
+        postId: postId,
+        communityId: communityId,
+        ...(communityGroupId ? { communityGroupId } : {}),
+        source: communityGroupId.length > 0 ? 'community_group_post_comment' : 'community_post_comment',
+      })
     },
     onError: (res: any) => {
       showCustomDangerToast(res.response?.data?.message as string)
@@ -630,7 +658,9 @@ export const useCreateGroupPostCommentReply = (
   type: PostType.Community | PostType.Timeline,
   showInitial: boolean,
   postId: string,
-  sortBy: Sortby | null
+  sortBy: Sortby | null,
+  communityId: string,
+  communityGroupId: string
 ) => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
@@ -681,6 +711,16 @@ export const useCreateGroupPostCommentReply = (
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
       queryClient.invalidateQueries({ queryKey: ['userPosts'] })
       queryClient.invalidateQueries({ queryKey: ['getPost'] })
+
+      mixpanel.track(
+        communityGroupId.length > 0 ? TRACK_EVENT.COMMUNITY_GROUP_POST_COMMENT_REPLY_CREATE : TRACK_EVENT.COMMUNITY_POST_COMMENT_REPLY_CREATE,
+        {
+          postId: postId,
+          communityId: communityId,
+          ...(communityGroupId ? { communityGroupId } : {}),
+          source: communityGroupId.length > 0 ? 'community_group_post_comment_reply' : 'community_post_comment_reply',
+        }
+      )
     },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
@@ -688,16 +728,53 @@ export const useCreateGroupPostCommentReply = (
   })
 }
 
-export const useLikeUnlikeGroupPostComment = (isReply: boolean, showInitial: boolean, postId: string, sortBy: Sortby | null) => {
+export const useLikeUnlikeGroupPostComment = (
+  isReply: boolean,
+  showInitial: boolean,
+  postId: string,
+  sortBy: Sortby | null,
+  communityId: string,
+  communityGroupId: string
+) => {
   const [cookieValue] = useCookie('uni_user_token')
   const { userData } = useUniStore()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ communityGroupPostCommentId, level }: { communityGroupPostCommentId: string; level: string }) =>
+    mutationFn: ({ communityGroupPostCommentId, level }: { communityGroupPostCommentId: string; level: string; isLiked: boolean }) =>
       LikeUnilikeGroupPostCommnet(communityGroupPostCommentId, cookieValue),
 
     onSuccess: (_, variables) => {
-      const { communityGroupPostCommentId, level } = variables
+      const { communityGroupPostCommentId, level, isLiked } = variables
+
+      const isCommentReply = level !== '0'
+
+      if (!isLiked) {
+        const event =
+          isCommentReply && communityGroupId.length > 0
+            ? TRACK_EVENT.COMMUNITY_GROUP_POST_COMMENT_REPLY_LIKE
+            : isCommentReply && communityGroupId.length < 1
+            ? TRACK_EVENT.COMMUNITY_POST_COMMENT_REPLY_LIKE
+            : !isCommentReply && communityGroupId.length > 0
+            ? TRACK_EVENT.COMMUNITY_GROUP_POST_COMMENT_LIKE
+            : TRACK_EVENT.COMMUNITY_POST_COMMENT_LIKE
+
+        mixpanel.track(event, {
+          postId: postId,
+          commentId: communityGroupPostCommentId,
+          level: level,
+          communityId: communityId,
+          ...(communityGroupId ? { communityGroupId } : {}),
+          source:
+            isCommentReply && communityGroupId.length > 0
+              ? 'community_group_post_comment_reply'
+              : isCommentReply && !communityGroupId.length
+              ? 'community_post_comment_reply'
+              : !isCommentReply && communityGroupId.length > 0
+              ? 'community_group_post_comment'
+              : 'community_post_comment',
+        })
+      }
+
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['communityPostComments', postId, sortBy])
 
       if (showInitial) {

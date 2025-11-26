@@ -4,10 +4,9 @@ import CommunityGroupBanner from '@/components/molecules/CommunityGroupBanner'
 import CommunityGroupNotLiveCard from '@/components/molecules/CommunityGroupNotLiveCard'
 import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
 import CommunityGroupPostContainer from '@/components/organisms/CommunityGroupPostContainer'
-import { notificationRoleAccess } from '@/components/organisms/NotificationTabs/NotificationTab'
+import { TRACK_EVENT } from '@/content/constant'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
 import { useGetCommunityGroup } from '@/services/community-university'
-import { notificationStatus } from '@/services/notification'
-import { useUniStore } from '@/store/store'
 import { CommunityGroupType, CommunityGroupTypeEnum } from '@/types/CommuityGroup'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState } from 'react'
@@ -27,12 +26,19 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
   const [isUserJoinedCommunityGroup, setIsUserJoinedCommunityGroup] = useState<boolean | null>(null)
   const [isCommunityGroupLive, setIsCommunityGroupLive] = useState<boolean | null>(null)
   const [pendingPostCount, setPendingPostCount] = useState(0)
+
   const {
     data: communityGroups,
     isLoading: isCommunityGroupsLoading,
     refetch,
     isError: isCommunityGroupError,
   } = useGetCommunityGroup(communityId, communityGroupId)
+  useTimeTracking(TRACK_EVENT.COMMUNITY_GROUP_PAGE_VIEW_DURATION, {
+    communityId,
+    groupId: communityGroupId,
+    groupName: communityGroups?.title,
+  })
+
   const changePostFilter = (filter: string) => {
     router.push(`?filterPostBy=${filter}`)
   }
