@@ -108,7 +108,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
 
         if (fileItems?.length > 0) {
           fileItems?.forEach((item) => {
-            mixpanel.track(TRACK_EVENT.USER_POST_FILE_UPLOAD, {
+            mixpanel.track(TRACK_EVENT.MESSAGE_FILE_UPLOAD, {
               fileUrl: item.imageUrl,
             })
           })
