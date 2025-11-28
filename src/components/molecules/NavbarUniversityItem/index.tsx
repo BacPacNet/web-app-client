@@ -98,10 +98,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-
-  const targetCommunityId = subscribedCommunities?.[0]?._id
-  const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
-
   const { mutate: mutateFilterCommunityGroups, data: filteredCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
   const handleCommunityClick = (index: number) => {
@@ -212,8 +208,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   //sort
   useEffect(() => {
     const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-
-    mutateFilterCommunityGroups(data)
+    if (community?._id) {
+      mutateFilterCommunityGroups(data)
+    }
   }, [sort, cookieValue, community?._id, selectedCommunityGroupCommunityId, selectedFiltersMain, selectedTypeMain])
 
   const handleSelect = (value: string) => {

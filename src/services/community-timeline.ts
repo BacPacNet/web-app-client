@@ -106,7 +106,6 @@ export const useCreateUserPostComment = (isSinglePost: boolean, postId: string, 
 
     onSuccess: (res: any) => {
       const currUserComments = queryClient.getQueryData<{ pages: any[]; pageParams: any[] }>(['userPostComments', postId, sortBy])
-      console.log(currUserComments, 'currUserComments')
 
       if (currUserComments) {
         queryClient.setQueryData(['userPostComments', postId, sortBy], {
