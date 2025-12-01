@@ -61,4 +61,7 @@ export enum TRACK_EVENT {
   //   register page events
   REGISTER_PAGE_VIEW_DURATION = 'register_page_view_duration',
   UNIVERSITY_VERIFICATION_STEP_VIEW_DURATION = 'university_verification_step_view_duration',
+
+  //   error page events
+  ERROR_PAGE_VIEW = 'error_page_view',
 }
