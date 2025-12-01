@@ -1,7 +1,9 @@
 'use client'
 
+import { TRACK_EVENT } from '@/content/constant'
+import { trackEvent } from '@/mixpanel/track'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface ErrorProps {
   error: Error & { digest?: string }
@@ -16,15 +18,26 @@ export default function Error({ error, reset }: ErrorProps) {
   }>({
     message: 'Something went wrong!',
   })
+  const hasTrackedRef = useRef(false)
 
   useEffect(() => {
     setMounted(true)
 
-    // Capture error details for debugging
     if (error) {
       setErrorDetails({
         message: error.message || 'An unexpected error occurred',
         stack: error.stack,
+      })
+    }
+
+    if (!hasTrackedRef.current && typeof window !== 'undefined') {
+      hasTrackedRef.current = true
+      trackEvent(TRACK_EVENT.ERROR_PAGE_VIEW, {
+        error: error.message || 'An unexpected error occurred',
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href || 'unknown',
       })
     }
   }, [error])
