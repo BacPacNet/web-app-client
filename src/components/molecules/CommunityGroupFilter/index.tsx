@@ -7,6 +7,8 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useModal } from '@/context/ModalContext'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import Pill from '@/components/atoms/Pill'
+import { TRACK_EVENT } from '@/content/constant'
+import mixpanel from 'mixpanel-browser'
 
 const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 const GroupLabelCategories = ['Course', 'Club', 'Circle', 'Other']
@@ -89,6 +91,13 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
 
   const handleClick = () => {
     const data = { selectedType, selectedFilters, selectedLabel: selectedLabelLocal, sort }
+    mixpanel.track(TRACK_EVENT.SIDEBAR_GROUP_FILTER, {
+      communityId,
+      selectedFilters,
+      selectedType,
+      selectedLabel: selectedLabelLocal,
+      sort,
+    })
     setSelectedFiltersMain(selectedFilters)
     setSelectedTypeMain(selectedType)
     setSelectedLabel(selectedLabelLocal)

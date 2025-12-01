@@ -11,12 +11,14 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAcceptGroupRequest, useAcceptRequest, useCreateChatMessage } from '@/services/Messages'
 import { Spinner } from '@/components/spinner/Spinner'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import { generateFileId, validateImageFiles, validateUploadedFiles } from '@/lib/utils'
+import { generateFileId, getMimeTypeFromUrl, imageMimeTypes, validateImageFiles, validateUploadedFiles } from '@/lib/utils'
 import { useUploadToS3 } from '@/services/upload'
 import { FileWithId, UPLOAD_CONTEXT } from '@/types/Uploads'
 import MediaPreview from '../MediaPreview'
 import { TbFileUpload } from 'react-icons/tb'
 import Buttons from '@/components/atoms/Buttons'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 type Props = {
   userProfileId: string
@@ -87,6 +89,31 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
         }
         const uploaded = await uploadToS3(uploadPayload)
         mediaData = uploaded.data
+
+        // mix panel start
+        const imageItems =
+          uploaded.data?.filter((item: { imageUrl: string | null }) => item.imageUrl && imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))) ||
+          []
+        const fileItems =
+          uploaded.data?.filter(
+            (item: { imageUrl: string | null }) => item.imageUrl && !imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))
+          ) || []
+        if (imageItems?.length > 0) {
+          imageItems?.forEach((item) => {
+            mixpanel.track(TRACK_EVENT.MESSAGE_IMAGE_UPLOAD, {
+              imageUrl: item.imageUrl,
+            })
+          })
+        }
+
+        if (fileItems?.length > 0) {
+          fileItems?.forEach((item) => {
+            mixpanel.track(TRACK_EVENT.MESSAGE_FILE_UPLOAD, {
+              fileUrl: item.imageUrl,
+            })
+          })
+        }
+        // mix panel end
       }
 
       const messagePayload = {

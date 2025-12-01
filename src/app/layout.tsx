@@ -12,6 +12,7 @@ import { ModalManager } from '@/components/molecules/Modal/ModalManager'
 import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
+import MixPanelProvider from '@/utils/MixPanelProvider'
 type FontClassName = string
 
 const inter = Inter({
@@ -48,16 +49,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       <body>
         <ReactQueryClientProvider>
-          <ZustandSocketProvider>
-            <ModalProvider>
-              <Toaster />
-              {/* <ModalManager /> */}
-              <ImageManager />
-              <LogoNavbar />
-              {children}
-              {/*<Footer />*/}
-            </ModalProvider>
-          </ZustandSocketProvider>
+          <MixPanelProvider>
+            <ZustandSocketProvider>
+              <ModalProvider>
+                <Toaster />
+                {/* <ModalManager /> */}
+                <ImageManager />
+                <LogoNavbar />
+                {children}
+                {/*<Footer />*/}
+              </ModalProvider>
+            </ZustandSocketProvider>
+          </MixPanelProvider>
         </ReactQueryClientProvider>
 
         {/* Google Analytics */}

@@ -28,6 +28,8 @@ export type PostCommentProps = {
   initialComment: any
   isReplyTrue?: boolean
   commentID?: string
+  communityId?: string
+  communityGroupId?: string
 }
 
 export type CommentsType = {

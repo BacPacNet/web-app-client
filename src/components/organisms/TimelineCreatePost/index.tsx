@@ -2,7 +2,7 @@ import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import { Spinner } from '@/components/spinner/Spinner'
-import { cleanInnerHTML, validateUploadedFiles } from '@/lib/utils'
+import { cleanInnerHTML, getMimeTypeFromUrl, imageMimeTypes, validateUploadedFiles } from '@/lib/utils'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useUploadToS3 } from '@/services/upload'
 import { CommunityPostType, PostInputData, PostTypeOption, UserPostTypeOption } from '@/types/constants'
@@ -18,6 +18,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 type FileWithId = {
   id: string
@@ -102,6 +104,30 @@ function TimelineCreatePost() {
         }
         const response = await uploadtoS3(uploadPayload)
         payload.imageUrl = response.data
+        // mix panel start
+        const imageItems =
+          response.data?.filter((item: { imageUrl: string | null }) => item.imageUrl && imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))) ||
+          []
+        const fileItems =
+          response.data?.filter(
+            (item: { imageUrl: string | null }) => item.imageUrl && !imageMimeTypes.includes(getMimeTypeFromUrl(item.imageUrl))
+          ) || []
+        if (imageItems?.length > 0) {
+          imageItems?.forEach((item) => {
+            mixpanel.track(TRACK_EVENT.USER_POST_IMAGE_UPLOAD, {
+              imageUrl: item.imageUrl,
+            })
+          })
+        }
+
+        if (fileItems?.length > 0) {
+          fileItems?.forEach((item) => {
+            mixpanel.track(TRACK_EVENT.USER_POST_FILE_UPLOAD, {
+              fileUrl: item.imageUrl,
+            })
+          })
+        }
+        // mix panel end
       }
       await CreateTimelinePost(payload)
       resetPostContent()
@@ -109,6 +135,9 @@ function TimelineCreatePost() {
       console.error('Error creating post:', err)
     } finally {
       setIsPostCreating(false)
+      mixpanel.track(TRACK_EVENT.USER_POST_BUTTON_CLICK, {
+        buttonName: 'post_create',
+      })
     }
   }
 
@@ -136,13 +165,20 @@ function TimelineCreatePost() {
     editor.setSelection(position + emojiData.emoji.length, 0)
   }
 
+  const customEventCallback = (actionName: string) => {
+    mixpanel.track(TRACK_EVENT.USER_POST_TEXT_EDIT, { textEdit: actionName })
+  }
+
   return (
     <>
       <Editor
-        onTextChange={(innerHTML) => (quillHTMLState.current = innerHTML)}
+        onTextChange={(innerHTML) => {
+          quillHTMLState.current = innerHTML
+        }}
         ref={quillRef}
         getQuillInstance={setQuillInstance}
         placeholder="What`s on your mind?"
+        customEventCallback={customEventCallback}
       />
       <div className="w-full px-4 bg-white rounded-b-lg">
         <MediaPreview files={files} onRemove={handleFileRemove} onOpenPDF={handleOpenPDF} />

@@ -25,13 +25,10 @@ import {
   getUniqueById,
 } from '@/lib/communityGroup'
 import { useUploadToS3 } from '@/services/upload'
-import { Users } from '@/types/Connections'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
-import UserSelectDropdown from '../UserSearchList'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { useModal } from '@/context/ModalContext'
-import UniversityDropdown from './Dropdown'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { AnimatePresence, motion } from 'framer-motion'
 import ProfileImageUploader from '../ProfileImageUploader'
@@ -40,6 +37,8 @@ import VerifyUserSelectDropdown from '@/components/organism/VerifyUserSelectDrop
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Switch from '@/components/atoms/Switch'
 import Image from 'next/image'
+import { TRACK_EVENT } from '@/content/constant'
+import mixpanel from 'mixpanel-browser'
 
 type Props = {
   communityId: string
@@ -217,6 +216,14 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAd
         onSuccess: () => {
           setSelectedFilters({})
           setIsLoading(false)
+          mixpanel.track(TRACK_EVENT.NEW_COMMUNITY_GROUP, {
+            groupName: payload.title,
+            groupId: payload._id,
+            groupType: payload.communityGroupType,
+            accessType: payload.communityGroupAccess,
+            groupLabel: payload.communityLabel,
+            communityId: communityId,
+          })
         },
         onError: (error: any) => {
           const err = error.response.data

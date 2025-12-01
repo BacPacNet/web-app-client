@@ -9,7 +9,6 @@ import Tabs from '../Tabs'
 import AssignGroupModerators from '@/components/communityUniversity/AssignGroupModerators'
 import { useUniStore } from '@/store/store'
 import CreateNewGroupBox from '../CreateNewGroupBox'
-import avatar from '@assets/avatar.svg'
 import CommunityGroupAll from './Tabs/communityGroupAll'
 import NavbarSubscribedUniversity from './NavbarSubscribedUniversity'
 import { Community } from '@/types/Community'
@@ -28,6 +27,8 @@ import { status } from '@/types/CommuityGroup'
 import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
 import { IoIosArrowDown } from 'react-icons/io'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -97,10 +98,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-
-  const targetCommunityId = subscribedCommunities?.[0]?._id
-  const communityIdForNewGroup = userProfileData?.email?.find((item) => item.communityId === targetCommunityId)?.communityId ?? ''
-
   const { mutate: mutateFilterCommunityGroups, data: filteredCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
 
   const handleCommunityClick = (index: number) => {
@@ -211,8 +208,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   //sort
   useEffect(() => {
     const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-
-    mutateFilterCommunityGroups(data)
+    if (community?._id) {
+      mutateFilterCommunityGroups(data)
+    }
   }, [sort, cookieValue, community?._id, selectedCommunityGroupCommunityId, selectedFiltersMain, selectedTypeMain])
 
   const handleSelect = (value: string) => {
@@ -306,6 +304,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     const indextoPush = Number(index)
+    mixpanel.track(TRACK_EVENT.UNIVERSITY_COMMUNITY_PAGE_VIEW, {
+      communityId: subscribedCommunities?.[indextoPush]._id,
+      communityName: subscribedCommunities?.[indextoPush]?.name,
+    })
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
   }

@@ -6,6 +6,8 @@ import { ChatsArray, messages, SocketEnums } from '@/types/constants'
 import { useUniStore } from '@/store/store'
 import { useGetUserUnreadMessagesTotalCount } from './notification'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import mixpanel from 'mixpanel-browser'
+import { TRACK_EVENT } from '@/content/constant'
 
 export async function getUserChats(token: string) {
   const response: ChatsArray = await client(`/chat`, { headers: { Authorization: `Bearer ${token}` } })
@@ -114,7 +116,11 @@ export const useCreateUserChat = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => createUserChat(cookieValue, data),
-    onSuccess: () => {
+    onSuccess: (res: any, variables) => {
+      mixpanel.track(TRACK_EVENT.NEW_INDIVIDUAL_CHAT, {
+        chatId: res._id,
+        userId: variables.userId,
+      })
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
     },
     onError: (res: any) => {
@@ -128,7 +134,12 @@ export const useCreateGroupChat = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: any) => createGroupChat(cookieValue, data),
-    onSuccess: () => {
+    onSuccess: (res: any, variables) => {
+      mixpanel.track(TRACK_EVENT.NEW_GROUP_CHAT, {
+        chatId: res._id,
+        users: variables.users,
+        groupName: variables.groupName,
+      })
       queryClient.invalidateQueries({ queryKey: ['userChats'] })
       showCustomSuccessToast('Group has been created')
     },

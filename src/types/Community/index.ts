@@ -96,6 +96,9 @@ export interface communityPostType {
       isCommunityAdmin?: boolean
     }[]
   }
+  community: {
+    _id: string
+  }
   content: string
   createdAt: string
   likeCount: []
