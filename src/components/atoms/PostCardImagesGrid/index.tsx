@@ -69,7 +69,7 @@ const PostCardImageGrid: React.FC<Props> = ({ images, isComment = false }) => {
       )}
 
       {imageItems.length > 0 && (
-        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-6/12 max-h-[400px]' : 'w-full max-w-2xl mx-auto max-h-[400px]'} mt-4`}>
+        <div className={`grid ${getGridTemplate()} ${isComment ? 'w-full max-h-[400px]' : 'w-full max-w-2xl mx-auto max-h-[400px]'} mt-4`}>
           {imageItems.slice(0, 4).map((item, index) => {
             const isThreeImageLayout = imageItems.length === 3
             let customClasses = 'max-h-[300px]'

@@ -142,9 +142,9 @@ const MultiSelectDropdown = ({
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 mt-2">
         {parentCategory && parentCategory?.length > 0 ? (
-          <div className="flex items-center text-2xs  px-2 py-1 h-7 text-primary-500 bg-white rounded-md border border-primary">
+          <div className="flex items-center text-2xs  px-2 py-1 h-7  text-primary-500 bg-white rounded-md border border-primary">
             <span className=" mr-1">{parentCategory}</span>
           </div>
         ) : (
@@ -152,7 +152,7 @@ const MultiSelectDropdown = ({
         )}
         {value.length > 0
           ? value.map((selected, index) => (
-              <div key={index} className="flex gap-2 items-center text-2xs  px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
+              <div key={index} className="flex gap-2 items-center text-2xs   px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
                 <span className="flex gap-2">
                   {selected}
                   {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
@@ -190,7 +190,7 @@ const MultiSelectDropdown = ({
               filteredOptions.map((item: string, key: number) => (
                 <div
                   key={key}
-                  className={`flex gap-2 items-center text-xs text-neutral-900 p-1 px-2 cursor-pointer hover:bg-neutral-100 rounded-md ${
+                  className={`flex gap-2 items-center text-xs text-neutral-900  p-1 px-2 cursor-pointer hover:bg-neutral-100 rounded-md ${
                     value.includes(item) ? 'bg-gray-200' : ''
                   }`}
                   onClick={() => handleSelect(item)}
