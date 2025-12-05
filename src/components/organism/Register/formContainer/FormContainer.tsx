@@ -155,14 +155,23 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
   }
 
-  const userLoginEmailVerification = async (data: { email: string; verificationOtp: string }) => {
+  const userLoginEmailVerification = async (data: {
+    email: string
+    verificationOtp: string
+    firstName: string
+    lastName: string
+    birthDate: string
+  }) => {
     try {
       const dataToSend = {
         email: data.email,
         verificationOtp: data.verificationOtp,
         universityId: registerData?.universityId,
+        name: data?.firstName,
+        dob: data?.birthDate,
       }
       const isAvailable = await handleUserLoginEmailVerification(dataToSend)
+
       if (isAvailable?.isAvailable) {
         methods.setValue('isEmailVerified', true)
       }
