@@ -22,7 +22,6 @@ const GroupRecommendations: React.FC = () => {
       communityGroupCategory: group.communityGroupCategory,
     })) || []
 
-  console.log('transformedGroups', transformedGroups)
   // Only show the component if there's data available
   if (groupLoading) {
     return <UserListItemSkeleton count={2} />

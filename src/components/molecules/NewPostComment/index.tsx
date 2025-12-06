@@ -6,7 +6,7 @@ import { PostCommentData, PostType } from '@/types/constants'
 import Quill from 'quill'
 import { GoFileMedia } from 'react-icons/go'
 import Buttons from '@/components/atoms/Buttons'
-import { cleanInnerHTML, validateImageFiles } from '@/lib/utils'
+import { cleanInnerHTML, generateFileId, validateImageFiles, validateUploadedFiles } from '@/lib/utils'
 import { useCreateUserPostComment, useCreateUserPostCommentReply } from '@/services/community-timeline'
 import { useCreateGroupPostComment, useCreateGroupPostCommentReply } from '@/services/community-university'
 import { Spinner } from '@/components/spinner/Spinner'
@@ -17,8 +17,10 @@ import { useUploadToS3 } from '@/services/upload'
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { HiOutlineEmojiHappy } from 'react-icons/hi'
-import { UPLOAD_CONTEXT } from '@/types/Uploads'
+import { FileWithId, UPLOAD_CONTEXT } from '@/types/Uploads'
 import { Sortby } from '@/types/common'
+import { TbFileUpload } from 'react-icons/tb'
+import CommentPreview from '../CommentMediaPreview'
 
 const Editor = dynamic(() => import('@components/molecules/Editor/QuillRichTextEditor'), {
   ssr: false,
@@ -63,7 +65,8 @@ const NewPostComment = ({
 }: Props) => {
   const quillHTMLState = useRef(null)
   const quillRef = useRef<Quill | null>(null)
-  const [images, setImages] = useState<File[]>([])
+  //   const [images, setImages] = useState<File[]>([])
+  const [files, setFiles] = useState<FileWithId[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const { mutate: mutateUserPostComment, isPending: isUserPostCommentPending } = useCreateUserPostComment(false, postId, sortBy && sortBy)
   const { mutateAsync: mutateGroupPostComment, isPending: isGroupPostCommentPending } = useCreateGroupPostComment(
@@ -96,28 +99,40 @@ const NewPostComment = ({
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      const fileArray = Array.from(files)
-      const validation = validateImageFiles(fileArray)
-      if (!validation.isValid) {
-        showCustomDangerToast(validation.message)
-        return
-      }
-      setImages((prevImages) => [...prevImages, ...fileArray]) // Store the actual files
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files ? Array.from(e.target.files) : []
+    const validation = validateUploadedFiles(newFiles)
+    if (!validation.isValid) {
+      showCustomDangerToast(validation.message)
+      return
     }
+
+    const mappedFiles: FileWithId[] = newFiles.map((file) => ({
+      id: generateFileId(file),
+      file,
+      size: file.size,
+    }))
+
+    const totalFiles = files.length + mappedFiles.length
+    if (totalFiles > 4) {
+      showCustomDangerToast('You can upload a maximum of 4 files.')
+      return
+    }
+
+    setFiles((prev) => [...prev, ...mappedFiles])
+
+    e.target.value = ''
   }
 
   const resetPostContent = () => {
     quillInstance?.setText('')
-    setImages([])
+    setFiles([])
   }
 
   const handleSubmit = async () => {
     const plainText = quillInstance?.getText().trim()
     const hasText = !!plainText && plainText.length > 0
-    const hasFiles = images.length > 0
+    const hasFiles = files.length > 0
 
     if (!hasText && !hasFiles) {
       showCustomDangerToast('Post must contain text or at least one file.')
@@ -134,11 +149,11 @@ const NewPostComment = ({
     // If images exist, process them
     if (hasFiles) {
       const uploadPayload = {
-        files: images,
+        files: files.map((f) => f.file),
         context: UPLOAD_CONTEXT.POST_COMMENT,
       }
-      const imageData = await uploadToS3(uploadPayload)
-      payload.imageUrl = imageData.data // Add image URL to the data
+      const response = await uploadToS3(uploadPayload)
+      payload.imageUrl = response.data
     }
 
     // Handle different post types (Timeline or Community)
@@ -193,8 +208,8 @@ const NewPostComment = ({
     //resetPostContent()
   }
 
-  const handleImageRemove = (index: number) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index))
+  const handleFileRemove = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id))
   }
 
   React.useEffect(() => {
@@ -240,17 +255,7 @@ const NewPostComment = ({
             placeholder="What`s on your mind?"
           />
           <div className="w-full bg-white rounded-b-lg">
-            <div className={`${images ? 'flex flex-wrap gap-4' : 'hidden'}`}>
-              {images.map((image, index) => (
-                <div key={index} className="relative w-fit">
-                  <img src={URL.createObjectURL(image)} alt={`Selected ${index}`} className="w-24 h-24 object-cover rounded" />
-                  {/* Remove image button */}
-                  <div onClick={() => handleImageRemove(index)} className="absolute -top-1 -right-1 cursor-pointer text-sm">
-                    <MdCancel size={24} className="text-destructive-600 bg-white rounded-full" />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <CommentPreview files={files} onRemove={(id: string | number) => handleFileRemove(id as string)} />
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-3 sm:gap-4 items-center ">
                 <Popover>
@@ -267,9 +272,20 @@ const NewPostComment = ({
                     type="file"
                     accept="image/jpeg,image/png,image/jpg,image/gif"
                     className="hidden"
-                    onChange={(e) => handleImageChange(e)}
+                    onChange={handleFileChange}
                   />
                   <GoFileMedia size={24} className="text-neutral-400" />
+                </label>
+                <label htmlFor="postCommentFile" className="cursor-pointer inline-block">
+                  <input
+                    id="postCommentFile"
+                    type="file"
+                    multiple
+                    accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <TbFileUpload size={24} className="text-neutral-400" />
                 </label>
               </div>
               <div className="flex gap-2 h-10">
