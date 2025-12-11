@@ -7,6 +7,8 @@ import { useUniStore } from '@/store/store'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import CommunityLeaveModal from '../CommunityLeaveModal'
+import { useFilterCommunityGroups } from '@/hooks/useFilterCommunityGroups'
+import { useQueryClient } from '@tanstack/react-query'
 import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import publicIcon from '@assets/public.svg'
 import Buttons from '@/components/atoms/Buttons'
@@ -61,10 +63,18 @@ export default function CommunityGroupBanner({
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
   const { isMobile } = useDeviceType()
+  const queryClient = useQueryClient()
   const [_showEditGroupMoadal, setShowEditGroupMoadal] = useState<boolean>(false)
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
   const { mutateAsync: joinGroup } = useJoinCommunityGroupFromNotification()
+  const { applyFilters } = useFilterCommunityGroups({
+    communityId: communityID,
+    selectedType: [],
+    selectedFilters: {},
+    sort: 'userCountDesc',
+    enabled: false,
+  })
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
 
   const handleShowMembers = () => {
@@ -93,6 +103,8 @@ export default function CommunityGroupBanner({
       joinGroup(payload, {
         onSuccess: () => {
           refetch()
+          queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+          applyFilters()
         },
         onError: (error: any) => {
           if (error.response.data.message == verifyUniversityEmailMessage) {
@@ -153,7 +165,12 @@ export default function CommunityGroupBanner({
   const handleToggleJoinCommunityGroup = (communityGroupID: string) => {
     if (isUserRequestPending && isGroupPrivate) return
     if (!isUserJoinedCommunityGroup) {
-      joinCommunityGroup(communityGroupID)
+      joinCommunityGroup(communityGroupID, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+          applyFilters()
+        },
+      })
     } else {
       openModal(
         <CommunityLeaveModal

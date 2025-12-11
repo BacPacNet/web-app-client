@@ -2,6 +2,18 @@ export const MESSAGES = {
   SOMETHING_WENT_WRONG: 'Something went wrong',
 }
 
+export enum ContentType {
+  USER_POST = 'USER_POST',
+  COMMUNITY_POST = 'COMMUNITY_POST',
+  COMMUNITY_GROUP_POST = 'COMMUNITY_GROUP_POST',
+  USER_COMMENT = 'USER_COMMENT',
+  COMMUNITY_COMMENT = 'COMMUNITY_COMMENT',
+  COMMUNITY_GROUP_COMMENT = 'COMMUNITY_GROUP_COMMENT',
+  USER_REPLY = 'USER_REPLY',
+  COMMUNITY_REPLY = 'COMMUNITY_REPLY',
+  COMMUNITY_GROUP_REPLY = 'COMMUNITY_GROUP_REPLY',
+}
+
 export const REGION = ['Asia', 'Africa', 'North America', 'South America', 'Europe', 'Australia'].sort()
 
 export enum TRACK_EVENT {
