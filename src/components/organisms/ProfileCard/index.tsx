@@ -27,7 +27,7 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import { useBlockUser } from '@/services/userProfile'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import ProfileCommunityHolder from '@/components/molecules/ProfileCommunityHolder'
+import ProfileCommunityHolder, { AlignType } from '@/components/molecules/ProfileCommunityHolder'
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
@@ -117,13 +117,13 @@ export function UserProfileCard({
     setIsLightboxOpen(true)
   }
 
-  // const handleBlockUser = () => {
-  //   mutateBlockUser(userId, {
-  //     onSuccess: () => {
-  //       setIsBlocked(!isBlocked)
-  //     },
-  //   })
-  // }
+  const handleBlockUser = () => {
+    mutateBlockUser(userId, {
+      onSuccess: () => {
+        setIsBlocked(!isBlocked)
+      },
+    })
+  }
 
   useEffect(() => {
     setIsBlocked(isBlockedByYou)
@@ -216,13 +216,13 @@ export function UserProfileCard({
                         </li>
                       )}
 
-                      {/* <li
+                      <li
                         onClick={() => handleBlockUser()}
                         className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
                       >
                         <MdBlockFlipped />
                         <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
-                      </li> */}
+                      </li>
                       {/* <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoFlagOutline />
                         <p>Report User</p>
@@ -352,6 +352,7 @@ export function UserProfileCard({
                 name={community?.name || ''}
                 isVerified={community?.isVerifiedMember}
                 isCommunityAdmin={community?.isCommunityAdmin}
+                align={AlignType.Start}
               />
             ))}
         </div>

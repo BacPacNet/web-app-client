@@ -1,7 +1,8 @@
 'use client'
 import GroupSearchBox from '@/components/atoms/GroupSearchBox'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
-import { useGetFilteredSubscribedCommunities, useGetSubscribedCommunties } from '@/services/university-community'
+import { useGetSubscribedCommunties } from '@/services/university-community'
+import { useFilterCommunityGroups } from '@/hooks/useFilterCommunityGroups'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -98,7 +99,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-  const { mutate: mutateFilterCommunityGroups, data: filteredCommunityGroups } = useGetFilteredSubscribedCommunities(community?._id)
+  const { applyFilters, filteredCommunityGroups, mutateFilterCommunityGroups } = useFilterCommunityGroups({
+    communityId: community?._id,
+    selectedType: selectedTypeMain,
+    selectedFilters: selectedFiltersMain,
+    sort,
+  })
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
@@ -205,13 +211,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     }
   }, [subscribedCommunities, communityId, selectedCommunityGroupCommunityId])
 
-  //sort
-  useEffect(() => {
-    const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-    if (community?._id) {
-      mutateFilterCommunityGroups(data)
-    }
-  }, [sort, cookieValue, community?._id, selectedCommunityGroupCommunityId, selectedFiltersMain, selectedTypeMain])
+  // Filter community groups - automatically triggered by useFilterCommunityGroups hook
 
   const handleSelect = (value: string) => {
     setSort(value)
@@ -222,11 +222,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     setSelectedCommunityImage(logo)
     setCommunity(subscribedCommunities?.find((community) => community._id === communityId))
     const expirationDateForLoginData = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000).toUTCString()
-    // roughly 400 days from now — Chrome’s current cap
+    // roughly 400 days from now — Chrome's current cap
     setSelectedCommunityGroupCommunityId(communityId, expirationDateForLoginData)
-    const data = { selectedType: selectedTypeMain, selectedFilters: selectedFiltersMain, sort }
-
-    mutateFilterCommunityGroups(data)
+    applyFilters()
     setOpen(false)
   }
 

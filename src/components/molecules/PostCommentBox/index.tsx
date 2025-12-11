@@ -17,6 +17,7 @@ import SimpleDropdown from '../SimpleDropDown'
 import { Sortby } from '@/types/common'
 import { LuRocket } from 'react-icons/lu'
 import { AnimatePresence } from 'framer-motion'
+import { ContentType } from '@/content/constant'
 
 const options = [
   {
@@ -45,6 +46,7 @@ const CommentList = React.memo(function CommentList({
   handelCommentData,
   visibleComments,
   sortBy,
+  contentType,
 }: {
   comments: any[]
   userData: any
@@ -53,11 +55,12 @@ const CommentList = React.memo(function CommentList({
   type: PostType.Community | PostType.Timeline
   setImageCarasol: any
   handleProfileClicked: (adminId: string) => void
-  likePostCommentHandler: (commentId: string, level: string, sortBy: Sortby, isLiked: boolean) => void
+  likePostCommentHandler: (commentId: string, level: string, sortBy: Sortby | null, isLiked: boolean) => void
   handleCommentClicked: (comment: any) => void
   handelCommentData: (comment: any) => void
   visibleComments: { [key: string]: boolean }
   sortBy: Sortby | null
+  contentType: ContentType
 }) {
   return (
     <AnimatePresence>
@@ -77,6 +80,7 @@ const CommentList = React.memo(function CommentList({
           showReplies={visibleComments[comment._id]}
           sortBy={sortBy}
           communities={comment?.commenterProfileId?.communities}
+          contentType={contentType}
         />
       ))}
     </AnimatePresence>
@@ -98,6 +102,7 @@ const PostCommentBox = ({
   commentID,
   communityId,
   communityGroupId,
+  contentType,
 }: PostCommentProps) => {
   const { userData, userProfileData } = useUniStore()
 
@@ -157,7 +162,7 @@ const PostCommentBox = ({
   }, [type, fetchNextPage, communityCommentsNextpage])
 
   const likePostCommentHandler = React.useCallback(
-    (commentId: string, level: string, sortBy: Sortby, isLiked: boolean) => {
+    (commentId: string, level: string, sortBy: Sortby | null, isLiked: boolean) => {
       if (isTimeline) {
         likeUserPostComment({ userPostCommentId: commentId, level, isLiked })
       } else if (type === PostType.Community) {
@@ -293,6 +298,7 @@ const PostCommentBox = ({
               handelCommentData={handelCommentData}
               visibleComments={visibleComments}
               sortBy={selectedSortValue}
+              contentType={contentType}
             />
           ) : (
             <CommentList
@@ -308,6 +314,7 @@ const PostCommentBox = ({
               handelCommentData={handelCommentData}
               visibleComments={visibleComments}
               sortBy={selectedSortValue}
+              contentType={contentType}
             />
           )}
         </div>

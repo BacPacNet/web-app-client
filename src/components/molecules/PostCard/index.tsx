@@ -18,6 +18,8 @@ import { truncateStringTo } from '@/lib/utils'
 import UserCard from '@/components/atoms/UserCard'
 import { motion } from 'framer-motion'
 import PostCommunityHolder from '../PostCommunityHolder'
+import { ContentType } from '@/content/constant'
+
 dayjs.extend(relativeTime)
 
 const SharePopup = React.memo(({ postId, type }: { postId: string; type: PostType }) => {
@@ -229,6 +231,16 @@ const PostCard = React.memo(
       return null
     }, [type, communityGroupId, communityGroupName, communityName])
 
+    const postCategory = useMemo(() => {
+      if (type === PostType.Community && communityGroupName) {
+        return ContentType.COMMUNITY_GROUP_POST
+      }
+      if (type === PostType.Community) {
+        return ContentType.COMMUNITY_POST
+      }
+      return ContentType.USER_POST
+    }, [type, communityGroupId, communityGroupName, communityName])
+
     const formattedDate = useMemo(() => format(date as unknown as Date, 'h:mm a · MMM d, yyyy'), [date])
 
     //const isLiked = useMemo(() => likes?.some((like: any) => like.userId == userData?.id), [likes, userData?.id])
@@ -332,7 +344,7 @@ const PostCard = React.memo(
               )}
 
               <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
-                <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} />
+                <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} postType={postCategory} />
               </div>
             </div>
           </div>
@@ -397,6 +409,7 @@ const PostCard = React.memo(
             commentID={commentID}
             communityId={communityId}
             communityGroupId={communityGroupId}
+            contentType={postCategory}
           />
         </div>
       </motion.div>

@@ -1,9 +1,12 @@
 'use client'
 import DeleteModal from '@/components/molecules/DeleteModal'
+import ReportContentModal from '@/components/molecules/ReportContentModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
+import { ContentType } from '@/content/constant'
 import { useModal } from '@/context/ModalContext'
 import { useDeleteCommunityPost } from '@/services/community-post'
 import { useDeleteUserPost } from '@/services/community-timeline'
+import { useUniStore } from '@/store/store'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -16,14 +19,16 @@ interface PostOptionType {
   postID: string
   isType: 'Community' | 'Timeline'
   isSelfPost: boolean
+  postType: ContentType
 }
 
-const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
+const PostCartOption = ({ postID, isType, isSelfPost, postType }: PostOptionType) => {
   const { mutate: mutateDeletePost } = useDeleteUserPost()
   const { mutate: mutateDeleteCommunityPost } = useDeleteCommunityPost()
   const [isOpen, setIsOpen] = useState(false)
   const { openModal } = useModal()
   const router = useRouter()
+  const { userData } = useUniStore()
 
   const handleDeletePost = () => {
     openModal(
@@ -40,6 +45,9 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
       />,
       'h-auto'
     )
+  }
+  const handleReportPost = () => {
+    openModal(<ReportContentModal postID={postID} reporterId={userData?.id || ''} contentType={postType} />, 'h-auto', false)
   }
 
   return (
@@ -59,10 +67,12 @@ const PostCartOption = ({ postID, isType, isSelfPost }: PostOptionType) => {
             <p className="font-medium text-xs text-neutral-800">Open Post</p>
           </Link>
 
-          {/* <div className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
-            <HiOutlineFlag className="text-primary" size={16} />
-            <p className="font-medium text-xs text-neutral-800">Report this Post</p>
-          </div> */}
+          {!isSelfPost && (
+            <div onClick={handleReportPost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
+              <HiOutlineFlag className="text-primary" size={16} />
+              <p className="font-medium text-xs text-neutral-800">Report this Post</p>
+            </div>
+          )}
           {isSelfPost && (
             <div onClick={handleDeletePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
               <MdDeleteForever className="text-primary" size={16} />
