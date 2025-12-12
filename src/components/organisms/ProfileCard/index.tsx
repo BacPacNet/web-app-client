@@ -216,13 +216,13 @@ export function UserProfileCard({
                         </li>
                       )}
 
-                      <li
+                      {/* <li
                         onClick={() => handleBlockUser()}
                         className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
                       >
                         <MdBlockFlipped />
                         <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
-                      </li>
+                      </li> */}
                       {/* <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoFlagOutline />
                         <p>Report User</p>
