@@ -28,6 +28,10 @@ const deActivateUserAccount = async (data: any, token: string) => {
   const res = await client(`/users/deActivateUserAccount`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
 }
+const softDeleteUserAccount = async (token: string, data: any) => {
+  const res = await client(`/users`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, data })
+  return res
+}
 const newUserTrue = async (token: string) => {
   const res = await client(`/users/new-user`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` } })
   return res
@@ -170,6 +174,22 @@ export const useChangeUserPassword = () => {
   const [cookieValue] = useCookie('uni_user_token')
   return useMutation({
     mutationFn: (data: any) => changeUserPassword(data, cookieValue),
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+
+export const useDeleteUserAccount = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useMutation({
+    mutationFn: (data: any) => softDeleteUserAccount(cookieValue, data),
+
+    onSuccess: (res: any) => {
+      console.log(res, 'res')
+      showCustomDangerToast('Account deleted successfully')
+    },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
