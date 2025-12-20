@@ -194,6 +194,7 @@ export type ChatUser = {
     occupation: string
     affiliation: string
     major: string
+    isDeleted: boolean
   }
   _id: string
   firstName: string

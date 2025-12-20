@@ -291,7 +291,7 @@ export const useCreateChatMessage = () => {
     mutationFn: (data: any) => createChatMessage(cookieValue, data),
     onSuccess: () => {},
     onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
     },
   })
 }

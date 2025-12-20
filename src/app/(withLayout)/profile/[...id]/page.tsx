@@ -10,6 +10,8 @@ import { useGetUserData } from '@/services/user'
 import React, { useRef } from 'react'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
 import notMember from '@/assets/notCommunityMember.svg'
+import ErrorCard from '@/components/molecules/ErrorCard'
+import { MESSAGES } from '@/content/constant'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
@@ -43,11 +45,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   //  const { logos } = university || {}
 
   if (isUserProfileDataError) {
-    return (
-      <div>
-        <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="User Not Found" description="" />
-      </div>
-    )
+    return <ErrorCard title={MESSAGES.USER_NOT_FOUND} description={MESSAGES.USER_NOT_FOUND_DESCRIPTION} />
   }
 
   const IsUniversityVerified = (): boolean => {

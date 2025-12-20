@@ -2,9 +2,10 @@
 import CommunityGroupPostFilterDropDown from '@/components/atoms/CommunityGroupPostFilterDropDown'
 import CommunityGroupBanner from '@/components/molecules/CommunityGroupBanner'
 import CommunityGroupNotLiveCard from '@/components/molecules/CommunityGroupNotLiveCard'
+import ErrorCard from '@/components/molecules/ErrorCard'
 import CommunityCreatePost from '@/components/organisms/CommunityCreatePost'
 import CommunityGroupPostContainer from '@/components/organisms/CommunityGroupPostContainer'
-import { TRACK_EVENT } from '@/content/constant'
+import { MESSAGES, TRACK_EVENT } from '@/content/constant'
 import { useTimeTracking } from '@/hooks/useTimeTracking'
 import { useGetCommunityGroup } from '@/services/community-university'
 import { CommunityGroupType, CommunityGroupTypeEnum } from '@/types/CommuityGroup'
@@ -32,7 +33,9 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
     isLoading: isCommunityGroupsLoading,
     refetch,
     isError: isCommunityGroupError,
+    error: communityGroupError,
   } = useGetCommunityGroup(communityId, communityGroupId)
+
   useTimeTracking(TRACK_EVENT.COMMUNITY_GROUP_PAGE_VIEW_DURATION, {
     communityId,
     groupId: communityGroupId,
@@ -41,6 +44,10 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
 
   const changePostFilter = (filter: string) => {
     router.push(`?filterPostBy=${filter}`)
+  }
+
+  if (isCommunityGroupError) {
+    return <ErrorCard title={MESSAGES.GROUP_NOT_FOUND} description={MESSAGES.GROUP_NOT_FOUND_DESCRIPTION} />
   }
   return (
     <div ref={containerRef} className="h-with-navbar overflow-y-scroll hideScrollbar outline-none">

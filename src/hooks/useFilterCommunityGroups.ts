@@ -10,7 +10,7 @@ interface UseFilterCommunityGroupsParams {
 }
 
 export function useFilterCommunityGroups({ communityId, selectedType, selectedFilters, sort, enabled = true }: UseFilterCommunityGroupsParams) {
-  const { mutate: mutateFilterCommunityGroups } = useGetFilteredSubscribedCommunities(communityId || '')
+  const { mutate: mutateFilterCommunityGroups, data } = useGetFilteredSubscribedCommunities(communityId || '')
   const { data: subscribedCommunities } = useGetSubscribedCommunties()
 
   const filteredCommunityGroups = subscribedCommunities?.find((community: any) => community._id === communityId)
@@ -30,7 +30,7 @@ export function useFilterCommunityGroups({ communityId, selectedType, selectedFi
 
   return {
     applyFilters,
-    filteredCommunityGroups,
+    filteredCommunityGroups: data,
     mutateFilterCommunityGroups,
   }
 }

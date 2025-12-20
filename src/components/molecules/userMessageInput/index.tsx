@@ -28,9 +28,19 @@ type Props = {
   isBlocked: boolean
   setAcceptedId: (value: string) => void
   setCurrTab: (value: string) => void
+  isDeletedUser: boolean
 }
 
-const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcceptedId, setCurrTab, isGroupChat, isBlocked }: Props) => {
+const UserMessageInput = ({
+  chatId,
+  userProfileId,
+  isRequestNotAccepted,
+  setAcceptedId,
+  setCurrTab,
+  isGroupChat,
+  isBlocked,
+  isDeletedUser,
+}: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
   const [files, setFiles] = useState<FileWithId[]>([])
@@ -43,6 +53,7 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const MAX_HEIGHT = 300
+  const toDisableButton = isDeletedUser && !isGroupChat ? true : false
 
   const handleInput = () => {
     const textarea = textareaRef.current
@@ -488,11 +499,15 @@ const UserMessageInput = ({ chatId, userProfileId, isRequestNotAccepted, setAcce
             {/* Send / Accept & Send Button */}
             <div>
               {isRequestNotAccepted ? (
-                <button onClick={handleAcceptRequestAndSendNewMessage} className="bg-primary-500 text-white text-2xs rounded-lg px-3 py-2">
+                <button
+                  onClick={handleAcceptRequestAndSendNewMessage}
+                  disabled={toDisableButton || isPending}
+                  className="bg-primary-500 text-white text-2xs rounded-lg px-3 py-2"
+                >
                   {isPending ? <Spinner /> : 'Accept & Send Message'}
                 </button>
               ) : (
-                <Buttons onClick={handleSubmit} variant="primary" size="medium">
+                <Buttons onClick={handleSubmit} disabled={toDisableButton || isPending || isImageUploading} variant="primary" size="medium">
                   {isPending || isImageUploading ? <Spinner /> : 'Send'}
                 </Buttons>
                 //<button onClick={handleSubmit} className="bg-primary-500 text-white text-xs rounded-lg px-3 py-1">
