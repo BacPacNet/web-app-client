@@ -44,7 +44,6 @@ const MessageContainer = () => {
     currImageIndex: null,
   })
   useNewMessageHandler(selectedChat)
-  console.log('selectedChat', selectedChat)
 
   const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {

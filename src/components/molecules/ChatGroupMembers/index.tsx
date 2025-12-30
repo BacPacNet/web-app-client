@@ -31,8 +31,8 @@ const ChatGroupMembers = ({ users, chatId, adminId }: Props) => {
     <div>
       <Title>Members</Title>
       {usersList
-        .filter((user) => !user.userId.isBlocked)
-        .map((user) => {
+        ?.filter((user) => !user.userId.isBlocked)
+        ?.map((user) => {
           const { userId } = user
           return (
             <UserListItem
