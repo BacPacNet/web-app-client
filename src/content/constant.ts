@@ -4,6 +4,8 @@ export const MESSAGES = {
   GROUP_NOT_FOUND_DESCRIPTION: "The group you're looking for doesn't exist or may have been removed by the admin.",
   USER_NOT_FOUND: 'User Not Found',
   USER_NOT_FOUND_DESCRIPTION: 'The user you’re looking for can’t be found or may have deleted their account.',
+  POST_NOT_FOUND: 'Post Not Found',
+  POST_NOT_FOUND_DESCRIPTION: "The post you're looking for doesn't exist or may have been removed by the user.",
 }
 
 export enum ContentType {

@@ -195,6 +195,7 @@ export type ChatUser = {
     affiliation: string
     major: string
     isDeleted: boolean
+    isBlocked: boolean
   }
   _id: string
   firstName: string
