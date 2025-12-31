@@ -97,12 +97,12 @@ export function UserProfileCard({
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
   const router = useRouter()
-  const { openModal } = useModal()
+  const { openModal, closeModal } = useModal()
   const [isOpen, setIsOpen] = useState(false)
   const [isBlocked, setIsBlocked] = useState(isBlockedByYou)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
-  const { mutateAsync: mutateBlockUser } = useBlockUser()
+  const { mutateAsync: mutateBlockUser, isPending: isBlockPending } = useBlockUser()
   const userFollowerIDs = followers && followers?.map((followers) => followers.userId.toString())
 
   const isStudent = role === userTypeEnum.Student
@@ -127,12 +127,13 @@ export function UserProfileCard({
     mutateBlockUser(userId, {
       onSuccess: () => {
         setIsBlocked(!isBlocked)
+        closeModal()
       },
     })
   }
 
   const handleBlockUser = () => {
-    openModal(<BlockUserModal onConfirm={() => handleBlockUserConfirm()} pending={false} />, 'w-[350px] sm:w-[490px] hideScrollbar h-max')
+    openModal(<BlockUserModal onConfirm={() => handleBlockUserConfirm()} pending={isBlockPending} />, 'w-[350px] sm:w-[490px] hideScrollbar h-max')
   }
 
   useEffect(() => {
