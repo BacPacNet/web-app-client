@@ -29,6 +29,7 @@ type Props = {
   setAcceptedId: (value: string) => void
   setCurrTab: (value: string) => void
   isDeletedUser: boolean
+  isBlockedUser: boolean
 }
 
 const UserMessageInput = ({
@@ -40,6 +41,7 @@ const UserMessageInput = ({
   isGroupChat,
   isBlocked,
   isDeletedUser,
+  isBlockedUser,
 }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const valueRef = useRef<string>('')
@@ -53,7 +55,7 @@ const UserMessageInput = ({
   const { mutateAsync: uploadToS3 } = useUploadToS3()
 
   const MAX_HEIGHT = 300
-  const toDisableButton = isDeletedUser && !isGroupChat ? true : false
+  const toDisableButton = (isDeletedUser || isBlockedUser) && !isGroupChat ? true : false
 
   const handleInput = () => {
     const textarea = textareaRef.current

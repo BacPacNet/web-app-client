@@ -27,13 +27,13 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
         (item: Chat) =>
-          item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
-          item.isRequestAccepted ||
-          item.groupAdmin.toString() === userData?.id
+          item?.users?.find((user) => user?.userId?._id.toString() === userData?.id && user?.isRequestAccepted) ||
+          item?.isRequestAccepted ||
+          item?.groupAdmin.toString() === userData?.id
       )
       //   const filteredChats = chats?.filter(
       //     (item: Chat) =>
-      //       (item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isRequestAccepted) ||
+      //       (item.users.find((user) => user?.userId?._id.toString() === userData?.id && user?.isRequestAccepted) ||
       //         item.isRequestAccepted ||
       //         item.groupAdmin.toString() === userData?.id) &&
       //       (item.latestMessage || item.isGroupChat)
@@ -61,7 +61,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
         )
       }
 
-      if (filteredChats.length === 0) {
+      if (filteredChats?.length === 0) {
         return <p className="text-neutral-500 text-center py-16">There are no chats in your Inbox yet.</p>
       }
 
@@ -82,16 +82,16 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
       ))
     } else if (currTabb === 'Requests') {
       const filteredChats = chats?.filter((item: Chat) =>
-        item.isGroupChat
-          ? item.users.some((user) => user.userId._id.toString() === userData?.id && !user.isRequestAccepted)
-          : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
+        item?.isGroupChat
+          ? item?.users?.some((user) => user?.userId?._id.toString() === userData?.id && !user?.isRequestAccepted)
+          : !item?.isRequestAccepted && item?.groupAdmin.toString() !== userData?.id
       )
 
-      if (filteredChats.length === 0) {
+      if (filteredChats?.length === 0) {
         return <p className="text-neutral-500 text-center py-8">You have no message requests at the moment.</p>
       }
 
-      return filteredChats.map((item: Chat) => (
+      return filteredChats?.map((item: Chat) => (
         <div onClick={() => setSelectedChat(item)} key={item?._id} className="flex flex-col gap-2 border-t border-neutral-300">
           <UserChatCard
             profilePic={item?.isGroupChat ? item?.groupLogo?.imageUrl : item?.groupLogoImage}
@@ -107,13 +107,15 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
         </div>
       ))
     } else {
-      const filteredChats = chats?.filter((item: Chat) => item.users.find((user) => user?.userId._id.toString() === userData?.id && user?.isStarred))
+      const filteredChats = chats?.filter(
+        (item: Chat) => item?.users?.find((user) => user?.userId?._id.toString() === userData?.id && user?.isStarred)
+      )
 
-      if (filteredChats.length === 0) {
+      if (filteredChats?.length === 0) {
         return <p className="text-neutral-500 text-center">You have no starred chats.</p>
       }
 
-      return filteredChats.map((item: Chat) => (
+      return filteredChats?.map((item: Chat) => (
         <div onClick={() => setSelectedChat(item)} key={item?._id} className="flex flex-col gap-2 border-t py-5 border-neutral-300">
           <UserChatCard
             profilePic={item?.isGroupChat ? item?.groupLogo?.imageUrl : item?.groupLogoImage}
