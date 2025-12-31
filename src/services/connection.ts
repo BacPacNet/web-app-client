@@ -66,7 +66,8 @@ export const useToggleFollow = (type: string) => {
     mutationFn: (id: string) => toggleFollow(id, cookieValue),
 
     onSuccess: (response: any) => {
-      setUserfollowing(response.following)
+      //   setUserfollowing(response.following)
+      queryClient.invalidateQueries({ queryKey: ['getRefetchUserData'] })
       if (type == 'FIND_PEOPLE') {
         queryClient.invalidateQueries({ queryKey: ['usersProfileForConnections'] })
       }

@@ -27,6 +27,7 @@ export default function AccountSettingsPage() {
         { href: '/setting/university-verification', label: 'University Verification' },
         { href: '/setting/change-username', label: 'Change Username' },
         { href: '/setting/change-password', label: 'Change Password' },
+        { href: '/setting/blocked-users', label: 'Blocked Users' },
         { href: '/setting/delete-account', label: 'Delete Account' },
         // { href: '/setting/change-email', label: 'Change Email' },
         // { href: '/setting/deactivation', label: 'Account Deactivation' },
