@@ -22,7 +22,7 @@ export interface FormDataType {
   universityName: string
   UniversityOtp: string
   UniversityOtpOK: string
-  referralCode: string
+  referralCode?: string
   isJoinUniversity: boolean
   isUniversityVerified: boolean
   isEmailVerified: boolean

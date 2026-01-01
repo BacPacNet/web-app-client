@@ -9,7 +9,7 @@ import { MESSAGES } from '@/content/constant'
 import { useState, useEffect } from 'react'
 import { trackUserLogin } from '@/utils/analytics'
 
-interface data {
+interface RegisterData {
   email: string
   userName: string
   password: string
@@ -24,7 +24,7 @@ interface data {
   universityEmail: string
   UniversityOtp: string
   UniversityOtpOK: string
-  referralCode: string
+  referralCode?: string
 }
 
 const login = async (data: LoginForm): Promise<UserResponseType> => {
@@ -37,7 +37,7 @@ const register = async (data: Omit<RegisterForm, 'confirmPassword' | 'tnc'>): Pr
   return result
 }
 
-async function register_v2(data: data) {
+async function register_v2(data: RegisterData) {
   const response: { isRegistered: boolean } = await client(`/auth/register`, { method: 'POST', data })
   return response
 }
@@ -118,7 +118,7 @@ export const useHandleRegister = () => {
 
 export const useHandleRegister_v2 = () => {
   return useMutation({
-    mutationFn: (data: data) => register_v2(data),
+    mutationFn: (data: RegisterData) => register_v2(data),
     onError: (error: any) => {
       console.log(error)
       showCustomDangerToast(error.response.data.message || MESSAGES.SOMETHING_WENT_WRONG)

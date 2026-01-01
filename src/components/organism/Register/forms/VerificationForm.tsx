@@ -11,7 +11,6 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import { MdOutlineArrowBack } from 'react-icons/md'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 interface props {
   isVerificationSuccess: boolean

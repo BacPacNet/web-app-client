@@ -34,3 +34,16 @@ export const parseDateOfBirth = (dob: string | undefined): string => {
     return ''
   }
 }
+
+export const formatDate = (dateString: string | Date): string => {
+  try {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString
+    if (isValid(date)) {
+      return format(date, 'MMM d, yyyy')
+    }
+    return ''
+  } catch (error) {
+    console.warn('Failed to format date:', dateString, error)
+    return ''
+  }
+}

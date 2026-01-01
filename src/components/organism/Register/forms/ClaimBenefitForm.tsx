@@ -38,17 +38,15 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
 
           <InputBox
             placeholder="ASI132943"
-            type="referralCode"
-            {...register('referralCode', {
+            type="referCode"
+            {...register('referCode', {
               // required: true,
             })}
-            err={!!VerificationFormErrors.referralCode}
+            err={!!VerificationFormErrors.referCode}
           />
-          {VerificationFormErrors.referralCode && (
+          {VerificationFormErrors.referCode && (
             <InputWarningText>
-              {VerificationFormErrors.referralCode.message
-                ? VerificationFormErrors.referralCode.message.toString()
-                : 'Please enter your referral code!'}
+              {VerificationFormErrors.referCode.message ? VerificationFormErrors.referCode.message.toString() : 'Please enter your referral code!'}
             </InputWarningText>
           )}
           <Button variant="border_primary" className="h-10" size="large">
