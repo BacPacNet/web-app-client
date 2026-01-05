@@ -142,7 +142,7 @@ const MultiSelectDropdown = ({
         </div>
         <IoIosArrowDown className={`${variantText[variant]}`} />
       </div>
-      <div className="flex flex-wrap gap-2 mt-2">
+      <div className="flex flex-wrap gap-4 mt-2">
         {parentCategory && parentCategory?.length > 0 ? (
           <div className="flex items-center text-2xs  px-2 py-1 h-7  text-primary-500 bg-white rounded-md border border-primary">
             <span className=" mr-1">{parentCategory}</span>

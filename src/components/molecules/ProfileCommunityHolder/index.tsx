@@ -58,12 +58,7 @@ const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityA
               )}
             </div>
           </PopoverTrigger>
-          <PopoverContent
-            align={align || AlignType.End}
-            className={`relative w-max ${
-              align == AlignType.Start ? '-left-4' : 'left-6'
-            } top-2  py-2 px-4 border-none shadow-lg bg-white shadow-gray-light`}
-          >
+          <PopoverContent align="end" className="relative w-max  left-6 top-2  py-2 px-4 border-none shadow-lg bg-white shadow-gray-light">
             <p className=" w-full text-neutral-700 text-2xs">
               {(isCommunityAdmin && isVerified) || (isCommunityAdmin && !isVerified) ? 'Admin of ' : isVerified ? 'Verified for ' : 'Joined '}
               <span className="font-bold">{name}</span>
