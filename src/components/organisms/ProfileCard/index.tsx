@@ -27,14 +27,19 @@ import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
 import { useBlockUser } from '@/services/userProfile'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import ProfileCommunityHolder from '@/components/molecules/ProfileCommunityHolder'
+import ProfileCommunityHolder, { AlignType } from '@/components/molecules/ProfileCommunityHolder'
+import BlockUserModal from '@/components/molecules/BlockUserModal'
+
+type userFollowing = {
+  userId: string
+}
 interface UserProfileCardProps {
   name: string
   isPremium: boolean
   description: string
   university: string
-  following: number
-  followers: number
+  following: userFollowing[]
+  followers: userFollowing[]
   year: string
   major: string
   email: string
@@ -92,13 +97,14 @@ export function UserProfileCard({
   const { isDesktop } = useDeviceType()
   const { userProfileData } = useUniStore()
   const router = useRouter()
-  const { openModal } = useModal()
+  const { openModal, closeModal } = useModal()
   const [isOpen, setIsOpen] = useState(false)
   const [isBlocked, setIsBlocked] = useState(isBlockedByYou)
   const { mutate: toggleFollow, isPending } = useToggleFollow('Following')
   const { mutateAsync: mutateCreateUserChat } = useCreateUserChat()
-  const { mutateAsync: mutateBlockUser } = useBlockUser()
-  const userFollowingIDs = userProfileData && userProfileData?.following?.map((following) => following.userId)
+  const { mutateAsync: mutateBlockUser, isPending: isBlockPending } = useBlockUser()
+  const userFollowerIDs = followers && followers?.map((followers) => followers.userId.toString())
+
   const isStudent = role === userTypeEnum.Student
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
 
@@ -117,13 +123,18 @@ export function UserProfileCard({
     setIsLightboxOpen(true)
   }
 
-  // const handleBlockUser = () => {
-  //   mutateBlockUser(userId, {
-  //     onSuccess: () => {
-  //       setIsBlocked(!isBlocked)
-  //     },
-  //   })
-  // }
+  const handleBlockUserConfirm = () => {
+    mutateBlockUser(userId, {
+      onSuccess: () => {
+        setIsBlocked(!isBlocked)
+        closeModal()
+      },
+    })
+  }
+
+  const handleBlockUser = () => {
+    openModal(<BlockUserModal onConfirm={() => handleBlockUserConfirm()} pending={isBlockPending} />, 'w-[350px] sm:w-[490px] hideScrollbar h-max')
+  }
 
   useEffect(() => {
     setIsBlocked(isBlockedByYou)
@@ -206,7 +217,7 @@ export function UserProfileCard({
                         <IoIosShareAlt />
                         <p>Share Profile</p>
                       </li>
-                      {userFollowingIDs?.includes(userId as string) && (
+                      {userFollowerIDs?.includes(userProfileData?.users_id as string) && (
                         <li
                           onClick={() => toggleFollow(userId as string)}
                           className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
@@ -216,13 +227,13 @@ export function UserProfileCard({
                         </li>
                       )}
 
-                      {/* <li
+                      <li
                         onClick={() => handleBlockUser()}
                         className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer"
                       >
                         <MdBlockFlipped />
                         <p>{isBlocked ? 'Unblock User' : 'Block User'}</p>
-                      </li> */}
+                      </li>
                       {/* <li className="flex py-2 px-4 gap-2 items-center text-neutral-600 hover:bg-neutral-200 hover:cursor-pointer">
                         <IoFlagOutline />
                         <p>Report User</p>
@@ -234,13 +245,13 @@ export function UserProfileCard({
               <Buttons onClick={() => handleMessage()} className="flex items-center gap-2 h-10 " variant="shade" size="small">
                 <HiMail className="w-4 h-4" /> Message
               </Buttons>
-              {!userFollowingIDs?.includes(userId as string) && (
+              {!userFollowerIDs?.includes(userProfileData?.users_id as string) && (
                 <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
                   Follow
                 </Buttons>
               )}
               {/* <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
-                {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+                {isPending ? <Spinner /> : userFollowerIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
               </Buttons> */}
             </div>
           )}
@@ -290,7 +301,7 @@ export function UserProfileCard({
             <HiMail className="w-4 h-4" /> Message
           </Buttons>
           <Buttons className=" h-10 " onClick={() => toggleFollow(userId as string)} variant="primary" size="small">
-            {isPending ? <Spinner /> : userFollowingIDs?.includes(userId as string) ? 'UnFollow' : 'Follow'}
+            {isPending ? <Spinner /> : userFollowerIDs?.includes(userProfileData?.users_id as string) ? 'UnFollow' : 'Follow'}
           </Buttons>
         </div>
       )}
@@ -307,7 +318,7 @@ export function UserProfileCard({
             }
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
-            {following || '0'} Following
+            {following?.length || '0'} Following
           </div>
 
           <div
@@ -321,7 +332,7 @@ export function UserProfileCard({
             }
             className="h-[38px] flex gap-1 items-center justify-center text-2xs font-medium py-3 px-4 rounded-lg text-neutral-700  border border-neutral-200  drop-shadow-sm whitespace-nowrap cursor-pointer"
           >
-            {followers || '0'} Followers
+            {followers?.length || '0'} Followers
           </div>
         </div>
 
@@ -352,6 +363,7 @@ export function UserProfileCard({
                 name={community?.name || ''}
                 isVerified={community?.isVerifiedMember}
                 isCommunityAdmin={community?.isCommunityAdmin}
+                align={AlignType.Start}
               />
             ))}
         </div>

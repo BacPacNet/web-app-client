@@ -1,12 +1,10 @@
 'use client'
 import FormContainer from '@/components/organism/Register/formContainer/FormContainer'
-import RegisterSIdebar from '@/components/organism/Register/sidebar/RegisterSIdebar'
 import React, { useEffect, useState } from 'react'
-import Loading from './loading'
 import { userTypeEnum } from '@/types/RegisterForm'
 import ProgressBar from 'react-customizable-progressbar'
 import useCookie from '@/hooks/useCookie'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import RedirectFromRegister from '@/components/organism/Register/redirect-screen'
 import Spinner from '@/components/atoms/spinner'
 
@@ -25,11 +23,37 @@ const Register = () => {
   const [loading, setLoading] = useState(true)
   const [userType, setUserType] = useState('')
   const router = useRouter()
-  const [cookieValue] = useCookie('register_data')
+  const searchParams = useSearchParams()
+  const [cookieValue, setCookieValue] = useCookie('register_data')
+
+  // Extract referCode from query parameters
+  const referralCode = searchParams.get('referralCode')
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const registerData = cookieValue ? JSON.parse(cookieValue) : null
+      let registerData = cookieValue ? JSON.parse(cookieValue) : null
+      let shouldUpdateCookie = false
+
+      // If referCode exists in query params, merge it into registerData
+      if (referralCode) {
+        if (registerData) {
+          // Update referCode if it's different from what's in registerData
+          if (registerData.referCode !== referralCode) {
+            registerData = { ...registerData, referralCode }
+            shouldUpdateCookie = true
+          }
+        } else {
+          // Initialize registerData with referCode if cookie doesn't exist
+          registerData = { referralCode }
+          shouldUpdateCookie = true
+        }
+      }
+
+      // Update cookie if needed
+      if (shouldUpdateCookie && registerData) {
+        const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
+        setCookieValue(JSON.stringify(registerData), expirationDate)
+      }
 
       if (registerData) {
         setStep(registerData.step || 0)
@@ -37,7 +61,8 @@ const Register = () => {
       }
       setLoading(false)
     }
-  }, [cookieValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookieValue, referralCode])
 
   const handlePrev = () => {
     if (step == 0) {

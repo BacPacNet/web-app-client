@@ -11,12 +11,11 @@ import {
   useHandleUniversityEmailVerification,
   useHandleUserEmailAndUserNameAvailability,
 } from '@/services/auth'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import ProfileStudentForm from '../forms/ProfileStudentForm'
 import ProfileFacultyForm from '../forms/ProfileFacultyForm'
 import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
 import useCookie from '@/hooks/useCookie'
-import { convertToDateObj } from '@/lib/utils'
 import { TRACK_EVENT } from '@/content/constant'
 import { useTimeTracking } from '@/hooks/useTimeTracking'
 
@@ -47,6 +46,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
   const { mutateAsync: HandleRegister, isPending: registerIsPending, data: registeredData } = useHandleRegister_v2()
 
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const referralCode = searchParams?.get('referralCode')
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -88,7 +89,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       universityId: '',
       UniversityOtp: '',
       UniversityOtpOK: '',
-      referralCode: '',
+      referralCode: referralCode || '',
       isJoinUniversity: true,
       isUniversityVerified: false,
       isEmailVerified: false,
@@ -121,7 +122,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         universityLogo: registerData?.universityLogo || '',
         universityDomain: registerData?.universityDomain || [],
         UniversityOtp: registerData?.UniversityOtp || '',
-        referralCode: registerData?.referralCode || '',
+        referralCode: referralCode || registerData?.referralCode || '',
         isJoinUniversity: registerData?.isJoinUniversity || true,
         isUniversityVerified: registerData?.isUniversityVerified,
         isEmailVerified: registerData?.isEmailVerified,
@@ -241,18 +242,21 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         // Get the current value from the form methods
         const isEmailVerified = methods.getValues('isEmailVerified')
 
-        const res = await HandleRegister({
-          ...data,
-          isEmailVerified: isEmailVerified,
-        } as FormDataType)
-        if (res?.isRegistered) {
-          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
-          deleteCookie()
+        console.log(data, 'data')
 
-          setStep(4)
-          setSubStep(0)
-        }
+        // const res = await HandleRegister({
+        //   ...data,
+        //   isEmailVerified: isEmailVerified,
+        // } as FormDataType)
+
+        // if (res?.isRegistered) {
+        //   const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+        //   setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+        //   deleteCookie()
+
+        //   setStep(4)
+        //   setSubStep(0)
+        // }
       }
 
       return

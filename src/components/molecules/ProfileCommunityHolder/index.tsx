@@ -7,15 +7,21 @@ import Buttons from '@/components/atoms/Buttons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import communityAdminBadge from '@assets/communityAdminBadge.svg'
 
+export enum AlignType {
+  Center = 'center',
+  Start = 'start',
+  End = 'end',
+}
 type Props = {
   logo: string
   name: string
   isVerified: boolean
   isActive: boolean
   isCommunityAdmin: boolean
+  align?: AlignType
 }
 
-const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityAdmin }: Props) => {
+const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityAdmin, align = AlignType.End }: Props) => {
   const [logoSrc, setLogoSrc] = useState(logo)
   const [isLogoPopoverOpen, setIsLogoPopoverOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)

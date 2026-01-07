@@ -1,5 +1,5 @@
 import useCookie from '@/hooks/useCookie'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import axios from 'axios'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
@@ -53,11 +53,37 @@ const blockUser = async (userToBlock: any, token: string) => {
 }
 export const useBlockUser = () => {
   const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (userToBlock: any) => blockUser(userToBlock, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getRefetchUserData'] })
+    },
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
     },
   })
+}
+
+export async function getUserBlockedList(token: any) {
+  const response: any = await client(`/userprofile/blocked_users`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserBlockedList() {
+  const [cookieValue] = useCookie('uni_user_token')
+
+  const state = useQuery({
+    queryKey: ['getUserBlockedList'],
+    queryFn: () => getUserBlockedList(cookieValue),
+    enabled: !!cookieValue,
+  })
+
+  let errorMessage = null
+  if (axios.isAxiosError(state.error) && state.error.response) {
+    errorMessage = state.error.response.data
+  }
+
+  return { ...state, error: errorMessage }
 }

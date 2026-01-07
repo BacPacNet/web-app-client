@@ -25,7 +25,8 @@ const MessageContainer = () => {
     currTab,
   })
   const { userData, socket, userProfileData } = useUniStore()
-  const userName = selectedChat?.users?.find((item) => item?.userId._id !== userData?.id)
+  const userName = selectedChat?.users?.find((item) => item?.userId?._id !== userData?.id)
+
   const { mutate: updateIsSeen } = useUpdateMessageIsSeen()
   const [isRequest, setIsRequest] = useState(true)
   const { data: chatsData, isLoading: isChatLoading, isFetching } = useGetUserChats()
@@ -47,7 +48,7 @@ const MessageContainer = () => {
 
   const totalUnreadMessages = chats?.reduce((sum, item) => {
     if (item.isGroupChat) {
-      const isUserInGroup = item.users.some((user) => user.userId._id === userData?.id && user.isRequestAccepted)
+      const isUserInGroup = item?.users?.some((user) => user?.userId?._id === userData?.id && user?.isRequestAccepted)
 
       return isUserInGroup ? sum + item.unreadMessagesCount : sum
     } else {
@@ -57,8 +58,8 @@ const MessageContainer = () => {
 
   const totalUnreadNotAcceptedMessages = chats?.reduce((sum, item) => {
     const shouldInclude = item.isGroupChat
-      ? item.users.some((user) => user.userId._id.toString() === userData?.id && !user.isRequestAccepted)
-      : !item.isRequestAccepted && item.groupAdmin.toString() !== userData?.id
+      ? item?.users?.some((user) => user?.userId?._id.toString() === userData?.id && !user?.isRequestAccepted)
+      : !item?.isRequestAccepted && item?.groupAdmin.toString() !== userData?.id
 
     return shouldInclude ? sum + item.unreadMessagesCount : sum
   }, 0)
@@ -80,8 +81,8 @@ const MessageContainer = () => {
   }, [selectedChat?.latestMessage])
 
   const userChatsId = useMemo(() => {
-    return chatsData?.flatMap((chat) =>
-      chat.users.map((user) => (user.userId._id !== userData?.id ? user.userId._id : null)).filter((id) => id !== null)
+    return chatsData?.flatMap(
+      (chat) => chat?.users?.map((user) => (user?.userId?._id !== userData?.id ? user.userId?._id : null)).filter((id) => id !== null)
     )
   }, [chatsData, userData?.id])
 
@@ -92,15 +93,15 @@ const MessageContainer = () => {
 
     const updatedChats = chatsData.map((chat) => ({
       ...chat,
-      users: chat.users.map((user) => ({
+      users: chat?.users?.map((user) => ({
         ...user,
-        isOnline: onlineUsersSet?.has(user.userId._id) ?? false,
+        isOnline: onlineUsersSet?.has(user?.userId?._id) ?? false,
       })),
     }))
 
     setChats(updatedChats)
     const updateCurrSelectedChat = () => {
-      const toWrite = updatedChats.find((item) => item._id == selectedChat?._id)
+      const toWrite = updatedChats.find((item) => item?._id == selectedChat?._id)
       setSelectedChat(toWrite)
     }
 
@@ -154,7 +155,7 @@ const MessageContainer = () => {
 
   useEffect(() => {
     if (acceptedChatId.length > 0) {
-      const chat = chats?.find((item) => item._id == acceptedChatId)
+      const chat = chats?.find((item) => item?._id == acceptedChatId)
 
       setSelectedChat(chat)
     }
@@ -162,7 +163,7 @@ const MessageContainer = () => {
 
   useEffect(() => {
     if (selectedUserId) {
-      const selectedChatBySearchQuery = chats?.find((item) => item._id.toString() == selectedUserId)
+      const selectedChatBySearchQuery = chats?.find((item) => item?._id?.toString() == selectedUserId)
       if (selectedChatBySearchQuery) {
         setSelectedChat(selectedChatBySearchQuery)
       }
@@ -239,6 +240,7 @@ const MessageContainer = () => {
             isBlockedByYou={selectedChat.blockedBy.some((id) => id.toString() == userData?.id)}
             groupAdminId={selectedChat?.groupAdmin}
             communitySelected={selectedChat?.community as CommunityChat}
+            isDeletedUser={userName?.userId.isDeleted || false}
           />
           <UserMessages
             chatId={selectedChat._id}
@@ -262,6 +264,8 @@ const MessageContainer = () => {
               setAcceptedId={setAcceptedId}
               setCurrTab={setCurrTab}
               isGroupChat={selectedChat?.isGroupChat}
+              isDeletedUser={userName?.userId.isDeleted || false}
+              isBlockedUser={userName?.userId?.isBlocked || false}
             />
           </div>
         </div>

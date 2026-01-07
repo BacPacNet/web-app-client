@@ -2,19 +2,16 @@ import React from 'react'
 import UserCard from '@/components/atoms/UserCard'
 import { AiOutlineLike } from 'react-icons/ai'
 import { HiReply } from 'react-icons/hi'
-import { FiMessageCircle, FiMoreHorizontal } from 'react-icons/fi'
+import { FiMessageCircle } from 'react-icons/fi'
 import { format } from 'date-fns'
 import PostCardImageGrid from '@/components/atoms/PostCardImagesGrid'
 import avatar from '@assets/avatar.svg'
-import { useDeleteUserPostComment } from '@/services/community-timeline'
-import { PostType } from '@/types/constants'
-import { useDeleteCommunityPostComment } from '@/services/community-university'
 import CommentCardOption from '@/components/atoms/CommentCardOption'
 import { motion } from 'framer-motion'
 import PostCommunityHolder from '../PostCommunityHolder'
+import { CommentItemProps } from '@/types/CommentPost'
 
 const CommentItem = ({
-  key,
   comment,
   currentUserId,
   postID,
@@ -28,26 +25,17 @@ const CommentItem = ({
   childCommentsId,
   sortBy,
   communities,
-}: any) => {
+  contentType,
+  parentCommentId,
+}: CommentItemProps) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
 
-  const { mutate: deleteUserPost } = useDeleteUserPostComment()
-  const { mutate: deleteCommunityPost } = useDeleteCommunityPostComment()
-
-  const handleDelete = () => {
-    if (type === PostType.Community) {
-      deleteCommunityPost(comment._id)
-    } else {
-      deleteUserPost(comment._id)
-    }
-  }
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
       transition={{ duration: 0.3 }}
-      key={key}
       className={`w-auto h-full  relative ${childCommentsId.includes(comment._id) ? 'ml-6' : ''} ${
         comment.level == 1 ? 'mt-4 ml-6 ' : 'first:mt-8 '
       }`}
@@ -55,11 +43,11 @@ const CommentItem = ({
       <div className="flex items-start gap-2 justify-between">
         <UserCard
           user={comment?.commenterId?.firstName + ' ' + comment?.commenterId?.lastName}
-          university={comment?.commenterProfileId?.university_name}
+          university={comment?.commenterProfileId?.university_name || ''}
           major={comment?.commenterProfileId?.major}
           year={comment?.commenterProfileId?.study_year}
           avatar={comment?.commenterProfileId?.profile_dp?.imageUrl || avatar}
-          adminId={comment?.commenterId?._id}
+          adminId={comment?.commenterId?._id || comment?.commenterId?.id || ''}
           postID={postID}
           type={type}
           role={comment?.commenterProfileId?.role}
@@ -72,7 +60,7 @@ const CommentItem = ({
         />
 
         <div className="flex items-center gap-2">
-          {communities?.length && communities?.length > 0 && (
+          {communities?.length && communities?.length > 0 ? (
             <div className="flex items-center gap-2">
               {communities
                 ?.slice()
@@ -98,16 +86,32 @@ const CommentItem = ({
                   />
                 ))}
             </div>
-          )}
+          ) : null}
           <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex ">
-            <CommentCardOption isSelfPost={commenterId === currentUserId} commentId={comment._id} isType={type} />
+            <CommentCardOption
+              isSelfPost={commenterId?.toString() === currentUserId?.toString()}
+              commentId={comment._id}
+              isType={type}
+              contentType={contentType}
+              postID={postID}
+              level={comment.level}
+              parentCommentId={parentCommentId || ''}
+            />
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 pt-2 border-b border-neutral-200">
         <p className="text-2xs sm:text-xs break-words " dangerouslySetInnerHTML={{ __html: comment?.content }} />
-        <PostCardImageGrid images={comment?.imageUrl} setImageCarasol={setImageCarasol} idx={0} type={type} isComment={true} />
+        {comment?.imageUrl && comment.imageUrl.length > 0 && (
+          <PostCardImageGrid
+            images={comment.imageUrl.filter((img) => img.imageUrl !== null).map((img) => ({ imageUrl: img.imageUrl! }))}
+            setImageCarasol={setImageCarasol}
+            idx={0}
+            type={type}
+            isComment={true}
+          />
+        )}
         <p className="text-2xs text-neutral-500 font-normal">
           {comment?.createdAt ? format(new Date(comment.createdAt), 'h:mm a · MMM d, yyyy') : ''}
         </p>
@@ -141,9 +145,9 @@ const CommentItem = ({
       </div>
 
       {/* Nest replies if available */}
-      {showReplies && comment.replies?.length > 0 && (
+      {showReplies && comment.replies && comment.replies.length > 0 && (
         <div className="w-full mt-6">
-          {comment.replies.map((reply: any) => (
+          {comment.replies.map((reply) => (
             <CommentItem
               key={reply._id}
               comment={reply}
@@ -159,6 +163,9 @@ const CommentItem = ({
                 handleReplyClick,
                 showReplies: true,
                 childCommentsId,
+                contentType,
+                sortBy,
+                parentCommentId: comment._id,
               }}
             />
           ))}

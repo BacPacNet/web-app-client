@@ -4,7 +4,7 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
-import { IUserProfileResponse } from '@/types/User'
+import { IUserProfileResponse, ReferralsResponse } from '@/types/User'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserData(token: any, id: string) {
@@ -26,6 +26,10 @@ const changeUserPassword = async (data: any, token: string) => {
 }
 const deActivateUserAccount = async (data: any, token: string) => {
   const res = await client(`/users/deActivateUserAccount`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
+  return res
+}
+const softDeleteUserAccount = async (token: string, data: any) => {
+  const res = await client(`/users`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, data })
   return res
 }
 const newUserTrue = async (token: string) => {
@@ -83,7 +87,6 @@ export function useUsersProfileForConnections(
 ) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(name, 1000)
-  console.log(chatId, 'chatId')
 
   return useInfiniteQuery({
     queryKey: ['usersProfileForConnections', debouncedSearchTerm],
@@ -174,5 +177,34 @@ export const useChangeUserPassword = () => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
     },
+  })
+}
+
+export const useDeleteUserAccount = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useMutation({
+    mutationFn: (data: any) => softDeleteUserAccount(cookieValue, data),
+
+    onSuccess: (res: any) => {
+      console.log(res, 'res')
+      showCustomDangerToast('Account deleted successfully')
+    },
+    onError: (res: any) => {
+      console.log(res.response.data.message, 'res')
+      showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+export async function getUserReferrals(token: string): Promise<ReferralsResponse> {
+  const response = await client<ReferralsResponse, any>(`/users/referrals`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserReferrals() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['getUserReferrals'],
+    queryFn: () => getUserReferrals(cookieValue),
+    enabled: !!cookieValue,
   })
 }

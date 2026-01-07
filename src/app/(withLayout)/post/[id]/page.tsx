@@ -10,6 +10,8 @@ import PostImageSlider from '@/components/atoms/PostImageSlider'
 import { openImageModal } from '@/components/molecules/ImageWrapper/ImageManager'
 import notMember from '@/assets/notCommunityMember.svg'
 import EmptyStateCard from '@/components/molecules/EmptyStateCard'
+import { MESSAGES } from '@/content/constant'
+import ErrorCard from '@/components/molecules/ErrorCard'
 
 const SinglePost = () => {
   const { id } = useParams<{ id: string }>()
@@ -42,7 +44,7 @@ const SinglePost = () => {
   if (isError) {
     return (
       <div>
-        <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="Post Not Found" description="" />
+        <ErrorCard title={MESSAGES.POST_NOT_FOUND} description={MESSAGES.POST_NOT_FOUND_DESCRIPTION} />
       </div>
     )
   }

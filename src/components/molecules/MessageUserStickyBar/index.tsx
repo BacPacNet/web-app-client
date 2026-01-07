@@ -41,6 +41,7 @@ type Props = {
   groupAdminId: string
   communitySelected: CommunityChat
   id: string
+  isDeletedUser: boolean
 }
 
 const MessageUserStickyBar = ({
@@ -59,8 +60,10 @@ const MessageUserStickyBar = ({
   groupAdminId,
   communitySelected,
   id,
+  isDeletedUser,
 }: Props) => {
   const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
+  const isBlockedByUser = users?.flat().some((user) => user.userId.isBlocked) || false
   const [open, setOpen] = useState(false)
   const { openModal } = useModal()
 
@@ -73,7 +76,7 @@ const MessageUserStickyBar = ({
   const router = useRouter()
 
   const isGroupAdmin = yourID === groupAdminId
-
+  const toShowPopover = (isDeletedUser || isBlockedByUser) && !isGroupChat ? false : true
   const handleMoveToInbox = () => {
     if (isGroupChat) {
       acceptGroupRequest({ chatId })
@@ -156,71 +159,72 @@ const MessageUserStickyBar = ({
             Move to inbox
           </button>
         )}
+        {toShowPopover && (
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger onClick={() => setOpen(!open)}>
+              <BiDotsHorizontalRounded className="w-8 h-8" />
+            </PopoverTrigger>
+            <PopoverContent className="relative px-0 py-2 drop-shadow-lg right-16 top-4 w-fit bg-white shadow-card border-none">
+              {isGroupChat ? (
+                <div className="text-sm text-neutral-700 font-medium">
+                  {isGroupAdmin && (
+                    <div
+                      onClick={() => {
+                        setOpen(false)
+                        handleEditGroupModal()
+                      }}
+                      className="flex px-4 gap-2 py-2 items-center cursor-pointer hover:bg-neutral-200"
+                    >
+                      <FaEdit size={20} className="text-primary-500" />
+                      <p>Edit Group Chat</p>
+                    </div>
+                  )}
 
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger onClick={() => setOpen(!open)}>
-            <BiDotsHorizontalRounded className="w-8 h-8" />
-          </PopoverTrigger>
-          <PopoverContent className="relative px-0 py-2 drop-shadow-lg right-16 top-4 w-fit bg-white shadow-card border-none">
-            {isGroupChat ? (
-              <div className="text-sm text-neutral-700 font-medium">
-                {isGroupAdmin && (
                   <div
                     onClick={() => {
                       setOpen(false)
-                      handleEditGroupModal()
+                      handleShowModal()
                     }}
-                    className="flex px-4 gap-2 py-2 items-center cursor-pointer hover:bg-neutral-200"
+                    className="flex gap-2 px-4 py-2 items-center  cursor-pointer hover:bg-neutral-200"
                   >
-                    <FaEdit size={20} className="text-primary-500" />
-                    <p>Edit Group Chat</p>
+                    <FaCircleUser size={20} className="text-primary-500" />
+                    <p>Show Members</p>
                   </div>
-                )}
 
+                  {isGroupAdmin ? (
+                    <div onClick={() => mutateDeleteChatGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                      <HiOutlineLogin size={20} className="text-destructive-600" />
+                      <p>Delete Group </p>
+                    </div>
+                  ) : (
+                    <div onClick={() => leaveGroup()} className="flex gap-2  px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
+                      <HiOutlineLogin size={20} className="text-destructive-600" />
+                      <p>Leave </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // ) : isGroupChat ? (
+                //   <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">
+                //     <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-2 items-center cursor-pointer">
+                //       <MdOutlineBlock size={20} className="text-destructive-600" />
+                //       {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
+                //     </div>
+                //   </div>
+                // )
                 <div
-                  onClick={() => {
-                    setOpen(false)
-                    handleShowModal()
-                  }}
-                  className="flex gap-2 px-4 py-2 items-center  cursor-pointer hover:bg-neutral-200"
+                  onClick={() => handleProfileClicked(id as string)}
+                  className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 "
                 >
-                  <FaCircleUser size={20} className="text-primary-500" />
-                  <p>Show Members</p>
-                </div>
-
-                {isGroupAdmin ? (
-                  <div onClick={() => mutateDeleteChatGroup()} className="flex gap-2 px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
-                    <HiOutlineLogin size={20} className="text-destructive-600" />
-                    <p>Delete Group </p>
+                  <div className="flex gap-2 items-center cursor-pointer">
+                    <FaUser size={20} />
+                    <p>View Profile</p>
                   </div>
-                ) : (
-                  <div onClick={() => leaveGroup()} className="flex gap-2  px-4  py-2 items-center   cursor-pointer hover:bg-neutral-200">
-                    <HiOutlineLogin size={20} className="text-destructive-600" />
-                    <p>Leave </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              // ) : isGroupChat ? (
-              //   <div className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 ">
-              //     <div onClick={() => toggleBlockMessage({ chatId })} className="flex gap-2 items-center cursor-pointer">
-              //       <MdOutlineBlock size={20} className="text-destructive-600" />
-              //       {isBlockedByYou ? <p>Un-Block Messages </p> : <p>Block Messages </p>}
-              //     </div>
-              //   </div>
-              // )
-              <div
-                onClick={() => handleProfileClicked(id as string)}
-                className="text-xs px-4 py-2 text-neutral-700 font-medium flex flex-col justify-evenly items-center hover:bg-neutral-200 "
-              >
-                <div className="flex gap-2 items-center cursor-pointer">
-                  <FaUser size={20} />
-                  <p>View Profile</p>
                 </div>
-              </div>
-            )}
-          </PopoverContent>
-        </Popover>
+              )}
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
     </div>
   )

@@ -2,21 +2,19 @@
 
 import ProfilePostContainer from '@/components/organisms/ProfilePostContainer'
 import { UserProfileCard } from '@/components/organisms/ProfileCard'
-
 import { Skeleton } from '@/components/ui/Skeleton'
 import { useCheckSelfProfile } from '@/lib/utils'
 import { useGetUserData } from '@/services/user'
-
 import React, { useRef } from 'react'
-import EmptyStateCard from '@/components/molecules/EmptyStateCard'
-import notMember from '@/assets/notCommunityMember.svg'
+import ErrorCard from '@/components/molecules/ErrorCard'
+import { MESSAGES } from '@/content/constant'
 
 export default function Profile({ params }: { params: { id: string } }) {
   const userId = params.id[0]
 
   const isSelfProfile = useCheckSelfProfile(userId)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { data: userProfileData, isLoading: isUserProfileDataLoading, isError: isUserProfileDataError } = useGetUserData(userId)
+  const { data: userProfileData, isLoading: isUserProfileDataLoading, isFetching, isError: isUserProfileDataError } = useGetUserData(userId)
 
   const { profile, firstName, lastName, isBlocked } = userProfileData || {}
   const {
@@ -43,11 +41,7 @@ export default function Profile({ params }: { params: { id: string } }) {
   //  const { logos } = university || {}
 
   if (isUserProfileDataError) {
-    return (
-      <div>
-        <EmptyStateCard imageWidth={320} imageHeight={171} imageSrc={notMember} title="User Not Found" description="" />
-      </div>
-    )
+    return <ErrorCard title={MESSAGES.USER_NOT_FOUND} description={MESSAGES.USER_NOT_FOUND_DESCRIPTION} />
   }
 
   const IsUniversityVerified = (): boolean => {
@@ -56,7 +50,7 @@ export default function Profile({ params }: { params: { id: string } }) {
 
   return (
     <div ref={containerRef} className="h-with-navbar py-4 overflow-y-scroll hideScrollbar">
-      {isUserProfileDataLoading || !userProfileData ? (
+      {isUserProfileDataLoading || isFetching || !userProfileData ? (
         <Skeleton className="w-full h-60 bg-slate-300" />
       ) : (
         <UserProfileCard
@@ -64,8 +58,8 @@ export default function Profile({ params }: { params: { id: string } }) {
           isPremium={true}
           description={bio || ''}
           university={university_name || 'Lorem University'}
-          following={following?.length || 0}
-          followers={followers?.length || 0}
+          following={following || []}
+          followers={followers || []}
           year={study_year || ''}
           degree={degree || ''}
           major={major || ''}
