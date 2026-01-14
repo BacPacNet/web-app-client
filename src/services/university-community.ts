@@ -8,7 +8,6 @@ export async function getUserSubscribedCommunities(token: any) {
   return response
 }
 export async function getUserFilteredSubscribedCommunities(communityId: string, token: string, data: any) {
-  console.log('data', data)
   const response = await client(`/community/filtered/${data?.communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
