@@ -9,6 +9,7 @@ import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import Pill from '@/components/atoms/Pill'
 import { TRACK_EVENT } from '@/content/constant'
 import mixpanel from 'mixpanel-browser'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 const GroupLabelCategories = ['Course', 'Club', 'Circle', 'Other']
@@ -37,7 +38,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
   const [selectedType, setSelectedType] = useState<string[]>([])
   const [selectedLabelLocal, setSelectedLabelLocal] = useState<string[]>([])
-  const { mutate } = useGetFilteredSubscribedCommunities(communityId)
+  const { applyFilters } = useCommunityFilter()
   const { closeModal } = useModal()
 
   const handleSelect = (category: string, option: string) => {
@@ -90,7 +91,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
   }
 
   const handleClick = () => {
-    const data = { selectedType, selectedFilters, selectedLabel: selectedLabelLocal, sort }
+    const data = { communityId, selectedType, selectedFilters, selectedLabel: selectedLabelLocal, sort }
     mixpanel.track(TRACK_EVENT.SIDEBAR_GROUP_FILTER, {
       communityId,
       selectedFilters,
@@ -101,7 +102,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
     setSelectedFiltersMain(selectedFilters)
     setSelectedTypeMain(selectedType)
     setSelectedLabel(selectedLabelLocal)
-    mutate(data)
+    applyFilters(data as any)
     closeModal()
   }
 
