@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.unibuzzapp",
+      "sha256_cert_fingerprints": [
+        "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
+        "96:0C:C2:29:5A:93:FD:5D:AC:88:FB:E6:D8:7E:C4:51:3E:81:F0:AF:60:37:09:3B:20:3B:E7:8E:0E:85:DE:79"
+      ]
+    }
+  }
+]
