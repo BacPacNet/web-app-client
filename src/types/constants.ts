@@ -225,6 +225,7 @@ export type Message = {
   sender: {
     firstName: string
     id: string
+    _id: string
     lastName: string
     role: string
     affiliation: string

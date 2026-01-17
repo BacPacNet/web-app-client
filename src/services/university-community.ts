@@ -8,7 +8,7 @@ export async function getUserSubscribedCommunities(token: any) {
   return response
 }
 export async function getUserFilteredSubscribedCommunities(communityId: string, token: string, data: any) {
-  const response = await client(`/community/filtered/${communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
+  const response = await client(`/community/filtered/${data?.communityId}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, data })
   return response
 }
 
@@ -23,6 +23,7 @@ export function useGetSubscribedCommunties() {
 export function useGetFilteredSubscribedCommunities(communityId: string = '') {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: any) => getUserFilteredSubscribedCommunities(communityId, cookieValue, data),
     onSuccess: (response: any) => {

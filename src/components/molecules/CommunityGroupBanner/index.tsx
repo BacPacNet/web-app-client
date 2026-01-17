@@ -7,7 +7,6 @@ import { useUniStore } from '@/store/store'
 import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import CommunityLeaveModal from '../CommunityLeaveModal'
-import { useFilterCommunityGroups } from '@/hooks/useFilterCommunityGroups'
 import { useQueryClient } from '@tanstack/react-query'
 import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
 import publicIcon from '@assets/public.svg'
@@ -28,6 +27,7 @@ import { notificationStatus } from '@/services/notification'
 import { useJoinCommunityGroup as useJoinCommunityGroupFromNotification } from '@/services/notification'
 import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import { verifyUniversityEmailMessage } from '@/types/constants'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 interface Props {
   communityID: string
@@ -68,13 +68,7 @@ export default function CommunityGroupBanner({
   const [toggleDropdown, setToggleDropdown] = useState(false)
   const { mutate: joinCommunityGroup, isPending } = useJoinCommunityGroup()
   const { mutateAsync: joinGroup } = useJoinCommunityGroupFromNotification()
-  const { applyFilters } = useFilterCommunityGroups({
-    communityId: communityID,
-    selectedType: [],
-    selectedFilters: {},
-    sort: 'userCountDesc',
-    enabled: false,
-  })
+  const { applyFilters, filteredCommunityGroups } = useCommunityFilter()
   const CommunityGroupMember = communityGroups?.users.filter((user) => user.status === status.accepted)
 
   const handleShowMembers = () => {
@@ -104,7 +98,12 @@ export default function CommunityGroupBanner({
         onSuccess: () => {
           refetch()
           queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-          applyFilters()
+          applyFilters({
+            communityId: communityID,
+            selectedType: [],
+            selectedFilters: {},
+            sort: 'userCountDesc',
+          })
         },
         onError: (error: any) => {
           if (error.response.data.message == verifyUniversityEmailMessage) {
@@ -168,7 +167,12 @@ export default function CommunityGroupBanner({
       joinCommunityGroup(communityGroupID, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-          applyFilters()
+          applyFilters({
+            communityId: communityID,
+            selectedType: [],
+            selectedFilters: {},
+            sort: 'userCountDesc',
+          })
         },
       })
     } else {
@@ -177,6 +181,15 @@ export default function CommunityGroupBanner({
           setIsMember={setIsUserJoinedCommunityGroup}
           communityGroupID={communityGroupID}
           setIsUserJoinedCommunityGroup={setIsUserJoinedCommunityGroup}
+          communityID={communityID}
+          applyFilters={() =>
+            applyFilters({
+              communityId: communityID,
+              selectedType: [],
+              selectedFilters: {},
+              sort: 'userCountDesc',
+            })
+          }
         />,
         'h-max w-96'
       )
