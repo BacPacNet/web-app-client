@@ -7,6 +7,7 @@ import useCookie from '@/hooks/useCookie'
 import { useRouter, useSearchParams } from 'next/navigation'
 import RedirectFromRegister from '@/components/organism/Register/redirect-screen'
 import Spinner from '@/components/atoms/spinner'
+import MobileAppDownload from '@/components/organism/Register/mobile-download'
 
 const progressBarData = [
   { title: 'Account Creation', des: 'Login Information' },
@@ -104,7 +105,7 @@ const Register = () => {
   }, [step, subStep])
 
   if (step == 4) {
-    return <RedirectFromRegister />
+    return <MobileAppDownload />
   }
 
   if (loading)

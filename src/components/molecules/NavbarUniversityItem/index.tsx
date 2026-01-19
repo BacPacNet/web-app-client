@@ -314,10 +314,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     const indextoPush = Number(index)
-    mixpanel.track(TRACK_EVENT.UNIVERSITY_COMMUNITY_PAGE_VIEW, {
-      communityId: subscribedCommunities?.[indextoPush]._id,
-      communityName: subscribedCommunities?.[indextoPush]?.name,
-    })
+    // mixpanel.track(TRACK_EVENT.UNIVERSITY_COMMUNITY_PAGE_VIEW, {
+    //   communityId: subscribedCommunities?.[indextoPush]._id,
+    //   communityName: subscribedCommunities?.[indextoPush]?.name,
+    // })
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
   }
