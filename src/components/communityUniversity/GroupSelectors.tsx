@@ -20,11 +20,11 @@ const GroupSelectors = ({
     setCurrSelectedGroup(data)
 
     router.push(`/community/${selectCommunityId}/${data?._id}`)
-    mixpanel.track(TRACK_EVENT.COMMUNITY_GROUP_PAGE_VIEW, {
-      communityId: selectCommunityId,
-      groupId: data?._id,
-      groupName: data?.title,
-    })
+    // mixpanel.track(TRACK_EVENT.COMMUNITY_GROUP_PAGE_VIEW, {
+    //   communityId: selectCommunityId,
+    //   groupId: data?._id,
+    //   groupName: data?.title,
+    // })
     toggleLeftNavbar && toggleLeftNavbar()
   }
   const isSelected = selectedCommuntyGroupdId === data?._id

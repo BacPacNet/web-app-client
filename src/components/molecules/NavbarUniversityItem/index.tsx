@@ -2,7 +2,6 @@
 import GroupSearchBox from '@/components/atoms/GroupSearchBox'
 import UserListItemSkeleton from '@/components/Connections/UserListItemSkeleton'
 import { useGetSubscribedCommunties } from '@/services/university-community'
-import { useFilterCommunityGroups } from '@/hooks/useFilterCommunityGroups'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -30,6 +29,7 @@ import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
 import { IoIosArrowDown } from 'react-icons/io'
 import mixpanel from 'mixpanel-browser'
 import { TRACK_EVENT } from '@/content/constant'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -99,12 +99,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-  const { applyFilters, filteredCommunityGroups, mutateFilterCommunityGroups } = useFilterCommunityGroups({
-    communityId: community?._id,
-    selectedType: selectedTypeMain,
-    selectedFilters: selectedFiltersMain,
-    sort,
-  })
+
+  const { applyFilters, filteredCommunityGroups } = useCommunityFilter()
 
   const handleCommunityClick = (index: number) => {
     handleUniversityClick(index)
@@ -224,9 +220,25 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     const expirationDateForLoginData = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000).toUTCString()
     // roughly 400 days from now — Chrome's current cap
     setSelectedCommunityGroupCommunityId(communityId, expirationDateForLoginData)
-    applyFilters()
+    applyFilters({
+      communityId: community?._id || '',
+      selectedType: selectedTypeMain,
+      selectedFilters: selectedFiltersMain,
+      sort,
+    })
     setOpen(false)
   }
+
+  useEffect(() => {
+    if (community?._id) {
+      applyFilters({
+        communityId: community?._id || '',
+        selectedType: selectedTypeMain,
+        selectedFilters: selectedFiltersMain,
+        sort,
+      })
+    }
+  }, [community?._id])
 
   const tabData = [
     {
@@ -302,10 +314,10 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   const handleUniversityClick = (index: React.SetStateAction<number>) => {
     const indextoPush = Number(index)
-    mixpanel.track(TRACK_EVENT.UNIVERSITY_COMMUNITY_PAGE_VIEW, {
-      communityId: subscribedCommunities?.[indextoPush]._id,
-      communityName: subscribedCommunities?.[indextoPush]?.name,
-    })
+    // mixpanel.track(TRACK_EVENT.UNIVERSITY_COMMUNITY_PAGE_VIEW, {
+    //   communityId: subscribedCommunities?.[indextoPush]._id,
+    //   communityName: subscribedCommunities?.[indextoPush]?.name,
+    // })
     setCommunity(subscribedCommunities?.[indextoPush] as Community)
     router.push(`/community/${subscribedCommunities?.[indextoPush]._id}`)
   }

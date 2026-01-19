@@ -13,6 +13,7 @@ import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
 import MixPanelProvider from '@/utils/MixPanelProvider'
+import { CommunityFilterProvider } from '@/context/CommunityGroupHookContext'
 type FontClassName = string
 
 const inter = Inter({
@@ -51,14 +52,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ReactQueryClientProvider>
           <MixPanelProvider>
             <ZustandSocketProvider>
-              <ModalProvider>
-                <Toaster />
-                {/* <ModalManager /> */}
-                <ImageManager />
-                <LogoNavbar />
-                {children}
-                {/*<Footer />*/}
-              </ModalProvider>
+              <CommunityFilterProvider>
+                <ModalProvider>
+                  <Toaster />
+                  {/* <ModalManager /> */}
+                  <ImageManager />
+                  <LogoNavbar />
+                  {children}
+                  {/*<Footer />*/}
+                </ModalProvider>
+              </CommunityFilterProvider>
             </ZustandSocketProvider>
           </MixPanelProvider>
         </ReactQueryClientProvider>
