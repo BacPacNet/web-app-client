@@ -28,7 +28,6 @@ import GenericInfoModal from '../VerifyUniversityToJoinModal/VerifyUniversityToJ
 import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
 import { IoIosArrowDown } from 'react-icons/io'
 import mixpanel from 'mixpanel-browser'
-import { TRACK_EVENT } from '@/content/constant'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 interface Props {
@@ -209,6 +208,17 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
 
   // Filter community groups - automatically triggered by useFilterCommunityGroups hook
 
+  useEffect(() => {
+    const verifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified).map((community) => community?.name)
+    const unverifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified === false).map((community) => community?.name)
+    if (userData?.id) {
+      mixpanel.people.set({
+        $verifiedCommunities: verifiedCommunities,
+        $unverifiedCommunities: unverifiedCommunities,
+      })
+    }
+  }, [subscribedCommunities, userData?.id])
+
   const handleSelect = (value: string) => {
     setSort(value)
     setIsOpen(false)
@@ -221,7 +231,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     // roughly 400 days from now — Chrome's current cap
     setSelectedCommunityGroupCommunityId(communityId, expirationDateForLoginData)
     applyFilters({
-      communityId: community?._id || '',
+      communityId: communityId || '',
       selectedType: selectedTypeMain,
       selectedFilters: selectedFiltersMain,
       sort,

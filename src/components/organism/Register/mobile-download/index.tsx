@@ -1,6 +1,6 @@
 'use client'
 import Card from '@/components/atoms/Card'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import GoogleStoreSvg from '@/assets/downloadApp/googleStore.svg'
 import AppleStoreSvg from '@/assets/downloadApp/appleStore.svg'
@@ -14,6 +14,8 @@ import { useRouter } from 'next/navigation'
 import Spinner from '@/components/atoms/spinner'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import { TRACK_EVENT } from '@/content/constant'
+import { trackEvent } from '@/mixpanel/track'
 const MobileAppDownload = () => {
   const router = useRouter()
   const [cookieLoginValue] = useCookie('login_data')
@@ -32,6 +34,17 @@ const MobileAppDownload = () => {
       toast.error('Please login to continue')
     }
   }
+
+  useEffect(() => {
+    if (cookieLoginValue) {
+      const loginData = JSON.parse(cookieLoginValue)
+      if (loginData) {
+        trackEvent(TRACK_EVENT.REGISTRATION_COMPLETE, {
+          email: loginData?.email,
+        })
+      }
+    }
+  }, [cookieLoginValue])
 
   return (
     <div className="md:h-with-navbar flex   bg-neutral-100 flex-col items-center justify-center px-8 ">
