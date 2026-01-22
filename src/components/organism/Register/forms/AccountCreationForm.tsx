@@ -8,6 +8,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useRouter } from 'next/navigation'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 
 type Props = {
   isPending: boolean
@@ -21,7 +23,11 @@ const AccountCreationForm = ({ isPending }: Props) => {
     register,
     formState: { errors: registerFormErrors },
     watch,
+    getValues,
   } = useFormContext()
+  useTimeTracking(TRACK_EVENT.ACCOUNT_CREATION_STEP_VIEW_DURATION, {
+    email: getValues('email'),
+  })
 
   const password = watch('password')
 

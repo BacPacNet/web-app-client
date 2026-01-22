@@ -20,7 +20,7 @@ const initMixpanel = (): void => {
   try {
     mixpanel.init(MIXPANEL_TOKEN, {
       debug: isDevelopment,
-      track_pageview: true,
+      //   track_pageview: true,
     })
   } catch (error) {
     if (isDevelopment) {

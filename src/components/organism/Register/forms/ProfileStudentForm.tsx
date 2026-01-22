@@ -11,6 +11,8 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import { currYear, degreeAndMajors } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import Switch from '@/components/atoms/Switch'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 
 const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -18,8 +20,11 @@ const ProfileStudentForm = ({ handlePrev }: { handlePrev: () => void }) => {
     control,
     watch,
     setValue,
+    getValues,
   } = useFormContext()
-
+  useTimeTracking(TRACK_EVENT.PROFILE_STUDENT_SETUP_STEP_VIEW_DURATION, {
+    email: getValues('email'),
+  })
   type DegreeKeys = keyof typeof degreeAndMajors
   const currDegree: DegreeKeys = watch('year')
   const currMa: DegreeKeys = watch('major')

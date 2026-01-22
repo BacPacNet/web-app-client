@@ -13,6 +13,8 @@ import DateSelect from '@/components/atoms/DateSelect/DateSelect'
 import { userType } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import { isValid, parse } from 'date-fns'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 
 const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -20,8 +22,11 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
     formState: { errors: ProfileFormErrors },
     control,
     setValue,
+    getValues,
   } = useFormContext()
-
+  useTimeTracking(TRACK_EVENT.PROFILE_SETUP_STEP_VIEW_DURATION, {
+    email: getValues('email'),
+  })
   return (
     <div className="w-full  flex flex-col gap-8 items-center ">
       <div className="text-start flex flex-col gap-2 w-full">

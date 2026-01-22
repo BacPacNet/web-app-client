@@ -209,8 +209,23 @@ export default function CommunityGroupBanner({
     openModal(<EditCommunityGroupModal setNewGroup={setShowEditGroupMoadal} communityGroups={communityGroups} />)
   }
 
+  const refetchCommunityGroup = () => {
+    applyFilters({
+      communityId: communityGroups?.communityId?._id,
+      selectedType: [],
+      selectedFilters: {},
+      sort: 'userCountDesc',
+    })
+  }
   const handleDeleteGroup = () => {
-    openModal(<DeleteCommunityGroupModal communityId={communityGroups?.communityId?._id} communityGroupId={communityGroups?._id} />, 'h-max w-96')
+    openModal(
+      <DeleteCommunityGroupModal
+        communityId={communityGroups?.communityId?._id}
+        communityGroupId={communityGroups?._id}
+        refetchCommunityGroup={refetchCommunityGroup}
+      />,
+      'h-max w-96'
+    )
     //deleteCommunityGroup(communityGroups?._id || '')
     //router.push(`/community/${communityGroups?.communityId._id}`)
   }

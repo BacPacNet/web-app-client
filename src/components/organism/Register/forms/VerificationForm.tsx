@@ -11,6 +11,8 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import { Slot } from '@/components/atoms/OTP-Input/OTP_SlotAndCarrot'
 import { MdOutlineArrowBack } from 'react-icons/md'
+import { TRACK_EVENT } from '@/content/constant'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
 
 interface props {
   isVerificationSuccess: boolean
@@ -28,7 +30,9 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
     clearErrors,
   } = useFormContext()
   const { mutate: generateLoginEmailOTP, countdown, isCounting } = useHandleLoginEmailVerificationGenerateWithCountdown()
-
+  useTimeTracking(TRACK_EVENT.EMAIL_VERIFICATION_STEP_VIEW_DURATION, {
+    email: getValues('email'),
+  })
   const email = getValues('email')
   const handleLoginEmailSendCode = () => {
     if (!email) {
