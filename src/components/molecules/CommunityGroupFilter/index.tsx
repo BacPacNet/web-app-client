@@ -1,6 +1,5 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
-import { useGetFilteredSubscribedCommunities } from '@/services/university-community'
 import { subCategories } from '@/types/CommuityGroup'
 import React, { useEffect, useState } from 'react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
@@ -99,6 +98,7 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
       selectedLabel: selectedLabelLocal,
       sort,
     })
+
     setSelectedFiltersMain(selectedFilters)
     setSelectedTypeMain(selectedType)
     setSelectedLabel(selectedLabelLocal)

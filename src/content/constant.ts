@@ -79,6 +79,13 @@ export enum TRACK_EVENT {
   //   register page events
   REGISTER_PAGE_VIEW_DURATION = 'register_page_view',
   UNIVERSITY_VERIFICATION_STEP_VIEW_DURATION = 'university_verification_step_view',
+  ACCOUNT_CREATION_STEP_VIEW_DURATION = 'account_creation_step_view',
+  PROFILE_SETUP_STEP_VIEW_DURATION = 'profile_setup_step_view',
+  PROFILE_STUDENT_SETUP_STEP_VIEW_DURATION = 'profile_student_setup_step_view',
+  PROFILE_FACULTY_SETUP_STEP_VIEW_DURATION = 'profile_faculty_setup_step_view',
+  EMAIL_VERIFICATION_STEP_VIEW_DURATION = 'email_verification_step_view',
+
+  REGISTRATION_COMPLETE = 'registration_complete',
 
   //   error page events
   ERROR_PAGE_VIEW = 'error_page_view',

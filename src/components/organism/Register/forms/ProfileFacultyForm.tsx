@@ -11,6 +11,8 @@ import SelectUniversityDropdown from '@/components/atoms/SelectUniversityDropDow
 import { occupationAndDepartment } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import Switch from '@/components/atoms/Switch'
+import { useTimeTracking } from '@/hooks/useTimeTracking'
+import { TRACK_EVENT } from '@/content/constant'
 
 const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const {
@@ -26,7 +28,9 @@ const ProfileFacultyForm = ({ handlePrev }: { handlePrev: () => void }) => {
   const currFormDepartment: occupationKeys = watch('department')
   const userType = getValues('userType')
   const [currDepartment, setCurrDepartment] = useState<any>([])
-
+  useTimeTracking(TRACK_EVENT.PROFILE_FACULTY_SETUP_STEP_VIEW_DURATION, {
+    email: getValues('email'),
+  })
   useEffect(() => {
     setCurrDepartment(occupationAndDepartment[currOccupation] || [])
     if (!occupationAndDepartment[currOccupation]?.includes(currFormDepartment)) {

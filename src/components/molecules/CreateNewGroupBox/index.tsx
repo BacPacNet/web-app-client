@@ -39,6 +39,7 @@ import Switch from '@/components/atoms/Switch'
 import Image from 'next/image'
 import { TRACK_EVENT } from '@/content/constant'
 import mixpanel from 'mixpanel-browser'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 type Props = {
   communityId: string
@@ -72,6 +73,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAd
   const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
   const { mutateAsync: createGroup, isPending } = useCreateCommunityGroup(isCommunityAdmin)
   const { mutateAsync: uploadToS3 } = useUploadToS3()
+  const { applyFilters } = useCommunityFilter()
   const {
     register: GroupRegister,
     watch,
@@ -223,6 +225,12 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAd
             accessType: payload.communityGroupAccess,
             groupLabel: payload.communityLabel,
             communityId: communityId,
+          })
+          applyFilters({
+            communityId: communityId,
+            selectedType: [],
+            selectedFilters: {},
+            sort: 'userCountDesc',
           })
         },
         onError: (error: any) => {

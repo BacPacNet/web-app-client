@@ -5,22 +5,25 @@ import { useDeleteCommunityGroup } from '@/services/community-group'
 import { useRouter } from 'next/navigation'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { useModal } from '@/context/ModalContext'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 type Props = {
   communityId?: string
   setIsUserJoinedCommunity?: (value: boolean) => void
   setIsUserJoinedCommunityGroup?: (value: boolean) => void
   communityGroupId?: string
+  refetchCommunityGroup?: () => void
 }
 
-const DeleteCommunityGroupModal = ({ communityGroupId, communityId }: Props) => {
+const DeleteCommunityGroupModal = ({ communityGroupId, communityId, refetchCommunityGroup }: Props) => {
   const router = useRouter()
   const { closeModal } = useModal()
-  const { mutate: deleteCommunityGroup, isPending: isDeleteCommunityGroupPending } = useDeleteCommunityGroup()
+  const { mutateAsync: deleteCommunityGroup, isPending: isDeleteCommunityGroupPending } = useDeleteCommunityGroup()
 
-  const handleDeleteCommunityGroup = () => {
-    deleteCommunityGroup(communityGroupId as string)
+  const handleDeleteCommunityGroup = async () => {
+    await deleteCommunityGroup(communityGroupId as string, {})
     closeModal()
+    refetchCommunityGroup?.()
     router.push(`/community/${communityId}`)
   }
   return (
