@@ -35,6 +35,7 @@ import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import Image from 'next/image'
 import Switch from '@/components/atoms/Switch'
+import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -61,6 +62,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [filtersError, setFIltersError] = useState('')
   const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
+  const { applyFilters } = useCommunityFilter()
 
   const {
     data: communityUsersData,
@@ -272,6 +274,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           setSelectedFilters({})
           setNewGroup(false)
           closeModal()
+          applyFilters({
+            communityId: communityGroups?.communityId?._id,
+            selectedType: [],
+            selectedFilters: {},
+            sort: 'userCountDesc',
+          })
         },
         onError: (error: any) => {
           const err = JSON.parse(error.response?.data?.message ?? '{}')
