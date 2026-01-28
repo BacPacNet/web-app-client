@@ -6,6 +6,7 @@ import Recommendations from '@/components/Timeline/Recommendations'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import FooterLinks from '@/components/molecules/FooterLinks'
+import DownloadApp from '@/components/Timeline/rightSidebar/downloadApp'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Right Sidebar - Fixed */}
         <aside className="hidden lg:block bg-white w-[284px] sticky top-0">
           <Card className="h-with-navbar custom-scrollbar overflow-y-auto px-4">
+            <DownloadApp />
             <Recommendations />
             <FooterLinks isOnLeft={true} />
             <p className="text-neutral-500 text-xs font-normal text-center">Unibuzz Networks © 2024 </p>

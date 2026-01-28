@@ -21,7 +21,7 @@ const CommentItem = ({
   likeHandler,
   toggleCommentSection,
   handleReplyClick,
-  showReplies,
+
   childCommentsId,
   sortBy,
   communities,
@@ -30,12 +30,6 @@ const CommentItem = ({
 }: CommentItemProps) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
   const [visibleReplyCount, setVisibleReplyCount] = React.useState(2)
-
-  React.useEffect(() => {
-    if (!showReplies) {
-      setVisibleReplyCount(2)
-    }
-  }, [showReplies])
 
   return (
     <motion.div
@@ -135,14 +129,14 @@ const CommentItem = ({
             <span className="mx-1">{comment?.likeCount?.length || 0}</span>
           </motion.div>
 
-          {comment.level < 1 && (
-            <motion.span className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
+          {comment?.level < 1 && (
+            <motion.span onClick={() => toggleCommentSection(comment)} className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               <FiMessageCircle className="mr-1 text-neutral-600" />
               {comment?.totalCount || comment?.replies?.length || 0}
             </motion.span>
           )}
 
-          {comment.level < 1 && (
+          {comment?.level < 1 && (
             <motion.div onClick={() => handleReplyClick(comment)} className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               <HiReply className="text-gray-dark" />
               <span className="ml-1 font-poppins text-xs">reply</span>
@@ -152,7 +146,7 @@ const CommentItem = ({
       </div>
 
       {/* Nest replies if available */}
-      {showReplies && comment?.replies && comment?.replies?.length > 0 && (
+      {comment?.replies && comment?.replies?.length > 0 && (
         <div className="w-full mt-6">
           {comment?.replies?.slice(0, visibleReplyCount).map((reply) => (
             <CommentItem

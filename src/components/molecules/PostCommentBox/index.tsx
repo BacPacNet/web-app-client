@@ -114,7 +114,7 @@ const PostCommentBox = ({
 
   const [visibleComments, setVisibleComments] = useState<{ [key: string]: boolean }>({})
   const [childCommentsId, setChildCommentsId] = useState<string[]>([])
-  console.log('childCommentsId', childCommentsId)
+
   const [commentData, setCommentData] = useState<any>()
   const [isReply, setIsReply] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
