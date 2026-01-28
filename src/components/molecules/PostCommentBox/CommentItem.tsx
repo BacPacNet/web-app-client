@@ -29,6 +29,13 @@ const CommentItem = ({
   parentCommentId,
 }: CommentItemProps) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
+  const [visibleReplyCount, setVisibleReplyCount] = React.useState(2)
+
+  React.useEffect(() => {
+    if (!showReplies) {
+      setVisibleReplyCount(2)
+    }
+  }, [showReplies])
 
   return (
     <motion.div
@@ -129,7 +136,7 @@ const CommentItem = ({
           </motion.div>
 
           {comment.level < 1 && (
-            <motion.span onClick={() => toggleCommentSection(comment)} className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
+            <motion.span className="flex items-center cursor-pointer" whileHover={{ scale: 1.1 }}>
               <FiMessageCircle className="mr-1 text-neutral-600" />
               {comment?.totalCount || comment?.replies?.length || 0}
             </motion.span>
@@ -145,9 +152,9 @@ const CommentItem = ({
       </div>
 
       {/* Nest replies if available */}
-      {showReplies && comment.replies && comment.replies.length > 0 && (
+      {showReplies && comment?.replies && comment?.replies?.length > 0 && (
         <div className="w-full mt-6">
-          {comment.replies.map((reply) => (
+          {comment?.replies?.slice(0, visibleReplyCount).map((reply) => (
             <CommentItem
               key={reply._id}
               comment={reply}
@@ -169,6 +176,16 @@ const CommentItem = ({
               }}
             />
           ))}
+          {comment?.replies?.length > visibleReplyCount && (
+            <button className="text-primary text-xs font-medium mt-2" onClick={() => setVisibleReplyCount((prev) => prev + 5)}>
+              Show more replies
+            </button>
+          )}
+          {comment?.replies?.length > 2 && visibleReplyCount > 2 && visibleReplyCount >= comment?.replies?.length && (
+            <button className="text-primary text-xs font-medium mt-2 ml-4" onClick={() => setVisibleReplyCount(2)}>
+              Show fewer replies
+            </button>
+          )}
         </div>
       )}
     </motion.div>
