@@ -5,13 +5,10 @@ import { HiHome } from 'react-icons/hi'
 import { IoMdPeople } from 'react-icons/io'
 import { BiSolidMessageDots } from 'react-icons/bi'
 import { FaBell } from 'react-icons/fa6'
-import { PiFinnTheHumanFill } from 'react-icons/pi'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import botIcon from '@/assets/botIcon.svg'
 import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
-import Image from 'next/image'
 import NotificationBadge from '@/components/atoms/NotificationBadge'
 
 interface Props {

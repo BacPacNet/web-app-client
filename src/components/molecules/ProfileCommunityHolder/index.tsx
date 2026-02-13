@@ -77,7 +77,7 @@ const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityA
 
             {isOpen && (
               <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[215px] h-max bg-white z-50 py-2 px-4 rounded-lg shadow-md">
-                <p className="w-full text-neutral-700 text-2xs font-medium">Your profile is currently associated with this university.</p>
+                <p className="w-full text-neutral-700 text-2xs font-medium">Profile is currently associated with this university.</p>
               </div>
             )}
           </div>

@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import Tabs from '../Tabs'
-import AssignGroupModerators from '@/components/communityUniversity/AssignGroupModerators'
 import { useUniStore } from '@/store/store'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import CommunityGroupAll from './Tabs/communityGroupAll'
@@ -141,9 +140,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     }
     toggleLeftNavbar && toggleLeftNavbar()
   }
-  const handleAssignUsersModal = () => {
-    openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
-  }
+
   const handleCommunityGroupFilter = () => {
     toggleLeftNavbar && toggleLeftNavbar()
     openModal(
@@ -240,7 +237,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   }
 
   useEffect(() => {
-    if (community?._id) {
+    if (community?._id && isLoading) {
       applyFilters({
         communityId: community?._id || '',
         selectedType: selectedTypeMain,
@@ -262,7 +259,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          handleAssignUsersModal={handleAssignUsersModal}
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
@@ -275,14 +271,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'All',
       content: (
         <CommunityGroupAll
-          key={subscribedCommunities}
+          key={subscribedCommunitiesAllGroups}
           communityGroups={subscribedCommunitiesAllGroups}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          handleAssignUsersModal={handleAssignUsersModal}
           SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
@@ -310,7 +305,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             currSelectedGroup={currSelectedGroup as Community}
             setCurrSelectedGroup={setCurrSelectedGroup}
             userData={userData}
-            handleAssignUsersModal={handleAssignUsersModal}
             SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}

@@ -16,10 +16,7 @@ const changeUserName = async (data: any, token: string) => {
   const res = await client(`/users/changeUserName`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
 }
-const changeUserEmail = async (data: any, token: string) => {
-  const res = await client(`/users/changeUserEmail`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
-  return res
-}
+
 const changeUserPassword = async (data: any, token: string) => {
   const res = await client(`/users/changeUserPassword`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
@@ -128,20 +125,7 @@ export const useChangeUserName = () => {
     },
   })
 }
-export const useChangeUserEmail = () => {
-  const setUserData = useUniStore((state) => state.setUserData)
-  const [cookieValue] = useCookie('uni_user_token')
-  return useMutation({
-    mutationFn: (data: any) => changeUserEmail(data, cookieValue),
-    onSuccess: (response: any) => {
-      setUserData(response)
-    },
-    onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
-      showCustomDangerToast(res.response.data.message)
-    },
-  })
-}
+
 export const useDeActivateUserAccount = () => {
   const [cookieValue] = useCookie('uni_user_token')
   return useMutation({
