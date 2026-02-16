@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { TiFilter } from 'react-icons/ti'
 import GroupSelectors from './GroupSelectors'
 import GroupFilterPopUp from './GroupFilterPopUp'
-import CreateNewGroup from './CreateNewGroup'
 import { useModal } from '@/context/ModalContext'
 
 const GroupSideBar = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined }: any) => {
@@ -94,12 +93,7 @@ const GroupSideBar = ({ data, currSelectedGroup, setCurrSelectedGroup, isJoined 
           </div>
         ) : currGroup == 'Your Groups' ? (
           <div className="min-h-[412.8px] max-md:min-h-[100px] w-full flex flex-col items-center relative after:content-[''] after:absolute after:right-0 after:z-10 after:top-[calc(20%+10px)] max-md:after:top-[calc(75%+10px)] after:w-[calc(100%)] after:h-[2px] after:bg-neutral-300">
-            <button
-              onClick={() => openModal(<CreateNewGroup setNewGroup={closeModal} />)}
-              className="bg-primary py-3 px-5 my-4 text-white rounded-md"
-            >
-              Create your Group
-            </button>
+            <button className="bg-primary py-3 px-5 my-4 text-white rounded-md">Create your Group</button>
           </div>
         ) : (
           <div className=" min-h-[412.8px] max-md:min-h-[100px]"></div>

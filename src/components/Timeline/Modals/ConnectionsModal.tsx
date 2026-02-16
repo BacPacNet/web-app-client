@@ -99,31 +99,17 @@ const ConnectionsModal = ({ defaultTab = 'Following', userId = '' }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const userFollow = useMemo(() => {
-    const followingIds = new Set(userProfileData?.following?.map((f) => f.userId))
-
     return (
       userFollowData?.pages.flatMap((page) =>
-        page.users
-          .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
-          .map((user) => ({
-            ...user,
-            isFollowing: followingIds.has(user._id),
-          }))
+        page.users.filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
       ) || []
     )
   }, [userFollowData, userProfileData, currIdInPathName])
 
   const userFollowers = useMemo(() => {
-    const followingIds = new Set(userProfileData?.following?.map((f) => f.userId))
-
     return (
       userFollowersData?.pages.flatMap((page) =>
-        page.users
-          .filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
-          .map((user) => ({
-            ...user,
-            isFollowing: followingIds.has(user._id),
-          }))
+        page.users.filter((user) => (userProfileData?.users_id === currIdInPathName ? user._id !== userProfileData?.users_id : true))
       ) || []
     )
   }, [userFollowersData, userProfileData, currIdInPathName])
