@@ -10,15 +10,16 @@ interface TabsProps {
   className?: string
   tabAlign?: 'left' | 'center' | 'right'
   labelSize?: 'small' | 'medium' | 'large'
+  activeTabIndex?: number
 }
 
-const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left', labelSize = 'medium' }) => {
+const Tabs: React.FC<TabsProps> = ({ tabs, className = '', tabAlign = 'left', labelSize = 'medium', activeTabIndex = 0 }) => {
   const fontSize = {
     small: 'text-2xs',
     medium: 'text-xs',
     large: 'text-sm',
   }
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(activeTabIndex)
 
   const handleTabClick = (index: number) => {
     setActiveTab(index)

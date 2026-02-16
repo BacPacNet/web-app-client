@@ -96,8 +96,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [community, setCommunity] = useState<Community>()
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
-  const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-
+  const { data: subscribedCommunities } = useGetSubscribedCommunties()
+  const [isLoading, setIsLoading] = useState(true)
   const { applyFilters, filteredCommunityGroups } = useCommunityFilter()
 
   const handleCommunityClick = (index: number) => {
@@ -235,7 +235,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     })
     setOpen(false)
   }
-
   useEffect(() => {
     if (community?._id && isLoading) {
       applyFilters({
@@ -244,8 +243,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         selectedFilters: selectedFiltersMain,
         sort,
       })
+      setIsLoading(false)
     }
-  }, [community?._id])
+  }, [community?._id, isLoading])
 
   const tabData = [
     {
@@ -415,7 +415,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
       <div className="h-fit">
         {subscribedCommunities?.length !== 0 ? (
-          <Tabs tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
+          <Tabs activeTabIndex={1} tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
         ) : (
           //  <CommunityGroupAll
           //    key={subscribedCommunities}
