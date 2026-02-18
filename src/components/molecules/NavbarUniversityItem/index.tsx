@@ -250,6 +250,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         selectedFilters: selectedFiltersMain,
         sort,
       })
+      setIsLoading(false)
     }
   }, [sort])
 
