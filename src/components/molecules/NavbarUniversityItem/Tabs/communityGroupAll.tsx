@@ -7,7 +7,6 @@ function CommunityGroupAll({
   showGroupTill,
   currSelectedGroup,
   userData,
-  SetcurrClickedID,
   setCurrSelectedGroup,
   selectedCommuntyGroupdId,
   setShowGroupTill,
@@ -31,7 +30,6 @@ function CommunityGroupAll({
             data={item}
             userId={userData?.id}
             handleAssignUsersModal={handleAssignUsersModal}
-            SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
             toggleLeftNavbar={toggleLeftNavbar}

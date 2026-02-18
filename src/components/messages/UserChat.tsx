@@ -22,7 +22,7 @@ type Props = {
 }
 
 const UserChat = ({ profilePic, users, lastMessage, isSeen, date, YourID, groupName, isGroupChat, unRead }: Props) => {
-  const userName = users?.flat().filter((item) => item.userId._id != YourID)
+  const userName = users?.flat().filter((item) => item?.userId?._id != YourID)
 
   return (
     <div className="flex gap-2 px-4">

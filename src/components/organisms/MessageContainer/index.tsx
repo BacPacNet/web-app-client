@@ -240,7 +240,7 @@ const MessageContainer = () => {
             isBlockedByYou={selectedChat.blockedBy.some((id) => id.toString() == userData?.id)}
             groupAdminId={selectedChat?.groupAdmin}
             communitySelected={selectedChat?.community as CommunityChat}
-            isDeletedUser={userName?.userId.isDeleted || false}
+            isDeletedUser={userName?.userId?.isDeleted || false}
           />
           <UserMessages
             chatId={selectedChat._id}
@@ -264,7 +264,7 @@ const MessageContainer = () => {
               setAcceptedId={setAcceptedId}
               setCurrTab={setCurrTab}
               isGroupChat={selectedChat?.isGroupChat}
-              isDeletedUser={userName?.userId.isDeleted || false}
+              isDeletedUser={userName?.userId?.isDeleted || false}
               isBlockedUser={userName?.userId?.isBlocked || false}
             />
           </div>

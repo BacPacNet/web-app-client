@@ -62,8 +62,8 @@ const MessageUserStickyBar = ({
   id,
   isDeletedUser,
 }: Props) => {
-  const userName = users?.flat().filter((item) => item.userId._id != yourID) || []
-  const isBlockedByUser = users?.flat().some((user) => user.userId.isBlocked) || false
+  const userName = users?.flat().filter((item) => item?.userId?._id != yourID) || []
+  const isBlockedByUser = users?.flat().some((user) => user?.userId?.isBlocked) || false
   const [open, setOpen] = useState(false)
   const { openModal } = useModal()
 
