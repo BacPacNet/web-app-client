@@ -14,12 +14,8 @@ import { useModal } from '@/context/ModalContext'
 import mixpanel from 'mixpanel-browser'
 import { TRACK_EVENT } from '@/content/constant'
 
-export async function getCommunity(communityId: string) {
-  const response = await client(`/community/${communityId}`)
-  return response
-}
-export async function getCommunityFromUniversity(universityId: string) {
-  const response = await client(`/community/uni/${universityId}`)
+export async function getCommunity(communityId: string, token: string) {
+  const response = await client(`/community/${communityId}`, { headers: { Authorization: `Bearer ${token}` } })
   return response
 }
 
@@ -182,15 +178,17 @@ export function useDeleteCommunityPostComment() {
 export function useGetCommunity(communityId: string) {
   return useQuery({
     queryKey: ['community', communityId],
-    queryFn: () => getCommunity(communityId),
+    queryFn: () => getCommunity(communityId, ''),
     enabled: !!communityId,
   }) as UseQueryResult<Community>
 }
-export function useGetCommunityFromUniversityId(universityId: string) {
+
+export function useGetCommunityByToken(communityId: string) {
+  const [cookieValue] = useCookie('uni_user_token')
   return useQuery({
-    queryKey: ['communityFromUniversity', universityId],
-    queryFn: () => getCommunityFromUniversity(universityId),
-    enabled: !!universityId,
+    queryKey: ['community', communityId],
+    queryFn: () => getCommunity(communityId, cookieValue),
+    enabled: !!communityId && !!cookieValue,
   }) as UseQueryResult<Community>
 }
 

@@ -43,23 +43,18 @@ import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 type Props = {
   communityId: string
-  setNewGroup: (value: boolean) => void
   communityName: string
   isCommunityAdmin: boolean
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAdmin }: Props) => {
+const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props) => {
   const { userProfileData } = useUniStore()
-  const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File | null>(null)
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
-
   const [searchInput, setSearchInput] = useState('')
-  const logoInputRef = useRef<HTMLInputElement>(null)
-
   const [universityError, setUniversityError] = useState(false)
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})

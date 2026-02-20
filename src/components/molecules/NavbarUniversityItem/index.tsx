@@ -74,7 +74,6 @@ const sortOptions = [
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
-  const [cookieValue] = useCookie('uni_user_token')
   const [selectedCommunityGroupCommunityId, setSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
   const [isOpen, setIsOpen] = useState(false)
   const [open, setOpen] = useState(false)
@@ -82,16 +81,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
-
-  const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
-  const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [selectedLabel, setSelectedLabel] = useState<string[]>([])
   const [sort, setSort] = useState<string>('userCountDesc')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 1000)
-  const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
@@ -107,7 +102,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     toggleLeftNavbar && toggleLeftNavbar()
   }
 
-  const isUserVerifiedForCommunity: boolean = userProfileData?.email?.some((community) => community?.communityId === selectCommunityId) || false
+  const isUserVerifiedForCommunity: boolean =
+    userProfileData?.email?.some((profileCommunity) => profileCommunity?.communityId === community?._id) || false
 
   const canUserCreateGroup = community?.users.some((user) => user._id === userData?.id) && isUserVerifiedForCommunity
 
@@ -132,7 +128,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         <CreateNewGroupBox
           communityName={community?.name || 'Sd'}
           communityId={community?._id || ''}
-          setNewGroup={setShowNewGroup}
           isCommunityAdmin={community?.adminId.includes(userData?.id?.toString() || '') || false}
         />,
         'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar'
@@ -247,6 +242,18 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     }
   }, [community?._id, isLoading])
 
+  useEffect(() => {
+    if (sort && community?._id) {
+      applyFilters({
+        communityId: community?._id || '',
+        selectedType: selectedTypeMain,
+        selectedFilters: selectedFiltersMain,
+        sort,
+      })
+      setIsLoading(false)
+    }
+  }, [sort])
+
   const tabData = [
     {
       label: 'Joined',
@@ -259,7 +266,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
@@ -278,7 +284,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
@@ -305,7 +310,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             currSelectedGroup={currSelectedGroup as Community}
             setCurrSelectedGroup={setCurrSelectedGroup}
             userData={userData}
-            SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
             toggleLeftNavbar={toggleLeftNavbar}
