@@ -6,7 +6,9 @@ import { Spinner } from '@/components/spinner/Spinner'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import InputBox from '@/components/atoms/Input/InputBox'
 import { useSendContactMessage } from '@/services/contact'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { useSubmitCaptcha } from '@/services/captcha'
 
 interface FormValues {
   firstName: string
@@ -17,6 +19,10 @@ interface FormValues {
 }
 
 export function ContactForm() {
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null)
+  const formDataRef = useRef<FormValues | null>(null)
+  const isCaptchaRunning = useRef(false)
+  const { mutate: submitCaptcha, isPending: isSubmitCaptchaPending, isSuccess: isSubmitCaptchaSuccess } = useSubmitCaptcha()
   const { mutate, isPending, isSuccess } = useSendContactMessage()
   const {
     register,
@@ -38,7 +44,38 @@ export function ContactForm() {
   const messageLength = message.length
 
   const onSubmit = (data: FormValues) => {
-    mutate(data)
+    if (isCaptchaRunning.current) return
+
+    isCaptchaRunning.current = true
+    formDataRef.current = data
+
+    recaptchaRef.current?.execute()
+  }
+
+  const handleCaptcha = (token: string | null) => {
+    if (!token || !formDataRef.current) {
+      isCaptchaRunning.current = false
+      return
+    }
+
+    submitCaptcha(
+      { 'g-recaptcha-response': token },
+      {
+        onSuccess: () => {
+          if (formDataRef.current) {
+            mutate(formDataRef.current)
+          }
+        },
+        onError: (error) => {
+          console.log(error)
+        },
+        onSettled: () => {
+          isCaptchaRunning.current = false
+        },
+      }
+    )
+
+    recaptchaRef.current?.reset()
   }
 
   useEffect(() => {
@@ -129,7 +166,7 @@ export function ContactForm() {
           <span className="absolute bottom-0 right-3 text-sm text-neutral-500">{messageLength}/240</span>
           {registerFormErrors.message && <InputWarningText>{registerFormErrors.message.message}</InputWarningText>}
         </div>
-
+        <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''} ref={recaptchaRef} size="invisible" onChange={handleCaptcha} />
         <div className="flex flex-col  gap-6 items-start">
           <p className="text-2xs text-neutral-500 ">
             By pressing the submit button, I agree to Unibuzz contacting me by email and/or phone to share opportunities exclusively available to
