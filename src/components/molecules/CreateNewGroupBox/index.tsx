@@ -155,7 +155,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
     const trimmedValue = value.trim()
     const charCount = trimmedValue.length
 
-    if (charCount > 160) return 'Bio must not exceed 150 characters'
+    if (charCount > 160) return 'Description must not exceed 160 characters'
 
     return true
   }
@@ -409,7 +409,9 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
               placeholder="Enter description"
             ></textarea>
 
-            {errors.description && <span className="text-red-500 text-2xs font-normal"> This field is required</span>}
+            {errors.description && (
+              <span className="text-red-500 text-2xs font-normal"> {errors.description.message || 'This field is required'}</span>
+            )}
           </div>
 
           <div>
