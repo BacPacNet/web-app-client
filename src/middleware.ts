@@ -12,6 +12,7 @@ const protectedRoutes = [
   '/setting',
   '/connections',
   '/post',
+  '/rewards',
 ]
 export default function middleware(req: NextRequest) {
   const pathName = req.nextUrl.pathname

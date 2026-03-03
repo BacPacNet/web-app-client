@@ -4,7 +4,7 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
-import { IUserProfileResponse, ReferralsResponse } from '@/types/User'
+import { EligibleForRewardsResponse, IUserProfileResponse, ReferralsResponse, RewardsResponse } from '@/types/User'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserData(token: any, id: string) {
@@ -189,6 +189,34 @@ export function useGetUserReferrals() {
   return useQuery({
     queryKey: ['getUserReferrals'],
     queryFn: () => getUserReferrals(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function getUserRewards(token: string): Promise<RewardsResponse> {
+  const response = await client<RewardsResponse, any>(`/users/rewards`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserRewards() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['getUserRewards'],
+    queryFn: () => getUserRewards(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function getUserEligibleForRewards(token: string): Promise<EligibleForRewardsResponse> {
+  const response = await client<EligibleForRewardsResponse, any>(`/users/eligible`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserEligibleForRewards() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['getUserEligibleForRewards'],
+    queryFn: () => getUserEligibleForRewards(cookieValue),
     enabled: !!cookieValue,
   })
 }
