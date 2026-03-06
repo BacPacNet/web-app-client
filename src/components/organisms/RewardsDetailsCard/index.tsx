@@ -5,7 +5,7 @@ import InputBox from '@/components/atoms/Input/InputBox'
 import MaxMonthInviteCardDetails from '@/components/molecules/Rewards/maxMonthInviteCardDetails'
 import MilestoneCard from '@/components/molecules/Rewards/milestoneCard'
 import MonthProgressCard from '@/components/molecules/Rewards/monthProgressCard'
-import { useGetUserReferrals, useGetUserRewards } from '@/services/user'
+import { useGetUserRewards } from '@/services/user'
 import { useState } from 'react'
 import infoIcon from '@/assets/rewards/info.svg'
 import giftIcon from '@/assets/rewards/gift.svg'
@@ -55,8 +55,6 @@ export default function RewardsDetailsCard() {
   const { data, isLoading, error } = useGetUserRewards()
   const [copied, setCopied] = useState(false)
 
-  console.log('data', data)
-
   const referralLink = data?.referCode ? `${window.location.origin}/register?referralCode=${data.referCode}` : ''
 
   const handleCopyLink = async () => {
@@ -97,7 +95,7 @@ export default function RewardsDetailsCard() {
       </div>
 
       {/* payout  */}
-      <ExpectedPayoutCard amount={data?.previousMonthReward || 0} />
+      <ExpectedPayoutCard amount={data?.previousMonthReward || 0} previousMonthRedeemed={data?.previousMonthRedeemed || false} />
 
       {/* milestone */}
       <div className="flex flex-col gap-4">

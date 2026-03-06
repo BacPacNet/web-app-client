@@ -1,5 +1,5 @@
 import useCookie from '@/hooks/useCookie'
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
@@ -218,5 +218,24 @@ export function useGetUserEligibleForRewards() {
     queryKey: ['getUserEligibleForRewards'],
     queryFn: () => getUserEligibleForRewards(cookieValue),
     enabled: !!cookieValue,
+  })
+}
+
+export async function postUserRequestRewards(token: string, data: { awsEmail: string }): Promise<any> {
+  const response = await client<EligibleForRewardsResponse, any>(`/users/rewards/request`, { headers: { Authorization: `Bearer ${token}` }, data })
+  return response
+}
+
+export function usePostUserRequestRewards() {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: { awsEmail: string }) => postUserRequestRewards(cookieValue, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getUserRewards'] })
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error.response.data.message)
+    },
   })
 }

@@ -191,6 +191,7 @@ export interface RewardsResponse {
   referCode: string
   thisMonthProgress: number
   thisMonthReward: number
+  previousMonthRedeemed: boolean
 }
 
 export interface EligibleForRewardsResponse {
