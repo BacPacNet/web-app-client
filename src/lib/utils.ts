@@ -117,7 +117,7 @@ export const validateUploadedFiles = (
 ): { isValid: boolean; message: string } => {
   const {
     maxFiles = 4,
-    maxSize = 5 * 1024 * 1024, // 5MB
+    maxSize = 10 * 1024 * 1024, // 5MB
   } = options
 
   // Supported formats
