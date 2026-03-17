@@ -263,6 +263,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
     if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       const isAvailable = await userLoginEmailVerification(data)
+
       if (isAvailable?.isAvailable && !isAvailable?.isUniversityDomain) {
         handleNext()
         saveToLocalStorage()

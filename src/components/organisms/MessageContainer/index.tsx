@@ -58,7 +58,7 @@ const MessageContainer = () => {
 
   const totalUnreadNotAcceptedMessages = chats?.reduce((sum, item) => {
     const shouldInclude = item.isGroupChat
-      ? item?.users?.some((user) => user?.userId?._id.toString() === userData?.id && !user?.isRequestAccepted)
+      ? item?.users?.some((user) => user?.userId?._id?.toString() === userData?.id && !user?.isRequestAccepted)
       : !item?.isRequestAccepted && item?.groupAdmin.toString() !== userData?.id
 
     return shouldInclude ? sum + item.unreadMessagesCount : sum
