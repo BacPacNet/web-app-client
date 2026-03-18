@@ -38,7 +38,7 @@ const MilestoneCard = ({
         {/* Text */}
         <div>
           <p className={`font-normal ${isActive ? 'text-primary ' : 'text-[#18191A]'} text-sm`}>{invitesRequired} Invites</p>
-          <p className="text-sm text-[#6B7280] font-normal">₹{perInviteAmount.toFixed(2)} per invite</p>
+          {/* <p className="text-sm text-[#6B7280] font-normal">₹{perInviteAmount.toFixed(2)} per invite</p> */}
         </div>
       </div>
 
