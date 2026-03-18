@@ -79,7 +79,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
   useEffect(() => {
     if (userData?.id) {
       mixpanel.identify(userData?.id)
-      mixpanel.people.set({
+      mixpanel?.people?.set({
         $email: userData?.email,
         $name: `${userData?.firstName} ${userData?.lastName}`,
       })

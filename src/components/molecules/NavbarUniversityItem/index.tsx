@@ -204,7 +204,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     const verifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified).map((community) => community?.name)
     const unverifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified === false).map((community) => community?.name)
     if (userData?.id) {
-      mixpanel.people.set({
+      mixpanel?.people?.set({
         $verifiedCommunities: verifiedCommunities,
         $unverifiedCommunities: unverifiedCommunities,
       })
