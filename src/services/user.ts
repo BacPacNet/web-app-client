@@ -4,7 +4,13 @@ import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
-import { EligibleForRewardsResponse, IUserProfileResponse, ReferralsResponse, RewardsResponse } from '@/types/User'
+import {
+  EligibleForRewardsResponse,
+  IUserProfileResponse,
+  ReferralsResponse,
+  RewardsResponse,
+  UpdateLatestRewardRedemptionUpiIdPayload,
+} from '@/types/User'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserData(token: any, id: string) {
@@ -221,21 +227,23 @@ export function useGetUserEligibleForRewards() {
   })
 }
 
-export async function postUserRequestRewards(token: string, data: { awsEmail: string }): Promise<any> {
-  const response = await client<EligibleForRewardsResponse, any>(`/users/rewards/request`, { headers: { Authorization: `Bearer ${token}` }, data })
+export async function updateLatestRewardRedemptionUpiId(token: string, data: UpdateLatestRewardRedemptionUpiIdPayload) {
+  const response = await client(`/users/rewards/latest/upi-id`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
   return response
 }
 
-export function usePostUserRequestRewards() {
+export function useUpdateLatestRewardRedemptionUpiId() {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: (data: { awsEmail: string }) => postUserRequestRewards(cookieValue, data),
+    mutationFn: (data: UpdateLatestRewardRedemptionUpiIdPayload) => updateLatestRewardRedemptionUpiId(cookieValue, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getUserRewards'] })
-    },
-    onError: (error: any) => {
-      showCustomDangerToast(error.response.data.message)
     },
   })
 }
