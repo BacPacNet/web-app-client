@@ -9,6 +9,7 @@ const MilestoneCard = ({
   perInviteAmount,
   isActive = false,
   isCompleted = false,
+  showEarned = false,
   isDisabled = false,
 }: {
   invitesRequired: number
@@ -16,6 +17,7 @@ const MilestoneCard = ({
   perInviteAmount: number
   isActive: boolean
   isCompleted: boolean
+  showEarned?: boolean
   isDisabled: boolean
 }) => {
   return (
@@ -44,8 +46,9 @@ const MilestoneCard = ({
 
       {/* Reward */}
       <div className={`font-normal flex flex-col justify-end items-end  text-sm ${isActive ? 'text-primary' : 'text-[#18191A]'} `}>
-        ₹{rewardAmount}
-        {isActive ? <span>Earned</span> : ''}
+        {!showEarned && !isCompleted ? <span>₹{rewardAmount}</span> : showEarned ? <span>₹{rewardAmount}</span> : ''}
+
+        {showEarned ? <span>Earned</span> : ''}
       </div>
     </div>
   )

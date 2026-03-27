@@ -7,11 +7,8 @@ import MilestoneCard from '@/components/molecules/Rewards/milestoneCard'
 import MonthProgressCard from '@/components/molecules/Rewards/monthProgressCard'
 import { useGetUserRewards } from '@/services/user'
 import { useState } from 'react'
-import infoIcon from '@/assets/rewards/info.svg'
-import giftIcon from '@/assets/rewards/gift.svg'
-import plusIcon from '@/assets/rewards/redem.svg'
-import RewardInfoCard from '@/components/molecules/Rewards/rewardInfoCard'
-import ExpectedPayoutCard from '@/components/molecules/Rewards/expectedPayoutCard'
+import RedeemRewardsCard from '@/components/molecules/Rewards/redeemRewardsCard'
+import EarningsHistoryCard from '@/components/molecules/Rewards/earningsHistoryCard'
 
 const rewardTiers = [
   {
@@ -33,27 +30,11 @@ const rewardTiers = [
   },
 ]
 
-const cards = [
-  {
-    icon: infoIcon,
-    title: 'Monthly Reset',
-    description: 'Milestones reset on the 1st of every month. Start fresh and earn more rewards!',
-  },
-  {
-    icon: giftIcon,
-    title: 'Gift Card Delivery',
-    description: 'Gift cards will be sent to your login email (personal or university email).',
-  },
-  {
-    icon: plusIcon,
-    title: 'Redemption',
-    description: 'Rewards are redeemable on or after 1st April 2026. Gift cards will be issued in multiples of ₹100.',
-  },
-]
-
 export default function RewardsDetailsCard() {
   const { data, isLoading, error } = useGetUserRewards()
   const [copied, setCopied] = useState(false)
+  const currentProgress = data?.thisMonthProgress || 0
+  const latestCompletedMilestone = rewardTiers.filter((tier) => currentProgress >= tier.invitesRequired).at(-1)?.invitesRequired || null
 
   const referralLink = data?.referCode ? `${window.location.origin}/register?referralCode=${data.referCode}` : ''
 
@@ -74,14 +55,16 @@ export default function RewardsDetailsCard() {
       <div className="flex flex-col gap-4">
         <h4 className="text-md-big font-extrabold font-poppins text-neutral-900">Rewards</h4>
         <p className="text-sm text-neutral-700 font-inter">
-          Share your unique link, and earn cash rewards when a student or faculty member from your current university signs up.
+          Share your unique link and earn cash rewards when someone from your university signs up.
+          <span className=" font-bold"> Only verified students or faculty from your current university </span>
+          will count toward your rewards, so please remind them to complete their university verification during or after signing up!
         </p>
       </div>
       {/* referral link */}
       <div className="flex flex-col gap-4">
         {referralLink && (
-          <div className="py-4 ">
-            <div className="flex flex-col gap-2 mb-4">
+          <div className="">
+            <div className="flex flex-col gap-2 ">
               <label className="font-semibold text-xs text-neutral-900">Referral Link</label>
               <div className="flex gap-2">
                 <InputBox type="text" value={referralLink} readOnly disabled className="flex-1" placeholder="Loading referral link..." />
@@ -94,13 +77,10 @@ export default function RewardsDetailsCard() {
         )}
       </div>
 
-      {/* payout  */}
-      <ExpectedPayoutCard amount={data?.previousMonthReward || 0} previousMonthRedeemed={data?.previousMonthRedeemed || false} />
-
       {/* milestone */}
       <div className="flex flex-col gap-4">
         <h6 className="text-[20px] font-bold font-poppins text-neutral-700">Milestones</h6>
-        <MonthProgressCard monthProgress={data?.thisMonthProgress || 0} monthEarnings={data?.thisMonthReward || 0} />
+        <MonthProgressCard monthProgress={currentProgress} monthEarnings={data?.thisMonthReward || 0} />
         <div className="flex flex-col gap-3">
           {rewardTiers.map((tier) => (
             <MilestoneCard
@@ -108,8 +88,9 @@ export default function RewardsDetailsCard() {
               invitesRequired={tier.invitesRequired}
               rewardAmount={tier.rewardAmount}
               perInviteAmount={tier.perInviteAmount}
-              isActive={(data?.thisMonthProgress && data?.thisMonthProgress >= tier.invitesRequired) || false}
-              isCompleted={(data?.thisMonthProgress && data?.thisMonthProgress >= tier.invitesRequired) || false}
+              isActive={currentProgress >= tier.invitesRequired}
+              isCompleted={currentProgress >= tier.invitesRequired}
+              showEarned={latestCompletedMilestone === tier.invitesRequired}
               isDisabled={false}
             />
           ))}
@@ -117,15 +98,8 @@ export default function RewardsDetailsCard() {
         <MaxMonthInviteCardDetails />
       </div>
 
-      {/* //info cards */}
-      <div className="flex flex-col gap-4">
-        <h6 className="text-[20px] font-bold font-poppins text-neutral-700">How it Works</h6>
-        <div className="flex flex-col gap-3">
-          {cards.map((card) => (
-            <RewardInfoCard key={card.title} icon={card.icon} title={card.title} description={card.description} />
-          ))}
-        </div>
-      </div>
+      <RedeemRewardsCard currentUpiId={data?.currentUPI || null} />
+      <EarningsHistoryCard completedReferrals={data?.totalInvites || 0} totalEarnings={data?.totalEarning || 0} />
     </div>
   )
 }
