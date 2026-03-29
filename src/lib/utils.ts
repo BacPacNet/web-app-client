@@ -117,7 +117,7 @@ export const validateUploadedFiles = (
 ): { isValid: boolean; message: string } => {
   const {
     maxFiles = 4,
-    maxSize = 5 * 1024 * 1024, // 5MB
+    maxSize = 10 * 1024 * 1024, // 5MB
   } = options
 
   // Supported formats
@@ -236,4 +236,9 @@ export const handleFieldError = <T extends FieldValues>(
   } catch {
     setIsLoading(false)
   }
+}
+
+export const isValidUpi = (upi: string) => {
+  const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/
+  return upiRegex.test(upi)
 }

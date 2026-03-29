@@ -5,15 +5,13 @@ import { HiHome } from 'react-icons/hi'
 import { IoMdPeople } from 'react-icons/io'
 import { BiSolidMessageDots } from 'react-icons/bi'
 import { FaBell } from 'react-icons/fa6'
-import { PiFinnTheHumanFill } from 'react-icons/pi'
 import NavbarUniversityItem from '@/components/molecules/NavbarUniversityItem'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUniStore } from '@/store/store'
-import botIcon from '@/assets/botIcon.svg'
 import { useGetUserNotificationTotalCount, useGetUserUnreadMessagesTotalCount } from '@/services/notification'
-import Image from 'next/image'
 import NotificationBadge from '@/components/atoms/NotificationBadge'
-
+import { useGetUserEligibleForRewards } from '@/services/user'
+import RewardsIcon from '@/components/atoms/RewardsIcon'
 interface Props {
   toggleLeftNavbar?: () => void
 }
@@ -23,6 +21,7 @@ const MENU_ITEMS = [
   { name: 'Connections', icon: <IoMdPeople />, path: '/connections' },
   { name: 'Message', icon: <BiSolidMessageDots />, path: '/messages' },
   { name: 'Notification', icon: <FaBell />, path: '/notifications' },
+  { name: 'Rewards', icon: <RewardsIcon />, path: '/rewards' },
   // { name: 'AI Assistant', icon: <Image width={20} height={20} alt="" src={botIcon} />, path: '/ai-assistant' },
 ]
 const PAGE_ITEMS = [
@@ -34,10 +33,15 @@ const PAGE_ITEMS = [
 export default function LeftNavbar({ toggleLeftNavbar }: Props) {
   const pathname = usePathname()
   const router = useRouter()
-  const { userData } = useUniStore()
+  const { userData, userEligibleForRewards, setUserEligibleForRewards } = useUniStore()
   const [activeMenu, setActiveMenu] = useState(pathname)
   const { data: userUnreadMessagesCount } = useGetUserUnreadMessagesTotalCount()
   const { data: unreadNotificationCount } = useGetUserNotificationTotalCount()
+  const { data: userEligibleForRewardsData } = useGetUserEligibleForRewards()
+
+  useEffect(() => {
+    setUserEligibleForRewards(userEligibleForRewardsData ?? null)
+  }, [userEligibleForRewardsData, setUserEligibleForRewards])
 
   //  useEffect(() => {
   //    setIsLogin(!!userProfileData?.users_id)
@@ -72,24 +76,26 @@ export default function LeftNavbar({ toggleLeftNavbar }: Props) {
 
       <div className="border-b-2 border-neutral-200 pb-4">
         <p className="text-xs text-neutral-500 font-bold py-2">COMMUNITY</p>
-        {MENU_ITEMS.map(({ name, icon, path }) => (
-          <div
-            key={path}
-            className={`flex items-center gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
-              activeMenu === path ? 'text-primary font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-medium'
-            }`}
-            onClick={() => handleMenuClick(path)}
-          >
-            <span className="text-[20px]">{icon}</span>
-            <span className="">{name}</span>
-            {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 && (
-              <NotificationBadge count={Number(userUnreadMessagesCount?.messageTotalCount)} maxCount={9} />
-            )}
-            {name == 'Notification' && Number(unreadNotificationCount) > 0 && (
-              <NotificationBadge count={Number(unreadNotificationCount)} maxCount={99} />
-            )}
-          </div>
-        ))}
+        {MENU_ITEMS.filter((item) => item.name != 'Rewards' || (item.name == 'Rewards' && (userEligibleForRewards?.eligible ?? false))).map(
+          ({ name, icon, path }) => (
+            <div
+              key={path}
+              className={`flex items-center gap-2 cursor-pointer text-xs p-2 my-1 hover:bg-neutral-100 rounded-md  ${
+                activeMenu === path ? 'text-primary font-bold bg-surface-primary-50 rounded-md' : 'text-neutral-500 font-medium'
+              }`}
+              onClick={() => handleMenuClick(path)}
+            >
+              <span className="text-[20px]">{icon}</span>
+              <span className="">{name}</span>
+              {name == 'Message' && Number(userUnreadMessagesCount?.messageTotalCount) > 0 && (
+                <NotificationBadge count={Number(userUnreadMessagesCount?.messageTotalCount)} maxCount={9} />
+              )}
+              {name == 'Notification' && Number(unreadNotificationCount) > 0 && (
+                <NotificationBadge count={Number(unreadNotificationCount)} maxCount={99} />
+              )}
+            </div>
+          )
+        )}
       </div>
       {userData?.email && (
         <>

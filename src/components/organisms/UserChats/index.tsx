@@ -27,7 +27,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     if (currTabb === 'Inbox') {
       const filteredChats = chats?.filter(
         (item: Chat) =>
-          item?.users?.find((user) => user?.userId?._id.toString() === userData?.id && user?.isRequestAccepted) ||
+          item?.users?.find((user) => user?.userId?._id?.toString() === userData?.id && user?.isRequestAccepted) ||
           item?.isRequestAccepted ||
           item?.groupAdmin.toString() === userData?.id
       )
@@ -83,7 +83,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
     } else if (currTabb === 'Requests') {
       const filteredChats = chats?.filter((item: Chat) =>
         item?.isGroupChat
-          ? item?.users?.some((user) => user?.userId?._id.toString() === userData?.id && !user?.isRequestAccepted)
+          ? item?.users?.some((user) => user?.userId?._id?.toString() === userData?.id && !user?.isRequestAccepted)
           : !item?.isRequestAccepted && item?.groupAdmin.toString() !== userData?.id
       )
 
@@ -108,7 +108,7 @@ const UserChats = ({ setSelectedChat, selectedChat, setIsRequest, currTabb, chat
       ))
     } else {
       const filteredChats = chats?.filter(
-        (item: Chat) => item?.users?.find((user) => user?.userId?._id.toString() === userData?.id && user?.isStarred)
+        (item: Chat) => item?.users?.find((user) => user?.userId?._id?.toString() === userData?.id && user?.isStarred)
       )
 
       if (filteredChats?.length === 0) {

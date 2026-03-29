@@ -149,7 +149,7 @@ const UserCard = ({ profilePic, name, content, date, chatId, media, isOnline, id
 }
 
 const UserMessages = ({ chatId, users, yourID, setImageCarasol }: props) => {
-  const userName = users?.flat().filter((item) => item.userId._id != yourID)
+  const userName = users?.flat().filter((item) => item?.userId?._id != yourID)
 
   const { userData } = useUniStore()
   const { data: chatMessages } = useGetUserMessages(chatId)

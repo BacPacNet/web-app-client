@@ -185,3 +185,23 @@ export interface ReferralsResponse {
   referCode: string
   referrals: Referral[]
 }
+export interface RewardsResponse {
+  referCode: string
+  totalInvites: number
+  totalEarning: number
+  thisMonthProgress: number
+  previousMonthProgress: number
+  thisMonthReward: number
+  previousMonthReward: number
+  thisMonthLeftoverInvites: number
+  previousMonthLeftoverInvites: number
+  currentUPI: string | null
+}
+
+export interface EligibleForRewardsResponse {
+  eligible: boolean
+}
+
+export type UpdateLatestRewardRedemptionUpiIdPayload = {
+  upiId: string
+}

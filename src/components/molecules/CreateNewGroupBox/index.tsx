@@ -43,23 +43,18 @@ import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
 type Props = {
   communityId: string
-  setNewGroup: (value: boolean) => void
   communityName: string
   isCommunityAdmin: boolean
 }
 
-const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAdmin }: Props) => {
+const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props) => {
   const { userProfileData } = useUniStore()
-  const { closeModal } = useModal()
   const [logoImage, setLogoImage] = useState<File | null>(null)
   const [coverImage, setCoverImage] = useState<File>()
   const [isLoading, setIsLoading] = useState(false)
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
-
   const [searchInput, setSearchInput] = useState('')
-  const logoInputRef = useRef<HTMLInputElement>(null)
-
   const [universityError, setUniversityError] = useState(false)
   const [individualsUsers, setIndividualsUsers] = useState<any[]>([])
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({})
@@ -160,7 +155,7 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAd
     const trimmedValue = value.trim()
     const charCount = trimmedValue.length
 
-    if (charCount > 160) return 'Bio must not exceed 150 characters'
+    if (charCount > 160) return 'Description must not exceed 160 characters'
 
     return true
   }
@@ -414,7 +409,9 @@ const CreateNewGroup = ({ setNewGroup, communityId, communityName, isCommunityAd
               placeholder="Enter description"
             ></textarea>
 
-            {errors.description && <span className="text-red-500 text-2xs font-normal"> This field is required</span>}
+            {errors.description && (
+              <span className="text-red-500 text-2xs font-normal"> {errors.description.message || 'This field is required'}</span>
+            )}
           </div>
 
           <div>

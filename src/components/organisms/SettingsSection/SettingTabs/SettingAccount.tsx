@@ -15,7 +15,6 @@ import { EmailType } from '@/models/auth'
 import ChangeUserNameModal from '../SettingModals/ChangeUserNameModal'
 import ChangePasswordModal from '../SettingModals/ChangePasswordModal'
 import UniversityVerificationModal from '../SettingModals/UniversityVerificationModal'
-import ChangeEmailModal from '../SettingModals/ChangeEmailModal'
 import DeActivateModal from '../SettingModals/DeActivateModal'
 import UniversityVerificationPerks from '@/components/atoms/UniversityVerificationPerks'
 import { useModal } from '@/context/ModalContext'
@@ -115,9 +114,6 @@ const SettingAccount = () => {
 
           <InputBox className="w-80" placeholder="Email Address" type="email" value={userEmail} disabled />
         </div>
-        <Button onClick={() => openModal(<ChangeEmailModal />)} className="w-max" size="large">
-          Change Email
-        </Button>
       </div>
 
       {/* deactivate  */}

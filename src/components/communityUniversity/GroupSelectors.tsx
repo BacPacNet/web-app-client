@@ -4,8 +4,6 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { IoIosPeople } from 'react-icons/io'
 import officialLogo from '@assets/official-logo.svg'
-import mixpanel from 'mixpanel-browser'
-import { TRACK_EVENT } from '@/content/constant'
 
 const GroupSelectors = ({
   setCurrSelectedGroup,

@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import Tabs from '../Tabs'
-import AssignGroupModerators from '@/components/communityUniversity/AssignGroupModerators'
 import { useUniStore } from '@/store/store'
 import CreateNewGroupBox from '../CreateNewGroupBox'
 import CommunityGroupAll from './Tabs/communityGroupAll'
@@ -75,7 +74,6 @@ const sortOptions = [
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
   const { openModal } = useModal()
-  const [cookieValue] = useCookie('uni_user_token')
   const [selectedCommunityGroupCommunityId, setSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
   const [isOpen, setIsOpen] = useState(false)
   const [open, setOpen] = useState(false)
@@ -83,22 +81,18 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const router = useRouter()
   const { communityId, groupId: communityGroupId }: { communityId: string; groupId: string } = useParams()
   const [currSelectedGroup, setCurrSelectedGroup] = useState<Community>()
-
-  const [currClickedID, SetcurrClickedID] = useState<any>({ id: null, group: false })
-  const [showNewGroup, setShowNewGroup] = useState<boolean>(false)
   const [selectedFiltersMain, setSelectedFiltersMain] = useState<Record<string, string[]>>({})
   const [selectedTypeMain, setSelectedTypeMain] = useState<string[]>([])
   const [selectedLabel, setSelectedLabel] = useState<string[]>([])
   const [sort, setSort] = useState<string>('userCountDesc')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, 1000)
-  const [assignUsers, setAssignUsers] = useState(false)
   const [showGroupTill, setShowGroupTill] = useState(5)
   const [community, setCommunity] = useState<Community>()
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
-  const { data: subscribedCommunities, isLoading } = useGetSubscribedCommunties()
-
+  const { data: subscribedCommunities } = useGetSubscribedCommunties()
+  const [isLoading, setIsLoading] = useState(true)
   const { applyFilters, filteredCommunityGroups } = useCommunityFilter()
 
   const handleCommunityClick = (index: number) => {
@@ -108,7 +102,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     toggleLeftNavbar && toggleLeftNavbar()
   }
 
-  const isUserVerifiedForCommunity: boolean = userProfileData?.email?.some((community) => community?.communityId === selectCommunityId) || false
+  const isUserVerifiedForCommunity: boolean =
+    userProfileData?.email?.some((profileCommunity) => profileCommunity?.communityId === community?._id) || false
 
   const canUserCreateGroup = community?.users.some((user) => user._id === userData?.id) && isUserVerifiedForCommunity
 
@@ -133,7 +128,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
         <CreateNewGroupBox
           communityName={community?.name || 'Sd'}
           communityId={community?._id || ''}
-          setNewGroup={setShowNewGroup}
           isCommunityAdmin={community?.adminId.includes(userData?.id?.toString() || '') || false}
         />,
         'h-[80vh] w-[350px] sm:w-[490px] hideScrollbar'
@@ -141,9 +135,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     }
     toggleLeftNavbar && toggleLeftNavbar()
   }
-  const handleAssignUsersModal = () => {
-    openModal(<AssignGroupModerators assignUsers={assignUsers} setAssignUsers={setAssignUsers} id={currClickedID.id} isGroup={currClickedID.group} />)
-  }
+
   const handleCommunityGroupFilter = () => {
     toggleLeftNavbar && toggleLeftNavbar()
     openModal(
@@ -212,7 +204,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     const verifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified).map((community) => community?.name)
     const unverifiedCommunities = subscribedCommunities?.filter((community) => community?.isVerified === false).map((community) => community?.name)
     if (userData?.id) {
-      mixpanel.people.set({
+      mixpanel?.people?.set({
         $verifiedCommunities: verifiedCommunities,
         $unverifiedCommunities: unverifiedCommunities,
       })
@@ -238,17 +230,29 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     })
     setOpen(false)
   }
-
   useEffect(() => {
-    if (community?._id) {
+    if (community?._id && isLoading) {
       applyFilters({
         communityId: community?._id || '',
         selectedType: selectedTypeMain,
         selectedFilters: selectedFiltersMain,
         sort,
       })
+      setIsLoading(false)
     }
-  }, [community?._id])
+  }, [community?._id, isLoading])
+
+  useEffect(() => {
+    if (sort && community?._id) {
+      applyFilters({
+        communityId: community?._id || '',
+        selectedType: selectedTypeMain,
+        selectedFilters: selectedFiltersMain,
+        sort,
+      })
+      setIsLoading(false)
+    }
+  }, [sort])
 
   const tabData = [
     {
@@ -262,8 +266,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          handleAssignUsersModal={handleAssignUsersModal}
-          SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
@@ -275,15 +277,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       label: 'All',
       content: (
         <CommunityGroupAll
-          key={subscribedCommunities}
+          key={subscribedCommunitiesAllGroups}
           communityGroups={subscribedCommunitiesAllGroups}
           showGroupTill={showGroupTill}
           setShowGroupTill={setShowGroupTill}
           currSelectedGroup={currSelectedGroup as Community}
           setCurrSelectedGroup={setCurrSelectedGroup}
           userData={userData}
-          handleAssignUsersModal={handleAssignUsersModal}
-          SetcurrClickedID={SetcurrClickedID}
           selectedCommuntyGroupdId={selectedCommuntyGroupdId}
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
@@ -310,8 +310,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
             currSelectedGroup={currSelectedGroup as Community}
             setCurrSelectedGroup={setCurrSelectedGroup}
             userData={userData}
-            handleAssignUsersModal={handleAssignUsersModal}
-            SetcurrClickedID={SetcurrClickedID}
             selectedCommuntyGroupdId={selectedCommuntyGroupdId}
             selectCommunityId={selectCommunityId}
             toggleLeftNavbar={toggleLeftNavbar}
@@ -421,7 +419,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
       <div className="h-fit">
         {subscribedCommunities?.length !== 0 ? (
-          <Tabs tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
+          <Tabs activeTabIndex={1} tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
         ) : (
           //  <CommunityGroupAll
           //    key={subscribedCommunities}

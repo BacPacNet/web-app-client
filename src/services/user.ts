@@ -1,10 +1,16 @@
 import useCookie from '@/hooks/useCookie'
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
-import { IUserProfileResponse, ReferralsResponse } from '@/types/User'
+import {
+  EligibleForRewardsResponse,
+  IUserProfileResponse,
+  ReferralsResponse,
+  RewardsResponse,
+  UpdateLatestRewardRedemptionUpiIdPayload,
+} from '@/types/User'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 
 export async function getUserData(token: any, id: string) {
@@ -16,10 +22,7 @@ const changeUserName = async (data: any, token: string) => {
   const res = await client(`/users/changeUserName`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
 }
-const changeUserEmail = async (data: any, token: string) => {
-  const res = await client(`/users/changeUserEmail`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
-  return res
-}
+
 const changeUserPassword = async (data: any, token: string) => {
   const res = await client(`/users/changeUserPassword`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
   return res
@@ -128,20 +131,7 @@ export const useChangeUserName = () => {
     },
   })
 }
-export const useChangeUserEmail = () => {
-  const setUserData = useUniStore((state) => state.setUserData)
-  const [cookieValue] = useCookie('uni_user_token')
-  return useMutation({
-    mutationFn: (data: any) => changeUserEmail(data, cookieValue),
-    onSuccess: (response: any) => {
-      setUserData(response)
-    },
-    onError: (res: any) => {
-      console.log(res.response.data.message, 'res')
-      showCustomDangerToast(res.response.data.message)
-    },
-  })
-}
+
 export const useDeActivateUserAccount = () => {
   const [cookieValue] = useCookie('uni_user_token')
   return useMutation({
@@ -206,5 +196,54 @@ export function useGetUserReferrals() {
     queryKey: ['getUserReferrals'],
     queryFn: () => getUserReferrals(cookieValue),
     enabled: !!cookieValue,
+  })
+}
+
+export async function getUserRewards(token: string): Promise<RewardsResponse> {
+  const response = await client<RewardsResponse, any>(`/users/rewards`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserRewards() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['getUserRewards'],
+    queryFn: () => getUserRewards(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function getUserEligibleForRewards(token: string): Promise<EligibleForRewardsResponse> {
+  const response = await client<EligibleForRewardsResponse, any>(`/users/eligible`, { headers: { Authorization: `Bearer ${token}` } })
+  return response
+}
+
+export function useGetUserEligibleForRewards() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['getUserEligibleForRewards'],
+    queryFn: () => getUserEligibleForRewards(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function updateLatestRewardRedemptionUpiId(token: string, data: UpdateLatestRewardRedemptionUpiIdPayload) {
+  const response = await client(`/users/rewards/latest/upi-id`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+  return response
+}
+
+export function useUpdateLatestRewardRedemptionUpiId() {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: UpdateLatestRewardRedemptionUpiIdPayload) => updateLatestRewardRedemptionUpiId(cookieValue, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getUserRewards'] })
+    },
   })
 }

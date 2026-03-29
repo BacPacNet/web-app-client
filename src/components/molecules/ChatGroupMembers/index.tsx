@@ -31,29 +31,29 @@ const ChatGroupMembers = ({ users, chatId, adminId }: Props) => {
     <div>
       <Title>Members</Title>
       {usersList
-        ?.filter((user) => !user.userId.isBlocked)
+        ?.filter((user) => !user?.userId?.isBlocked)
         ?.map((user) => {
           const { userId } = user
           return (
             <UserListItem
               key={user._id}
-              firstName={userId.firstName}
-              lastName={userId.lastName}
-              id={userId._id as string}
+              firstName={userId?.firstName}
+              lastName={userId?.lastName}
+              id={userId?._id as string}
               university={''}
-              study_year={userId.studyYear}
+              study_year={userId?.studyYear}
               degree={''}
-              major={userId.major}
-              occupation={userId.occupation}
-              imageUrl={userId.profileDp}
+              major={userId?.major}
+              occupation={userId?.occupation}
+              imageUrl={userId?.profileDp}
               type={''}
-              isSelfProfile={userProfileData?.users_id === userId._id}
-              isFollowing={userProfileData?.following?.some((userItem) => userItem.userId === userId._id) as boolean}
-              role={userId.role || 'student'}
-              affiliation={userId.affiliation}
+              isSelfProfile={userProfileData?.users_id === userId?._id}
+              isFollowing={userProfileData?.following?.some((userItem) => userItem?.userId === userId?._id) as boolean}
+              role={userId?.role || 'student'}
+              affiliation={userId?.affiliation}
               showCommunityGroupMember={true}
               isViewerAdmin={adminId === userProfileData?.users_id}
-              isGroupAdmin={userId._id === adminId}
+              isGroupAdmin={userId?._id === adminId}
               handleRemoveClick={(id) => handleRemoveUser(id)}
               isRemovePending={isPending}
             />
