@@ -1,6 +1,6 @@
 'use client'
 import FormContainer from '@/components/organism/Register/formContainer/FormContainer'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { userTypeEnum } from '@/types/RegisterForm'
 import ProgressBar from 'react-customizable-progressbar'
 import useCookie from '@/hooks/useCookie'
@@ -26,42 +26,60 @@ const Register = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [cookieValue, setCookieValue] = useCookie('register_data')
+  const hasSyncedStepFromCookie = useRef(false)
 
   // Extract referCode from query parameters
   const referralCode = searchParams.get('referralCode')
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      let registerData = cookieValue ? JSON.parse(cookieValue) : null
-      let shouldUpdateCookie = false
+    if (typeof window === 'undefined') return
 
-      // If referCode exists in query params, merge it into registerData
-      if (referralCode) {
-        if (registerData) {
-          // Update referCode if it's different from what's in registerData
-          if (registerData.referCode !== referralCode) {
-            registerData = { ...registerData, referralCode }
-            shouldUpdateCookie = true
-          }
-        } else {
-          // Initialize registerData with referCode if cookie doesn't exist
-          registerData = { referralCode }
-          shouldUpdateCookie = true
+    let registerData: Record<string, unknown> | null = null
+    if (cookieValue) {
+      try {
+        registerData = JSON.parse(cookieValue)
+      } catch {
+        registerData = null
+      }
+    } else {
+      const match = document.cookie.match(/(?:^|; )register_data=([^;]*)/)
+      if (match?.[1]) {
+        try {
+          registerData = JSON.parse(decodeURIComponent(match[1]))
+        } catch {
+          registerData = null
         }
       }
-
-      // Update cookie if needed
-      if (shouldUpdateCookie && registerData) {
-        const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
-        setCookieValue(JSON.stringify(registerData), expirationDate)
-      }
-
-      if (registerData) {
-        setStep(registerData.step || 0)
-        setSubStep(registerData.subStep || 0)
-      }
-      setLoading(false)
     }
+
+    let shouldUpdateCookie = false
+
+    if (referralCode) {
+      if (registerData) {
+        if (registerData.referCode !== referralCode) {
+          registerData = { ...registerData, referralCode }
+          shouldUpdateCookie = true
+        }
+      } else {
+        registerData = { referralCode }
+        shouldUpdateCookie = true
+      }
+    }
+
+    if (shouldUpdateCookie && registerData) {
+      const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
+      setCookieValue(JSON.stringify(registerData), expirationDate)
+    }
+
+    if (!hasSyncedStepFromCookie.current) {
+      if (registerData) {
+        setStep((registerData.step as number) ?? 0)
+        setSubStep((registerData.subStep as number) ?? 0)
+      }
+      hasSyncedStepFromCookie.current = true
+    }
+
+    setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookieValue, referralCode])
 

@@ -1,5 +1,5 @@
 import { LoginForm, RegisterForm, UserResponseType } from '@/models/auth'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
 import useCookie from '@/hooks/useCookie'
@@ -80,12 +80,30 @@ async function universityEmailVerification(data: { universityEmail: string; Univ
 export const useHandleLogin = () => {
   const setUserData = useUniStore((state) => state.setUserData)
   const setUserProfileData = useUniStore((state) => state.setUserProfileData)
+  const resetStore = useUniStore((state) => state.reset)
   const [, setCookieValue] = useCookie('uni_user_token')
   const [, setRefreshCookieValue] = useCookie('uni_user_refresh_token')
+  const [, , deleteSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (data: LoginForm) => login(data),
+    onMutate: async () => {
+      await queryClient.cancelQueries()
+    },
     onSuccess: (response: UserResponseType, data) => {
+      // New login session: clear previous user caches/state to prevent cross-account data leakage.
+      queryClient.clear()
+      resetStore?.()
+      deleteSelectedCommunityGroupCommunityId()
+      try {
+        localStorage.removeItem('store')
+        localStorage.removeItem('selectedCommunityGroupCommunityId')
+        sessionStorage.removeItem('selectedCommunityGroupCommunityId')
+      } catch {
+        // ignore
+      }
+
       setUserData(response.user)
       setUserProfileData(response.userProfile)
       setCookieValue(response.tokens.access.token, response.tokens.access.expires)
