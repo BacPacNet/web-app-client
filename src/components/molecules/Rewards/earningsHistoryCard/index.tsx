@@ -28,7 +28,12 @@ function MetricCard({ title, value, icon }: MetricCardProps) {
 export default function EarningsHistoryCard({ completedReferrals, totalEarnings }: EarningsHistoryCardProps) {
   return (
     <div className="flex flex-col gap-3">
-      <h6 className="text-[20px] font-bold font-poppins text-neutral-700">Earnings History</h6>
+      <div className="flex flex-col gap-1">
+        <h6 className="text-[20px] font-bold font-poppins text-neutral-700">Earnings History</h6>
+        <p className="text-neutral-700 text-sm leading-relaxed">
+          You can see your total referral earnings calculated up to the end of the previous month.
+        </p>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <MetricCard title="Completed Referrals" value={String(completedReferrals)} icon={<FaUsers size={24} />} />
         <MetricCard title="Total Earnings" value={`₹${totalEarnings}`} icon={<RewardsIcon size={24} />} />
