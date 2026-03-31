@@ -205,7 +205,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       currSubStep += 1
     } else if (step == 1 && subStep == 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      currStep = 2
+      currStep = step + 2
     } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
       currSubStep += 1
     } else if (step === 2 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
