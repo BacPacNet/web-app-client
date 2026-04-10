@@ -132,7 +132,7 @@ const ChangeUserPasswordPage = () => {
                   type={passwordVisibility.showConfirmPassword ? 'text' : 'password'}
                   {...register(
                     'confirmPassword',
-                    withInputLengthRules('password', { required: true, validate: (value) => value === password || 'Passwords do not match' })
+                    withInputLengthRules('password', { required: true, validate: (value: string) => value === password || 'Passwords do not match' })
                   )}
                   err={!!errors.confirmPassword}
                 />
