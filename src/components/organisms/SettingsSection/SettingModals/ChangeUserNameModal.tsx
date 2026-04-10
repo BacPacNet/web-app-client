@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Button from '@/components/atoms/Buttons'
@@ -54,9 +55,12 @@ const ChangeUserNameModal = () => {
               className="w-full"
               placeholder="UserName"
               type="text"
-              {...register('userName', {
-                required: true,
-              })}
+              {...register(
+                'userName',
+                withInputLengthRules('text', {
+                  required: true,
+                })
+              )}
               err={!!errors.userName}
             />
             {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
@@ -71,9 +75,12 @@ const ChangeUserNameModal = () => {
               className="w-full"
               placeholder="UserName"
               type="text"
-              {...register('newUserName', {
-                required: true,
-              })}
+              {...register(
+                'newUserName',
+                withInputLengthRules('text', {
+                  required: true,
+                })
+              )}
               err={!!errors.newUserName}
             />
           </div>
@@ -92,7 +99,7 @@ const ChangeUserNameModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={showPassword ? 'text' : 'password'}
-                {...register('password', { required: true })}
+                {...register('password', withInputLengthRules('password', { required: true }))}
                 err={!!errors.password}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>

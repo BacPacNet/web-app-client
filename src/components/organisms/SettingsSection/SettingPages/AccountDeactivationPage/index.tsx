@@ -2,6 +2,7 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useDeActivateUserAccount } from '@/services/user'
@@ -77,9 +78,12 @@ const AccountDeactivationPage = () => {
                   className="w-full"
                   placeholder="UserName"
                   type="text"
-                  {...register('userName', {
-                    required: true,
-                  })}
+                  {...register(
+                    'userName',
+                    withInputLengthRules('text', {
+                      required: true,
+                    })
+                  )}
                   err={!!errors.userName}
                 />
                 {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
@@ -94,13 +98,16 @@ const AccountDeactivationPage = () => {
                 <InputBox
                   placeholder="Email Address"
                   type="email"
-                  {...register('email', {
-                    required: true,
-                    pattern: {
-                      value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                      message: 'Invalid email format',
-                    },
-                  })}
+                  {...register(
+                    'email',
+                    withInputLengthRules('email', {
+                      required: true,
+                      pattern: {
+                        value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                        message: 'Invalid email format',
+                      },
+                    })
+                  )}
                   err={!!errors.email}
                 />
 
@@ -123,7 +130,7 @@ const AccountDeactivationPage = () => {
                     className="w-full ps-8"
                     placeholder="************"
                     type={passwordVisibility.showNewPassword ? 'text' : 'password'}
-                    {...register('Password', { required: true })}
+                    {...register('Password', withInputLengthRules('password', { required: true }))}
                     err={!!errors.Password}
                   />
                 </div>
@@ -143,7 +150,13 @@ const AccountDeactivationPage = () => {
                     className="w-full ps-8"
                     placeholder="************"
                     type={passwordVisibility.showConfirmPassword ? 'text' : 'password'}
-                    {...register('confirmPassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
+                    {...register(
+                      'confirmPassword',
+                      withInputLengthRules('password', {
+                        required: true,
+                        validate: (value: string) => value === password || 'Passwords do not match',
+                      })
+                    )}
                     err={!!errors.confirmPassword}
                   />
                 </div>

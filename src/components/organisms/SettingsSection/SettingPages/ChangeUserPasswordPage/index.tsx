@@ -2,6 +2,7 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useModal } from '@/context/ModalContext'
@@ -80,7 +81,7 @@ const ChangeUserPasswordPage = () => {
                   className="w-full ps-8"
                   placeholder="************"
                   type={passwordVisibility.showPassword ? 'text' : 'password'}
-                  {...register('currentPassword', { required: true })}
+                  {...register('currentPassword', withInputLengthRules('password', { required: true }))}
                   err={!!errors.currentPassword}
                 />
               </div>
@@ -109,7 +110,7 @@ const ChangeUserPasswordPage = () => {
                   className="w-full ps-8"
                   placeholder="************"
                   type={passwordVisibility.showNewPassword ? 'text' : 'password'}
-                  {...register('newPassword', { required: true })}
+                  {...register('newPassword', withInputLengthRules('password', { required: true }))}
                   err={!!errors.newPassword}
                 />
               </div>
@@ -129,7 +130,10 @@ const ChangeUserPasswordPage = () => {
                   className="w-full ps-8"
                   placeholder="************"
                   type={passwordVisibility.showConfirmPassword ? 'text' : 'password'}
-                  {...register('confirmPassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
+                  {...register(
+                    'confirmPassword',
+                    withInputLengthRules('password', { required: true, validate: (value) => value === password || 'Passwords do not match' })
+                  )}
                   err={!!errors.confirmPassword}
                 />
               </div>

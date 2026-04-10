@@ -2,6 +2,7 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import { Spinner } from '@/components/spinner/Spinner'
 import { useChangeUserName } from '@/services/user'
@@ -77,9 +78,12 @@ const ChangeUserNamePage = () => {
                 value={userData?.userName}
                 disabled={true}
                 readOnly={true}
-                {...register('userName', {
-                  //   required: true,
-                })}
+                {...register(
+                  'userName',
+                  withInputLengthRules('text', {
+                    //   required: true,
+                  })
+                )}
                 err={!!errors.userName}
               />
               {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
@@ -94,9 +98,12 @@ const ChangeUserNamePage = () => {
                 className="w-full"
                 placeholder="UserName"
                 type="text"
-                {...register('newUserName', {
-                  required: true,
-                })}
+                {...register(
+                  'newUserName',
+                  withInputLengthRules('text', {
+                    required: true,
+                  })
+                )}
                 err={!!errors.newUserName}
               />
             </div>
@@ -115,7 +122,7 @@ const ChangeUserNamePage = () => {
                   className="w-full ps-8"
                   placeholder="************"
                   type={showPassword ? 'text' : 'password'}
-                  {...register('password', { required: true })}
+                  {...register('password', withInputLengthRules('password', { required: true }))}
                   err={!!errors.password}
                 />
               </div>

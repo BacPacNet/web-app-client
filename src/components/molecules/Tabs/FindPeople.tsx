@@ -127,9 +127,9 @@ export default function FindPeople() {
     if (isUserProfilesLoading || isFilterLoading) return <UserListItemSkeleton count={8} />
     if (userProfiles.length === 0) return <p className="text-center my-4 text-2sm text-neutral-600 font-semibold">No User Found</p>
 
-    return userProfiles.map((item, index) => (
+    return userProfiles.map((item) => (
       <UserListItem
-        key={index}
+        key={item._id}
         id={item._id}
         firstName={item.firstName}
         lastName={item.lastName}

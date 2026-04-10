@@ -59,9 +59,9 @@ export default function Following() {
     }
     return (
       <>
-        {userFollowing?.map((userProfile, index: number) => (
+        {userFollowing?.map((userProfile) => (
           <UserListItem
-            key={index}
+            key={userProfile?._id}
             id={userProfile?._id}
             firstName={userProfile?.firstName}
             lastName={userProfile?.lastName}

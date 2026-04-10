@@ -2,6 +2,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { RequestData, ServerResponse } from '../models/common/api-client'
+import { MESSAGES } from '@/content/constant'
 
 /**
  * Handle Network Requests.
@@ -54,6 +55,18 @@ const client = async <T, U>(
 
     return resData
   } catch (err) {
+    if (axios.isAxiosError(err) && !err.response) {
+      return Promise.reject({
+        ...err,
+        response: {
+          status: 503,
+          data: {
+            message: MESSAGES.BACKEND_UNAVAILABLE,
+          },
+        },
+      })
+    }
+
     return Promise.reject(err)
   }
 }

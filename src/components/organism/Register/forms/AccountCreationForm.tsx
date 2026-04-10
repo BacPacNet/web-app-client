@@ -1,5 +1,6 @@
 'use client'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
@@ -61,13 +62,16 @@ const AccountCreationForm = ({ isPending }: Props) => {
             label="Email Address"
             placeholder="john@example.com"
             type="email"
-            {...register('email', {
-              required: true,
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Enter a valid email address.',
-              },
-            })}
+            {...register(
+              'email',
+              withInputLengthRules('email', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Enter a valid email address.',
+                },
+              })
+            )}
             err={!!registerFormErrors.email}
           />
           {registerFormErrors.email && (
@@ -81,9 +85,12 @@ const AccountCreationForm = ({ isPending }: Props) => {
             label="Username"
             placeholder="john123"
             type="text"
-            {...register('userName', {
-              required: true,
-            })}
+            {...register(
+              'userName',
+              withInputLengthRules('text', {
+                required: true,
+              })
+            )}
             err={!!registerFormErrors.userName}
           />
           {registerFormErrors.userName && (
@@ -97,19 +104,22 @@ const AccountCreationForm = ({ isPending }: Props) => {
             label="Password"
             placeholder="***********"
             type={showPassword ? 'text' : 'password'}
-            {...register('password', {
-              required: true,
-              minLength: {
-                value: 8,
-                message:
-                  'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
-              },
-              pattern: {
-                value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
-                message:
-                  'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
-              },
-            })}
+            {...register(
+              'password',
+              withInputLengthRules('password', {
+                required: true,
+                minLength: {
+                  value: 8,
+                  message:
+                    'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
+                },
+                pattern: {
+                  value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                  message:
+                    'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
+                },
+              })
+            )}
             err={!!registerFormErrors.password}
           />
           <div className={`absolute  right-0 pr-3 flex items-center text-sm ${registerFormErrors.password ? 'top-[15%]' : 'top-[20%]'} `}>
@@ -142,7 +152,10 @@ const AccountCreationForm = ({ isPending }: Props) => {
             label="Confirm password"
             placeholder="***********"
             type={showConfirmPassword ? 'text' : 'password'}
-            {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match.' })}
+            {...register(
+              'confirmpassword',
+              withInputLengthRules('password', { required: true, validate: (value: string) => value === password || 'Passwords do not match.' })
+            )}
             err={!!registerFormErrors.confirmpassword}
           />
 

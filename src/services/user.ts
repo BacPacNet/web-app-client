@@ -185,16 +185,33 @@ export const useDeleteUserAccount = () => {
     },
   })
 }
-export async function getUserReferrals(token: string): Promise<ReferralsResponse> {
-  const response = await client<ReferralsResponse, any>(`/users/referrals`, { headers: { Authorization: `Bearer ${token}` } })
+export async function getUserReferrals(token: string, page: number = 1, limit: number = 10): Promise<ReferralsResponse> {
+  const params = new URLSearchParams()
+  params.append('page', String(page))
+  params.append('limit', String(limit))
+
+  const response = await client<ReferralsResponse, any>(`/users/referrals?${params.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return response
 }
 
-export function useGetUserReferrals() {
+export function useGetUserReferrals(limit: number = 10) {
   const [cookieValue] = useCookie('uni_user_token')
-  return useQuery({
-    queryKey: ['getUserReferrals'],
-    queryFn: () => getUserReferrals(cookieValue),
+  return useInfiniteQuery({
+    queryKey: ['getUserReferrals', limit],
+    queryFn: ({ pageParam = 1 }) => {
+      if (!cookieValue) {
+        throw new Error('Missing auth token')
+      }
+      return getUserReferrals(cookieValue, pageParam, limit)
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || !Array.isArray(lastPage.referrals)) return undefined
+      if (!lastPage.currentPage || !lastPage.totalPages) return undefined
+      return lastPage.currentPage < lastPage.totalPages ? lastPage.currentPage + 1 : undefined
+    },
+    initialPageParam: 1,
     enabled: !!cookieValue,
   })
 }

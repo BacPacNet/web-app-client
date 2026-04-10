@@ -1,5 +1,6 @@
 'use client'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 
 import { useCreateGroupChat, useGetUserFollowingAndFollowers } from '@/services/Messages'
 import Image from 'next/image'
@@ -127,9 +128,12 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
               <InputBox
                 placeholder="title "
                 type="title"
-                {...GroupChatRegister('title', {
-                  required: true,
-                })}
+                {...GroupChatRegister(
+                  'title',
+                  withInputLengthRules('text', {
+                    required: true,
+                  })
+                )}
               />
 
               {GroupChatRegisterErr.title && <span className="text-red-500 font-normal"> Please enter your Group Name!</span>}
@@ -142,9 +146,12 @@ const CreateGroupChat = ({ setSelectedChat }: Props) => {
             <InputBox
               placeholder="description "
               type="description"
-              {...GroupChatRegister('description', {
-                required: true,
-              })}
+              {...GroupChatRegister(
+                'description',
+                withInputLengthRules('text', {
+                  required: true,
+                })
+              )}
             />
 
             {GroupChatRegisterErr.description && <span className="text-red-500 font-normal"> Please enter your Group Name!</span>}
