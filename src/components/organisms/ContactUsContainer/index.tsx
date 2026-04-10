@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Spinner } from '@/components/spinner/Spinner'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { useSendContactMessage } from '@/services/contact'
 import { useEffect, useRef } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
@@ -98,7 +99,7 @@ export function ContactForm() {
               type="text"
               label="First Name"
               placeholder="e.g. John"
-              {...register('firstName', { required: 'First name is required' })}
+              {...register('firstName', withInputLengthRules('text', { required: 'First name is required' }))}
               err={!!registerFormErrors.firstName}
             />
             {registerFormErrors.firstName && <InputWarningText>{registerFormErrors.firstName.message}</InputWarningText>}
@@ -109,7 +110,7 @@ export function ContactForm() {
               type="text"
               label="Last Name"
               placeholder="e.g. Doe"
-              {...register('lastName', { required: 'Last name is required' })}
+              {...register('lastName', withInputLengthRules('text', { required: 'Last name is required' }))}
               err={!!registerFormErrors.lastName}
             />
             {registerFormErrors.lastName && <InputWarningText>{registerFormErrors.lastName.message}</InputWarningText>}
@@ -121,7 +122,7 @@ export function ContactForm() {
             type="text"
             label="University"
             placeholder="e.g. Harvard University (if any)"
-            {...register('university')}
+            {...register('university', withInputLengthRules('text'))}
             err={!!registerFormErrors.university}
           />
           {registerFormErrors.university && <InputWarningText>{registerFormErrors.university.message}</InputWarningText>}
@@ -132,13 +133,16 @@ export function ContactForm() {
             label="Email Address"
             placeholder="john@example.com"
             type="email"
-            {...register('email', {
-              required: true,
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Enter a valid email address.',
-              },
-            })}
+            {...register(
+              'email',
+              withInputLengthRules('email', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Enter a valid email address.',
+                },
+              })
+            )}
             err={!!registerFormErrors.email}
           />
           {registerFormErrors.email && (

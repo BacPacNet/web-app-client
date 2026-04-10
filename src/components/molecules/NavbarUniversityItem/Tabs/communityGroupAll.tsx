@@ -15,9 +15,10 @@ function CommunityGroupAll({
   handleAssignUsersModal,
   toggleLeftNavbar,
   selectedCommunityImage,
+  emptyMessage,
 }: any) {
   if (isCommunityGroupsLoading || communityGroups === 'undefined') return <UserListItemSkeleton className="px-4" />
-  if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> No Groups Available</p>
+  if (communityGroups?.length === 0) return <p className="text-center text-neutral-500"> {emptyMessage || 'No Groups Available'}</p>
   return (
     <>
       {communityGroups

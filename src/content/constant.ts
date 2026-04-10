@@ -1,5 +1,6 @@
 export const MESSAGES = {
   SOMETHING_WENT_WRONG: 'Something went wrong',
+  BACKEND_UNAVAILABLE: 'Something went wrong on our end. We\u2019re working to fix it as soon as possible. Please try again soon.',
   GROUP_NOT_FOUND: 'Group Not Found',
   GROUP_NOT_FOUND_DESCRIPTION: "The group you're looking for doesn't exist or may have been removed by the admin.",
   USER_NOT_FOUND: 'User Not Found',

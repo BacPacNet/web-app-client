@@ -1,6 +1,7 @@
 'use client'
 import { OTPInput } from 'input-otp'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
@@ -65,13 +66,16 @@ const VerificationForm = ({ isVerificationSuccess, isPending, handlePrev }: prop
             type="email"
             value={email}
             disabled
-            {...register('email', {
-              required: true,
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Invalid email format',
-              },
-            })}
+            {...register(
+              'email',
+              withInputLengthRules('email', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Invalid email format',
+                },
+              })
+            )}
             err={!!VerificationFormErrors.email}
           />
           {VerificationFormErrors.verificationEmail && (

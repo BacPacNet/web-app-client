@@ -270,6 +270,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
           selectCommunityId={selectCommunityId}
           toggleLeftNavbar={toggleLeftNavbar}
           selectedCommunityImage={selectedCommunityImage}
+          emptyMessage="You haven’t joined any groups yet. Groups you join will appear here"
         />
       ),
     },

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Button from '@/components/atoms/Buttons'
@@ -77,7 +78,7 @@ const ChangePasswordModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={passwordVisibility.showPassword ? 'text' : 'password'}
-                {...register('currentPassword', { required: true })}
+                {...register('currentPassword', withInputLengthRules('password', { required: true }))}
                 err={!!errors.currentPassword}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>
@@ -104,7 +105,7 @@ const ChangePasswordModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={passwordVisibility.showNewPassword ? 'text' : 'password'}
-                {...register('newPassword', { required: true })}
+                {...register('newPassword', withInputLengthRules('password', { required: true }))}
                 err={!!errors.newPassword}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>
@@ -134,7 +135,10 @@ const ChangePasswordModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={passwordVisibility.showConfirmPassword ? 'text' : 'password'}
-                {...register('confirmPassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
+                {...register(
+                  'confirmPassword',
+                  withInputLengthRules('password', { required: true, validate: (value: string) => value === password || 'Passwords do not match' })
+                )}
                 err={!!errors.confirmPassword}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>

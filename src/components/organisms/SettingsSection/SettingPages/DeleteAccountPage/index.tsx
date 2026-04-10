@@ -2,6 +2,7 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import DeleteAccountModal from '@/components/molecules/SettingsDeleteAccountModal'
 import GenericInfoModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
@@ -105,7 +106,7 @@ const DeleteAccountPage = () => {
                     className="w-full ps-8"
                     placeholder="************"
                     type={'password'}
-                    {...register('password', { required: true })}
+                    {...register('password', withInputLengthRules('password', { required: true }))}
                     err={!!errors.password}
                   />
                 </div>

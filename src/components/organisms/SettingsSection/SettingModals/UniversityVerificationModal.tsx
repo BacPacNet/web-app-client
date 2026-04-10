@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 
 import Button from '@/components/atoms/Buttons'
 import { Controller, useForm } from 'react-hook-form'
@@ -172,13 +173,16 @@ const UniversityVerificationModal = ({ universityNameProp }: Props) => {
               label="University Email"
               placeholder="Email Address"
               type="email"
-              {...register('universityEmail', {
-                required: true,
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                  message: 'Invalid email format',
-                },
-              })}
+              {...register(
+                'universityEmail',
+                withInputLengthRules('email', {
+                  required: true,
+                  pattern: {
+                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                    message: 'Invalid email format',
+                  },
+                })
+              )}
               err={!!errors.universityEmail}
             />
             {errors.universityEmail && (

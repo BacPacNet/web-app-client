@@ -245,7 +245,7 @@ export default function CommunityGroupBanner({
                 isOfficial={isGroupOfficial}
                 badgeLogoUrl={communityGroups?.communityId?.communityLogoUrl.imageUrl}
               />
-              <p className="text-sm font-bold">{communityGroups?.title}</p>
+              <p className="text-sm font-bold whitespace-normal break-words">{communityGroups?.title}</p>
               {/*<p className="ai-power text-xs font-extrabold">AI POWERED </p>*/}
             </div>
 

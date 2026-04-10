@@ -4,15 +4,12 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
 import Title from '@/components/atoms/Title'
-import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { useForm, useFormContext } from 'react-hook-form'
-import logo from '@/assets/Logo Circle.svg'
-import { AiOutlineEye } from 'react-icons/ai'
-import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useHandleLogin } from '@/services/auth'
 import { LoginForm } from '@/models/auth'
 import { Spinner } from '@/components/spinner/Spinner'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 
 const FinalLoginForm = ({ email }: { email: string }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -45,13 +42,16 @@ const FinalLoginForm = ({ email }: { email: string }) => {
             label="Email Address"
             placeholder="john.dowry@example.com"
             type="email"
-            {...registerLogin('email', {
-              required: true,
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Invalid email format',
-              },
-            })}
+            {...registerLogin(
+              'email',
+              withInputLengthRules('email', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Invalid email format',
+                },
+              })
+            )}
             err={!!FinalLoginFormErrors.email}
           />
           {FinalLoginFormErrors.email && (
@@ -65,7 +65,7 @@ const FinalLoginForm = ({ email }: { email: string }) => {
             label="Password"
             placeholder="**********"
             type={showPassword ? 'text' : 'password'}
-            {...registerLogin('password', { required: true })}
+            {...registerLogin('password', withInputLengthRules('password', { required: true }))}
             err={!!FinalLoginFormErrors.password}
           />
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SettingsText from '@/components/atoms/SettingsText'
 import SubText from '@/components/atoms/SubText'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { AiOutlineEye } from 'react-icons/ai'
 import { AiOutlineEyeInvisible } from 'react-icons/ai'
 import Button from '@/components/atoms/Buttons'
@@ -81,9 +82,12 @@ const DeActivateModal = () => {
               className="w-full"
               placeholder="UserName"
               type="text"
-              {...register('userName', {
-                required: true,
-              })}
+              {...register(
+                'userName',
+                withInputLengthRules('text', {
+                  required: true,
+                })
+              )}
               err={!!errors.userName}
             />
             {errors.userName && <InputWarningText>{'Please enter your user name!'}</InputWarningText>}
@@ -97,13 +101,16 @@ const DeActivateModal = () => {
             <InputBox
               placeholder="Email Address"
               type="email"
-              {...register('email', {
-                required: true,
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                  message: 'Invalid email format',
-                },
-              })}
+              {...register(
+                'email',
+                withInputLengthRules('email', {
+                  required: true,
+                  pattern: {
+                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                    message: 'Invalid email format',
+                  },
+                })
+              )}
               err={!!errors.email}
             />
             <SubText>In case you change your mind, we will send a reactivation link valid for 30 days.</SubText>
@@ -123,7 +130,7 @@ const DeActivateModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={passwordVisibility.showNewPassword ? 'text' : 'password'}
-                {...register('Password', { required: true })}
+                {...register('Password', withInputLengthRules('password', { required: true }))}
                 err={!!errors.Password}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>
@@ -153,7 +160,10 @@ const DeActivateModal = () => {
                 className="w-full ps-8"
                 placeholder="************"
                 type={passwordVisibility.showConfirmPassword ? 'text' : 'password'}
-                {...register('confirmPassword', { required: true, validate: (value) => value === password || 'Passwords do not match' })}
+                {...register(
+                  'confirmPassword',
+                  withInputLengthRules('password', { required: true, validate: (value: string) => value === password || 'Passwords do not match' })
+                )}
                 err={!!errors.confirmPassword}
               />
               <div className={`absolute  right-0 pr-3 flex items-center text-sm top-3 `}>

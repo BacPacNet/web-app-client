@@ -1,12 +1,11 @@
 'use client'
 
-import Spinner from '@/components/atoms/spinner'
 import { useGetUserReferrals } from '@/services/user'
 import { useRouter } from 'next/navigation'
 import { FaChevronLeft } from 'react-icons/fa'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { Referral } from '@/types/User'
 import { formatDate } from '@/lib/date'
@@ -63,10 +62,32 @@ const ReferralListItem = ({ referral }: { referral: Referral }) => {
 
 export const ReferralsPage = () => {
   const router = useRouter()
-  const { data, isLoading, error } = useGetUserReferrals()
+  const ref = useRef<HTMLDivElement>(null)
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetUserReferrals(10)
   const [copied, setCopied] = useState(false)
+  const referralData = data?.pages?.[0]
+  const referrals = useMemo(() => data?.pages?.flatMap((page) => page.referrals) || [], [data])
 
-  const referralLink = data?.referCode ? `${window.location.origin}/register?referralCode=${data.referCode}` : ''
+  const referralLink = referralData?.referCode ? `${window.location.origin}/register?referralCode=${referralData.referCode}` : ''
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        const { scrollTop, scrollHeight, clientHeight } = ref.current
+        const bottom = scrollTop + clientHeight >= scrollHeight - 10
+        if (bottom && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      }
+    }
+
+    const container = ref.current
+    container?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      container?.removeEventListener('scroll', handleScroll)
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   const handleCopyLink = async () => {
     if (!referralLink) return
@@ -106,29 +127,22 @@ export const ReferralsPage = () => {
         <div className="flex flex-col gap-2">
           <h6 className="font-poppins font-bold text-neutral-700 text-[20px]">Referrals</h6>
           <p className="text-neutral-500 text-xs">
-            View all users who have joined using your referral code. You have referred {data?.totalReferrals || 0} user
-            {data?.totalReferrals !== 1 ? 's' : ''}.
+            View all users who have joined using your referral code. You have referred {referralData?.totalReferrals || 0} user
+            {referralData?.totalReferrals !== 1 ? 's' : ''}.
           </p>
         </div>
       </div>
-      <div>
-        {/* {isLoading ? (
-          <div className="flex justify-center items-center h-full min-h-[300px]">
-            <Spinner />
-          </div>
+      <div ref={ref} className="max-h-[420px] overflow-y-auto custom-scrollbar">
+        {isLoading ? (
+          <p className="text-neutral-500 text-sm">Loading referrals...</p>
         ) : error ? (
           <p className="text-neutral-500 text-sm">Error loading referrals. Please try again later.</p>
-        ) : data?.referrals && data.referrals.length > 0 ? (
-          data.referrals.map((referral) => <ReferralListItem key={referral._id} referral={referral} />)
-        ) : (
-          <p className="text-neutral-500 text-sm">No referrals found</p>
-        )} */}
-
-        {data?.referrals && data.referrals.length > 0 ? (
-          data.referrals.map((referral) => <ReferralListItem key={referral._id} referral={referral} />)
+        ) : referrals?.length > 0 ? (
+          referrals.map((referral) => <ReferralListItem key={referral._id} referral={referral} />)
         ) : (
           <p className="text-neutral-500 text-sm">No referrals found</p>
         )}
+        {isFetchingNextPage && <p className="text-neutral-500 text-xs py-3 text-center">Loading more referrals...</p>}
       </div>
     </div>
   )

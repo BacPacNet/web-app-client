@@ -63,7 +63,11 @@ const GroupSelectors = ({
           )}
         </div>
 
-        <label className={`text-xs ${isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium'} `}>
+        <label
+          className={`text-xs max-w-[80%]  whitespace-normal break-words ${
+            isSelected ? 'text-neutral-700 font-bold' : 'text-neutral-500 font-medium'
+          } `}
+        >
           {data?.title || data?.communityGroupName}
         </label>
       </div>
