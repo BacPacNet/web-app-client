@@ -10,6 +10,7 @@ import CommentCardOption from '@/components/atoms/CommentCardOption'
 import { motion } from 'framer-motion'
 import PostCommunityHolder from '../PostCommunityHolder'
 import { CommentItemProps } from '@/types/CommentPost'
+import { formatHtmlContentForCodeBlocks } from '@/lib/formatHtmlContentForCodeBlocks'
 
 const CommentItem = ({
   comment,
@@ -30,6 +31,7 @@ const CommentItem = ({
 }: CommentItemProps) => {
   const commenterId = comment?.commenterId?._id ? comment?.commenterId?._id : comment?.commenterId?.id
   const [visibleReplyCount, setVisibleReplyCount] = React.useState(2)
+  const formattedContent = React.useMemo(() => formatHtmlContentForCodeBlocks(comment?.content), [comment?.content])
 
   return (
     <motion.div
@@ -103,7 +105,7 @@ const CommentItem = ({
       </div>
 
       <div className="flex flex-col gap-2 pt-2 border-b border-neutral-200">
-        <p className="text-2xs sm:text-xs break-words " dangerouslySetInnerHTML={{ __html: comment?.content }} />
+        <div className="post-content text-2xs sm:text-xs break-words" dangerouslySetInnerHTML={{ __html: formattedContent }} />
         {comment?.imageUrl && comment.imageUrl.length > 0 && (
           <PostCardImageGrid
             images={comment.imageUrl.filter((img) => img.imageUrl !== null).map((img) => ({ imageUrl: img.imageUrl! }))}
