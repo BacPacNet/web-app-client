@@ -153,6 +153,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         methods.setError('email', { message: error.response.data.message })
       } else if (error.response.data.message == userCheckError.userNameNotAvailable) {
         methods.setError('userName', { message: error.response.data.message })
+      } else {
+        methods.setError('email', { message: error.response.data.message })
       }
     }
   }

@@ -15,6 +15,7 @@ import { useCreateGroupPostStatusChange } from '@/services/community-university'
 import { communityPostStatus } from '@/types/CommuityGroup'
 import { userTypeEnum } from '@/types/RegisterForm'
 import PostCommunityHolder from '../PostCommunityHolder'
+import { formatHtmlContentForCodeBlocks } from '@/lib/formatHtmlContentForCodeBlocks'
 dayjs.extend(relativeTime)
 
 interface Like {
@@ -128,6 +129,7 @@ const PendingPostCard = React.memo(
         ? 'border-red-500'
         : 'border-yellow-400'
     }, [postStatus, communityGroupAdminId])
+    const formattedText = useMemo(() => formatHtmlContentForCodeBlocks(text), [text])
 
     const updatePostStatus = (status: communityPostUpdateStatus) => {
       mutate(status)
@@ -191,7 +193,10 @@ const PendingPostCard = React.memo(
             </div>
           </div>
 
-          <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
+          <div
+            className="post-content font-medium text-neutral-700 break-words whitespace-normal mb-2"
+            dangerouslySetInnerHTML={{ __html: formattedText }}
+          />
 
           <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 
