@@ -19,6 +19,7 @@ import UserCard from '@/components/atoms/UserCard'
 import { motion } from 'framer-motion'
 import PostCommunityHolder from '../PostCommunityHolder'
 import { ContentType } from '@/content/constant'
+import { formatHtmlContentForCodeBlocks } from '@/lib/formatHtmlContentForCodeBlocks'
 
 dayjs.extend(relativeTime)
 
@@ -242,6 +243,7 @@ const PostCard = React.memo(
     }, [type, communityGroupId, communityGroupName, communityName])
 
     const formattedDate = useMemo(() => format(date as unknown as Date, 'h:mm a · MMM d, yyyy'), [date])
+    const formattedText = useMemo(() => formatHtmlContentForCodeBlocks(text), [text])
 
     //const isLiked = useMemo(() => likes?.some((like: any) => like.userId == userData?.id), [likes, userData?.id])
 
@@ -349,7 +351,10 @@ const PostCard = React.memo(
             </div>
           </div>
 
-          <div className="font-medium text-neutral-700 break-words whitespace-normal mb-2" dangerouslySetInnerHTML={{ __html: text }} />
+          <div
+            className="post-content font-medium text-neutral-700 break-words whitespace-normal mb-2"
+            dangerouslySetInnerHTML={{ __html: formattedText }}
+          />
 
           <PostCardImageGrid images={images} setImageCarasol={setImageCarasol} idx={idx} type={type} />
 

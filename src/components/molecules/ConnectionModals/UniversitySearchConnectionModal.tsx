@@ -125,49 +125,6 @@ export default function ConnectionUserSelectModal({
     }
   }, [showDropdown])
 
-  // useEffect(() => {
-  //   const allUsers = communityUsers || []
-  //   // const allStudentUsers = allUsers.filter((user) => user.role == 'student')
-  //   // const allStudentUsers = allUsers.filter((user) => user.role === 'student' && user._id !== userData?.id)
-
-  //   if (selectedRadio == 'Student' && studentYear.length < 1 && major.length < 1) {
-  //     return setFilterUsers(allUsers)
-  //   }
-  //   const filters = { year: studentYear, major: major }
-
-  //   const filtered = filterData(allUsers, filters)
-  //   setFilterUsers(filtered)
-
-  //   // const yearOnlyFiltered = filterData(allUsers, { year: studentYear, major: [] })
-  //   // const yearCounts = getFilteredYearCounts(yearOnlyFiltered)
-
-  //   // const majorCounts = getFilteredMajorCounts(filtered)
-
-  //   // setFilteredYearsCount(yearCounts)
-  //   // setFilteredMajorsCount(majorCounts)
-  // }, [studentYear, major, communityUsers, selectedRadio])
-
-  // useEffect(() => {
-  //   const allUsers = communityUsers || []
-  //   // const allFacultyUsers = allUsers.filter((user) => user.role == 'faculty' && user._id !== userData?.id)
-
-  //   if (selectedRadio == 'Faculty' && occupation.length < 1 && affiliation.length < 1) {
-  //     return setFilterFacultyUsers(allUsers)
-  //   }
-  //   const filters = { occupation: occupation, affiliation: affiliation }
-  //   const filtered = filterFacultyData(allUsers, filters)
-  //   setFilterFacultyUsers(filtered)
-
-  //   // const occupationOnlyFiltered = filterFacultyData(allUsers, { occupation: occupation, affiliation: [] })
-
-  //   // const occupationCounts = getOccupationCounts(occupationOnlyFiltered)
-
-  //   // const affiliationCounts = getFilteredAffiliationCounts(filtered)
-
-  //   // setFilteredOccupationCount(occupationCounts)
-  //   // setFilteredAffiliationCount(affiliationCounts)
-  // }, [occupation, affiliation, selectedRadio])
-
   const filteredUsers = React.useMemo(() => {
     const allUsers = communityUsers || []
     const filters = { year: studentYear, major: major }

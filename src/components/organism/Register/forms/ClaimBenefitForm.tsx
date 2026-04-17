@@ -1,4 +1,5 @@
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import SupportingText from '@/components/atoms/SupportingText'
@@ -39,9 +40,12 @@ const ClaimBenefitForm = ({ isPending }: Props) => {
           <InputBox
             placeholder="ASI132943"
             type="referCode"
-            {...register('referCode', {
-              // required: true,
-            })}
+            {...register(
+              'referCode',
+              withInputLengthRules('text', {
+                // required: true,
+              })
+            )}
             err={!!VerificationFormErrors.referCode}
           />
           {VerificationFormErrors.referCode && (

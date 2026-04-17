@@ -17,6 +17,7 @@ import { BiChevronDown } from 'react-icons/bi'
 import { FaXmark } from 'react-icons/fa6'
 import { FiCamera } from 'react-icons/fi'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
 import { useUsersProfileForConnections } from '@/services/user'
@@ -254,9 +255,12 @@ const GroupChatModal = ({
             className="text-xs"
             placeholder="Enter Group Name "
             type="title"
-            {...register('title', {
-              required: true,
-            })}
+            {...register(
+              'title',
+              withInputLengthRules('text', {
+                required: true,
+              })
+            )}
           />
 
           {errors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}

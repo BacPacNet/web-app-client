@@ -9,6 +9,7 @@ import InputWarningText from '@/components/atoms/InputWarningText'
 import { useHandleLogin } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/spinner/Spinner'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 
 const LoginBox = () => {
   const router = useRouter()
@@ -51,13 +52,16 @@ const LoginBox = () => {
               label="Email Address"
               placeholder="john.dowry@example.com"
               type="email"
-              {...register('email', {
-                required: 'Please enter your email!',
-                pattern: {
-                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                  message: 'Invalid email format',
-                },
-              })}
+              {...register(
+                'email',
+                withInputLengthRules('email', {
+                  required: 'Please enter your email!',
+                  pattern: {
+                    value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                    message: 'Invalid email format',
+                  },
+                })
+              )}
               err={!!errors.email}
             />
             {errors.email && <InputWarningText>{errors.email.message}</InputWarningText>}
@@ -67,7 +71,7 @@ const LoginBox = () => {
               label="Password"
               placeholder="*********"
               type="password"
-              {...register('password', { required: 'Please enter your password!' })}
+              {...register('password', withInputLengthRules('password', { required: 'Please enter your password!' }))}
               err={!!errors.password}
             />
             {errors.password && <InputWarningText>{errors.password.message}</InputWarningText>}

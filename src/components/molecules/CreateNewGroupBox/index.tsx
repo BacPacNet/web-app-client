@@ -6,6 +6,7 @@ import badge from '@assets/badge.svg'
 import { useCreateCommunityGroup, useGetCommunity } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
 import { CommunityGroupTypeEnum, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
@@ -384,9 +385,12 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
                 className="text-xs"
                 placeholder="Enter Group Name "
                 type="title"
-                {...GroupRegister('title', {
-                  required: true,
-                })}
+                {...GroupRegister(
+                  'title',
+                  withInputLengthRules('text', {
+                    required: true,
+                  })
+                )}
               />
 
               {errors.title && <span className="text-red-500 text-2xs font-normal text-"> {errors.title.message || 'This field is required'} </span>}
@@ -436,7 +440,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
             </label>
 
             <label className="flex items-center gap-3">
-              {/* <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" /> */}
+              {/* <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true }))} className="w-[18px] h-[18px] mt-1" /> */}
               <input
                 type="radio"
                 value="Private"

@@ -133,6 +133,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
   useTimeTracking(TRACK_EVENT.REGISTER_PAGE_VIEW_DURATION, {
     isRegistrationCompleted: registeredData?.isRegistered || false,
     email: currEmail || '',
+    referralCode: referralCode || '',
   })
 
   useEffect(() => {
@@ -152,6 +153,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         methods.setError('email', { message: error.response.data.message })
       } else if (error.response.data.message == userCheckError.userNameNotAvailable) {
         methods.setError('userName', { message: error.response.data.message })
+      } else {
+        methods.setError('email', { message: error.response.data.message })
       }
     }
   }
@@ -219,7 +222,7 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
 
     const saveToLocalStorage = () => {
       const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
-      setCookieValue(JSON.stringify({ ...data, step: currStep, subStep: currSubStep }), expirationDate)
+      setCookieValue(JSON.stringify({ ...data, step: currStep, subStep: currSubStep, referralCode: data.referralCode }), expirationDate)
     }
 
     if (step === 0) {
@@ -277,7 +280,10 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         } as FormDataType)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+          setCookieLoginValue(
+            JSON.stringify({ email: data?.email, password: data.password, referralCode: data.referralCode }),
+            expirationDateForLoginData
+          )
           deleteCookie()
           setStep(4)
           setSubStep(0)
@@ -303,7 +309,10 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         } as FormDataType)
         if (res?.isRegistered) {
           const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-          setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
+          setCookieLoginValue(
+            JSON.stringify({ email: data?.email, password: data.password, referralCode: data.referralCode }),
+            expirationDateForLoginData
+          )
           deleteCookie()
           setStep(4)
           setSubStep(0)

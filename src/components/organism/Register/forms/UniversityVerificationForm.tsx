@@ -1,4 +1,5 @@
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 import { OTPInput } from 'input-otp'
@@ -148,13 +149,16 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
             label=" University Email"
             placeholder="Email Address"
             type="email"
-            {...register('universityEmail', {
-              required: true,
-              pattern: {
-                value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                message: 'Invalid email format',
-              },
-            })}
+            {...register(
+              'universityEmail',
+              withInputLengthRules('email', {
+                required: true,
+                pattern: {
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                  message: 'Invalid email format',
+                },
+              })
+            )}
             err={!!UniversityVerificationFormErrors.universityEmail}
           />
           {UniversityVerificationFormErrors.universityEmail && (

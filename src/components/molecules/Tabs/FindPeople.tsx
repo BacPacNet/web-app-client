@@ -71,21 +71,26 @@ export default function FindPeople() {
     selectedFilters.studentYear,
     selectedFilters.major,
     selectedFilters.occupation,
-    selectedFilters.affiliation
+    selectedFilters.affiliation,
+    '',
+    selectedFilters?.selectedRadio ?? ''
   )
 
+  const hasActiveFilters =
+    !!selectedFilters?.university?.name ||
+    !!selectedFilters?.studentYear?.length ||
+    !!selectedFilters?.major?.length ||
+    !!selectedFilters?.occupation?.length ||
+    !!selectedFilters?.affiliation?.length ||
+    !!selectedFilters?.selectedRadio
+
   useEffect(() => {
-    if (
-      selectedFilters?.university?.name ||
-      selectedFilters?.studentYear?.length ||
-      selectedFilters?.major?.length ||
-      selectedFilters?.occupation?.length ||
-      selectedFilters?.affiliation?.length
-    ) {
+    if (hasActiveFilters) {
       setIsFilterLoading(true)
       refetch().finally(() => setIsFilterLoading(false))
     }
   }, [
+    hasActiveFilters,
     selectedFilters?.university?.name,
     selectedFilters?.studentYear,
     selectedFilters?.major,
@@ -127,9 +132,9 @@ export default function FindPeople() {
     if (isUserProfilesLoading || isFilterLoading) return <UserListItemSkeleton count={8} />
     if (userProfiles.length === 0) return <p className="text-center my-4 text-2sm text-neutral-600 font-semibold">No User Found</p>
 
-    return userProfiles.map((item, index) => (
+    return userProfiles.map((item) => (
       <UserListItem
-        key={index}
+        key={item._id}
         id={item._id}
         firstName={item.firstName}
         lastName={item.lastName}
@@ -185,9 +190,10 @@ export default function FindPeople() {
           <UserSearchInput value={name} onChange={(value) => handleChange(value)} />
           <div
             onClick={openModal}
-            className="cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"
+            className="relative cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"
           >
             <FaFilter className="text-primary-500" />
+            {hasActiveFilters && <div className="absolute top-2 right-1 bg-destructive-500 text-white text-xs rounded-full w-2 h-2"></div>}
           </div>
         </div>
       </div>

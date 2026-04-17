@@ -25,7 +25,9 @@ const MobileAppDownload = () => {
 
   const handleLogin = () => {
     if (cookieLoginValue) {
-      login(JSON.parse(cookieLoginValue), {
+      const data = JSON.parse(cookieLoginValue)
+      const loginData = { email: data?.email, password: data?.password }
+      login(loginData, {
         onSuccess: () => {
           router.push('/timeline')
         },
@@ -41,6 +43,7 @@ const MobileAppDownload = () => {
       if (loginData) {
         trackEvent(TRACK_EVENT.REGISTRATION_COMPLETE, {
           email: loginData?.email,
+          referralCode: loginData?.referralCode,
         })
       }
     }

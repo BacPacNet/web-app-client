@@ -1,6 +1,7 @@
 'use client'
 import { OTPInput } from 'input-otp'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import InputWarningText from '@/components/atoms/InputWarningText'
 import Button from '@/components/atoms/Buttons'
 
@@ -192,19 +193,22 @@ const ResetPasswordSendOtp = () => {
                     label="Password"
                     placeholder="***********"
                     type={showPassword ? 'text' : 'password'}
-                    {...register('password', {
-                      required: true,
-                      minLength: {
-                        value: 8,
-                        message:
-                          'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
-                      },
-                      pattern: {
-                        value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
-                        message:
-                          'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
-                      },
-                    })}
+                    {...register(
+                      'password',
+                      withInputLengthRules('password', {
+                        required: true,
+                        minLength: {
+                          value: 8,
+                          message:
+                            'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
+                        },
+                        pattern: {
+                          value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                          message:
+                            'Password must have at least 8 characters, one number, one uppercase letter, one lowercase letter, and one special character (!@#$%^&*).',
+                        },
+                      })
+                    )}
                     err={!!errors.password && hasSubmittedPasswordForm}
                   />
                   <div className={`absolute  right-0 pr-3 flex items-center text-sm ${errors.password ? 'top-[15%]' : 'top-[20%]'} `}>
@@ -245,7 +249,13 @@ const ResetPasswordSendOtp = () => {
                     label="Confirm password"
                     placeholder="***********"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    {...register('confirmpassword', { required: true, validate: (value) => value === password || 'Passwords do not match.' })}
+                    {...register(
+                      'confirmpassword',
+                      withInputLengthRules('password', {
+                        required: true,
+                        validate: (value: string) => value === password || 'Passwords do not match.',
+                      })
+                    )}
                     err={!!errors.confirmpassword && hasSubmittedPasswordForm}
                   />
 
@@ -277,13 +287,16 @@ const ResetPasswordSendOtp = () => {
                     placeholder="Email Address"
                     type="email"
                     // value={email}
-                    {...register('email', {
-                      required: true,
-                      pattern: {
-                        value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
-                        message: 'Invalid email format',
-                      },
-                    })}
+                    {...register(
+                      'email',
+                      withInputLengthRules('email', {
+                        required: true,
+                        pattern: {
+                          value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i,
+                          message: 'Invalid email format',
+                        },
+                      })
+                    )}
                     err={!!errors.email}
                   />
                   {errors.email && (

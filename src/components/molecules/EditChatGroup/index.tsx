@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { FiCamera } from 'react-icons/fi'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { useEditGroupChat } from '@/services/Messages'
 import Image from 'next/image'
 import Buttons from '@/components/atoms/Buttons'
@@ -260,9 +261,12 @@ const EditGroupChatModal = ({
             className="text-xs"
             placeholder="Enter Group Name "
             type="title"
-            {...register('title', {
-              required: true,
-            })}
+            {...register(
+              'title',
+              withInputLengthRules('text', {
+                required: true,
+              })
+            )}
           />
 
           {errors.title && <span className="text-red-500 text-2xs font-normal text-"> This field is required</span>}

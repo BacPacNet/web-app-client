@@ -177,12 +177,14 @@ export interface Referral {
   referCode: string
   referredBy: string
   createdAt: string
-  profile: ReferralProfile
+  profile: ReferralProfile | null
 }
 
 export interface ReferralsResponse {
   totalReferrals: number
   referCode: string
+  currentPage: number
+  totalPages: number
   referrals: Referral[]
 }
 export interface RewardsResponse {

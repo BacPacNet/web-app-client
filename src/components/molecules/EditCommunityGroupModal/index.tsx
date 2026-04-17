@@ -36,6 +36,7 @@ import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToa
 import Image from 'next/image'
 import Switch from '@/components/atoms/Switch'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 
 type Props = {
   communityGroups: CommunityGroupType
@@ -396,9 +397,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 className="text-xs"
                 placeholder="Enter Group Name "
                 type="title"
-                {...GroupRegister('title', {
-                  required: true,
-                })}
+                {...GroupRegister(
+                  'title',
+                  withInputLengthRules('text', {
+                    required: true,
+                  })
+                )}
               />
 
               {GroupErrors.title && (

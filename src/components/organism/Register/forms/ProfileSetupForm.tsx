@@ -1,5 +1,6 @@
 'use client'
 import InputBox from '@/components/atoms/Input/InputBox'
+import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import React from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 
@@ -39,13 +40,16 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
             label="First Name"
             type="text"
             placeholder="John"
-            {...register('firstName', {
-              required: 'Please enter your first name.',
-              pattern: {
-                value: /^[A-Za-z\s-]+$/,
-                message: 'First name can only contain letters, spaces, and hyphens.',
-              },
-            })}
+            {...register(
+              'firstName',
+              withInputLengthRules('text', {
+                required: 'Please enter your first name.',
+                pattern: {
+                  value: /^[A-Za-z\s-]+$/,
+                  message: 'First name can only contain letters, spaces, and hyphens.',
+                },
+              })
+            )}
             err={!!ProfileFormErrors.firstName}
           />
           {ProfileFormErrors.firstName && <InputWarningText>{ProfileFormErrors.firstName.message?.toString()}</InputWarningText>}
@@ -56,13 +60,16 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
             label="Last Name"
             placeholder="Doe"
             type="text"
-            {...register('lastName', {
-              required: 'Please enter your last name.',
-              pattern: {
-                value: /^[A-Za-z\s-]+$/,
-                message: 'Last name can only contain letters, spaces, and hyphens.',
-              },
-            })}
+            {...register(
+              'lastName',
+              withInputLengthRules('text', {
+                required: 'Please enter your last name.',
+                pattern: {
+                  value: /^[A-Za-z\s-]+$/,
+                  message: 'Last name can only contain letters, spaces, and hyphens.',
+                },
+              })
+            )}
             err={!!ProfileFormErrors.lastName}
           />
           {ProfileFormErrors.lastName && <InputWarningText>{ProfileFormErrors.lastName.message?.toString()}</InputWarningText>}

@@ -174,20 +174,53 @@ h6 {
   margin-left: 16px;
 }
 
+.post-container .ql-editor li[data-list='ordered'],
+.post-container .ql-editor li[data-list='bullet'] {
+  list-style-type: none;
+}
+
 .ql-code-block-container {
   background-color: #f0f0f0 !important;
   padding: 10px !important;
   border: 1px solid #ccc !important;
   color: #000 !important;
-  font-family: monospace;
 }
-code {
-  background-color: #f0f0f0 !important;
-  padding: 10px !important;
-  border: 1px solid #ccc !important;
-  color: #000 !important;
+.post-content code {
   font-family: monospace;
-  width: 100% !important;
+  background-color: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #3a3b3c;
+}
+
+.post-content pre {
+  margin: 0;
+  padding: 8px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.post-content pre code {
+  display: block;
+  padding: 0;
+  background-color: transparent;
+}
+
+.post-content .ql-code-block-container {
+  margin: 0;
+  padding: 8px;
+  background-color: #f0f0f0 !important;
+  border-radius: 3px;
+}
+
+.post-content .ql-code-block {
+  font-family: monospace;
+  white-space: pre;
+  font-size: 13px;
+  color: #3a3b3c;
 }
 
 .collapse {

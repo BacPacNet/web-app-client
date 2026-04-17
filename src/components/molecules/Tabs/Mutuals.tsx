@@ -58,9 +58,9 @@ export default function Mutuals() {
     }
     return (
       <>
-        {userProfiles?.map((item, index: number) => (
+        {userProfiles?.map((item) => (
           <UserListItem
-            key={index}
+            key={item?._id}
             id={item?._id}
             firstName={item?.firstName}
             lastName={item?.lastName}
