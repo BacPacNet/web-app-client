@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isAuthenticated } from './utils/Authentication'
+import { hasAdminDashboardUniversitySelected, isAdminDashboardAuthenticated, isAuthenticated } from './utils/Authentication'
 
 const protectedRoutes = [
   '/community',
@@ -16,6 +16,27 @@ const protectedRoutes = [
 ]
 export default function middleware(req: NextRequest) {
   const pathName = req.nextUrl.pathname
+  const isAdminRoute = pathName.startsWith('/admin-dashboard')
+  const isAdminLoginRoute = pathName === '/admin-dashboard/login'
+  const isAdminSelectUniversityRoute = pathName === '/admin-dashboard/select-university'
+
+  if (isAdminRoute) {
+    if (isAdminLoginRoute && isAdminDashboardAuthenticated(req)) {
+      const absoluteUrl = new URL('/admin-dashboard/select-university', req.nextUrl.origin)
+      return NextResponse.redirect(absoluteUrl.toString())
+    }
+
+    if (!isAdminLoginRoute && !isAdminDashboardAuthenticated(req)) {
+      const absoluteUrl = new URL('/admin-dashboard/login', req.nextUrl.origin)
+      return NextResponse.redirect(absoluteUrl.toString())
+    }
+
+    const requiresSelectedUniversity = !isAdminLoginRoute && !isAdminSelectUniversityRoute
+    if (requiresSelectedUniversity && !hasAdminDashboardUniversitySelected(req)) {
+      const absoluteUrl = new URL('/admin-dashboard/select-university', req.nextUrl.origin)
+      return NextResponse.redirect(absoluteUrl.toString())
+    }
+  }
 
   // Redirect authenticated users from root path to timeline
   if (pathName === '/' && isAuthenticated(req)) {
