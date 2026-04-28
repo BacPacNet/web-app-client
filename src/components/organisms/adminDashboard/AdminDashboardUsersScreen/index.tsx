@@ -11,6 +11,7 @@ import { useAdminDashboardUsers } from '@/services/admin-dashboard-auth'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { FiPlus } from 'react-icons/fi'
 import AdminDashboardShell from '../AdminDashboardShell'
@@ -22,6 +23,7 @@ const statusFilterOptions: SegmentedOption[] = [
 ]
 
 export default function AdminDashboardUsersScreen() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedYears, setSelectedYears] = useState<string[]>([])
@@ -113,7 +115,7 @@ export default function AdminDashboardUsersScreen() {
               <UserSearchInput value={searchTerm} onChange={setSearchTerm} />
             </div>
 
-            <Buttons variant="primary" size="medium" leftIcon={<FiPlus size={16} />}>
+            <Buttons variant="primary" size="medium" leftIcon={<FiPlus size={16} />} onClick={() => router.push('/admin-dashboard/users/import')}>
               Add users
             </Buttons>
           </div>

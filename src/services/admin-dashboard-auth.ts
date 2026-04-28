@@ -188,6 +188,23 @@ export type AdminDashboardCreateGroupsPayload = {
   communityGroupLogoCoverUrl?: string
 }
 
+export type AdminDashboardBulkRegisterUsersPayload = {
+  userType: 'student' | 'faculty'
+  uniqueId: string
+  email: string
+  password: string
+  universityEmail: string
+  universityName: string
+  universityId: string
+  firstName: string
+  lastName: string
+  birthday?: string
+  major?: string
+  year?: string
+  occupation?: string
+  affiliation?: string
+}
+
 const getAdminDashboardFilteredGroups = async (
   communityId: string,
   token: string,
@@ -237,6 +254,14 @@ const validateAdminDashboardGroupUniqueIds = async (communityId: string, token: 
   }
 
   return client<any, AdminDashboardCreateGroupsPayload[]>(`/communitygroup/super-admin/${communityId}/validate-unique-ids`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+}
+
+const bulkRegisterAdminDashboardUsers = async (token: string, data: AdminDashboardBulkRegisterUsersPayload[]): Promise<any> => {
+  return client<any, AdminDashboardBulkRegisterUsersPayload[]>('/auth/super-admin/bulk-register-users', {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
     data,
@@ -309,6 +334,17 @@ export const useAdminDashboardValidateUniqueIds = (communityId: string) => {
 
   return useMutation({
     mutationFn: (data: AdminDashboardCreateGroupsPayload[]) => validateAdminDashboardGroupUniqueIds(communityId, accessToken, data),
+    onError: (error: any) => {
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
+  })
+}
+
+export const useAdminDashboardBulkRegisterUsers = () => {
+  const [accessToken] = useCookie(ADMIN_DASHBOARD_ACCESS_TOKEN_COOKIE)
+
+  return useMutation({
+    mutationFn: (data: AdminDashboardBulkRegisterUsersPayload[]) => bulkRegisterAdminDashboardUsers(accessToken, data),
     onError: (error: any) => {
       showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
     },

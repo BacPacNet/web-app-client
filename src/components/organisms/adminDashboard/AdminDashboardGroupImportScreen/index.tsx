@@ -71,7 +71,14 @@ type GroupBulkResponse = {
   }
 }
 
-type ServerErrorIdsByRow = Record<number, Partial<Record<GroupImportField, string[]>>>
+type ValidationIdSets = {
+  unresolved: string[]
+  nonCommunity: string[]
+  nonVerified: string[]
+  any: string[]
+}
+
+type ServerErrorIdsByRow = Record<number, Partial<Record<GroupImportField, ValidationIdSets>>>
 type UploadRetrySummary = {
   passedCount: number
   failedCount: number
@@ -94,6 +101,20 @@ const LABEL_VALUES = ['Course', 'Club', 'Circle', 'Other']
 const USER_ID_NOT_FOUND_MESSAGE = 'No user with this id exist'
 const USER_ID_NOT_IN_COMMUNITY_MESSAGE = 'User is not part of this community'
 const USER_ID_NOT_VERIFIED_MESSAGE = 'User is not verified'
+
+const getErrorPriority = (id: string, idSets: ValidationIdSets) => {
+  if (idSets.unresolved.includes(id)) return 0
+  if (idSets.nonCommunity.includes(id)) return 1
+  if (idSets.nonVerified.includes(id)) return 2
+  return 3
+}
+
+const getErrorBadgeClass = (id: string, idSets: ValidationIdSets) => {
+  if (idSets.unresolved.includes(id)) return 'rounded bg-red-100 px-1.5 py-0.5 text-red-700'
+  if (idSets.nonCommunity.includes(id)) return 'rounded bg-amber-100 px-1.5 py-0.5 text-amber-800'
+  if (idSets.nonVerified.includes(id)) return 'rounded bg-neutral-700 px-1.5 py-0.5 text-white'
+  return 'text-neutral-800'
+}
 
 const headerAliasMap: Record<GroupImportField, string[]> = {
   title: ['title', 'group title', 'group name'],
@@ -134,7 +155,12 @@ const splitMemberIds = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean)
 
-const uniqueIds = (ids: string[]) => Array.from(new Set(ids.filter(Boolean)))
+const normalizeUniqueId = (id: string) => id.trim().toUpperCase()
+
+const uniqueIds = (ids: string[]) => {
+  const normalizedIds = ids.map((id) => normalizeUniqueId(id)).filter(Boolean)
+  return Array.from(new Set(normalizedIds))
+}
 
 const getValidationIdsByField = (failedItem: GroupBulkFailedItem, fallbackReason: string) => {
   const extractedAdminIdFromReason = fallbackReason.match(/uniqueId\s+"([^"]+)"/i)?.[1]
@@ -165,10 +191,11 @@ const getValidationIdsByField = (failedItem: GroupBulkFailedItem, fallbackReason
 }
 
 const getFieldErrorMessage = (idSets: { unresolved: string[]; nonCommunity: string[]; nonVerified: string[] }) => {
-  if (idSets.unresolved.length > 0) return USER_ID_NOT_FOUND_MESSAGE
-  if (idSets.nonCommunity.length > 0) return USER_ID_NOT_IN_COMMUNITY_MESSAGE
-  if (idSets.nonVerified.length > 0) return USER_ID_NOT_VERIFIED_MESSAGE
-  return ''
+  const messages: string[] = []
+  if (idSets.unresolved.length > 0) messages.push(USER_ID_NOT_FOUND_MESSAGE)
+  if (idSets.nonCommunity.length > 0) messages.push(USER_ID_NOT_IN_COMMUNITY_MESSAGE)
+  if (idSets.nonVerified.length > 0) messages.push(USER_ID_NOT_VERIFIED_MESSAGE)
+  return messages.join(' | ')
 }
 
 const parseCategoryValue = (rawValue: string): Record<string, string[]> | null => {
@@ -390,7 +417,7 @@ export default function AdminDashboardGroupImportScreen() {
           }
           nextServerErrorIds[mappedIndex] = {
             ...(nextServerErrorIds[mappedIndex] || {}),
-            adminId: idsByField.adminId.any,
+            adminId: idsByField.adminId,
           }
         }
 
@@ -401,7 +428,7 @@ export default function AdminDashboardGroupImportScreen() {
           }
           nextServerErrorIds[mappedIndex] = {
             ...(nextServerErrorIds[mappedIndex] || {}),
-            memberList: idsByField.memberList.any,
+            memberList: idsByField.memberList,
           }
         }
 
@@ -507,7 +534,7 @@ export default function AdminDashboardGroupImportScreen() {
           }
           nextServerErrorIds[failedItem.index] = {
             ...(nextServerErrorIds[failedItem.index] || {}),
-            adminId: idsByField.adminId.any,
+            adminId: idsByField.adminId,
           }
         }
 
@@ -518,7 +545,7 @@ export default function AdminDashboardGroupImportScreen() {
           }
           nextServerErrorIds[failedItem.index] = {
             ...(nextServerErrorIds[failedItem.index] || {}),
-            memberList: idsByField.memberList.any,
+            memberList: idsByField.memberList,
           }
         }
 
@@ -675,7 +702,12 @@ export default function AdminDashboardGroupImportScreen() {
                               {COLUMNS.map((column) => {
                                 const fieldError = rowErrors[column.key]
                                 const serverFieldError = serverRowErrors[column.key]
-                                const serverFieldErrorIds = serverRowErrorIds[column.key] || []
+                                const serverFieldErrorIds = serverRowErrorIds[column.key] || {
+                                  unresolved: [],
+                                  nonCommunity: [],
+                                  nonVerified: [],
+                                  any: [],
+                                }
                                 const hasCellError = Boolean(fieldError || (serverFieldError && column.key !== 'memberList'))
                                 return (
                                   <td key={column.key} className="px-3 py-3">
@@ -688,34 +720,64 @@ export default function AdminDashboardGroupImportScreen() {
                                           : 'break-words'
                                       }`}
                                     >
-                                      {column.key === 'memberList' && serverFieldErrorIds.length > 0 ? (
+                                      {column.key === 'memberList' && serverFieldErrorIds.any.length > 0 ? (
                                         <div className="flex flex-wrap gap-1.5">
-                                          {splitMemberIds(row.memberList).map((memberId, memberIndex) => {
-                                            const isInvalidId = serverFieldErrorIds.includes(memberId)
-                                            return (
-                                              <span
-                                                key={`${memberId}-${memberIndex}`}
-                                                className={isInvalidId ? 'rounded bg-red-100 px-1.5 py-0.5 text-red-700' : 'text-neutral-800'}
-                                              >
-                                                {memberId}
-                                                {memberIndex < splitMemberIds(row.memberList).length - 1 ? ',' : ''}
-                                              </span>
-                                            )
-                                          })}
+                                          {Array.from(
+                                            new Map(
+                                              splitMemberIds(row.memberList).map((memberId, originalIndex) => [
+                                                normalizeUniqueId(memberId),
+                                                { memberId: normalizeUniqueId(memberId), originalIndex },
+                                              ])
+                                            ).values()
+                                          )
+                                            .sort((a, b) => {
+                                              const priorityDiff =
+                                                getErrorPriority(a.memberId, serverFieldErrorIds) - getErrorPriority(b.memberId, serverFieldErrorIds)
+                                              if (priorityDiff !== 0) return priorityDiff
+                                              return a.originalIndex - b.originalIndex
+                                            })
+                                            .map(({ memberId }, memberIndex, sortedIds) => {
+                                              const highlightClass = getErrorBadgeClass(memberId, serverFieldErrorIds)
+                                              return (
+                                                <span key={`${memberId}-${memberIndex}`} className={highlightClass}>
+                                                  {memberId}
+                                                  {memberIndex < sortedIds.length - 1 ? ',' : ''}
+                                                </span>
+                                              )
+                                            })}
                                         </div>
                                       ) : (
                                         row[column.key] || '-'
                                       )}
                                     </div>
                                     {fieldError ? <p className="mt-1 text-[11px] text-red-600">{fieldError}</p> : null}
-                                    {serverFieldError ? <p className="mt-1 text-[11px] text-red-600">{serverFieldError}</p> : null}
-                                    {serverFieldErrorIds.length > 0 && column.key !== 'memberList' ? (
+                                    {serverFieldErrorIds.unresolved.length > 0 ? (
+                                      <p className="mt-1 text-[11px] text-red-600">{USER_ID_NOT_FOUND_MESSAGE}</p>
+                                    ) : null}
+                                    {serverFieldErrorIds.nonCommunity.length > 0 ? (
+                                      <p className="mt-1 text-[11px] text-amber-700">{USER_ID_NOT_IN_COMMUNITY_MESSAGE}</p>
+                                    ) : null}
+                                    {serverFieldErrorIds.nonVerified.length > 0 ? (
+                                      <p className="mt-1 text-[11px] text-neutral-700">{USER_ID_NOT_VERIFIED_MESSAGE}</p>
+                                    ) : null}
+                                    {serverFieldError && serverFieldErrorIds.any.length === 0 ? (
+                                      <p className="mt-1 text-[11px] text-red-600">{serverFieldError}</p>
+                                    ) : null}
+                                    {serverFieldErrorIds.any.length > 0 && column.key !== 'memberList' ? (
                                       <div className="mt-1 flex flex-wrap gap-1">
-                                        {serverFieldErrorIds.map((id) => (
-                                          <span key={id} className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] text-red-700">
-                                            {id}
-                                          </span>
-                                        ))}
+                                        {serverFieldErrorIds.any
+                                          .map((id, originalIndex) => ({ id, originalIndex }))
+                                          .sort((a, b) => {
+                                            const priorityDiff =
+                                              getErrorPriority(a.id, serverFieldErrorIds) - getErrorPriority(b.id, serverFieldErrorIds)
+                                            if (priorityDiff !== 0) return priorityDiff
+                                            return a.originalIndex - b.originalIndex
+                                          })
+                                          .map(({ id }) => (
+                                            <span key={id} className={getErrorBadgeClass(id, serverFieldErrorIds)}>
+                                              {id}
+                                            </span>
+                                          ))}
                                       </div>
                                     ) : null}
                                   </td>
