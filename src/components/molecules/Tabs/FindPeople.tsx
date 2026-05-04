@@ -25,6 +25,48 @@ type User = {
 
 type UserList = User[]
 
+type SelectedFilters = {
+  selectedRadio: string
+  studentYear: string[]
+  major: string[]
+  occupation: string[]
+  affiliation: string[]
+  university: { name: string; id: string; communityId: string }
+}
+
+const FIND_PEOPLE_FILTERS_STORAGE_KEY = 'find_people_selected_filters'
+
+const DEFAULT_SELECTED_FILTERS: SelectedFilters = {
+  selectedRadio: '',
+  studentYear: [],
+  major: [],
+  occupation: [],
+  affiliation: [],
+  university: { name: '', id: '', communityId: '' },
+}
+
+const getInitialSelectedFilters = (): SelectedFilters => {
+  if (typeof window === 'undefined') return DEFAULT_SELECTED_FILTERS
+
+  const storedFilters = localStorage.getItem(FIND_PEOPLE_FILTERS_STORAGE_KEY)
+  if (!storedFilters) return DEFAULT_SELECTED_FILTERS
+
+  try {
+    const parsedFilters = JSON.parse(storedFilters) as Partial<SelectedFilters>
+    return {
+      ...DEFAULT_SELECTED_FILTERS,
+      ...parsedFilters,
+      university: {
+        ...DEFAULT_SELECTED_FILTERS.university,
+        ...(parsedFilters.university ?? {}),
+      },
+    }
+  } catch {
+    localStorage.removeItem(FIND_PEOPLE_FILTERS_STORAGE_KEY)
+    return DEFAULT_SELECTED_FILTERS
+  }
+}
+
 export default function FindPeople() {
   const { userProfileData } = useUniStore()
   const [name, setName] = useState('')
@@ -38,15 +80,9 @@ export default function FindPeople() {
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
   const [isFilterLoading, setIsFilterLoading] = useState(false)
-  const [selectedFilters, setSelectedFilters] = useState({
-    selectedRadio: '',
-    studentYear: [],
-    major: [],
-    occupation: [],
-    affiliation: [],
-    university: { name: '' as string, id: '' as string, communityId: '' },
-  })
-
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(getInitialSelectedFilters)
+  const [applyReset, setApplyReset] = useState(false)
+  const [applyTrigger, setApplyTrigger] = useState(0)
   const openModal = () => {
     setIsModalOpen(true)
   }
@@ -61,13 +97,14 @@ export default function FindPeople() {
     isFetchingNextPage,
     hasNextPage,
     isLoading: isUserProfilesLoading,
+    isRefetching,
     refetch,
   } = useUsersProfileForConnections(
     name,
     10,
     true,
 
-    selectedFilters?.university?.name ?? userProfileData?.university_name,
+    selectedFilters?.university?.name ?? '',
     selectedFilters.studentYear,
     selectedFilters.major,
     selectedFilters.occupation,
@@ -85,17 +122,25 @@ export default function FindPeople() {
     !!selectedFilters?.selectedRadio
 
   useEffect(() => {
-    if (hasActiveFilters) {
+    localStorage.setItem(FIND_PEOPLE_FILTERS_STORAGE_KEY, JSON.stringify(selectedFilters))
+  }, [selectedFilters])
+
+  useEffect(() => {
+    if (hasActiveFilters || applyReset) {
       setIsFilterLoading(true)
       refetch().finally(() => setIsFilterLoading(false))
+      setApplyReset(false)
     }
   }, [
     hasActiveFilters,
+    applyReset,
+    applyTrigger,
     selectedFilters?.university?.name,
     selectedFilters?.studentYear,
     selectedFilters?.major,
     selectedFilters?.occupation,
     selectedFilters?.affiliation,
+    selectedFilters?.selectedRadio,
   ])
 
   const userProfiles = userProfilesData?.pages.flatMap((page) => page.users).filter((user) => user._id !== userProfileData?.users_id) || null
@@ -129,7 +174,7 @@ export default function FindPeople() {
 
   const renderUserProfileList = useCallback(() => {
     if (userProfiles === null) return <UserListItemSkeleton count={8} />
-    if (isUserProfilesLoading || isFilterLoading) return <UserListItemSkeleton count={8} />
+    if (isUserProfilesLoading || isFilterLoading || isRefetching) return <UserListItemSkeleton count={8} />
     if (userProfiles.length === 0) return <p className="text-center my-4 text-2sm text-neutral-600 font-semibold">No User Found</p>
 
     return userProfiles.map((item) => (
@@ -150,17 +195,12 @@ export default function FindPeople() {
         isFollowing={item.isFollowing}
       />
     ))
-  }, [isUserProfilesLoading, isFilterLoading, userProfiles])
+  }, [isUserProfilesLoading, isFilterLoading, isRefetching, userProfiles])
 
   const handleClear = () => {
-    setSelectedFilters({
-      selectedRadio: '',
-      studentYear: [],
-      major: [],
-      occupation: [],
-      affiliation: [],
-      university: { name: '', id: '', communityId: '' },
-    })
+    setSelectedFilters(DEFAULT_SELECTED_FILTERS)
+    localStorage.removeItem(FIND_PEOPLE_FILTERS_STORAGE_KEY)
+    setApplyReset(true)
   }
 
   const handleChange = (value: string) => {
@@ -225,6 +265,7 @@ export default function FindPeople() {
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
           handleClear={handleClear}
+          onApplyFilters={() => setApplyTrigger((prev) => prev + 1)}
         />
       )}
     </div>
