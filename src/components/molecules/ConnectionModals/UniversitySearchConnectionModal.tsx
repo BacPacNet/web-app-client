@@ -40,6 +40,7 @@ interface ConnectionUserSelectModalProps {
   }
   setSelectedFilters: React.Dispatch<React.SetStateAction<any>>
   handleClear: () => void
+  onApplyFilters: () => void
 }
 export default function ConnectionUserSelectModal({
   setFilteredUsers,
@@ -51,6 +52,7 @@ export default function ConnectionUserSelectModal({
   selectedFilters,
   setSelectedFilters,
   handleClear,
+  onApplyFilters,
   closeModal,
 }: ConnectionUserSelectModalProps) {
   const { userData } = useUniStore()
@@ -138,11 +140,10 @@ export default function ConnectionUserSelectModal({
   }, [occupation, affiliation, communityUsers])
 
   const handleClick = () => {
+    setIsFiltered(true)
     if (selectedUniversity?.name?.length < 1 || selectedUniversity?.name == undefined) {
       return setUniversityError(true)
     }
-    setIsFiltered(true)
-
     if (selectedRadio == 'Faculty') {
       setFilteredUsers(filteredFacultyUsers)
     } else if (selectedRadio == 'Student') {
@@ -161,12 +162,13 @@ export default function ConnectionUserSelectModal({
       affiliation,
       university: selectedUniversity,
     })
+    onApplyFilters()
     closeModal()
   }
 
   const handleClearButton = () => {
     handleClear()
-
+    setUniversityError(false)
     setSelectedUniversity({
       name: '',
       id: '',
@@ -207,6 +209,7 @@ export default function ConnectionUserSelectModal({
                   onClick={(e) => {
                     e.stopPropagation()
                     setSelectedUniversity({ name: '', id: '', communityId: '' })
+                    setUniversityError(false)
                   }}
                   className="w-4 h-4 ml-2"
                 />
