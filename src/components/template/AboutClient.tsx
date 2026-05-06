@@ -25,11 +25,11 @@ const team = [
     role: 'CPO, Lead Designer',
     image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/robin.png',
   },
-  {
-    name: 'Isha Gupta',
-    role: 'CMO',
-    image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/isha.png',
-  },
+  // {
+  //   name: 'Isha Gupta',
+  //   role: 'CMO',
+  //   image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/isha.png',
+  // },
   {
     name: 'Pratik Yadav',
     role: 'CTO, Lead Developer',
@@ -40,11 +40,11 @@ const team = [
     role: 'Full-Stack Engineer',
     image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/aamil.png',
   },
-  {
-    name: 'Priyanshi',
-    role: 'AI/ML Intern',
-    image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/priyanshi.jpg',
-  },
+  // {
+  //   name: 'Priyanshi',
+  //   role: 'AI/ML Intern',
+  //   image: 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/priyanshi.jpg',
+  // },
 ]
 
 const AboutClient = () => {
