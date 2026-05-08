@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import UserRecommendations from '../molecules/UserRecommendations'
-import GroupRecommendations from '../molecules/GroupRecommendations'
 
 interface Props {
   people?: any[]
@@ -15,7 +14,7 @@ const Recommendations: React.FC<Props> = ({ people, userItemButtonStyle, contain
   return (
     <div>
       <UserRecommendations />
-      <GroupRecommendations />
+      {/* <GroupRecommendations /> */}
     </div>
   )
 }
