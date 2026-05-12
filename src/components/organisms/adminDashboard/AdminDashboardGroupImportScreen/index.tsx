@@ -1,9 +1,10 @@
 'use client'
 
 import Buttons from '@/components/atoms/Buttons'
+import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import AdminDashboardShell from '@/components/organisms/adminDashboard/AdminDashboardShell'
 import useCookie from '@/hooks/useCookie'
-import { subCategories } from '@/types/CommuityGroup'
+import { categories, subCategories, type Category } from '@/types/CommuityGroup'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
 import { ChangeEvent, useMemo, useRef, useState } from 'react'
 import { FiArrowLeft, FiUpload } from 'react-icons/fi'
@@ -19,7 +20,8 @@ type GroupImportRow = {
   communityGroupAccess: string
   communityGroupType: string
   communityGroupLabel: string
-  communityGroupCategory: string
+  communityGroupCategoryMain: string
+  communityGroupCategorySub: string
 }
 
 type GroupImportField = keyof GroupImportRow
@@ -92,7 +94,8 @@ const COLUMNS: EditableColumn[] = [
   { key: 'communityGroupAccess', label: 'Access', required: true },
   { key: 'communityGroupType', label: 'Type', required: true },
   { key: 'communityGroupLabel', label: 'Label', required: true },
-  { key: 'communityGroupCategory', label: 'Category JSON' },
+  { key: 'communityGroupCategoryMain', label: 'Category', required: true },
+  { key: 'communityGroupCategorySub', label: 'Subcategory', required: true },
 ]
 
 const ACCESS_VALUES = ['Private', 'Public']
@@ -116,6 +119,9 @@ const getErrorBadgeClass = (id: string, idSets: ValidationIdSets) => {
   return 'text-neutral-800'
 }
 
+/** Legacy Excel column for JSON object (e.g. {"Academic":["Science"]}); separate from Category / Subcategory columns */
+const COMMUNITY_GROUP_CATEGORY_JSON_ALIASES = ['communitygroupcategory', 'categoryjson', 'categoriesjson', 'groupcategoryjson']
+
 const headerAliasMap: Record<GroupImportField, string[]> = {
   title: ['title', 'group title', 'group name'],
   adminId: ['adminid', 'admin id', 'admin'],
@@ -124,7 +130,8 @@ const headerAliasMap: Record<GroupImportField, string[]> = {
   communityGroupAccess: ['communitygroupaccess', 'access', 'group access'],
   communityGroupType: ['communitygrouptype', 'type', 'label'],
   communityGroupLabel: ['communitygrouplabel', 'group type', 'group label'],
-  communityGroupCategory: ['communitygroupcategory', 'category', 'categories'],
+  communityGroupCategoryMain: ['category', 'maincategory', 'groupcategory', 'primarycategory'],
+  communityGroupCategorySub: ['subcategory', 'sub category', 'sub', 'categorysub'],
 }
 
 const normalizeHeader = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -154,6 +161,52 @@ const splitMemberIds = (value: string) =>
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean)
+
+const splitSubcategories = (value: string) =>
+  value
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+
+const splitCategories = (value: string) =>
+  value
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+
+const CATEGORY_SUB_DELIMITER = ': '
+
+const encodeCategorySub = (category: string, sub: string) => `${category}${CATEGORY_SUB_DELIMITER}${sub}`
+
+const decodeCategorySub = (value: string): { category: string; sub: string } | null => {
+  const separatorIndex = value.indexOf(CATEGORY_SUB_DELIMITER)
+  if (separatorIndex === -1) return null
+  const category = value.slice(0, separatorIndex).trim()
+  const sub = value.slice(separatorIndex + CATEGORY_SUB_DELIMITER.length).trim()
+  if (!category || !sub) return null
+  return { category, sub }
+}
+
+const toSubcategoryLabels = (values: string[]) =>
+  values
+    .map((value) => decodeCategorySub(value))
+    .filter((item): item is { category: string; sub: string } => Boolean(item))
+    .map(({ category, sub }) => `${category}: ${sub}`)
+
+const getSelectedCategorySubPairs = (row: Pick<GroupImportRow, 'communityGroupCategoryMain' | 'communityGroupCategorySub'>) => {
+  const categoryList = splitCategories(row.communityGroupCategoryMain)
+  const selectedPairs = splitSubcategories(row.communityGroupCategorySub)
+    .map((value) => {
+      const decoded = decodeCategorySub(value)
+      if (decoded) return decoded
+      // Backward compatibility for plain subcategory values.
+      if (categoryList.length === 1) return { category: categoryList[0], sub: value.trim() }
+      return null
+    })
+    .filter((item): item is { category: string; sub: string } => Boolean(item))
+
+  return selectedPairs
+}
 
 const normalizeUniqueId = (id: string) => id.trim().toUpperCase()
 
@@ -211,9 +264,77 @@ const parseCategoryValue = (rawValue: string): Record<string, string[]> | null =
   }
 }
 
+const rowCategoryPayload = (row: GroupImportRow): Record<string, string[]> | null => {
+  const categoriesList = splitCategories(row.communityGroupCategoryMain)
+  const selectedPairs = getSelectedCategorySubPairs(row)
+
+  const payload: Record<string, string[]> = {}
+  categoriesList.forEach((category) => {
+    payload[category] = selectedPairs.filter((pair) => pair.category === category).map((pair) => pair.sub)
+  })
+
+  return Object.keys(payload).length > 0 ? payload : null
+}
+
 const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
-  const communityGroupCategoryRaw = getRowValueByAliases(row, headerAliasMap.communityGroupCategory)
-  const parsedCategory = parseCategoryValue(communityGroupCategoryRaw)
+  const rawMain = getRowValueByAliases(row, headerAliasMap.communityGroupCategoryMain)
+  const rawSub = getRowValueByAliases(row, headerAliasMap.communityGroupCategorySub)
+  const jsonColumnRaw = getRowValueByAliases(row, COMMUNITY_GROUP_CATEGORY_JSON_ALIASES)
+  const parsedFromJsonCol = parseCategoryValue(jsonColumnRaw)
+  const parsedFromCategoryCell =
+    rawMain.trim().startsWith('{') || rawMain.trim().startsWith('[') ? parseCategoryValue(rawMain) : null
+
+  const explicitMain = rawMain.trim()
+  const explicitSub = rawSub.trim()
+
+  let communityGroupCategoryMain = ''
+  let communityGroupCategorySub = ''
+
+  const fillFromParsedCategory = (parsed: Record<string, string[]>) => {
+    if (!parsed || Object.keys(parsed).length === 0) return
+    const normalizedCategories = Object.keys(parsed)
+      .map((key) => normalizeEnum(key, categories as unknown as string[]) || key)
+      .filter(Boolean)
+    const normalizedPairs = normalizedCategories.flatMap((categoryKey) => {
+      const rawSubs = parsed[categoryKey] || parsed[Object.keys(parsed).find((key) => (normalizeEnum(key, categories as unknown as string[]) || key) === categoryKey) || '']
+      const allowedSubs = subCategories[categoryKey as Category] || []
+      const list = Array.isArray(rawSubs) ? rawSubs.map((item) => String(item)) : []
+      return list.map((sub) => encodeCategorySub(categoryKey, normalizeEnum(sub, allowedSubs) || sub))
+    })
+    communityGroupCategoryMain = Array.from(new Set(normalizedCategories)).join(', ')
+    communityGroupCategorySub = Array.from(new Set(normalizedPairs)).join(', ')
+  }
+
+  if (parsedFromJsonCol && Object.keys(parsedFromJsonCol).length > 0) {
+    fillFromParsedCategory(parsedFromJsonCol)
+  } else if (parsedFromCategoryCell && Object.keys(parsedFromCategoryCell).length > 0) {
+    fillFromParsedCategory(parsedFromCategoryCell)
+  } else if (explicitMain || explicitSub) {
+    const explicitCategories = splitCategories(explicitMain).map(
+      (category) => normalizeEnum(category, categories as unknown as string[]) || category,
+    )
+    communityGroupCategoryMain = explicitCategories.join(', ')
+
+    const hasEncodedSubs = explicitSub.includes(CATEGORY_SUB_DELIMITER)
+    if (hasEncodedSubs) {
+      const explicitPairs = splitSubcategories(explicitSub)
+      const normalizedPairs = explicitPairs
+        .map((pairValue) => decodeCategorySub(pairValue))
+        .filter((item): item is { category: string; sub: string } => Boolean(item))
+        .map(({ category, sub }) => {
+          const normalizedCategory = normalizeEnum(category, categories as unknown as string[]) || category
+          const allowedSubs = subCategories[normalizedCategory as Category] || []
+          return encodeCategorySub(normalizedCategory, normalizeEnum(sub, allowedSubs) || sub)
+        })
+      communityGroupCategorySub = normalizedPairs.join(', ')
+    } else if (explicitCategories.length === 1) {
+      const allowedSubs = subCategories[explicitCategories[0] as Category] || []
+      const explicitSubList = splitSubcategories(explicitSub)
+      communityGroupCategorySub = explicitSubList
+        .map((sub) => encodeCategorySub(explicitCategories[0], normalizeEnum(sub, allowedSubs) || sub))
+        .join(', ')
+    }
+  }
 
   return {
     title: getRowValueByAliases(row, headerAliasMap.title),
@@ -223,7 +344,8 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
     communityGroupAccess: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupAccess), ACCESS_VALUES),
     communityGroupType: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupType), TYPE_VALUES),
     communityGroupLabel: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupLabel), LABEL_VALUES),
-    communityGroupCategory: parsedCategory ? JSON.stringify(parsedCategory) : communityGroupCategoryRaw,
+    communityGroupCategoryMain,
+    communityGroupCategorySub,
   }
 }
 
@@ -264,24 +386,31 @@ const validateRow = (row: GroupImportRow): RowValidation => {
     errors.communityGroupLabel = 'Label must be Course, Club, Circle, or Other'
   }
 
-  if (row.communityGroupCategory.trim()) {
-    const parsedCategory = parseCategoryValue(row.communityGroupCategory)
-    if (!parsedCategory) {
-      errors.communityGroupCategory = 'Category must be valid JSON object'
+  const categoryList = splitCategories(row.communityGroupCategoryMain)
+  const pairList = getSelectedCategorySubPairs(row)
+
+  const hasMain = categoryList.length > 0
+  const hasSub = pairList.length > 0
+  if (!hasMain && !hasSub) {
+    errors.communityGroupCategoryMain = 'Category is required'
+    errors.communityGroupCategorySub = 'Subcategory is required'
+  } else if (hasMain !== hasSub) {
+    const pairMsg = 'Set both category and subcategory'
+    errors.communityGroupCategoryMain = pairMsg
+    errors.communityGroupCategorySub = pairMsg
+  } else if (hasMain && hasSub) {
+    const allowedCategorySet = new Set(categories)
+    if (categoryList.some((category) => !allowedCategorySet.has(category as Category))) {
+      errors.communityGroupCategoryMain = 'Invalid category'
     } else {
-      const allowedCategorySet = new Set(Object.keys(subCategories))
-      const invalidCategoryKeys = Object.keys(parsedCategory).filter((key) => !allowedCategorySet.has(key))
-      if (invalidCategoryKeys.length > 0) {
-        errors.communityGroupCategory = `Invalid categories: ${invalidCategoryKeys.join(', ')}`
-      } else {
-        const hasInvalidSubcategory = Object.entries(parsedCategory).some(([category, selectedSubcategories]) => {
-          if (!Array.isArray(selectedSubcategories)) return true
-          const allowedSubcategorySet = new Set(subCategories[category as keyof typeof subCategories] || [])
-          return selectedSubcategories.some((item) => !allowedSubcategorySet.has(item))
-        })
-        if (hasInvalidSubcategory) {
-          errors.communityGroupCategory = 'One or more subcategories are invalid'
-        }
+      const categorySet = new Set(categoryList)
+      const hasInvalidPair = pairList.some(({ category, sub }) => {
+        if (!categorySet.has(category)) return true
+        const allowedSubs = subCategories[category as Category] || []
+        return !allowedSubs.includes(sub)
+      })
+      if (hasInvalidPair) {
+        errors.communityGroupCategorySub = 'Invalid subcategory for selected category'
       }
     }
   }
@@ -322,6 +451,33 @@ export default function AdminDashboardGroupImportScreen() {
 
   const handleUploadClick = () => {
     inputRef.current?.click()
+  }
+
+  const handleCategoryFieldChange = (
+    rowIndex: number,
+    field: 'communityGroupCategoryMain' | 'communityGroupCategorySub',
+    value: string | string[],
+  ) => {
+    setRows((prev) =>
+      prev.map((row, index) => {
+        if (index !== rowIndex) return row
+        if (field === 'communityGroupCategoryMain') {
+          const nextCategories = Array.isArray(value) ? value : splitCategories(value)
+          const selectedCategorySet = new Set(nextCategories)
+          const nextSubList = splitSubcategories(row.communityGroupCategorySub).filter((pairValue) => {
+            const pair = decodeCategorySub(pairValue) || (nextCategories.length === 1 ? { category: nextCategories[0], sub: pairValue } : null)
+            return pair ? selectedCategorySet.has(pair.category) : false
+          })
+          return {
+            ...row,
+            communityGroupCategoryMain: nextCategories.join(', '),
+            communityGroupCategorySub: nextSubList.join(', '),
+          }
+        }
+        const nextSubValues = Array.isArray(value) ? value : splitSubcategories(value)
+        return { ...row, communityGroupCategorySub: nextSubValues.join(', ') }
+      }),
+    )
   }
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -392,7 +548,7 @@ export default function AdminDashboardGroupImportScreen() {
         .split(',')
         .map((item) => item.trim())
         .filter(Boolean),
-      communityGroupCategory: row.communityGroupCategory.trim() ? parseCategoryValue(row.communityGroupCategory) : null,
+      communityGroupCategory: rowCategoryPayload(row),
     }))
 
     const mapFailedRowsToErrors = (response?: GroupBulkResponse, rowIndexMap?: Map<number, number>) => {
@@ -507,7 +663,7 @@ export default function AdminDashboardGroupImportScreen() {
         .split(',')
         .map((item) => item.trim())
         .filter(Boolean),
-      communityGroupCategory: row.communityGroupCategory.trim() ? parseCategoryValue(row.communityGroupCategory) : null,
+      communityGroupCategory: rowCategoryPayload(row),
     }))
 
     const mapFailedRowsToErrors = (response?: GroupBulkResponse) => {
@@ -594,10 +750,11 @@ export default function AdminDashboardGroupImportScreen() {
             </p>
           ) : null}
           <p className="mt-1 text-xs text-neutral-500">
-            Required fields: `title`, `communityGroupAccess`, `communityGroupType`, `communityGroupLabel`.
+            Required fields: `title`, `communityGroupAccess`, `communityGroupType`, `communityGroupLabel`, `category`, `subcategory`.
           </p>
           <p className="mt-1 text-xs text-neutral-500">
-            `communityGroupCategory` is optional. If provided, it must be JSON, for example: {`{"Academic":["Science"]}`}
+            Category and subcategory are optional; set both or neither. You can edit them in the preview table, or import from Excel columns
+            (`category` / `subcategory`) or a legacy JSON column (`communityGroupCategory`, etc.), for example {`{"Academic":["Science"]}`}.
           </p>
           {skippedRows.length > 0 ? (
             <p className="mt-1 text-xs text-amber-600">
@@ -715,12 +872,48 @@ export default function AdminDashboardGroupImportScreen() {
                                       className={`min-h-[32px] w-full rounded-md border px-2 py-1.5 text-xs ${
                                         hasCellError ? 'border-red-400 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-800'
                                       } ${
-                                        column.key === 'memberList' || column.key === 'communityGroupCategory'
+                                        column.key === 'memberList'
                                           ? 'min-h-[90px] whitespace-pre-wrap break-words'
                                           : 'break-words'
                                       }`}
                                     >
-                                      {column.key === 'memberList' && serverFieldErrorIds.any.length > 0 ? (
+                                      {column.key === 'communityGroupCategoryMain' ? (
+                                        <div className="w-full max-w-[220px]">
+                                          <MultiSelectDropdown
+                                            options={categories}
+                                            value={splitCategories(row.communityGroupCategoryMain)}
+                                            onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategoryMain', value)}
+                                            placeholder="Select category"
+                                            err={hasCellError}
+                                            search={true}
+                                          />
+                                        </div>
+                                      ) : column.key === 'communityGroupCategorySub' ? (
+                                        <div className={`w-full max-w-[360px] ${splitCategories(row.communityGroupCategoryMain).length === 0 ? 'pointer-events-none opacity-60' : ''}`}>
+                                          <MultiSelectDropdown
+                                            options={splitCategories(row.communityGroupCategoryMain).flatMap((category) =>
+                                              (subCategories[category as Category] || []).map((sub) => encodeCategorySub(category, sub)),
+                                            )}
+                                            value={splitSubcategories(row.communityGroupCategorySub)}
+                                            onChange={(value) =>
+                                              handleCategoryFieldChange(rowIndex, 'communityGroupCategorySub', value)
+                                            }
+                                            placeholder={
+                                              splitCategories(row.communityGroupCategoryMain).length > 0
+                                                ? 'Select subcategory'
+                                                : 'Select category first'
+                                            }
+                                            err={hasCellError}
+                                            search={true}
+                                            disabled={splitCategories(row.communityGroupCategoryMain).length === 0}
+                                          />
+                                          {/* {splitSubcategories(row.communityGroupCategorySub).length > 0 ? (
+                                            <p className="mt-1 text-[11px] text-neutral-600">
+                                              {toSubcategoryLabels(splitSubcategories(row.communityGroupCategorySub)).join(', ')}
+                                            </p>
+                                          ) : null} */}
+                                        </div>
+                                      ) : column.key === 'memberList' && serverFieldErrorIds.any.length > 0 ? (
                                         <div className="flex flex-wrap gap-1.5">
                                           {Array.from(
                                             new Map(
@@ -817,12 +1010,14 @@ export default function AdminDashboardGroupImportScreen() {
                               <td key={column.key} className="px-3 py-3">
                                 <div
                                   className={`min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 ${
-                                    column.key === 'memberList' || column.key === 'communityGroupCategory'
+                                    column.key === 'memberList'
                                       ? 'min-h-[90px] whitespace-pre-wrap break-words'
                                       : 'break-words'
                                   }`}
                                 >
-                                  {row[column.key] || '-'}
+                                  {column.key === 'communityGroupCategorySub'
+                                    ? toSubcategoryLabels(splitSubcategories(row.communityGroupCategorySub)).join(', ') || '-'
+                                    : row[column.key] || '-'}
                                 </div>
                               </td>
                             ))}

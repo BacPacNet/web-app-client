@@ -152,7 +152,7 @@ const MultiSelectDropdown = ({
         )}
         {value.length > 0
           ? value.map((selected, index) => (
-              <div key={index} className="flex gap-2 items-center text-2xs   px-2 py-1 h-7 bg-primary-500 text-white rounded-md">
+              <div key={index} className="flex gap-2 items-center text-2xs   px-2 py-1 min-h-7 bg-primary-500 text-white rounded-md">
                 <span className="flex gap-2">
                   {selected}
                   {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
@@ -200,7 +200,7 @@ const MultiSelectDropdown = ({
                       type="checkbox"
                       checked={value.includes(item)}
                       onChange={() => handleSelect(item)}
-                      className="w-[16px] h-[16px] appearance-none rounded border-2 border-neutral-200 cursor-pointer
+                      className="w-[16px] h-[16px]  appearance-none rounded border-2 border-neutral-200 cursor-pointer
                     checked:bg-primary checked:border-primary
                     relative after:content-[''] after:absolute after:w-[4px] after:h-[8px] after:border-r-2 after:border-b-2 after:border-white
                     after:rotate-45 after:top-[1.5px] after:left-[5px] checked:after:block after:hidden"
