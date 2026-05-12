@@ -281,8 +281,7 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
   const rawSub = getRowValueByAliases(row, headerAliasMap.communityGroupCategorySub)
   const jsonColumnRaw = getRowValueByAliases(row, COMMUNITY_GROUP_CATEGORY_JSON_ALIASES)
   const parsedFromJsonCol = parseCategoryValue(jsonColumnRaw)
-  const parsedFromCategoryCell =
-    rawMain.trim().startsWith('{') || rawMain.trim().startsWith('[') ? parseCategoryValue(rawMain) : null
+  const parsedFromCategoryCell = rawMain.trim().startsWith('{') || rawMain.trim().startsWith('[') ? parseCategoryValue(rawMain) : null
 
   const explicitMain = rawMain.trim()
   const explicitSub = rawSub.trim()
@@ -296,7 +295,9 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
       .map((key) => normalizeEnum(key, categories as unknown as string[]) || key)
       .filter(Boolean)
     const normalizedPairs = normalizedCategories.flatMap((categoryKey) => {
-      const rawSubs = parsed[categoryKey] || parsed[Object.keys(parsed).find((key) => (normalizeEnum(key, categories as unknown as string[]) || key) === categoryKey) || '']
+      const rawSubs =
+        parsed[categoryKey] ||
+        parsed[Object.keys(parsed).find((key) => (normalizeEnum(key, categories as unknown as string[]) || key) === categoryKey) || '']
       const allowedSubs = subCategories[categoryKey as Category] || []
       const list = Array.isArray(rawSubs) ? rawSubs.map((item) => String(item)) : []
       return list.map((sub) => encodeCategorySub(categoryKey, normalizeEnum(sub, allowedSubs) || sub))
@@ -310,9 +311,7 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
   } else if (parsedFromCategoryCell && Object.keys(parsedFromCategoryCell).length > 0) {
     fillFromParsedCategory(parsedFromCategoryCell)
   } else if (explicitMain || explicitSub) {
-    const explicitCategories = splitCategories(explicitMain).map(
-      (category) => normalizeEnum(category, categories as unknown as string[]) || category,
-    )
+    const explicitCategories = splitCategories(explicitMain).map((category) => normalizeEnum(category, categories as unknown as string[]) || category)
     communityGroupCategoryMain = explicitCategories.join(', ')
 
     const hasEncodedSubs = explicitSub.includes(CATEGORY_SUB_DELIMITER)
@@ -456,7 +455,7 @@ export default function AdminDashboardGroupImportScreen() {
   const handleCategoryFieldChange = (
     rowIndex: number,
     field: 'communityGroupCategoryMain' | 'communityGroupCategorySub',
-    value: string | string[],
+    value: string | string[]
   ) => {
     setRows((prev) =>
       prev.map((row, index) => {
@@ -476,7 +475,7 @@ export default function AdminDashboardGroupImportScreen() {
         }
         const nextSubValues = Array.isArray(value) ? value : splitSubcategories(value)
         return { ...row, communityGroupCategorySub: nextSubValues.join(', ') }
-      }),
+      })
     )
   }
 
@@ -871,11 +870,7 @@ export default function AdminDashboardGroupImportScreen() {
                                     <div
                                       className={`min-h-[32px] w-full rounded-md border px-2 py-1.5 text-xs ${
                                         hasCellError ? 'border-red-400 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-800'
-                                      } ${
-                                        column.key === 'memberList'
-                                          ? 'min-h-[90px] whitespace-pre-wrap break-words'
-                                          : 'break-words'
-                                      }`}
+                                      } ${column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'}`}
                                     >
                                       {column.key === 'communityGroupCategoryMain' ? (
                                         <div className="w-full max-w-[220px]">
@@ -889,15 +884,17 @@ export default function AdminDashboardGroupImportScreen() {
                                           />
                                         </div>
                                       ) : column.key === 'communityGroupCategorySub' ? (
-                                        <div className={`w-full max-w-[360px] ${splitCategories(row.communityGroupCategoryMain).length === 0 ? 'pointer-events-none opacity-60' : ''}`}>
+                                        <div
+                                          className={`w-full max-w-[360px] ${
+                                            splitCategories(row.communityGroupCategoryMain).length === 0 ? 'pointer-events-none opacity-60' : ''
+                                          }`}
+                                        >
                                           <MultiSelectDropdown
                                             options={splitCategories(row.communityGroupCategoryMain).flatMap((category) =>
-                                              (subCategories[category as Category] || []).map((sub) => encodeCategorySub(category, sub)),
+                                              (subCategories[category as Category] || []).map((sub) => encodeCategorySub(category, sub))
                                             )}
                                             value={splitSubcategories(row.communityGroupCategorySub)}
-                                            onChange={(value) =>
-                                              handleCategoryFieldChange(rowIndex, 'communityGroupCategorySub', value)
-                                            }
+                                            onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategorySub', value)}
                                             placeholder={
                                               splitCategories(row.communityGroupCategoryMain).length > 0
                                                 ? 'Select subcategory'
@@ -1010,9 +1007,7 @@ export default function AdminDashboardGroupImportScreen() {
                               <td key={column.key} className="px-3 py-3">
                                 <div
                                   className={`min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 ${
-                                    column.key === 'memberList'
-                                      ? 'min-h-[90px] whitespace-pre-wrap break-words'
-                                      : 'break-words'
+                                    column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'
                                   }`}
                                 >
                                   {column.key === 'communityGroupCategorySub'
