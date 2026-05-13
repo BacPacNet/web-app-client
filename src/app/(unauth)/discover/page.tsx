@@ -6,13 +6,15 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
   const url = `${baseUrl}/discover`
   const ogImage = 'https://unibuzz-uploads.s3.ap-south-1.amazonaws.com/assets/unibuzz_logo_extralarge.png'
+  const title = 'Discover Universities and Communities | UniBuzz'
+  const description = 'Discover universities, student communities, and trending campus topics on UniBuzz.'
 
   return {
-    title: 'Discover | UniBuzz',
-    description: 'Explore trending topics, communities, and more on UniBuzz.',
+    title,
+    description,
     openGraph: {
-      title: 'Discover | UniBuzz',
-      description: 'Explore trending topics, communities, and more on UniBuzz.',
+      title,
+      description,
       url,
       siteName: 'UniBuzz',
       images: [
@@ -26,6 +28,10 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: 'en_US',
       type: 'website',
     },
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: url,
     },
@@ -33,7 +39,23 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 function Discover() {
-  return <DiscoverContainer />
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = `${baseUrl}/discover`
+  const description = 'Discover universities, student communities, and trending campus topics on UniBuzz.'
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Discover Universities and Communities | UniBuzz',
+    description,
+    url,
+  }
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <DiscoverContainer />
+    </>
+  )
 }
 
 export default Discover
