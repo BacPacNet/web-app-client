@@ -1,9 +1,6 @@
 import './globals.css'
-
 import { Inter } from 'next/font/google'
 import { Poppins } from 'next/font/google'
-import type { Metadata } from 'next'
-
 import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 import { Toaster } from 'react-hot-toast'
