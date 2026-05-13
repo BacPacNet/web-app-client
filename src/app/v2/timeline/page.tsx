@@ -34,7 +34,6 @@ import { RxAvatar } from 'react-icons/rx'
 export default function UnibuzzPage() {
   return (
     <div className="min-h-screen bg-[#f3f2ff]">
-      {/* trigget comment  please ignore this comment  */}
       {/*<header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b bg-white px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center">
