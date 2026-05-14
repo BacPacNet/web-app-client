@@ -1,14 +1,10 @@
 import './globals.css'
-
 import { Inter } from 'next/font/google'
 import { Poppins } from 'next/font/google'
-import type { Metadata } from 'next'
-
 import { ReactQueryClientProvider } from '@/utils/Provider'
 import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 import { Toaster } from 'react-hot-toast'
 import LogoNavbar from '@/components/atoms/LogoNavbar'
-import { ModalManager } from '@/components/molecules/Modal/ModalManager'
 import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
