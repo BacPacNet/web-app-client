@@ -97,7 +97,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
             <p className="text-xs font-bold text-neutral-700">{communityData?.name}</p>
             {/*<p className="ai-power text-xs font-black">AI POWERED</p>*/}
           </div>
-          {isUserJoinedCommunity ? (
+          {isUserJoinedCommunity && communityData?.isUserAllowedToLeave ? (
             <Popover open={toggleDropdown} onOpenChange={(open) => setToggleDropdown(open)}>
               <PopoverTrigger>
                 <Image onClick={() => setToggleDropdown(!toggleDropdown)} src={settingIcon} width={32} height={32} alt="Settings" />
@@ -105,11 +105,11 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
               <PopoverContent className="p-0 drop-shadow-lg  top-2 w-40 bg-white shadow-card border-none absolute -right-[20px]">
                 <div className="flex flex-col">
                   {/* {isGroupAdmin && (
-                    <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
-                      <FiEdit onClick={() => setToggleDropdown(false)} size={16} className="text-primary-500" />
-                      <p className="font-medium text-neutral-700 text-xs">Edit</p>
-                    </div>
-                  )} */}
+                  <div className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
+                    <FiEdit onClick={() => setToggleDropdown(false)} size={16} className="text-primary-500" />
+                    <p className="font-medium text-neutral-700 text-xs">Edit</p>
+                  </div>
+                )} */}
                   {!isGroupAdmin && (
                     <div onClick={handleToggleJoinCommunity} className="flex items-center px-4 py-2 gap-2 hover:bg-neutral-100 cursor-pointer">
                       <TbLogout2 size={16} className="text-red-500" />
@@ -119,11 +119,11 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
                 </div>
               </PopoverContent>
             </Popover>
-          ) : (
+          ) : communityData?.isAllowedToJoin ? (
             <Buttons size="medium" onClick={handleToggleJoinCommunity}>
               Join Community
             </Buttons>
-          )}
+          ) : null}
         </div>
         <p className="text-2xs text-neutral-500 font-medium pt-4">{communityData?.about}</p>
       </div>

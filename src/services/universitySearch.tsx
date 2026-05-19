@@ -71,3 +71,18 @@ export function useGetFilteredUniversity(page: number, limit: number, query: str
 
   return { ...state, error: errorMessage }
 }
+
+export async function getPartnerUniversities(): Promise<any[]> {
+  const response = await client(`/university/partnered`)
+
+  return response
+}
+
+export function useGetPartnerUniversities() {
+  return useQuery<any, Error>({
+    queryKey: ['partnerUniversities'],
+    queryFn: () => getPartnerUniversities(),
+    staleTime: 0,
+    retry: false,
+  })
+}

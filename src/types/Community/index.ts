@@ -5,6 +5,8 @@ export interface Community {
   _id: string
   communityCoverUrl: { imageUrl: string; publicId: string }
   communityLogoUrl: { imageUrl: string; publicId: string }
+  isAllowedToJoin?: boolean
+  isUserAllowedToLeave?: boolean
   name: string
   adminId: string[]
   university_id: string

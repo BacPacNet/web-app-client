@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { useGetGroupRecommendations } from '@/services/recommendation'
 import { GroupRecommendationData as GroupRecommendationDataType } from '@/types/Recommendation'

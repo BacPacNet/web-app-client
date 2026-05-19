@@ -131,15 +131,16 @@ export default function ClientUniversityProfile({ universityName }: { university
               <p className="text-neutral-900 md:text-lg-small text-md font-extrabold font-poppins">{university?.name}</p>
             </div>
             <SupportingText>{university?.short_overview || 'Not Available'}</SupportingText>
-            {isCommunityAlreadyJoined ? (
-              <Buttons variant="shade" className="w-max" size="large" onClick={handleViewCommunity}>
-                View Community
-              </Buttons>
-            ) : (
-              <Buttons disabled={isJoinLoading} className="w-max" size="large" onClick={handleClick}>
-                Join Community
-              </Buttons>
-            )}
+            {university?.isAllowedToJoin &&
+              (isCommunityAlreadyJoined ? (
+                <Buttons variant="shade" className="w-max" size="large" onClick={handleViewCommunity}>
+                  View Community
+                </Buttons>
+              ) : (
+                <Buttons disabled={isJoinLoading} className="w-max" size="large" onClick={handleClick}>
+                  Join Community
+                </Buttons>
+              ))}
           </div>
           <div className="relative flex-1 flex justify-center lg:max-w-[480px]  max-sm:items-center max-h-[290px] sm:min-h-[290px] min-h-[208px] bg-neutral-300 rounded-lg">
             <Image

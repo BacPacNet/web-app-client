@@ -105,15 +105,15 @@ const EditProfileModal = () => {
         bio: profile?.bio || '',
         city: profile?.city || '',
         country: profile?.country || '',
-        degree: profile?.degree || '',
+        // degree: profile?.degree || '',
         dob: parseDateOfBirth(profile?.dob),
-        major: profile?.major || '',
-        occupation: profile?.occupation || '',
+        // major: profile?.major || '',
+        // occupation: profile?.occupation || '',
         phone_number: profile?.phone_number || '',
-        study_year: profile?.study_year || '',
-        university_name: profile?.university_name || '',
-        universityId: profile?.university_id || '',
-        universityLogo: profile?.universityLogo || '',
+        // study_year: profile?.study_year || '',
+        // university_name: profile?.university_name || '',
+        // universityId: profile?.university_id || '',
+        // universityLogo: profile?.universityLogo || '',
         profilePicture: null,
       }
       reset(userDefault)
@@ -272,7 +272,7 @@ const EditProfileModal = () => {
           />
         </LabeledInput>
 
-        <div className="flex flex-col py-2">
+        {/* <div className="flex flex-col py-2">
           <label htmlFor="university_name" className="py-1">
             University <span className="text-destructive-600">*</span>
           </label>
@@ -300,7 +300,7 @@ const EditProfileModal = () => {
             />
             {errors.university_name && <InputWarningText>{errors?.university_name?.message?.toString()}</InputWarningText>}
           </div>
-        </div>
+        </div>  */}
         <div className="flex flex-col">
           <div className="flex justify-between">
             <label htmlFor="bio" className="py-1">
@@ -392,7 +392,7 @@ const EditProfileModal = () => {
           </div>
         </div>
 
-        <div>
+        {/*<div>
           <Title>
             Edit status<span className="text-destructive-600">*</span>
           </Title>
@@ -535,7 +535,7 @@ const EditProfileModal = () => {
               </div>
             </>
           )}
-        </div>
+        </div>*/}
         <Button variant="primary" type="submit" disabled={!isDirty || isProfileLoading || isPending}>
           {isProfileLoading || isPending ? <Spinner /> : 'Update Profile'}
         </Button>
