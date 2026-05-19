@@ -317,7 +317,7 @@ const PostCard = React.memo(
             />
 
             <div className="flex items-center gap-2">
-              {communities?.length && communities?.length > 0 && (
+              {communities?.length && communities?.length > 0 ? (
                 <div className="flex items-center gap-2">
                   {communities
                     ?.slice()
@@ -343,7 +343,7 @@ const PostCard = React.memo(
                       />
                     ))}
                 </div>
-              )}
+              ) : null}
 
               <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
                 <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} postType={postCategory} />

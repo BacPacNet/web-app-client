@@ -163,7 +163,7 @@ const PendingPostCard = React.memo(
             />
 
             <div className="flex items-center gap-2">
-              {communities?.length && communities?.length > 0 && type === PostType.Community && (
+              {communities?.length && communities?.length > 0 && type === PostType.Community ? (
                 <div className="flex items-center gap-2">
                   {communities
                     ?.slice()
@@ -189,7 +189,7 @@ const PendingPostCard = React.memo(
                       />
                     ))}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
 

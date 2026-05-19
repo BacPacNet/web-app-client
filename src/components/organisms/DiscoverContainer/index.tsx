@@ -5,7 +5,7 @@ import DiscoverUniversityCard from '@/components/molecules/Discover/DiscoverUniv
 import DiscoverUniversityCardSkeleton from '@/components/molecules/Discover/DiscoverUniversityCardSkeleton'
 import Paginate from '@/components/molecules/Paginate'
 import useDeviceType from '@/hooks/useDeviceType'
-import { useGetFilteredUniversity } from '@/services/universitySearch'
+import { useGetFilteredUniversity, useGetPartnerUniversities } from '@/services/universitySearch'
 import React, { useEffect, useRef, useState } from 'react'
 import { IoSearch } from 'react-icons/io5'
 
@@ -13,6 +13,7 @@ const DiscoverContainer = () => {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading } = useGetFilteredUniversity(page, 10, query, true)
+  const { data: partnerUniversitiesData } = useGetPartnerUniversities()
   const { isTablet, isMobile, isDesktop } = useDeviceType()
   const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -66,6 +67,7 @@ const DiscoverContainer = () => {
           {!isLoading && !data?.Universities?.length && (
             <div className="lg:w-[700px] flex items-center justify-center text-center font-bold text-4xl  font-poppins h-32">No Result Found</div>
           )}
+
           <div ref={containerRef} className={`grid ${isTablet || isMobile ? 'grid-cols-1 place-items-center' : 'lg:grid-cols-2'}  gap-8 `}>
             {isLoading ? (
               <>
@@ -81,7 +83,10 @@ const DiscoverContainer = () => {
                 <DiscoverUniversityCardSkeleton />
               </>
             ) : (
-              data?.Universities?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} />)
+              <>
+                {partnerUniversitiesData?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} />)}
+                {data?.Universities?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} />)}
+              </>
             )}
           </div>
           <div className="flex items-center justify-center mt-[72px] pb-10">

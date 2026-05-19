@@ -24,7 +24,7 @@ export default function AccountSettingsPage() {
       title: 'Account',
       icon: <FaUser className="text-neutral-500 w-5 h-5" />,
       items: [
-        { href: '/setting/university-verification', label: 'University Verification' },
+        // { href: '/setting/university-verification', label: 'University Verification' },
         { href: '/setting/change-username', label: 'Change Username' },
         { href: '/setting/change-password', label: 'Change Password' },
         { href: '/setting/blocked-users', label: 'Blocked Users' },

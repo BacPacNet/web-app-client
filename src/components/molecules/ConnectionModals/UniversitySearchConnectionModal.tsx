@@ -7,7 +7,8 @@ import { filterData, filterFacultyData } from '@/lib/communityGroup'
 import { useCommunityUsers } from '@/services/community'
 import { useUniversitySearch } from '@/services/universitySearch'
 import { useUniStore } from '@/store/store'
-import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
+import { EmailType } from '@/models/auth'
+import { degreeAndMajors, occupationAndDepartment, userTypeEnum, value } from '@/types/RegisterForm'
 import React, { useState, useRef, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { BiChevronDown } from 'react-icons/bi'
@@ -41,6 +42,7 @@ interface ConnectionUserSelectModalProps {
   setSelectedFilters: React.Dispatch<React.SetStateAction<any>>
   handleClear: () => void
   onApplyFilters: () => void
+  isApplicant?: boolean
 }
 export default function ConnectionUserSelectModal({
   setFilteredUsers,
@@ -54,8 +56,9 @@ export default function ConnectionUserSelectModal({
   handleClear,
   onApplyFilters,
   closeModal,
+  isApplicant,
 }: ConnectionUserSelectModalProps) {
-  const { userData } = useUniStore()
+  const { userData, userProfileData } = useUniStore()
   const [selectedUniversity, setSelectedUniversity] = useState({ name: '', id: '', communityId: '' })
   const [searchTerm, setSearchTerm] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
@@ -65,8 +68,14 @@ export default function ConnectionUserSelectModal({
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { data: universitiesData, isLoading } = useUniversitySearch(searchTerm || 'india', 1, 10)
   const universities = universitiesData?.result?.universities
+  const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
+  const firstVerifiedUniversity = userProfileData?.email?.[0]
 
-  //   const filtered = universities.filter((u) => u.toLowerCase().includes(query.toLowerCase()))
+  const toSelectedUniversity = (university: EmailType) => ({
+    name: university.UniversityName,
+    id: university._id,
+    communityId: university.communityId ?? '',
+  })
 
   const { data: communityUsersData } = useCommunityUsers(selectedUniversity?.communityId)
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userData?.id) || []
@@ -96,8 +105,13 @@ export default function ConnectionUserSelectModal({
   const affiliation = watch('affiliation') || ''
 
   useEffect(() => {
-    setSelectedUniversity(selectedFilters.university)
-  }, [])
+    if (isApplicantUser) {
+      setSelectedUniversity(selectedFilters.university)
+    } else if (firstVerifiedUniversity) {
+      setSelectedUniversity(toSelectedUniversity(firstVerifiedUniversity))
+      setUniversityError(false)
+    }
+  }, [isApplicantUser, firstVerifiedUniversity])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -169,11 +183,15 @@ export default function ConnectionUserSelectModal({
   const handleClearButton = () => {
     handleClear()
     setUniversityError(false)
-    setSelectedUniversity({
-      name: '',
-      id: '',
-      communityId: '',
-    })
+    if (!isApplicantUser && firstVerifiedUniversity) {
+      setSelectedUniversity(toSelectedUniversity(firstVerifiedUniversity))
+    } else {
+      setSelectedUniversity({
+        name: '',
+        id: '',
+        communityId: '',
+      })
+    }
     setIsFiltered(false)
     reset({
       selectedRadio: '',
@@ -196,62 +214,63 @@ export default function ConnectionUserSelectModal({
           </div>
 
           <div className="relative " ref={dropdownRef}>
-            <label className="text-xs font-medium mb-2">University</label>
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className={`w-full flex justify-between items-center border ${
-                universityError ? 'border-destructive-600' : 'border-neutral-200'
-              }  rounded-lg p-3  text-xs text-neutral-700 h-10 bg-white shadow-sm`}
-            >
-              {selectedUniversity?.name || 'Select University'}
-              {selectedUniversity?.name ? (
-                <FaXmark
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setSelectedUniversity({ name: '', id: '', communityId: '' })
-                    setUniversityError(false)
-                  }}
-                  className="w-4 h-4 ml-2"
-                />
-              ) : (
-                <BiChevronDown className="w-4 h-4 ml-2" />
-              )}
-            </button>
-            {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
-            {showDropdown && (
-              <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-2  outline-none"
-                  ref={inputRef}
-                />
-
-                {universities && universities?.length > 0 ? (
-                  <>
-                    {universities?.map((university: any) => (
-                      <div
-                        onClick={() => {
-                          setSelectedUniversity({ name: university.name, id: university?._id, communityId: university.communityId })
-                          setShowDropdown(false)
-                          setUniversityError(false)
-                        }}
-                        key={university?.id}
-                        className=" bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
-                      >
-                        <CollegeResult university={university} />
+            {isApplicantUser ? (
+              <>
+                <label className="text-xs font-medium mb-2">University</label>
+                <button
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className={`w-full flex justify-between items-center border ${
+                    universityError ? 'border-destructive-600' : 'border-neutral-200'
+                  }  rounded-lg p-3  text-xs text-neutral-700 h-10 bg-white shadow-sm`}
+                >
+                  {selectedUniversity?.name || 'Select University'}
+                  {selectedUniversity?.name ? (
+                    <FaXmark
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSelectedUniversity({ name: '', id: '', communityId: '' })
+                        setUniversityError(false)
+                      }}
+                      className="w-4 h-4 ml-2"
+                    />
+                  ) : (
+                    <BiChevronDown className="w-4 h-4 ml-2" />
+                  )}
+                </button>
+                {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
+                {showDropdown && (
+                  <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full px-4 py-2  outline-none"
+                      ref={inputRef}
+                    />
+                    {universities?.length > 0 ? (
+                      universities.map((university: any) => (
+                        <div
+                          onClick={() => {
+                            setSelectedUniversity({ name: university.name, id: university?._id, communityId: university.communityId })
+                            setShowDropdown(false)
+                            setUniversityError(false)
+                          }}
+                          key={university?._id}
+                          className=" bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
+                        >
+                          <CollegeResult university={university} />
+                        </div>
+                      ))
+                    ) : (
+                      <div className=" bg-white rounded-lg hover:bg-gray-100 border-b border-neutral-200 last:border-b-0 text-black">
+                        <p className="p-3 text-gray-500">No results found</p>
                       </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className=" bg-white rounded-lg hover:bg-gray-100 border-b border-neutral-200 last:border-b-0 text-black">
-                    <p className="p-3 text-gray-500">No results found</p>
+                    )}
                   </div>
                 )}
-              </div>
-            )}
+              </>
+            ) : null}
           </div>
 
           <RadioOption
