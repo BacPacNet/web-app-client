@@ -5,6 +5,7 @@ import { Users } from '@/types/Connections'
 import { FaCheck } from 'react-icons/fa'
 import { userProfileType } from '@/store/userProfileSlice/userProfileType'
 import { HiCheckCircle } from 'react-icons/hi'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 
 type UserSelectDropdownProps = {
   show: boolean
@@ -77,6 +78,14 @@ const VerifyUserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
       ) : filteredUsers.length > 0 ? (
         filteredUsers.map((user) => {
           const isSelected = selectedUsers.some((u) => u._id === user._id)
+          const { line1, line2 } = getUserProfileSubtitleLines({
+            role: user?.role,
+            study_year: user?.study_year,
+            major: user.major,
+            occupation: user?.occupation,
+            affiliation: user?.affiliation,
+          })
+
           return (
             <div
               key={user._id}
@@ -90,8 +99,8 @@ const VerifyUserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
                     <p className="text-sm font-semibold">{`${user?.firstName} ${user?.lastName}`}</p>
                     {user?.isVerified && <HiCheckCircle width={14} height={14} className="text-primary-500 " />}
                   </div>
-                  <p className="text-2xs text-neutral-600">{user?.role === 'student' ? `${user?.study_year} ` : user?.occupation}</p>
-                  <p className="text-2xs text-neutral-600">{user?.role === 'student' ? user.major : user?.affiliation}</p>
+                  {line1 && <p className="text-2xs text-neutral-600">{line1}</p>}
+                  {line2 && <p className="text-2xs text-neutral-600">{line2}</p>}
                 </div>
               </div>
               {isSelected && <FaCheck className="w-5 h-5 text-primary shrink-0" />}

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { PostType } from '@/types/constants'
 import badge from '@assets/badge.svg'
 import communityAdminBadge from '@assets/communityAdminBadge.svg'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 interface UserCardProps {
   user: string
   year?: string
@@ -40,7 +40,14 @@ const UserCard: React.FC<UserCardProps> = ({
   isCommunityAdmin,
   role,
 }) => {
-  const isStudent = role === userTypeEnum.Student
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role,
+    study_year: year,
+    major,
+    occupation,
+    affiliation,
+  })
+
   return (
     <div onClick={() => handleProfileClicked(adminId as string)} className="flex gap-2 cursor-pointer items-center flex-shrink-0">
       <div className="rounded-full w-[48px] h-[48px]">
@@ -52,11 +59,8 @@ const UserCard: React.FC<UserCardProps> = ({
         </div>
 
         <div className="flex flex-col">
-          <p className="block text-[10px] text-neutral-500">
-            {' '}
-            <p>{isStudent ? year : occupation}</p>{' '}
-          </p>
-          <p className="text-[10px] text-neutral-500">{isStudent ? major : affiliation}</p>
+          {line1 && <p className="text-[10px] text-neutral-500">{line1}</p>}
+          {line2 && <p className="text-[10px] text-neutral-500">{line2}</p>}
         </div>
       </div>
     </div>

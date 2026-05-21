@@ -432,7 +432,13 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </>
       <div className="h-fit">
         {subscribedCommunities?.length !== 0 ? (
-          <Tabs activeTabIndex={1} tabs={tabData} tabAlign="center" className="my-4" labelSize="medium" />
+          <Tabs
+            activeTabIndex={1}
+            tabs={isApplicantUser ? tabData.filter((tab) => tab.label !== 'Create') : tabData}
+            tabAlign="center"
+            className="my-4"
+            labelSize="medium"
+          />
         ) : (
           //  <CommunityGroupAll
           //    key={subscribedCommunities}
