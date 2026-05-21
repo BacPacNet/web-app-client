@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /community
-
-# Sitemap
-Sitemap: https://unibuzz.org/sitemap.xml 

@@ -34,33 +34,6 @@ import { RxAvatar } from 'react-icons/rx'
 export default function UnibuzzPage() {
   return (
     <div className="min-h-screen bg-[#f3f2ff]">
-      {/*<header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b bg-white px-4 md:px-6">
-        <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center">
-            <span className="text-2xl font-bold text-[#6744ff]">
-              uni<span className="text-[#6744ff]">buzz</span>
-            </span>
-          </Link>
-        </div>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="#" className="text-sm font-medium">
-            Discover
-          </Link>
-          <Link href="#" className="text-sm font-medium">
-            Community
-          </Link>
-          <Link href="#" className="text-sm font-medium">
-            About
-          </Link>
-        </nav>
-        <div className="flex items-center gap-4">
-          <RxAvatar className="h-8 w-8 border-2 border-[#6744ff]">
-       
-          </RxAvatar>
-          <LuChevronDown className="h-4 w-4" />
-        </div>
-      </header>*/}
-
       {/* Main Content */}
       <div className="max-width-allowed mx-auto grid grid-cols-1 md:grid-cols-[260px_1fr_300px] gap-0">
         {/* Left Sidebar */}
