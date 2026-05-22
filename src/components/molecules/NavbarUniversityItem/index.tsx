@@ -354,10 +354,9 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </div>
 
       <>
-        {isApplicantUser ? (
-          <div className="flex gap-2 mt-4 py-2 items-center ">
-            <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
-
+        <div className="flex gap-2 mt-4 py-2 items-center ">
+          <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
+          {isApplicantUser ? (
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <div className=" cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
@@ -386,10 +385,8 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
                 </div>
               </PopoverContent>
             </Popover>
-          </div>
-        ) : (
-          <div className="mb-4"></div>
-        )}
+          ) : null}
+        </div>
 
         <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
 

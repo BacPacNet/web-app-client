@@ -9,7 +9,7 @@ import { UniversityInfo } from '@/types/University'
 import React, { useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import universityLogoPlaceholder from '@assets/Logo Circle.svg'
-
+import Link from 'next/link'
 const SelectUniversitiesForm = () => {
   const { data: universities, isLoading } = useGetPartnerUniversities()
   const { setValue, watch, getValues } = useFormContext()
@@ -53,6 +53,10 @@ const SelectUniversitiesForm = () => {
         <Button disabled={selectedCount === 0} variant="primary" size="large">
           {`Add ${selectedCount} ${selectedCount === 1 ? 'University' : 'Universities'}`}
         </Button>
+
+        <p className="text-sm text-primary-500 text-center h-[48px] flex items-center justify-center">
+          <Link href="/login">Already have an account? Login</Link>
+        </p>
       </div>
     </div>
   )

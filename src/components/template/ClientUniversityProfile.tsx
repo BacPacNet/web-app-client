@@ -17,7 +17,9 @@ import NotLoggedInModal from '@/components/molecules/NotLoggedInModal'
 import { useJoinCommunityFromUniversity } from '@/services/community-university'
 import SupportingText from '@/components/atoms/SupportingText'
 import { useModal } from '@/context/ModalContext'
-import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomInfoToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { MESSAGES } from '@/content/constant'
+import { userTypeEnum } from '@/types/RegisterForm'
 import { useQueryClient } from '@tanstack/react-query'
 import GenericInfoModal from '@/components/molecules/VerifyUniversityToJoinModal/VerifyUniversityToJoinModal'
 import UniversityInfoCard from '@/components/atoms/UniversityInfoCard'
@@ -93,30 +95,45 @@ export default function ClientUniversityProfile({ universityName }: { university
         <NotLoggedInModal title={'Login to Join Community'} desc={"Login or create an account to become part of Lorem University's community! "} />,
         'w-96 p-0 rounded-md'
       )
-    } else {
-      joinCommunityFromUniversity(university._id, {
-        onSuccess: (response: any) => {
-          if (response.statusCode === 406) {
-            return openModal(
-              <GenericInfoModal
-                title="Oops! You've hit the limit."
-                description="Looks like you've already joined a university without verifying your student status. You can only join one unverified university at a time."
-                subTitle="To continue, verify your student email for either:"
-                listItems={['The university you have previously joined', 'The one you are currently attempting to join']}
-                buttonLabel="Verify University Email"
-                redirectUrl="/setting/university-verification"
-              />,
-              'w-[350px] sm:w-[490px] hideScrollbar'
-            )
-          } else {
-            queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
-            if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
-            router.push(`/community/${response.data.community._id}`)
-            showCustomSuccessToast(`Joined Community `)
-          }
-        },
-      })
+      return
     }
+
+    const isStudentOrFaculty = userProfileData?.role === userTypeEnum.Student || userProfileData?.role === userTypeEnum.Faculty
+    const partneredUniversity = userProfileData?.email?.[0]
+    const isJoiningDifferentUniversity =
+      !!partneredUniversity?.UniversityName &&
+      (partneredUniversity.communityId
+        ? partneredUniversity.communityId !== university?.communityId
+        : partneredUniversity.UniversityName.toLowerCase() !== university?.name?.toLowerCase())
+
+    if (isStudentOrFaculty && isJoiningDifferentUniversity) {
+      router.push('/timeline')
+      showCustomInfoToast(MESSAGES.ALREADY_AFFILIATED_WITH_UNIVERSITY(partneredUniversity.UniversityName))
+      return
+    }
+
+    joinCommunityFromUniversity(university._id, {
+      onSuccess: (response: any) => {
+        if (response.statusCode === 406) {
+          return openModal(
+            <GenericInfoModal
+              title="Oops! You've hit the limit."
+              description="Looks like you've already joined a university without verifying your student status. You can only join one unverified university at a time."
+              subTitle="To continue, verify your student email for either:"
+              listItems={['The university you have previously joined', 'The one you are currently attempting to join']}
+              buttonLabel="Verify University Email"
+              redirectUrl="/setting/university-verification"
+            />,
+            'w-[350px] sm:w-[490px] hideScrollbar'
+          )
+        } else {
+          queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+          if (response.data && response.data.profile) setUserProfileCommunities(response.data.profile.communities)
+          router.push(`/community/${response.data.community._id}`)
+          showCustomSuccessToast(`Joined Community `)
+        }
+      },
+    })
   }
 
   return (
