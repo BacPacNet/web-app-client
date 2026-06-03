@@ -11,12 +11,14 @@ import { Spinner } from '@/components/spinner/Spinner'
 import { useRouter } from 'next/navigation'
 import { useTimeTracking } from '@/hooks/useTimeTracking'
 import { TRACK_EVENT } from '@/content/constant'
+import { MdOutlineArrowBack } from 'react-icons/md'
 
 type Props = {
   isPending: boolean
+  handlePrev: () => void
 }
 
-const AccountCreationForm = ({ isPending }: Props) => {
+const AccountCreationForm = ({ isPending, handlePrev }: Props) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
@@ -168,12 +170,9 @@ const AccountCreationForm = ({ isPending }: Props) => {
         <Button disabled={isPending} variant="primary" size="large">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
-
-        <div className="mx-auto">
-          <p className="text-primary-500 cursor-pointer" onClick={() => router.push('/login')}>
-            Already have an account? Log in
-          </p>
-        </div>
+        <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+          Back
+        </Button>
       </div>
     </div>
   )

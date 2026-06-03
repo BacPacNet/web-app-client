@@ -4,16 +4,9 @@ import AccountCreationForm from '../forms/AccountCreationForm'
 import ProfileSetupForm from '../forms/ProfileSetupForm'
 import { FormProvider, useForm } from 'react-hook-form'
 import VerificationForm from '../forms/VerificationForm'
-import UniversityVerificationForm from '../forms/UniversityVerificationForm'
-import {
-  useHandleLoginEmailVerification,
-  useHandleRegister_v2,
-  useHandleUniversityEmailVerification,
-  useHandleUserEmailAndUserNameAvailability,
-} from '@/services/auth'
-import { useRouter, useSearchParams } from 'next/navigation'
-import ProfileStudentForm from '../forms/ProfileStudentForm'
-import ProfileFacultyForm from '../forms/ProfileFacultyForm'
+import SelectUniversitiesForm from '../forms/SelectUniversitiesForm'
+import { useHandleLoginEmailVerification, useHandleRegister_v2, useHandleUserEmailAndUserNameAvailability } from '@/services/auth'
+import { useSearchParams } from 'next/navigation'
 import { FormDataType, userCheckError, userTypeEnum } from '@/types/RegisterForm'
 import useCookie from '@/hooks/useCookie'
 import { TRACK_EVENT } from '@/content/constant'
@@ -22,13 +15,10 @@ import { useTimeTracking } from '@/hooks/useTimeTracking'
 interface Props {
   step: number
   setStep: (value: number) => void
-  subStep: number
-  setSubStep: (value: number) => void
-  setUserType: (value: string) => void
   handlePrev: () => void
 }
 
-const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handlePrev }: Props) => {
+const FormContainer = ({ step, setStep, handlePrev }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
   const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
@@ -38,14 +28,8 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     isSuccess: userLoginEmailVerificationSuccess,
     isPending: userLoginEmailVerificationIsPending,
   } = useHandleLoginEmailVerification()
-  const {
-    mutateAsync: handleUserUniversityEmailVerification,
-    isSuccess: userUniversityEmailVerificationSuccess,
-    isPending: UniversityEmailVerificationIsPending,
-  } = useHandleUniversityEmailVerification()
   const { mutateAsync: HandleRegister, isPending: registerIsPending, data: registeredData } = useHandleRegister_v2()
 
-  const router = useRouter()
   const searchParams = useSearchParams()
   const referralCode = searchParams?.get('referralCode')
 
@@ -72,31 +56,26 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
       confirmpassword: '',
       birthDate: '',
       gender: '',
-      userType: '',
-      country: '',
+      userType: userTypeEnum.Applicant,
+
       firstName: '',
       lastName: '',
-      year: '',
-      degree: '',
-      major: '',
       verificationEmail: '',
       verificationOtp: '',
       universityName: '',
       universityLogo: '',
       universityDomain: [],
-      department: '',
-      occupation: '',
       universityId: '',
       UniversityOtp: '',
       UniversityOtpOK: '',
       referralCode: referralCode || '',
       isJoinUniversity: true,
-      isUniversityVerified: false,
       isEmailVerified: false,
+      selectedUniversityIds: [],
     },
   })
-  const currUserType = methods.watch('userType')
   const currEmail = methods.watch('email')
+
   useEffect(() => {
     if (registerData) {
       methods.reset({
@@ -106,15 +85,9 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         confirmpassword: registerData?.confirmpassword || '',
         birthDate: registerData?.birthDate || '',
         gender: registerData?.gender || '',
-        userType: registerData?.userType || '',
-        country: registerData?.country || '',
+        userType: userTypeEnum.Applicant,
         firstName: registerData?.firstName || '',
         lastName: registerData?.lastName || '',
-        year: registerData?.year || '',
-        degree: registerData?.degree || '',
-        major: registerData?.major || '',
-        occupation: registerData?.occupation || '',
-        department: registerData?.department || '',
         verificationEmail: registerData?.verificationEmail || '',
         universityId: registerData?.universityId || '',
         verificationOtp: registerData?.verificationOtp || '',
@@ -124,21 +97,17 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
         UniversityOtp: registerData?.UniversityOtp || '',
         referralCode: referralCode || registerData?.referralCode || '',
         isJoinUniversity: registerData?.isJoinUniversity || true,
-        isUniversityVerified: registerData?.isUniversityVerified,
         isEmailVerified: registerData?.isEmailVerified,
+        selectedUniversityIds: registerData?.selectedUniversityIds || [],
       })
     }
-  }, [registerData, methods])
+  }, [registerData, methods, referralCode])
 
   useTimeTracking(TRACK_EVENT.REGISTER_PAGE_VIEW_DURATION, {
     isRegistrationCompleted: registeredData?.isRegistered || false,
     email: currEmail || '',
     referralCode: referralCode || '',
   })
-
-  useEffect(() => {
-    setUserType(currUserType)
-  }, [currUserType])
 
   const userCheck = async (data: { email: string; userName: string }) => {
     try {
@@ -186,228 +155,84 @@ const FormContainer = ({ step, setStep, setSubStep, subStep, setUserType, handle
     }
   }
 
-  const userUniversityEmailVerification = async (data: { universityEmail: string; UniversityOtp: string }) => {
-    try {
-      const dataToSend = {
-        universityEmail: data.universityEmail,
-        UniversityOtp: data.UniversityOtp,
-      }
-      const isAvailable = await handleUserUniversityEmailVerification(dataToSend)
-
-      return isAvailable
-    } catch (error: any) {
-      methods.setError('UniversityOtp', { message: error.response.data.message })
-      methods.setValue('UniversityOtp', '')
-    }
-  }
-
   const onSubmit = async (data: FormDataType) => {
-    let currStep = step
-    let currSubStep = subStep
-
-    if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      currSubStep += 1
-    } else if (step == 1 && subStep == 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      currStep = step + 2
-    } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      currSubStep += 1
-    } else if (step === 2 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      currStep = 3
-    } else if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      currSubStep = 1
-    } else {
-      currStep += 1
-      currSubStep = 0
-    }
-
-    const saveToLocalStorage = () => {
+    const saveToCookie = (nextStep: number) => {
       const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
-      setCookieValue(JSON.stringify({ ...data, step: currStep, subStep: currSubStep, referralCode: data.referralCode }), expirationDate)
+      setCookieValue(JSON.stringify({ ...data, step: nextStep, userType: userTypeEnum.Applicant, referralCode: data.referralCode }), expirationDate)
     }
 
     if (step === 0) {
+      if (!data.selectedUniversityIds?.length) {
+        methods.setError('selectedUniversityIds', { message: 'Please select at least one university.' })
+        return
+      }
+      handleNext()
+      saveToCookie(1)
+      return
+    }
+
+    if (step === 1) {
       const isAvailable = await userCheck(data)
       if (isAvailable?.isAvailable) {
         handleNext()
-        saveToLocalStorage()
+        saveToCookie(2)
       }
       return
     }
 
-    if (step === 3 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      const isAvailable = await userLoginEmailVerification(data)
-
-      if (isAvailable?.isAvailable) {
-        // Keep birthDate in dd/MM/yyyy format instead of converting to timestamp
-        // const dob = convertToDateObj(data.birthDate)?.getTime().toString()
-        // data.birthDate = dob || ''
-
-        // Get the current value from the form methods
-        const isEmailVerified = methods.getValues('isEmailVerified')
-
-        console.log(data, 'data')
-
-        // const res = await HandleRegister({
-        //   ...data,
-        //   isEmailVerified: isEmailVerified,
-        // } as FormDataType)
-
-        // if (res?.isRegistered) {
-        //   const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-        //   setCookieLoginValue(JSON.stringify({ email: data?.email, password: data.password }), expirationDateForLoginData)
-        //   deleteCookie()
-
-        //   setStep(4)
-        //   setSubStep(0)
-        // }
-      }
-
-      return
-    }
-    if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      const isAvailable = await userLoginEmailVerification(data)
-
-      if (isAvailable?.isAvailable && !isAvailable?.isUniversityDomain) {
-        handleNext()
-        saveToLocalStorage()
-      } else if (isAvailable?.isAvailable && isAvailable?.isUniversityDomain) {
-        data.isUniversityVerified = true
-        data.universityEmail = data.email
-        const isEmailVerified = methods.getValues('isEmailVerified')
-        const res = await HandleRegister({
-          ...data,
-          isEmailVerified: isEmailVerified,
-        } as FormDataType)
-        if (res?.isRegistered) {
-          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-          setCookieLoginValue(
-            JSON.stringify({ email: data?.email, password: data.password, referralCode: data.referralCode }),
-            expirationDateForLoginData
-          )
-          deleteCookie()
-          setStep(4)
-          setSubStep(0)
-        }
-      }
-
-      return
-    }
-    if (step === 3 && subStep === 1) {
-      const isAvailable = await userUniversityEmailVerification(data)
-      if (isAvailable?.isAvailable) {
-        data.isUniversityVerified = true
-        // Keep birthDate in dd/MM/yyyy format instead of converting to timestamp
-        // const dob = convertToDateObj(data.birthDate)?.getTime().toString()
-        // data.birthDate = dob || ''
-
-        // Get the current value from the form methods
-        const isEmailVerified = methods.getValues('isEmailVerified')
-
-        const res = await HandleRegister({
-          ...data,
-          isEmailVerified: isEmailVerified,
-        } as FormDataType)
-        if (res?.isRegistered) {
-          const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
-          setCookieLoginValue(
-            JSON.stringify({ email: data?.email, password: data.password, referralCode: data.referralCode }),
-            expirationDateForLoginData
-          )
-          deleteCookie()
-          setStep(4)
-          setSubStep(0)
-        }
-      }
-
-      return
-    }
-
-    if (step === 1 && subStep === 0) {
+    if (step === 2) {
       handleNext()
-      saveToLocalStorage()
-
+      saveToCookie(3)
       return
     }
 
-    handleNext()
-    saveToLocalStorage()
+    if (step === 3) {
+      const isAvailable = await userLoginEmailVerification(data)
+      if (!isAvailable?.isAvailable) return
+
+      const isEmailVerified = methods.getValues('isEmailVerified')
+      const res = await HandleRegister({ ...data, isEmailVerified, userType: userTypeEnum.Applicant } as FormDataType)
+      if (res?.isRegistered) {
+        const expirationDateForLoginData = new Date(Date.now() + 1 * 60 * 1000).toUTCString()
+        setCookieLoginValue(
+          JSON.stringify({ email: data.email, password: data.password, referralCode: data.referralCode }),
+          expirationDateForLoginData
+        )
+        deleteCookie()
+        setStep(4)
+      }
+      return
+    }
   }
 
   const handleNext = () => {
-    if (step === 1 && subStep === 0 && methods.getValues('userType') == userTypeEnum.Applicant) {
-      const newStep = step + 2
-      setStep(newStep)
-      return setSubStep(0)
-    } else if (step === 1 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      return setSubStep(1)
-    } else if (step === 1 && subStep === 1) {
-      const newStep = step + 2
-      setStep(newStep)
-      return setSubStep(0)
-    } else if (step === 2 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      return setSubStep(1)
-    } else if (step === 3 && subStep === 0 && methods.getValues('userType') !== userTypeEnum.Applicant) {
-      return setSubStep(1)
-    } else {
-      const newStep = step + 1
-      setStep(newStep)
-      setSubStep(0)
-    }
+    setStep(step + 1)
   }
 
   const renderStep = () => {
-    if (step === 0 && subStep === 0) {
-      return <AccountCreationForm isPending={handleUserCheckIsPending} />
-    } else if (step === 1 && subStep === 0) {
+    if (step === 0) {
+      return <SelectUniversitiesForm />
+    }
+
+    if (step === 1) {
+      return <AccountCreationForm isPending={handleUserCheckIsPending} handlePrev={handlePrev} />
+    }
+
+    if (step === 2) {
       return <ProfileSetupForm handlePrev={() => handlePrev()} />
-    } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Student) {
-      return <ProfileStudentForm handlePrev={() => handlePrev()} />
-    } else if (step === 1 && subStep === 1 && methods.getValues('userType') == userTypeEnum.Faculty) {
-      return <ProfileFacultyForm handlePrev={() => handlePrev()} />
-    } else if (step === 2 && subStep === 0) {
+    }
+
+    if (step === 3) {
       return (
         <VerificationForm
           handlePrev={() => handlePrev()}
           isVerificationSuccess={userLoginEmailVerificationSuccess}
-          isPending={userLoginEmailVerificationIsPending}
-        />
-      )
-    } else if (step === 2 && subStep === 1) {
-      return (
-        <UniversityVerificationForm
-          setStep={setStep}
-          setSubStep={setSubStep}
-          isVerificationSuccess={userUniversityEmailVerificationSuccess}
-          isPending={UniversityEmailVerificationIsPending}
+          isPending={userLoginEmailVerificationIsPending || registerIsPending}
         />
       )
     }
-    //else if (step === 3) {
-    //  return <ClaimBenefitForm isPending={registerIsPending} />
-    //}
-    else if (step === 3 && subStep === 0) {
-      //   return <FinalLoginForm email={registerData?.email || ''} />
-      return (
-        <VerificationForm
-          handlePrev={() => handlePrev()}
-          isVerificationSuccess={userLoginEmailVerificationSuccess}
-          isPending={userLoginEmailVerificationIsPending}
-        />
-      )
-    } else if (step === 3 && subStep === 1) {
-      //   return <FinalLoginForm email={registerData?.email || ''} />
-      return (
-        <UniversityVerificationForm
-          setStep={setStep}
-          setSubStep={setSubStep}
-          isVerificationSuccess={userUniversityEmailVerificationSuccess}
-          isPending={UniversityEmailVerificationIsPending}
-        />
-      )
-    } else if (step === 4) {
-      //   return <FinalLoginForm email={registerData?.email || ''} />
-      return <div>44</div>
-    }
+
+    return null
   }
 
   return (
