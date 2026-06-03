@@ -28,6 +28,7 @@ import { LeftNavGroupsCommunityHolder } from '../LeftNavGroupsCommunityHolder'
 import { IoIosArrowDown } from 'react-icons/io'
 import mixpanel from 'mixpanel-browser'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface Props {
   setActiveMenu: (activeMenu: string) => void
@@ -73,6 +74,8 @@ const sortOptions = [
 
 export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }: Props) {
   const { userData, userProfileData } = useUniStore()
+  const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
+  const firstVerifiedUniversity = userProfileData?.email?.[0]
   const { openModal } = useModal()
   const [selectedCommunityGroupCommunityId, setSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
   const [isOpen, setIsOpen] = useState(false)
@@ -194,9 +197,14 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     if (selectedCommunityGroupCommunityId && subscribedCommunities) {
       setCommunity(subscribedCommunities?.find((community) => community._id === selectedCommunityGroupCommunityId))
     } else if (subscribedCommunities) {
-      setCommunity(subscribedCommunities[0] as Community)
+      if (!isApplicantUser && firstVerifiedUniversity?.communityId) {
+        const defaultCommunity = subscribedCommunities.find((community) => community._id === firstVerifiedUniversity.communityId)
+        setCommunity((defaultCommunity ?? subscribedCommunities[0]) as Community)
+      } else {
+        setCommunity(subscribedCommunities[0] as Community)
+      }
     }
-  }, [subscribedCommunities, communityId, selectedCommunityGroupCommunityId])
+  }, [subscribedCommunities, communityId, selectedCommunityGroupCommunityId, isApplicantUser, firstVerifiedUniversity])
 
   // Filter community groups - automatically triggered by useFilterCommunityGroups hook
 
@@ -346,38 +354,42 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       </div>
 
       <>
-        <div className="flex gap-2 mt-4 py-2 items-center ">
-          <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
+        {isApplicantUser ? (
+          <div className="flex gap-2 mt-4 py-2 items-center ">
+            <p className="text-xs text-neutral-500 font-bold  ">GROUPS</p>
 
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <div className=" cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
-                <Image
-                  className="w-6 h-6 object-contain rounded-full overflow-hidden m-auto"
-                  src={(selectedCommunityImage as string) || placeholder}
-                  width={24}
-                  height={24}
-                  alt=""
-                  onError={() => setSelectedCommunityImage(placeholder)}
-                />
-                <IoIosArrowDown size={16} strokeWidth={3} />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent className="relative w-[236px]  left-6 top-0  p-5 border-none shadow-lg bg-white shadow-gray-light">
-              <div className=" w-full flex flex-col gap-2">
-                {subscribedCommunities?.map((community) => (
-                  <LeftNavGroupsCommunityHolder
-                    key={community._id}
-                    name={community.name}
-                    logo={community.communityLogoUrl.imageUrl}
-                    communityId={community._id}
-                    handleChange={handleCommunityGroupClick}
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <div className=" cursor-pointer  overflow-hidden rounded-full flex justify-center items-center">
+                  <Image
+                    className="w-6 h-6 object-contain rounded-full overflow-hidden m-auto"
+                    src={(selectedCommunityImage as string) || placeholder}
+                    width={24}
+                    height={24}
+                    alt=""
+                    onError={() => setSelectedCommunityImage(placeholder)}
                   />
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
+                  <IoIosArrowDown size={16} strokeWidth={3} />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="relative w-[236px]  left-6 top-0  p-5 border-none shadow-lg bg-white shadow-gray-light">
+                <div className=" w-full flex flex-col gap-2">
+                  {subscribedCommunities?.map((community) => (
+                    <LeftNavGroupsCommunityHolder
+                      key={community._id}
+                      name={community.name}
+                      logo={community.communityLogoUrl.imageUrl}
+                      communityId={community._id}
+                      handleChange={handleCommunityGroupClick}
+                    />
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <div className="mb-4"></div>
+        )}
 
         <GroupSearchBox placeholder="Search Groups" type="text" onChange={handleSearch} />
 

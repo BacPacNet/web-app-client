@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FaFilter } from 'react-icons/fa6'
 import ConnectionUserSelectModal from '../ConnectionModals/UniversitySearchConnectionModal'
 import UserSearchInput from '@/components/atoms/UserSearchBox'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 type User = {
   _id: string
@@ -266,6 +267,7 @@ export default function FindPeople() {
           setSelectedFilters={setSelectedFilters}
           handleClear={handleClear}
           onApplyFilters={() => setApplyTrigger((prev) => prev + 1)}
+          isApplicant={userProfileData?.role == userTypeEnum.Applicant || false}
         />
       )}
     </div>

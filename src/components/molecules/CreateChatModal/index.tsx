@@ -1,7 +1,7 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
 import RadioOption from '@/components/atoms/RadioSelect'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import IndividualUsers from './IndividualUsers'
 import GroupChatModal from './GroupChatModal'
@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
 import { useModal } from '@/context/ModalContext'
+import { useUniStore } from '@/store/store'
+import { userTypeEnum } from '@/types/RegisterForm'
 
 interface OneToOneProps {
   setSelectedChat: (value: any) => void
@@ -24,7 +26,9 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
   const [groupLogoImage, setGroupLogoImage] = useState<File | null>(null)
   const [groupName, setGroupName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
+  const userProfileData = useUniStore((state) => state.userProfileData)
+  const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
+  const firstVerifiedUniversity = userProfileData?.email?.[0]
   // Memoize setter functions to prevent infinite re-renders
   const memoizedSetFilterUsers = useCallback((users: any[]) => {
     setFilterUsers(users)
@@ -55,6 +59,12 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
   const selectedRadio = watch('selectedRadio')
   const community = watch('community')
+
+  useEffect(() => {
+    if (isApplicantUser) {
+      setValue('selectedRadio', 'Individual')
+    }
+  }, [isApplicantUser, setValue])
 
   const handleIndividualUserClick = async (userId: string) => {
     const createChatResponse: any = await mutateCreateUserChat({ userId: userId })
@@ -107,7 +117,16 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent click from bubbling up
-    reset()
+    reset({
+      selectedRadio: isApplicantUser ? 'Individual' : '',
+      community:
+        !isApplicantUser && firstVerifiedUniversity
+          ? {
+              name: firstVerifiedUniversity.UniversityName,
+              id: firstVerifiedUniversity.communityId ?? '',
+            }
+          : { name: '', id: '' },
+    })
     setGroupName('')
     setFilterUsers([])
     setFilterFacultyUsers([])
@@ -142,36 +161,37 @@ const CreateChatModal = ({ setSelectedChat }: OneToOneProps) => {
             </div>
           }
         />
-        <RadioOption
-          label="Group Chat"
-          // description="Permission to join required"
-          value="Group"
-          register={register}
-          name="selectedRadio"
-          error={errors.selectedRadio && 'This field is required'}
-          checkedValue={selectedRadio}
-          fontSize={'large'}
-          // isDisabled={selectedUniversity?.name?.length < 1 || selectedUniversity?.name == undefined}
-          onAttemptSelect={() => {
-            setUniversityError(true)
-          }}
-          checkedContent={
-            <div className="flex flex-col gap-8 mb-4">
-              <GroupChatModal
-                setGroupName={setGroupName}
-                individualsUsers={selectedIndividualsUsers}
-                setIndividualsUsers={setSelectedIndividualsUsers}
-                setFilterUsers={memoizedSetFilterUsers}
-                setFilterFacultyUsers={memoizedSetFilterFacultyUsers}
-                // hadleClear={handleClear}
-                setGroupLogoImage={setGroupLogoImage}
-                groupLogoImage={groupLogoImage}
-                setValueGroup={setValue}
-                communitySelected={community}
-              />
-            </div>
-          }
-        />
+        {!isApplicantUser && (
+          <RadioOption
+            label="Group Chat"
+            value="Group"
+            register={register}
+            name="selectedRadio"
+            error={errors.selectedRadio && 'This field is required'}
+            checkedValue={selectedRadio}
+            fontSize={'large'}
+            // isDisabled={selectedUniversity?.name?.length < 1 || selectedUniversity?.name == undefined}
+            onAttemptSelect={() => {
+              setUniversityError(true)
+            }}
+            checkedContent={
+              <div className="flex flex-col gap-8 mb-4">
+                <GroupChatModal
+                  setGroupName={setGroupName}
+                  individualsUsers={selectedIndividualsUsers}
+                  setIndividualsUsers={setSelectedIndividualsUsers}
+                  setFilterUsers={memoizedSetFilterUsers}
+                  setFilterFacultyUsers={memoizedSetFilterFacultyUsers}
+                  // hadleClear={handleClear}
+                  setGroupLogoImage={setGroupLogoImage}
+                  groupLogoImage={groupLogoImage}
+                  setValueGroup={setValue}
+                  communitySelected={community}
+                />
+              </div>
+            }
+          />
+        )}
       </div>
 
       <Buttons

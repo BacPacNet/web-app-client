@@ -69,7 +69,7 @@ const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityA
           <p className="text-neutral-500  font-medium text-2xs ">{name}</p>
         </div>
 
-        {isActive && (
+        {/*{isActive && (
           <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
             <Buttons variant="shade" size="extra_small">
               Active
@@ -81,7 +81,7 @@ const ProfileCommunityHolder = ({ logo, name, isVerified, isActive, isCommunityA
               </div>
             )}
           </div>
-        )}
+        )}*/}
       </div>
     </div>
   )

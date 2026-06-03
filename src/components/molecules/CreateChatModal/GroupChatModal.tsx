@@ -11,7 +11,8 @@ import {
   getOccupationCounts,
 } from '@/lib/communityGroup'
 import { useGetCommunity } from '@/services/community-university'
-import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
+import { degreeAndMajors, occupationAndDepartment, userTypeEnum, value } from '@/types/RegisterForm'
+import { EmailType } from '@/models/auth'
 import { Controller, useForm } from 'react-hook-form'
 import { BiChevronDown } from 'react-icons/bi'
 import { FaXmark } from 'react-icons/fa6'
@@ -55,11 +56,18 @@ const GroupChatModal = ({
   communitySelected,
 }: Props) => {
   const { userProfileData } = useUniStore()
+  const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
+  const firstVerifiedUniversity = userProfileData?.email?.[0]
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [showDropdown, setShowDropdown] = useState(false)
   const [universityError, setUniversityError] = useState(false)
+
+  const toCommunity = (university: EmailType) => ({
+    name: university.UniversityName,
+    id: university.communityId ?? '',
+  })
 
   //  const [selectedUniversity, setSelectedUniversity] = useState<{ name: string; id: string }>({ name: '', id: '' })
   const [filteredYearCount, setFilteredYearsCount] = useState<Record<string, number>>()
@@ -129,6 +137,13 @@ const GroupChatModal = ({
   useEffect(() => {
     if (showDropdown) inputRef.current?.focus()
   }, [showDropdown])
+
+  useEffect(() => {
+    if (!isApplicantUser && firstVerifiedUniversity) {
+      setValueGroup('community', toCommunity(firstVerifiedUniversity))
+      setUniversityError(false)
+    }
+  }, [isApplicantUser, firstVerifiedUniversity, setValueGroup])
 
   useEffect(() => {
     setGroupName(title)
@@ -296,56 +311,58 @@ const GroupChatModal = ({
         </div>
       </div>
       {/* end  */}
-      <div className="relative mb-2" ref={dropdownRef}>
-        <label className="text-xs font-medium mb-2">University</label>
-        <button
-          onClick={() => setShowDropdown(!showDropdown)}
-          className={`w-full flex justify-between items-center border ${
-            universityError ? 'border-destructive-600' : 'border-neutral-200'
-          } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
-        >
-          {communitySelected?.name || 'Select University'}
-          {communitySelected?.name ? (
-            <FaXmark
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setValueGroup('community', { name: '', id: '' })
-                //setSelectedUniversity({ name: '', id: '' })
-              }}
-              className="w-4 h-4 ml-2"
-            />
-          ) : (
-            <BiChevronDown className="w-4 h-4 ml-2" />
-          )}
-        </button>
-        {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
-        {showDropdown && (
-          <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
-            {userProfileData && userProfileData.email!.length > 0 ? (
-              userProfileData.email!.map((university: any) => (
-                <div
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    setValueGroup('community', { name: university.UniversityName, id: university?.communityId })
-                    setShowDropdown(false)
-                    setUniversityError(false)
-                  }}
-                  key={university?._id}
-                  className="bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
-                >
-                  <CollegeResult university={university} />
-                </div>
-              ))
+      {isApplicantUser && (
+        <div className="relative mb-2" ref={dropdownRef}>
+          <label className="text-xs font-medium mb-2">University</label>
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className={`w-full flex justify-between items-center border ${
+              universityError ? 'border-destructive-600' : 'border-neutral-200'
+            } rounded-lg p-3 text-xs text-neutral-700 h-10 bg-white shadow-sm`}
+          >
+            {communitySelected?.name || 'Select University'}
+            {communitySelected?.name ? (
+              <FaXmark
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setValueGroup('community', { name: '', id: '' })
+                  //setSelectedUniversity({ name: '', id: '' })
+                }}
+                className="w-4 h-4 ml-2"
+              />
             ) : (
-              <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
-                <p className="p-3 text-gray-500">{isJoined ? 'No results found' : 'You dont have a verified university'}</p>
-              </div>
+              <BiChevronDown className="w-4 h-4 ml-2" />
             )}
-          </div>
-        )}
-      </div>
+          </button>
+          {universityError && <p className="text-destructive-600 text-xs mt-1">Select university to filter based on student or faculty.</p>}
+          {showDropdown && (
+            <div className="absolute left-0 top-full mt-2 w-full max-h-64 bg-white shadow-lg border border-neutral-300 rounded-lg z-50 overflow-y-auto custom-scrollbar">
+              {userProfileData && userProfileData.email!.length > 0 ? (
+                userProfileData.email!.map((university: any) => (
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setValueGroup('community', { name: university.UniversityName, id: university?.communityId })
+                      setShowDropdown(false)
+                      setUniversityError(false)
+                    }}
+                    key={university?._id}
+                    className="bg-white rounded-md hover:bg-surface-primary-50 py-1 cursor-pointer"
+                  >
+                    <CollegeResult university={university} />
+                  </div>
+                ))
+              ) : (
+                <div className="bg-white rounded-lg border-b border-neutral-200 text-black">
+                  <p className="p-3 text-gray-500">{isJoined ? 'No results found' : 'You dont have a verified university'}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div
         className="flex flex-col gap-8 mb-4"
