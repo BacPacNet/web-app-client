@@ -4,7 +4,8 @@ import useDebounce from '@/hooks/useDebounce'
 import useCookie from '@/hooks/useCookie'
 import { LoginForm, UserResponseType } from '@/models/auth'
 import { ProfileConnection } from '@/types/Connections'
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { ADMIN_DASHBOARD_ACCESS_TOKEN_COOKIE } from '@/utils/adminDashboard'
 import { client } from './api-Client'
 
@@ -28,6 +29,11 @@ export const useAdminDashboardLogin = () => {
   })
 }
 
+export type SemesterStart = {
+  day: number
+  month: number
+}
+
 export type AdminDashboardStatsResponse = {
   totalUsers: number
   totalStudentUsers: number
@@ -35,6 +41,7 @@ export type AdminDashboardStatsResponse = {
   totalGroups: number
   totalOfficialGroups: number
   totalCasualGroups: number
+  semesterStart?: SemesterStart | null
 }
 
 const getAdminDashboardStats = async (universityName: string, token: string): Promise<AdminDashboardStatsResponse> => {
@@ -53,6 +60,36 @@ export const useAdminDashboardStats = (universityName: string) => {
     queryKey: ['admin-dashboard-stats', universityName],
     queryFn: () => getAdminDashboardStats(universityName, accessToken),
     enabled: Boolean(universityName && accessToken),
+  })
+}
+
+export type SetSemesterStartPayload = {
+  day: number
+  month: number
+}
+
+export async function setSemesterStart(universityName: string, token: string, data: SetSemesterStartPayload) {
+  const response = await client(`/university/${encodeURIComponent(universityName)}/semester-start`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+  return response
+}
+
+export function useSetSemesterStart(universityName: string) {
+  const [accessToken] = useCookie(ADMIN_DASHBOARD_ACCESS_TOKEN_COOKIE)
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: SetSemesterStartPayload) => setSemesterStart(universityName, accessToken, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats', universityName] })
+      showCustomSuccessToast('Semester start updated successfully')
+    },
+    onError: (error: any) => {
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 
