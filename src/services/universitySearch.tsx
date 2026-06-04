@@ -86,3 +86,20 @@ export function useGetPartnerUniversities() {
     retry: false,
   })
 }
+
+export async function getUniversitiesHighlightedPostd(universityId: string): Promise<any[]> {
+  const response = await client(`/university/highlights/${universityId}`)
+
+  return response
+}
+
+export function useGetUniversitiesHighlightedPostd(universityId: string) {
+  console.log('universityId', universityId)
+  return useQuery<any, Error>({
+    queryKey: ['universitiesHighlightedPostd', universityId],
+    queryFn: () => getUniversitiesHighlightedPostd(universityId),
+    staleTime: 0,
+    retry: false,
+    enabled: !!universityId,
+  })
+}

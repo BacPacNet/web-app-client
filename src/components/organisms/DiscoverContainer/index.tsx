@@ -84,8 +84,10 @@ const DiscoverContainer = () => {
               </>
             ) : (
               <>
-                {partnerUniversitiesData?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} />)}
-                {data?.Universities?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} />)}
+                {partnerUniversitiesData?.map((item: any) => (
+                  <DiscoverUniversityCard key={item._id + 'partner'} data={item} isPartnerUniversity={true} />
+                ))}
+                {data?.Universities?.map((item: any) => <DiscoverUniversityCard key={item._id} data={item} isPartnerUniversity={false} />)}
               </>
             )}
           </div>
