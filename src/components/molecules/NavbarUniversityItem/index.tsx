@@ -203,6 +203,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       } else {
         setCommunity(subscribedCommunities[0] as Community)
       }
+      if (!isApplicantUser && firstVerifiedUniversity?.communityId) {
+        const defaultCommunity = subscribedCommunities.find((community) => community._id === firstVerifiedUniversity.communityId)
+        setCommunity((defaultCommunity ?? subscribedCommunities[0]) as Community)
+      } else {
+        setCommunity(subscribedCommunities[0] as Community)
+      }
     }
   }, [subscribedCommunities, communityId, selectedCommunityGroupCommunityId, isApplicantUser, firstVerifiedUniversity])
 
