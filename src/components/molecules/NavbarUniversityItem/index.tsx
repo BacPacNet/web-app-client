@@ -76,6 +76,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const { userData, userProfileData } = useUniStore()
   const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
   const firstVerifiedUniversity = userProfileData?.email?.[0]
+
   const { openModal } = useModal()
   const [selectedCommunityGroupCommunityId, setSelectedCommunityGroupCommunityId] = useCookie('selectedCommunityGroupCommunityId')
   const [isOpen, setIsOpen] = useState(false)
@@ -267,6 +268,12 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       setIsLoading(false)
     }
   }, [sort])
+
+  useEffect(() => {
+    if (subscribedCommunities) {
+      setIsLoading(false)
+    }
+  }, [subscribedCommunities])
 
   const tabData = [
     {
