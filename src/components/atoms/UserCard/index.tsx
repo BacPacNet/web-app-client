@@ -58,7 +58,7 @@ const UserCard: React.FC<UserCardProps> = ({
           <h3 className="font-semibold text-xs text-neutral-700">{user}</h3>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col items-start">
           {line1 && <p className="text-[10px] text-neutral-500">{line1}</p>}
           {line2 && <p className="text-[10px] text-neutral-500">{line2}</p>}
         </div>
