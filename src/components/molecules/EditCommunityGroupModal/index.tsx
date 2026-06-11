@@ -3,24 +3,19 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { FiCamera } from 'react-icons/fi'
 import { Controller, useForm } from 'react-hook-form'
-import { useGetCommunity, useUpdateCommunityGroup } from '@/services/community-university'
+import { useUpdateCommunityGroup } from '@/services/community-university'
 import { Spinner } from '../../spinner/Spinner'
 import InputBox from '../../atoms/Input/InputBox'
-import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupUsers, status, subCategories } from '@/types/CommuityGroup'
+import { CommunityGroupAccess, CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupUsers, status, subCategories } from '@/types/CommuityGroup'
 import badge from '@assets/badge.svg'
 import { useUniStore } from '@/store/store'
-
-import DeleteCommunityGroupModal from '../DeleteCommunityGroupModal'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
-import { filterData, filterFacultyData, getUniqueById } from '@/lib/communityGroup'
+import { filterData, filterFacultyData } from '@/lib/communityGroup'
 import { BsExclamationCircleFill } from 'react-icons/bs'
 import { useUploadToS3 } from '@/services/upload'
 import { UPLOAD_CONTEXT } from '@/types/Uploads'
-import UserSelectDropdown from '../UserSearchList'
 import SelectedUserTags from '@/components/atoms/SelectedUserTags'
-import { Users } from '@/types/Connections'
 import { useModal } from '@/context/ModalContext'
-import Buttons from '@/components/atoms/Buttons'
 import { IoClose } from 'react-icons/io5'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import { degreeAndMajors, occupationAndDepartment, value } from '@/types/RegisterForm'
@@ -33,6 +28,7 @@ import CustomTooltip from '@/components/atoms/CustomTooltip'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { handleFieldError, validateSingleImageFile } from '@/lib/utils'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { isApplicantRole } from '@/lib/userProfileSubtitle'
 import Image from 'next/image'
 import Switch from '@/components/atoms/Switch'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
@@ -41,11 +37,6 @@ import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRu
 type Props = {
   communityGroups: CommunityGroupType
   setNewGroup: (value: boolean) => void
-}
-
-type media = {
-  imageUrl: string
-  publicId: string
 }
 
 const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
@@ -63,6 +54,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [showSelectUsers, setShowSelectUsers] = useState<boolean>(false)
   const [filtersError, setFIltersError] = useState('')
   const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
+  const [isRequestRequiredToJoinGroup, setIsRequestRequiredToJoinGroup] = useState(communityGroups?.isRequestRequiredToJoinGroup ?? false)
   const { applyFilters } = useCommunityFilter()
 
   const {
@@ -95,7 +87,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     defaultValues: {
       title: title,
       description: initialDescription,
-      communityGroupAccess: communityGroupAccess,
       communityGroupLabel: communityGroupLabel,
       selectedUsers: [],
       studentYear: [],
@@ -113,7 +104,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const major = watch('major') || []
   const occupation = watch('occupation') || ''
   const affiliation = watch('affiliation') || []
-  const currentCommunityGroupAccess = watch('communityGroupAccess')
+  const inviteableUsers = useMemo(() => {
+    if (communityGroupAccess !== CommunityGroupAccess.UniversityWide) {
+      return communityUsers
+    }
+    return communityUsers.filter((user) => !isApplicantRole(user.role))
+  }, [communityUsers, communityGroupAccess])
 
   // Reset form when communityGroups changes
   useEffect(() => {
@@ -121,7 +117,6 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       reset({
         title: communityGroups.title,
         description: communityGroups.description,
-        communityGroupAccess: communityGroups.communityGroupAccess,
         communityGroupLabel: communityGroups.communityGroupLabel || '',
         selectedUsers: [],
         studentYear: [],
@@ -223,10 +218,22 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   }
 
   useEffect(() => {
-    if (currentCommunityGroupAccess === 'Private') {
+    if (communityGroupAccess === CommunityGroupAccess.OpenCampus) {
       setFetchVerifiedUsers(true)
     }
-  }, [currentCommunityGroupAccess])
+  }, [communityGroupAccess])
+
+  useEffect(() => {
+    if (communityGroupAccess === CommunityGroupAccess.UniversityWide) {
+      setIndividualsUsers((prev) => prev.filter((user) => !isApplicantRole(user.role)))
+    }
+  }, [communityGroupAccess])
+
+  useEffect(() => {
+    if (communityGroupAccess === CommunityGroupAccess.Hidden) {
+      setIsRequestRequiredToJoinGroup(false)
+    }
+  }, [communityGroupAccess])
 
   const onSubmit = async (data: any) => {
     setIsLoading(true)
@@ -243,10 +250,10 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
     const payload: any = {
       title: data.title,
       description: data.description,
-      communityGroupAccess: data.communityGroupAccess,
       communityGroupLabel: data.communityGroupLabel,
       ...communityGroupCategory,
       selectedUsers: mergedUsers,
+      isRequestRequiredToJoinGroup,
     }
 
     if (logoImage && typeof logoImage === 'object') {
@@ -304,6 +311,10 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const handleSelectIndividuals = (e: React.MouseEvent, user: any) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (communityGroupAccess === CommunityGroupAccess.UniversityWide && isApplicantRole(user.role)) {
+      return
+    }
 
     setIndividualsUsers((prev) => {
       const isAlreadySelected = prev.some((u) => u._id === user._id)
@@ -433,41 +444,34 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
           <div>
             <h2 className="font-medium text-sm text-neutral-900">Group Access</h2>
             <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                value="Public"
-                {...GroupRegister('communityGroupAccess', { required: true })}
-                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
-                       checked:border-primary relative bg-white
-                       after:content-[''] after:absolute after:top-[3px] after:left-[3px]
-                       after:w-[8px] after:h-[8px] after:rounded-full
-                       after:bg-primary after:hidden checked:after:block"
-              />
               <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Public</span>
-                <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
+                {communityGroupAccess === CommunityGroupAccess.OpenCampus && (
+                  <>
+                    <span className="text-neutral-900 text-[12px] font-medium">Open Campus</span>
+                    <p className="text-neutral-400 text-[12px]">Open to university members and external users.</p>
+                  </>
+                )}
+
+                {communityGroupAccess === CommunityGroupAccess.UniversityWide && (
+                  <>
+                    <span className="text-neutral-900 text-[12px] font-medium">University-wide</span>
+                    <p className="text-neutral-400 text-[12px]">Students and faculty can join</p>
+                  </>
+                )}
+                {communityGroupAccess === CommunityGroupAccess.Hidden && (
+                  <>
+                    <span className="text-neutral-900 text-[12px] font-medium">Hidden</span>
+                    <p className="text-neutral-400 text-[12px]">Group is invite-only and hidden from search</p>
+                  </>
+                )}
               </div>
             </label>
 
-            <label className="flex items-center gap-3">
-              {/* <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true })} className="w-[18px] h-[18px] mt-1" /> */}
-              <input
-                type="radio"
-                value="Private"
-                {...GroupRegister('communityGroupAccess', { required: true })}
-                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
-                       checked:border-primary relative bg-white
-                       after:content-[''] after:absolute after:top-[3px] after:left-[3px]
-                       after:w-[8px] after:h-[8px] after:rounded-full
-                       after:bg-primary after:hidden checked:after:block"
-              />
-              <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Private</span>
-                <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
+            {communityGroupAccess !== CommunityGroupAccess.Hidden && (
+              <div className="flex items-center gap-2">
+                <Switch checked={isRequestRequiredToJoinGroup} onCheckedChange={setIsRequestRequiredToJoinGroup} />
+                <p className="text-neutral-400 text-[12px]">Require users to request access before joining.</p>
               </div>
-            </label>
-            {GroupErrors.communityGroupAccess && (
-              <p className="text-red-500 text-2xs">{GroupErrors.communityGroupAccess.message?.toString() || 'This field is required'}</p>
             )}
           </div>
 
@@ -641,13 +645,17 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
             {filtersError?.length ? <p className="text-red-500 text-2xs ">{filtersError || 'This field is required'}</p> : ''}
           </div>
           <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
-          <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
+          {/* <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
             <div className=" flex  gap-2 items-center">
               <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />
               <p className="text-xs text-neutral-700  ">Show verified members only</p>
             </div>
-            <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
-          </div>
+            <Switch
+              checked={fetchVerifiedUsers}
+              onCheckedChange={setFetchVerifiedUsers}
+              disabled={communityGroupAccess === CommunityGroupAccess.OpenCampus}
+            />
+          </div> */}
           <div className="relative w-full flex flex-col">
             <div className=" flex items-center justify-between">
               <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
@@ -667,7 +675,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
 
             <VerifyUserSelectDropdown
               show={showSelectUsers}
-              users={communityUsers || []}
+              users={inviteableUsers || []}
               onSelect={handleSelectIndividuals}
               currentUserId={userProfileData?.users_id as string}
               selectedUsers={individualsUsers}

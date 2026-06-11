@@ -38,6 +38,47 @@ export enum CommunityGroupVisibility {
   PRIVATE = 'Private',
 }
 
+export enum CommunityGroupAccess {
+  // Public = 'Public',
+  // Private = 'Private',
+  OpenCampus = 'Open-campus',
+  UniversityWide = 'University-wide',
+  Hidden = 'Hidden',
+}
+
+export const GROUP_FILTER_ACCESS_OPTIONS = [CommunityGroupAccess.OpenCampus, CommunityGroupAccess.UniversityWide] as const
+
+export const GROUP_FILTER_TYPE_OPTIONS = ['Official', 'Casual'] as const
+
+export const GROUP_ACCESS_TOOLTIP_CONFIG: Record<
+  string,
+  {
+    title: string
+    description: string
+  }
+> = {
+  [CommunityGroupAccess.OpenCampus]: {
+    title: 'Open Campus',
+    description: 'Open to university members and external users.',
+  },
+  // [CommunityGroupAccess.Public]: {
+  //   title: 'Open Campus',
+  //   description: 'Open to university members and external users.',
+  // },
+  [CommunityGroupAccess.UniversityWide]: {
+    title: 'University-Only',
+    description: 'Access is limited to university students and faculty.',
+  },
+  [CommunityGroupAccess.Hidden]: {
+    title: 'Hidden',
+    description: 'Only users who have been invited can see this group.',
+  },
+  [CommunityGroupVisibility.PRIVATE]: {
+    title: 'Private',
+    description: 'Must request access to join the group. Only verified users can request access.',
+  },
+}
+
 export interface CreateCommunityGroupType {
   title: string
   description: string
@@ -56,6 +97,7 @@ export interface CreateCommunityGroupType {
   repostOption: string
   community: { name: string; id: string }
   communityLabel: string
+  isRequestRequiredToJoinGroup?: boolean
 }
 
 export enum status {
@@ -96,6 +138,7 @@ export interface CommunityGroupType {
   communityGroupLogoUrl?: S3UploadItem | null
   users: CommunityGroupUsers[]
   isCommunityGroupLive: boolean
+  isRequestRequiredToJoinGroup?: boolean
 }
 export interface AdminUserId {
   _id: string

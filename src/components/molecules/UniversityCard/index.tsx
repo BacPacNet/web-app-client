@@ -119,7 +119,7 @@ export default function UniversityCard({ communityID, isGroupAdmin, setIsGroupAd
                 </div>
               </PopoverContent>
             </Popover>
-          ) : communityData?.isAllowedToJoin ? (
+          ) : communityData?.isAllowedToJoin && !isGroupAdmin ? (
             <Buttons size="medium" onClick={handleToggleJoinCommunity}>
               Join Community
             </Buttons>

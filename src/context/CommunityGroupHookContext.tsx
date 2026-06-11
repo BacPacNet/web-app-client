@@ -7,6 +7,7 @@ interface ApplyFiltersParams {
   communityId: string
   selectedType?: string[]
   selectedFilters?: Record<string, string[]>
+  selectedLabel?: string[]
   sort?: string
 }
 
@@ -31,13 +32,20 @@ export function CommunityFilterProvider({ children }: { children: React.ReactNod
 
   const [filteredCommunityGroups, setFilteredCommunityGroups] = useState<Community | null>(null)
 
-  const applyFilters = async ({ communityId, selectedType = [], selectedFilters = {}, sort = 'userCountDesc' }: ApplyFiltersParams) => {
+  const applyFilters = async ({
+    communityId,
+    selectedType = [],
+    selectedFilters = {},
+    selectedLabel = [],
+    sort = 'userCountDesc',
+  }: ApplyFiltersParams) => {
     if (!communityId) return
 
     const response = await mutateAsync({
       communityId,
       selectedType,
       selectedFilters,
+      selectedLabel,
       sort,
     })
 

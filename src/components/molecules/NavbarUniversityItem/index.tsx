@@ -96,6 +96,7 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
   const [selectedCommunityImage, setSelectedCommunityImage] = useState(community?.communityLogoUrl.imageUrl || placeholder)
   const [selectCommunityId, selectedCommuntyGroupdId] = [communityId || community?._id, communityGroupId]
   const { data: subscribedCommunities } = useGetSubscribedCommunties()
+  const subscribedCommunitiesReady = subscribedCommunities !== undefined
   const [isLoading, setIsLoading] = useState(true)
   const { applyFilters, filteredCommunityGroups } = useCommunityFilter()
 
@@ -241,39 +242,30 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
       communityId: communityId || '',
       selectedType: selectedTypeMain,
       selectedFilters: selectedFiltersMain,
+      selectedLabel,
       sort,
     })
     setOpen(false)
   }
   useEffect(() => {
-    if (community?._id && isLoading) {
-      applyFilters({
-        communityId: community?._id || '',
-        selectedType: selectedTypeMain,
-        selectedFilters: selectedFiltersMain,
-        sort,
-      })
-      setIsLoading(false)
-    }
-  }, [community?._id, isLoading])
+    if (!subscribedCommunitiesReady) return
 
-  useEffect(() => {
-    if (sort && community?._id) {
-      applyFilters({
-        communityId: community?._id || '',
-        selectedType: selectedTypeMain,
-        selectedFilters: selectedFiltersMain,
-        sort,
-      })
-      setIsLoading(false)
+    if (!community?._id) {
+      if (subscribedCommunities?.length === 0) {
+        setIsLoading(false)
+      }
+      return
     }
-  }, [sort])
 
-  useEffect(() => {
-    if (subscribedCommunities) {
-      setIsLoading(false)
-    }
-  }, [subscribedCommunities])
+    applyFilters({
+      communityId: community._id,
+      selectedType: selectedTypeMain,
+      selectedFilters: selectedFiltersMain,
+      selectedLabel,
+      sort,
+    })
+    setIsLoading(false)
+  }, [community?._id, subscribedCommunitiesReady, sort])
 
   const tabData = [
     {

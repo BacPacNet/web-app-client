@@ -1,17 +1,15 @@
 import Buttons from '@/components/atoms/Buttons'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
-import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
+import PostVisibilityDropdown from '@/components/molecules/PostVisibilityDropdown'
 import { Spinner } from '@/components/spinner/Spinner'
 import { cleanInnerHTML, getMimeTypeFromUrl, imageMimeTypes, validateUploadedFiles } from '@/lib/utils'
 import { useCreateUserPost } from '@/services/community-timeline'
 import { useUploadToS3 } from '@/services/upload'
-import { CommunityPostType, PostInputData, PostTypeOption, UserPostTypeOption } from '@/types/constants'
+import { PostInputData, TIMELINE_VISIBILITY_OPTIONS, UserPostType } from '@/types/constants'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
 import Quill from 'quill'
 import React, { useRef, useState } from 'react'
 import { GoFileMedia } from 'react-icons/go'
-import gif from '@/assets/gif.svg'
 import { TbFileUpload } from 'react-icons/tb'
 import MediaPreview from '@/components/molecules/MediaPreview'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
@@ -36,7 +34,7 @@ function TimelineCreatePost() {
   const quillRef = useRef<Quill | null>(null)
   const quillHTMLState = useRef(null)
   const [files, setFiles] = useState<FileWithId[]>([])
-  const [postAccessType, setPostAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
+  const [postVisibility, setPostVisibility] = useState<UserPostType>(UserPostType.PUBLIC)
   const { mutateAsync: CreateTimelinePost, isPending } = useCreateUserPost()
   const [isPostCreating, setIsPostCreating] = useState(false)
   const { mutateAsync: uploadtoS3 } = useUploadToS3()
@@ -93,7 +91,7 @@ function TimelineCreatePost() {
 
     const payload: PostInputData = {
       content: cleanInnerHTML(quillHTMLState.current!),
-      PostType: PostTypeOption[postAccessType as never],
+      PostType: postVisibility,
     }
 
     try {
@@ -219,6 +217,7 @@ function TimelineCreatePost() {
           </div>
 
           <div className="flex gap-2 h-10">
+            <PostVisibilityDropdown value={postVisibility} onChange={setPostVisibility} options={TIMELINE_VISIBILITY_OPTIONS} />
             <Buttons className="w-[70px]" size="medium" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>
