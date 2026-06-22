@@ -70,6 +70,11 @@ export interface CommunityGroup {
   users: CommunityGroupUsers[]
 }
 
+export interface PostPromote {
+  universityId: string
+  isAdminOfUni: boolean
+}
+
 export interface communityPostType {
   _id: string
   user: {
@@ -114,4 +119,5 @@ export interface communityPostType {
   communityGroupId?: string
   postStatus: communityPostStatus
   isPostLive: boolean
+  promote?: PostPromote
 }

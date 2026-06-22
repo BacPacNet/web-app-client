@@ -20,6 +20,7 @@ import { motion } from 'framer-motion'
 import PostCommunityHolder from '../PostCommunityHolder'
 import { ContentType } from '@/content/constant'
 import { formatHtmlContentForCodeBlocks } from '@/lib/formatHtmlContentForCodeBlocks'
+import { PostPromote } from '@/types/Community'
 
 dayjs.extend(relativeTime)
 
@@ -98,6 +99,7 @@ interface PostProps {
 
     isCommunityAdmin?: boolean
   }[]
+  promote?: PostPromote
 }
 
 const PostCard = React.memo(
@@ -136,6 +138,7 @@ const PostCard = React.memo(
     isReply,
     commentID,
     communities,
+    promote,
   }: PostProps) => {
     const { userData } = useUniStore()
     const commentSectionRef = useRef<HTMLDivElement>(null)
@@ -346,7 +349,14 @@ const PostCard = React.memo(
               ) : null}
 
               <div className="text-primary-500 text-sm md:text-md bg-surface-primary-50 rounded-full flex p-1">
-                <PostCartOption isSelfPost={adminId === userData?.id} postID={postID} isType={type} postType={postCategory} />
+                <PostCartOption
+                  isSelfPost={adminId === userData?.id}
+                  postID={postID}
+                  isType={type}
+                  postType={postCategory}
+                  promote={promote}
+                  universityName={university}
+                />
               </div>
             </div>
           </div>

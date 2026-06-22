@@ -55,6 +55,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
   const [filtersError, setFIltersError] = useState('')
   const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
   const [isRequestRequiredToJoinGroup, setIsRequestRequiredToJoinGroup] = useState(communityGroups?.isRequestRequiredToJoinGroup ?? false)
+  const [requirePostApproval, setRequirePostApproval] = useState(communityGroups?.requirePostApproval ?? false)
   const { applyFilters } = useCommunityFilter()
 
   const {
@@ -124,6 +125,8 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
         occupation: [],
         affiliation: [],
       })
+      setIsRequestRequiredToJoinGroup(communityGroups.isRequestRequiredToJoinGroup ?? false)
+      setRequirePostApproval(communityGroups.requirePostApproval ?? false)
     }
   }, [communityGroups, reset])
 
@@ -254,6 +257,7 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
       ...communityGroupCategory,
       selectedUsers: mergedUsers,
       isRequestRequiredToJoinGroup,
+      requirePostApproval,
     }
 
     if (logoImage && typeof logoImage === 'object') {
@@ -527,6 +531,12 @@ const EditCommunityGroupModal = ({ setNewGroup, communityGroups }: Props) => {
                 </div>
               )}
             </label>
+            {(communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL || communityGroups?.status === status.pending) && (
+              <div className="flex items-center gap-2 ">
+                <Switch checked={requirePostApproval} onCheckedChange={setRequirePostApproval} />
+                <p className="text-neutral-400 text-[12px]">Require posts to be approved before publishing.</p>
+              </div>
+            )}
           </div>
 
           <div>

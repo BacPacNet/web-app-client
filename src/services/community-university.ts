@@ -2,7 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult
 import { client } from './api-Client'
 import axios from 'axios'
 import useCookie from '@/hooks/useCookie'
-import { PostType } from '@/types/constants'
+import { CommunityPostData, PostType } from '@/types/constants'
 import { Community } from '@/types/Community'
 import { showCustomDangerToast, showCustomInfoToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { CommunityGroupType } from '@/types/CommuityGroup'
@@ -564,11 +564,14 @@ export const useCreateGroupPost = () => {
   const [cookieValue] = useCookie('uni_user_token')
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: any) => CreateGroupPost(data, cookieValue),
+    mutationFn: (data: CommunityPostData) => {
+      const { requirePostApproval: _, ...postData } = data
+      return CreateGroupPost(postData, cookieValue)
+    },
 
     onSuccess: (_, req) => {
       queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
-      if (!req?.isCommunityAdmin && req?.isGroupOfficial) {
+      if (req?.requirePostApproval) {
         showCustomInfoToast('Your post has been submitted for approval.')
       } else {
         showCustomSuccessToast('Post created successfully')

@@ -57,7 +57,7 @@ const SinglePost = () => {
     )
   }
 
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName, isPostVerified } =
+  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName, isPostVerified, promote } =
     item
 
   return (
@@ -94,6 +94,7 @@ const SinglePost = () => {
           isReply={isReply == 'true'}
           commentID={commentID || ''}
           communities={profile?.communities}
+          promote={promote}
         />
       </div>
     </div>

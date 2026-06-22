@@ -68,6 +68,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
   const [isRequestRequiredToJoinGroup, setIsRequestRequiredToJoinGroup] = useState(false)
+  const [requirePostApproval, setRequirePostApproval] = useState(false)
   const { mutateAsync: createGroup, isPending } = useCreateCommunityGroup(isCommunityAdmin)
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const { applyFilters } = useCommunityFilter()
@@ -216,6 +217,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
       communityGroupLogoCoverUrl: CoverImageData?.data[0],
       universityAdminId: communityData?.adminId,
       isRequestRequiredToJoinGroup,
+      requirePostApproval,
     }
 
     createGroup(
@@ -345,6 +347,12 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
       setIsRequestRequiredToJoinGroup(false)
     }
   }, [communityGroupAccess])
+
+  useEffect(() => {
+    if (communityGroupType !== 'Official') {
+      setRequirePostApproval(false)
+    }
+  }, [communityGroupType])
 
   const handleLogoImage = (file: File) => {
     setLogoImage(file)
@@ -572,6 +580,12 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
                 <p className="text-neutral-400 text-[12px] ">Require university approval</p>
               </div>
             </label>
+            {communityGroupType === 'Official' && (
+              <div className="flex items-center gap-2 ">
+                <Switch checked={requirePostApproval} onCheckedChange={setRequirePostApproval} />
+                <p className="text-neutral-400 text-[12px]">Require posts to be approved before publishing.</p>
+              </div>
+            )}
             {errors.communityGroupType && <p className="text-red-500 text-2xs ">This field is required</p>}
           </div>
 
