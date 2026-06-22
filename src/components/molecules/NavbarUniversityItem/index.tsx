@@ -267,12 +267,6 @@ export default function NavbarUniversityItem({ setActiveMenu, toggleLeftNavbar }
     setIsLoading(false)
   }, [community?._id, subscribedCommunitiesReady, sort])
 
-  useEffect(() => {
-    if (subscribedCommunities) {
-      setIsLoading(false)
-    }
-  }, [subscribedCommunities])
-
   const tabData = [
     {
       label: 'Joined',

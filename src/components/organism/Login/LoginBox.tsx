@@ -27,7 +27,6 @@ const LoginBox = () => {
       const emailValue = localStorage.getItem('registeredEmail')
       if (emailValue) setValue('email', emailValue)
     }
-    console.log('Inside LoginBox')
   }, [])
 
   const onSubmit = async (data: LoginForm) => {

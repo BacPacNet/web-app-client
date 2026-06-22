@@ -98,6 +98,7 @@ export interface CreateCommunityGroupType {
   community: { name: string; id: string }
   communityLabel: string
   isRequestRequiredToJoinGroup?: boolean
+  requirePostApproval?: boolean
 }
 
 export enum status {
@@ -139,6 +140,7 @@ export interface CommunityGroupType {
   users: CommunityGroupUsers[]
   isCommunityGroupLive: boolean
   isRequestRequiredToJoinGroup?: boolean
+  requirePostApproval?: boolean
 }
 export interface AdminUserId {
   _id: string

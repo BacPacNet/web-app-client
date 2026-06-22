@@ -35,9 +35,10 @@ interface Props {
   communityGroupId: string
   communityGroupAdminId?: string
   isOfficial?: boolean
+  requirePostApproval?: boolean
 }
 
-function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdminId, isOfficial }: Props) {
+function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdminId, isOfficial, requirePostApproval }: Props) {
   const quillRef = useRef<Quill | null>(null)
   const quillHTMLState = useRef(null)
   const { userProfileData } = useUniStore()
@@ -100,6 +101,7 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
         isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) as boolean,
         isCommunityAdmin: communityGroupAdminId == userProfileData?.users_id,
         isGroupOfficial: isOfficial,
+        ...(requirePostApproval && { requirePostApproval }),
       }
 
       // Upload image if present

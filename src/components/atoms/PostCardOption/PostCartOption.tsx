@@ -1,5 +1,6 @@
 'use client'
 import DeleteModal from '@/components/molecules/DeleteModal'
+import PromotePostModal from '@/components/molecules/PromotePostModal'
 import ReportContentModal from '@/components/molecules/ReportContentModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { ContentType } from '@/content/constant'
@@ -7,27 +8,30 @@ import { useModal } from '@/context/ModalContext'
 import { useDeleteCommunityPost } from '@/services/community-post'
 import { useDeleteUserPost } from '@/services/community-timeline'
 import { useUniStore } from '@/store/store'
+import { PostPromote } from '@/types/Community'
+import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import React, { useState } from 'react'
 import { FiMoreHorizontal } from 'react-icons/fi'
-import { HiOutlineBell, HiOutlineFlag } from 'react-icons/hi'
-import { MdDeleteForever, MdOutlineBookmarkBorder, MdOutlineOpenInNew } from 'react-icons/md'
+import { HiOutlineFlag } from 'react-icons/hi'
+import { MdDeleteForever, MdOutlineOpenInNew } from 'react-icons/md'
+import publicIcon from '@assets/post/globe.svg'
 
 interface PostOptionType {
   postID: string
   isType: 'Community' | 'Timeline'
   isSelfPost: boolean
   postType: ContentType
+  promote?: PostPromote
+  universityName?: string
 }
 
-const PostCartOption = ({ postID, isType, isSelfPost, postType }: PostOptionType) => {
+const PostCartOption = ({ postID, isType, isSelfPost, postType, promote, universityName }: PostOptionType) => {
   const { mutate: mutateDeletePost } = useDeleteUserPost()
   const { mutate: mutateDeleteCommunityPost } = useDeleteCommunityPost()
   const [isOpen, setIsOpen] = useState(false)
   const { openModal } = useModal()
-  const router = useRouter()
   const { userData } = useUniStore()
 
   const handleDeletePost = () => {
@@ -46,8 +50,18 @@ const PostCartOption = ({ postID, isType, isSelfPost, postType }: PostOptionType
       'h-auto'
     )
   }
+
   const handleReportPost = () => {
     openModal(<ReportContentModal postID={postID} reporterId={userData?.id || ''} contentType={postType} />, 'h-auto', false)
+  }
+
+  const handlePromotePost = () => {
+    if (!promote?.universityId) return
+    openModal(
+      <PromotePostModal postID={postID} isType={isType} universityId={promote.universityId} universityName={universityName || ''} />,
+      'h-auto ',
+      false
+    )
   }
 
   return (
@@ -57,6 +71,13 @@ const PostCartOption = ({ postID, isType, isSelfPost, postType }: PostOptionType
       </PopoverTrigger>
       <PopoverContent onClick={() => setIsOpen(false)} className="relative top-0 right-16 w-auto border-none  bg-white shadow-card p-0">
         <div className="flex flex-col">
+          {promote?.isAdminOfUni && (
+            <div onClick={handlePromotePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
+              <Image src={publicIcon} alt="promote" width={16} height={16} />
+              <p className="font-medium text-xs text-neutral-800">Promote This Post</p>
+            </div>
+          )}
+
           <Link
             target="_blank"
             rel="noopener noreferrer"

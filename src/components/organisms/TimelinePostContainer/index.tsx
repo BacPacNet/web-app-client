@@ -118,6 +118,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
         isPostVerified={post.isPostVerified}
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
         communities={post?.userProfile?.communities}
+        promote={post.promote}
       />
     ))
   }, [timlineDatas, showCommentSection])

@@ -1,7 +1,19 @@
+import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
-import { useQuery } from '@tanstack/react-query'
+import { AxiosErrorType } from '@/types/constants'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { client } from './api-Client'
 import axios from 'axios'
+
+export type HighlightPostType = 'CommunityPost' | 'UserPost'
+
+export type AddUniversityHighlightPostPayload = {
+  postId: string
+  postType: HighlightPostType
+  position: number
+}
 
 export function useUniversitySearch(searchTerm: string, page: number, limit: number) {
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -94,12 +106,51 @@ export async function getUniversitiesHighlightedPostd(universityId: string): Pro
 }
 
 export function useGetUniversitiesHighlightedPostd(universityId: string) {
-  console.log('universityId', universityId)
   return useQuery<any, Error>({
     queryKey: ['universitiesHighlightedPostd', universityId],
     queryFn: () => getUniversitiesHighlightedPostd(universityId),
     staleTime: 0,
     retry: false,
     enabled: !!universityId,
+  })
+}
+
+export async function addUniversityHighlightPost(universityId: string, data: AddUniversityHighlightPostPayload, token: string) {
+  const response = await client(`/university/highlights/${universityId}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+  return response
+}
+
+export function useAddUniversityHighlightPost(universityId: string, universityName?: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  return useMutation({
+    mutationFn: (data: AddUniversityHighlightPostPayload) => addUniversityHighlightPost(universityId, data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['universitiesHighlightedPostd', universityId] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      showToast("Post has been successfully featured in the university's discovery page.", {
+        variant: 'success',
+        duration: 5000,
+        position: 'bottom-center',
+        actions: universityName
+          ? [
+              {
+                label: 'Check Post',
+                onClick: () => router.push(`/discover/${encodeURIComponent(universityName)}`),
+              },
+            ]
+          : [],
+      })
+    },
+    onError: (error: AxiosErrorType) => {
+      showCustomDangerToast(error.response?.data.message as string)
+    },
   })
 }
