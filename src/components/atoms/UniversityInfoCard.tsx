@@ -8,7 +8,7 @@ export interface UniversityInfoCardProps {
 }
 
 const UniversityInfoCard: React.FC<UniversityInfoCardProps> = ({ icon: Icon, title, info }) => (
-  <div>
+  <div className="flex flex-col items-start gap-2 w-full rounded-lg">
     <p className="text-primary-700 text-[20px] flex gap-1 items-center font-semibold font-poppins">
       <Icon size={20} />
       {title}
