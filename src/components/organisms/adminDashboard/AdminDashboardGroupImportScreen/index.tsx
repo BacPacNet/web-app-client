@@ -98,7 +98,7 @@ const COLUMNS: EditableColumn[] = [
   { key: 'communityGroupCategorySub', label: 'Subcategory', required: true },
 ]
 
-const ACCESS_VALUES = ['Private', 'Public']
+const ACCESS_VALUES = ['Private', 'Public', 'University-wide', 'Hidden']
 const TYPE_VALUES = ['casual', 'official']
 const LABEL_VALUES = ['Course', 'Club', 'Circle', 'Other']
 const USER_ID_NOT_FOUND_MESSAGE = 'No user with this id exist'
@@ -374,7 +374,7 @@ const validateRow = (row: GroupImportRow): RowValidation => {
   }
 
   if (!ACCESS_VALUES.includes(row.communityGroupAccess)) {
-    errors.communityGroupAccess = 'Access must be Private or Public'
+    errors.communityGroupAccess = 'Access must be Private, Public, University-wide, or Hidden'
   }
 
   if (!TYPE_VALUES.includes(row.communityGroupType)) {

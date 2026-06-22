@@ -1,6 +1,6 @@
 'use client'
 import Buttons from '@/components/atoms/Buttons'
-import { subCategories } from '@/types/CommuityGroup'
+import { GROUP_FILTER_ACCESS_OPTIONS, GROUP_FILTER_TYPE_OPTIONS, subCategories } from '@/types/CommuityGroup'
 import React, { useEffect, useState } from 'react'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { useModal } from '@/context/ModalContext'
@@ -10,7 +10,6 @@ import { TRACK_EVENT } from '@/content/constant'
 import mixpanel from 'mixpanel-browser'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
 
-const GroupCategories = ['Private', 'Public', 'Official', 'Casual']
 const GroupLabelCategories = ['Course', 'Club', 'Circle', 'Other']
 
 type Props = {
@@ -158,10 +157,26 @@ const CommunityGroupFilterComponent: React.FC<Props> = ({
 
         <div className="">
           <CollapsibleMultiSelect
-            title="Group Access & Type"
+            title="Group Access"
             titleFontSize="sm"
-            options={GroupCategories}
-            selectedOptions={selectedType || []}
+            options={[...GROUP_FILTER_ACCESS_OPTIONS]}
+            selectedOptions={selectedType.filter((item) =>
+              GROUP_FILTER_ACCESS_OPTIONS.includes(item as (typeof GROUP_FILTER_ACCESS_OPTIONS)[number])
+            )}
+            onSelect={(value: string) => handleSelectTypes(value)}
+            alwaysExpanded={true}
+            alignStart={true}
+            borderBottom={false}
+            columnView={true}
+          />
+        </div>
+
+        <div className="">
+          <CollapsibleMultiSelect
+            title="Group Type"
+            titleFontSize="sm"
+            options={[...GROUP_FILTER_TYPE_OPTIONS]}
+            selectedOptions={selectedType.filter((item) => GROUP_FILTER_TYPE_OPTIONS.includes(item as (typeof GROUP_FILTER_TYPE_OPTIONS)[number]))}
             onSelect={(value: string) => handleSelectTypes(value)}
             alwaysExpanded={true}
             alignStart={true}

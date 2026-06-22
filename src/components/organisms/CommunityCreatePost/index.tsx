@@ -4,7 +4,8 @@ import { cleanInnerHTML, getMimeTypeFromUrl, imageMimeTypes, validateUploadedFil
 import { useCreateGroupPost } from '@/services/community-university'
 import { useUploadToS3 } from '@/services/upload'
 import { useUniStore } from '@/store/store'
-import { CommunityPostData, CommunityPostType, PostInputType, PostTypeOption, UserPostTypeOption } from '@/types/constants'
+import PostVisibilityDropdown from '@/components/molecules/PostVisibilityDropdown'
+import { COMMUNITY_VISIBILITY_OPTIONS, CommunityPostData, PostInputType, UserPostType } from '@/types/constants'
 import dynamic from 'next/dynamic'
 import Quill from 'quill'
 import React, { useRef, useState } from 'react'
@@ -42,7 +43,8 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
   const { userProfileData } = useUniStore()
   const [quillInstance, setQuillInstance] = useState<Quill | null>(null)
   const [files, setFiles] = useState<FileWithId[]>([])
-  const [postAccessType] = useState<CommunityPostType | UserPostTypeOption>(UserPostTypeOption.PUBLIC)
+  const [postVisibility, setPostVisibility] = useState<UserPostType>(UserPostType.PUBLIC)
+  const isGroupPost = Boolean(communityGroupId?.length)
   const { mutate: CreateGroupPost, isPending } = useCreateGroupPost()
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const [isPostCreating, setIsPostCreating] = useState(false)
@@ -92,7 +94,7 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
     try {
       const basePayload: CommunityPostData = {
         content: cleanInnerHTML(quillHTMLState.current!),
-        communityPostsType: PostTypeOption[postAccessType as never],
+        communityPostsType: postVisibility,
         communityId,
         communityGroupId: communityGroupId || null,
         isPostVerified: userProfileData?.email?.some((entry) => entry.communityId === communityId) as boolean,
@@ -267,17 +269,7 @@ function CommunityCreatePost({ communityId, communityGroupId, communityGroupAdmi
             </label>
           </div>
           <div className="flex gap-2 h-10">
-            {/*<SelectDropdown
-              options={Object.values(CommunityPostTypeOption)}
-              value={postAccessType}
-              onChange={(e: any) => setPostAccessType(e)}
-              placeholder=""
-              icon={'single'}
-              // search={true}
-              err={false}
-              showIcon={true}
-              isAllowedToRemove={false}
-            />*/}
+            {!isGroupPost && <PostVisibilityDropdown value={postVisibility} onChange={setPostVisibility} options={COMMUNITY_VISIBILITY_OPTIONS} />}
             <Buttons className="w-[70px]" size="medium" disabled={isPending} onClick={handleSubmit}>
               {isPending || isPostCreating ? <Spinner /> : 'Post'}
             </Buttons>

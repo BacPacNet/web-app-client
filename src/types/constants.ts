@@ -100,6 +100,7 @@ export enum CommunityPostType {
 export enum PostTypeOption {
   'Public' = 'PUBLIC',
   'Followers only' = 'FOLLOWER_ONLY',
+  'University-wide' = 'UNIVERSITY_WIDE',
   'Mutual' = 'MUTUAL',
   'Only me' = 'ONLY_ME',
 }
@@ -107,15 +108,29 @@ export enum PostTypeOption {
 export enum UserPostTypeOption {
   PUBLIC = 'Public',
   FOLLOWER_ONLY = 'Followers only',
+  UNIVERSITY_WIDE = 'University-wide',
   MUTUAL = 'Mutual',
   ONLY_ME = 'Only me',
 }
 export enum UserPostType {
   PUBLIC = 'PUBLIC',
   FOLLOWER_ONLY = 'FOLLOWER_ONLY',
+  UNIVERSITY_WIDE = 'UNIVERSITY_WIDE',
   MUTUAL = 'MUTUAL',
   ONLY_ME = 'ONLY_ME',
 }
+
+export const POST_VISIBILITY_LABELS: Record<UserPostType, string> = {
+  [UserPostType.PUBLIC]: 'All',
+  [UserPostType.FOLLOWER_ONLY]: 'Followers',
+  [UserPostType.UNIVERSITY_WIDE]: 'University',
+  [UserPostType.MUTUAL]: 'Mutual',
+  [UserPostType.ONLY_ME]: 'Only me',
+}
+
+export const TIMELINE_VISIBILITY_OPTIONS = [UserPostType.PUBLIC, UserPostType.FOLLOWER_ONLY, UserPostType.UNIVERSITY_WIDE]
+
+export const COMMUNITY_VISIBILITY_OPTIONS = [UserPostType.PUBLIC, UserPostType.UNIVERSITY_WIDE]
 
 export interface PostInputData {
   content: string | any

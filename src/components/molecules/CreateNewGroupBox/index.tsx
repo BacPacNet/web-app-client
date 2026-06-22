@@ -9,7 +9,7 @@ import InputBox from '../../atoms/Input/InputBox'
 import { withInputLengthRules } from '@/components/atoms/Input/withInputLengthRules'
 import { IoClose } from 'react-icons/io5'
 import { useUniStore } from '@/store/store'
-import { CommunityGroupTypeEnum, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
+import { CommunityGroupAccess, CommunityGroupTypeEnum, CreateCommunityGroupType, subCategories } from '@/types/CommuityGroup'
 import { CommunityUsers } from '@/types/Community'
 import CollapsibleMultiSelect from '@/components/atoms/CollapsibleMultiSelect'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
@@ -41,6 +41,7 @@ import Image from 'next/image'
 import { TRACK_EVENT } from '@/content/constant'
 import mixpanel from 'mixpanel-browser'
 import { useCommunityFilter } from '@/context/CommunityGroupHookContext'
+import { isApplicantRole } from '@/lib/userProfileSubtitle'
 
 type Props = {
   communityId: string
@@ -66,7 +67,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
   const [filteredMajorsCount, setFilteredMajorsCount] = useState<Record<string, number>>()
   const [filteredOccupationCount, setFilteredOccupationCount] = useState<Record<string, number>>()
   const [filteredAffiliationCount, setFilteredAffiliationCount] = useState<Record<string, number>>()
-  const [fetchVerifiedUsers, setFetchVerifiedUsers] = useState(false)
+  const [isRequestRequiredToJoinGroup, setIsRequestRequiredToJoinGroup] = useState(false)
   const { mutateAsync: createGroup, isPending } = useCreateCommunityGroup(isCommunityAdmin)
   const { mutateAsync: uploadToS3 } = useUploadToS3()
   const { applyFilters } = useCommunityFilter()
@@ -101,6 +102,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
   const community = watch('community')
   const communityGroupType = watch('communityGroupType')
   const communityGroupAccess = watch('communityGroupAccess')
+  const fetchVerifiedUsers = communityGroupAccess === CommunityGroupAccess.UniversityWide
 
   const { data: communityData } = useGetCommunity(community.id)
   const {
@@ -111,6 +113,13 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
   } = useCommunityFilteredUsers(communityId, fetchVerifiedUsers, searchInput)
 
   const communityUsers = communityUsersData?.pages.flatMap((page) => page.data).filter((user) => user.users_id !== userProfileData?.users_id) || []
+
+  const inviteableUsers = useMemo(() => {
+    if (communityGroupAccess !== CommunityGroupAccess.UniversityWide) {
+      return communityUsers
+    }
+    return communityUsers.filter((user) => !isApplicantRole(user.role))
+  }, [communityUsers, communityGroupAccess])
 
   const handleSelect = (category: string, option: string) => {
     setSelectedFilters((prev: any) => {
@@ -206,6 +215,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
       communityGroupLogoUrl: logoImageData?.data[0],
       communityGroupLogoCoverUrl: CoverImageData?.data[0],
       universityAdminId: communityData?.adminId,
+      isRequestRequiredToJoinGroup,
     }
 
     createGroup(
@@ -303,6 +313,10 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
     e.preventDefault()
     e.stopPropagation()
 
+    if (communityGroupAccess === CommunityGroupAccess.UniversityWide && isApplicantRole(user.role)) {
+      return
+    }
+
     setIndividualsUsers((prev) => {
       const isAlreadySelected = prev.some((u) => u._id === user._id)
 
@@ -315,8 +329,20 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
   }
 
   useEffect(() => {
-    if (communityGroupAccess === 'Private') {
-      setFetchVerifiedUsers(true)
+    if (communityGroupAccess === CommunityGroupAccess.UniversityWide) {
+      setIndividualsUsers((prev) => prev.filter((user) => !isApplicantRole(user.role)))
+    }
+  }, [communityGroupAccess])
+
+  useEffect(() => {
+    if (communityGroupAccess === CommunityGroupAccess.Hidden && communityGroupType === 'Official') {
+      setValue('communityGroupType', 'Casual')
+    }
+  }, [communityGroupAccess, communityGroupType, setValue])
+
+  useEffect(() => {
+    if (communityGroupAccess === CommunityGroupAccess.Hidden) {
+      setIsRequestRequiredToJoinGroup(false)
     }
   }, [communityGroupAccess])
 
@@ -422,28 +448,12 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
             <h2 className="font-medium text-sm text-neutral-900">
               Group Access <span className="text-destructive-600">*</span>
             </h2>
-            <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                value="Public"
-                {...GroupRegister('communityGroupAccess', { required: true })}
-                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
-                checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
-                after:w-[8px] after:h-[8px] after:rounded-full
-                after:bg-primary after:hidden checked:after:block"
-              />
-              <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Public</span>
-                <p className="text-neutral-400 text-[12px] ">Anyone can join</p>
-              </div>
-            </label>
 
             <label className="flex items-center gap-3">
               {/* <input type="radio" value="Private" {...GroupRegister('communityGroupAccess', { required: true }))} className="w-[18px] h-[18px] mt-1" /> */}
               <input
                 type="radio"
-                value="Private"
+                value={CommunityGroupAccess.OpenCampus}
                 {...GroupRegister('communityGroupAccess', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
@@ -452,11 +462,52 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
                 after:bg-primary after:hidden checked:after:block"
               />
               <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Private</span>
-                <p className="text-neutral-400 text-[12px] ">Permission to join required</p>
+                <span className="text-neutral-900 text-[12px] font-medium">Open Campus</span>
+                <p className="text-neutral-400 text-[12px] ">Open to university members and external users.</p>
+              </div>
+            </label>
+
+            <label className="flex items-center gap-3">
+              <input
+                type="radio"
+                value={CommunityGroupAccess.UniversityWide}
+                {...GroupRegister('communityGroupAccess', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
+              <div className="py-3">
+                <span className="text-neutral-900 text-[12px] font-medium">University-wide</span>
+                <p className="text-neutral-400 text-[12px] ">Students and faculty can join</p>
+              </div>
+            </label>
+
+            <label className="flex items-center gap-3">
+              <input
+                type="radio"
+                value={CommunityGroupAccess.Hidden}
+                {...GroupRegister('communityGroupAccess', { required: true })}
+                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
+                checked:border-primary relative bg-white
+                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
+                after:w-[8px] after:h-[8px] after:rounded-full
+                after:bg-primary after:hidden checked:after:block"
+              />
+              <div className="py-3">
+                <span className="text-neutral-900 text-[12px] font-medium">Hidden</span>
+                <p className="text-neutral-400 text-[12px] ">Group is invite-only and hidden from search</p>
               </div>
             </label>
             {errors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
+
+            {communityGroupAccess !== CommunityGroupAccess.Hidden && (
+              <div className="flex items-center gap-2">
+                <Switch checked={isRequestRequiredToJoinGroup} onCheckedChange={setIsRequestRequiredToJoinGroup} />
+                <p className="text-neutral-400 text-[12px]">Require users to request access before joining.</p>
+              </div>
+            )}
           </div>
 
           {/* communty group type  */}
@@ -485,16 +536,20 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
               </div>
             </label>
 
-            <label className="flex items-center gap-3">
+            <label
+              className={`flex items-center gap-3 ${communityGroupAccess === CommunityGroupAccess.Hidden ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <input
                 type="radio"
                 value="Official"
+                disabled={communityGroupAccess === CommunityGroupAccess.Hidden}
                 {...GroupRegister('communityGroupType', { required: true })}
                 className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
                 checked:border-primary relative bg-white
                 after:content-[''] after:absolute after:top-[3px] after:left-[3px]
                 after:w-[8px] after:h-[8px] after:rounded-full
-                after:bg-primary after:hidden checked:after:block"
+                after:bg-primary after:hidden checked:after:block
+                disabled:cursor-not-allowed"
               />
               <div className="py-3 ">
                 <div className="flex gap-4">
@@ -641,13 +696,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
           <div className="flex flex-col  items-start w-full">
             <h5 className="font-bold text-md text-neutral-900 font-poppins mt-[10px]">Add Members</h5>
           </div>
-          <div className=" flex justify-between items-center gap-2 border border-neutral-200 rounded-lg p-2 w-full">
-            <div className=" flex  gap-2 items-center">
-              <Image src={badge} width={16} height={16} alt="badge" className=" min-w-[16px]" />
-              <p className="text-xs text-neutral-700  ">Show verified members only</p>
-            </div>
-            <Switch checked={fetchVerifiedUsers} onCheckedChange={setFetchVerifiedUsers} disabled={communityGroupAccess === 'Private'} />
-          </div>
+
           <div className="relative w-full flex flex-col">
             <div className=" flex items-center justify-between">
               <label htmlFor="inviteFriends" className="font-medium text-sm text-neutral-900 mb-2">
@@ -666,7 +715,7 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
             />
             <VerifyUserSelectDropdown
               show={showSelectUsers}
-              users={communityUsers || []}
+              users={inviteableUsers || []}
               onSelect={handleSelectIndividuals}
               currentUserId={userProfileData?.users_id as string}
               selectedUsers={individualsUsers}
