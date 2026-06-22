@@ -58,12 +58,7 @@ const PostCartOption = ({ postID, isType, isSelfPost, postType, promote, univers
   const handlePromotePost = () => {
     if (!promote?.universityId) return
     openModal(
-      <PromotePostModal
-        postID={postID}
-        isType={isType}
-        universityId={promote.universityId}
-        universityName={universityName || ''}
-      />,
+      <PromotePostModal postID={postID} isType={isType} universityId={promote.universityId} universityName={universityName || ''} />,
       'h-auto ',
       false
     )

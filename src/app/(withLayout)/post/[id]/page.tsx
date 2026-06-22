@@ -57,8 +57,21 @@ const SinglePost = () => {
     )
   }
 
-  const { _id, user, user_id, profile, content, createdAt, imageUrl, likeCount, commentCount, communityName, communityGroupName, isPostVerified, promote } =
-    item
+  const {
+    _id,
+    user,
+    user_id,
+    profile,
+    content,
+    createdAt,
+    imageUrl,
+    likeCount,
+    commentCount,
+    communityName,
+    communityGroupName,
+    isPostVerified,
+    promote,
+  } = item
 
   return (
     <div className="w-full flex justify-center py-4 post-container">

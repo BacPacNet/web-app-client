@@ -6,7 +6,7 @@ import { useModal } from '@/context/ModalContext'
 import { HighlightPostType, useAddUniversityHighlightPost } from '@/services/universitySearch'
 import Link from 'next/link'
 import { HiArrowRight } from 'react-icons/hi'
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { AiOutlineExclamationCircle } from 'react-icons/ai'
 
 interface PromotePostModalProps {
   postID: string
