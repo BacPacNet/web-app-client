@@ -480,8 +480,6 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
               <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Open Campus</span>
                 <p className="text-neutral-400 text-[12px] ">Open to university members and external users.</p>
-                <span className="text-neutral-900 text-[12px] font-medium">Open Campus</span>
-                <p className="text-neutral-400 text-[12px] ">Open to university members and external users.</p>
               </div>
             </label>
 
@@ -516,35 +514,10 @@ const CreateNewGroup = ({ communityId, communityName, isCommunityAdmin }: Props)
               <div className="py-3">
                 <span className="text-neutral-900 text-[12px] font-medium">Hidden</span>
                 <p className="text-neutral-400 text-[12px] ">Group is invite-only and hidden from search</p>
-                <span className="text-neutral-900 text-[12px] font-medium">University-wide</span>
-                <p className="text-neutral-400 text-[12px] ">Students and faculty can join</p>
               </div>
             </label>
 
-            <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                value={CommunityGroupAccess.Hidden}
-                {...GroupRegister('communityGroupAccess', { required: true })}
-                className="w-[18px] h-[18px] mt-1 appearance-none rounded-full border-2 border-neutral-300
-                checked:border-primary relative bg-white
-                after:content-[''] after:absolute after:top-[3px] after:left-[3px]
-                after:w-[8px] after:h-[8px] after:rounded-full
-                after:bg-primary after:hidden checked:after:block"
-              />
-              <div className="py-3">
-                <span className="text-neutral-900 text-[12px] font-medium">Hidden</span>
-                <p className="text-neutral-400 text-[12px] ">Group is invite-only and hidden from search</p>
-              </div>
-            </label>
             {errors.communityGroupAccess && <p className="text-red-500 text-2xs">This field is required</p>}
-
-            {communityGroupAccess !== CommunityGroupAccess.Hidden && (
-              <div className="flex items-center gap-2">
-                <Switch checked={isRequestRequiredToJoinGroup} onCheckedChange={setIsRequestRequiredToJoinGroup} />
-                <p className="text-neutral-400 text-[12px]">Require users to request access before joining.</p>
-              </div>
-            )}
 
             {communityGroupAccess !== CommunityGroupAccess.Hidden && (
               <div className="flex items-center gap-2">
