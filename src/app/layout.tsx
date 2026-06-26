@@ -2,9 +2,9 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { Poppins } from 'next/font/google'
 import { ReactQueryClientProvider } from '@/utils/Provider'
-import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
+// import ZustandSocketProvider from '@/utils/ZustandSocketProvider'
 import { Toaster } from 'react-hot-toast'
-import LogoNavbar from '@/components/atoms/LogoNavbar'
+// import LogoNavbar from '@/components/atoms/LogoNavbar'
 import { ImageManager } from '@/components/molecules/ImageWrapper/ImageManager'
 import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
@@ -47,18 +47,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ReactQueryClientProvider>
           <MixPanelProvider>
-            <ZustandSocketProvider>
-              <CommunityFilterProvider>
-                <ModalProvider>
-                  <Toaster />
-                  {/* <ModalManager /> */}
-                  <ImageManager />
-                  <LogoNavbar />
-                  {children}
-                  {/*<Footer />*/}
-                </ModalProvider>
-              </CommunityFilterProvider>
-            </ZustandSocketProvider>
+            {/* <ZustandSocketProvider> */}
+            <CommunityFilterProvider>
+              <ModalProvider>
+                <Toaster />
+                {/* <ModalManager /> */}
+                <ImageManager />
+                {/* <LogoNavbar /> */}
+                {children}
+                {/*<Footer />*/}
+              </ModalProvider>
+            </CommunityFilterProvider>
+            {/* </ZustandSocketProvider> */}
           </MixPanelProvider>
         </ReactQueryClientProvider>
 

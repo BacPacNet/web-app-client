@@ -17,6 +17,7 @@ import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfileMenu from '../ProfileMenu'
 import NavigationMenu from '../NavigationMenu'
+import { useIsUserCommunityAdmin } from '@/services/user'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -24,14 +25,27 @@ interface Props {
 
 const nonPaddingUrls = ['/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
+const hiddenNavbarUrls = ['/admin']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
+  const shouldHideNavbar = hiddenNavbarUrls.some((path) => pathname.startsWith(path))
 
-  const { userProfileData, userData } = useUniStore()
+  const { userProfileData, userData, userCommunityAdmin, setUserCommunityAdmin } = useUniStore()
+  const { data: communityAdminData } = useIsUserCommunityAdmin()
+
+  useEffect(() => {
+    setUserCommunityAdmin(communityAdminData ?? null)
+  }, [communityAdminData, setUserCommunityAdmin])
+
+  const menuList = useMemo(() => {
+    if (!userCommunityAdmin?.isCommunityAdmin) return MENU_LIST
+
+    return [...MENU_LIST, { name: 'Admin', path: '/admin' }]
+  }, [userCommunityAdmin?.isCommunityAdmin])
 
   const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
@@ -90,6 +104,8 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowLeftNavbar(false)
   }
 
+  if (shouldHideNavbar) return null
+
   if (shouldHeaderRemove)
     return (
       <div className="w-full flex items-center justify-center bg-neutral-100">
@@ -124,7 +140,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />
+                <NavigationMenu menuList={menuList} currentPath={pathname} onNavigate={(path) => router.push(path)} />
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
             )}

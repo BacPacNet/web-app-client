@@ -14,13 +14,18 @@ interface NavigationMenuProps {
 }
 
 const NavigationMenu = ({ menuList, currentPath, onNavigate }: NavigationMenuProps) => {
+  const isMenuActive = (menuPath: string) => {
+    if (menuPath === '/admin') return currentPath.startsWith('/admin')
+    return currentPath === menuPath
+  }
+
   return (
     <div className="flex gap-6 px-4">
       {menuList.map((menu, index) => (
         <motion.p
           onClick={() => onNavigate(menu.path)}
           key={index}
-          className={`text-neutral-800 text-xs cursor-pointer ${currentPath === menu.path ? 'font-extrabold' : ''}`}
+          className={`text-neutral-800 text-xs cursor-pointer ${isMenuActive(menu.path) ? 'font-extrabold' : ''}`}
           whileHover={{
             scale: 1.05,
             transition: { duration: 0.2, ease: 'easeInOut' },

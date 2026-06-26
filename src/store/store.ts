@@ -7,6 +7,7 @@ import { storeType } from './storeType'
 import { createChatbotSlice } from './chatbotSlice/chatbotSlice'
 import { createUserPasswordResetSlice } from './userPasswordResetSlice/userPasswordResetSlice'
 import { createUserEligibleForRewardsSlice } from './userEligibleForRewardsSlice/userEligibleForRewardsSlice'
+import { createUserCommunityAdminSlice } from './userCommunityAdminSlice/userCommunityAdminSlice'
 
 let finalCookie: any = null
 let hasResetPasswordToken = false
@@ -34,12 +35,14 @@ export const useUniStore = create<storeType>()(
         ...createChatbotSlice(set, get, api),
         ...createUserPasswordResetSlice(set, get, api),
         ...createUserEligibleForRewardsSlice(set, get, api),
+        ...createUserCommunityAdminSlice(set, get, api),
         reset: () =>
           set({
             userData: null,
             userProfileData: null,
             chatbotData: [],
             userEligibleForRewards: null,
+            userCommunityAdmin: null,
           }),
       }),
       {

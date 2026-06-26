@@ -6,6 +6,7 @@ import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
 import {
   EligibleForRewardsResponse,
+  IsUserCommunityAdminResponse,
   IUserProfileResponse,
   ReferralsResponse,
   RewardsResponse,
@@ -108,6 +109,47 @@ export function useUsersProfileForConnections(
         occupation || [],
         affiliation || [],
         chatId,
+        role
+      ),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!cookieValue && enabled,
+  })
+}
+
+export function useAdminUsersForConnections(
+  name: string,
+  limit: number,
+  enabled: boolean,
+  universityName: string = '',
+  studyYear?: string[],
+  major?: string[],
+  occupation?: string[],
+  affiliation?: string[],
+  role?: string
+) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const debouncedSearchTerm = useDebounce(name, 1000)
+
+  return useInfiniteQuery({
+    queryKey: ['adminUsersForConnections', debouncedSearchTerm, universityName, studyYear, major, occupation, affiliation, role, limit],
+    queryFn: ({ pageParam = 1 }) =>
+      getAllUsersForConnections(
+        cookieValue,
+        pageParam,
+        limit,
+        debouncedSearchTerm,
+        universityName,
+        studyYear || [],
+        major || [],
+        occupation || [],
+        affiliation || [],
+        undefined,
         role
       ),
     getNextPageParam: (lastPage) => {
@@ -244,6 +286,22 @@ export function useGetUserEligibleForRewards() {
   return useQuery({
     queryKey: ['getUserEligibleForRewards'],
     queryFn: () => getUserEligibleForRewards(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function getIsUserCommunityAdmin(token: string): Promise<IsUserCommunityAdminResponse> {
+  const response = await client<IsUserCommunityAdminResponse, any>(`/users/community-admin`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
+export function useIsUserCommunityAdmin() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['isUserCommunityAdmin'],
+    queryFn: () => getIsUserCommunityAdmin(cookieValue),
     enabled: !!cookieValue,
   })
 }
