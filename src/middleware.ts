@@ -13,27 +13,28 @@ const protectedRoutes = [
   '/connections',
   '/post',
   '/rewards',
+  '/admin',
 ]
 export default function middleware(req: NextRequest) {
   const pathName = req.nextUrl.pathname
-  const isAdminRoute = pathName.startsWith('/admin-dashboard')
-  const isAdminLoginRoute = pathName === '/admin-dashboard/login'
-  const isAdminSelectUniversityRoute = pathName === '/admin-dashboard/select-university'
+  const isAdminRoute = pathName.startsWith('/automation')
+  const isAdminLoginRoute = pathName === '/automation/login'
+  const isAdminSelectUniversityRoute = pathName === '/automation/select-university'
 
   if (isAdminRoute) {
     if (isAdminLoginRoute && isAdminDashboardAuthenticated(req)) {
-      const absoluteUrl = new URL('/admin-dashboard/select-university', req.nextUrl.origin)
+      const absoluteUrl = new URL('/automation/select-university', req.nextUrl.origin)
       return NextResponse.redirect(absoluteUrl.toString())
     }
 
     if (!isAdminLoginRoute && !isAdminDashboardAuthenticated(req)) {
-      const absoluteUrl = new URL('/admin-dashboard/login', req.nextUrl.origin)
+      const absoluteUrl = new URL('/automation/login', req.nextUrl.origin)
       return NextResponse.redirect(absoluteUrl.toString())
     }
 
     const requiresSelectedUniversity = !isAdminLoginRoute && !isAdminSelectUniversityRoute
     if (requiresSelectedUniversity && !hasAdminDashboardUniversitySelected(req)) {
-      const absoluteUrl = new URL('/admin-dashboard/select-university', req.nextUrl.origin)
+      const absoluteUrl = new URL('/automation/select-university', req.nextUrl.origin)
       return NextResponse.redirect(absoluteUrl.toString())
     }
   }

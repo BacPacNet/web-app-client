@@ -47,7 +47,7 @@ const PromotePostModal = ({ postID, isType, universityId, universityName }: Prom
           </div>
         </div>
 
-        <Link href="/admin-dashboard" className="flex items-center gap-1 text-xs font-medium font-inter text-primary-500 w-fit hover:underline">
+        <Link href="/automation" className="flex items-center gap-1 text-xs font-medium font-inter text-primary-500 w-fit hover:underline">
           Manage your posts in the dashboard
           <HiArrowRight size={16} />
         </Link>
