@@ -43,6 +43,8 @@ export const useUniStore = create<storeType>()(
             chatbotData: [],
             userEligibleForRewards: null,
             userCommunityAdmin: null,
+            university_id: '',
+            universityName: '',
           }),
       }),
       {

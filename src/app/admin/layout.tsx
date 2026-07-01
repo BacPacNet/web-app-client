@@ -40,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className=" flex align-start h-with-navbar bg-surface-neutral-100">
+    <div className="flex items-start bg-surface-neutral-100">
       <AdminDashboardSidebar />
       <main className="max-w-[1280px] flex-1">{children}</main>
     </div>
