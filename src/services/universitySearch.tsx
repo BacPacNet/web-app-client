@@ -1,4 +1,4 @@
-import { showCustomDangerToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast, showToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import useCookie from '@/hooks/useCookie'
 import useDebounce from '@/hooks/useDebounce'
 import { AxiosErrorType } from '@/types/constants'
@@ -14,6 +14,8 @@ export type AddUniversityHighlightPostPayload = {
   postType: HighlightPostType
   position: number
 }
+
+export type UpdateUniversityHighlightPostPositionsPayload = AddUniversityHighlightPostPayload[]
 
 export function useUniversitySearch(searchTerm: string, page: number, limit: number) {
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
@@ -53,6 +55,23 @@ export async function getUniversityByName(universityName: string): Promise<any[]
   const response = await client(`/university/${universityName}`)
 
   // TypeScript assumes `response` is of type `University[]`
+  return response
+}
+
+export function useUniversityById(universityId: string) {
+  return useQuery<any, Error>({
+    queryKey: ['universityById', universityId],
+    queryFn: () => getUniversityById(universityId),
+    enabled: !!universityId,
+    staleTime: 0,
+    retry: false,
+  })
+}
+
+export async function getUniversityById(universityId: string): Promise<any> {
+  if (!universityId) return null
+
+  const response = await client(`/university/id/${universityId}`)
   return response
 }
 
@@ -153,4 +172,122 @@ export function useAddUniversityHighlightPost(universityId: string, universityNa
       showCustomDangerToast(error.response?.data.message as string)
     },
   })
+}
+
+export async function deleteUniversityHighlightPost(universityId: string, postId: string, token: string) {
+  const response = await client(`/university/highlights/${universityId}/${postId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
+export function useDeleteUniversityHighlightPost(universityId: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (postId: string) => deleteUniversityHighlightPost(universityId, postId, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['universitiesHighlightedPostd', universityId] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+      queryClient.invalidateQueries({ queryKey: ['timelinePosts'] })
+      showCustomSuccessToast('Post removed from promoted posts')
+    },
+    onError: (error: AxiosErrorType) => {
+      showCustomDangerToast(error.response?.data.message as string)
+    },
+  })
+}
+
+export async function updateUniversityHighlightPostPositions(
+  universityId: string,
+  data: UpdateUniversityHighlightPostPositionsPayload,
+  token: string
+) {
+  const response = await client(`/university/highlights/${universityId}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+  return response
+}
+
+export function useUpdateUniversityHighlightPostPositions(universityId: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: UpdateUniversityHighlightPostPositionsPayload) => updateUniversityHighlightPostPositions(universityId, data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['universitiesHighlightedPostd', universityId] })
+      showCustomSuccessToast('Promoted posts order updated successfully')
+    },
+    onError: (error: AxiosErrorType) => {
+      showCustomDangerToast(error.response?.data.message as string)
+    },
+  })
+}
+
+export type UpdateUniversityProfilePayload = {
+  name?: string
+  description?: string
+  long_description?: string
+  short_overview?: string
+  shortOverview?: string
+  logo?: string
+  campus?: string
+  email?: string
+  phone?: string
+  address?: string
+  office_hours?: string
+  total_students?: string
+  web_pages?: string | string[]
+  contacts?: {
+    email?: string
+    phone?: string
+    address?: string
+    office_hours?: string
+  }
+}
+
+export async function updateUniversityProfile(universityId: string, data: UpdateUniversityProfilePayload, token: string) {
+  const response = await client(`/university/${universityId}/profile`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
+  return response
+}
+
+export function useUpdateUniversityProfile(universityId: string) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: UpdateUniversityProfilePayload) => updateUniversityProfile(universityId, data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['universityById', universityId] })
+      queryClient.invalidateQueries({ queryKey: ['universityByName'] })
+    },
+    onError: (error: AxiosErrorType) => {
+      showCustomDangerToast(error.response?.data.message as string)
+    },
+  })
+}
+
+export function useUpdateUniversityLongDescription(universityId: string) {
+  const mutation = useUpdateUniversityProfile(universityId)
+
+  return {
+    ...mutation,
+    mutate: (data: UpdateUniversityProfilePayload, options?: Parameters<typeof mutation.mutate>[1]) =>
+      mutation.mutate(data, {
+        ...options,
+        onSuccess: (...args) => {
+          showCustomSuccessToast('University overview updated successfully')
+          options?.onSuccess?.(...args)
+        },
+      }),
+  }
 }

@@ -67,7 +67,7 @@ export default function AdminDashboardSidebar({ items = defaultNavItems, userNam
   }, [userData?.firstName, userData?.lastName, userInitials, userProfileData?.firstName, userProfileData?.lastName])
 
   return (
-    <aside className="flex h-screen w-[260px] shrink-0 flex-col border-r border-neutral-200 bg-white">
+    <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 self-start flex-col border-r border-neutral-200 bg-white">
       <div className="px-5 py-7 flex flex-col">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#4F46E5]">
