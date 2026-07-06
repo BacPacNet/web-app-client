@@ -38,6 +38,7 @@ export default function UniversityProfileDetailsForm({
           onChange={(e) => onNameChange(e.target.value)}
           className="w-full rounded-lg border border-neutral-200 px-3 py-2.5 text-xs text-neutral-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           placeholder="Enter university name"
+          disabled={true}
         />
       </div>
 

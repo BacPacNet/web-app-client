@@ -6,16 +6,17 @@ import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import UserSearchInput from '@/components/atoms/UserSearchBox'
 import { useModal } from '@/context/ModalContext'
 import useCookie from '@/hooks/useCookie'
-import { useAdminDashboardFilteredGroups } from '@/services/admin-dashboard-auth'
+import { useAdminDashboardFilteredGroups, useAdminDashboardFilteredGroupsExport } from '@/services/admin-dashboard-auth'
 import { subCategories } from '@/types/CommuityGroup'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
+import { downloadGroupImportTemplate, downloadGroupsExportAsImportTemplate } from '@/utils/adminDashboardGroupsImportExport'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import AutomationDashboardGroupMembersModal from '../AutomationDashboardGroupMembersModal'
 import AutomationDashboardShell from '../AutomationDashboardShell'
 import Buttons from '@/components/atoms/Buttons'
-import { FiPlus } from 'react-icons/fi'
+import { FiDownload, FiPlus } from 'react-icons/fi'
 
 const groupTypeOptions = ['Private', 'Public', 'Official', 'Casual']
 
@@ -51,6 +52,7 @@ export default function AutomationDashboardGroupsScreen() {
     selectedFilters,
     selectedSort
   )
+  const { mutate: exportGroups, isPending: isExporting } = useAdminDashboardFilteredGroupsExport()
 
   const groups = useMemo(() => data?.communityGroups || [], [data])
   const selectedCategoryOptions = useMemo(() => {
@@ -62,6 +64,29 @@ export default function AutomationDashboardGroupsScreen() {
     openModal(<AutomationDashboardGroupMembersModal groupId={groupId} groupTitle={groupTitle} />, 'h-[70vh] w-[350px] sm:w-[720px] hideScrollbar')
   }
 
+  const handleExportGroups = () => {
+    if (!selectedUniversity?._id || !selectedUniversity?.name) return
+
+    exportGroups(
+      {
+        universityId: selectedUniversity._id,
+        searchTerm,
+        selectedType,
+        selectedFilters,
+        sort: selectedSort,
+      },
+      {
+        onSuccess: (data) => {
+          downloadGroupsExportAsImportTemplate(data.communityGroups, `${selectedUniversity.name}-groups-export`)
+        },
+      }
+    )
+  }
+
+  const handleExportTemplate = () => {
+    downloadGroupImportTemplate()
+  }
+
   return (
     <AutomationDashboardShell title="Groups">
       <div className="flex h-[72vh] flex-col gap-4">
@@ -70,6 +95,20 @@ export default function AutomationDashboardGroupsScreen() {
             <div className="min-w-[280px] flex-1">
               <UserSearchInput value={searchTerm} onChange={setSearchTerm} placeholder="Searching All Groups" />
             </div>
+            <Buttons
+              variant="border"
+              size="medium"
+              leftIcon={<FiDownload size={16} />}
+              disabled={!selectedUniversity?._id || isExporting}
+              onClick={handleExportGroups}
+            >
+              {isExporting ? 'Exporting...' : 'Export XLSX'}
+            </Buttons>
+
+            <Buttons variant="border" size="medium" leftIcon={<FiDownload size={16} />} onClick={handleExportTemplate}>
+              Export Template
+            </Buttons>
+
             <Buttons
               variant="primary"
               size="medium"

@@ -4,13 +4,14 @@ import Buttons from '@/components/atoms/Buttons'
 import MultiSelectDropdown from '@/components/atoms/MultiSelectDropdown'
 import AutomationDashboardShell from '@/components/organisms/AutomationDashboard/AutomationDashboardShell'
 import useCookie from '@/hooks/useCookie'
-import { categories, subCategories, type Category } from '@/types/CommuityGroup'
+import { categories, subCategories, CommunityGroupAccess, type Category } from '@/types/CommuityGroup'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
-import { ChangeEvent, useMemo, useRef, useState } from 'react'
-import { FiArrowLeft, FiUpload } from 'react-icons/fi'
+import { ChangeEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { FiArrowLeft, FiDownload, FiUpload } from 'react-icons/fi'
 import { useRouter, useSearchParams } from 'next/navigation'
 import * as XLSX from 'xlsx'
 import { useAdminDashboardCreateGroups, useAdminDashboardValidateUniqueIds } from '@/services/admin-dashboard-auth'
+import { downloadGroupImportTemplate } from '@/utils/adminDashboardGroupsImportExport'
 
 type GroupImportRow = {
   title: string
@@ -37,6 +38,12 @@ type EditableColumn = {
 type SheetSummary = {
   sheetName: string
   rowCount: number
+}
+
+/** Raw rows of an additional (non-groups) tab, preserved verbatim so export can copy it as-is */
+type ExtraSheet = {
+  sheetName: string
+  rows: unknown[][]
 }
 
 type GroupBulkFailedItem = {
@@ -98,7 +105,7 @@ const COLUMNS: EditableColumn[] = [
   { key: 'communityGroupCategorySub', label: 'Subcategory', required: true },
 ]
 
-const ACCESS_VALUES = ['Private', 'Public', 'University-wide', 'Hidden']
+const ACCESS_VALUES = Object.values(CommunityGroupAccess)
 const TYPE_VALUES = ['casual', 'official']
 const LABEL_VALUES = ['Course', 'Club', 'Circle', 'Other']
 const USER_ID_NOT_FOUND_MESSAGE = 'No user with this id exist'
@@ -123,13 +130,13 @@ const getErrorBadgeClass = (id: string, idSets: ValidationIdSets) => {
 const COMMUNITY_GROUP_CATEGORY_JSON_ALIASES = ['communitygroupcategory', 'categoryjson', 'categoriesjson', 'groupcategoryjson']
 
 const headerAliasMap: Record<GroupImportField, string[]> = {
-  title: ['title', 'group title', 'group name'],
-  adminId: ['adminid', 'admin id', 'admin'],
-  memberList: ['memberlist', 'member list', 'members'],
-  description: ['description', 'about', 'group description'],
-  communityGroupAccess: ['communitygroupaccess', 'access', 'group access'],
-  communityGroupType: ['communitygrouptype', 'type', 'label'],
-  communityGroupLabel: ['communitygrouplabel', 'group type', 'group label'],
+  title: ['group name', 'title', 'group title'],
+  adminId: ['admin id', 'adminid', 'admin'],
+  memberList: ['member list', 'memberlist', 'members'],
+  description: ['group description', 'description', 'about'],
+  communityGroupAccess: ['access', 'communitygroupaccess', 'group access'],
+  communityGroupType: ['label', 'communitygrouptype', 'type'],
+  communityGroupLabel: ['group type', 'communitygrouplabel', 'group label'],
   communityGroupCategoryMain: ['category', 'maincategory', 'groupcategory', 'primarycategory'],
   communityGroupCategorySub: ['subcategory', 'sub category', 'sub', 'categorysub'],
 }
@@ -141,12 +148,163 @@ const normalizeEnum = (value: string, allowedValues: string[]) => {
   return allowedValues.find((item) => item.toLowerCase() === normalized) || value
 }
 
+const normalizeAccessValue = (value: string) => {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+
+  const compact = normalizeHeader(trimmed)
+  const accessAliases: Record<string, CommunityGroupAccess> = {
+    opencampus: CommunityGroupAccess.OpenCampus,
+    universitywide: CommunityGroupAccess.UniversityWide,
+    hidden: CommunityGroupAccess.Hidden,
+  }
+
+  return accessAliases[compact] || normalizeEnum(trimmed, ACCESS_VALUES)
+}
+
 const toStringValue = (value: unknown): string => {
   if (value == null) return ''
   if (typeof value === 'string') return value.trim()
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
   if (typeof value === 'object') return JSON.stringify(value)
   return ''
+}
+
+type ImportColumnHeaders = Record<GroupImportField, string>
+
+const DEFAULT_IMPORT_COLUMN_HEADERS: ImportColumnHeaders = {
+  communityGroupLabel: 'Group Type',
+  title: 'Group Name',
+  memberList: 'Member List',
+  communityGroupAccess: 'Access',
+  communityGroupType: 'Label',
+  adminId: 'Admin ID',
+  communityGroupCategoryMain: 'Category',
+  description: 'Group Description',
+  communityGroupCategorySub: 'Subcategory',
+}
+
+const DEFAULT_IMPORT_COLUMN_ORDER: GroupImportField[] = [
+  'communityGroupLabel',
+  'title',
+  'memberList',
+  'communityGroupAccess',
+  'communityGroupType',
+  'adminId',
+  'communityGroupCategoryMain',
+  'description',
+]
+
+const getWorksheetHeaders = (worksheet: XLSX.WorkSheet): string[] => {
+  const sheetRows = XLSX.utils.sheet_to_json<unknown[]>(worksheet, { header: 1, defval: '' })
+  const headerRow = sheetRows[0]
+  if (!Array.isArray(headerRow)) return []
+  return headerRow.map((cell) => toStringValue(cell)).filter(Boolean)
+}
+
+const resolveImportColumnHeaders = (sourceHeaders: string[]): ImportColumnHeaders => {
+  const importFields = Object.keys(headerAliasMap) as GroupImportField[]
+
+  return Object.fromEntries(
+    importFields.map((field) => {
+      const matchedHeader = sourceHeaders.find((header) => {
+        const normalizedHeader = normalizeHeader(header)
+        return headerAliasMap[field].some((alias) => normalizeHeader(alias) === normalizedHeader)
+      })
+      return [field, matchedHeader || DEFAULT_IMPORT_COLUMN_HEADERS[field]]
+    })
+  ) as ImportColumnHeaders
+}
+
+const resolveImportColumnOrder = (sourceHeaders: string[]): GroupImportField[] => {
+  const importFields = Object.keys(headerAliasMap) as GroupImportField[]
+  const columnOrder: GroupImportField[] = []
+
+  sourceHeaders.forEach((header) => {
+    const normalizedHeader = normalizeHeader(header)
+    const matchedField = importFields.find((field) => headerAliasMap[field].some((alias) => normalizeHeader(alias) === normalizedHeader))
+    if (matchedField && !columnOrder.includes(matchedField)) {
+      columnOrder.push(matchedField)
+    }
+  })
+
+  importFields.forEach((field) => {
+    if (!columnOrder.includes(field) && DEFAULT_IMPORT_COLUMN_ORDER.includes(field)) {
+      columnOrder.push(field)
+    }
+  })
+
+  return columnOrder
+}
+
+const formatExportFieldValue = (row: GroupImportRow, field: GroupImportField): string => {
+  if (field === 'communityGroupCategoryMain') {
+    const categoriesList = splitCategories(row.communityGroupCategoryMain)
+    const pairs = getSelectedCategorySubPairs(row)
+
+    if (pairs.length > 0) {
+      const payload = rowCategoryPayload(row)
+      return payload ? JSON.stringify(payload) : ''
+    }
+
+    if (categoriesList.length > 0) {
+      return JSON.stringify(categoriesList)
+    }
+
+    return ''
+  }
+
+  return row[field] || ''
+}
+
+const rowToExportRecord = (row: GroupImportRow, headers: ImportColumnHeaders, columnOrder: GroupImportField[]): Record<string, string> =>
+  Object.fromEntries(columnOrder.map((field) => [headers[field], formatExportFieldValue(row, field)]))
+
+const getUniqueSheetName = (workbook: XLSX.WorkBook, desiredName: string): string => {
+  const existing = new Set(workbook.SheetNames)
+  const safeName = (desiredName || 'Sheet').slice(0, 31)
+  if (!existing.has(safeName)) return safeName
+
+  let index = 2
+  let candidate = `${safeName.slice(0, 28)}_${index}`
+  while (existing.has(candidate)) {
+    index += 1
+    candidate = `${safeName.slice(0, 28)}_${index}`
+  }
+  return candidate
+}
+
+const isGroupImportSheet = (worksheet: XLSX.WorkSheet): boolean => {
+  const headers = getWorksheetHeaders(worksheet)
+  if (!headers.length) return false
+
+  const normalizedHeaders = new Set(headers.map((header) => normalizeHeader(header)))
+  const hasTitle = headerAliasMap.title.some((alias) => normalizedHeaders.has(normalizeHeader(alias)))
+  const hasAccess = headerAliasMap.communityGroupAccess.some((alias) => normalizedHeaders.has(normalizeHeader(alias)))
+
+  return hasTitle && hasAccess
+}
+
+const downloadRowsAsXlsx = (
+  rows: GroupImportRow[],
+  baseFileName: string,
+  headers: ImportColumnHeaders,
+  columnOrder: GroupImportField[],
+  extraSheets: ExtraSheet[] = []
+) => {
+  const exportHeaders = columnOrder.map((field) => headers[field])
+  const exportData = rows.map((row) => rowToExportRecord(row, headers, columnOrder))
+  const worksheet = XLSX.utils.json_to_sheet(exportData, { header: exportHeaders })
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Groups')
+
+  extraSheets.forEach((sheet) => {
+    const extraWorksheet = XLSX.utils.aoa_to_sheet(sheet.rows)
+    XLSX.utils.book_append_sheet(workbook, extraWorksheet, getUniqueSheetName(workbook, sheet.sheetName))
+  })
+
+  const baseName = baseFileName ? baseFileName.replace(/\.(xlsx|xls|csv)$/i, '') : 'groups-import'
+  XLSX.writeFile(workbook, `${baseName}-export.xlsx`, { bookType: 'xlsx' })
 }
 
 const getRowValueByAliases = (row: Record<string, unknown>, aliases: string[]) => {
@@ -264,6 +422,19 @@ const parseCategoryValue = (rawValue: string): Record<string, string[]> | null =
   }
 }
 
+const parseCategoryArrayValue = (rawValue: string): string[] | null => {
+  const trimmed = rawValue.trim()
+  if (!trimmed.startsWith('[')) return null
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown
+    if (!Array.isArray(parsed)) return null
+    return parsed.map((item) => String(item)).filter(Boolean)
+  } catch {
+    return null
+  }
+}
+
 const rowCategoryPayload = (row: GroupImportRow): Record<string, string[]> | null => {
   const categoriesList = splitCategories(row.communityGroupCategoryMain)
   const selectedPairs = getSelectedCategorySubPairs(row)
@@ -281,7 +452,8 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
   const rawSub = getRowValueByAliases(row, headerAliasMap.communityGroupCategorySub)
   const jsonColumnRaw = getRowValueByAliases(row, COMMUNITY_GROUP_CATEGORY_JSON_ALIASES)
   const parsedFromJsonCol = parseCategoryValue(jsonColumnRaw)
-  const parsedFromCategoryCell = rawMain.trim().startsWith('{') || rawMain.trim().startsWith('[') ? parseCategoryValue(rawMain) : null
+  const parsedFromCategoryCell = rawMain.trim().startsWith('{') ? parseCategoryValue(rawMain) : null
+  const parsedCategoryArray = rawMain.trim().startsWith('[') ? parseCategoryArrayValue(rawMain) : null
 
   const explicitMain = rawMain.trim()
   const explicitSub = rawSub.trim()
@@ -310,6 +482,10 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
     fillFromParsedCategory(parsedFromJsonCol)
   } else if (parsedFromCategoryCell && Object.keys(parsedFromCategoryCell).length > 0) {
     fillFromParsedCategory(parsedFromCategoryCell)
+  } else if (parsedCategoryArray?.length) {
+    communityGroupCategoryMain = parsedCategoryArray
+      .map((category) => normalizeEnum(category, categories as unknown as string[]) || category)
+      .join(', ')
   } else if (explicitMain || explicitSub) {
     const explicitCategories = splitCategories(explicitMain).map((category) => normalizeEnum(category, categories as unknown as string[]) || category)
     communityGroupCategoryMain = explicitCategories.join(', ')
@@ -340,7 +516,7 @@ const mapRawRowToGroupRow = (row: Record<string, unknown>): GroupImportRow => {
     adminId: getRowValueByAliases(row, headerAliasMap.adminId),
     memberList: getRowValueByAliases(row, headerAliasMap.memberList),
     description: getRowValueByAliases(row, headerAliasMap.description),
-    communityGroupAccess: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupAccess), ACCESS_VALUES),
+    communityGroupAccess: normalizeAccessValue(getRowValueByAliases(row, headerAliasMap.communityGroupAccess)),
     communityGroupType: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupType), TYPE_VALUES),
     communityGroupLabel: normalizeEnum(getRowValueByAliases(row, headerAliasMap.communityGroupLabel), LABEL_VALUES),
     communityGroupCategoryMain,
@@ -360,9 +536,12 @@ const isHeaderLikeMappedRow = (row: GroupImportRow) => {
 
   return (
     normalizedTitle === normalizeHeader('title') ||
+    normalizedTitle === normalizeHeader('group name') ||
     normalizedAccess === normalizeHeader('access') ||
     normalizedType === normalizeHeader('type') ||
-    normalizedLabel === normalizeHeader('label')
+    normalizedType === normalizeHeader('label') ||
+    normalizedLabel === normalizeHeader('label') ||
+    normalizedLabel === normalizeHeader('group type')
   )
 }
 
@@ -373,8 +552,10 @@ const validateRow = (row: GroupImportRow): RowValidation => {
     errors.title = 'Title is required'
   }
 
-  if (!ACCESS_VALUES.includes(row.communityGroupAccess)) {
-    errors.communityGroupAccess = 'Access must be Private, Public, University-wide, or Hidden'
+  if (!row.communityGroupAccess.trim()) {
+    errors.communityGroupAccess = 'Access is required'
+  } else if (!ACCESS_VALUES.includes(row.communityGroupAccess as CommunityGroupAccess)) {
+    errors.communityGroupAccess = `Access must be ${ACCESS_VALUES.join(', ')}`
   }
 
   if (!TYPE_VALUES.includes(row.communityGroupType)) {
@@ -417,6 +598,89 @@ const validateRow = (row: GroupImportRow): RowValidation => {
   return errors
 }
 
+type HorizontalScrollBarProps = {
+  scrollTargetRef: React.RefObject<HTMLDivElement | null>
+  className?: string
+}
+
+function HorizontalScrollBar({ scrollTargetRef, className = '' }: HorizontalScrollBarProps) {
+  const barRef = useRef<HTMLDivElement | null>(null)
+  const [contentWidth, setContentWidth] = useState(0)
+  const [showBar, setShowBar] = useState(false)
+  const isSyncingScroll = useRef(false)
+
+  useEffect(() => {
+    const content = scrollTargetRef.current
+    if (!content) return
+
+    const updateMeasurements = () => {
+      setContentWidth(content.scrollWidth)
+      setShowBar(content.scrollWidth > content.clientWidth)
+    }
+
+    const syncFromContent = () => {
+      if (!barRef.current || isSyncingScroll.current) return
+      isSyncingScroll.current = true
+      barRef.current.scrollLeft = content.scrollLeft
+      isSyncingScroll.current = false
+    }
+
+    updateMeasurements()
+    content.addEventListener('scroll', syncFromContent)
+    const resizeObserver = new ResizeObserver(updateMeasurements)
+    resizeObserver.observe(content)
+
+    return () => {
+      content.removeEventListener('scroll', syncFromContent)
+      resizeObserver.disconnect()
+    }
+  }, [scrollTargetRef])
+
+  const syncScrollLeft = (source: HTMLDivElement, target: HTMLDivElement) => {
+    if (isSyncingScroll.current) return
+    isSyncingScroll.current = true
+    target.scrollLeft = source.scrollLeft
+    isSyncingScroll.current = false
+  }
+
+  if (!showBar) {
+    return null
+  }
+
+  return (
+    <div
+      ref={(node) => {
+        barRef.current = node
+      }}
+      className={`shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar border-t bg-white ${className}`}
+      onScroll={(event) => {
+        if (scrollTargetRef.current) {
+          syncScrollLeft(event.currentTarget, scrollTargetRef.current)
+        }
+      }}
+    >
+      <div aria-hidden="true" className="h-3" style={{ width: contentWidth }} />
+    </div>
+  )
+}
+
+type TableHorizontalScrollProps = {
+  children: ReactNode
+  scrollRef: React.Ref<HTMLDivElement>
+  className?: string
+}
+
+function TableHorizontalScroll({ children, scrollRef, className = '' }: TableHorizontalScrollProps) {
+  return (
+    <div
+      ref={scrollRef}
+      className={`overflow-x-auto overflow-y-visible [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function AutomationDashboardGroupImportScreen() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -427,6 +691,7 @@ export default function AutomationDashboardGroupImportScreen() {
   const [rows, setRows] = useState<GroupImportRow[]>([])
   const [passedRows, setPassedRows] = useState<GroupImportRow[]>([])
   const [sheetSummaries, setSheetSummaries] = useState<SheetSummary[]>([])
+  const [extraSheets, setExtraSheets] = useState<ExtraSheet[]>([])
   const [skippedRows, setSkippedRows] = useState<string[]>([])
   const [isParsing, setIsParsing] = useState(false)
   const [hasParsedFile, setHasParsedFile] = useState(false)
@@ -435,6 +700,10 @@ export default function AutomationDashboardGroupImportScreen() {
   const [isValidatedWithoutErrors, setIsValidatedWithoutErrors] = useState(false)
   const [uploadRetrySummary, setUploadRetrySummary] = useState<UploadRetrySummary | null>(null)
   const [hasUploadAttempted, setHasUploadAttempted] = useState(false)
+  const previewTableScrollRef = useRef<HTMLDivElement>(null)
+  const passedTableScrollRef = useRef<HTMLDivElement>(null)
+
+  const activeHorizontalScrollRef = rows.length > 0 ? previewTableScrollRef : passedTableScrollRef
 
   const { mutate: createGroups, isPending: isUploadingGroups } = useAdminDashboardCreateGroups(communityId || '')
   const { mutate: validateUniqueIds, isPending: isValidatingUniqueIds } = useAdminDashboardValidateUniqueIds(communityId || '')
@@ -447,9 +716,38 @@ export default function AutomationDashboardGroupImportScreen() {
   const validations = useMemo(() => rows.map((row) => validateRow(row)), [rows])
   const validRowCount = useMemo(() => validations.filter((item) => Object.keys(item).length === 0).length, [validations])
   const invalidRowCount = rows.length - validRowCount
+  const invalidRowNumbers = useMemo(
+    () =>
+      validations
+        .map((validation, index) => (Object.keys(validation).length > 0 ? index + 1 : null))
+        .filter((rowNumber): rowNumber is number => rowNumber !== null),
+    [validations]
+  )
+  const idInvalidRowCount = useMemo(
+    () => rows.filter((_, index) => Object.keys(serverErrorsByRow[index] || {}).length > 0).length,
+    [rows, serverErrorsByRow]
+  )
+  const idInvalidRowNumbers = useMemo(
+    () =>
+      rows
+        .map((_, index) => (Object.keys(serverErrorsByRow[index] || {}).length > 0 ? index + 1 : null))
+        .filter((rowNumber): rowNumber is number => rowNumber !== null),
+    [rows, serverErrorsByRow]
+  )
+  const idValidRowCount = rows.length - idInvalidRowCount
+  const showIdValidationStatus = !hasUploadAttempted && (isValidatedWithoutErrors || idInvalidRowCount > 0)
 
   const handleUploadClick = () => {
     inputRef.current?.click()
+  }
+
+  const handleExportRows = () => {
+    if (!rows.length) return
+    downloadRowsAsXlsx(rows, fileName, DEFAULT_IMPORT_COLUMN_HEADERS, DEFAULT_IMPORT_COLUMN_ORDER, extraSheets)
+  }
+
+  const handleExportTemplate = () => {
+    downloadGroupImportTemplate()
   }
 
   const handleCategoryFieldChange = (
@@ -489,6 +787,7 @@ export default function AutomationDashboardGroupImportScreen() {
     setRows([])
     setPassedRows([])
     setSheetSummaries([])
+    setExtraSheets([])
     setSkippedRows([])
     setServerErrorsByRow({})
     setServerErrorIdsByRow({})
@@ -506,9 +805,18 @@ export default function AutomationDashboardGroupImportScreen() {
       const summaries: SheetSummary[] = []
       const skipped: string[] = []
       const parsedRows: GroupImportRow[] = []
+      const additionalSheets: ExtraSheet[] = []
 
       workbook.SheetNames.forEach((sheetName) => {
         const worksheet = workbook.Sheets[sheetName]
+
+        if (!isGroupImportSheet(worksheet)) {
+          const rawRows = XLSX.utils.sheet_to_json<unknown[]>(worksheet, { header: 1, defval: '' })
+          summaries.push({ sheetName, rowCount: Math.max(rawRows.length - 1, 0) })
+          additionalSheets.push({ sheetName, rows: rawRows })
+          return
+        }
+
         const sheetRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, { defval: '' })
         summaries.push({ sheetName, rowCount: sheetRows.length })
 
@@ -526,6 +834,7 @@ export default function AutomationDashboardGroupImportScreen() {
       })
 
       setSheetSummaries(summaries)
+      setExtraSheets(additionalSheets)
       setSkippedRows(skipped)
       setRows(parsedRows)
       event.target.value = ''
@@ -730,7 +1039,7 @@ export default function AutomationDashboardGroupImportScreen() {
 
   return (
     <AutomationDashboardShell title="Import Groups">
-      <div className="flex h-[72vh] flex-col gap-4">
+      <div className="flex h-[72vh] min-h-0 flex-col gap-4">
         <div className="flex items-center gap-3">
           <Buttons variant="border" size="small" leftIcon={<FiArrowLeft size={14} />} onClick={() => router.push('/automation/groups')}>
             Back to Groups
@@ -748,13 +1057,7 @@ export default function AutomationDashboardGroupImportScreen() {
               Loaded sheets: {sheetSummaries.map((item) => `${item.sheetName} (${item.rowCount})`).join(', ')}
             </p>
           ) : null}
-          <p className="mt-1 text-xs text-neutral-500">
-            Required fields: `title`, `communityGroupAccess`, `communityGroupType`, `communityGroupLabel`, `category`, `subcategory`.
-          </p>
-          <p className="mt-1 text-xs text-neutral-500">
-            Category and subcategory are optional; set both or neither. You can edit them in the preview table, or import from Excel columns
-            (`category` / `subcategory`) or a legacy JSON column (`communityGroupCategory`, etc.), for example {`{"Academic":["Science"]}`}.
-          </p>
+
           {skippedRows.length > 0 ? (
             <p className="mt-1 text-xs text-amber-600">
               Skipped rows (empty/header): {skippedRows.length} ({skippedRows.slice(0, 8).join(', ')}
@@ -771,15 +1074,33 @@ export default function AutomationDashboardGroupImportScreen() {
 
         {rows.length > 0 && (
           <div className="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm">
-            <div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <span className="font-medium text-neutral-900">
                 {hasUploadAttempted ? 'Failed' : 'Rows'}: {rows.length}
               </span>
-              {passedRows.length > 0 ? <span className="ml-4 text-emerald-600">Passed: {passedRows.length}</span> : null}
-              <span className="ml-4 text-green-600">Valid: {validRowCount}</span>
-              <span className="ml-4 text-red-600">Invalid: {invalidRowCount}</span>
+              {passedRows.length > 0 ? <span className="text-emerald-600">Passed: {passedRows.length}</span> : null}
+              <span className="text-green-600">Valid: {validRowCount}</span>
+              <span className="text-red-600">
+                Invalid: {invalidRowCount}
+                {invalidRowNumbers.length > 0 ? ` (rows ${invalidRowNumbers.join(', ')})` : null}
+              </span>
+              {showIdValidationStatus ? (
+                <>
+                  <span className="text-emerald-600">ID Valid: {idValidRowCount}</span>
+                  <span className="text-red-600">
+                    ID Invalid: {idInvalidRowCount}
+                    {idInvalidRowNumbers.length > 0 ? ` (rows ${idInvalidRowNumbers.join(', ')})` : null}
+                  </span>
+                </>
+              ) : null}
             </div>
             <div className="flex items-center gap-2">
+              <Buttons variant="border" size="small" leftIcon={<FiDownload size={14} />} onClick={handleExportTemplate}>
+                Export Template
+              </Buttons>
+              <Buttons variant="border" size="small" leftIcon={<FiDownload size={14} />} disabled={rows.length === 0} onClick={handleExportRows}>
+                Export XLSX
+              </Buttons>
               <Buttons
                 variant="border"
                 size="small"
@@ -800,230 +1121,242 @@ export default function AutomationDashboardGroupImportScreen() {
           </div>
         )}
 
-        <div className="flex-1 overflow-auto rounded-xl border border-neutral-200">
-          {isParsing ? (
-            <div className="flex items-center gap-3 px-4 py-6 text-sm text-neutral-600">
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-primary-500"></span>
-              <p>Loading preview rows from Excel...</p>
-            </div>
-          ) : rows.length === 0 && passedRows.length === 0 ? (
-            <p className="px-4 py-6 text-sm text-neutral-500">
-              {hasParsedFile
-                ? 'No valid preview rows were found in this file. Please review column names/data or upload another file.'
-                : 'Upload an Excel file to preview rows.'}
-            </p>
-          ) : (
-            <div className="space-y-3 p-3">
-              <details
-                open
-                className={`overflow-hidden rounded-lg border ${
-                  hasUploadAttempted ? 'border-red-200 bg-red-50/40' : 'border-neutral-200 bg-neutral-50/40'
-                }`}
-              >
-                <summary
-                  className={`cursor-pointer select-none px-3 py-2 text-sm font-medium ${hasUploadAttempted ? 'text-red-700' : 'text-neutral-700'}`}
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-neutral-200">
+          <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+            {isParsing ? (
+              <div className="flex items-center gap-3 px-4 py-6 text-sm text-neutral-600">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-primary-500"></span>
+                <p>Loading preview rows from Excel...</p>
+              </div>
+            ) : rows.length === 0 && passedRows.length === 0 ? (
+              <p className="px-4 py-6 text-sm text-neutral-500">
+                {hasParsedFile
+                  ? 'No valid preview rows were found in this file. Please review column names/data or upload another file.'
+                  : 'Upload an Excel file to preview rows.'}
+              </p>
+            ) : (
+              <div className="space-y-3 p-3">
+                <details
+                  open
+                  className={`overflow-hidden rounded-lg border ${
+                    hasUploadAttempted ? 'border-red-200 bg-red-50/40' : 'border-neutral-200 bg-neutral-50/40'
+                  }`}
                 >
-                  {hasUploadAttempted ? 'Failed Rows' : 'Preview Rows'} ({rows.length})
-                </summary>
-                <div className={`overflow-auto border-t bg-white ${hasUploadAttempted ? 'border-red-200' : 'border-neutral-200'}`}>
-                  {rows.length === 0 ? (
-                    <p className="px-4 py-4 text-sm text-neutral-500">
-                      {hasUploadAttempted ? 'No failed rows to retry.' : 'No preview rows available.'}
-                    </p>
-                  ) : (
-                    <table className="min-w-[1400px] table-fixed border-collapse">
-                      <thead className="sticky top-0 bg-neutral-50">
-                        <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                          <th className="px-3 py-3">Row</th>
-                          {COLUMNS.map((column) => (
-                            <th key={column.key} className="px-3 py-3">
-                              {column.label} {column.required ? '*' : ''}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {rows.map((row, rowIndex) => {
-                          const rowErrors = validations[rowIndex]
-                          const serverRowErrors = serverErrorsByRow[rowIndex] || {}
-                          const serverRowErrorIds = serverErrorIdsByRow[rowIndex] || {}
-                          const rowHasErrors = Object.keys(rowErrors).length > 0 || Object.keys(serverRowErrors).length > 0
+                  <summary
+                    className={`cursor-pointer select-none px-3 py-2 text-sm font-medium ${hasUploadAttempted ? 'text-red-700' : 'text-neutral-700'}`}
+                  >
+                    {hasUploadAttempted ? 'Failed Rows' : 'Preview Rows'} ({rows.length})
+                  </summary>
+                  <TableHorizontalScroll
+                    scrollRef={previewTableScrollRef}
+                    className={`border-t bg-white ${hasUploadAttempted ? 'border-red-200' : 'border-neutral-200'}`}
+                  >
+                    {rows.length === 0 ? (
+                      <p className="px-4 py-4 text-sm text-neutral-500">
+                        {hasUploadAttempted ? 'No failed rows to retry.' : 'No preview rows available.'}
+                      </p>
+                    ) : (
+                      <table className="min-w-[1400px] table-fixed border-collapse">
+                        <thead className="sticky top-0 bg-neutral-50">
+                          <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            <th className="px-3 py-3">Row</th>
+                            {COLUMNS.map((column) => (
+                              <th key={column.key} className="px-3 py-3">
+                                {column.label} {column.required ? '*' : ''}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rows.map((row, rowIndex) => {
+                            const rowErrors = validations[rowIndex]
+                            const serverRowErrors = serverErrorsByRow[rowIndex] || {}
+                            const serverRowErrorIds = serverErrorIdsByRow[rowIndex] || {}
+                            const rowHasErrors = Object.keys(rowErrors).length > 0 || Object.keys(serverRowErrors).length > 0
 
-                          return (
-                            <tr
-                              key={`${rowIndex}-${row.title}`}
-                              className={`border-b border-neutral-100 align-top ${rowHasErrors ? 'bg-red-50/30' : 'bg-white'}`}
-                            >
-                              <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
-                              {COLUMNS.map((column) => {
-                                const fieldError = rowErrors[column.key]
-                                const serverFieldError = serverRowErrors[column.key]
-                                const serverFieldErrorIds = serverRowErrorIds[column.key] || {
-                                  unresolved: [],
-                                  nonCommunity: [],
-                                  nonVerified: [],
-                                  any: [],
-                                }
-                                const hasCellError = Boolean(fieldError || (serverFieldError && column.key !== 'memberList'))
-                                return (
-                                  <td key={column.key} className="px-3 py-3">
-                                    <div
-                                      className={`min-h-[32px] w-full rounded-md border px-2 py-1.5 text-xs ${
-                                        hasCellError ? 'border-red-400 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-800'
-                                      } ${column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'}`}
-                                    >
-                                      {column.key === 'communityGroupCategoryMain' ? (
-                                        <div className="w-full max-w-[220px]">
-                                          <MultiSelectDropdown
-                                            options={categories}
-                                            value={splitCategories(row.communityGroupCategoryMain)}
-                                            onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategoryMain', value)}
-                                            placeholder="Select category"
-                                            err={hasCellError}
-                                            search={true}
-                                          />
-                                        </div>
-                                      ) : column.key === 'communityGroupCategorySub' ? (
-                                        <div
-                                          className={`w-full max-w-[360px] ${
-                                            splitCategories(row.communityGroupCategoryMain).length === 0 ? 'pointer-events-none opacity-60' : ''
-                                          }`}
-                                        >
-                                          <MultiSelectDropdown
-                                            options={splitCategories(row.communityGroupCategoryMain).flatMap((category) =>
-                                              (subCategories[category as Category] || []).map((sub) => encodeCategorySub(category, sub))
-                                            )}
-                                            value={splitSubcategories(row.communityGroupCategorySub)}
-                                            onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategorySub', value)}
-                                            placeholder={
-                                              splitCategories(row.communityGroupCategoryMain).length > 0
-                                                ? 'Select subcategory'
-                                                : 'Select category first'
-                                            }
-                                            err={hasCellError}
-                                            search={true}
-                                            disabled={splitCategories(row.communityGroupCategoryMain).length === 0}
-                                          />
-                                          {/* {splitSubcategories(row.communityGroupCategorySub).length > 0 ? (
+                            return (
+                              <tr
+                                key={`${rowIndex}-${row.title}`}
+                                className={`border-b border-neutral-100 align-top ${rowHasErrors ? 'bg-red-50/30' : 'bg-white'}`}
+                              >
+                                <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                                {COLUMNS.map((column) => {
+                                  const fieldError = rowErrors[column.key]
+                                  const serverFieldError = serverRowErrors[column.key]
+                                  const serverFieldErrorIds = serverRowErrorIds[column.key] || {
+                                    unresolved: [],
+                                    nonCommunity: [],
+                                    nonVerified: [],
+                                    any: [],
+                                  }
+                                  const hasCellError = Boolean(fieldError || (serverFieldError && column.key !== 'memberList'))
+                                  return (
+                                    <td key={column.key} className="px-3 py-3">
+                                      <div
+                                        className={`min-h-[32px] w-full rounded-md border px-2 py-1.5 text-xs ${
+                                          hasCellError ? 'border-red-400 bg-red-50 text-red-700' : 'border-neutral-200 bg-neutral-50 text-neutral-800'
+                                        } ${column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'}`}
+                                      >
+                                        {column.key === 'communityGroupCategoryMain' ? (
+                                          <div className="w-full max-w-[220px]">
+                                            <MultiSelectDropdown
+                                              options={categories}
+                                              value={splitCategories(row.communityGroupCategoryMain)}
+                                              onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategoryMain', value)}
+                                              placeholder="Select category"
+                                              err={hasCellError}
+                                              search={true}
+                                            />
+                                          </div>
+                                        ) : column.key === 'communityGroupCategorySub' ? (
+                                          <div
+                                            className={`w-full max-w-[360px] ${
+                                              splitCategories(row.communityGroupCategoryMain).length === 0 ? 'pointer-events-none opacity-60' : ''
+                                            }`}
+                                          >
+                                            <MultiSelectDropdown
+                                              options={splitCategories(row.communityGroupCategoryMain).flatMap((category) =>
+                                                (subCategories[category as Category] || []).map((sub) => encodeCategorySub(category, sub))
+                                              )}
+                                              value={splitSubcategories(row.communityGroupCategorySub)}
+                                              onChange={(value) => handleCategoryFieldChange(rowIndex, 'communityGroupCategorySub', value)}
+                                              placeholder={
+                                                splitCategories(row.communityGroupCategoryMain).length > 0
+                                                  ? 'Select subcategory'
+                                                  : 'Select category first'
+                                              }
+                                              err={hasCellError}
+                                              search={true}
+                                              disabled={splitCategories(row.communityGroupCategoryMain).length === 0}
+                                            />
+                                            {/* {splitSubcategories(row.communityGroupCategorySub).length > 0 ? (
                                             <p className="mt-1 text-[11px] text-neutral-600">
                                               {toSubcategoryLabels(splitSubcategories(row.communityGroupCategorySub)).join(', ')}
                                             </p>
                                           ) : null} */}
-                                        </div>
-                                      ) : column.key === 'memberList' && serverFieldErrorIds.any.length > 0 ? (
-                                        <div className="flex flex-wrap gap-1.5">
-                                          {Array.from(
-                                            new Map(
-                                              splitMemberIds(row.memberList).map((memberId, originalIndex) => [
-                                                normalizeUniqueId(memberId),
-                                                { memberId: normalizeUniqueId(memberId), originalIndex },
-                                              ])
-                                            ).values()
-                                          )
+                                          </div>
+                                        ) : column.key === 'memberList' && serverFieldErrorIds.any.length > 0 ? (
+                                          <div className="flex flex-wrap gap-1.5">
+                                            {Array.from(
+                                              new Map(
+                                                splitMemberIds(row.memberList).map((memberId, originalIndex) => [
+                                                  normalizeUniqueId(memberId),
+                                                  { memberId: normalizeUniqueId(memberId), originalIndex },
+                                                ])
+                                              ).values()
+                                            )
+                                              .sort((a, b) => {
+                                                const priorityDiff =
+                                                  getErrorPriority(a.memberId, serverFieldErrorIds) -
+                                                  getErrorPriority(b.memberId, serverFieldErrorIds)
+                                                if (priorityDiff !== 0) return priorityDiff
+                                                return a.originalIndex - b.originalIndex
+                                              })
+                                              .map(({ memberId }, memberIndex, sortedIds) => {
+                                                const highlightClass = getErrorBadgeClass(memberId, serverFieldErrorIds)
+                                                return (
+                                                  <span key={`${memberId}-${memberIndex}`} className={highlightClass}>
+                                                    {memberId}
+                                                    {memberIndex < sortedIds.length - 1 ? ',' : ''}
+                                                  </span>
+                                                )
+                                              })}
+                                          </div>
+                                        ) : (
+                                          row[column.key] || '-'
+                                        )}
+                                      </div>
+                                      {fieldError ? <p className="mt-1 text-[11px] text-red-600">{fieldError}</p> : null}
+                                      {serverFieldErrorIds.unresolved.length > 0 ? (
+                                        <p className="mt-1 text-[11px] text-red-600">{USER_ID_NOT_FOUND_MESSAGE}</p>
+                                      ) : null}
+                                      {serverFieldErrorIds.nonCommunity.length > 0 ? (
+                                        <p className="mt-1 text-[11px] text-amber-700">{USER_ID_NOT_IN_COMMUNITY_MESSAGE}</p>
+                                      ) : null}
+                                      {serverFieldErrorIds.nonVerified.length > 0 ? (
+                                        <p className="mt-1 text-[11px] text-neutral-700">{USER_ID_NOT_VERIFIED_MESSAGE}</p>
+                                      ) : null}
+                                      {serverFieldError && serverFieldErrorIds.any.length === 0 ? (
+                                        <p className="mt-1 text-[11px] text-red-600">{serverFieldError}</p>
+                                      ) : null}
+                                      {serverFieldErrorIds.any.length > 0 && column.key !== 'memberList' ? (
+                                        <div className="mt-1 flex flex-wrap gap-1">
+                                          {serverFieldErrorIds.any
+                                            .map((id, originalIndex) => ({ id, originalIndex }))
                                             .sort((a, b) => {
                                               const priorityDiff =
-                                                getErrorPriority(a.memberId, serverFieldErrorIds) - getErrorPriority(b.memberId, serverFieldErrorIds)
+                                                getErrorPriority(a.id, serverFieldErrorIds) - getErrorPriority(b.id, serverFieldErrorIds)
                                               if (priorityDiff !== 0) return priorityDiff
                                               return a.originalIndex - b.originalIndex
                                             })
-                                            .map(({ memberId }, memberIndex, sortedIds) => {
-                                              const highlightClass = getErrorBadgeClass(memberId, serverFieldErrorIds)
-                                              return (
-                                                <span key={`${memberId}-${memberIndex}`} className={highlightClass}>
-                                                  {memberId}
-                                                  {memberIndex < sortedIds.length - 1 ? ',' : ''}
-                                                </span>
-                                              )
-                                            })}
+                                            .map(({ id }) => (
+                                              <span key={id} className={getErrorBadgeClass(id, serverFieldErrorIds)}>
+                                                {id}
+                                              </span>
+                                            ))}
                                         </div>
-                                      ) : (
-                                        row[column.key] || '-'
-                                      )}
-                                    </div>
-                                    {fieldError ? <p className="mt-1 text-[11px] text-red-600">{fieldError}</p> : null}
-                                    {serverFieldErrorIds.unresolved.length > 0 ? (
-                                      <p className="mt-1 text-[11px] text-red-600">{USER_ID_NOT_FOUND_MESSAGE}</p>
-                                    ) : null}
-                                    {serverFieldErrorIds.nonCommunity.length > 0 ? (
-                                      <p className="mt-1 text-[11px] text-amber-700">{USER_ID_NOT_IN_COMMUNITY_MESSAGE}</p>
-                                    ) : null}
-                                    {serverFieldErrorIds.nonVerified.length > 0 ? (
-                                      <p className="mt-1 text-[11px] text-neutral-700">{USER_ID_NOT_VERIFIED_MESSAGE}</p>
-                                    ) : null}
-                                    {serverFieldError && serverFieldErrorIds.any.length === 0 ? (
-                                      <p className="mt-1 text-[11px] text-red-600">{serverFieldError}</p>
-                                    ) : null}
-                                    {serverFieldErrorIds.any.length > 0 && column.key !== 'memberList' ? (
-                                      <div className="mt-1 flex flex-wrap gap-1">
-                                        {serverFieldErrorIds.any
-                                          .map((id, originalIndex) => ({ id, originalIndex }))
-                                          .sort((a, b) => {
-                                            const priorityDiff =
-                                              getErrorPriority(a.id, serverFieldErrorIds) - getErrorPriority(b.id, serverFieldErrorIds)
-                                            if (priorityDiff !== 0) return priorityDiff
-                                            return a.originalIndex - b.originalIndex
-                                          })
-                                          .map(({ id }) => (
-                                            <span key={id} className={getErrorBadgeClass(id, serverFieldErrorIds)}>
-                                              {id}
-                                            </span>
-                                          ))}
-                                      </div>
-                                    ) : null}
-                                  </td>
-                                )
-                              })}
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              </details>
+                                      ) : null}
+                                    </td>
+                                  )
+                                })}
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </TableHorizontalScroll>
+                </details>
 
-              {passedRows.length > 0 ? (
-                <details open className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/40">
-                  <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-emerald-700">
-                    Passed Rows ({passedRows.length})
-                  </summary>
-                  <div className="overflow-auto border-t border-emerald-200 bg-white">
-                    <table className="min-w-[1400px] table-fixed border-collapse">
-                      <thead className="sticky top-0 bg-neutral-50">
-                        <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                          <th className="px-3 py-3">Row</th>
-                          {COLUMNS.map((column) => (
-                            <th key={column.key} className="px-3 py-3">
-                              {column.label} {column.required ? '*' : ''}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {passedRows.map((row, rowIndex) => (
-                          <tr key={`${rowIndex}-${row.title}`} className="border-b border-neutral-100 align-top bg-emerald-50/20">
-                            <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                {passedRows.length > 0 ? (
+                  <details open className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/40">
+                    <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-emerald-700">
+                      Passed Rows ({passedRows.length})
+                    </summary>
+                    <TableHorizontalScroll scrollRef={passedTableScrollRef} className="border-t border-emerald-200 bg-white">
+                      <table className="min-w-[1400px] table-fixed border-collapse">
+                        <thead className="sticky top-0 bg-neutral-50">
+                          <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            <th className="px-3 py-3">Row</th>
                             {COLUMNS.map((column) => (
-                              <td key={column.key} className="px-3 py-3">
-                                <div
-                                  className={`min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 ${
-                                    column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'
-                                  }`}
-                                >
-                                  {column.key === 'communityGroupCategorySub'
-                                    ? toSubcategoryLabels(splitSubcategories(row.communityGroupCategorySub)).join(', ') || '-'
-                                    : row[column.key] || '-'}
-                                </div>
-                              </td>
+                              <th key={column.key} className="px-3 py-3">
+                                {column.label} {column.required ? '*' : ''}
+                              </th>
                             ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </details>
-              ) : null}
-            </div>
+                        </thead>
+                        <tbody>
+                          {passedRows.map((row, rowIndex) => (
+                            <tr key={`${rowIndex}-${row.title}`} className="border-b border-neutral-100 align-top bg-emerald-50/20">
+                              <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                              {COLUMNS.map((column) => (
+                                <td key={column.key} className="px-3 py-3">
+                                  <div
+                                    className={`min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 ${
+                                      column.key === 'memberList' ? 'min-h-[90px] whitespace-pre-wrap break-words' : 'break-words'
+                                    }`}
+                                  >
+                                    {column.key === 'communityGroupCategorySub'
+                                      ? toSubcategoryLabels(splitSubcategories(row.communityGroupCategorySub)).join(', ') || '-'
+                                      : row[column.key] || '-'}
+                                  </div>
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </TableHorizontalScroll>
+                  </details>
+                ) : null}
+              </div>
+            )}
+          </div>
+          {(rows.length > 0 || passedRows.length > 0) && (
+            <HorizontalScrollBar
+              scrollTargetRef={activeHorizontalScrollRef}
+              className={hasUploadAttempted ? 'border-red-200' : 'border-neutral-200'}
+            />
           )}
         </div>
       </div>
