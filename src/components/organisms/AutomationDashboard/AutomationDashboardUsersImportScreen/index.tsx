@@ -3,12 +3,14 @@
 import Buttons from '@/components/atoms/Buttons'
 import AutomationDashboardShell from '@/components/organisms/AutomationDashboard/AutomationDashboardShell'
 import useCookie from '@/hooks/useCookie'
-import { ChangeEvent, useMemo, useRef, useState } from 'react'
-import { FiArrowLeft, FiUpload } from 'react-icons/fi'
+import { ChangeEvent, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { FiArrowLeft, FiDownload, FiUpload } from 'react-icons/fi'
 import { useRouter } from 'next/navigation'
 import * as XLSX from 'xlsx'
+import { isValid, parse } from 'date-fns'
 import { useAdminDashboardBulkRegisterUsers } from '@/services/admin-dashboard-auth'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
+import { downloadUserImportTemplate } from '@/utils/adminDashboardUsersImportExport'
 
 type SheetSummary = {
   sheetName: string
@@ -42,6 +44,9 @@ type FailedUploadedRow = {
 
 const getErrorFieldFromMessage = (message: string): keyof UserImportPayload | null => {
   const normalized = message.toLowerCase()
+  if (normalized.includes('birthday') || normalized.includes('birthdate') || normalized.includes('dob') || normalized.includes('date of birth')) {
+    return 'birthday'
+  }
   if (normalized.includes('email')) return 'email'
   if (normalized.includes('uniqueid') || normalized.includes('unique id') || normalized.includes('roll') || normalized.includes('faculty id')) {
     return 'uniqueId'
@@ -112,6 +117,124 @@ const getValueByAliases = (row: Record<string, unknown>, aliases: string[]) => {
   return match?.[1] || ''
 }
 
+const parseBirthday = (value: string): { normalized: string; error?: string } => {
+  const trimmed = value.trim()
+  if (!trimmed) return { normalized: '' }
+
+  let normalized = ''
+
+  if (/^\d{2}-\d{2}-\d{4}$/.test(trimmed)) {
+    normalized = trimmed.replace(/-/g, '/')
+  } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(trimmed)) {
+    normalized = trimmed
+  } else {
+    return { normalized: trimmed, error: 'Birthday must be in DD/MM/YYYY or DD-MM-YYYY format' }
+  }
+
+  const parsed = parse(normalized, 'dd/MM/yyyy', new Date())
+  if (!isValid(parsed)) {
+    return { normalized, error: 'Birthday is not a valid date' }
+  }
+
+  return { normalized }
+}
+
+const validatePayloadRow = (payload: UserImportPayload): Partial<Record<keyof UserImportPayload, string>> => {
+  const errors: Partial<Record<keyof UserImportPayload, string>> = {}
+
+  if (payload.birthday) {
+    const birthdayResult = parseBirthday(payload.birthday)
+    if (birthdayResult.error) {
+      errors.birthday = birthdayResult.error
+    }
+  }
+
+  return errors
+}
+
+type HorizontalScrollBarProps = {
+  scrollTargetRef: React.RefObject<HTMLDivElement | null>
+  className?: string
+}
+
+function HorizontalScrollBar({ scrollTargetRef, className = '' }: HorizontalScrollBarProps) {
+  const barRef = useRef<HTMLDivElement | null>(null)
+  const [contentWidth, setContentWidth] = useState(0)
+  const [showBar, setShowBar] = useState(false)
+  const isSyncingScroll = useRef(false)
+
+  useEffect(() => {
+    const content = scrollTargetRef.current
+    if (!content) return
+
+    const updateMeasurements = () => {
+      setContentWidth(content.scrollWidth)
+      setShowBar(content.scrollWidth > content.clientWidth)
+    }
+
+    const syncFromContent = () => {
+      if (!barRef.current || isSyncingScroll.current) return
+      isSyncingScroll.current = true
+      barRef.current.scrollLeft = content.scrollLeft
+      isSyncingScroll.current = false
+    }
+
+    updateMeasurements()
+    content.addEventListener('scroll', syncFromContent)
+    const resizeObserver = new ResizeObserver(updateMeasurements)
+    resizeObserver.observe(content)
+
+    return () => {
+      content.removeEventListener('scroll', syncFromContent)
+      resizeObserver.disconnect()
+    }
+  }, [scrollTargetRef])
+
+  const syncScrollLeft = (source: HTMLDivElement, target: HTMLDivElement) => {
+    if (isSyncingScroll.current) return
+    isSyncingScroll.current = true
+    target.scrollLeft = source.scrollLeft
+    isSyncingScroll.current = false
+  }
+
+  if (!showBar) {
+    return null
+  }
+
+  return (
+    <div
+      ref={(node) => {
+        barRef.current = node
+      }}
+      className={`shrink-0 overflow-x-auto overflow-y-hidden custom-scrollbar border-t bg-white ${className}`}
+      onScroll={(event) => {
+        if (scrollTargetRef.current) {
+          syncScrollLeft(event.currentTarget, scrollTargetRef.current)
+        }
+      }}
+    >
+      <div aria-hidden="true" className="h-3" style={{ width: contentWidth }} />
+    </div>
+  )
+}
+
+type TableHorizontalScrollProps = {
+  children: ReactNode
+  scrollRef: React.Ref<HTMLDivElement>
+  className?: string
+}
+
+function TableHorizontalScroll({ children, scrollRef, className = '' }: TableHorizontalScrollProps) {
+  return (
+    <div
+      ref={scrollRef}
+      className={`overflow-x-auto overflow-y-visible [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
 const mapSheetRowToPayload = (
   sheetType: UserType,
   row: Record<string, unknown>,
@@ -126,6 +249,8 @@ const mapSheetRowToPayload = (
   const uniqueIdFallback =
     getValueByAliases(row, ['column1', 'column2']) || getValueByAliases(row, ['id', 'identifier']) || getValueByAliases(row, ['roll no', 'rollno'])
 
+  const birthdayResult = parseBirthday(getValueByAliases(row, ['birthday', 'birthdate', 'dob', 'date of birth', 'dateofbirth']))
+
   return {
     userType: sheetType,
     uniqueId: uniqueIdFromAliases || uniqueIdFallback,
@@ -135,7 +260,7 @@ const mapSheetRowToPayload = (
     universityId: selectedUniversityId || getValueByAliases(row, ['university id', 'universityid', 'college id', 'collegeid']),
     firstName: getValueByAliases(row, ['first name', 'firstname', 'first']),
     lastName: getValueByAliases(row, ['last name', 'lastname', 'last']),
-    birthday: getValueByAliases(row, ['birthday', 'birthdate', 'dob', 'date of birth', 'dateofbirth']),
+    birthday: birthdayResult.normalized,
     major: getValueByAliases(row, ['major']),
     year: getValueByAliases(row, ['year', 'study year', 'studyyear']),
     occupation: getValueByAliases(row, ['occupation']),
@@ -148,6 +273,9 @@ export default function AutomationDashboardUsersImportScreen() {
   const router = useRouter()
   const [selectedUniversityCookie] = useCookie(ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE)
   const inputRef = useRef<HTMLInputElement>(null)
+  const previewTableScrollRef = useRef<HTMLDivElement>(null)
+  const uploadedTableScrollRef = useRef<HTMLDivElement>(null)
+  const failedTableScrollRef = useRef<HTMLDivElement>(null)
   const [fileName, setFileName] = useState('')
   const [columns] = useState<string[]>(PREVIEW_COLUMNS as string[])
   const [rows, setRows] = useState<ParsedRow[]>([])
@@ -165,10 +293,28 @@ export default function AutomationDashboardUsersImportScreen() {
     if (!selectedUniversityCookie) return null
     return parseAdminDashboardSelectedUniversity(selectedUniversityCookie)
   }, [selectedUniversityCookie])
-  const canUpload = useMemo(() => rows.length > 0 && !isParsing, [rows.length, isParsing])
+
+  const validations = useMemo(() => payloadRows.map((payload) => validatePayloadRow(payload)), [payloadRows])
+  const invalidRowCount = useMemo(() => validations.filter((item) => Object.keys(item).length > 0).length, [validations])
+  const invalidRowNumbers = useMemo(
+    () =>
+      validations
+        .map((validation, index) => (Object.keys(validation).length > 0 ? index + 1 : null))
+        .filter((rowNumber): rowNumber is number => rowNumber !== null),
+    [validations]
+  )
+
+  const activeHorizontalScrollRef =
+    rows.length > 0 ? previewTableScrollRef : failedUploadedRows.length > 0 ? failedTableScrollRef : uploadedTableScrollRef
+
+  const canUpload = useMemo(() => rows.length > 0 && !isParsing && invalidRowCount === 0, [rows.length, isParsing, invalidRowCount])
 
   const handleUploadClick = () => {
     inputRef.current?.click()
+  }
+
+  const handleExportTemplate = () => {
+    downloadUserImportTemplate()
   }
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -265,7 +411,12 @@ export default function AutomationDashboardUsersImportScreen() {
   const handleUploadRows = () => {
     if (!canUpload) return
 
-    bulkRegisterUsers(payloadRows, {
+    const normalizedPayloadRows = payloadRows.map((payload) => ({
+      ...payload,
+      birthday: payload.birthday ? parseBirthday(payload.birthday).normalized : '',
+    }))
+
+    bulkRegisterUsers(normalizedPayloadRows, {
       onSuccess: (response: BulkRegisterUsersResponse) => {
         const failedFromResponse = response?.data?.failed || []
         const failedRowsWithReason: FailedUploadedRow[] = failedFromResponse
@@ -312,6 +463,9 @@ export default function AutomationDashboardUsersImportScreen() {
           <Buttons variant="primary" size="small" leftIcon={<FiUpload size={14} />} onClick={handleUploadClick}>
             Add Excel File
           </Buttons>
+          <Buttons variant="border" size="small" leftIcon={<FiDownload size={14} />} onClick={handleExportTemplate}>
+            Export Template
+          </Buttons>
           <input ref={inputRef} type="file" className="hidden" accept=".xlsx,.xls,.csv" onChange={handleFileChange} />
         </div>
 
@@ -336,6 +490,12 @@ export default function AutomationDashboardUsersImportScreen() {
           <div className="flex items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm">
             <div>
               <span className="font-medium text-neutral-900">Rows: {rows.length}</span>
+              {invalidRowCount > 0 ? (
+                <span className="ml-4 text-rose-600">
+                  Invalid: {invalidRowCount}
+                  {invalidRowNumbers.length > 0 ? ` (rows ${invalidRowNumbers.join(', ')})` : null}
+                </span>
+              ) : null}
               {uploadedRows.length > 0 ? <span className="ml-4 text-emerald-600">Uploaded: {uploadedRows.length}</span> : null}
               {failedUploadedRows.length > 0 ? <span className="ml-4 text-rose-600">Failed: {failedUploadedRows.length}</span> : null}
               {payloadRows.length > 0 ? <span className="ml-4 text-blue-600">Payload Ready: {payloadRows.length}</span> : null}
@@ -347,140 +507,162 @@ export default function AutomationDashboardUsersImportScreen() {
           </div>
         )}
 
-        <div className="flex-1 overflow-auto rounded-xl border border-neutral-200">
-          {isParsing ? (
-            <div className="flex items-center gap-3 px-4 py-6 text-sm text-neutral-600">
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-primary-500"></span>
-              <p>Loading preview rows from Excel...</p>
-            </div>
-          ) : rows.length === 0 && uploadedRows.length === 0 && failedUploadedRows.length === 0 ? (
-            <p className="px-4 py-6 text-sm text-neutral-500">
-              {hasParsedFile
-                ? 'No valid preview rows were found in this file. Please review column names/data or upload another file.'
-                : 'Upload an Excel file to preview rows.'}
-            </p>
-          ) : (
-            <div className="space-y-3 p-3">
-              {rows.length > 0 ? (
-                <details open className="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50/40">
-                  <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-neutral-700">
-                    Preview Rows ({rows.length})
-                  </summary>
-                  <div className="overflow-auto border-t border-neutral-200 bg-white">
-                    <table className="min-w-[1200px] table-fixed border-collapse">
-                      <thead className="sticky top-0 bg-neutral-50">
-                        <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                          <th className="px-3 py-3">Row</th>
-                          {columns.map((column) => (
-                            <th key={column} className="px-3 py-3">
-                              {column}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {rows.map((row, rowIndex) => (
-                          <tr
-                            key={`${rowIndex}-${row.email || row.userName || row.firstName || 'user'}`}
-                            className="border-b border-neutral-100 align-top bg-white"
-                          >
-                            <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-neutral-200">
+          <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+            {isParsing ? (
+              <div className="flex items-center gap-3 px-4 py-6 text-sm text-neutral-600">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-300 border-t-primary-500"></span>
+                <p>Loading preview rows from Excel...</p>
+              </div>
+            ) : rows.length === 0 && uploadedRows.length === 0 && failedUploadedRows.length === 0 ? (
+              <p className="px-4 py-6 text-sm text-neutral-500">
+                {hasParsedFile
+                  ? 'No valid preview rows were found in this file. Please review column names/data or upload another file.'
+                  : 'Upload an Excel file to preview rows.'}
+              </p>
+            ) : (
+              <div className="space-y-3 p-3">
+                {rows.length > 0 ? (
+                  <details open className="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50/40">
+                    <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-neutral-700">
+                      Preview Rows ({rows.length})
+                    </summary>
+                    <TableHorizontalScroll scrollRef={previewTableScrollRef} className="border-t border-neutral-200 bg-white">
+                      <table className="min-w-[1200px] table-fixed border-collapse">
+                        <thead className="sticky top-0 bg-neutral-50">
+                          <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            <th className="px-3 py-3">Row</th>
                             {columns.map((column) => (
-                              <td key={column} className="px-3 py-3">
-                                <div className="min-h-[32px] w-full rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1.5 text-xs text-neutral-800 break-words">
-                                  {row[column] || '-'}
-                                </div>
-                              </td>
+                              <th key={column} className="px-3 py-3">
+                                {column}
+                              </th>
                             ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </details>
-              ) : null}
+                        </thead>
+                        <tbody>
+                          {rows.map((row, rowIndex) => {
+                            const rowErrors = validations[rowIndex] || {}
 
-              {uploadedRows.length > 0 ? (
-                <details open className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/40">
-                  <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-emerald-700">
-                    Successful Rows ({uploadedRows.length})
-                  </summary>
-                  <div className="overflow-auto border-t border-emerald-200 bg-white">
-                    <table className="min-w-[1200px] table-fixed border-collapse">
-                      <thead className="sticky top-0 bg-neutral-50">
-                        <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                          <th className="px-3 py-3">Row</th>
-                          {columns.map((column) => (
-                            <th key={column} className="px-3 py-3">
-                              {column}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {uploadedRows.map((row, rowIndex) => (
-                          <tr
-                            key={`${rowIndex}-${row.email || row.userName || row.firstName || 'uploaded-user'}`}
-                            className="border-b border-neutral-100 align-top bg-emerald-50/20"
-                          >
-                            <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
-                            {columns.map((column) => (
-                              <td key={column} className="px-3 py-3">
-                                <div className="min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 break-words">
-                                  {row[column] || '-'}
-                                </div>
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </details>
-              ) : null}
+                            return (
+                              <tr
+                                key={`${rowIndex}-${row.email || row.userName || row.firstName || 'user'}`}
+                                className={`border-b border-neutral-100 align-top ${
+                                  Object.keys(rowErrors).length > 0 ? 'bg-rose-50/30' : 'bg-white'
+                                }`}
+                              >
+                                <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                                {columns.map((column) => {
+                                  const fieldError = rowErrors[column as keyof UserImportPayload]
 
-              {failedUploadedRows.length > 0 ? (
-                <details open className="overflow-hidden rounded-lg border border-rose-200 bg-rose-50/40">
-                  <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-rose-700">
-                    Failed Rows ({failedUploadedRows.length})
-                  </summary>
-                  <div className="overflow-auto border-t border-rose-200 bg-white">
-                    <table className="min-w-[1300px] table-fixed border-collapse">
-                      <thead className="sticky top-0 bg-neutral-50">
-                        <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                          <th className="px-3 py-3">Row</th>
-                          {columns.map((column) => (
-                            <th key={column} className="px-3 py-3">
-                              {column}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {failedUploadedRows.map((failedItem, rowIndex) => (
-                          <tr
-                            key={`${rowIndex}-${failedItem.row.email || failedItem.row.uniqueId || 'failed-user'}`}
-                            className="border-b border-neutral-100 align-top bg-rose-50/20"
-                          >
-                            <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                                  return (
+                                    <td key={column} className="px-3 py-3">
+                                      <div
+                                        className={`min-h-[32px] w-full rounded-md border px-2 py-1.5 text-xs break-words ${
+                                          fieldError
+                                            ? 'border-rose-400 bg-rose-50 text-rose-700'
+                                            : 'border-neutral-200 bg-neutral-50 text-neutral-800'
+                                        }`}
+                                      >
+                                        {row[column] || '-'}
+                                      </div>
+                                      {fieldError ? <p className="mt-1 text-[11px] text-rose-600">{fieldError}</p> : null}
+                                    </td>
+                                  )
+                                })}
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    </TableHorizontalScroll>
+                  </details>
+                ) : null}
+
+                {uploadedRows.length > 0 ? (
+                  <details open className="overflow-hidden rounded-lg border border-emerald-200 bg-emerald-50/40">
+                    <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-emerald-700">
+                      Successful Rows ({uploadedRows.length})
+                    </summary>
+                    <TableHorizontalScroll scrollRef={uploadedTableScrollRef} className="border-t border-emerald-200 bg-white">
+                      <table className="min-w-[1200px] table-fixed border-collapse">
+                        <thead className="sticky top-0 bg-neutral-50">
+                          <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            <th className="px-3 py-3">Row</th>
                             {columns.map((column) => (
-                              <td key={column} className="px-3 py-3">
-                                <div className="min-h-[32px] w-full rounded-md border border-rose-200 bg-rose-50/30 px-2 py-1.5 text-xs text-neutral-800 break-words">
-                                  {failedItem.row[column] || '-'}
-                                </div>
-                                {failedItem.errorsByField[column as keyof UserImportPayload] ? (
-                                  <p className="mt-1 text-[11px] text-rose-600">{failedItem.errorsByField[column as keyof UserImportPayload]}</p>
-                                ) : null}
-                              </td>
+                              <th key={column} className="px-3 py-3">
+                                {column}
+                              </th>
                             ))}
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </details>
-              ) : null}
-            </div>
+                        </thead>
+                        <tbody>
+                          {uploadedRows.map((row, rowIndex) => (
+                            <tr
+                              key={`${rowIndex}-${row.email || row.userName || row.firstName || 'uploaded-user'}`}
+                              className="border-b border-neutral-100 align-top bg-emerald-50/20"
+                            >
+                              <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                              {columns.map((column) => (
+                                <td key={column} className="px-3 py-3">
+                                  <div className="min-h-[32px] w-full rounded-md border border-emerald-200 bg-emerald-50/30 px-2 py-1.5 text-xs text-neutral-800 break-words">
+                                    {row[column] || '-'}
+                                  </div>
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </TableHorizontalScroll>
+                  </details>
+                ) : null}
+
+                {failedUploadedRows.length > 0 ? (
+                  <details open className="overflow-hidden rounded-lg border border-rose-200 bg-rose-50/40">
+                    <summary className="cursor-pointer select-none px-3 py-2 text-sm font-medium text-rose-700">
+                      Failed Rows ({failedUploadedRows.length})
+                    </summary>
+                    <TableHorizontalScroll scrollRef={failedTableScrollRef} className="border-t border-rose-200 bg-white">
+                      <table className="min-w-[1300px] table-fixed border-collapse">
+                        <thead className="sticky top-0 bg-neutral-50">
+                          <tr className="border-b border-neutral-200 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                            <th className="px-3 py-3">Row</th>
+                            {columns.map((column) => (
+                              <th key={column} className="px-3 py-3">
+                                {column}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {failedUploadedRows.map((failedItem, rowIndex) => (
+                            <tr
+                              key={`${rowIndex}-${failedItem.row.email || failedItem.row.uniqueId || 'failed-user'}`}
+                              className="border-b border-neutral-100 align-top bg-rose-50/20"
+                            >
+                              <td className="px-3 py-3 text-xs text-neutral-500">{rowIndex + 1}</td>
+                              {columns.map((column) => (
+                                <td key={column} className="px-3 py-3">
+                                  <div className="min-h-[32px] w-full rounded-md border border-rose-200 bg-rose-50/30 px-2 py-1.5 text-xs text-neutral-800 break-words">
+                                    {failedItem.row[column] || '-'}
+                                  </div>
+                                  {failedItem.errorsByField[column as keyof UserImportPayload] ? (
+                                    <p className="mt-1 text-[11px] text-rose-600">{failedItem.errorsByField[column as keyof UserImportPayload]}</p>
+                                  ) : null}
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </TableHorizontalScroll>
+                  </details>
+                ) : null}
+              </div>
+            )}
+          </div>
+          {(rows.length > 0 || uploadedRows.length > 0 || failedUploadedRows.length > 0) && (
+            <HorizontalScrollBar scrollTargetRef={activeHorizontalScrollRef} className="border-neutral-200" />
           )}
         </div>
       </div>

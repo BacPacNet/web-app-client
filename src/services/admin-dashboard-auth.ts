@@ -36,6 +36,7 @@ export type SemesterStart = {
 
 export type AdminDashboardStatsResponse = {
   totalUsers: number
+  totalApplicantsUsers: number
   totalStudentUsers: number
   totalFacultyUsers: number
   totalGroups: number
@@ -97,6 +98,7 @@ type AdminDashboardUsersParams = {
   page: number
   limit: number
   searchTerm: string
+  universityId: string
   universityName: string
   role: string
   studyYear: string[]
@@ -111,6 +113,7 @@ const getAdminDashboardUsers = async (params: AdminDashboardUsersParams, token: 
   queryParams.append('page', String(params.page))
   queryParams.append('limit', String(params.limit))
   if (params.searchTerm) queryParams.append('name', params.searchTerm)
+  if (params.universityId) queryParams.append('universityId', params.universityId)
   if (params.universityName) queryParams.append('universityName', params.universityName)
   if (params.role) queryParams.append('role', params.role)
   if (params.studyYear.length) queryParams.append('studyYear', params.studyYear.join(','))
@@ -118,12 +121,47 @@ const getAdminDashboardUsers = async (params: AdminDashboardUsersParams, token: 
   if (params.occupation.length) queryParams.append('occupation', params.occupation.join(','))
   if (params.affiliation.length) queryParams.append('affiliation', params.affiliation.join(','))
 
-  return client<ProfileConnection, never>(`/users/connections?${queryParams.toString()}`, {
+  return client<ProfileConnection, never>(`/users/super-admin/connections?${queryParams.toString()}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export type AdminDashboardUsersExportParams = {
+  searchTerm: string
+  universityId: string
+  universityName: string
+  role: string
+  studyYear: string[]
+  major: string[]
+  occupation: string[]
+  affiliation: string[]
+}
+
+export type AdminDashboardUsersExportResponse = {
+  users: ProfileConnection['users']
+}
+
+const exportAdminDashboardUsers = async (params: AdminDashboardUsersExportParams, token: string): Promise<AdminDashboardUsersExportResponse> => {
+  const queryParams = new URLSearchParams()
+  if (params.searchTerm) queryParams.append('name', params.searchTerm)
+  if (params.universityId) queryParams.append('universityId', params.universityId)
+  if (params.universityName) queryParams.append('universityName', params.universityName)
+  if (params.role) queryParams.append('role', params.role)
+  if (params.studyYear.length) queryParams.append('studyYear', params.studyYear.join(','))
+  if (params.major.length) queryParams.append('major', params.major.join(','))
+  if (params.occupation.length) queryParams.append('occupation', params.occupation.join(','))
+  if (params.affiliation.length) queryParams.append('affiliation', params.affiliation.join(','))
+
+  const query = queryParams.toString()
+
+  return client<AdminDashboardUsersExportResponse, never>(`/users/super-admin/connections/export${query ? `?${query}` : ''}`, {
+    method: 'GET',
     headers: { Authorization: `Bearer ${token}` },
   })
 }
 
 export const useAdminDashboardUsers = (
+  universityId: string,
   universityName: string,
   searchTerm: string,
   role: string,
@@ -137,13 +175,14 @@ export const useAdminDashboardUsers = (
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
   return useInfiniteQuery({
-    queryKey: ['admin-dashboard-users', universityName, debouncedSearchTerm, role, studyYear, major, occupation, affiliation, limit],
+    queryKey: ['admin-dashboard-users', universityId, universityName, debouncedSearchTerm, role, studyYear, major, occupation, affiliation, limit],
     queryFn: ({ pageParam = 1 }) =>
       getAdminDashboardUsers(
         {
           page: pageParam,
           limit,
           searchTerm: debouncedSearchTerm,
+          universityId,
           universityName,
           role,
           studyYear,
@@ -160,7 +199,18 @@ export const useAdminDashboardUsers = (
       return undefined
     },
     initialPageParam: 1,
-    enabled: Boolean(universityName && accessToken),
+    enabled: Boolean(universityId && universityName && accessToken),
+  })
+}
+
+export const useAdminDashboardUsersExport = () => {
+  const [accessToken] = useCookie(ADMIN_DASHBOARD_ACCESS_TOKEN_COOKIE)
+
+  return useMutation({
+    mutationFn: (params: AdminDashboardUsersExportParams) => exportAdminDashboardUsers(params, accessToken),
+    onError: (error: any) => {
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 
@@ -183,6 +233,34 @@ type AdminDashboardFilteredGroupsResponse = {
     communityGroupLogoUrl?: string | { imageUrl?: string }
     description?: string
   }[]
+}
+
+export type AdminDashboardFilteredGroupsExportUser = {
+  _id: string
+  firstName?: string
+  lastName?: string
+  role?: string
+  status?: string
+  isRequestAccepted?: boolean
+}
+
+export type AdminDashboardFilteredGroupsExportGroup = {
+  _id: string
+  adminUserId: string
+  communityId: string
+  title: string
+  description?: string
+  memberCount: number
+  communityGroupAccess: string
+  communityGroupType: string
+  communityGroupLabel: string
+  communityGroupCategory?: Record<string, string[]> | null
+  users: AdminDashboardFilteredGroupsExportUser[]
+}
+
+export type AdminDashboardFilteredGroupsExportResponse = {
+  communityGroups: AdminDashboardFilteredGroupsExportGroup[]
+  totalCount: number
 }
 
 type AdminDashboardGroupMembersParams = {
@@ -258,6 +336,38 @@ const getAdminDashboardFilteredGroups = async (
   })
 }
 
+export type AdminDashboardFilteredGroupsExportParams = AdminDashboardFilteredGroupsParams & {
+  universityId: string
+}
+
+const exportAdminDashboardFilteredGroups = async (
+  universityId: string,
+  token: string,
+  data: AdminDashboardFilteredGroupsParams
+): Promise<AdminDashboardFilteredGroupsExportResponse> => {
+  if (!universityId) {
+    throw new Error('universityId is required')
+  }
+
+  const queryParams = new URLSearchParams()
+  if (data.searchTerm) queryParams.append('searchTerm', data.searchTerm)
+  if (data.selectedType.length) queryParams.append('selectedType', data.selectedType.join(','))
+  if (data.sort) queryParams.append('sort', data.sort)
+  if (Object.keys(data.selectedFilters).length) {
+    queryParams.append('selectedFilters', JSON.stringify(data.selectedFilters))
+  }
+
+  const query = queryParams.toString()
+
+  return client<AdminDashboardFilteredGroupsExportResponse, never>(
+    `/community/super-admin/filtered/${universityId}/export${query ? `?${query}` : ''}`,
+    {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+}
+
 const getAdminDashboardGroupMembers = async (
   params: AdminDashboardGroupMembersParams,
   token: string
@@ -325,6 +435,18 @@ export const useAdminDashboardFilteredGroups = (
         sort,
       }),
     enabled: Boolean(communityId && accessToken),
+  })
+}
+
+export const useAdminDashboardFilteredGroupsExport = () => {
+  const [accessToken] = useCookie(ADMIN_DASHBOARD_ACCESS_TOKEN_COOKIE)
+
+  return useMutation({
+    mutationFn: ({ universityId, ...filters }: AdminDashboardFilteredGroupsExportParams) =>
+      exportAdminDashboardFilteredGroups(universityId, accessToken, filters),
+    onError: (error: any) => {
+      showCustomDangerToast(error?.response?.data?.message || MESSAGES.SOMETHING_WENT_WRONG)
+    },
   })
 }
 

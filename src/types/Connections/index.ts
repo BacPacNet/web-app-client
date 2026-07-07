@@ -22,6 +22,7 @@ export interface Users {
   userUnVerifiedCommunities?: (UserUnVerifiedCommunitiesEntity | null)[] | null
   userVerifiedCommunities?: (UserVerifiedCommunitiesEntity | null)[] | null
   userName?: string | null
+  uniqueId?: string
   isFollowing: boolean
 }
 export interface Profile {

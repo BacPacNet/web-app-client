@@ -7,13 +7,14 @@ import SegmentedControl, { SegmentedOption } from '@/components/atoms/SegmentCon
 import avatar from '@assets/avatar.svg'
 import useCookie from '@/hooks/useCookie'
 import { parseDateOfBirth } from '@/lib/date'
-import { useAdminDashboardUsers } from '@/services/admin-dashboard-auth'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { useAdminDashboardUsers, useAdminDashboardUsersExport } from '@/services/admin-dashboard-auth'
+import { adminAndOther, degreeAndMajors, occupationAndDepartment, userTypeEnum, value } from '@/types/RegisterForm'
 import { ADMIN_DASHBOARD_SELECTED_UNIVERSITY_COOKIE, parseAdminDashboardSelectedUniversity } from '@/utils/adminDashboard'
+import { downloadUsersExportAsImportTemplate } from '@/utils/adminDashboardUsersImportExport'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { FiPlus } from 'react-icons/fi'
+import { FiDownload, FiPlus } from 'react-icons/fi'
 import AutomationDashboardShell from '../AutomationDashboardShell'
 
 const statusFilterOptions: SegmentedOption[] = [
@@ -21,6 +22,11 @@ const statusFilterOptions: SegmentedOption[] = [
   { label: 'Students', value: userTypeEnum.Student },
   { label: 'Faculty', value: userTypeEnum.Faculty },
 ]
+
+const yearOptions = Object.keys(degreeAndMajors)
+const majorOptions = value
+const occupationOptions = Object.keys(occupationAndDepartment)
+const affiliationOptions = adminAndOther
 
 export default function AutomationDashboardUsersScreen() {
   const router = useRouter()
@@ -42,6 +48,7 @@ export default function AutomationDashboardUsersScreen() {
   const roleFilter = selectedStatus === 'all' ? '' : selectedStatus
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, isError } = useAdminDashboardUsers(
+    selectedUniversity?._id || '',
     selectedUniversity?.name || '',
     searchTerm,
     roleFilter,
@@ -50,24 +57,31 @@ export default function AutomationDashboardUsersScreen() {
     selectedOccupations,
     selectedAffiliations
   )
+  const { mutate: exportUsers, isPending: isExporting } = useAdminDashboardUsersExport()
 
   const users = useMemo(() => data?.pages.flatMap((page) => page.users) || [], [data])
 
-  const yearOptions = useMemo(() => {
-    return Array.from(new Set(users.map((user) => user.profile?.study_year).filter((value): value is string => Boolean(value))))
-  }, [users])
+  const handleExportUsers = () => {
+    if (!selectedUniversity?._id || !selectedUniversity?.name) return
 
-  const majorOptions = useMemo(() => {
-    return Array.from(new Set(users.map((user) => user.profile?.major).filter((value): value is string => Boolean(value))))
-  }, [users])
-
-  const occupationOptions = useMemo(() => {
-    return Array.from(new Set(users.map((user) => user.profile?.occupation).filter((value): value is string => Boolean(value))))
-  }, [users])
-
-  const affiliationOptions = useMemo(() => {
-    return Array.from(new Set(users.map((user) => user.profile?.affiliation).filter((value): value is string => Boolean(value))))
-  }, [users])
+    exportUsers(
+      {
+        searchTerm,
+        universityId: selectedUniversity._id,
+        universityName: selectedUniversity.name,
+        role: roleFilter,
+        studyYear: selectedYears,
+        major: selectedMajors,
+        occupation: selectedOccupations,
+        affiliation: selectedAffiliations,
+      },
+      {
+        onSuccess: (data) => {
+          downloadUsersExportAsImportTemplate(data.users, `${selectedUniversity.name}-users-export`)
+        },
+      }
+    )
+  }
 
   useEffect(() => {
     const container = scrollRef.current
@@ -114,6 +128,16 @@ export default function AutomationDashboardUsersScreen() {
             <div className="min-w-[280px] flex-1">
               <UserSearchInput value={searchTerm} onChange={setSearchTerm} />
             </div>
+
+            <Buttons
+              variant="border"
+              size="medium"
+              leftIcon={<FiDownload size={16} />}
+              disabled={!selectedUniversity?.name || isExporting}
+              onClick={handleExportUsers}
+            >
+              {isExporting ? 'Exporting...' : 'Export XLSX'}
+            </Buttons>
 
             <Buttons variant="primary" size="medium" leftIcon={<FiPlus size={16} />} onClick={() => router.push('/automation/users/import')}>
               Add users

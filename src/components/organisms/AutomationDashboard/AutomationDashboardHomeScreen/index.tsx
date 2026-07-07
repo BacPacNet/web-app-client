@@ -193,6 +193,10 @@ export default function AutomationDashboardHomeScreen() {
                 <p className="text-sm text-neutral-500">Total Users</p>
                 <p className="mt-2 text-2xl font-semibold text-neutral-900">{dashboardStats?.totalUsers ?? 0}</p>
               </div>
+              <div className="rounded-xl bg-neutral-50 p-4">
+                <p className="text-sm text-neutral-500">Total Applicants Users</p>
+                <p className="mt-2 text-2xl font-semibold text-neutral-900">{dashboardStats?.totalApplicantsUsers ?? 0}</p>
+              </div>
 
               <div className="rounded-xl bg-neutral-50 p-4">
                 <p className="text-sm text-neutral-500">Total Student Users</p>
