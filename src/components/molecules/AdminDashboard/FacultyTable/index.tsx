@@ -1,20 +1,20 @@
 'use client'
 
-import AdminPillBadge, { getStudyYearBadgeVariant } from '@/components/molecules/AdminDashboard/AdminPillBadge'
+import AdminPillBadge from '@/components/molecules/AdminDashboard/AdminPillBadge'
 import AdminUserStatusBadge from '@/components/molecules/AdminDashboard/AdminUserStatusBadge'
-import StudentRowActionMenu from '@/components/molecules/AdminDashboard/StudentRowActionMenu'
+import FacultyRowActionMenu from '@/components/molecules/AdminDashboard/FacultyRowActionMenu'
 import { getInactiveOpacityClass } from '@/lib/utils'
 import { Users } from '@/types/Connections'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
-type StudentUser = Users & {
+type FacultyUser = Users & {
   isUserDeactive?: boolean
 }
 
 type Props = {
-  users: StudentUser[]
-  selectedStudentIds: string[]
+  users: FacultyUser[]
+  selectedFacultyIds: string[]
   onSelectionChange: (ids: string[]) => void
   totalCount?: number
   isLoading?: boolean
@@ -51,17 +51,17 @@ function getAvatarColorClass(userId: string) {
   return AVATAR_COLOR_CLASSES[hash % AVATAR_COLOR_CLASSES.length]
 }
 
-function getDisplayEmail(user: StudentUser) {
+function getDisplayEmail(user: FacultyUser) {
   return user.email || user.profile?.email?.[0]?.UniversityEmail || '-'
 }
 
-function isUserActive(user: StudentUser) {
+function isUserActive(user: FacultyUser) {
   return !user.isUserDeactive
 }
 
-export default function StudentTable({
+export default function FacultyTable({
   users,
-  selectedStudentIds,
+  selectedFacultyIds,
   onSelectionChange,
   totalCount,
   isLoading = false,
@@ -72,37 +72,37 @@ export default function StudentTable({
 }: Props) {
   const [failedImageIds, setFailedImageIds] = useState<Record<string, boolean>>({})
 
-  const allSelected = users.length > 0 && users.every((user) => selectedStudentIds.includes(user._id))
-  const someSelected = users.some((user) => selectedStudentIds.includes(user._id))
+  const allSelected = users.length > 0 && users.every((user) => selectedFacultyIds.includes(user._id))
+  const someSelected = users.some((user) => selectedFacultyIds.includes(user._id))
 
   const showingLabel = useMemo(() => {
     const total = totalCount ?? users.length
     const visible = users.length
 
-    if (isLoading) return 'Loading students...'
-    if (total === 0) return 'Showing 0 of 0 students'
+    if (isLoading) return 'Loading faculty...'
+    if (total === 0) return 'Showing 0 of 0 faculty'
 
-    return `Showing ${visible} of ${total} students`
+    return `Showing ${visible} of ${total} faculty`
   }, [isLoading, totalCount, users.length])
 
   const handleSelectAll = () => {
     if (allSelected) {
       const visibleIds = new Set(users.map((user) => user._id))
-      onSelectionChange(selectedStudentIds.filter((id) => !visibleIds.has(id)))
+      onSelectionChange(selectedFacultyIds.filter((id) => !visibleIds.has(id)))
       return
     }
 
-    const mergedIds = new Set([...selectedStudentIds, ...users.map((user) => user._id)])
+    const mergedIds = new Set([...selectedFacultyIds, ...users.map((user) => user._id)])
     onSelectionChange(Array.from(mergedIds))
   }
 
   const handleSelectOne = (userId: string) => {
-    if (selectedStudentIds.includes(userId)) {
-      onSelectionChange(selectedStudentIds.filter((id) => id !== userId))
+    if (selectedFacultyIds.includes(userId)) {
+      onSelectionChange(selectedFacultyIds.filter((id) => id !== userId))
       return
     }
 
-    onSelectionChange([...selectedStudentIds, userId])
+    onSelectionChange([...selectedFacultyIds, userId])
   }
 
   return (
@@ -120,27 +120,27 @@ export default function StudentTable({
               }}
               onChange={handleSelectAll}
               className={CHECKBOX_CLASS}
-              aria-label="Select all students"
+              aria-label="Select all faculty"
             />
           </div>
           <p>Name</p>
           <p>Email</p>
-          <p>Major</p>
-          <p>Year</p>
+          <p>Affiliation</p>
+          <p>Occupation</p>
           <p>Status</p>
           <span className="sr-only">Actions</span>
         </div>
 
-        {isLoading && <p className="px-4 py-6 text-sm text-neutral-500">Loading students...</p>}
+        {isLoading && <p className="px-4 py-6 text-sm text-neutral-500">Loading faculty...</p>}
 
-        {!isLoading && isError && <p className="px-4 py-6 text-sm text-red-500">Failed to load students.</p>}
+        {!isLoading && isError && <p className="px-4 py-6 text-sm text-red-500">Failed to load faculty.</p>}
 
-        {!isLoading && !isError && users.length === 0 && <p className="px-4 py-6 text-sm text-neutral-500">No students found.</p>}
+        {!isLoading && !isError && users.length === 0 && <p className="px-4 py-6 text-sm text-neutral-500">No faculty found.</p>}
 
         {!isLoading &&
           !isError &&
           users.map((user) => {
-            const isSelected = selectedStudentIds.includes(user._id)
+            const isSelected = selectedFacultyIds.includes(user._id)
             const isActive = isUserActive(user)
             const profileImageSrc = failedImageIds[user._id] ? null : user.profile?.profile_dp?.imageUrl || null
             const initials = getInitials(user.firstName, user.lastName)
@@ -191,23 +191,21 @@ export default function StudentTable({
                 </div>
 
                 <p className={`truncate text-2xs text-[#9CA3AF] ${inactiveOpacityClass}`}>{getDisplayEmail(user)}</p>
-                <p className={`truncate text-2xs font-medium font-inter text-[#111827] ${inactiveOpacityClass}`}>{user.profile?.major || '-'}</p>
-                <AdminPillBadge
-                  label={user.profile?.study_year}
-                  variant={getStudyYearBadgeVariant(user.profile?.study_year)}
-                  isUserActive={isActive}
-                />
+                <p className={`truncate text-2xs font-medium font-inter text-[#111827] ${inactiveOpacityClass}`}>
+                  {user.profile?.affiliation || '-'}
+                </p>
+                <AdminPillBadge label={user.profile?.occupation} isUserActive={isActive} />
                 <AdminUserStatusBadge isActive={isActive} />
 
                 <div className="flex justify-end">
-                  <StudentRowActionMenu
+                  <FacultyRowActionMenu
                     userId={user._id}
-                    studentName={`${user.firstName} ${user.lastName}`.trim()}
+                    facultyName={`${user.firstName} ${user.lastName}`.trim()}
                     avatarUrl={profileImageSrc ?? undefined}
                     initials={initials}
                     avatarColorClass={avatarColorClass}
-                    studyYear={user.profile?.study_year}
-                    major={user.profile?.major}
+                    occupation={user.profile?.occupation}
+                    affiliation={user.profile?.affiliation}
                     isActive={isActive}
                     onViewProfile={onViewProfile ? () => onViewProfile(user._id) : undefined}
                   />
@@ -216,7 +214,7 @@ export default function StudentTable({
             )
           })}
 
-        {isFetchingNextPage && <p className="px-4 py-4 text-sm text-neutral-500">Loading more students...</p>}
+        {isFetchingNextPage && <p className="px-4 py-4 text-sm text-neutral-500">Loading more faculty...</p>}
       </div>
     </div>
   )

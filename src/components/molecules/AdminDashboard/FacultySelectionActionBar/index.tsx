@@ -6,26 +6,26 @@ import { FiCheck } from 'react-icons/fi'
 
 type Props = {
   selectedCount: number
-  yearOptions: string[]
-  majorOptions: string[]
-  actionYear: string
-  actionMajor: string
-  onActionYearChange: (year: string) => void
-  onActionMajorChange: (major: string) => void
+  occupationOptions: string[]
+  affiliationOptions: string[]
+  actionOccupation: string
+  actionAffiliation: string
+  onActionOccupationChange: (occupation: string) => void
+  onActionAffiliationChange: (affiliation: string) => void
   onApply: () => void
   onCancel: () => void
   isApplying?: boolean
   className?: string
 }
 
-export default function StudentSelectionActionBar({
+export default function FacultySelectionActionBar({
   selectedCount,
-  yearOptions,
-  majorOptions,
-  actionYear,
-  actionMajor,
-  onActionYearChange,
-  onActionMajorChange,
+  occupationOptions,
+  affiliationOptions,
+  actionOccupation,
+  actionAffiliation,
+  onActionOccupationChange,
+  onActionAffiliationChange,
   onApply,
   onCancel,
   isApplying = false,
@@ -33,7 +33,7 @@ export default function StudentSelectionActionBar({
 }: Props) {
   if (selectedCount === 0) return null
 
-  const label = selectedCount === 1 ? '1 student selected' : `${selectedCount} students selected`
+  const label = selectedCount === 1 ? '1 faculty member selected' : `${selectedCount} faculty members selected`
 
   return (
     <div
@@ -43,12 +43,12 @@ export default function StudentSelectionActionBar({
         <p className="shrink-0 text-xs font-inter font-semibold text-[#4338CA]">{label}</p>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="min-w-[120px]">
+          <div className="min-w-[160px]">
             <SelectDropdown
-              options={yearOptions}
-              value={actionYear}
-              onChange={onActionYearChange}
-              placeholder="Year"
+              options={occupationOptions}
+              value={actionOccupation}
+              onChange={onActionOccupationChange}
+              placeholder="Occupation"
               icon="single"
               err={false}
               isAllowedToRemove={false}
@@ -57,10 +57,10 @@ export default function StudentSelectionActionBar({
 
           <div className="min-w-[160px]">
             <SelectDropdown
-              options={majorOptions}
-              value={actionMajor}
-              onChange={onActionMajorChange}
-              placeholder="Major"
+              options={affiliationOptions}
+              value={actionAffiliation}
+              onChange={onActionAffiliationChange}
+              placeholder="Affiliation"
               icon="single"
               err={false}
               isAllowedToRemove={false}

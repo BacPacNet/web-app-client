@@ -1,7 +1,7 @@
 'use client'
 
+import AdminUserSearchBar from '@/components/molecules/AdminDashboard/AdminUserSearchBar'
 import StudentFilterRow from '@/components/molecules/AdminDashboard/StudentFilterRow'
-import StudentSearchBar from '@/components/molecules/AdminDashboard/StudentSearchBar'
 import StudentSelectionActionBar from '@/components/molecules/AdminDashboard/StudentSelectionActionBar'
 
 type Props = {
@@ -10,9 +10,9 @@ type Props = {
   yearOptions: string[]
   majorOptions: string[]
   selectedYears: string[]
-  selectedMajor: string
-  onYearToggle: (year: string) => void
-  onMajorChange: (major: string) => void
+  selectedMajors: string[]
+  onYearChange: (years: string[]) => void
+  onMajorChange: (majors: string[]) => void
   selectedCount: number
   actionYear: string
   actionMajor: string
@@ -20,32 +20,34 @@ type Props = {
   onActionMajorChange: (major: string) => void
   onApply: () => void
   onCancelSelection: () => void
+  isApplying?: boolean
   className?: string
 }
 
 export default function StudentFilterToolbar({
   searchTerm,
   onSearchChange,
-  yearOptions,
-  majorOptions,
   selectedYears,
-  selectedMajor,
-  onYearToggle,
+  selectedMajors,
+  onYearChange,
   onMajorChange,
   selectedCount,
+  yearOptions,
+  majorOptions,
   actionYear,
   actionMajor,
   onActionYearChange,
   onActionMajorChange,
   onApply,
   onCancelSelection,
+  isApplying = false,
   className = '',
 }: Props) {
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
-      <StudentSearchBar value={searchTerm} onChange={onSearchChange} />
+    <div className={`flex flex-col gap-3 ${className}`}>
+      <AdminUserSearchBar value={searchTerm} onChange={onSearchChange} placeholder="Search by name, email or major..." />
 
-      <StudentFilterRow selectedYears={selectedYears} selectedMajor={selectedMajor} onYearToggle={onYearToggle} onMajorChange={onMajorChange} />
+      <StudentFilterRow selectedYears={selectedYears} selectedMajors={selectedMajors} onYearChange={onYearChange} onMajorChange={onMajorChange} />
 
       <StudentSelectionActionBar
         selectedCount={selectedCount}
@@ -57,6 +59,7 @@ export default function StudentFilterToolbar({
         onActionMajorChange={onActionMajorChange}
         onApply={onApply}
         onCancel={onCancelSelection}
+        isApplying={isApplying}
       />
     </div>
   )

@@ -107,7 +107,7 @@ type AdminDashboardUsersParams = {
   affiliation: string[]
 }
 
-const getAdminDashboardUsers = async (params: AdminDashboardUsersParams, token: string): Promise<ProfileConnection> => {
+export const getAdminDashboardUsers = async (params: AdminDashboardUsersParams, token: string): Promise<ProfileConnection> => {
   const queryParams = new URLSearchParams()
 
   queryParams.append('page', String(params.page))

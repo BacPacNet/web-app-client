@@ -10,6 +10,7 @@ import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
 import MixPanelProvider from '@/utils/MixPanelProvider'
 import { CommunityFilterProvider } from '@/context/CommunityGroupHookContext'
+import SessionExpiryHandler from '@/components/auth/SessionExpiryHandler'
 type FontClassName = string
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ZustandSocketProvider>
               <CommunityFilterProvider>
                 <ModalProvider>
+                  <SessionExpiryHandler />
                   <Toaster />
                   {/* <ModalManager /> */}
                   <ImageManager />

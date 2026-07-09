@@ -9,6 +9,6 @@ type Props = {
   className?: string
 }
 
-export default function StudentSearchBar({ value, onChange, placeholder = 'Search by name, email or major...', className = '' }: Props) {
+export default function AdminUserSearchBar({ value, onChange, placeholder = 'Search by name, email or major...', className = '' }: Props) {
   return <UserSearchInput value={value} onChange={onChange} placeholder={placeholder} iconPosition="left" className={className} />
 }

@@ -4,7 +4,9 @@ import { STUDENT_MAJOR_FILTER_OPTIONS, STUDENT_YEAR_FILTER_OPTIONS } from '@/com
 import StudentFilterToolbar from '@/components/molecules/AdminDashboard/StudentFilterToolbar'
 import StudentTable from '@/components/molecules/AdminDashboard/StudentTable'
 import { useAdminUsersForConnections } from '@/services/user'
+import { useBulkUpdateStudentProfileByCommunityAdmin } from '@/services/userProfile'
 import { useUniStore } from '@/store/store'
+import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { userTypeEnum } from '@/types/RegisterForm'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
@@ -13,7 +15,7 @@ import { useForm } from 'react-hook-form'
 type AdminStudentsFilterForm = {
   searchTerm: string
   selectedYears: string[]
-  selectedMajor: string
+  selectedMajors: string[]
   selectedStudentIds: string[]
   actionYear: string
   actionMajor: string
@@ -22,7 +24,7 @@ type AdminStudentsFilterForm = {
 const defaultValues: AdminStudentsFilterForm = {
   searchTerm: '',
   selectedYears: [],
-  selectedMajor: '',
+  selectedMajors: [],
   selectedStudentIds: [],
   actionYear: '',
   actionMajor: '',
@@ -32,16 +34,17 @@ export default function AdminStudentsPage() {
   const router = useRouter()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { userProfileData } = useUniStore()
-  const { watch, setValue, getValues } = useForm<AdminStudentsFilterForm>({ defaultValues })
+  const { watch, setValue } = useForm<AdminStudentsFilterForm>({ defaultValues })
 
   const searchTerm = watch('searchTerm')
   const selectedYears = watch('selectedYears')
-  const selectedMajor = watch('selectedMajor')
+  const selectedMajors = watch('selectedMajors')
   const selectedStudentIds = watch('selectedStudentIds')
   const actionYear = watch('actionYear')
   const actionMajor = watch('actionMajor')
 
   const universityName = userProfileData?.university_name || ''
+  const { mutate: bulkUpdateStudentProfiles, isPending: isApplyingBulkUpdate } = useBulkUpdateStudentProfileByCommunityAdmin()
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage, isLoading, isError } = useAdminUsersForConnections(
     searchTerm,
@@ -49,7 +52,7 @@ export default function AdminStudentsPage() {
     Boolean(universityName),
     universityName,
     selectedYears,
-    selectedMajor ? [selectedMajor] : [],
+    selectedMajors,
     [],
     [],
     userTypeEnum.Student
@@ -76,11 +79,6 @@ export default function AdminStudentsPage() {
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  const handleYearToggle = (year: string) => {
-    const currentYears = getValues('selectedYears')
-    setValue('selectedYears', currentYears.includes(year) ? currentYears.filter((item) => item !== year) : [...currentYears, year])
-  }
-
   const clearSelection = () => {
     setValue('selectedStudentIds', [])
     setValue('actionYear', '')
@@ -88,7 +86,25 @@ export default function AdminStudentsPage() {
   }
 
   const handleApply = () => {
-    clearSelection()
+    if (!selectedStudentIds.length) return
+
+    if (!actionYear && !actionMajor) {
+      showCustomDangerToast('Select a year or major to update')
+      return
+    }
+
+    bulkUpdateStudentProfiles(
+      {
+        userIds: selectedStudentIds,
+        ...(actionYear ? { study_year: actionYear } : {}),
+        ...(actionMajor ? { major: actionMajor } : {}),
+      },
+      {
+        onSuccess: () => {
+          clearSelection()
+        },
+      }
+    )
   }
 
   const handleCancelSelection = () => {
@@ -106,9 +122,9 @@ export default function AdminStudentsPage() {
           yearOptions={STUDENT_YEAR_FILTER_OPTIONS}
           majorOptions={STUDENT_MAJOR_FILTER_OPTIONS}
           selectedYears={selectedYears}
-          selectedMajor={selectedMajor}
-          onYearToggle={handleYearToggle}
-          onMajorChange={(value) => setValue('selectedMajor', value)}
+          selectedMajors={selectedMajors}
+          onYearChange={(value) => setValue('selectedYears', value)}
+          onMajorChange={(value) => setValue('selectedMajors', value)}
           selectedCount={selectedStudentIds.length}
           actionYear={actionYear}
           actionMajor={actionMajor}
@@ -116,6 +132,7 @@ export default function AdminStudentsPage() {
           onActionMajorChange={(value) => setValue('actionMajor', value)}
           onApply={handleApply}
           onCancelSelection={handleCancelSelection}
+          isApplying={isApplyingBulkUpdate}
         />
 
         <div ref={scrollRef} className="max-h-[calc(100vh-320px)] overflow-y-auto">
