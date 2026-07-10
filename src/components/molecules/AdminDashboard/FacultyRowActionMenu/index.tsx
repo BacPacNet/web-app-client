@@ -81,7 +81,7 @@ export default function FacultyRowActionMenu({
 
       <PopoverContent align="end" className="w-max border-none bg-white p-1 shadow-card">
         <div className="flex flex-col">
-          {isActive ? (
+          {/* {isActive ? (
             <button
               type="button"
               onClick={handleDeactivate}
@@ -100,7 +100,7 @@ export default function FacultyRowActionMenu({
               <FiUserX size={12} color="#15803D" />
               {isActivating ? 'Activating...' : 'Activate'}
             </button>
-          )}
+          )} */}
 
           {onViewProfile ? (
             <button
