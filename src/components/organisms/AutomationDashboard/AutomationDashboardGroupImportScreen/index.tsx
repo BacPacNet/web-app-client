@@ -111,6 +111,7 @@ const LABEL_VALUES = ['Course', 'Club', 'Circle', 'Other']
 const USER_ID_NOT_FOUND_MESSAGE = 'No user with this id exist'
 const USER_ID_NOT_IN_COMMUNITY_MESSAGE = 'User is not part of this community'
 const USER_ID_NOT_VERIFIED_MESSAGE = 'User is not verified'
+const DUPLICATE_TITLE_MESSAGE = 'Group title must be unique'
 
 const getErrorPriority = (id: string, idSets: ValidationIdSets) => {
   if (idSets.unresolved.includes(id)) return 0
@@ -598,6 +599,22 @@ const validateRow = (row: GroupImportRow): RowValidation => {
   return errors
 }
 
+const buildDuplicateTitleErrors = (rows: GroupImportRow[]): RowValidation[] => {
+  const titleCount = new Map<string, number>()
+
+  rows.forEach((row) => {
+    const normalizedTitle = normalizeHeader(row.title)
+    if (!normalizedTitle) return
+    titleCount.set(normalizedTitle, (titleCount.get(normalizedTitle) || 0) + 1)
+  })
+
+  return rows.map((row) => {
+    const normalizedTitle = normalizeHeader(row.title)
+    if (!normalizedTitle || (titleCount.get(normalizedTitle) || 0) <= 1) return {}
+    return { title: DUPLICATE_TITLE_MESSAGE }
+  })
+}
+
 type HorizontalScrollBarProps = {
   scrollTargetRef: React.RefObject<HTMLDivElement | null>
   className?: string
@@ -708,12 +725,15 @@ export default function AutomationDashboardGroupImportScreen() {
   const { mutate: createGroups, isPending: isUploadingGroups } = useAdminDashboardCreateGroups(communityId || '')
   const { mutate: validateUniqueIds, isPending: isValidatingUniqueIds } = useAdminDashboardValidateUniqueIds(communityId || '')
 
-  const selectedUniversity = useMemo(() => {
-    if (!selectedUniversityCookie) return null
-    return parseAdminDashboardSelectedUniversity(selectedUniversityCookie)
-  }, [selectedUniversityCookie])
+  const validations = useMemo(() => {
+    const rowValidations = rows.map((row) => validateRow(row))
+    const duplicateTitleErrors = buildDuplicateTitleErrors(rows)
 
-  const validations = useMemo(() => rows.map((row) => validateRow(row)), [rows])
+    return rowValidations.map((validation, index) => ({
+      ...validation,
+      ...duplicateTitleErrors[index],
+    }))
+  }, [rows])
   const validRowCount = useMemo(() => validations.filter((item) => Object.keys(item).length === 0).length, [validations])
   const invalidRowCount = rows.length - validRowCount
   const invalidRowNumbers = useMemo(

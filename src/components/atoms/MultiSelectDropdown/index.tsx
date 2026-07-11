@@ -16,6 +16,7 @@ interface MultiSelectDropdownProps {
   label?: string
   isStatus?: boolean
   variant?: 'primary' | 'default'
+  appearance?: 'default' | 'pill'
   filteredCount?: any
   multiSelect?: boolean
   disabled?: boolean
@@ -23,6 +24,7 @@ interface MultiSelectDropdownProps {
   setUniversityErr?: (value: boolean) => void
   onShowChange?: (show: boolean) => void
   isRelative?: boolean
+  hideSelectedTags?: boolean
 }
 
 const motionStyle = {
@@ -52,6 +54,7 @@ const MultiSelectDropdown = ({
   label,
   isStatus = false,
   variant = 'default',
+  appearance = 'default',
   filteredCount,
   multiSelect = true,
   parentCategory,
@@ -59,6 +62,7 @@ const MultiSelectDropdown = ({
   setUniversityErr,
   onShowChange,
   isRelative = false,
+  hideSelectedTags = false,
 }: MultiSelectDropdownProps) => {
   const [show, setShow] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -124,55 +128,64 @@ const MultiSelectDropdown = ({
     })
   }
 
+  const isPill = appearance === 'pill'
+
   return (
-    <motion.div ref={dropdownRef} className="relative cursor-pointer min-w-[150px] ">
+    <motion.div ref={dropdownRef} className={`relative shrink-0 cursor-pointer ${isPill ? 'w-fit' : 'min-w-[150px]'}`}>
       <div className="flex gap-1">
-        {label && <label className="text-sm mb-2 text-neutral-900 font-medium">{label}</label>}
+        {label && <label className="text-xs mb-2 text-neutral-900 font-medium">{label}</label>}
         {isStatus && <StatusTooltip />}
       </div>
 
       <div
         onClick={toggleDropdown}
-        className={`${err ? 'border-red-400' : 'border-neutral-200'} border h-10 flex justify-between items-center px-2 py-2 ${
-          variantBg[variant]
-        } focus:ring-2 rounded-lg drop-shadow-sm text-neutral-700 outline-none ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
+        className={`${err ? 'border-red-400' : 'border-neutral-200'} border flex items-center ${
+          isPill
+            ? 'h-9 w-fit shrink-0 gap-2 rounded-full bg-white px-4 py-2 text-sm shadow-none'
+            : `h-10 justify-between px-2 py-2 ${variantBg[variant]} rounded-lg drop-shadow-sm`
+        } text-neutral-700 outline-none focus:ring-2 ${disabled ? 'bg-neutral-100 cursor-not-allowed opacity-70' : ''}`}
       >
-        <div className="flex flex-wrap gap-1 text-xs px-1">
-          <p className="text-neutral-700">{placeholder}</p>
+        <div className={`flex flex-wrap gap-1 ${isPill ? '' : 'px-1 text-xs'}`}>
+          <p className={isPill ? 'font-medium text-neutral-700' : 'text-neutral-700'}>{placeholder}</p>
         </div>
-        <IoIosArrowDown className={`${variantText[variant]}`} />
+        <IoIosArrowDown className={`shrink-0 ${isPill ? 'text-sm text-neutral-500' : variantText[variant]}`} />
       </div>
-      <div className="flex flex-wrap gap-2 mt-2">
-        {parentCategory && parentCategory?.length > 0 ? (
-          <div className="flex items-center text-2xs  px-2 py-1 h-7  text-primary-500 bg-white rounded-md border border-primary">
-            <span className=" mr-1">{parentCategory}</span>
-          </div>
-        ) : (
-          ''
-        )}
-        {value.length > 0
-          ? value.map((selected, index) => (
-              <div key={index} className="flex gap-2 items-center text-2xs   px-2 py-1 min-h-7 bg-primary-500 text-white rounded-md">
-                <span className="flex gap-2">
-                  {selected}
-                  {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
-                </span>
-                <RxCross2
-                  className="cursor-pointer text-sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onChange(value.filter((item) => item !== selected))
-                  }}
-                />
-              </div>
-            ))
-          : ''}
-      </div>
+      {!hideSelectedTags && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {parentCategory && parentCategory?.length > 0 ? (
+            <div className="flex items-center text-2xs  px-2 py-1 h-7  text-primary-500 bg-white rounded-md border border-primary">
+              <span className=" mr-1">{parentCategory}</span>
+            </div>
+          ) : (
+            ''
+          )}
+          {value.length > 0
+            ? value.map((selected, index) => (
+                <div
+                  key={index}
+                  className="inline-flex w-fit shrink-0 gap-2 items-center text-2xs px-2 py-1 h-7 bg-primary-500 text-white rounded-md"
+                >
+                  <span className="whitespace-nowrap">
+                    {selected}
+                    {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
+                  </span>
+                  <RxCross2
+                    className="cursor-pointer text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onChange(value.filter((item) => item !== selected))
+                    }}
+                  />
+                </div>
+              ))
+            : ''}
+        </div>
+      )}
 
       <AnimatePresence>
         {show && (
           <motion.div
-            className={`flex flex-col custom-scrollbar gap-2 p-2 ${
+            className={`${isPill ? 'min-w-max' : ''} flex flex-col custom-scrollbar gap-2 p-2 ${
               isRelative ? 'relative mb-3' : 'absolute left-0 top-14 mt-2'
             } bg-white border border-neutral-200 rounded-lg z-50 w-full max-h-52 overflow-y-auto`}
             {...motionStyle}

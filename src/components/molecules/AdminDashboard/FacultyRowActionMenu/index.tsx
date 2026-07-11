@@ -9,42 +9,42 @@ import { FiExternalLink, FiMoreVertical, FiUserX } from 'react-icons/fi'
 
 type Props = {
   userId: string
-  studentName: string
+  facultyName: string
   avatarUrl?: string
   initials: string
   avatarColorClass: string
-  studyYear?: string | null
-  major?: string | null
+  occupation?: string | null
+  affiliation?: string | null
   onViewProfile?: () => void
   isActive?: boolean
 }
 
-export default function StudentRowActionMenu({
+export default function FacultyRowActionMenu({
   userId,
-  studentName,
+  facultyName,
   avatarUrl,
   initials,
   avatarColorClass,
-  studyYear,
-  major,
+  occupation,
+  affiliation,
   onViewProfile,
   isActive = true,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const { openModal } = useModal()
-  const { mutate: activateStudentAccount, isPending: isActivating } = useActivateUserAccountByCommunityAdmin()
+  const { mutate: activateFacultyAccount, isPending: isActivating } = useActivateUserAccountByCommunityAdmin()
 
   const handleDeactivate = () => {
     setIsOpen(false)
     openModal(
       <AdminDeactivateAccountModal
         userId={userId}
-        userName={studentName}
+        userName={facultyName}
         avatarUrl={avatarUrl}
         initials={initials}
         avatarColorClass={avatarColorClass}
-        detailOne={studyYear}
-        detailTwo={major}
+        detailOne={occupation}
+        detailTwo={affiliation}
       />,
       'w-[350px] sm:w-[490px] hideScrollbar h-max',
       false
@@ -52,7 +52,7 @@ export default function StudentRowActionMenu({
   }
 
   const handleActivate = () => {
-    activateStudentAccount(
+    activateFacultyAccount(
       { userId },
       {
         onSuccess: () => {
@@ -73,7 +73,7 @@ export default function StudentRowActionMenu({
         <button
           type="button"
           className="flex h-5 w-5 items-center justify-center border border-[#E5E7EB] text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
-          aria-label="Student actions"
+          aria-label="Faculty actions"
         >
           <FiMoreVertical size={16} className="text-primary-500" />
         </button>
@@ -81,7 +81,7 @@ export default function StudentRowActionMenu({
 
       <PopoverContent align="end" className="w-max border-none bg-white p-1 shadow-card">
         <div className="flex flex-col">
-          {isActive ? (
+          {/* {isActive ? (
             <button
               type="button"
               onClick={handleDeactivate}
@@ -100,7 +100,7 @@ export default function StudentRowActionMenu({
               <FiUserX size={12} color="#15803D" />
               {isActivating ? 'Activating...' : 'Activate'}
             </button>
-          )}
+          )} */}
 
           {onViewProfile ? (
             <button

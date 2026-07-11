@@ -12,7 +12,12 @@ import {
   RewardsResponse,
   UpdateLatestRewardRedemptionUpiIdPayload,
 } from '@/types/User'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { getAdminDashboardUsers } from '@/services/admin-dashboard-auth'
+
+export type DeActivateUserAccountByCommunityAdminPayload = {
+  userId: string
+}
 
 export async function getUserData(token: any, id: string) {
   const response: IUserProfileResponse = await client(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -30,6 +35,15 @@ const changeUserPassword = async (data: any, token: string) => {
 }
 const deActivateUserAccount = async (data: any, token: string) => {
   const res = await client(`/users/deActivateUserAccount`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
+  return res
+}
+
+const deActivateUserAccountByCommunityAdmin = async (data: DeActivateUserAccountByCommunityAdminPayload, token: string) => {
+  const res = await client(`/users/community-admin/deActivate`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
   return res
 }
 const softDeleteUserAccount = async (token: string, data: any) => {
@@ -134,23 +148,26 @@ export function useAdminUsersForConnections(
   role?: string
 ) {
   const [cookieValue] = useCookie('uni_user_token')
+  const universityId = useUniStore((state) => state.university_id)
   const debouncedSearchTerm = useDebounce(name, 1000)
 
   return useInfiniteQuery({
-    queryKey: ['adminUsersForConnections', debouncedSearchTerm, universityName, studyYear, major, occupation, affiliation, role, limit],
+    queryKey: ['adminUsersForConnections', debouncedSearchTerm, universityName, studyYear, major, occupation, affiliation, role, limit, universityId],
     queryFn: ({ pageParam = 1 }) =>
-      getAllUsersForConnections(
-        cookieValue,
-        pageParam,
-        limit,
-        debouncedSearchTerm,
-        universityName,
-        studyYear || [],
-        major || [],
-        occupation || [],
-        affiliation || [],
-        undefined,
-        role
+      getAdminDashboardUsers(
+        {
+          page: pageParam,
+          limit,
+          searchTerm: debouncedSearchTerm,
+          universityId,
+          universityName,
+          role: role || '',
+          studyYear: studyYear || [],
+          major: major || [],
+          occupation: occupation || [],
+          affiliation: affiliation || [],
+        },
+        cookieValue
       ),
     getNextPageParam: (lastPage) => {
       if (lastPage.currentPage < lastPage.totalPages) {
@@ -159,7 +176,7 @@ export function useAdminUsersForConnections(
       return undefined
     },
     initialPageParam: 1,
-    enabled: !!cookieValue && enabled,
+    enabled: !!cookieValue && !!universityId && enabled,
   })
 }
 
@@ -186,6 +203,38 @@ export const useDeActivateUserAccount = () => {
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+
+export const useDeActivateUserAccountByCommunityAdmin = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: DeActivateUserAccountByCommunityAdminPayload) => deActivateUserAccountByCommunityAdmin(data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminUsersForConnections'] })
+      showCustomSuccessToast('Student account deactivated successfully')
+    },
+    onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message || 'Failed to deactivate student account')
+    },
+  })
+}
+
+export const useActivateUserAccountByCommunityAdmin = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: DeActivateUserAccountByCommunityAdminPayload) => deActivateUserAccountByCommunityAdmin(data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminUsersForConnections'] })
+      showCustomSuccessToast('Student account activated successfully')
+    },
+    onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message || 'Failed to activate student account')
     },
   })
 }
