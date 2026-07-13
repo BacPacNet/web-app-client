@@ -207,6 +207,7 @@ export interface EligibleForRewardsResponse {
 export interface IsUserCommunityAdminResponse {
   isCommunityAdmin: boolean
   university_id: string
+  communityId: string
   universityName: string
 }
 

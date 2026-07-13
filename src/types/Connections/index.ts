@@ -50,6 +50,7 @@ export interface Profile {
   cover_dp?: ProfileDpOrCoverDp1 | null
   isCommunityAdmin?: boolean
   adminCommunityId?: string
+  communityAdminAddedAt?: string
 }
 export interface FollowersEntity {
   userId: string
