@@ -3,6 +3,7 @@
 import RemoveAdminAccountModal from '@/components/molecules/AdminDashboard/RemoveAdminAccountModal'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useModal } from '@/context/ModalContext'
+import { useUniStore } from '@/store/store'
 import { useState } from 'react'
 import { FiExternalLink, FiMoreVertical, FiUserMinus } from 'react-icons/fi'
 
@@ -29,8 +30,12 @@ export default function AdminAccountsRowActionMenu({
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const { openModal } = useModal()
+  const currentUserId = useUniStore((state) => state.userProfileData?.users_id)
+  const isCurrentUser = userId === currentUserId
 
   const handleRemove = () => {
+    if (isCurrentUser) return
+
     setIsOpen(false)
     openModal(
       <RemoveAdminAccountModal
@@ -66,14 +71,16 @@ export default function AdminAccountsRowActionMenu({
 
       <PopoverContent align="end" className="w-max border-none bg-white p-1 shadow-card">
         <div className="flex flex-col">
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="flex items-center gap-2 rounded-md px-3 py-2 text-left font-inter text-2xs text-[#3A3B3C] transition-colors hover:bg-neutral-50"
-          >
-            <FiUserMinus size={12} color="#DC2626" />
-            Remove
-          </button>
+          {!isCurrentUser ? (
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-left font-inter text-2xs text-[#3A3B3C] transition-colors hover:bg-neutral-50"
+            >
+              <FiUserMinus size={12} color="#DC2626" />
+              Remove
+            </button>
+          ) : null}
 
           {onViewProfile ? (
             <button

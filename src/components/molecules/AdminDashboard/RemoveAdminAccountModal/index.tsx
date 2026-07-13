@@ -3,6 +3,7 @@
 import Buttons from '@/components/atoms/Buttons'
 import { useModal } from '@/context/ModalContext'
 import { useRemoveCommunityAdmin } from '@/services/communityAdminAccounts'
+import { useUniStore } from '@/store/store'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -30,8 +31,12 @@ export default function RemoveAdminAccountModal({
   const { closeModal } = useModal()
   const [imageFailed, setImageFailed] = useState(false)
   const { mutate: removeAdmin, isPending } = useRemoveCommunityAdmin()
+  const currentUserId = useUniStore((state) => state.userProfileData?.users_id)
+  const isCurrentUser = userId === currentUserId
 
   const handleConfirm = () => {
+    if (isCurrentUser) return
+
     removeAdmin(
       { userId },
       {
@@ -75,9 +80,11 @@ export default function RemoveAdminAccountModal({
       </div>
 
       <div className="flex gap-4">
-        <Buttons size="large" variant="danger" className="w-full" onClick={handleConfirm} disabled={isPending}>
-          {isPending ? 'Removing...' : 'Remove'}
-        </Buttons>
+        {!isCurrentUser ? (
+          <Buttons size="large" variant="danger" className="w-full" onClick={handleConfirm} disabled={isPending}>
+            {isPending ? 'Removing...' : 'Remove'}
+          </Buttons>
+        ) : null}
         <Buttons size="large" variant="shade" className="w-full" onClick={closeModal} disabled={isPending}>
           Cancel
         </Buttons>
