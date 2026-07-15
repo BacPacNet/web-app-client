@@ -44,6 +44,7 @@ export const useUniStore = create<storeType>()(
             userEligibleForRewards: null,
             userCommunityAdmin: null,
             university_id: '',
+            communityId: '',
             universityName: '',
           }),
       }),
