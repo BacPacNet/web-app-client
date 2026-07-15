@@ -42,12 +42,12 @@ export async function POST(request: Request) {
 
     // 2. SMTP Transporter Setup
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+      host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT || '587', 10),
       secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.SMTP_USERNAME || '7ca912001@smtp-brevo.com',
-        pass: process.env.SMTP_PASSWORD || '7tWhV8X3raKdMTNI',
+        user: process.env.SMTP_USERNAME,
+        pass: process.env.SMTP_PASSWORD,
       },
     })
 
