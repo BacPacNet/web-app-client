@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
 
   return (
     <div className="w-full mx-auto relative flex flex-col center-v py-2 lg:py-3  bg-surface-primary-50">
-      <div className="max-width-allowed w-full text-gray-dark text-sm lg:text-lg">
+      <div className="max-width-allowed mx-auto w-full text-gray-dark text-sm lg:text-lg">
         <div className="w-full flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between my-4 gap-4 text-sm">
           <div className="flex gap-4 items-start">
             <p className="text-neutral-500 text-xs font-normal">Copyright © 2024, Unibuzz Networks</p>
