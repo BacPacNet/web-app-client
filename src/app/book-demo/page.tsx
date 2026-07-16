@@ -13,8 +13,9 @@ import Footer from '@/components/Footer/Footer'
 import Script from 'next/script'
 
 export default function BookDemoPage() {
-  const [selectedDate, setSelectedDate] = useState<number>(12) // Default is Saturday Oct 12, 2024
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedTime, setSelectedTime] = useState<string>('11:00 AM')
+  const [currentMonthDate, setCurrentMonthDate] = useState<Date>(new Date())
   const router = useRouter()
   
   // Form states
@@ -31,12 +32,8 @@ export default function BookDemoPage() {
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen)
 
-  const days = Array.from({ length: 21 }, (_, i) => i + 1)
-
-  // Helper to determine day of the week for October 2024
-  const getDayOfWeekName = (day: number) => {
-    // October 1, 2024 is a Tuesday (index 2)
-    const date = new Date(2024, 9, day)
+  // Helper to determine day of the week for a Date
+  const getDayOfWeekName = (date: Date) => {
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     return {
       name: dayNames[date.getDay()],
@@ -44,9 +41,17 @@ export default function BookDemoPage() {
     }
   }
 
+  const formatReadableDate = (date: Date) => {
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ]
+    return `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+  }
+
   // Get active time slots based on rules
-  const getTimeSlotsForDay = (day: number) => {
-    const { name, index } = getDayOfWeekName(day)
+  const getTimeSlotsForDay = (date: Date) => {
+    const { index } = getDayOfWeekName(date)
     
     switch (index) {
       case 1: // Monday: 8am to 2pm and 5pm to 7pm
@@ -145,7 +150,7 @@ export default function BookDemoPage() {
           occupation,
           designation,
           message,
-          date: selectedDate,
+          date: formatReadableDate(selectedDate),
           time: selectedTime,
         }),
       })
@@ -153,7 +158,7 @@ export default function BookDemoPage() {
       const resData = await response.json()
 
       if (response.ok && resData.success) {
-        toast.success(`Your demo has been scheduled for ${getDayOfWeekName(selectedDate).name}, Oct ${selectedDate} at ${selectedTime}!`)
+        toast.success(`Your demo has been scheduled for ${getDayOfWeekName(selectedDate).name}, ${formatReadableDate(selectedDate)} at ${selectedTime}!`)
         // Reset form fields
         setFullName('')
         setEmail('')
@@ -298,17 +303,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     {/* Mini Calendar */}
                     <div className="w-full md:w-1/2">
                       <div className="flex justify-between items-center mb-4">
-                        <span className="font-semibold text-on-surface">October 2024</span>
+                        <span className="font-semibold text-on-surface">
+                          {(() => {
+                            const monthNames = [
+                              "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"
+                            ];
+                            return `${monthNames[currentMonthDate.getMonth()]} ${currentMonthDate.getFullYear()}`;
+                          })()}
+                        </span>
                         <div className="flex gap-2">
                           <button
-                            className="p-1 hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors focus:ring-2 focus:ring-primary focus:outline-none"
+                            className="p-1 hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors focus:ring-2 focus:ring-primary focus:outline-none disabled:opacity-30 disabled:hover:bg-transparent"
                             type="button"
+                            onClick={() => {
+                              const y = currentMonthDate.getFullYear();
+                              const m = currentMonthDate.getMonth();
+                              setCurrentMonthDate(new Date(y, m - 1, 1));
+                            }}
+                            disabled={(() => {
+                              const today = new Date();
+                              return currentMonthDate.getFullYear() < today.getFullYear() || 
+                                (currentMonthDate.getFullYear() === today.getFullYear() && currentMonthDate.getMonth() <= today.getMonth());
+                            })()}
                           >
                             <span className="material-symbols-outlined text-sm">chevron_left</span>
                           </button>
                           <button
                             className="p-1 hover:bg-surface-variant rounded-full text-on-surface-variant transition-colors focus:ring-2 focus:ring-primary focus:outline-none"
                             type="button"
+                            onClick={() => {
+                              const y = currentMonthDate.getFullYear();
+                              const m = currentMonthDate.getMonth();
+                              setCurrentMonthDate(new Date(y, m + 1, 1));
+                            }}
                           >
                             <span className="material-symbols-outlined text-sm">chevron_right</span>
                           </button>
@@ -325,26 +353,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       </div>
                       <div className="grid grid-cols-7 gap-1 text-center">
                         {/* Empty cells for padding */}
-                        <div />
-                        <div />
+                        {Array.from({ length: new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth(), 1).getDay() }).map((_, idx) => (
+                          <div key={`pad-${idx}`} />
+                        ))}
                         {/* Days */}
-                        {days.map((day) => {
-                          const isSelected = day === selectedDate
-                          const { name } = getDayOfWeekName(day)
-                          const isSunday = name === 'Sunday'
+                        {Array.from({ length: new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1, 0).getDate() }).map((_, idx) => {
+                          const day = idx + 1;
+                          const dateObj = new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth(), day);
+                          const isSelected = dateObj.toDateString() === selectedDate.toDateString();
+                          const { name } = getDayOfWeekName(dateObj);
+                          const isSunday = name === 'Sunday';
+                          
+                          // Check if date is in the past
+                          const today = new Date();
+                          today.setHours(0,0,0,0);
+                          const isPast = dateObj.getTime() < today.getTime();
+                          const isDisabled = isPast || isSunday;
+
                           return (
                             <button
                               key={day}
-                              onClick={() => setSelectedDate(day)}
+                              onClick={() => {
+                                if (!isDisabled) {
+                                  setSelectedDate(dateObj);
+                                }
+                              }}
                               className={`p-2 text-sm transition-all focus:ring-2 focus:ring-primary focus:outline-none rounded-full ${
                                 isSelected
                                   ? 'font-bold shadow-sm'
-                                  : isSunday
+                                  : isDisabled
                                     ? 'text-gray-300 cursor-not-allowed hover:bg-transparent'
                                     : 'text-on-surface-variant cursor-pointer hover:bg-primary/10 hover:text-primary'
                               }`}
                               style={isSelected ? { backgroundColor: '#6744ff', color: '#ffffff' } : undefined}
                               type="button"
+                              disabled={isDisabled}
                             >
                               {day}
                             </button>

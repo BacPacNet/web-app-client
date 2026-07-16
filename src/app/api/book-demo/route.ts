@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Designation is required.' }, { status: 400 })
     }
 
-    if (!date || typeof date !== 'number') {
+    if (!date) {
       return NextResponse.json({ success: false, message: 'Please select a date.' }, { status: 400 })
     }
 
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
               </tr>
               <tr style="border-bottom: 1px solid #eee;">
                 <td style="padding: 12px; font-weight: bold; color: #6744ff;">Preferred Date</td>
-                <td style="padding: 12px; color: #222; font-weight: bold;">October ${date}, 2024</td>
+                <td style="padding: 12px; color: #222; font-weight: bold;">${date}</td>
               </tr>
               <tr style="border-bottom: 1px solid #eee; background-color: #fbfbfe;">
                 <td style="padding: 12px; font-weight: bold; color: #6744ff;">Preferred Time</td>
