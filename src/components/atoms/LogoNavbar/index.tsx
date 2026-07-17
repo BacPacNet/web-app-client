@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import { MENU_LIST } from './constant'
 import LoginButton from '../LoginButton'
@@ -22,30 +22,43 @@ interface Props {
   showOnlyLogo?: boolean
 }
 
-const nonPaddingUrls = ['/about', '/discover', '/privacy-policy', '/terms-and-condition', '/user-guidelines', '/contact']
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
+const isLandingRoute = (pathname: string) => pathname === '/' || pathname.startsWith('/for-university') || pathname.startsWith('/book-demo')
+
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
-  const pathname = usePathname()
+  const pathname = usePathname() ?? ''
   const router = useRouter()
-  const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
-  const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
-
   const { userProfileData, userData } = useUniStore()
-
   const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
-
   const { reinitResetPasswordTimeout } = useUniStore((state) => state)
+  const [showLeftNavbar, setShowLeftNavbar] = useState(false)
+  const [showRightMenu, setShowRightMenu] = useState(false)
 
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData?.users_id)
   }, [userProfileData])
-  const [showLeftNavbar, setShowLeftNavbar] = useState(false)
-  const [showRightMenu, setShowRightMenu] = useState(false)
+
   useEffect(() => {
     isUserLoggedIn()
   }, [userProfileData, isUserLoggedIn])
+
+  useEffect(() => {
+    reinitResetPasswordTimeout()
+  }, [reinitResetPasswordTimeout])
+
+  const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
+  const navbarContainerClass = 'max-width-allowed px-4'
+  const showAudienceToggle = isLandingRoute(pathname)
+  const activeAudience: 'faculty' | 'student' = pathname === '/' ? 'student' : 'faculty'
+
+  const handleAudienceToggle = (audience: 'faculty' | 'student') => {
+    const target = audience === 'faculty' ? '/for-university' : '/'
+    if (pathname !== target) {
+      router.push(target)
+    }
+  }
 
   const toggleRightMenu = () => {
     setShowRightMenu(!showRightMenu)
@@ -55,9 +68,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowRightMenu(false)
   }
 
-  useEffect(() => {
-    reinitResetPasswordTimeout()
-  }, [])
+  const isForUniversityPage = pathname.startsWith('/for-university')
 
   const renderProfile = () => {
     const handleNavigate = (path: string) => {
@@ -68,6 +79,19 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case true:
         return <ProfileMenu userProfileData={userProfileData} userData={userData} onLogout={handleLogout} onNavigate={handleNavigate} />
       case false:
+        if (isForUniversityPage) {
+          return (
+            <div className="pl-8 gap-4 flex">
+              <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs">
+                Book a Free Demo
+              </Button>
+              <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
+                Sign Up
+              </Button>
+            </div>
+          )
+        }
+
         return (
           <div className="pl-8 gap-4 flex">
             <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
@@ -106,7 +130,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       <div className="w-full h-[50px] sm:h-[68px] ">
         <div className="fixed w-full top-0 left-0 z-50 h-[inherit] bg-white border-b-[1px] border-neutral-200 ">
           <div
-            className={`${shouldPadding ? 'max-width-allowed px-4' : 'max-w-[1280px] px-6'}
+            className={`${navbarContainerClass}
              relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
@@ -120,6 +144,28 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
               <Link className="flex gap-4 center-v" href="/">
                 <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
               </Link>
+              {showAudienceToggle && (
+                <div className="flex items-center bg-neutral-100 p-1 rounded-full border border-neutral-200">
+                  <button
+                    type="button"
+                    className={`px-4 py-1.5 text-[13px] font-semibold rounded-full transition-all ${
+                      activeAudience === 'faculty' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
+                    }`}
+                    onClick={() => handleAudienceToggle('faculty')}
+                  >
+                    Faculty
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-4 py-1.5 text-[13px] font-semibold rounded-full transition-all ${
+                      activeAudience === 'student' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
+                    }`}
+                    onClick={() => handleAudienceToggle('student')}
+                  >
+                    Student
+                  </button>
+                </div>
+              )}
             </div>
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (

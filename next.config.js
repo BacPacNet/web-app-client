@@ -13,7 +13,6 @@ const withPWA = require("next-pwa")({
 
 // Next.js configuration
 const nextConfig = {
-
     images: {
         domains: ["unibuzz-uploads-prod.s3.amazonaws.com"],
         remotePatterns: [
