@@ -24,6 +24,7 @@ import { formatHtmlContentForCodeBlocks } from '@/lib/formatHtmlContentForCodeBl
 dayjs.extend(relativeTime)
 
 interface PostProps {
+  isModerationPost?: boolean
   user: string
   university: string
   communityName?: string
@@ -95,6 +96,7 @@ const DiscoverPostCard = React.memo(
     communityGroupId,
     isCommunityAdmin,
     communities,
+    isModerationPost = false,
   }: PostProps) => {
     const router = useRouter()
 
@@ -126,7 +128,7 @@ const DiscoverPostCard = React.memo(
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg border border-neutral-300 w-full"
+        className={`bg-white rounded-lg  ${isModerationPost ? 'border-none' : 'border border-neutral-300'} w-full`}
       >
         <div className="px-6 flex flex-col gap-4">
           <div className="flex items-start pt-4 gap-2 justify-between">

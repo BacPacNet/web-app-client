@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useMemo } from 'react'
@@ -7,7 +8,7 @@ import { IconType } from 'react-icons'
 import { HiOutlineShieldCheck, HiOutlineShieldExclamation, HiOutlineSquares2X2, HiOutlineUsers } from 'react-icons/hi2'
 import { RiGraduationCapLine } from 'react-icons/ri'
 import { useUniStore } from '@/store/store'
-
+import unibuzzLogo from '@assets/unibuzz_dark_square.png'
 export type AdminDashboardSidebarNavItem = {
   href: string
   label: string
@@ -69,12 +70,12 @@ export default function AdminDashboardSidebar({ items = defaultNavItems, userNam
   return (
     <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 self-start flex-col border-r border-neutral-200 bg-white">
       <div className="px-5 py-7 flex flex-col">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#6C63FF] to-[#4F46E5]">
-            <span className="text-xs font-bold text-white">U</span>
+        <Link href="/timeline" className="flex items-center gap-3" aria-label="Go to timeline">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl ">
+            <Image src={unibuzzLogo} alt="Unibuzz logo" className="h-8 w-8 object-contain rounded-xl" />
           </div>
           <p className="text-[20px] font-poppins font-bold text-[#111827]">Unibuzz</p>
-        </div>
+        </Link>
         <div className="mt-[6px]">
           <p className="text-2xs text-[#9CA3AF]">Admin Dashboard</p>
         </div>
