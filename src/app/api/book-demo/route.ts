@@ -110,15 +110,14 @@ export async function POST(request: Request) {
       </div>
     `
 
-    const recipients = [
-      // 'isha.vishank@gmail.com',
-      // 'catcharyan.23@gmail.com',
-      // 'info@unibuzz.org',
-      // 'ishagupta.may6@gmail.com',
-      // 'parkkanidon@gmail.com',
-      // 'park.joohyun@outlook.com',
-      'pavank@cheenti.com'
-    ]
+    const recipients = (process.env.BOOK_DEMO_EMAIL_RECIPIENTS || '')
+      .split(',')
+      .map((recipient) => recipient.trim())
+      .filter(Boolean)
+
+    if (recipients.length === 0) {
+      return NextResponse.json({ success: false, message: 'Email recipients are not configured.' }, { status: 500 })
+    }
 
     // 4. Send Email
     await transporter.sendMail({

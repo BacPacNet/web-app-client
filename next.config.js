@@ -13,10 +13,6 @@ const withPWA = require("next-pwa")({
 
 // Next.js configuration
 const nextConfig = {
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-
     images: {
         domains: ["unibuzz-uploads-prod.s3.amazonaws.com"],
         remotePatterns: [

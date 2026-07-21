@@ -1,14 +1,12 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { 
-  Check, 
-  Menu, 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
   ArrowRight,
   MessageSquare,
   Mail,
@@ -29,42 +27,40 @@ import {
   Briefcase,
   Sliders,
   Settings,
-  PlayCircle
-} from "lucide-react";
-import styles from "./page.module.css";
-import unibuzzLogo from "@/assets/unibuzz_logo.svg";
-import Footer from "@/components/Footer/Footer";
-import Script from "next/script";
+  PlayCircle,
+} from 'lucide-react'
+import styles from './page.module.css'
+import Footer from '@/components/Footer/Footer'
+import Script from 'next/script'
 
 // Testimonial data matching Dr. Abhas Kanungo
 const testimonials = [
   {
-    quote: "“One of the key challenges we encountered was that details about student clubs, activities, and campus events were scattered across various platforms. As a result, many students were unaware of the opportunities available to them and often missed chances to participate. Unibuzz has helped solve this issue by creating a single space where students can easily find clubs, join communities, keep track of upcoming events, and take a more active role in campus life.”",
-    author: "Dr. Abhas Kanungo",
-    role: "Assistant Dean SW, KIET Group of Institutions",
-    logo: "/kiet_logo_1783597378444.png"
+    quote:
+      '“One of the key challenges we encountered was that details about student clubs, activities, and campus events were scattered across various platforms. As a result, many students were unaware of the opportunities available to them and often missed chances to participate. Unibuzz has helped solve this issue by creating a single space where students can easily find clubs, join communities, keep track of upcoming events, and take a more active role in campus life.”',
+    author: 'Dr. Abhas Kanungo',
+    role: 'Assistant Dean SW, KIET Group of Institutions',
+    logo: '/kiet_logo_1783597378444.png',
   },
   {
-    quote: "“Unibuzz has centralized our official announcements and streamlined student communication. It has completely eliminated the confusion of informal WhatsApp groups and brought our entire academic structure online in one safe, verified digital space.”",
-    author: "Aggarwal College Representative",
-    role: "Dean of Academic Affairs, Aggarwal College",
-    logo: "/kiet_logo_1783597378444.png"
-  }
-];
+    quote:
+      '“Unibuzz has centralized our official announcements and streamlined student communication. It has completely eliminated the confusion of informal WhatsApp groups and brought our entire academic structure online in one safe, verified digital space.”',
+    author: 'Aggarwal College Representative',
+    role: 'Dean of Academic Affairs, Aggarwal College',
+    logo: '/kiet_logo_1783597378444.png',
+  },
+]
 
 export default function Home() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
-
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const [testimonialIndex, setTestimonialIndex] = useState(0)
 
   const handleNextTestimonial = () => {
-    setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
-  };
+    setTestimonialIndex((prev) => (prev + 1) % testimonials.length)
+  }
 
   const handlePrevTestimonial = () => {
-    setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+    setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }
 
   return (
     <div className={styles.landingPageWrapper}>
@@ -82,43 +78,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           src="https://www.googletagmanager.com/ns.html?id=GTM-5FM87MGZ"
           height="0"
           width="0"
-          style={{ display: "none", visibility: "hidden" }}
+          style={{ display: 'none', visibility: 'hidden' }}
         />
       </noscript>
-      {/* Navigation Header */}
-      <header className={styles.header}>
-        <div className={`container ${styles.headerContainer}`}>
-          <div className={styles.logoArea}>
-            <Link href="/" className="flex items-center">
-              <Image src={unibuzzLogo} alt="Unibuzz Logo" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-            </Link>
-          </div>
 
-          <div className={styles.navActions}>
-            <Link href="/book-demo">
-              <button className={styles.btnDemo}>Book a Free Demo</button>
-            </Link>
-          </div>
-
-          <Menu className={styles.mobileMenuBtn} onClick={toggleMobileMenu} />
-        </div>
-      </header>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && <div className={styles.drawerOverlay} onClick={toggleMobileMenu} />}
-      <div className={`${styles.drawer} ${mobileMenuOpen ? styles.drawerOpen : ""}`}>
-        <div className={styles.drawerHeader}>
-          <Link href="/" className="flex items-center" onClick={toggleMobileMenu}>
-            <Image src={unibuzzLogo} alt="Unibuzz Logo" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-          </Link>
-          <X className={styles.drawerClose} onClick={toggleMobileMenu} />
-        </div>
-        <div className={styles.drawerActions}>
-          <Link href="/book-demo" onClick={toggleMobileMenu} style={{ width: "100%" }}>
-            <button className={styles.btnDemo} style={{ width: "100%" }}>Book a Free Demo</button>
-          </Link>
-        </div>
-      </div>
 
       {/* Hero Section */}
       <section className={styles.hero}>
@@ -131,7 +94,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 Student Acquisition
               </h1>
               <p className={styles.heroDescription}>
-                Centralize official communication, student groups, clubs, placements, events, and campus engagement. Showcase your university by letting applicants connect with students and faculty and explore your campus.
+                Centralize official communication, student groups, clubs, placements, events, and campus engagement. Showcase your university by
+                letting applicants connect with students and faculty and explore your campus.
               </p>
               <div className={styles.heroButtons}>
                 <Link href="/book-demo">
@@ -156,14 +120,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               </div>
             </div>
             <div className={styles.heroImageContainer}>
-              <Image 
-                src="/banner.jpg"
-                alt="Unibuzz App Mockup Showcase"
-                width={500}
-                height={500}
-                className={styles.heroImage}
-                priority
-              />
+              <Image src="/banner.jpg" alt="Unibuzz App Mockup Showcase" width={500} height={500} className={styles.heroImage} priority />
             </div>
           </div>
         </div>
@@ -179,7 +136,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <span className={styles.sectionTitleHighlight}>— and it’s causing real issues.</span>
             </h2>
             <p className={styles.sectionSub}>
-              University communication is spread across informal tools that institutions can’t verify, control, or measure — and that’s creating risk, missed messages, and wasted time.
+              University communication is spread across informal tools that institutions can’t verify, control, or measure — and that’s creating risk,
+              missed messages, and wasted time.
             </p>
           </div>
 
@@ -190,9 +148,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <MessageSquare size={24} />
               </div>
               <h3 className={styles.cardTitle}>Informal WhatsApp groups</h3>
-              <p className={styles.cardDesc}>
-                Open chat groups are hard to control, easy to leave, and impossible to verify.
-              </p>
+              <p className={styles.cardDesc}>Open chat groups are hard to control, easy to leave, and impossible to verify.</p>
             </div>
 
             {/* Email updates get missed */}
@@ -201,9 +157,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <Mail size={24} />
               </div>
               <h3 className={styles.cardTitle}>Email updates get missed</h3>
-              <p className={styles.cardDesc}>
-                Important official communication is buried in crowded inboxes and rarely read.
-              </p>
+              <p className={styles.cardDesc}>Important official communication is buried in crowded inboxes and rarely read.</p>
             </div>
 
             {/* Clubs and events lack visibility */}
@@ -212,9 +166,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <EyeOff size={24} />
               </div>
               <h3 className={styles.cardTitle}>Clubs and events lack visibility</h3>
-              <p className={styles.cardDesc}>
-                Activity is scattered, so participation stays low and momentum is lost.
-              </p>
+              <p className={styles.cardDesc}>Activity is scattered, so participation stays low and momentum is lost.</p>
             </div>
 
             {/* Students can't discover peers */}
@@ -223,9 +175,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <UserSearch size={24} />
               </div>
               <h3 className={styles.cardTitle}>Students can&apos;t discover peers</h3>
+<<<<<<< HEAD
               <p className={styles.cardDesc}>
                 Finding the right people, groups, and opportunities is left to chance.
               </p>
+=======
+              <p className={styles.cardDesc}>Finding the right people, groups, and opportunities is left to chance.</p>
+>>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
             </div>
 
             {/* Admins lack engagement visibility */}
@@ -234,9 +190,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <BarChart3 size={24} />
               </div>
               <h3 className={styles.cardTitle}>Admins lack engagement visibility</h3>
+<<<<<<< HEAD
               <p className={styles.cardDesc}>
                 Leadership has no reliable view of what&apos;s working across campus.
               </p>
+=======
+              <p className={styles.cardDesc}>Leadership has no reliable view of what&apos;s working across campus.</p>
+>>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
             </div>
 
             {/* Campus life is scattered */}
@@ -245,9 +205,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <LayoutGrid size={24} />
               </div>
               <h3 className={styles.cardTitle}>Campus life is scattered</h3>
-              <p className={styles.cardDesc}>
-                Communication is spread across too many disconnected platforms.
-              </p>
+              <p className={styles.cardDesc}>Communication is spread across too many disconnected platforms.</p>
             </div>
           </div>
         </div>
@@ -262,9 +220,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               Unibuzz brings the university community <br />
               into <span className={styles.heroTitleHighlight}>one verified digital space</span>
             </h2>
-            <p className={styles.sectionSub}>
-              Everything campus communication needs — official, structured, and institution-controlled.
-            </p>
+            <p className={styles.sectionSub}>Everything campus communication needs — official, structured, and institution-controlled.</p>
           </div>
 
           <div className={styles.grid4x2}>
@@ -351,32 +307,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   Showcase your university to prospective students (applicants) to boost admissions and increase revenue.
                 </p>
                 <div className={styles.featureBulletList}>
-                  <div className={styles.featureBullet}><Check size={16} /> Promoted university posts</div>
-                  <div className={styles.featureBullet}><Check size={16} /> Promoted university blogs and stories</div>
-                  <div className={styles.featureBullet}><Check size={16} /> Direct pipeline to admissions</div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Promoted university posts
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Promoted university blogs and stories
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Direct pipeline to admissions
+                  </div>
                 </div>
               </div>
               <div className={styles.featureImageWrapper}>
-                <Image 
-                  src="/promote.jpg"
-                  alt="Students Collaborating"
-                  width={600}
-                  height={400}
-                  className={styles.featureImage}
-                />
+                <Image src="/promote.jpg" alt="Students Collaborating" width={600} height={400} className={styles.featureImage} />
               </div>
             </div>
 
             {/* Feature 2 */}
             <div className={`${styles.featureRow} ${styles.featureRowReversed}`}>
               <div className={styles.featureImageWrapper}>
-                <Image 
-                  src="/centralize.jpg"
-                  alt="Campus communication"
-                  width={600}
-                  height={400}
-                  className={styles.featureImage}
-                />
+                <Image src="/centralize.jpg" alt="Campus communication" width={600} height={400} className={styles.featureImage} />
               </div>
               <div className={styles.featureDetail}>
                 <span className={`${styles.featureDetailBadge} ${styles.themeBlue}`}>Communicate & engage</span>
@@ -385,9 +335,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   Replace scattered chats and missed emails with pinned official announcements, a university-wide feed, and on-platform messaging.
                 </p>
                 <div className={styles.featureBulletList}>
-                  <div className={styles.featureBullet}><Check size={16} /> Pinned official announcements</div>
-                  <div className={styles.featureBullet}><Check size={16} /> University-wide community feed</div>
-                  <div className={styles.featureBullet}><Check size={16} /> Messaging & collaboration</div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Pinned official announcements
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> University-wide community feed
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Messaging & collaboration
+                  </div>
                 </div>
               </div>
             </div>
@@ -398,22 +354,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span className={`${styles.featureDetailBadge} ${styles.themePurple}`}>Verify & onboard</span>
                 <h3 className={styles.featureDetailTitle}>Bring your verified campus online</h3>
                 <p className={styles.featureDetailDesc}>
+<<<<<<< HEAD
                   Set up your institution&apos;s space, verify students, faculty, and admins, and structure departments, courses, clubs, and official groups.
+=======
+                  Set up your institution&apos;s space, verify students, faculty, and admins, and structure departments, courses, clubs, and official
+                  groups.
+>>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
                 </p>
                 <div className={styles.featureBulletList}>
-                  <div className={styles.featureBullet}><Check size={16} /> Verified student, faculty & admin identities</div>
-                  <div className={styles.featureBullet}><Check size={16} /> Role-based access and permissions</div>
-                  <div className={styles.featureBullet}><Check size={16} /> Department, course & club structure</div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Verified student, faculty & admin identities
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Role-based access and permissions
+                  </div>
+                  <div className={styles.featureBullet}>
+                    <Check size={16} /> Department, course & club structure
+                  </div>
                 </div>
               </div>
               <div className={styles.featureImageWrapper}>
-                <Image 
-                  src="/bring.jpg"
-                  alt="Aerial Campus View"
-                  width={600}
-                  height={400}
-                  className={styles.featureImage}
-                />
+                <Image src="/bring.jpg" alt="Aerial Campus View" width={600} height={400} className={styles.featureImage} />
               </div>
             </div>
           </div>
@@ -433,16 +394,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
           <div className={styles.useCasesGrid}>
             {[
-              { num: "01", title: "Official announcements", desc: "Broadcast verified updates campus-wide." },
-              { num: "02", title: "First-year onboarding", desc: "Welcome and orient new students from day one." },
-              { num: "03", title: "Department & course groups", desc: "Structured spaces for every cohort." },
-              { num: "04", title: "Clubs & societies", desc: "Run student organisations with visibility." },
-              { num: "05", title: "Placement cell communication", desc: "Centralize drives, openings, and prep." },
-              { num: "06", title: "Events & hackathons", desc: "Promote, register, and track participation." },
-              { num: "07", title: "Faculty-student interaction", desc: "Keep academic conversations on platform." },
-              { num: "08", title: "Peer discovery", desc: "Help students find the right people." },
-              { num: "09", title: "Applicant campus showcase", desc: "Show real campus life to prospects." },
-              { num: "10", title: "Pipeline for increased revenue", desc: "Increase university visibility for admissions." }
+              { num: '01', title: 'Official announcements', desc: 'Broadcast verified updates campus-wide.' },
+              { num: '02', title: 'First-year onboarding', desc: 'Welcome and orient new students from day one.' },
+              { num: '03', title: 'Department & course groups', desc: 'Structured spaces for every cohort.' },
+              { num: '04', title: 'Clubs & societies', desc: 'Run student organisations with visibility.' },
+              { num: '05', title: 'Placement cell communication', desc: 'Centralize drives, openings, and prep.' },
+              { num: '06', title: 'Events & hackathons', desc: 'Promote, register, and track participation.' },
+              { num: '07', title: 'Faculty-student interaction', desc: 'Keep academic conversations on platform.' },
+              { num: '08', title: 'Peer discovery', desc: 'Help students find the right people.' },
+              { num: '09', title: 'Applicant campus showcase', desc: 'Show real campus life to prospects.' },
+              { num: '10', title: 'Pipeline for increased revenue', desc: 'Increase university visibility for admissions.' },
             ].map((uc, i) => (
               <div key={i} className={styles.useCaseCard}>
                 <span className={styles.useCaseNum}>{uc.num}</span>
@@ -458,16 +419,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <section className={`${styles.testimonialsSection} section-padding`} id="testimonials">
         <div className="container">
           <div className={styles.testimonialContainer}>
-            <Image 
-              src={testimonials[testimonialIndex].logo} 
-              alt="Partner logo" 
-              width={120} 
-              height={120} 
-              className={styles.testimonialLogo}
-            />
-            <blockquote className={styles.testimonialQuote}>
-              {testimonials[testimonialIndex].quote}
-            </blockquote>
+            <Image src={testimonials[testimonialIndex].logo} alt="Partner logo" width={120} height={120} className={styles.testimonialLogo} />
+            <blockquote className={styles.testimonialQuote}>{testimonials[testimonialIndex].quote}</blockquote>
             <p className={styles.testimonialAuthor}>{testimonials[testimonialIndex].author}</p>
             <p className={styles.testimonialRole}>{testimonials[testimonialIndex].role}</p>
 
@@ -492,28 +445,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               Built with early university partners and <br />
               student communities
             </h2>
-            <p className={styles.sectionSub}>
-              We’re partnering with institutions and student communities to shape the verified digital campus.
-            </p>
+            <p className={styles.sectionSub}>We’re partnering with institutions and student communities to shape the verified digital campus.</p>
           </div>
 
           <div className={styles.partnersGrid}>
             {/* Partner 1 */}
             <div className={styles.partnerCard}>
               <div className={styles.partnerImgWrapper}>
-                <Image 
-                  src="/built.jpg"
-                  alt="KIET Campus"
-                  width={600}
-                  height={300}
-                  className={styles.partnerImg}
-                />
+                <Image src="/built.jpg" alt="KIET Campus" width={600} height={300} className={styles.partnerImg} />
               </div>
               <div className={styles.partnerContent}>
                 <h3 className={styles.partnerTitle}>KIET Group of Institutions</h3>
-                <p className={styles.partnerDesc}>
-                  Configuring a verified campus community across departments and student groups.
-                </p>
+                <p className={styles.partnerDesc}>Configuring a verified campus community across departments and student groups.</p>
                 <Link href="#story" className={styles.partnerLink}>
                   Read the story <ArrowRight size={14} />
                 </Link>
@@ -523,19 +466,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             {/* Partner 2 */}
             <div className={styles.partnerCard}>
               <div className={styles.partnerImgWrapper}>
-                <Image 
-                  src="/built1.jpg"
-                  alt="Aggarwal College Campus"
-                  width={600}
-                  height={300}
-                  className={styles.partnerImg}
-                />
+                <Image src="/built1.jpg" alt="Aggarwal College Campus" width={600} height={300} className={styles.partnerImg} />
               </div>
               <div className={styles.partnerContent}>
                 <h3 className={styles.partnerTitle}>Aggarwal College</h3>
-                <p className={styles.partnerDesc}>
-                  Exploring structured onboarding and official communication for students.
-                </p>
+                <p className={styles.partnerDesc}>Exploring structured onboarding and official communication for students.</p>
                 <Link href="#story" className={styles.partnerLink}>
                   Read the story <ArrowRight size={14} />
                 </Link>
@@ -550,9 +485,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div className="container">
           <div className={styles.ctaContainer}>
             <h2 className={styles.ctaTitle}>Ready to transform your university?</h2>
-            <p className={styles.ctaDesc}>
-              Contact us to get started and kickstart using UniBuzz for your university today.
-            </p>
+            <p className={styles.ctaDesc}>Contact us to get started and kickstart using UniBuzz for your university today.</p>
             <Link href="/book-demo">
               <button className={styles.btnPrimary}>
                 Book a Free Demo <ArrowRight size={16} />
@@ -565,5 +498,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       {/* Footer */}
       <Footer minimal />
     </div>
-  );
+  )
 }

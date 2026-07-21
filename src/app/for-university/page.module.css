@@ -1,24 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 .landingPageWrapper {
-  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-family: var(--font-family);
   background-color: #ffffff;
   color: #475569;
-  
+
   --primary-color: #6366f1; /* Indigo / Violet theme */
   --primary-hover: #4f46e5;
   --primary-light: #e0e7ff;
-  
+
   --text-dark: #1e1b4b; /* Navy text */
   --text-body: #475569; /* Slate gray text */
   --text-light: #94a3b8;
-  
+
   --bg-white: #ffffff;
   --bg-light: #f8fafc;
   --bg-card: #ffffff;
   --border-color: #e2e8f0;
-  
+
   /* Accents */
   --accent-red: #ef4444;
   --accent-orange: #f97316;
@@ -26,12 +26,12 @@
   --accent-purple: #8b5cf6;
   --accent-green: #22c55e;
   --accent-pink: #ec4899;
-  
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
+
   --border-radius-sm: 8px;
   --border-radius-md: 12px;
   --border-radius-lg: 16px;
@@ -50,7 +50,7 @@
 }
 
 .landingPageWrapper :global(.container) {
-  max-width: 1280px;
+  max-width: 1058px;
   margin: 0 auto;
   padding: 0 24px;
   width: 100%;
@@ -81,7 +81,7 @@
   justify-content: space-between;
   align-items: center;
   height: 80px;
-  max-width: 1280px !important;
+  max-width: 1058px !important;
   margin: 0 auto !important;
   padding: 0 24px !important;
   width: 100% !important;
@@ -153,7 +153,9 @@
   border-radius: var(--border-radius-md);
   font-size: 14px;
   font-weight: 600;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .btnDemo:hover {
@@ -200,7 +202,7 @@
   width: 300px;
   height: 100%;
   background-color: var(--bg-white);
-  box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
   z-index: 200;
   padding: 30px;
   display: flex;
@@ -219,7 +221,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 199;
 }
 
@@ -320,7 +322,7 @@
 }
 
 .btnPrimary {
-  background-color: #3730a3 !important;
+  background-color: #6744ff !important;
   color: var(--bg-white) !important;
   padding: 16px 28px;
   border-radius: var(--border-radius-md);
@@ -334,9 +336,9 @@
 }
 
 .btnPrimary:hover {
-  background-color: #312e81 !important;
+  background-color: #3a169c !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(55, 48, 163, 0.2);
+  box-shadow: 0 4px 12px rgba(103, 68, 255, 0.2);
 }
 
 .btnSecondary {
@@ -396,7 +398,9 @@
   box-shadow: var(--shadow-xl);
   max-width: 100%;
   height: auto;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s ease;
   animation: floatImage 6s ease-in-out infinite 1.15s;
 }
 
@@ -429,7 +433,8 @@
 }
 
 @keyframes floatImage {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -678,7 +683,8 @@
 }
 
 @media (max-width: 992px) {
-  .featureRow, .featureRowReversed {
+  .featureRow,
+  .featureRowReversed {
     grid-template-columns: 1fr;
     gap: 40px;
   }
@@ -1029,7 +1035,7 @@
 }
 
 .footer :global(.container) {
-  max-width: 1280px !important;
+  max-width: 1058px !important;
   margin: 0 auto !important;
   padding: 0 24px !important;
   width: 100% !important;
@@ -1098,7 +1104,9 @@
 .footerLink {
   font-size: 14px;
   color: var(--text-body);
-  transition: color 0.2s ease, padding-left 0.2s ease;
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
