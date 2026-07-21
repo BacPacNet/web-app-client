@@ -82,7 +82,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </noscript>
 
-
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className="container">

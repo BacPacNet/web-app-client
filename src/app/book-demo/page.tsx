@@ -25,7 +25,6 @@ export default function BookDemoPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
-
   // Helper to determine day of the week for a Date
   const getDayOfWeekName = (date: Date) => {
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -187,7 +186,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <div className="particle w-48 h-48 bottom-[30%] left-[15%]" style={{ animationDelay: '-3s' }} />
           <div className="particle w-24 h-24 top-[60%] right-[10%]" style={{ animationDelay: '-5s' }} />
         </div>
-
 
         {/* Main Content */}
         <main className="flex-grow w-full max-width-allowed mx-auto px-2 md:px-4 py-12 md:py-24">

@@ -29,7 +29,6 @@ const isLandingRoute = (pathname: string) => pathname === '/' || pathname.starts
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname() ?? ''
   const router = useRouter()
-
   const { userProfileData, userData } = useUniStore()
   const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
@@ -170,9 +169,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                {!isLandingCustomPage && (
-                  <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />
-                )}
+                {!isLandingCustomPage && <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />}
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
             )}
