@@ -45,6 +45,7 @@ export default function FromTheUniversityTab() {
   })
 
   const totalPosts = orderedPosts.length
+  const showCarouselNav = totalPosts >= 2
   const currentPost = orderedPosts[currentIndex]
 
   const hasOrderChanges = !isSamePostOrder(postOrder, savedPostOrder)
@@ -133,12 +134,14 @@ export default function FromTheUniversityTab() {
             <>
               <div className="flex min-h-[500px] w-full flex-col items-center justify-center">
                 <div className="flex h-full min-h-0 w-full flex-1 flex-col items-center justify-center gap-4 md:flex-row">
-                  <div
-                    onClick={handlePrev}
-                    className="hidden h-12 w-12 shrink-0 cursor-pointer items-center justify-center self-center rounded-full bg-primary-500 md:flex"
-                  >
-                    <FaChevronLeft color="white" strokeWidth={2} />
-                  </div>
+                  {showCarouselNav && (
+                    <div
+                      onClick={handlePrev}
+                      className="hidden h-12 w-12 shrink-0 cursor-pointer items-center justify-center self-center rounded-full bg-primary-500 md:flex"
+                    >
+                      <FaChevronLeft color="white" strokeWidth={2} />
+                    </div>
+                  )}
 
                   {currentPost && (
                     <div className="flex min-h-0 w-full flex-1 items-start justify-center">
@@ -168,27 +171,31 @@ export default function FromTheUniversityTab() {
                     </div>
                   )}
 
-                  <div
-                    onClick={handleNext}
-                    className="hidden h-12 w-12 shrink-0 cursor-pointer items-center justify-center self-center rounded-full bg-primary-500 md:flex"
-                  >
-                    <FaChevronRight color="white" strokeWidth={2} />
-                  </div>
-
-                  <div className="flex items-center justify-center gap-4 md:hidden">
-                    <div
-                      onClick={handlePrev}
-                      className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary-500"
-                    >
-                      <FaChevronLeft color="white" strokeWidth={2} />
-                    </div>
+                  {showCarouselNav && (
                     <div
                       onClick={handleNext}
-                      className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary-500"
+                      className="hidden h-12 w-12 shrink-0 cursor-pointer items-center justify-center self-center rounded-full bg-primary-500 md:flex"
                     >
                       <FaChevronRight color="white" strokeWidth={2} />
                     </div>
-                  </div>
+                  )}
+
+                  {showCarouselNav && (
+                    <div className="flex items-center justify-center gap-4 md:hidden">
+                      <div
+                        onClick={handlePrev}
+                        className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary-500"
+                      >
+                        <FaChevronLeft color="white" strokeWidth={2} />
+                      </div>
+                      <div
+                        onClick={handleNext}
+                        className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary-500"
+                      >
+                        <FaChevronRight color="white" strokeWidth={2} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { FACULTY_AFFILIATION_FILTER_OPTIONS, FACULTY_OCCUPATION_FILTER_OPTIONS } from '@/components/molecules/AdminDashboard/FacultyFilterRow'
+import AdminPageHeader from '@/components/molecules/AdminDashboard/AdminPageHeader'
 import FacultyFilterToolbar from '@/components/molecules/AdminDashboard/FacultyFilterToolbar'
 import FacultyTable from '@/components/molecules/AdminDashboard/FacultyTable'
 import { useAdminUsersForConnections } from '@/services/user'
@@ -8,7 +9,6 @@ import { useBulkUpdateFacultyProfileByCommunityAdmin } from '@/services/userProf
 import { useUniStore } from '@/store/store'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { userTypeEnum } from '@/types/RegisterForm'
-import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -31,7 +31,6 @@ const defaultValues: AdminFacultyFilterForm = {
 }
 
 export default function AdminFacultyPage() {
-  const router = useRouter()
   const scrollRef = useRef<HTMLDivElement>(null)
   const { userProfileData } = useUniStore()
   const { watch, setValue } = useForm<AdminFacultyFilterForm>({ defaultValues })
@@ -113,7 +112,7 @@ export default function AdminFacultyPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-semibold text-neutral-900">Faculty</h1>
+      <AdminPageHeader title="Faculty" />
 
       <div className="mt-6 flex flex-col gap-6">
         <FacultyFilterToolbar
@@ -149,7 +148,7 @@ export default function AdminFacultyPage() {
               isLoading={isLoading}
               isError={isError}
               isFetchingNextPage={isFetchingNextPage}
-              onViewProfile={(userId) => router.push(`/profile/${userId}`)}
+              onViewProfile={(userId) => window.open(`/profile/${userId}`, '_blank', 'noopener,noreferrer')}
             />
           )}
         </div>

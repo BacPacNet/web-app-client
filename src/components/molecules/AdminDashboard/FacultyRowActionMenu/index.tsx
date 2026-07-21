@@ -4,6 +4,7 @@ import AdminDeactivateAccountModal from '@/components/molecules/AdminDashboard/A
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useModal } from '@/context/ModalContext'
 import { useActivateUserAccountByCommunityAdmin } from '@/services/user'
+import { useUniStore } from '@/store/store'
 import { useState } from 'react'
 import { FiExternalLink, FiMoreVertical, FiUserX } from 'react-icons/fi'
 
@@ -32,7 +33,10 @@ export default function FacultyRowActionMenu({
 }: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const { openModal } = useModal()
+  const { userProfileData } = useUniStore()
   const { mutate: activateFacultyAccount, isPending: isActivating } = useActivateUserAccountByCommunityAdmin()
+
+  const isOwnAccount = userProfileData?.users_id === userId
 
   const handleDeactivate = () => {
     setIsOpen(false)
@@ -81,7 +85,7 @@ export default function FacultyRowActionMenu({
 
       <PopoverContent align="end" className="w-max border-none bg-white p-1 shadow-card">
         <div className="flex flex-col">
-          {/* {isActive ? (
+          {isOwnAccount ? null : isActive ? (
             <button
               type="button"
               onClick={handleDeactivate}
@@ -100,7 +104,7 @@ export default function FacultyRowActionMenu({
               <FiUserX size={12} color="#15803D" />
               {isActivating ? 'Activating...' : 'Activate'}
             </button>
-          )} */}
+          )}
 
           {onViewProfile ? (
             <button

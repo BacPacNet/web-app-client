@@ -4,6 +4,7 @@ import RemoveAdminAccountModal from '@/components/molecules/AdminDashboard/Remov
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover'
 import { useModal } from '@/context/ModalContext'
 import { useUniStore } from '@/store/store'
+import Link from 'next/link'
 import { useState } from 'react'
 import { FiExternalLink, FiMoreVertical, FiUserMinus } from 'react-icons/fi'
 
@@ -53,7 +54,6 @@ export default function AdminAccountsRowActionMenu({
   }
 
   const handleViewProfile = () => {
-    onViewProfile?.()
     setIsOpen(false)
   }
 
@@ -83,14 +83,16 @@ export default function AdminAccountsRowActionMenu({
           ) : null}
 
           {onViewProfile ? (
-            <button
-              type="button"
+            <Link
+              href={`/profile/${userId}`}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={handleViewProfile}
               className="flex items-center gap-2 rounded-md px-3 py-2 text-left font-inter text-2xs text-[#3A3B3C] transition-colors hover:bg-neutral-50"
             >
               <FiExternalLink size={12} className="text-[#242526]" />
               View Profile
-            </button>
+            </Link>
           ) : null}
         </div>
       </PopoverContent>

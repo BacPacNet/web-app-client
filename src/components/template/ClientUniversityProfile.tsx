@@ -281,12 +281,14 @@ export default function ClientUniversityProfile({ universityName }: { university
             <p className="text-neutral-700 font-extrabold font-poppins text-md md:text-md-big shrink-0">From the University</p>
 
             <div className="w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-4 min-h-0 h-full">
-              <div
-                onClick={handlePrev}
-                className="hidden md:flex shrink-0 w-12 h-12 bg-primary-500 rounded-full items-center justify-center cursor-pointer self-center"
-              >
-                <FaChevronLeft color="white" strokeWidth={2} />
-              </div>
+              {totalPosts > 1 && (
+                <div
+                  onClick={handlePrev}
+                  className="hidden md:flex shrink-0 w-12 h-12 bg-primary-500 rounded-full items-center justify-center cursor-pointer self-center"
+                >
+                  <FaChevronLeft color="white" strokeWidth={2} />
+                </div>
+              )}
 
               {highlightedPosts?.[currentIndex] && (
                 <div className="flex-1 min-h-0 w-full flex items-start justify-center">
@@ -316,21 +318,31 @@ export default function ClientUniversityProfile({ universityName }: { university
                 </div>
               )}
 
-              <div
-                onClick={handleNext}
-                className="hidden md:flex shrink-0 w-12 h-12 bg-primary-500 rounded-full items-center justify-center cursor-pointer self-center"
-              >
-                <FaChevronRight color="white" strokeWidth={2} />
-              </div>
-
-              <div className="flex md:hidden items-center justify-center gap-4">
-                <div onClick={handlePrev} className="shrink-0 w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center cursor-pointer">
-                  <FaChevronLeft color="white" strokeWidth={2} />
-                </div>
-                <div onClick={handleNext} className="shrink-0 w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center cursor-pointer">
+              {totalPosts > 1 && (
+                <div
+                  onClick={handleNext}
+                  className="hidden md:flex shrink-0 w-12 h-12 bg-primary-500 rounded-full items-center justify-center cursor-pointer self-center"
+                >
                   <FaChevronRight color="white" strokeWidth={2} />
                 </div>
-              </div>
+              )}
+
+              {totalPosts > 1 && (
+                <div className="flex md:hidden items-center justify-center gap-4">
+                  <div
+                    onClick={handlePrev}
+                    className="shrink-0 w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center cursor-pointer"
+                  >
+                    <FaChevronLeft color="white" strokeWidth={2} />
+                  </div>
+                  <div
+                    onClick={handleNext}
+                    className="shrink-0 w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center cursor-pointer"
+                  >
+                    <FaChevronRight color="white" strokeWidth={2} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

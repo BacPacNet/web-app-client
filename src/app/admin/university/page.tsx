@@ -1,5 +1,6 @@
 'use client'
 
+import AdminPageHeader from '@/components/molecules/AdminDashboard/AdminPageHeader'
 import ContactInfoTab from '@/components/molecules/AdminDashboard/ContactInfoTab'
 import FromTheUniversityTab from '@/components/molecules/AdminDashboard/FromTheUniversityTab'
 import UniversityOverviewTab from '@/components/molecules/AdminDashboard/UniversityOverviewTab'
@@ -51,7 +52,7 @@ export default function AdminUniversityPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-md-big font-poppins font-bold text-[#111827]">University</h1>
+      <AdminPageHeader title="University" />
 
       <div className="mt-6 flex flex-col gap-6">
         <UniversityTabNav activeTab={activeTab} onTabChange={setActiveTab} />

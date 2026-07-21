@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FaFilter } from 'react-icons/fa6'
 import ConnectionUserSelectModal from '../ConnectionModals/UniversitySearchConnectionModal'
 import UserSearchInput from '@/components/atoms/UserSearchBox'
+import { EmailType } from '@/models/auth'
 import { userTypeEnum } from '@/types/RegisterForm'
 
 type User = {
@@ -46,6 +47,12 @@ const DEFAULT_SELECTED_FILTERS: SelectedFilters = {
   university: { name: '', id: '', communityId: '' },
 }
 
+const toUniversityFilter = (university: EmailType) => ({
+  name: university.UniversityName,
+  id: university._id,
+  communityId: university.communityId ?? '',
+})
+
 const getInitialSelectedFilters = (): SelectedFilters => {
   if (typeof window === 'undefined') return DEFAULT_SELECTED_FILTERS
 
@@ -70,6 +77,8 @@ const getInitialSelectedFilters = (): SelectedFilters => {
 
 export default function FindPeople() {
   const { userProfileData } = useUniStore()
+  const isApplicant = userProfileData?.role === userTypeEnum.Applicant
+  const firstVerifiedUniversity = userProfileData?.email?.[0]
   const [name, setName] = useState('')
   const ref = useRef<HTMLDivElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -114,27 +123,44 @@ export default function FindPeople() {
     selectedFilters?.selectedRadio ?? ''
   )
 
-  const hasActiveFilters =
-    !!selectedFilters?.university?.name ||
+  const hasUserSelectedFilters =
     !!selectedFilters?.studentYear?.length ||
     !!selectedFilters?.major?.length ||
     !!selectedFilters?.occupation?.length ||
     !!selectedFilters?.affiliation?.length ||
-    !!selectedFilters?.selectedRadio
+    !!selectedFilters?.selectedRadio ||
+    (isApplicant && !!selectedFilters?.university?.name)
+
+  const shouldRefetchWithFilters = hasUserSelectedFilters || applyReset || (!isApplicant && !!selectedFilters?.university?.name)
+
+  useEffect(() => {
+    if (isApplicant || !firstVerifiedUniversity) return
+
+    const universityFilter = toUniversityFilter(firstVerifiedUniversity)
+    setSelectedFilters((prev) => {
+      if (
+        prev.university.name === universityFilter.name &&
+        prev.university.id === universityFilter.id &&
+        prev.university.communityId === universityFilter.communityId
+      ) {
+        return prev
+      }
+      return { ...prev, university: universityFilter }
+    })
+  }, [isApplicant, firstVerifiedUniversity])
 
   useEffect(() => {
     localStorage.setItem(FIND_PEOPLE_FILTERS_STORAGE_KEY, JSON.stringify(selectedFilters))
   }, [selectedFilters])
 
   useEffect(() => {
-    if (hasActiveFilters || applyReset) {
+    if (shouldRefetchWithFilters) {
       setIsFilterLoading(true)
       refetch().finally(() => setIsFilterLoading(false))
       setApplyReset(false)
     }
   }, [
-    hasActiveFilters,
-    applyReset,
+    shouldRefetchWithFilters,
     applyTrigger,
     selectedFilters?.university?.name,
     selectedFilters?.studentYear,
@@ -199,7 +225,10 @@ export default function FindPeople() {
   }, [isUserProfilesLoading, isFilterLoading, isRefetching, userProfiles])
 
   const handleClear = () => {
-    setSelectedFilters(DEFAULT_SELECTED_FILTERS)
+    setSelectedFilters({
+      ...DEFAULT_SELECTED_FILTERS,
+      university: !isApplicant && firstVerifiedUniversity ? toUniversityFilter(firstVerifiedUniversity) : DEFAULT_SELECTED_FILTERS.university,
+    })
     localStorage.removeItem(FIND_PEOPLE_FILTERS_STORAGE_KEY)
     setApplyReset(true)
   }
@@ -234,7 +263,7 @@ export default function FindPeople() {
             className="relative cursor-pointer bg-[#F3F2FF] border border-[#E9E8FF] text-primary-500 h-10 w-10 flex items-center justify-center rounded-lg"
           >
             <FaFilter className="text-primary-500" />
-            {hasActiveFilters && <div className="absolute top-2 right-1 bg-destructive-500 text-white text-xs rounded-full w-2 h-2"></div>}
+            {hasUserSelectedFilters && <div className="absolute top-2 right-1 bg-destructive-500 text-white text-xs rounded-full w-2 h-2"></div>}
           </div>
         </div>
       </div>
@@ -267,7 +296,7 @@ export default function FindPeople() {
           setSelectedFilters={setSelectedFilters}
           handleClear={handleClear}
           onApplyFilters={() => setApplyTrigger((prev) => prev + 1)}
-          isApplicant={userProfileData?.role == userTypeEnum.Applicant || false}
+          isApplicant={isApplicant}
         />
       )}
     </div>

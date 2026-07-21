@@ -4,6 +4,8 @@ import AdminSectionHeader from '@/components/molecules/AdminDashboard/AdminSecti
 import Buttons from '@/components/atoms/Buttons'
 import { FaCheck } from 'react-icons/fa'
 
+const MAX_DESCRIPTION_LENGTH = 240
+
 type Props = {
   name: string
   description: string
@@ -43,13 +45,19 @@ export default function UniversityProfileDetailsForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="university-description" className="text-2xs font-semibold text-neutral-900">
-          Description
-        </label>
+        <div className="flex items-center justify-between">
+          <label htmlFor="university-description" className="text-2xs font-semibold text-neutral-900">
+            Description
+          </label>
+          <span className="text-2xs text-neutral-500">
+            {description.length}/{MAX_DESCRIPTION_LENGTH}
+          </span>
+        </div>
         <textarea
           id="university-description"
           value={description}
-          onChange={(e) => onDescriptionChange(e.target.value)}
+          onChange={(e) => onDescriptionChange(e.target.value.slice(0, MAX_DESCRIPTION_LENGTH))}
+          maxLength={MAX_DESCRIPTION_LENGTH}
           className="min-h-[120px] w-full resize-y rounded-lg border border-neutral-200 p-3 text-xs text-neutral-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
           placeholder="Enter a short description for the university profile page"
         />

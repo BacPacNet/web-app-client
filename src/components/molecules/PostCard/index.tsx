@@ -140,7 +140,7 @@ const PostCard = React.memo(
     communities,
     promote,
   }: PostProps) => {
-    const { userData } = useUniStore()
+    const { userData, universityName } = useUniStore()
     const commentSectionRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -355,7 +355,7 @@ const PostCard = React.memo(
                   isType={type}
                   postType={postCategory}
                   promote={promote}
-                  universityName={university}
+                  universityName={universityName}
                 />
               </div>
             </div>

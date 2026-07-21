@@ -71,8 +71,8 @@ export default function AdminDashboardSidebar({ items = defaultNavItems, userNam
     <aside className="sticky top-0 flex h-screen w-[260px] shrink-0 self-start flex-col border-r border-neutral-200 bg-white">
       <div className="px-5 py-7 flex flex-col">
         <Link href="/timeline" className="flex items-center gap-3" aria-label="Go to timeline">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl ">
-            <Image src={unibuzzLogo} alt="Unibuzz logo" className="h-8 w-8 object-contain rounded-xl" />
+          <div className="flex h-8 w-8 items-center justify-center ">
+            <Image src={unibuzzLogo} alt="Unibuzz logo" className="h-8 w-8 object-contain rounded-md " />
           </div>
           <p className="text-[20px] font-poppins font-bold text-[#111827]">Unibuzz</p>
         </Link>

@@ -1,5 +1,6 @@
 'use client'
 
+import AdminPageHeader from '@/components/molecules/AdminDashboard/AdminPageHeader'
 import ModerationGroupList from '@/components/molecules/AdminDashboard/ModerationGroupList'
 import ModerationStatsBadges from '@/components/molecules/AdminDashboard/ModerationStatsBadges'
 import { useOfficialGroupsStatsForCommunityAdmin, useOfficialGroupsWithPostCountForCommunityAdmin } from '@/services/community-group'
@@ -17,7 +18,7 @@ export default function AdminModerationPage() {
   return (
     <div className="p-8">
       <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-poppins font-bold text-[#111827]">Moderation</h1>
+        <AdminPageHeader title="Moderation" />
 
         <ModerationStatsBadges groupCount={stats?.officialGroupsCount ?? 0} postCount={stats?.totalPostsInOfficialGroups ?? 0} />
 
