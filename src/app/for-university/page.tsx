@@ -175,13 +175,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <UserSearch size={24} />
               </div>
               <h3 className={styles.cardTitle}>Students can&apos;t discover peers</h3>
-<<<<<<< HEAD
-              <p className={styles.cardDesc}>
-                Finding the right people, groups, and opportunities is left to chance.
-              </p>
-=======
               <p className={styles.cardDesc}>Finding the right people, groups, and opportunities is left to chance.</p>
->>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
             </div>
 
             {/* Admins lack engagement visibility */}
@@ -190,13 +184,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <BarChart3 size={24} />
               </div>
               <h3 className={styles.cardTitle}>Admins lack engagement visibility</h3>
-<<<<<<< HEAD
-              <p className={styles.cardDesc}>
-                Leadership has no reliable view of what&apos;s working across campus.
-              </p>
-=======
               <p className={styles.cardDesc}>Leadership has no reliable view of what&apos;s working across campus.</p>
->>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
             </div>
 
             {/* Campus life is scattered */}
@@ -354,12 +342,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span className={`${styles.featureDetailBadge} ${styles.themePurple}`}>Verify & onboard</span>
                 <h3 className={styles.featureDetailTitle}>Bring your verified campus online</h3>
                 <p className={styles.featureDetailDesc}>
-<<<<<<< HEAD
-                  Set up your institution&apos;s space, verify students, faculty, and admins, and structure departments, courses, clubs, and official groups.
-=======
                   Set up your institution&apos;s space, verify students, faculty, and admins, and structure departments, courses, clubs, and official
                   groups.
->>>>>>> 40e8ec35b035eda641c5342728c9998892bc3594
                 </p>
                 <div className={styles.featureBulletList}>
                   <div className={styles.featureBullet}>
