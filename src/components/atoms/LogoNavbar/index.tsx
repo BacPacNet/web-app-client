@@ -68,7 +68,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowRightMenu(false)
   }
 
-  const isForUniversityPage = pathname.startsWith('/for-university')
+  const isLandingCustomPage = pathname.includes('/for-university') || pathname.includes('/book-demo') || pathname.includes('/thank-you')
 
   const renderProfile = () => {
     const handleNavigate = (path: string) => {
@@ -79,14 +79,11 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
       case true:
         return <ProfileMenu userProfileData={userProfileData} userData={userData} onLogout={handleLogout} onNavigate={handleNavigate} />
       case false:
-        if (isForUniversityPage) {
+        if (isLandingCustomPage) {
           return (
             <div className="pl-8 gap-4 flex">
               <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs">
                 Book a Free Demo
-              </Button>
-              <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
-                Sign Up
               </Button>
             </div>
           )
@@ -134,17 +131,19 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
              relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-3 items-center">
-              <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
-                {!showLeftNavbar ? (
-                  <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
-                ) : (
-                  <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
-                )}
-              </div>
+              {(!isLandingCustomPage || isLogin) && (
+                <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
+                  {!showLeftNavbar ? (
+                    <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
+                  ) : (
+                    <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
+                  )}
+                </div>
+              )}
               <Link className="flex gap-4 center-v" href="/">
                 <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
               </Link>
-              {showAudienceToggle && (
+              {showAudienceToggle && !isLandingCustomPage && (
                 <div className="flex items-center bg-neutral-100 p-1 rounded-full border border-neutral-200">
                   <button
                     type="button"
@@ -170,7 +169,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />
+                {!isLandingCustomPage && <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />}
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
             )}

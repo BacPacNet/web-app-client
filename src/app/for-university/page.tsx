@@ -81,6 +81,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           style={{ display: 'none', visibility: 'hidden' }}
         />
       </noscript>
+
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className="container">
@@ -478,7 +479,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
       {/* Footer */}
-      <Footer />
+      <Footer minimal />
     </div>
   )
 }
