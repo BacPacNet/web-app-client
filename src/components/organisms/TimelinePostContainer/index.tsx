@@ -37,7 +37,7 @@ const TimelinePostContainer = ({ containerRef }: Props) => {
     images: [],
     currImageIndex: null,
   })
-  const { userData, userProfileData } = useUniStore()
+  const { userData } = useUniStore()
 
   // Memoize flattened posts data
   const timlineDatas = useMemo(() => TimelinePosts?.pages.flatMap((page) => page?.allPosts) || null, [TimelinePosts?.pages])

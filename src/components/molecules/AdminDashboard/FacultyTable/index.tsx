@@ -109,8 +109,8 @@ export default function FacultyTable({
     <div className={`flex flex-col gap-3 ${className}`}>
       <p className="text-sm text-neutral-500">{showingLabel}</p>
 
-      <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
-        <div className="grid grid-cols-[40px_minmax(180px,1.4fr)_minmax(160px,1.2fr)_minmax(120px,1fr)_minmax(150px,1.1fr)_130px_18px] items-center gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+      <div className="overflow-clip rounded-xl border border-neutral-200 bg-white shadow-sm">
+        <div className="sticky top-0 z-10 grid grid-cols-[40px_minmax(180px,1.4fr)_minmax(160px,1.2fr)_minmax(120px,1fr)_minmax(150px,1.1fr)_130px_18px] items-center gap-3 border-b border-neutral-200 bg-neutral-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
           <div className="flex items-center justify-center">
             <input
               type="checkbox"

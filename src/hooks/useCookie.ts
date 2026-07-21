@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 
 const COOKIE_CHANGE_EVENT = 'uni-cookie-change'
 
-const readCookieValue = (cookieName: string): string => {
+export const readCookieValue = (cookieName: string): string => {
   if (typeof document === 'undefined') return ''
   const cookie = document.cookie.split('; ').find((row) => row.startsWith(`${cookieName}=`))
   return cookie ? cookie.split('=')[1] : ''

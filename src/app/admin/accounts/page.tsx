@@ -1,5 +1,6 @@
 'use client'
 
+import AdminPageHeader from '@/components/molecules/AdminDashboard/AdminPageHeader'
 import AddAdminAccountModal from '@/components/molecules/AdminDashboard/AddAdminAccountModal'
 import AdminAccountsTable from '@/components/molecules/AdminDashboard/AdminAccountsTable'
 import AdminUserSearchBar from '@/components/molecules/AdminDashboard/AdminUserSearchBar'
@@ -7,12 +8,10 @@ import Buttons from '@/components/atoms/Buttons'
 import { useModal } from '@/context/ModalContext'
 import { useCommunityAdminAccounts } from '@/services/communityAdminAccounts'
 import { useUniStore } from '@/store/store'
-import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { FiUserPlus } from 'react-icons/fi'
 
 export default function AdminAccountsPage() {
-  const router = useRouter()
   const { openModal } = useModal()
   const { communityId } = useUniStore()
 
@@ -29,7 +28,7 @@ export default function AdminAccountsPage() {
   return (
     <div className="p-8">
       <div className="flex flex-col">
-        <h1 className="text-2xl font-poppins font-bols text-[#111827]">Admin Accounts</h1>
+        <AdminPageHeader title="Admin Accounts" />
 
         <div className="flex items-center justify-between pt-6 gap-2">
           <p className="text-xs text-[#6B7280]">Manage who has admin rights for your university.</p>
@@ -47,7 +46,7 @@ export default function AdminAccountsPage() {
             University information is required to view admin accounts.
           </div>
         ) : (
-          <AdminAccountsTable admins={admins} isLoading={isLoading} isError={isError} onViewProfile={(userId) => router.push(`/profile/${userId}`)} />
+          <AdminAccountsTable admins={admins} isLoading={isLoading} isError={isError} onViewProfile={() => {}} />
         )}
       </div>
     </div>

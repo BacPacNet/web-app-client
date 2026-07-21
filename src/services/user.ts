@@ -1,4 +1,4 @@
-import useCookie from '@/hooks/useCookie'
+import useCookie, { readCookieValue } from '@/hooks/useCookie'
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
@@ -77,6 +77,11 @@ export async function getAllUsersForConnections(
   chatId?: string,
   role?: string
 ): Promise<ProfileConnection> {
+  const normalizedToken = token.trim()
+  if (!normalizedToken) {
+    throw new Error('Missing auth token')
+  }
+
   const params = new URLSearchParams()
 
   params.append('page', String(page))
@@ -90,7 +95,7 @@ export async function getAllUsersForConnections(
   if (chatId) params.append('chatId', chatId)
   if (role) params.append('role', role)
   return await client(`/users/connections?${params.toString()}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${normalizedToken}` },
   })
 }
 
@@ -108,12 +113,18 @@ export function useUsersProfileForConnections(
 ) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(name, 1000)
+  const authToken = (cookieValue || readCookieValue('uni_user_token')).trim()
 
   return useInfiniteQuery({
     queryKey: ['usersProfileForConnections', debouncedSearchTerm],
-    queryFn: ({ pageParam = 1 }) =>
-      getAllUsersForConnections(
-        cookieValue,
+    queryFn: ({ pageParam = 1 }) => {
+      const token = readCookieValue('uni_user_token').trim()
+      if (!token) {
+        throw new Error('Missing auth token')
+      }
+
+      return getAllUsersForConnections(
+        token,
         pageParam,
         limit,
         debouncedSearchTerm,
@@ -124,7 +135,8 @@ export function useUsersProfileForConnections(
         affiliation || [],
         chatId,
         role
-      ),
+      )
+    },
     getNextPageParam: (lastPage) => {
       if (lastPage.currentPage < lastPage.totalPages) {
         return lastPage.currentPage + 1
@@ -132,7 +144,7 @@ export function useUsersProfileForConnections(
       return undefined
     },
     initialPageParam: 1,
-    enabled: !!cookieValue && enabled,
+    enabled: !!authToken && enabled,
   })
 }
 

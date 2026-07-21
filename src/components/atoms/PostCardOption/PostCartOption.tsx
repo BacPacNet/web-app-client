@@ -9,6 +9,7 @@ import { useDeleteCommunityPost } from '@/services/community-post'
 import { useDeleteUserPost } from '@/services/community-timeline'
 import { useUniStore } from '@/store/store'
 import { PostPromote } from '@/types/Community'
+import { PostType } from '@/types/constants'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -71,7 +72,7 @@ const PostCartOption = ({ postID, isType, isSelfPost, postType, promote, univers
       </PopoverTrigger>
       <PopoverContent onClick={() => setIsOpen(false)} className="relative top-0 right-16 w-auto border-none  bg-white shadow-card p-0">
         <div className="flex flex-col">
-          {promote?.isAdminOfUni && (
+          {promote?.isAdminOfUni && isType === PostType.Community && (
             <div onClick={handlePromotePost} className="flex gap-2 items-center cursor-pointer hover:bg-slate-200 px-3 py-2">
               <Image src={publicIcon} alt="promote" width={16} height={16} />
               <p className="font-medium text-xs text-neutral-800">Promote This Post</p>
