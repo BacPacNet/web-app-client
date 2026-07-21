@@ -53,7 +53,6 @@ const testimonials = [
 ];
 
 export default function Home() {
-  const [activeToggle, setActiveToggle] = useState<"faculty" | "student">("faculty");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
 
@@ -93,35 +92,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <Link href="/" className="flex items-center">
               <Image src={unibuzzLogo} alt="Unibuzz Logo" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
             </Link>
-            <div className={styles.toggleSwitch}>
-              <button 
-                className={`${styles.toggleBtn} ${activeToggle === "faculty" ? styles.toggleBtnActive : ""}`}
-                onClick={() => setActiveToggle("faculty")}
-              >
-                Faculty
-              </button>
-              <button 
-                className={`${styles.toggleBtn} ${activeToggle === "student" ? styles.toggleBtnActive : ""}`}
-                onClick={() => setActiveToggle("student")}
-              >
-                Student
-              </button>
-            </div>
           </div>
-
-          <nav className={styles.navLinks}>
-            <Link href="/timeline" className={styles.navLink}>Community</Link>
-            <Link href="/discover" className={styles.navLink}>Discover</Link>
-            <Link href="/for-university#blogs" className={styles.navLink}>Blogs</Link>
-            <Link href="/about" className={styles.navLink}>About</Link>
-          </nav>
 
           <div className={styles.navActions}>
             <Link href="/book-demo">
               <button className={styles.btnDemo}>Book a Free Demo</button>
-            </Link>
-            <Link href="/register">
-              <button className={styles.btnSignUp}>Sign Up</button>
             </Link>
           </div>
 
@@ -138,18 +113,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </Link>
           <X className={styles.drawerClose} onClick={toggleMobileMenu} />
         </div>
-        <div className={styles.drawerLinks}>
-          <Link href="/timeline" className={styles.navLink} onClick={toggleMobileMenu}>Community</Link>
-          <Link href="/discover" className={styles.navLink} onClick={toggleMobileMenu}>Discover</Link>
-          <Link href="/for-university#blogs" className={styles.navLink} onClick={toggleMobileMenu}>Blogs</Link>
-          <Link href="/about" className={styles.navLink} onClick={toggleMobileMenu}>About</Link>
-        </div>
         <div className={styles.drawerActions}>
           <Link href="/book-demo" onClick={toggleMobileMenu} style={{ width: "100%" }}>
             <button className={styles.btnDemo} style={{ width: "100%" }}>Book a Free Demo</button>
-          </Link>
-          <Link href="/register" onClick={toggleMobileMenu} style={{ width: "100%" }}>
-            <button className={styles.btnSignUp} style={{ width: "100%" }}>Sign Up</button>
           </Link>
         </div>
       </div>
@@ -256,7 +222,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className={`${styles.cardIconBox} ${styles.themeOrange}`}>
                 <UserSearch size={24} />
               </div>
-              <h3 className={styles.cardTitle}>Students can't discover peers</h3>
+              <h3 className={styles.cardTitle}>Students can&apos;t discover peers</h3>
               <p className={styles.cardDesc}>
                 Finding the right people, groups, and opportunities is left to chance.
               </p>
@@ -269,7 +235,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               </div>
               <h3 className={styles.cardTitle}>Admins lack engagement visibility</h3>
               <p className={styles.cardDesc}>
-                Leadership has no reliable view of what's working across campus.
+                Leadership has no reliable view of what&apos;s working across campus.
               </p>
             </div>
 
@@ -432,7 +398,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span className={`${styles.featureDetailBadge} ${styles.themePurple}`}>Verify & onboard</span>
                 <h3 className={styles.featureDetailTitle}>Bring your verified campus online</h3>
                 <p className={styles.featureDetailDesc}>
-                  Set up your institution's space, verify students, faculty, and admins, and structure departments, courses, clubs, and official groups.
+                  Set up your institution&apos;s space, verify students, faculty, and admins, and structure departments, courses, clubs, and official groups.
                 </p>
                 <div className={styles.featureBulletList}>
                   <div className={styles.featureBullet}><Check size={16} /> Verified student, faculty & admin identities</div>
@@ -597,7 +563,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </section>
 
       {/* Footer */}
-      <Footer />
+      <Footer minimal />
     </div>
   );
 }

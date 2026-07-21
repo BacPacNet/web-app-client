@@ -29,10 +29,6 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname()
   const router = useRouter()
 
-  if (pathname && (pathname.includes('/for-university') || pathname.includes('/book-demo') || pathname.includes('/thank-you'))) {
-    return null
-  }
-
   const shouldPadding = nonPaddingUrls.some((path) => pathname.includes(path)) || pathname === '/'
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
 
@@ -63,6 +59,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   useEffect(() => {
     reinitResetPasswordTimeout()
   }, [])
+
+  if (pathname && (pathname.includes('/for-university') || pathname.includes('/book-demo') || pathname.includes('/thank-you'))) {
+    return null
+  }
 
   const renderProfile = () => {
     const handleNavigate = (path: string) => {

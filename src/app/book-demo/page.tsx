@@ -27,7 +27,6 @@ export default function BookDemoPage() {
   const [designation, setDesignation] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [activeToggle, setActiveToggle] = useState<'faculty' | 'student'>('faculty')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen)
@@ -219,36 +218,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <Link href="/" className="flex items-center">
                 <Image src={unibuzzLogo} alt="Unibuzz Logo" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
               </Link>
-              <div className={styles.toggleSwitch}>
-                <button 
-                  className={`${styles.toggleBtn} ${activeToggle === "faculty" ? styles.toggleBtnActive : ""}`}
-                  onClick={() => setActiveToggle("faculty")}
-                >
-                  Faculty
-                </button>
-                <button 
-                  className={`${styles.toggleBtn} ${activeToggle === "student" ? styles.toggleBtnActive : ""}`}
-                  onClick={() => setActiveToggle("student")}
-                >
-                  Student
-                </button>
-              </div>
             </div>
-
-            <nav className={styles.navLinks}>
-              <Link href="/timeline" className={styles.navLink}>Community</Link>
-              <Link href="/discover" className={styles.navLink}>Discover</Link>
-              <Link href="/for-university#blogs" className={styles.navLink}>Blogs</Link>
-              <Link href="/about" className={styles.navLink}>About</Link>
-            </nav>
 
             <div className={styles.navActions}>
               <a href="#booking-form">
                 <button className={styles.btnDemo}>Book a Free Demo</button>
               </a>
-              <Link href="/register">
-                <button className={styles.btnSignUp}>Sign Up</button>
-              </Link>
             </div>
 
             <Menu className={styles.mobileMenuBtn} onClick={toggleMobileMenu} />
@@ -264,19 +239,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </Link>
             <X className={styles.drawerClose} onClick={toggleMobileMenu} />
           </div>
-          <div className={styles.drawerLinks}>
-            <Link href="/timeline" className={styles.navLink} onClick={toggleMobileMenu}>Community</Link>
-            <Link href="/discover" className={styles.navLink} onClick={toggleMobileMenu}>Discover</Link>
-            <Link href="/for-university#blogs" className={styles.navLink} onClick={toggleMobileMenu}>Blogs</Link>
-            <Link href="/about" className={styles.navLink} onClick={toggleMobileMenu}>About</Link>
-          </div>
           <div className={styles.drawerActions}>
             <a href="#booking-form" onClick={toggleMobileMenu} style={{ width: "100%" }}>
               <button className={styles.btnDemo} style={{ width: "100%" }}>Book a Free Demo</button>
             </a>
-            <Link href="/register" onClick={toggleMobileMenu} style={{ width: "100%" }}>
-              <button className={styles.btnSignUp} style={{ width: "100%" }}>Sign Up</button>
-            </Link>
           </div>
         </div>
 
@@ -560,7 +526,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {/* Benefits Checklist */}
             <div className="col-span-1 lg:col-span-5 flex flex-col gap-4 order-4">
-              <h3 className="text-xl font-bold text-on-surface mb-2">What you'll get:</h3>
+              <h3 className="text-xl font-bold text-on-surface mb-2">What you&apos;ll get:</h3>
               <div className="flex items-start gap-3">
                 <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
                 <p className="text-lg text-on-surface-variant" style={{ fontSize: "22px" }}>Personalized platform walkthrough</p>
@@ -627,7 +593,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </main>
 
         {/* Footer */}
-        <Footer />
+        <Footer minimal />
       </div>
     </>
   )
