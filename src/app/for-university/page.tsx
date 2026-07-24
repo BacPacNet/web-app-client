@@ -40,14 +40,14 @@ const testimonials = [
       '“One of the key challenges we encountered was that details about student clubs, activities, and campus events were scattered across various platforms. As a result, many students were unaware of the opportunities available to them and often missed chances to participate. Unibuzz has helped solve this issue by creating a single space where students can easily find clubs, join communities, keep track of upcoming events, and take a more active role in campus life.”',
     author: 'Dr. Abhas Kanungo',
     role: 'Assistant Dean SW, KIET Group of Institutions',
-    logo: '/kiet_logo_1783597378444.png',
+    logo: '/kiet_logo.jpg',
   },
   {
     quote:
       '“Unibuzz has centralized our official announcements and streamlined student communication. It has completely eliminated the confusion of informal WhatsApp groups and brought our entire academic structure online in one safe, verified digital space.”',
     author: 'Aggarwal College Representative',
     role: 'Dean of Academic Affairs, Aggarwal College',
-    logo: '/kiet_logo_1783597378444.png',
+    logo: '/aggarwal_logo.jpg',
   },
 ]
 
@@ -402,7 +402,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <section className={`${styles.testimonialsSection} section-padding`} id="testimonials">
         <div className="container">
           <div className={styles.testimonialContainer}>
-            <Image src={testimonials[testimonialIndex].logo} alt="Partner logo" width={120} height={120} className={styles.testimonialLogo} />
+            <Image src={testimonials[testimonialIndex].logo} alt="Partner logo" width={240} height={120} className={styles.testimonialLogo} />
             <blockquote className={styles.testimonialQuote}>{testimonials[testimonialIndex].quote}</blockquote>
             <p className={styles.testimonialAuthor}>{testimonials[testimonialIndex].author}</p>
             <p className={styles.testimonialRole}>{testimonials[testimonialIndex].role}</p>
@@ -440,9 +440,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className={styles.partnerContent}>
                 <h3 className={styles.partnerTitle}>KIET Group of Institutions</h3>
                 <p className={styles.partnerDesc}>Configuring a verified campus community across departments and student groups.</p>
-                <Link href="#story" className={styles.partnerLink}>
-                  Read the story <ArrowRight size={14} />
-                </Link>
               </div>
             </div>
 
@@ -454,9 +451,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className={styles.partnerContent}>
                 <h3 className={styles.partnerTitle}>Aggarwal College</h3>
                 <p className={styles.partnerDesc}>Exploring structured onboarding and official communication for students.</p>
-                <Link href="#story" className={styles.partnerLink}>
-                  Read the story <ArrowRight size={14} />
-                </Link>
               </div>
             </div>
           </div>
