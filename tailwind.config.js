@@ -175,8 +175,11 @@ module.exports = {
                         height: 'calc(100vh - 80px)', // Adjust this value as needed for mobile
                     },
                 },
-                '.max-width-allowed': {
-                    maxWidth: "1058px"
+                // '.max-width-allowed': {
+                //     maxWidth: "1058px"
+                // },
+                  '.max-width-allowed': {
+                    maxWidth: "1280px"
                 },
                 '.max-width-tablet': {
                     maxWidth: "518px"
