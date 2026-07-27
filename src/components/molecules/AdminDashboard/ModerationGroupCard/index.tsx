@@ -1,6 +1,7 @@
 'use client'
 
 import AdminPillBadge from '@/components/molecules/AdminDashboard/AdminPillBadge'
+import AdminTableLoadingState from '@/components/molecules/AdminDashboard/AdminTableLoadingState'
 import ModerationGroupActionMenu from '@/components/molecules/AdminDashboard/ModerationGroupActionMenu'
 import ModerationPostItem from '@/components/molecules/AdminDashboard/ModerationPostItem'
 import { ModerationGroup } from '@/services/communityAdminModeration'
@@ -127,7 +128,7 @@ export default function ModerationGroupCard({ group, communityId, isExpanded, on
         <div className="border-t border-neutral-100 px-4 pb-4 pt-3">
           <p className="mb-2 text-3xs font-semibold uppercase tracking-wide text-[#9CA3AF]">All Posts</p>
 
-          {isPostsLoading ? <p className="py-4 text-2xs text-neutral-500">Loading posts...</p> : null}
+          {isPostsLoading ? <AdminTableLoadingState label="Loading posts..." className="py-4" /> : null}
 
           {!isPostsLoading && posts.length === 0 ? <p className="py-4 text-2xs text-neutral-500">No posts in this group yet.</p> : null}
 
@@ -140,7 +141,7 @@ export default function ModerationGroupCard({ group, communityId, isExpanded, on
               </div>
 
               <div ref={loadMoreRef} className="h-1 w-full" aria-hidden />
-              {isFetchingNextPage ? <p className="py-3 text-center text-3xs text-neutral-500">Loading more...</p> : null}
+              {isFetchingNextPage ? <AdminTableLoadingState label="Loading more..." className="py-3" /> : null}
             </div>
           ) : null}
         </div>

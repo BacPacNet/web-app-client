@@ -46,7 +46,9 @@ export default function AdminAccountsPage() {
             University information is required to view admin accounts.
           </div>
         ) : (
-          <AdminAccountsTable admins={admins} isLoading={isLoading} isError={isError} onViewProfile={() => {}} />
+          <div className="flex max-h-[calc(100vh-320px)] min-h-0 flex-col">
+            <AdminAccountsTable admins={admins} isLoading={isLoading} isError={isError} onViewProfile={() => {}} className="min-h-0 flex-1" />
+          </div>
         )}
       </div>
     </div>

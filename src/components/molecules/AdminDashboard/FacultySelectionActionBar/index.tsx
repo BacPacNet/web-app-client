@@ -33,7 +33,7 @@ export default function FacultySelectionActionBar({
 }: Props) {
   if (selectedCount === 0) return null
 
-  const label = selectedCount === 1 ? '1 faculty member selected' : `${selectedCount} faculty members selected`
+  const label = selectedCount === 1 ? ' Change 1 faculty member' : `Change ${selectedCount}  faculty members`
 
   return (
     <div

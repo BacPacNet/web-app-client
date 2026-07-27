@@ -1,6 +1,7 @@
 'use client'
 
 import Buttons from '@/components/atoms/Buttons'
+import AdminTableLoadingState from '@/components/molecules/AdminDashboard/AdminTableLoadingState'
 import AdminUserSearchBar from '@/components/molecules/AdminDashboard/AdminUserSearchBar'
 import { useModal } from '@/context/ModalContext'
 import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
@@ -115,7 +116,7 @@ export default function AddAdminAccountModal({ existingAdminIds = [] }: Props) {
       <AdminUserSearchBar value={searchTerm} onChange={setSearchTerm} placeholder="Search by name" />
 
       <div ref={scrollRef} className="max-h-[280px] overflow-y-auto rounded-xl border border-neutral-200">
-        {isLoading ? <p className="px-4 py-6 text-sm text-neutral-500">Searching users...</p> : null}
+        {isLoading ? <AdminTableLoadingState label="Searching users..." /> : null}
 
         {!isLoading && isError ? <p className="px-4 py-6 text-sm text-red-500">Failed to search users.</p> : null}
 
@@ -183,7 +184,7 @@ export default function AddAdminAccountModal({ existingAdminIds = [] }: Props) {
             )
           })}
 
-        {isFetchingNextPage ? <p className="px-4 py-3 text-center text-sm text-neutral-500">Loading more...</p> : null}
+        {isFetchingNextPage ? <AdminTableLoadingState label="Loading more..." className="px-4 py-3" /> : null}
       </div>
 
       <div className="flex gap-4">
