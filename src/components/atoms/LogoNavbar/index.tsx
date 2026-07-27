@@ -153,39 +153,42 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
              relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
             <div className="flex gap-6 items-center lg:justify-start justify-between w-full lg:w-auto">
-              {(!isLandingCustomPage || isLogin) && (
-                <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
-                  {!showLeftNavbar ? (
-                    <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
-                  ) : (
-                    <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
-                  )}
+              <div className="flex items-center gap-2">
+                {(!isLandingCustomPage || isLogin) && (
+                  <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
+                    {!showLeftNavbar ? (
+                      <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
+                    ) : (
+                      <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
+                    )}
+                  </div>
+                )}
+                <Link className="flex gap-4 center-v" href={homeHref}>
+                  <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
+                </Link>
+              </div>
+              {!isLogin && (
+                <div className="flex items-center bg-neutral-100 py-[2px] px-2 h-10  rounded-full border border-[#131A2B1A]">
+                  <button
+                    type="button"
+                    className={`px-3.5 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
+                      activeAudience === 'faculty' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
+                    }`}
+                    onClick={() => handleAudienceToggle('faculty')}
+                  >
+                    Faculty
+                  </button>
+                  <button
+                    type="button"
+                    className={`px-4 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
+                      activeAudience === 'student' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
+                    }`}
+                    onClick={() => handleAudienceToggle('student')}
+                  >
+                    Student
+                  </button>
                 </div>
               )}
-              <Link className="flex gap-4 center-v" href={homeHref}>
-                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-              </Link>
-
-              <div className="flex items-center bg-neutral-100 py-[2px] px-2 h-10  rounded-full border border-[#131A2B1A]">
-                <button
-                  type="button"
-                  className={`px-3.5 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
-                    activeAudience === 'faculty' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
-                  }`}
-                  onClick={() => handleAudienceToggle('faculty')}
-                >
-                  Faculty
-                </button>
-                <button
-                  type="button"
-                  className={`px-4 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
-                    activeAudience === 'student' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
-                  }`}
-                  onClick={() => handleAudienceToggle('student')}
-                >
-                  Student
-                </button>
-              </div>
             </div>
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (

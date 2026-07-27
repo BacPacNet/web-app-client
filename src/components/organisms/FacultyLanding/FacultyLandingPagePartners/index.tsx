@@ -20,8 +20,8 @@ const partners = [
 
 export default function FacultyLandingPagePartners() {
   return (
-    <section className="bg-white py-16 sm:py-20 lg:py-[100px]">
-      <div className="mx-auto w-full max-width-allowed px-6">
+    <section className="bg-white py-16 sm:py-20 lg:py-[100px] px-4">
+      <div className="mx-auto w-full max-width-allowed ">
         <SectionHeader
           badge="Early partners"
           badgeVariant="violet"
@@ -37,11 +37,11 @@ export default function FacultyLandingPagePartners() {
 
         <div className="mt-10 flex flex-col lg:flex-row gap-10 justify-center items-center">
           {partners.map(({ title, description, image, imageAlt }) => (
-            <div key={title} className="flex flex-col overflow-hidden    shadow-lg rounded-xl">
-              <div className="relative h-[236px] w-[380px] overflow-hidden rounded-t-xl">
-                <Image src={image} alt={imageAlt} width={236} height={380} className="h-full w-full object-cover" />
+            <div key={title} className="flex w-full max-w-[380px] flex-col overflow-hidden shadow-lg rounded-xl">
+              <div className="relative h-[236px] w-full overflow-hidden rounded-t-xl">
+                <Image src={image} alt={imageAlt} width={380} height={236} className="h-full w-full object-cover" />
               </div>
-              <div className="flex flex-grow flex-col gap-2 p-5  border border-slate-200 w-[380px] rounded-b-xl">
+              <div className="flex flex-grow flex-col gap-2 p-5 border border-slate-200 w-full rounded-b-xl">
                 <h3 className="font-poppins text-[20px] font-semibold text-[#131A2B]">{title}</h3>
                 <p className="font-inter text-xs text-[#5B6477]">{description}</p>
                 <Link href="#story" className="mt-auto flex items-center gap-2 self-start text-2xs font-semibold text-primary-500 ">
