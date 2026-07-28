@@ -1,6 +1,7 @@
 'use client'
 
 import ModerationGroupCard from '@/components/molecules/AdminDashboard/ModerationGroupCard'
+import AdminTableLoadingState from '@/components/molecules/AdminDashboard/AdminTableLoadingState'
 import { ModerationGroup } from '@/services/communityAdminModeration'
 import { useEffect, useState } from 'react'
 
@@ -28,7 +29,7 @@ export default function ModerationGroupList({ groups, communityId, isLoading = f
   }, [expandedGroupId, groups])
 
   if (isLoading) {
-    return <p className="text-sm text-neutral-500">Loading groups...</p>
+    return <AdminTableLoadingState label="Loading groups..." className="py-6" />
   }
 
   if (isError) {

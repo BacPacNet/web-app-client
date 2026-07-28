@@ -33,7 +33,7 @@ export default function StudentSelectionActionBar({
 }: Props) {
   if (selectedCount === 0) return null
 
-  const label = selectedCount === 1 ? '1 student selected' : `${selectedCount} students selected`
+  const label = selectedCount === 1 ? ' Change 1 student' : `Change ${selectedCount}  students`
 
   return (
     <div

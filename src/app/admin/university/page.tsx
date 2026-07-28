@@ -13,7 +13,7 @@ import { UniversityAdminTabProps } from '@/types/University'
 import { useState } from 'react'
 
 export default function AdminUniversityPage() {
-  const [activeTab, setActiveTab] = useState<UniversityTabId>('from-the-university')
+  const [activeTab, setActiveTab] = useState<UniversityTabId>('university-profile')
   const { university_id: universityId, universityName } = useUniStore()
   const { data: university, isLoading: isUniversityLoading } = useUniversityById(universityId)
   const { mutate: updateProfile, isPending: isUpdatingProfile } = useUpdateUniversityProfile(universityId)

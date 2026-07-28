@@ -76,7 +76,7 @@ export default function AdminStudentsPage() {
     return () => {
       container.removeEventListener('scroll', onScroll)
     }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, universityName])
 
   const clearSelection = () => {
     setValue('selectedStudentIds', [])
@@ -134,7 +134,7 @@ export default function AdminStudentsPage() {
           isApplying={isApplyingBulkUpdate}
         />
 
-        <div ref={scrollRef} className="max-h-[calc(100vh-320px)] overflow-y-auto">
+        <div className="flex max-h-[calc(100vh-320px)] min-h-0 flex-col">
           {!universityName ? (
             <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-5 text-sm text-neutral-600">
               University information is required to view students.
@@ -148,7 +148,9 @@ export default function AdminStudentsPage() {
               isLoading={isLoading}
               isError={isError}
               isFetchingNextPage={isFetchingNextPage}
+              scrollContainerRef={scrollRef}
               onViewProfile={(userId) => window.open(`/profile/${userId}`, '_blank', 'noopener,noreferrer')}
+              className="min-h-0 flex-1"
             />
           )}
         </div>

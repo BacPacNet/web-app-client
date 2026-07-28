@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { IconType } from 'react-icons'
 import { HiOutlineShieldCheck, HiOutlineShieldExclamation, HiOutlineSquares2X2, HiOutlineUsers } from 'react-icons/hi2'
 import { RiGraduationCapLine } from 'react-icons/ri'
@@ -44,6 +44,13 @@ function getInitials(firstName?: string, lastName?: string, fallback?: string) {
 export default function AdminDashboardSidebar({ items = defaultNavItems, userName, userEmail, userInitials }: Props) {
   const pathname = usePathname()
   const { userData, userProfileData } = useUniStore()
+  const [hasImageError, setHasImageError] = useState(false)
+
+  const profileImageSrc = userProfileData?.profile_dp?.imageUrl || null
+
+  useEffect(() => {
+    setHasImageError(false)
+  }, [profileImageSrc])
 
   const displayName = useMemo(() => {
     if (userName) return userName
@@ -109,9 +116,20 @@ export default function AdminDashboardSidebar({ items = defaultNavItems, userNam
 
       <div className="border-t border-neutral-200 px-5 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#6C63FF] to-[#4F46E5] text-3xs font-semibold text-white">
-            {displayInitials}
-          </div>
+          {profileImageSrc && !hasImageError ? (
+            <Image
+              src={profileImageSrc}
+              alt={displayName}
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-full object-cover"
+              onError={() => setHasImageError(true)}
+            />
+          ) : (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#6C63FF] to-[#4F46E5] text-3xs font-semibold text-white">
+              {displayInitials}
+            </div>
+          )}
           <div className="min-w-0">
             <p className="truncate text-2xs font-semibold text-[#111827]">{displayName}</p>
             {displayEmail ? <p className="truncate text-2xs text-[#6B7280]">{displayEmail}</p> : null}

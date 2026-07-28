@@ -2,9 +2,10 @@
 
 import AdminSectionHeader from '@/components/molecules/AdminDashboard/AdminSectionHeader'
 import Buttons from '@/components/atoms/Buttons'
+import { cn } from '@/lib/utils'
 import { FaCheck } from 'react-icons/fa'
 
-const MAX_DESCRIPTION_LENGTH = 240
+const MAX_DESCRIPTION_LENGTH = 350
 
 type Props = {
   name: string
@@ -25,6 +26,8 @@ export default function UniversityProfileDetailsForm({
   isSaving = false,
   isSaveDisabled = false,
 }: Props) {
+  const isDescriptionOverLimit = description.length > MAX_DESCRIPTION_LENGTH
+
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
       <AdminSectionHeader title="University Name & Description" />
@@ -49,23 +52,37 @@ export default function UniversityProfileDetailsForm({
           <label htmlFor="university-description" className="text-2xs font-semibold text-neutral-900">
             Description
           </label>
-          <span className="text-2xs text-neutral-500">
+          <span className={cn('text-2xs', isDescriptionOverLimit ? 'text-red-500' : 'text-neutral-500')}>
             {description.length}/{MAX_DESCRIPTION_LENGTH}
           </span>
         </div>
         <textarea
           id="university-description"
           value={description}
-          onChange={(e) => onDescriptionChange(e.target.value.slice(0, MAX_DESCRIPTION_LENGTH))}
-          maxLength={MAX_DESCRIPTION_LENGTH}
-          className="min-h-[120px] w-full resize-y rounded-lg border border-neutral-200 p-3 text-xs text-neutral-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          onChange={(e) => onDescriptionChange(e.target.value)}
+          className={cn(
+            'min-h-[120px] w-full resize-y rounded-lg border p-3 text-xs text-neutral-900 outline-none',
+            isDescriptionOverLimit
+              ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-400'
+              : 'border-neutral-200 focus:border-primary-500 focus:ring-1 focus:ring-primary-500'
+          )}
           placeholder="Enter a short description for the university profile page"
         />
-        <p className="text-2xs text-neutral-500">Displayed below the university name on the profile page.</p>
+        {isDescriptionOverLimit ? (
+          <p className="text-2xs text-red-500">Description cannot exceed {MAX_DESCRIPTION_LENGTH} characters.</p>
+        ) : (
+          <p className="text-2xs text-neutral-500">Displayed below the university name on the profile page.</p>
+        )}
       </div>
 
       <div>
-        <Buttons variant="primary" size="extra_small" leftIcon={<FaCheck size={12} />} onClick={onSave} disabled={isSaveDisabled || isSaving}>
+        <Buttons
+          variant="primary"
+          size="extra_small"
+          leftIcon={<FaCheck size={12} />}
+          onClick={onSave}
+          disabled={isSaveDisabled || isSaving || isDescriptionOverLimit}
+        >
           {isSaving ? 'Saving...' : 'Save Changes'}
         </Buttons>
       </div>
