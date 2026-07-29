@@ -28,6 +28,7 @@ const isLandingRoute = (pathname: string) => pathname === '/' || pathname.starts
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname() ?? ''
+  const isLogoLinkDisabled = pathname.includes('/book-demo') || pathname.includes('/for-university')
   const router = useRouter()
   const { userProfileData, userData } = useUniStore()
   const { handleLogout } = useLogout()
@@ -115,9 +116,15 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     return (
       <div className="w-full flex items-center justify-center bg-neutral-100">
         <div className="max-width-allowed w-[1058px] h-[40px] sm:h-[68px] flex items-center px-8">
-          <Link className="flex gap-4 center-v" href="/">
-            <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
-          </Link>
+          {isLogoLinkDisabled ? (
+            <div className="flex gap-4 center-v">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full w-[84px]" />
+            </div>
+          ) : (
+            <Link className="flex gap-4 center-v" href="/">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+            </Link>
+          )}
         </div>
       </div>
     )
@@ -140,9 +147,15 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                   )}
                 </div>
               )}
-              <Link className="flex gap-4 center-v" href="/">
-                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-              </Link>
+              {isLogoLinkDisabled ? (
+                <div className="flex gap-4 center-v">
+                  <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full sm:w-[84px] w-[70px]" />
+                </div>
+              ) : (
+                <Link className="flex gap-4 center-v" href="/">
+                  <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
+                </Link>
+              )}
               {showAudienceToggle && !isLandingCustomPage && (
                 <div className="flex items-center bg-neutral-100 p-1 rounded-full border border-neutral-200">
                   <button

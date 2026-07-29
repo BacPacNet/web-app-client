@@ -82,6 +82,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </noscript>
 
+      {/* Chatbot Script */}
+      <Script id="tochat-chatbot" defer src="https://widget.tochat.be/bundle.js?key=684ca8ae-d86b-4356-9346-8e6e288967ad" strategy="lazyOnload" />
+
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className="container">
