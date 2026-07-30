@@ -17,6 +17,7 @@ import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfileMenu from '../ProfileMenu'
 import NavigationMenu from '../NavigationMenu'
+import { getHomePathForAudience, getStoredAudience, setStoredAudience, type Audience } from '@/utils/audienceRoute'
 
 interface Props {
   showOnlyLogo?: boolean
@@ -24,10 +25,9 @@ interface Props {
 
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
-const isLandingRoute = (pathname: string) => pathname === '/' || pathname.startsWith('/for-university') || pathname.startsWith('/book-demo')
-
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname() ?? ''
+  const isLogoLinkDisabled = pathname.includes('/book-demo') || pathname.includes('/for-university')
   const router = useRouter()
   const { userProfileData, userData } = useUniStore()
   const { handleLogout } = useLogout()
@@ -35,6 +35,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const { reinitResetPasswordTimeout } = useUniStore((state) => state)
   const [showLeftNavbar, setShowLeftNavbar] = useState(false)
   const [showRightMenu, setShowRightMenu] = useState(false)
+  const [activeAudience, setActiveAudience] = useState<Audience>('student')
 
   const isUserLoggedIn = useCallback(() => {
     setIsLogin(!!userProfileData?.users_id)
@@ -48,13 +49,32 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     reinitResetPasswordTimeout()
   }, [reinitResetPasswordTimeout])
 
+  useEffect(() => {
+    if (pathname === '/') {
+      setStoredAudience('student')
+      setActiveAudience('student')
+      return
+    }
+
+    if (pathname.startsWith('/for-university') || pathname.startsWith('/book-demo') || pathname.includes('/thank-you')) {
+      setStoredAudience('faculty')
+      setActiveAudience('faculty')
+      return
+    }
+
+    setActiveAudience(getStoredAudience())
+  }, [pathname])
+
   const shouldHeaderRemove = nonHeaderUrls.some((path) => pathname.includes(path))
   const navbarContainerClass = 'max-width-allowed px-4'
-  const showAudienceToggle = isLandingRoute(pathname)
-  const activeAudience: 'faculty' | 'student' = pathname === '/' ? 'student' : 'faculty'
 
-  const handleAudienceToggle = (audience: 'faculty' | 'student') => {
-    const target = audience === 'faculty' ? '/for-university' : '/'
+  const homeHref = getHomePathForAudience(activeAudience)
+  const isLandingCustomPage = activeAudience === 'faculty'
+
+  const handleAudienceToggle = (audience: Audience) => {
+    setStoredAudience(audience)
+    setActiveAudience(audience)
+    const target = getHomePathForAudience(audience)
     if (pathname !== target) {
       router.push(target)
     }
@@ -67,8 +87,6 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const closeRightMenu = () => {
     setShowRightMenu(false)
   }
-
-  const isLandingCustomPage = pathname.includes('/for-university') || pathname.includes('/book-demo') || pathname.includes('/thank-you')
 
   const renderProfile = () => {
     const handleNavigate = (path: string) => {
@@ -83,7 +101,10 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
           return (
             <div className="pl-8 gap-4 flex">
               <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs">
-                Book a Free Demo
+                Book a Demo
+              </Button>
+              <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
+                Sign Up
               </Button>
             </div>
           )
@@ -115,9 +136,15 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     return (
       <div className="w-full flex items-center justify-center bg-neutral-100">
         <div className="max-width-allowed w-[1058px] h-[40px] sm:h-[68px] flex items-center px-8">
-          <Link className="flex gap-4 center-v" href="/">
-            <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
-          </Link>
+          {isLogoLinkDisabled ? (
+            <div className="flex gap-4 center-v">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full w-[84px]" />
+            </div>
+          ) : (
+            <Link className="flex gap-4 center-v" href={homeHref}>
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+            </Link>
+          )}
         </div>
       </div>
     )
@@ -130,24 +157,32 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             className={`${navbarContainerClass}
              relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
-            <div className="flex gap-3 items-center">
-              {(!isLandingCustomPage || isLogin) && (
-                <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
-                  {!showLeftNavbar ? (
-                    <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
-                  ) : (
-                    <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
-                  )}
-                </div>
-              )}
-              <Link className="flex gap-4 center-v" href="/">
-                <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-              </Link>
-              {showAudienceToggle && !isLandingCustomPage && (
-                <div className="flex items-center bg-neutral-100 p-1 rounded-full border border-neutral-200">
+            <div className="flex gap-6 items-center lg:justify-start justify-between w-full lg:w-auto">
+              <div className="flex items-center gap-2">
+                {(!isLandingCustomPage || isLogin) && (
+                  <div onClick={toggleLeftNavbar} className="block lg:hidden cursor-pointer">
+                    {!showLeftNavbar ? (
+                      <IoMenu size={32} className="text-primary w-[24px] sm:w-[32px]" />
+                    ) : (
+                      <RxCross2 size={32} className="text-primary w-[20px] sm:w-[32px]" />
+                    )}
+                  </div>
+                )}
+                {isLogoLinkDisabled ? (
+                  <div className="flex gap-4 center-v">
+                    <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full sm:w-[84px] w-[70px]" />
+                  </div>
+                ) : (
+                  <Link className="flex gap-4 center-v" href={homeHref}>
+                    <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
+                  </Link>
+                )}
+              </div>
+              {!isLogin && (
+                <div className="flex items-center bg-neutral-100 py-[2px] px-2 h-10  rounded-full border border-[#131A2B1A]">
                   <button
                     type="button"
-                    className={`px-4 py-1.5 text-[13px] font-semibold rounded-full transition-all ${
+                    className={`px-3.5 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
                       activeAudience === 'faculty' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
                     }`}
                     onClick={() => handleAudienceToggle('faculty')}
@@ -156,7 +191,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                   </button>
                   <button
                     type="button"
-                    className={`px-4 py-1.5 text-[13px] font-semibold rounded-full transition-all ${
+                    className={`px-4 py-1.5 text-2xs h-[26px] flex items-center justify-center font-semibold font-inter rounded-full transition-all ${
                       activeAudience === 'student' ? 'bg-primary-500 text-white shadow-sm' : 'text-neutral-600'
                     }`}
                     onClick={() => handleAudienceToggle('student')}
@@ -169,7 +204,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                {!isLandingCustomPage && <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />}
+                <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
             )}

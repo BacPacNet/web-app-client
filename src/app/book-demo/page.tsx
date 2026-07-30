@@ -21,7 +21,7 @@ export default function BookDemoPage() {
   const [phone, setPhone] = useState('')
   const [university, setUniversity] = useState('')
   const [occupation, setOccupation] = useState('Administrator')
-  const [designation, setDesignation] = useState('')
+  const [noOfStudents, setNoOfStudents] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -95,8 +95,8 @@ export default function BookDemoPage() {
       toast.error('University / Institution is required.')
       return
     }
-    if (!designation.trim()) {
-      toast.error('Designation is required.')
+    if (!noOfStudents) {
+      toast.error('No. of Students is required.')
       return
     }
     if (activeTimeSlots.length === 0) {
@@ -122,7 +122,7 @@ export default function BookDemoPage() {
           phone,
           university,
           occupation,
-          designation,
+          noOfStudents,
           message,
           date: formatReadableDate(selectedDate),
           time: selectedTime,
@@ -140,7 +140,7 @@ export default function BookDemoPage() {
         setEmail('')
         setPhone('')
         setUniversity('')
-        setDesignation('')
+        setNoOfStudents('')
         setMessage('')
         router.push('/book-demo/thank-you')
       } else {
@@ -173,6 +173,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           style={{ display: 'none', visibility: 'hidden' }}
         />
       </noscript>
+
+      {/* Chatbot Script */}
+      <Script id="tochat-chatbot" defer src="https://widget.tochat.be/bundle.js?key=684ca8ae-d86b-4356-9346-8e6e288967ad" strategy="lazyOnload" />
+      {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       <div
         className={`${styles.landingPageWrapper} meshBg text-on-surface antialiased min-h-screen flex flex-col relative overflow-x-hidden font-sans`}
@@ -430,18 +434,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                       </select>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <label className="text-sm font-semibold text-on-surface" htmlFor="designation">
-                        Designation <span className="text-red-500">*</span>
+                      <label className="text-sm font-semibold text-on-surface" htmlFor="noOfStudents">
+                        No. of Students <span className="text-red-500">*</span>
                       </label>
-                      <input
-                        className="w-full bg-surface-white/80 border border-outline-variant rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        id="designation"
-                        placeholder="e.g. Professor, Dean"
-                        type="text"
-                        value={designation}
-                        onChange={(e) => setDesignation(e.target.value)}
+                      <select
+                        className="w-full bg-surface-white/80 border border-outline-variant rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-on-surface-variant"
+                        id="noOfStudents"
+                        value={noOfStudents}
+                        onChange={(e) => setNoOfStudents(e.target.value)}
                         required
-                      />
+                      >
+                        <option value="" disabled>
+                          Select number of students
+                        </option>
+                        <option>Under 1,000</option>
+                        <option>1,000 – 5,000</option>
+                        <option>5,000 – 15,000</option>
+                        <option>15,000 – 30,000</option>
+                        <option>30,000+</option>
+                      </select>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
