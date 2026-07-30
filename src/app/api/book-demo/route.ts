@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { fullName, email, phone, university, occupation, designation, message, date, time } = body
+    const { fullName, email, phone, university, occupation, noOfStudents, message, date, time } = body
 
     // 1. Validation
     if (!fullName || typeof fullName !== 'string' || fullName.trim() === '') {
@@ -28,8 +28,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Occupation / Role is required.' }, { status: 400 })
     }
 
-    if (!designation || typeof designation !== 'string' || designation.trim() === '') {
-      return NextResponse.json({ success: false, message: 'Designation is required.' }, { status: 400 })
+    if (!noOfStudents || typeof noOfStudents !== 'string' || noOfStudents.trim() === '') {
+      return NextResponse.json({ success: false, message: 'No. of Students is required.' }, { status: 400 })
     }
 
     if (!date) {
@@ -85,8 +85,8 @@ export async function POST(request: Request) {
                 <td style="padding: 12px; color: #222;">${occupation}</td>
               </tr>
               <tr style="border-bottom: 1px solid #eee; background-color: #fbfbfe;">
-                <td style="padding: 12px; font-weight: bold; color: #6744ff;">Designation</td>
-                <td style="padding: 12px; color: #222;">${designation}</td>
+                <td style="padding: 12px; font-weight: bold; color: #6744ff;">No. of Students</td>
+                <td style="padding: 12px; color: #222;">${noOfStudents}</td>
               </tr>
               <tr style="border-bottom: 1px solid #eee;">
                 <td style="padding: 12px; font-weight: bold; color: #6744ff;">Preferred Date</td>

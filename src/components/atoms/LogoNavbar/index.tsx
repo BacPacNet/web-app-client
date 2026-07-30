@@ -25,10 +25,9 @@ interface Props {
 
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
 
-const isLandingRoute = (pathname: string) => pathname === '/' || pathname.startsWith('/for-university') || pathname.startsWith('/book-demo')
-
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname() ?? ''
+  const isLogoLinkDisabled = pathname.includes('/book-demo') || pathname.includes('/for-university')
   const router = useRouter()
   const { userProfileData, userData } = useUniStore()
   const { handleLogout } = useLogout()
@@ -137,9 +136,15 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     return (
       <div className="w-full flex items-center justify-center bg-neutral-100">
         <div className="max-width-allowed w-[1058px] h-[40px] sm:h-[68px] flex items-center px-8">
-          <Link className="flex gap-4 center-v" href={homeHref}>
-            <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
-          </Link>
+          {isLogoLinkDisabled ? (
+            <div className="flex gap-4 center-v">
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full w-[84px]" />
+            </div>
+          ) : (
+            <Link className="flex gap-4 center-v" href={homeHref}>
+              <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer w-[84px]" />
+            </Link>
+          )}
         </div>
       </div>
     )
@@ -163,9 +168,15 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
                     )}
                   </div>
                 )}
-                <Link className="flex gap-4 center-v" href={homeHref}>
-                  <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
-                </Link>
+                {isLogoLinkDisabled ? (
+                  <div className="flex gap-4 center-v">
+                    <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full sm:w-[84px] w-[70px]" />
+                  </div>
+                ) : (
+                  <Link className="flex gap-4 center-v" href={homeHref}>
+                    <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
+                  </Link>
+                )}
               </div>
               {!isLogin && (
                 <div className="flex items-center bg-neutral-100 py-[2px] px-2 h-10  rounded-full border border-[#131A2B1A]">
