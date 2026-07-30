@@ -9,12 +9,14 @@ const partners = [
     description: 'Configuring a verified campus community across departments and student groups.',
     image: '/built.jpg',
     imageAlt: 'KIET Campus',
+    href: `/blogs/kiet-ghaziabad-unibuzz-digital-campus`,
   },
   {
     title: 'Aggarwal College',
     description: 'Exploring structured onboarding and official communication for students.',
     image: '/built1.jpg',
     imageAlt: 'Aggarwal College Campus',
+    href: `/blogs/aggarwal-college-ballabgarh-digital-student-life`,
   },
 ]
 
@@ -36,7 +38,7 @@ export default function FacultyLandingPagePartners() {
         />
 
         <div className="mt-10 flex flex-col lg:flex-row gap-10 justify-center items-center">
-          {partners.map(({ title, description, image, imageAlt }) => (
+          {partners.map(({ title, description, image, imageAlt, href }) => (
             <div key={title} className="flex w-full max-w-[380px] flex-col overflow-hidden shadow-lg rounded-xl">
               <div className="relative h-[236px] w-full overflow-hidden rounded-t-xl">
                 <Image src={image} alt={imageAlt} width={380} height={236} className="h-full w-full object-cover" />
@@ -44,7 +46,7 @@ export default function FacultyLandingPagePartners() {
               <div className="flex flex-grow flex-col gap-2 p-5 border border-slate-200 w-full rounded-b-xl">
                 <h3 className="font-poppins text-[20px] font-semibold text-[#131A2B]">{title}</h3>
                 <p className="font-inter text-xs text-[#5B6477]">{description}</p>
-                <Link href="#story" className="mt-auto flex items-center gap-2 self-start text-2xs font-semibold text-primary-500 ">
+                <Link href={href} className="mt-auto flex items-center gap-2 self-start text-2xs font-semibold text-primary-500 ">
                   Read the story <ArrowRight size={14} />
                 </Link>
               </div>
