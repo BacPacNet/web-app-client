@@ -8,6 +8,10 @@ export const MENU_LIST = [
     path: '/discover',
   },
   {
+    name: 'Blogs',
+    path: '/blogs',
+  },
+  {
     name: 'About Us',
     path: '/about',
   },

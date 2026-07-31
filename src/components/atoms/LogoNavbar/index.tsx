@@ -103,8 +103,8 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
               <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs">
                 Book a Demo
               </Button>
-              <Button onClick={() => router.push('/register')} variant="border" className="text-xs">
-                Sign Up
+              <Button onClick={() => router.push('/login')} variant="border" className="text-xs">
+                Login
               </Button>
             </div>
           )
