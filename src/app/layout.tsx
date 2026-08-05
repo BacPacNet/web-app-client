@@ -10,6 +10,7 @@ import { ModalProvider } from '@/context/ModalContext'
 import GoogleAnalyticsComponent from '@/components/GoogleAnalytics'
 import MixPanelProvider from '@/utils/MixPanelProvider'
 import { CommunityFilterProvider } from '@/context/CommunityGroupHookContext'
+import Script from 'next/script'
 type FontClassName = string
 
 const inter = Inter({
@@ -42,6 +43,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
+        {/* WhatsApp Chatbot */}
+        <script defer src="https://widget.tochat.be/bundle.js?key=684ca8ae-d86b-4356-9346-8e6e288967ad"></script>
       </head>
 
       <body>

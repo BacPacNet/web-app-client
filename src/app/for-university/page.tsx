@@ -6,7 +6,7 @@ import FacultyLandingPageComparison from '@/components/organisms/FacultyLanding/
 import FacultyLandingPagePricing from '@/components/organisms/FacultyLanding/FacultyLandingPagePricing'
 import FacultyLandingPageTestimonials from '@/components/organisms/FacultyLanding/FacultyLandingPageTestimonials'
 import FacultyLandingPagePartners from '@/components/organisms/FacultyLanding/FacultyLandingPagePartners'
-import FacultyLandingPageFooter from '@/components/organisms/FacultyLanding/FacultyLandingPageFooter'
+import Footer from '@/components/Footer/Footer'
 
 export default function FacultyPage() {
   return (
@@ -19,7 +19,7 @@ export default function FacultyPage() {
       <FacultyLandingPagePricing />
       <FacultyLandingPageTestimonials />
       <FacultyLandingPagePartners />
-      <FacultyLandingPageFooter />
+      <Footer minimal />
     </div>
   )
 }

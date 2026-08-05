@@ -42,9 +42,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             We have received your demo request and are preparing a personalized experience for you. <br />
             Our team will get in touch with you shortly to confirm the scheduled time.
           </p>
-          <Link href="/for-university" className={styles.btnBack}>
+          <a href="https://unibuzz.org" className={styles.btnBack}>
             Back to Home <ArrowRight size={16} />
-          </Link>
+          </a>
         </div>
       </main>
 

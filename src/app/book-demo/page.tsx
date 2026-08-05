@@ -174,8 +174,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </noscript>
 
-      {/* Chatbot Script */}
-      <Script id="tochat-chatbot" defer src="https://widget.tochat.be/bundle.js?key=684ca8ae-d86b-4356-9346-8e6e288967ad" strategy="lazyOnload" />
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       <div
