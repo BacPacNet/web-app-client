@@ -24,15 +24,15 @@ export default function LogoNavbar() {
             className={`${navbarContainerClass}
              relative h-[50px] sm:h-[68px]  mx-auto py-3 flex items-center justify-between bg-white top-0 border-b-[1px] border-neutral-200`}
           >
-            <div className="flex gap-6 items-center lg:justify-start justify-between w-full lg:w-auto">
+            <div className="flex gap-6 items-center lg:justify-start">
               <div className="flex items-center gap-2">
                 <Link className="flex gap-4 center-v" href="/">
                   <Image src={unibuzzLogo} alt="BACPAC LOGO" width={84} height={21} className="h-full cursor-pointer sm:w-[84px] w-[70px]" />
                 </Link>
               </div>
             </div>
-            <div className="flex pl-8 gap-4">
-              <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs">
+            <div className="flex pl-4 gap-4 flex-shrink-0">
+              <Button onClick={() => router.push('/book-demo')} variant="primary" className="text-xs whitespace-nowrap">
                 Book a Demo
               </Button>
             </div>
