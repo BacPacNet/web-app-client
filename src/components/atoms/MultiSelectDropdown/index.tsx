@@ -148,7 +148,33 @@ const MultiSelectDropdown = ({
         <div className={`flex flex-wrap gap-1 ${isPill ? '' : 'px-1 text-xs'}`}>
           <p className={isPill ? 'font-medium text-neutral-700' : 'text-neutral-700'}>{placeholder}</p>
         </div>
-        <IoIosArrowDown className={`shrink-0 ${isPill ? 'text-sm text-neutral-500' : variantText[variant]}`} />
+        <IoIosArrowDown className={`${variantText[variant]}`} />
+      </div>
+      <div className="flex flex-wrap gap-2 mt-2">
+        {parentCategory && parentCategory?.length > 0 ? (
+          <div className="flex items-center text-2xs  px-2 py-1 h-7  text-primary-500 bg-white rounded-md border border-primary">
+            <span className=" mr-1">{parentCategory}</span>
+          </div>
+        ) : (
+          ''
+        )}
+        {value.length > 0
+          ? value.map((selected, index) => (
+              <div key={index} className="flex gap-2 items-center text-2xs   px-2 py-1 min-h-7 bg-primary-500 text-white rounded-md">
+                <span className="flex gap-2">
+                  {selected}
+                  {/*<span className="px-[6px] py-0 bg-white text-primary rounded-sm">{filteredCount ? filteredCount[selected] || 0 : 0}</span>*/}
+                </span>
+                <RxCross2
+                  className="cursor-pointer text-sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onChange(value.filter((item) => item !== selected))
+                  }}
+                />
+              </div>
+            ))
+          : ''}
       </div>
       {!hideSelectedTags && (
         <div className="flex flex-wrap gap-2 mt-2">

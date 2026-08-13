@@ -27,6 +27,7 @@ const MENU_ITEMS = [
 const PAGE_ITEMS = [
   { name: 'Community', path: '/timeline' },
   { name: 'Discover', path: '/discover' },
+  { name: 'Blogs', path: '/blogs' },
   { name: 'About', path: '/about' },
 ]
 
