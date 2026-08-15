@@ -22,6 +22,7 @@ export interface Users {
   userUnVerifiedCommunities?: (UserUnVerifiedCommunitiesEntity | null)[] | null
   userVerifiedCommunities?: (UserVerifiedCommunitiesEntity | null)[] | null
   userName?: string | null
+  uniqueId?: string
   isFollowing: boolean
 }
 export interface Profile {
@@ -49,6 +50,7 @@ export interface Profile {
   cover_dp?: ProfileDpOrCoverDp1 | null
   isCommunityAdmin?: boolean
   adminCommunityId?: string
+  communityAdminAddedAt?: string
 }
 export interface FollowersEntity {
   userId: string

@@ -27,6 +27,7 @@ export interface FormDataType {
   isUniversityVerified: boolean
   isEmailVerified: boolean
   universityDomain: string[]
+  selectedUniversityIds?: string[]
 }
 
 export const value = [
@@ -303,7 +304,7 @@ export const degreeAndMajors = {
   '6th Year + PhD': value,
 }
 
-const adminAndOther = [...value, 'Library', 'Commerce', 'Other']
+export const adminAndOther = [...value, 'Library', 'Commerce', 'Other']
 export const occupationAndDepartment = {
   'Academic Advisor': adminAndOther,
   'Academic Writing Coach': adminAndOther,

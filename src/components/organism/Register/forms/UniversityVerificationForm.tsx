@@ -15,13 +15,11 @@ import { useTimeTracking } from '@/hooks/useTimeTracking'
 import { TRACK_EVENT } from '@/content/constant'
 interface props {
   setStep: (value: number) => void
-
-  setSubStep: (value: number) => void
   isVerificationSuccess: boolean
   isPending: boolean
 }
 
-const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess, isPending }: props) => {
+const UniversityVerificationForm = ({ setStep, isVerificationSuccess, isPending }: props) => {
   const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const {
     register,
@@ -80,7 +78,6 @@ const UniversityVerificationForm = ({ setStep, setSubStep, isVerificationSuccess
       deleteCookie()
 
       setStep(4)
-      setSubStep(0)
     }
   }
 

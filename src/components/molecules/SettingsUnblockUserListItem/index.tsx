@@ -4,7 +4,7 @@ import Button from '@/components/atoms/Buttons'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/spinner/Spinner'
 import Image from 'next/image'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 import avatar from '@assets/avatar.svg'
 import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
@@ -49,7 +49,13 @@ const SettingsUnblockUserListItem: React.FC<SettingsUnblockUserListItemProps> = 
 
   const [imgSrc, setImgSrc] = useState(imageUrl || '')
 
-  const isStudent = role === userTypeEnum.Student
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role,
+    study_year,
+    major,
+    occupation,
+    affiliation,
+  })
 
   const handleProfileClick = () => {
     router.push(`/profile/${id}`)
@@ -70,8 +76,8 @@ const SettingsUnblockUserListItem: React.FC<SettingsUnblockUserListItemProps> = 
           <h3 className="font-semibold text-neutral-700 text-xs flex items-center gap-1">
             {firstName} {lastName}
           </h3>
-          <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
-          <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
+          {line1 && <p className="text-3xs text-neutral-500">{line1}</p>}
+          {line2 && <p className="text-3xs text-neutral-500">{line2}</p>}
         </div>
       </div>
 

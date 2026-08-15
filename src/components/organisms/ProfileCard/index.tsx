@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react'
 import EditProfileModal from '@/components/Timeline/Modals/EditProfileModal'
 import ConnectionsModal from '@/components/Timeline/Modals/ConnectionsModal'
 import { Spinner } from '@/components/spinner/Spinner'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 import { convertToDateObj } from '@/lib/utils'
 import { HiMail } from 'react-icons/hi'
 import { useCreateUserChat } from '@/services/Messages'
@@ -105,7 +105,13 @@ export function UserProfileCard({
   const { mutateAsync: mutateBlockUser, isPending: isBlockPending } = useBlockUser()
   const userFollowerIDs = followers && followers?.map((followers) => followers.userId.toString())
 
-  const isStudent = role === userTypeEnum.Student
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role,
+    study_year: year,
+    major,
+    occupation,
+    affiliation,
+  })
   //  const isUniversityVerified = userProfileData?.email?.some((university) => university.UniversityName === userProfileData.university_name)
 
   // Lightbox state
@@ -185,9 +191,8 @@ export function UserProfileCard({
               </div>*/}
             </div>
             <div className="text-xs text-neutral-500 font-medium flex flex-col gap-1 font-inter">
-              <p>{isStudent ? year : occupation}</p>
-
-              <p>{isStudent ? major : affiliation}</p>
+              {line1 && <p>{line1}</p>}
+              {line2 && <p>{line2}</p>}
             </div>
           </div>
 

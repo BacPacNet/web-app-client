@@ -19,6 +19,7 @@ export interface RequestData<T> {
   userCode?: string
   email?: string
   isFormData?: boolean
+  responseType?: 'arraybuffer' | 'blob' | 'document' | 'json' | 'text' | 'stream'
 }
 
 export interface ServerData<T> {

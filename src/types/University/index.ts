@@ -1,3 +1,6 @@
+import type { UpdateUniversityProfilePayload } from '@/services/universitySearch'
+import type { UseMutateFunction } from '@tanstack/react-query'
+
 export type UniversityInfo = {
   _id: string
   name: string
@@ -18,6 +21,16 @@ export type UniversityInfo = {
   domains: string[]
   logo: string
   state_province?: string | null
-  web_pages: string[]
+  web_pages: string[] | string
   __v: number
+}
+
+export type UniversityAdminTabProps = {
+  className?: string
+  university?: UniversityInfo
+  isUniversityLoading: boolean
+  universityId: string
+  universityName: string
+  onUpdateProfile: UseMutateFunction<unknown, Error, UpdateUniversityProfilePayload, unknown>
+  isUpdatingProfile: boolean
 }

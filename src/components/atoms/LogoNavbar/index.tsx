@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import unibuzzLogo from '@assets/unibuzz_logo.svg'
 import { MENU_LIST } from './constant'
 import LoginButton from '../LoginButton'
@@ -17,6 +17,7 @@ import MobileLeftNavbar from '@/components/molecules/MobileLeftNavbar'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfileMenu from '../ProfileMenu'
 import NavigationMenu from '../NavigationMenu'
+import { useIsUserCommunityAdmin } from '@/services/user'
 import { getHomePathForAudience, getStoredAudience, setStoredAudience, type Audience } from '@/utils/audienceRoute'
 
 interface Props {
@@ -24,12 +25,27 @@ interface Props {
 }
 
 const nonHeaderUrls = ['/login', '/register', '/forget-password']
+const hiddenNavbarUrls = ['/admin']
 
 export default function LogoNavbar({ showOnlyLogo = false }: Props) {
   const pathname = usePathname() ?? ''
   const isLogoLinkDisabled = pathname.includes('/book-demo') || pathname.includes('/for-university')
   const router = useRouter()
-  const { userProfileData, userData } = useUniStore()
+  const shouldHideNavbar = hiddenNavbarUrls.some((path) => pathname.startsWith(path))
+
+  const { userProfileData, userData, userCommunityAdmin, setUserCommunityAdmin } = useUniStore()
+  const { data: communityAdminData } = useIsUserCommunityAdmin()
+
+  useEffect(() => {
+    setUserCommunityAdmin(communityAdminData ?? null)
+  }, [communityAdminData, setUserCommunityAdmin])
+
+  const menuList = useMemo(() => {
+    if (!userCommunityAdmin?.isCommunityAdmin) return MENU_LIST
+
+    return [...MENU_LIST, { name: 'Admin', path: '/admin' }]
+  }, [userCommunityAdmin?.isCommunityAdmin])
+
   const { handleLogout } = useLogout()
   const [isLogin, setIsLogin] = useState<boolean | undefined>(undefined)
   const { reinitResetPasswordTimeout } = useUniStore((state) => state)
@@ -132,6 +148,8 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
     setShowLeftNavbar(false)
   }
 
+  if (shouldHideNavbar) return null
+
   if (shouldHeaderRemove)
     return (
       <div className="w-full flex items-center justify-center bg-neutral-100">
@@ -204,7 +222,7 @@ export default function LogoNavbar({ showOnlyLogo = false }: Props) {
             {isLogin && <MobileViewNavbar closeLeftNavbar={closeLeftNavbar} toggleRightMenu={toggleRightMenu} showRightMenu={showRightMenu} />}
             {!showOnlyLogo && (
               <div className="items-center justify-between hidden lg:flex">
-                <NavigationMenu menuList={MENU_LIST} currentPath={pathname} onNavigate={(path) => router.push(path)} />
+                <NavigationMenu menuList={menuList} currentPath={pathname} onNavigate={(path) => router.push(path)} />
                 <div className=" flex border-l-[1px] border-neutral-200">{renderProfile()}</div>
               </div>
             )}

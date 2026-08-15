@@ -1,4 +1,5 @@
 export const MESSAGES = {
+  ALREADY_AFFILIATED_WITH_UNIVERSITY: (universityName: string) => `You are already affiliated with ${universityName}.`,
   SOMETHING_WENT_WRONG: 'Something went wrong',
   BACKEND_UNAVAILABLE: 'Something went wrong on our end. We\u2019re working to fix it as soon as possible. Please try again soon.',
   GROUP_NOT_FOUND: 'Group Not Found',

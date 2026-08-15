@@ -8,10 +8,18 @@ import EditCommunityGroupModal from '../EditCommunityGroupModal'
 import { useJoinCommunityGroup } from '@/services/community-group'
 import CommunityLeaveModal from '../CommunityLeaveModal'
 import { useQueryClient } from '@tanstack/react-query'
-import { CommunityGroupType, CommunityGroupTypeEnum, CommunityGroupVisibility, status } from '@/types/CommuityGroup'
+import {
+  CommunityGroupAccess,
+  CommunityGroupType,
+  CommunityGroupTypeEnum,
+  CommunityGroupVisibility,
+  GROUP_ACCESS_TOOLTIP_CONFIG,
+  status,
+} from '@/types/CommuityGroup'
+import { userTypeEnum } from '@/types/RegisterForm'
 import publicIcon from '@assets/public.svg'
 import Buttons from '@/components/atoms/Buttons'
-import { FaLock } from 'react-icons/fa6'
+import { FaBuildingColumns, FaEyeSlash, FaLock } from 'react-icons/fa6'
 import CustomTooltip from '@/components/atoms/CustomTooltip'
 import GroupAvatarWithBadge from '@/components/atoms/GroupAvatarWithBadge'
 import CoverImageUploader from '@/components/atoms/CoverImage'
@@ -130,6 +138,38 @@ export default function CommunityGroupBanner({
 
   const isGroupOfficial = communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL
   const isGroupPrivate = communityGroups?.communityGroupAccess === CommunityGroupVisibility.PRIVATE
+  const isRequestRequiredToJoinGroup = communityGroups?.isRequestRequiredToJoinGroup
+  const isGroupUniversityWide = communityGroups?.communityGroupAccess === CommunityGroupAccess.UniversityWide
+  const isApplicantUser = userProfileData?.role === userTypeEnum.Applicant
+
+  const groupAccessTooltip = useMemo(() => {
+    const access = communityGroups?.communityGroupAccess
+    return GROUP_ACCESS_TOOLTIP_CONFIG[access] ?? GROUP_ACCESS_TOOLTIP_CONFIG[CommunityGroupAccess.OpenCampus]
+  }, [communityGroups?.communityGroupAccess])
+
+  const groupAccessIcon = useMemo(() => {
+    const access = communityGroups?.communityGroupAccess
+    const iconClassName = 'text-primary-500'
+
+    switch (access) {
+      case CommunityGroupAccess.UniversityWide:
+        return (
+          <div className="w-8 h-8 flex items-center justify-center bg-secondary rounded-full">
+            <FaBuildingColumns size={16} className={iconClassName} />
+          </div>
+        )
+      case CommunityGroupAccess.Hidden:
+        return (
+          <div className="w-8 h-8 flex items-center justify-center bg-secondary rounded-full">
+            <FaEyeSlash size={16} className={iconClassName} />
+          </div>
+        )
+      case CommunityGroupVisibility.PRIVATE:
+        return <FaLock size={32} className="text-primary-500 bg-secondary p-2 rounded-full overflow-visible" />
+      default:
+        return <Image src={publicIcon} width={32} height={32} alt="" />
+    }
+  }, [communityGroups?.communityGroupAccess])
 
   const isUserVerifiedForCommunity = useMemo(() => {
     return userProfileData?.email?.some((email) => email.communityId === communityGroups?.communityId?._id) || false
@@ -267,9 +307,12 @@ export default function CommunityGroupBanner({
             ) : (
               <JoinGroupButton
                 isPrivate={isGroupPrivate}
+                isUniversityWide={isGroupUniversityWide}
+                isApplicant={isApplicantUser}
                 isVerified={isUserVerifiedForCommunity}
                 isPending={isPending}
                 userStatus={userStatus}
+                isRequestRequiredToJoinGroup={isRequestRequiredToJoinGroup || false}
                 onClick={() => handleToggleJoinCommunityGroup(communityGroupID)}
               />
             )}
@@ -288,26 +331,11 @@ export default function CommunityGroupBanner({
               </Buttons>
               <CustomTooltip
                 position={isMobile ? 'bottom' : 'right'}
-                icon={
-                  !isGroupPrivate ? (
-                    <Image src={publicIcon} width={32} height={32} alt="" />
-                  ) : (
-                    <FaLock size={32} className="text-primary-500 bg-secondary p-2 rounded-full overflow-visible" />
-                  )
-                }
+                icon={groupAccessIcon}
                 content={
                   <>
-                    <p className="font-medium text-neutral-900 text-xs sm:text-sm">Private and Public Groups</p>
-                    <ul className="mt-2 space-y-2 text-sm text-gray-700">
-                      <li className="text-2xs sm:text-xs text-neutral-700">
-                        <p className="font-bold">• Public:</p>
-                        <p>All users can join these groups without requesting permission. Labeled with globe icon.</p>
-                      </li>
-                      <li className="text-2xs sm:text-xs text-neutral-700">
-                        <p className="font-bold">• Private:</p>
-                        <p>Must request access to join the group. Only verified users can request access. Labeled with lock icon.</p>
-                      </li>
-                    </ul>
+                    <p className="font-medium text-neutral-900 text-xs sm:text-sm">{groupAccessTooltip.title}</p>
+                    <p className="mt-2 text-2xs sm:text-xs text-neutral-700">{groupAccessTooltip.description}</p>
                   </>
                 }
               />

@@ -9,6 +9,8 @@
     "strict": true,
     "noEmit": true,
     "incremental": true,
+    // set to false to decrease ram usage
+    // "incremental": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",

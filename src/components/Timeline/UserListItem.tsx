@@ -4,7 +4,7 @@ import Button from '../atoms/Buttons'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '../spinner/Spinner'
 import Image from 'next/image'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 import avatar from '@assets/avatar.svg'
 import { showCustomDangerToast } from '../atoms/CustomToasts/CustomToasts'
 import { useModal } from '@/context/ModalContext'
@@ -70,7 +70,13 @@ const UserListItem: React.FC<FollowingItemProps> = ({
   const [isFollowingState, setIsFollowingState] = useState(isFollowing)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const isStudent = role === userTypeEnum.Student
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role,
+    study_year,
+    major,
+    occupation,
+    affiliation,
+  })
   const showRemoveButton = !isSelfProfile && isViewerAdmin && showCommunityGroupMember
   const showFollowButton = !isSelfProfile && !showRemoveButton
   const isNotAllowedToRemove = isCommunityAdmin && isOfficialGroup
@@ -113,8 +119,8 @@ const UserListItem: React.FC<FollowingItemProps> = ({
             {isCommunityAdmin && <Image src={communityAdminBadge} alt="university logo" />}
           </h3>
           {/*{university && <p className="text-2xs text-gray-1 line-clamp-1">{university}</p>}*/}
-          <p className="text-3xs text-neutral-500">{isStudent ? study_year : occupation}</p>
-          <p className="text-3xs text-neutral-500">{isStudent ? major : affiliation}</p>
+          {line1 && <p className="text-3xs text-neutral-500">{line1}</p>}
+          {line2 && <p className="text-3xs text-neutral-500">{line2}</p>}
         </div>
       </div>
 

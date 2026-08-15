@@ -65,7 +65,9 @@ const OTPInput: React.FC<OTPInputProps> = ({ length, value, onChange }) => {
       {otp.map((data, index) => (
         <input
           key={index}
-          ref={(el) => (inputRefs.current[index] = el)}
+          ref={(el) => {
+            inputRefs.current[index] = el
+          }}
           type="text"
           maxLength={1}
           value={data}

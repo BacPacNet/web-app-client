@@ -89,6 +89,7 @@ const ProfilePostContainer = ({ userId = '', containerRef, source }: Props) => {
         communityGroupName={post.communityGroupName}
         isCommunityAdmin={post?.userProfile?.isCommunityAdmin}
         communities={post?.userProfile?.communities}
+        promote={post.promote}
       />
     ))
   }, [userSelfPosts, showCommentSection, source])

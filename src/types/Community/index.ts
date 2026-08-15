@@ -5,6 +5,8 @@ export interface Community {
   _id: string
   communityCoverUrl: { imageUrl: string; publicId: string }
   communityLogoUrl: { imageUrl: string; publicId: string }
+  isAllowedToJoin?: boolean
+  isUserAllowedToLeave?: boolean
   name: string
   adminId: string[]
   university_id: string
@@ -68,6 +70,11 @@ export interface CommunityGroup {
   users: CommunityGroupUsers[]
 }
 
+export interface PostPromote {
+  universityId: string
+  isAdminOfUni: boolean
+}
+
 export interface communityPostType {
   _id: string
   user: {
@@ -112,4 +119,5 @@ export interface communityPostType {
   communityGroupId?: string
   postStatus: communityPostStatus
   isPostLive: boolean
+  promote?: PostPromote
 }

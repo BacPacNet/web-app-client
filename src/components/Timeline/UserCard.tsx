@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { UserRecommendations } from '@/types/Recommendation'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 
 interface UserCardProps {
   user: UserRecommendations
@@ -12,6 +13,14 @@ interface UserCardProps {
 const RecommendationsUserCard: React.FC<UserCardProps> = ({ user }) => {
   const router = useRouter()
   const [imgSrc, setImgSrc] = useState(user?.profile_image || '')
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role: user.role,
+    study_year: user.study_year,
+    major: user.major,
+    occupation: user.occupation,
+    affiliation: user.affiliation,
+  })
+
   return (
     <div className="flex justify-between items-center">
       <div
@@ -32,8 +41,8 @@ const RecommendationsUserCard: React.FC<UserCardProps> = ({ user }) => {
         </div>
         <div>
           <p className="font-semibold text-neutral-700 text-xs flex items-center gap-1">{user.name}</p>
-          <p className="text-3xs text-neutral-500">{user.role === 'student' ? user.study_year : user.occupation}</p>
-          <p className="text-3xs text-neutral-500">{user.role === 'student' ? user.major : user.affiliation}</p>
+          {line1 && <p className="text-3xs text-neutral-500">{line1}</p>}
+          {line2 && <p className="text-3xs text-neutral-500">{line2}</p>}
         </div>
       </div>
     </div>

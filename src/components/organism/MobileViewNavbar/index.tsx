@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useLogout } from '@/hooks/useLogOut'
 import ProfilePicture from '@/components/atoms/RenderProfileDP'
 import Link from 'next/link'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 
 interface Props {
   closeLeftNavbar: () => void
@@ -23,6 +23,13 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
   const { userProfileData, userData } = useUniStore()
   const { handleLogout } = useLogout()
   const pathname = usePathname()
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role: userProfileData?.role,
+    study_year: userProfileData?.study_year,
+    major: userProfileData?.major,
+    occupation: userProfileData?.occupation,
+    affiliation: userProfileData?.affiliation,
+  })
 
   const handleProfileClicked = () => {
     router.push(`/profile/${userData?.id}`)
@@ -98,12 +105,8 @@ export default function MobileViewNavbar({ closeLeftNavbar, toggleRightMenu, sho
                 {userData?.firstName} {userData?.lastName}
               </p>
 
-              <p className="text-2xs text-neutral-600">
-                {userProfileData?.role === userTypeEnum.Student ? userProfileData.study_year : userProfileData?.occupation}
-              </p>
-              <p className="text-2xs text-neutral-600">
-                {userProfileData?.role === userTypeEnum.Student ? userProfileData?.major : userProfileData?.affiliation}
-              </p>
+              {line1 && <p className="text-2xs text-neutral-600">{line1}</p>}
+              {line2 && <p className="text-2xs text-neutral-600">{line2}</p>}
             </div>
           </motion.div>
 

@@ -204,6 +204,13 @@ export interface EligibleForRewardsResponse {
   eligible: boolean
 }
 
+export interface IsUserCommunityAdminResponse {
+  isCommunityAdmin: boolean
+  university_id: string
+  communityId: string
+  universityName: string
+}
+
 export type UpdateLatestRewardRedemptionUpiIdPayload = {
   upiId: string
 }

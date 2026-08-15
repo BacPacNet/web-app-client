@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Users } from '@/types/Connections'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 
 type UserListProps = {
   users: Users[]
@@ -16,28 +17,38 @@ const UserList: React.FC<UserListProps> = ({ users, onUserClick, fallbackImage, 
 
   return (
     <>
-      {users.map((user) => (
-        <div
-          key={user._id}
-          onClick={(e) => onUserClick(e, user)}
-          className="flex justify-between w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
-        >
-          <div className="flex items-center gap-4">
-            <Image
-              src={user.profile?.profile_dp?.imageUrl || fallbackImage}
-              alt="dp"
-              width={44}
-              height={44}
-              className="w-12 h-12 rounded-full object-cover"
-            />
-            <div>
-              <p className="font-semibold">{user.firstName}</p>
-              <p className="text-2xs text-neutral-600">{user.profile?.role === 'student' ? user.profile.study_year : user.profile?.occupation}</p>
-              <p className="text-2xs text-neutral-600">{user.profile?.role === 'student' ? user.profile?.major : user.profile?.affiliation}</p>
+      {users.map((user) => {
+        const { line1, line2 } = getUserProfileSubtitleLines({
+          role: user.profile?.role,
+          study_year: user.profile?.study_year,
+          major: user.profile?.major,
+          occupation: user.profile?.occupation,
+          affiliation: user.profile?.affiliation,
+        })
+
+        return (
+          <div
+            key={user._id}
+            onClick={(e) => onUserClick(e, user)}
+            className="flex justify-between w-full hover:bg-neutral-200 px-6 py-2 cursor-pointer transition-all duration-200"
+          >
+            <div className="flex items-center gap-4">
+              <Image
+                src={user.profile?.profile_dp?.imageUrl || fallbackImage}
+                alt="dp"
+                width={44}
+                height={44}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div>
+                <p className="font-semibold">{user.firstName}</p>
+                {line1 && <p className="text-2xs text-neutral-600">{line1}</p>}
+                {line2 && <p className="text-2xs text-neutral-600">{line2}</p>}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </>
   )
 }

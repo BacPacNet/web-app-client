@@ -1,17 +1,28 @@
 import React from 'react'
 import { GoSearch } from 'react-icons/go'
 
-export default function UserSearchInput({ value, onChange, placeholder }: { value: string; onChange: (val: string) => void; placeholder?: string }) {
+type UserSearchInputProps = {
+  value: string
+  onChange: (val: string) => void
+  placeholder?: string
+  iconPosition?: 'left' | 'right'
+  className?: string
+}
+
+export default function UserSearchInput({ value, onChange, placeholder, iconPosition = 'right', className = '' }: UserSearchInputProps) {
+  const icon = <GoSearch className="shrink-0 text-neutral-400" size={18} />
+
   return (
-    <div className="w-full px-3 py-2 border border-neutral-200 shadow-sm rounded-lg flex items-center gap-4 h-10">
+    <div className={`flex h-10 w-full items-center gap-3 rounded-full border border-neutral-200 bg-white px-4 shadow-sm ${className}`}>
+      {iconPosition === 'left' ? icon : null}
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="text-xs w-full outline-none text-neutral-700"
+        className="w-full text-sm outline-none text-neutral-700 placeholder:text-neutral-400"
         placeholder={placeholder || 'Searching All Users'}
       />
-      <GoSearch className="text-neutral-500" size={20} />
+      {iconPosition === 'right' ? icon : null}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { client } from './api-Client'
 import useCookie from '@/hooks/useCookie'
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
 import { useCallback } from 'react'
 
@@ -147,6 +147,8 @@ export const useDeleteCommunityGroup = () => {
     onSuccess: () => {
       showCustomSuccessToast(`Community group deleted`)
       queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      queryClient.invalidateQueries({ queryKey: ['officialGroupsStats'] })
+      queryClient.invalidateQueries({ queryKey: ['officialGroupsWithPostCount'] })
     },
 
     onError: (error: any) => {
@@ -247,5 +249,117 @@ export function useGetCommunityGroupMembersUser(communityGroupId: string, userSt
     },
     initialPageParam: 1,
     enabled: !!communityGroupId && !!cookieValue && cookieValue.length > 0,
+  })
+}
+
+export type OfficialGroupsStatsForCommunityAdminResponse = {
+  officialGroupsCount: number
+  totalPostsInOfficialGroups: number
+}
+
+export type OfficialGroupWithPostCount = {
+  _id: string
+  title: string
+  memberCount: number
+  postCount: number
+  status?: string
+  isCommunityGroupLive?: boolean
+  createdAt?: string
+  communityId?: string
+  communityGroupLabel?: string
+  communityGroupType?: string
+  communityGroupLogoUrl?: {
+    imageUrl: string
+    publicId?: string
+  }
+}
+
+type OfficialGroupsWithPostCountForCommunityAdminResponse = {
+  success?: boolean
+  officialGroups?: OfficialGroupWithPostCount[]
+}
+
+export async function getOfficialGroupsStatsForCommunityAdmin(
+  token: string,
+  communityId: string
+): Promise<OfficialGroupsStatsForCommunityAdminResponse> {
+  const response = await client<OfficialGroupsStatsForCommunityAdminResponse, never>(
+    `/communitygroup/${communityId}/community-admin/official-groups-stats`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
+  return {
+    officialGroupsCount: response.officialGroupsCount ?? 0,
+    totalPostsInOfficialGroups: response.totalPostsInOfficialGroups ?? 0,
+  }
+}
+
+export async function getOfficialGroupsWithPostCountForCommunityAdmin(token: string, communityId: string): Promise<OfficialGroupWithPostCount[]> {
+  const response = await client<OfficialGroupsWithPostCountForCommunityAdminResponse, never>(
+    `/communitygroup/${communityId}/community-admin/official-groups`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
+  return response.officialGroups ?? []
+}
+
+export function useOfficialGroupsStatsForCommunityAdmin(enabled: boolean = true) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const communityId = useUniStore((state) => state.communityId)
+
+  return useQuery({
+    queryKey: ['officialGroupsStats', communityId],
+    queryFn: () => getOfficialGroupsStatsForCommunityAdmin(cookieValue, communityId),
+    enabled: !!cookieValue && !!communityId && enabled,
+  })
+}
+
+export function useOfficialGroupsWithPostCountForCommunityAdmin(enabled: boolean = true) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const communityId = useUniStore((state) => state.communityId)
+
+  return useQuery({
+    queryKey: ['officialGroupsWithPostCount', communityId],
+    queryFn: () => getOfficialGroupsWithPostCountForCommunityAdmin(cookieValue, communityId),
+    enabled: !!cookieValue && !!communityId && enabled,
+  })
+}
+
+async function deleteCommunityGroupForCommunityAdminAPI(communityId: string, groupId: string, token: string) {
+  return await client(`/communitygroup/${communityId}/community-admin/${groupId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export const useDeleteCommunityGroupForCommunityAdmin = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+  const communityId = useUniStore((state) => state.communityId)
+
+  return useMutation({
+    mutationFn: (groupId: string) => {
+      if (!communityId) {
+        throw new Error('Community ID is required')
+      }
+
+      return deleteCommunityGroupForCommunityAdminAPI(communityId, groupId, cookieValue)
+    },
+    onSuccess: () => {
+      showCustomSuccessToast('Community group deleted')
+      queryClient.invalidateQueries({ queryKey: ['useGetSubscribedCommunties'] })
+      queryClient.invalidateQueries({ queryKey: ['officialGroupsStats'] })
+      queryClient.invalidateQueries({ queryKey: ['officialGroupsWithPostCount'] })
+      queryClient.invalidateQueries({ queryKey: ['moderationGroupPosts'] })
+      queryClient.invalidateQueries({ queryKey: ['communityGroupsPost'] })
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      const errorMessage = error?.response?.data?.message || 'Something went wrong'
+      showCustomDangerToast(errorMessage)
+    },
   })
 }

@@ -1,4 +1,4 @@
-import useCookie from '@/hooks/useCookie'
+import useCookie, { readCookieValue } from '@/hooks/useCookie'
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { client } from './api-Client'
 import { useUniStore } from '@/store/store'
@@ -6,12 +6,18 @@ import { ProfileConnection } from '@/types/Connections'
 import useDebounce from '@/hooks/useDebounce'
 import {
   EligibleForRewardsResponse,
+  IsUserCommunityAdminResponse,
   IUserProfileResponse,
   ReferralsResponse,
   RewardsResponse,
   UpdateLatestRewardRedemptionUpiIdPayload,
 } from '@/types/User'
-import { showCustomDangerToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { showCustomDangerToast, showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomToasts'
+import { getAdminDashboardUsers } from '@/services/admin-dashboard-auth'
+
+export type DeActivateUserAccountByCommunityAdminPayload = {
+  userId: string
+}
 
 export async function getUserData(token: any, id: string) {
   const response: IUserProfileResponse = await client(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } })
@@ -29,6 +35,15 @@ const changeUserPassword = async (data: any, token: string) => {
 }
 const deActivateUserAccount = async (data: any, token: string) => {
   const res = await client(`/users/deActivateUserAccount`, { method: 'PUT', headers: { Authorization: `Bearer ${token}` }, data })
+  return res
+}
+
+const deActivateUserAccountByCommunityAdmin = async (data: DeActivateUserAccountByCommunityAdminPayload, token: string) => {
+  const res = await client(`/users/community-admin/deActivate`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    data,
+  })
   return res
 }
 const softDeleteUserAccount = async (token: string, data: any) => {
@@ -62,6 +77,11 @@ export async function getAllUsersForConnections(
   chatId?: string,
   role?: string
 ): Promise<ProfileConnection> {
+  const normalizedToken = token.trim()
+  if (!normalizedToken) {
+    throw new Error('Missing auth token')
+  }
+
   const params = new URLSearchParams()
 
   params.append('page', String(page))
@@ -75,7 +95,7 @@ export async function getAllUsersForConnections(
   if (chatId) params.append('chatId', chatId)
   if (role) params.append('role', role)
   return await client(`/users/connections?${params.toString()}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${normalizedToken}` },
   })
 }
 
@@ -93,12 +113,18 @@ export function useUsersProfileForConnections(
 ) {
   const [cookieValue] = useCookie('uni_user_token')
   const debouncedSearchTerm = useDebounce(name, 1000)
+  const authToken = (cookieValue || readCookieValue('uni_user_token')).trim()
 
   return useInfiniteQuery({
     queryKey: ['usersProfileForConnections', debouncedSearchTerm],
-    queryFn: ({ pageParam = 1 }) =>
-      getAllUsersForConnections(
-        cookieValue,
+    queryFn: ({ pageParam = 1 }) => {
+      const token = readCookieValue('uni_user_token').trim()
+      if (!token) {
+        throw new Error('Missing auth token')
+      }
+
+      return getAllUsersForConnections(
+        token,
         pageParam,
         limit,
         debouncedSearchTerm,
@@ -109,6 +135,51 @@ export function useUsersProfileForConnections(
         affiliation || [],
         chatId,
         role
+      )
+    },
+    getNextPageParam: (lastPage) => {
+      if (lastPage.currentPage < lastPage.totalPages) {
+        return lastPage.currentPage + 1
+      }
+      return undefined
+    },
+    initialPageParam: 1,
+    enabled: !!authToken && enabled,
+  })
+}
+
+export function useAdminUsersForConnections(
+  name: string,
+  limit: number,
+  enabled: boolean,
+  universityName: string = '',
+  studyYear?: string[],
+  major?: string[],
+  occupation?: string[],
+  affiliation?: string[],
+  role?: string
+) {
+  const [cookieValue] = useCookie('uni_user_token')
+  const universityId = useUniStore((state) => state.university_id)
+  const debouncedSearchTerm = useDebounce(name, 1000)
+
+  return useInfiniteQuery({
+    queryKey: ['adminUsersForConnections', debouncedSearchTerm, universityName, studyYear, major, occupation, affiliation, role, limit, universityId],
+    queryFn: ({ pageParam = 1 }) =>
+      getAdminDashboardUsers(
+        {
+          page: pageParam,
+          limit,
+          searchTerm: debouncedSearchTerm,
+          universityId,
+          universityName,
+          role: role || '',
+          studyYear: studyYear || [],
+          major: major || [],
+          occupation: occupation || [],
+          affiliation: affiliation || [],
+        },
+        cookieValue
       ),
     getNextPageParam: (lastPage) => {
       if (lastPage.currentPage < lastPage.totalPages) {
@@ -117,7 +188,7 @@ export function useUsersProfileForConnections(
       return undefined
     },
     initialPageParam: 1,
-    enabled: !!cookieValue && enabled,
+    enabled: !!cookieValue && !!universityId && enabled,
   })
 }
 
@@ -144,6 +215,38 @@ export const useDeActivateUserAccount = () => {
     onError: (res: any) => {
       console.log(res.response.data.message, 'res')
       showCustomDangerToast(res.response.data.message)
+    },
+  })
+}
+
+export const useDeActivateUserAccountByCommunityAdmin = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: DeActivateUserAccountByCommunityAdminPayload) => deActivateUserAccountByCommunityAdmin(data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminUsersForConnections'] })
+      showCustomSuccessToast('Student account deactivated successfully')
+    },
+    onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message || 'Failed to deactivate student account')
+    },
+  })
+}
+
+export const useActivateUserAccountByCommunityAdmin = () => {
+  const [cookieValue] = useCookie('uni_user_token')
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: DeActivateUserAccountByCommunityAdminPayload) => deActivateUserAccountByCommunityAdmin(data, cookieValue),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminUsersForConnections'] })
+      showCustomSuccessToast('Student account activated successfully')
+    },
+    onError: (res: any) => {
+      showCustomDangerToast(res.response?.data?.message || 'Failed to activate student account')
     },
   })
 }
@@ -244,6 +347,22 @@ export function useGetUserEligibleForRewards() {
   return useQuery({
     queryKey: ['getUserEligibleForRewards'],
     queryFn: () => getUserEligibleForRewards(cookieValue),
+    enabled: !!cookieValue,
+  })
+}
+
+export async function getIsUserCommunityAdmin(token: string): Promise<IsUserCommunityAdminResponse> {
+  const response = await client<IsUserCommunityAdminResponse, any>(`/users/community-admin`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  return response
+}
+
+export function useIsUserCommunityAdmin() {
+  const [cookieValue] = useCookie('uni_user_token')
+  return useQuery({
+    queryKey: ['isUserCommunityAdmin'],
+    queryFn: () => getIsUserCommunityAdmin(cookieValue),
     enabled: !!cookieValue,
   })
 }

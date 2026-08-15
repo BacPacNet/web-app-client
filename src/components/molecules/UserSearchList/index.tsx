@@ -5,6 +5,7 @@ import { useUsersProfileForConnections } from '@/services/user'
 import { Users } from '@/types/Connections'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
 import { FaCheck } from 'react-icons/fa'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 
 type UserSelectDropdownProps = {
   searchInput: string
@@ -65,6 +66,14 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
       ) : userProfiles.length > 0 ? (
         userProfiles.map((user) => {
           const isSelected = Array.isArray(individualsUsers) ? individualsUsers.some((u) => u._id === user._id) : false
+          const { line1, line2 } = getUserProfileSubtitleLines({
+            role: user?.profile?.role,
+            study_year: user.profile?.study_year,
+            major: user.profile?.major,
+            occupation: user?.profile?.occupation,
+            affiliation: user?.profile?.affiliation,
+          })
+
           return (
             <div
               key={user._id}
@@ -83,10 +92,8 @@ const UserSelectDropdown: React.FC<UserSelectDropdownProps> = ({
                 />
                 <div>
                   <p className="text-sm font-semibold">{`${user?.firstName} ${user?.lastName}`}</p>
-                  <p className="text-2xs text-neutral-600">
-                    {user?.profile?.role === 'student' ? `${user.profile.study_year} ` : user?.profile?.occupation}
-                  </p>
-                  <p className="text-2xs text-neutral-600">{user?.profile?.role === 'student' ? user.profile.major : user?.profile?.affiliation}</p>
+                  {line1 && <p className="text-2xs text-neutral-600">{line1}</p>}
+                  {line2 && <p className="text-2xs text-neutral-600">{line2}</p>}
                 </div>
               </div>
               {isSelected && <FaCheck className="w-5 h-5 text-primary shrink-0" />}

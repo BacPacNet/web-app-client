@@ -4,6 +4,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { RequestData, ServerResponse } from '../models/common/api-client'
 import { MESSAGES } from '@/content/constant'
 
+export const SESSION_EXPIRED_EVENT = 'uni-session-expired'
+
 /**
  * Handle Network Requests.
  * @param {string} endpoint - Api path.
@@ -65,6 +67,15 @@ const client = async <T, U>(
           },
         },
       })
+    }
+
+    if (axios.isAxiosError(err)) {
+      const status = err.response?.status
+      const message = err.response?.data?.message
+
+      if (status === 401 && message === 'Expired Token' && typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT))
+      }
     }
 
     return Promise.reject(err)

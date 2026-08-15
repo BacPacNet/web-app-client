@@ -9,9 +9,7 @@ import Title from '@/components/atoms/Title'
 import SupportingText from '@/components/atoms/SupportingText'
 import InputWarningText from '@/components/atoms/InputWarningText'
 
-import SelectDropdown from '@/components/atoms/SelectDropdown/SelectDropdown'
 import DateSelect from '@/components/atoms/DateSelect/DateSelect'
-import { userType } from '@/types/RegisterForm'
 import { MdOutlineArrowBack } from 'react-icons/md'
 import { isValid, parse } from 'date-fns'
 import { useTimeTracking } from '@/hooks/useTimeTracking'
@@ -108,27 +106,6 @@ const ProfileSetupForm = ({ handlePrev }: { handlePrev: () => void }) => {
             )}
           />
           {ProfileFormErrors.birthDate && <InputWarningText>{ProfileFormErrors?.birthDate?.message?.toString()}</InputWarningText>}
-        </div>
-
-        <div className="w-full flex flex-col relative">
-          <Controller
-            name="userType"
-            control={control}
-            rules={{ required: 'User type is required.' }}
-            render={({ field }) => (
-              <SelectDropdown
-                isStatus={true}
-                options={userType}
-                value={field.value}
-                onChange={field.onChange}
-                label="Status"
-                icon={'single'}
-                err={!!ProfileFormErrors.userType}
-                placeholder="select your current role"
-              />
-            )}
-          />
-          {ProfileFormErrors.userType && <InputWarningText>{ProfileFormErrors?.userType?.message?.toString()}</InputWarningText>}
         </div>
       </div>
       <div className="w-full flex flex-col gap-2">

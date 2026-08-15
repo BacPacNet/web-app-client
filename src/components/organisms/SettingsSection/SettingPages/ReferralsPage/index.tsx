@@ -6,7 +6,7 @@ import { FaChevronLeft } from 'react-icons/fa'
 import Image from 'next/image'
 import avatar from '@assets/avatar.svg'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { userTypeEnum } from '@/types/RegisterForm'
+import { getUserProfileSubtitleLines } from '@/lib/userProfileSubtitle'
 import { Referral } from '@/types/User'
 import { formatDate } from '@/lib/date'
 import InputBox from '@/components/atoms/Input/InputBox'
@@ -16,7 +16,13 @@ import { showCustomSuccessToast } from '@/components/atoms/CustomToasts/CustomTo
 const ReferralListItem = ({ referral }: { referral: Referral }) => {
   const router = useRouter()
   const [imgSrc, setImgSrc] = useState(referral.profile?.profile_dp?.imageUrl || avatar)
-  const isStudent = referral.profile?.role === userTypeEnum.Student
+  const { line1, line2 } = getUserProfileSubtitleLines({
+    role: referral.profile?.role,
+    study_year: referral.profile?.study_year,
+    major: referral.profile?.major,
+    occupation: referral.profile?.occupation,
+    affiliation: referral.profile?.affiliation,
+  })
 
   const handleProfileClick = () => {
     if (referral.profile?.users_id) {
@@ -39,17 +45,8 @@ const ReferralListItem = ({ referral }: { referral: Referral }) => {
           <h3 className="font-semibold text-neutral-700 text-sm">
             {referral.firstName} {referral.lastName}
           </h3>
-          {isStudent ? (
-            <>
-              {referral.profile?.study_year && <p className="text-2xs text-neutral-500">{referral.profile.study_year}</p>}
-              {referral.profile?.major && <p className="text-2xs text-neutral-500">{referral.profile.major}</p>}
-            </>
-          ) : (
-            <>
-              {referral.profile?.occupation && <p className="text-2xs text-neutral-500">{referral.profile.occupation}</p>}
-              {referral.profile?.affiliation && <p className="text-2xs text-neutral-500">{referral.profile.affiliation}</p>}
-            </>
-          )}
+          {line1 && <p className="text-2xs text-neutral-500">{line1}</p>}
+          {line2 && <p className="text-2xs text-neutral-500">{line2}</p>}
         </div>
       </div>
       <div className="text-right">

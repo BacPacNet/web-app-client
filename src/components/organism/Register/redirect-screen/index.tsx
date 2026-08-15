@@ -23,22 +23,26 @@ const RedirectFromRegister = () => {
 
     const timeout = setTimeout(() => {
       setIsTimeComplete(true)
-      // Only redirect if login was successful
-      if (isSuccess) {
-        router.push('/timeline')
-      } else {
+      if (!isSuccess) {
         setShowFallback(true)
       }
     }, 3000)
 
     return () => clearTimeout(timeout)
-  }, [isSuccess, router])
+  }, [isSuccess])
 
   useEffect(() => {
-    if (cookieLoginValue && isTimeComplete) {
-      login(JSON.parse(cookieLoginValue))
+    if (cookieLoginValue) {
+      const { email, password } = JSON.parse(cookieLoginValue)
+      login({ email, password })
     }
-  }, [isTimeComplete, cookieLoginValue, login])
+  }, [cookieLoginValue, login])
+
+  useEffect(() => {
+    if (isSuccess && isTimeComplete) {
+      router.push('/timeline')
+    }
+  }, [isSuccess, isTimeComplete, router])
 
   const handleManualRedirect = () => {
     router.push('/timeline')

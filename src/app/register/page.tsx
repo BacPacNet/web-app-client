@@ -1,28 +1,23 @@
 'use client'
 import FormContainer from '@/components/organism/Register/formContainer/FormContainer'
 import React, { useEffect, useRef, useState } from 'react'
-import { userTypeEnum } from '@/types/RegisterForm'
 import ProgressBar from 'react-customizable-progressbar'
 import useCookie from '@/hooks/useCookie'
 import { useRouter, useSearchParams } from 'next/navigation'
-import RedirectFromRegister from '@/components/organism/Register/redirect-screen'
 import Spinner from '@/components/atoms/spinner'
-import MobileAppDownload from '@/components/organism/Register/mobile-download'
+import RedirectFromRegister from '@/components/organism/Register/redirect-screen'
 
 const progressBarData = [
+  { title: 'Select Universities', des: 'Choose universities to explore' },
   { title: 'Account Creation', des: 'Login Information' },
   { title: 'Profile Setup', des: 'User Information' },
-  { title: 'Status Setup', des: 'User Information' },
-  { title: 'User Verification', des: 'Sync personal and university email' },
-  { title: 'Almost There', des: 'Do you have a referral code?' },
-  { title: 'Finalize Account', des: 'Login to your newly made account' },
+  { title: 'User Verification', des: 'Sync personal email' },
 ]
 
 const Register = () => {
   const [step, setStep] = useState<number>(0)
-  const [subStep, setSubStep] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [userType, setUserType] = useState('')
+  const [, setUserType] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
   const [cookieValue, setCookieValue] = useCookie('register_data')
@@ -74,7 +69,6 @@ const Register = () => {
     if (!hasSyncedStepFromCookie.current) {
       if (registerData) {
         setStep((registerData.step as number) ?? 0)
-        setSubStep((registerData.subStep as number) ?? 0)
       }
       hasSyncedStepFromCookie.current = true
     }
@@ -84,46 +78,17 @@ const Register = () => {
   }, [cookieValue, referralCode])
 
   const handlePrev = () => {
-    if (step == 0) {
-      return
-    } else if (step === 1 && subStep === 1) {
-      return setSubStep(0)
-    } else if (step === 2 && subStep === 0 && userType !== userTypeEnum.Applicant) {
-      setStep(step - 1)
-      return setSubStep(1)
-    } else if (step === 2 && subStep === 0 && userType == userTypeEnum.Student) {
-      setStep(1)
-      return setSubStep(1)
-    } else if (step === 2 && subStep === 0 && userType == userTypeEnum.Faculty) {
-      setStep(1)
-      return setSubStep(1)
-    } else if (step === 3 && subStep === 0 && userType == userTypeEnum.Student) {
-      setStep(1)
-      return setSubStep(1)
-    } else if (step === 3 && subStep === 0 && userType == userTypeEnum.Faculty) {
-      setStep(1)
-      return setSubStep(1)
-    } else if (step === 2 && subStep === 1) {
-      setSubStep(0)
-    } else if (step === 3) {
-      setStep(step - 1)
-      if (userType == userTypeEnum.Applicant) {
-        setSubStep(0)
-      } else if (userType == userTypeEnum.Student || userType == userTypeEnum.Faculty) {
-        setSubStep(1)
-      }
-    } else {
-      setStep(step - 1)
-      setSubStep(0)
-    }
+    if (step === 0) return
+    setStep((prev) => Math.max(0, prev - 1))
   }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [step, subStep])
+  }, [step])
 
-  if (step == 4) {
-    return <MobileAppDownload />
+  // Final screen after the 4-step flow (0..3)
+  if (step === 4) {
+    return <RedirectFromRegister />
   }
 
   if (loading)
@@ -148,7 +113,7 @@ const Register = () => {
               <div className="absolute -left-5">
                 <ProgressBar
                   radius={32}
-                  progress={step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1}
+                  progress={Math.min(step + 1, 4)}
                   key={step}
                   strokeWidth={8}
                   strokeColor="#6744FF"
@@ -158,23 +123,16 @@ const Register = () => {
                   steps={4}
                 >
                   <div className="text-neutral-700 font-semibold text-2xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    {step == 4 ? 4 : step == 1 && subStep == 1 ? 3 : step + 1} of 4{' '}
+                    {Math.min(step + 1, 4)} of 4{' '}
                   </div>
                 </ProgressBar>
               </div>
               <div>
-                <p className="text-sm text-neutral-700 font-medium">{progressBarData[step == 1 && subStep == 1 ? 2 : step].title}</p>
-                <p className="text-neutral-500 text-xs">{progressBarData[step].des}</p>
+                <p className="text-sm text-neutral-700 font-medium">{progressBarData[Math.min(step, 3)].title}</p>
+                <p className="text-neutral-500 text-xs">{progressBarData[Math.min(step, 3)].des}</p>
               </div>
             </div>
-            <FormContainer
-              handlePrev={() => handlePrev()}
-              step={step}
-              setStep={setStep}
-              subStep={subStep}
-              setSubStep={setSubStep}
-              setUserType={setUserType}
-            />
+            <FormContainer handlePrev={() => handlePrev()} step={step} setStep={setStep} />
           </>
         </div>
       </div>

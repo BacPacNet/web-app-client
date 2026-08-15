@@ -88,6 +88,7 @@ export default function Page({ params: { communityId, groupId: communityGroupId 
               communityId={communityId}
               communityGroupId={communityGroupId}
               isOfficial={communityGroups?.communityGroupType === CommunityGroupTypeEnum.OFFICIAL}
+              requirePostApproval={communityGroups?.requirePostApproval}
             />
           )}
 
