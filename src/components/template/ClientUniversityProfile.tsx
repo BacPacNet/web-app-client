@@ -149,7 +149,11 @@ export default function ClientUniversityProfile({ universityName }: { university
   const handleClick = () => {
     if (!userData?.id) {
       openModal(
-        <NotLoggedInModal title={'Login to Join Community'} desc={"Login or create an account to become part of Lorem University's community! "} />,
+        <NotLoggedInModal
+          title={'Login to Join Community'}
+          desc={"Login or create an account to become part of Lorem University's community! "}
+          universityId={university?._id}
+        />,
         'w-96 p-0 rounded-md'
       )
       return
@@ -356,15 +360,15 @@ export default function ClientUniversityProfile({ universityName }: { university
         </div>
 
         {/* //contact  */}
-        <div className="flex flex-col gap-8 items-center w-full">
+        <div className="flex flex-col gap-8 items-center w-full min-w-0">
           <p className="text-neutral-700 text-base font-extrabold font-poppins text-md">Contact Info</p>
-          <div className="flex justify-center gap-8 flex-col md:flex-row max-sm:gap-5 w-full">
-            <div className="bg-neutral-200 p-5 w-full max-w-[474px] min-w-0 flex-1 h-[300px] rounded-lg flex flex-col gap-8">
+          <div className="flex justify-center gap-8 flex-col md:flex-row max-sm:gap-5 w-full min-w-0">
+            <div className="bg-neutral-200 p-5 w-full max-w-[474px] min-w-0 flex-1 min-h-[300px] overflow-hidden rounded-lg flex flex-col gap-8 text-left">
               {contactData.map((item, index) => (
                 <UniversityInfoCard key={index} icon={item.icon} title={item.title} info={item.info} />
               ))}
             </div>
-            <div className="bg-neutral-200 p-5 w-full max-w-[474px] min-w-0 flex-1 h-[300px] rounded-lg flex flex-col gap-8">
+            <div className="bg-neutral-200 p-5 w-full max-w-[474px] min-w-0 flex-1 min-h-[300px] overflow-hidden rounded-lg flex flex-col gap-8 text-left">
               {additionalData.map((item, index) => (
                 <UniversityInfoCard key={index} icon={item.icon} title={item.title} info={item.info} />
               ))}

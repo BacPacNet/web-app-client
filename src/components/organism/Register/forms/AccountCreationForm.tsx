@@ -16,9 +16,10 @@ import { MdOutlineArrowBack } from 'react-icons/md'
 type Props = {
   isPending: boolean
   handlePrev: () => void
+  skipUniversityStep?: boolean
 }
 
-const AccountCreationForm = ({ isPending, handlePrev }: Props) => {
+const AccountCreationForm = ({ isPending, handlePrev, skipUniversityStep = false }: Props) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const router = useRouter()
@@ -170,9 +171,11 @@ const AccountCreationForm = ({ isPending, handlePrev }: Props) => {
         <Button disabled={isPending} variant="primary" size="large">
           {isPending ? <Spinner /> : ' Create an account'}
         </Button>
-        <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
-          Back
-        </Button>
+        {!skipUniversityStep && (
+          <Button size="large" onClick={handlePrev} leftIcon={<MdOutlineArrowBack />} variant="shade">
+            Back
+          </Button>
+        )}
       </div>
     </div>
   )

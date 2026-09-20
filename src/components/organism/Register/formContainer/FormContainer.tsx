@@ -16,9 +16,10 @@ interface Props {
   step: number
   setStep: (value: number) => void
   handlePrev: () => void
+  skipUniversityStep?: boolean
 }
 
-const FormContainer = ({ step, setStep, handlePrev }: Props) => {
+const FormContainer = ({ step, setStep, handlePrev, skipUniversityStep = false }: Props) => {
   const [registerData, setRegisterData] = useState<FormDataType | any>(null)
   const [cookieValue, setCookieValue, deleteCookie] = useCookie('register_data')
   const [cookieLoginValue, setCookieLoginValue] = useCookie('login_data')
@@ -32,6 +33,7 @@ const FormContainer = ({ step, setStep, handlePrev }: Props) => {
 
   const searchParams = useSearchParams()
   const referralCode = searchParams?.get('referralCode')
+  const universityId = searchParams?.get('universityId')
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -89,7 +91,7 @@ const FormContainer = ({ step, setStep, handlePrev }: Props) => {
         firstName: registerData?.firstName || '',
         lastName: registerData?.lastName || '',
         verificationEmail: registerData?.verificationEmail || '',
-        universityId: registerData?.universityId || '',
+        universityId: universityId || registerData?.universityId || '',
         verificationOtp: registerData?.verificationOtp || '',
         universityName: registerData?.universityName || '',
         universityLogo: registerData?.universityLogo || '',
@@ -98,10 +100,16 @@ const FormContainer = ({ step, setStep, handlePrev }: Props) => {
         referralCode: referralCode || registerData?.referralCode || '',
         isJoinUniversity: registerData?.isJoinUniversity || true,
         isEmailVerified: registerData?.isEmailVerified,
-        selectedUniversityIds: registerData?.selectedUniversityIds || [],
+        selectedUniversityIds: universityId ? [universityId] : registerData?.selectedUniversityIds || [],
       })
     }
-  }, [registerData, methods, referralCode])
+  }, [registerData, methods, referralCode, universityId])
+
+  useEffect(() => {
+    if (!universityId) return
+    methods.setValue('selectedUniversityIds', [universityId])
+    methods.setValue('universityId', universityId)
+  }, [universityId, registerData, methods])
 
   useTimeTracking(TRACK_EVENT.REGISTER_PAGE_VIEW_DURATION, {
     isRegistrationCompleted: registeredData?.isRegistered || false,
@@ -158,7 +166,30 @@ const FormContainer = ({ step, setStep, handlePrev }: Props) => {
   const onSubmit = async (data: FormDataType) => {
     const saveToCookie = (nextStep: number) => {
       const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
-      setCookieValue(JSON.stringify({ ...data, step: nextStep, userType: userTypeEnum.Applicant, referralCode: data.referralCode }), expirationDate)
+      let existing: Record<string, unknown> = {}
+      try {
+        existing = cookieValue ? JSON.parse(cookieValue) : {}
+      } catch {
+        existing = {}
+      }
+
+      setCookieValue(
+        JSON.stringify({
+          ...existing,
+          ...data,
+          step: nextStep,
+          userType: userTypeEnum.Applicant,
+          referralCode: data.referralCode,
+          skippedUniversityStep: Boolean(existing.skippedUniversityStep) || skipUniversityStep,
+          ...(universityId
+            ? {
+                universityId,
+                selectedUniversityIds: [universityId],
+              }
+            : {}),
+        }),
+        expirationDate
+      )
     }
 
     if (step === 0) {
@@ -215,7 +246,7 @@ const FormContainer = ({ step, setStep, handlePrev }: Props) => {
     }
 
     if (step === 1) {
-      return <AccountCreationForm isPending={handleUserCheckIsPending} handlePrev={handlePrev} />
+      return <AccountCreationForm isPending={handleUserCheckIsPending} handlePrev={handlePrev} skipUniversityStep={skipUniversityStep} />
     }
 
     if (step === 2) {
