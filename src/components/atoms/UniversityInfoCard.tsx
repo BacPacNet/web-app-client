@@ -4,27 +4,45 @@ import { IconType } from 'react-icons/lib'
 export interface UniversityInfoCardProps {
   icon: IconType
   title: string
-  info: string
+  info?: string | string[] | number | null
 }
 
-const UniversityInfoCard: React.FC<UniversityInfoCardProps> = ({ icon: Icon, title, info }) => (
-  <div className="flex flex-col items-start gap-2 w-full rounded-lg">
-    <p className="text-primary-700 text-[20px] flex gap-1 items-center font-semibold font-poppins">
-      <Icon size={20} />
-      {title}
-    </p>
-    {title === 'Link' && info?.length ? (
-      <a className="underline text-primary-500" href={info} target="_blank" rel="noopener noreferrer">
-        {info}
-      </a>
-    ) : title === 'Email' && info?.length ? (
-      <a href={`mailto:${info}`}>{info}</a>
-    ) : title === 'Phone' && info?.length ? (
-      <a href={`tel:${info}`}>{info}</a>
-    ) : (
-      <p className="text-neutral-700 text-[18px] line-clamp-6">{info || 'Not available'}</p>
-    )}
-  </div>
-)
+const infoClassName = 'text-neutral-700 text-[18px] leading-snug break-words [overflow-wrap:anywhere] w-full min-w-0 text-left'
+
+function toDisplayInfo(info: UniversityInfoCardProps['info']): string {
+  if (Array.isArray(info)) {
+    return info.find((item) => typeof item === 'string' && item.length > 0) ?? ''
+  }
+  if (info === null || info === undefined) return ''
+  return String(info)
+}
+
+const UniversityInfoCard: React.FC<UniversityInfoCardProps> = ({ icon: Icon, title, info }) => {
+  const displayInfo = toDisplayInfo(info)
+
+  return (
+    <div className="flex flex-col items-start gap-2 w-full min-w-0 overflow-hidden rounded-lg">
+      <p className="text-primary-700 text-[20px] flex gap-1 items-center font-semibold font-poppins">
+        <Icon size={20} className="shrink-0" />
+        {title}
+      </p>
+      {title === 'Link' && displayInfo ? (
+        <a className={`${infoClassName} underline text-primary-500`} href={displayInfo} target="_blank" rel="noopener noreferrer">
+          {displayInfo}
+        </a>
+      ) : title === 'Email' && displayInfo ? (
+        <a className={infoClassName} href={`mailto:${displayInfo}`}>
+          {displayInfo}
+        </a>
+      ) : title === 'Phone' && displayInfo ? (
+        <a className={infoClassName} href={`tel:${displayInfo}`}>
+          {displayInfo}
+        </a>
+      ) : (
+        <p className={`${infoClassName} line-clamp-4`}>{displayInfo || 'Not available'}</p>
+      )}
+    </div>
+  )
+}
 
 export default UniversityInfoCard

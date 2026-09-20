@@ -8,11 +8,15 @@ import { useModal } from '@/context/ModalContext'
 type Props = {
   title: string
   desc: string
+  universityId?: string
 }
 
-const NotLoggedInModal = ({ title, desc }: Props) => {
+const NotLoggedInModal = ({ title, desc, universityId }: Props) => {
   const router = useRouter()
   const { closeModal } = useModal()
+
+  const registerPath = universityId ? `/register?universityId=${encodeURIComponent(universityId)}` : '/register'
+
   return (
     <div className="flex flex-col gap-4 justify-center items-center">
       <Image src={image.src} alt="img" width={300} height={200} className="w-full rounded-md" />
@@ -23,7 +27,8 @@ const NotLoggedInModal = ({ title, desc }: Props) => {
       <div className="flex flex-col gap-4 w-full">
         <Buttons
           onClick={() => {
-            router.push('/login'), closeModal()
+            router.push('/login')
+            closeModal()
           }}
           className=""
           variant="primary"
@@ -33,7 +38,8 @@ const NotLoggedInModal = ({ title, desc }: Props) => {
         </Buttons>
         <Buttons
           onClick={() => {
-            router.push('/register'), closeModal()
+            router.push(registerPath)
+            closeModal()
           }}
           variant="border"
           size="large"

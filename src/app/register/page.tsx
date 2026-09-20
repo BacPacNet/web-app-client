@@ -14,36 +14,39 @@ const progressBarData = [
   { title: 'User Verification', des: 'Sync personal email' },
 ]
 
+const REGISTER_COOKIE_EXPIRY_MS = 30 * 60 * 1000
+
+const parseRegisterData = (value: string): Record<string, unknown> | null => {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return null
+  }
+}
+
 const Register = () => {
   const [step, setStep] = useState<number>(0)
   const [loading, setLoading] = useState(true)
+  const [skipUniversityStep, setSkipUniversityStep] = useState(false)
   const [, setUserType] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
   const [cookieValue, setCookieValue] = useCookie('register_data')
   const hasSyncedStepFromCookie = useRef(false)
 
-  // Extract referCode from query parameters
   const referralCode = searchParams.get('referralCode')
+  const universityId = searchParams.get('universityId')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
 
     let registerData: Record<string, unknown> | null = null
     if (cookieValue) {
-      try {
-        registerData = JSON.parse(cookieValue)
-      } catch {
-        registerData = null
-      }
+      registerData = parseRegisterData(cookieValue)
     } else {
       const match = document.cookie.match(/(?:^|; )register_data=([^;]*)/)
       if (match?.[1]) {
-        try {
-          registerData = JSON.parse(decodeURIComponent(match[1]))
-        } catch {
-          registerData = null
-        }
+        registerData = parseRegisterData(decodeURIComponent(match[1]))
       }
     }
 
@@ -61,10 +64,35 @@ const Register = () => {
       }
     }
 
+    if (universityId) {
+      const selectedUniversityIds = Array.isArray(registerData?.selectedUniversityIds) ? (registerData.selectedUniversityIds as string[]) : []
+      const alreadyOnlyThisUniversity = selectedUniversityIds.length === 1 && selectedUniversityIds[0] === universityId
+      const currentStep = typeof registerData?.step === 'number' ? registerData.step : 0
+
+      if (
+        !registerData ||
+        !alreadyOnlyThisUniversity ||
+        registerData.universityId !== universityId ||
+        !registerData.skippedUniversityStep ||
+        currentStep < 1
+      ) {
+        registerData = {
+          ...(registerData || {}),
+          selectedUniversityIds: [universityId],
+          universityId,
+          skippedUniversityStep: true,
+          step: Math.max(currentStep, 1),
+        }
+        shouldUpdateCookie = true
+      }
+    }
+
     if (shouldUpdateCookie && registerData) {
-      const expirationDate = new Date(Date.now() + 30 * 60 * 1000).toUTCString()
+      const expirationDate = new Date(Date.now() + REGISTER_COOKIE_EXPIRY_MS).toUTCString()
       setCookieValue(JSON.stringify(registerData), expirationDate)
     }
+
+    setSkipUniversityStep(Boolean(universityId) || Boolean(registerData?.skippedUniversityStep))
 
     if (!hasSyncedStepFromCookie.current) {
       if (registerData) {
@@ -75,12 +103,19 @@ const Register = () => {
 
     setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookieValue, referralCode])
+  }, [cookieValue, referralCode, universityId])
 
   const handlePrev = () => {
     if (step === 0) return
-    setStep((prev) => Math.max(0, prev - 1))
+    if (skipUniversityStep && step === 1) return
+    setStep((prev) => Math.max(skipUniversityStep ? 1 : 0, prev - 1))
   }
+
+  useEffect(() => {
+    if (skipUniversityStep && step === 0) {
+      setStep(1)
+    }
+  }, [skipUniversityStep, step])
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -97,6 +132,11 @@ const Register = () => {
         <Spinner />
       </div>
     )
+
+  const totalSteps = skipUniversityStep ? 3 : 4
+  const displayedStep = skipUniversityStep ? Math.min(step, 3) : Math.min(step + 1, 4)
+  const progressIndex = Math.min(step, 3)
+
   return (
     <div className="flex w-full  bg-neutral-100 flex-col items-center  pb-48">
       <div className="flex  flex-col items-center  max-width-allowed w-full">
@@ -113,26 +153,26 @@ const Register = () => {
               <div className="absolute -left-5">
                 <ProgressBar
                   radius={32}
-                  progress={Math.min(step + 1, 4)}
-                  key={step}
+                  progress={displayedStep}
+                  key={`${skipUniversityStep ? 'skip' : 'full'}-${step}`}
                   strokeWidth={8}
                   strokeColor="#6744FF"
                   trackStrokeColor="#F3F2FF"
                   strokeLinecap="square"
                   trackStrokeWidth={8}
-                  steps={4}
+                  steps={totalSteps}
                 >
                   <div className="text-neutral-700 font-semibold text-2xs absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    {Math.min(step + 1, 4)} of 4{' '}
+                    {displayedStep} of {totalSteps}{' '}
                   </div>
                 </ProgressBar>
               </div>
               <div>
-                <p className="text-sm text-neutral-700 font-medium">{progressBarData[Math.min(step, 3)].title}</p>
-                <p className="text-neutral-500 text-xs">{progressBarData[Math.min(step, 3)].des}</p>
+                <p className="text-sm text-neutral-700 font-medium">{progressBarData[progressIndex].title}</p>
+                <p className="text-neutral-500 text-xs">{progressBarData[progressIndex].des}</p>
               </div>
             </div>
-            <FormContainer handlePrev={() => handlePrev()} step={step} setStep={setStep} />
+            <FormContainer handlePrev={() => handlePrev()} step={step} setStep={setStep} skipUniversityStep={skipUniversityStep} />
           </>
         </div>
       </div>

@@ -25,6 +25,7 @@ interface RegisterData {
   UniversityOtp: string
   UniversityOtpOK: string
   referralCode?: string
+  selectedUniversityIds?: string[]
 }
 
 const login = async (data: LoginForm): Promise<UserResponseType> => {
